@@ -1,0 +1,28 @@
+{
+  "name": "files.com/files-php-sdk",
+  "description": "Files.com PHP SDK",
+  "keywords": [
+    "files.com",
+    "cloud storage",
+    "api"
+  ],
+  "homepage": "https://www.files.com/",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Files.com and Contributors",
+      "homepage": "https://www.files.com/"
+    }
+  ],
+  "require": {
+    "php": ">=5.5.0",
+    "ext-curl": "*",
+    "ext-json": "*",
+    "ext-mbstring": "*",
+    "guzzlehttp/guzzle": "*",
+    "psr/log": "^1.1"
+  },
+  "autoload": {
+    "psr-4": { "Files\\" : "lib/" }
+  }
+}

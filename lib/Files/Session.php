@@ -218,6 +218,15 @@ class Session {
     return $this->attributes['otp'] = $value;
   }
 
+  // string # Identifier for a partially-completed login
+  public function getPartialSessionId() {
+    return $this->attributes['partial_session_id'];
+  }
+
+  public function setPartialSessionId($value) {
+    return $this->attributes['partial_session_id'] = $value;
+  }
+
   public function save() {
     if ($this->attributes['id']) {
       throw new \BadMethodCallException('The Session object doesn\'t support updates.');
@@ -232,6 +241,7 @@ class Session {
   //   username - string - Username to sign in as
   //   password - string - Password for sign in
   //   otp - string - If this user has a 2FA device, provide its OTP or code here.
+  //   partial_session_id - string - Identifier for a partially-completed login
   public static function create($params = [], $options = []) {
     if ($params['username'] && !is_string($params['username'])) {
       throw new \InvalidArgumentException('Bad parameter: $username must be of type string; received ' . gettype($username));
@@ -243,6 +253,10 @@ class Session {
 
     if ($params['otp'] && !is_string($params['otp'])) {
       throw new \InvalidArgumentException('Bad parameter: $otp must be of type string; received ' . gettype($otp));
+    }
+
+    if ($params['partial_session_id'] && !is_string($params['partial_session_id'])) {
+      throw new \InvalidArgumentException('Bad parameter: $partial_session_id must be of type string; received ' . gettype($partial_session_id));
     }
 
     $response = Api::sendRequest('/sessions', 'POST', $params);

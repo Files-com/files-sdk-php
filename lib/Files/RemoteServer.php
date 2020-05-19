@@ -38,6 +38,15 @@ class RemoteServer {
     return $this->attributes['id'] = $value;
   }
 
+  // string # Type of authentication method
+  public function getAuthenticationMethod() {
+    return $this->attributes['authentication_method'];
+  }
+
+  public function setAuthenticationMethod($value) {
+    return $this->attributes['authentication_method'] = $value;
+  }
+
   // string # Hostname or IP address
   public function getHostname() {
     return $this->attributes['hostname'];
@@ -63,6 +72,15 @@ class RemoteServer {
 
   public function setPort($value) {
     return $this->attributes['port'] = $value;
+  }
+
+  // int64 # Max number of parallel connections.  Ignored for S3 connections (we will parallelize these as much as possible).
+  public function getMaxConnections() {
+    return $this->attributes['max_connections'];
+  }
+
+  public function setMaxConnections($value) {
+    return $this->attributes['max_connections'] = $value;
   }
 
   // string # S3 bucket name
@@ -119,6 +137,60 @@ class RemoteServer {
     return $this->attributes['username'] = $value;
   }
 
+  // string # Google Cloud Storage bucket name
+  public function getGoogleCloudStorageBucket() {
+    return $this->attributes['google_cloud_storage_bucket'];
+  }
+
+  public function setGoogleCloudStorageBucket($value) {
+    return $this->attributes['google_cloud_storage_bucket'] = $value;
+  }
+
+  // string # Google Cloud Project ID
+  public function getGoogleCloudStorageProjectId() {
+    return $this->attributes['google_cloud_storage_project_id'];
+  }
+
+  public function setGoogleCloudStorageProjectId($value) {
+    return $this->attributes['google_cloud_storage_project_id'] = $value;
+  }
+
+  // string # Backblaze B2 Cloud Storage S3 Endpoint
+  public function getBackblazeB2S3Endpoint() {
+    return $this->attributes['backblaze_b2_s3_endpoint'];
+  }
+
+  public function setBackblazeB2S3Endpoint($value) {
+    return $this->attributes['backblaze_b2_s3_endpoint'] = $value;
+  }
+
+  // string # Backblaze B2 Cloud Storage Bucket name
+  public function getBackblazeB2Bucket() {
+    return $this->attributes['backblaze_b2_bucket'];
+  }
+
+  public function setBackblazeB2Bucket($value) {
+    return $this->attributes['backblaze_b2_bucket'] = $value;
+  }
+
+  // string # Wasabi region
+  public function getWasabiBucket() {
+    return $this->attributes['wasabi_bucket'];
+  }
+
+  public function setWasabiBucket($value) {
+    return $this->attributes['wasabi_bucket'] = $value;
+  }
+
+  // string # Wasabi Bucket name
+  public function getWasabiRegion() {
+    return $this->attributes['wasabi_region'];
+  }
+
+  public function setWasabiRegion($value) {
+    return $this->attributes['wasabi_region'] = $value;
+  }
+
   // string # AWS Access Key.
   public function getAwsAccessKey() {
     return $this->attributes['aws_access_key'];
@@ -155,20 +227,77 @@ class RemoteServer {
     return $this->attributes['private_key'] = $value;
   }
 
+  // string # A JSON file that contains the private key. To generate see https://cloud.google.com/storage/docs/json_api/v1/how-tos/authorizing#APIKey
+  public function getGoogleCloudStorageCredentialsJson() {
+    return $this->attributes['google_cloud_storage_credentials_json'];
+  }
+
+  public function setGoogleCloudStorageCredentialsJson($value) {
+    return $this->attributes['google_cloud_storage_credentials_json'] = $value;
+  }
+
+  // string # Wasabi access key.
+  public function getWasabiAccessKey() {
+    return $this->attributes['wasabi_access_key'];
+  }
+
+  public function setWasabiAccessKey($value) {
+    return $this->attributes['wasabi_access_key'] = $value;
+  }
+
+  // string # Wasabi secret key.
+  public function getWasabiSecretKey() {
+    return $this->attributes['wasabi_secret_key'];
+  }
+
+  public function setWasabiSecretKey($value) {
+    return $this->attributes['wasabi_secret_key'] = $value;
+  }
+
+  // string # Backblaze B2 Cloud Storage keyID.
+  public function getBackblazeB2KeyId() {
+    return $this->attributes['backblaze_b2_key_id'];
+  }
+
+  public function setBackblazeB2KeyId($value) {
+    return $this->attributes['backblaze_b2_key_id'] = $value;
+  }
+
+  // string # Backblaze B2 Cloud Storage applicationKey.
+  public function getBackblazeB2ApplicationKey() {
+    return $this->attributes['backblaze_b2_application_key'];
+  }
+
+  public function setBackblazeB2ApplicationKey($value) {
+    return $this->attributes['backblaze_b2_application_key'] = $value;
+  }
+
   // Parameters:
   //   aws_access_key - string - AWS Access Key.
   //   aws_secret_key - string - AWS secret key.
-  //   hostname - string - Hostname.
-  //   name - string - Internal reference name for server.
   //   password - string - Password if needed.
-  //   port - string - Port.
   //   private_key - string - Private key if needed.
-  //   s3_bucket - string - S3 bucket name.
-  //   s3_region - string - S3 region.
-  //   server_certificate - string - Certificate for this server.
-  //   server_type - string - Type of server.  Can be ftp, sftp, or s3.
-  //   ssl - string - SSL requirements.  Can be if_available, require, require_implicit, never.
-  //   username - string - Server username if needed.
+  //   google_cloud_storage_credentials_json - string - A JSON file that contains the private key. To generate see https://cloud.google.com/storage/docs/json_api/v1/how-tos/authorizing#APIKey
+  //   wasabi_access_key - string - Wasabi access key.
+  //   wasabi_secret_key - string - Wasabi secret key.
+  //   backblaze_b2_key_id - string - Backblaze B2 Cloud Storage keyID.
+  //   backblaze_b2_application_key - string - Backblaze B2 Cloud Storage applicationKey.
+  //   hostname - string - Hostname or IP address
+  //   name - string - Internal name for your reference
+  //   max_connections - integer - Max number of parallel connections.  Ignored for S3 connections (we will parallelize these as much as possible).
+  //   port - integer - Port for remote server.  Not needed for S3.
+  //   s3_bucket - string - S3 bucket name
+  //   s3_region - string - S3 region
+  //   server_certificate - string - Remote server certificate
+  //   server_type - string - Remote server type.
+  //   ssl - string - Should we require SSL?
+  //   username - string - Remote server username.  Not needed for S3 buckets.
+  //   google_cloud_storage_bucket - string - Google Cloud Storage bucket name
+  //   google_cloud_storage_project_id - string - Google Cloud Project ID
+  //   backblaze_b2_bucket - string - Backblaze B2 Cloud Storage Bucket name
+  //   backblaze_b2_s3_endpoint - string - Backblaze B2 Cloud Storage S3 Endpoint
+  //   wasabi_bucket - string - Wasabi region
+  //   wasabi_region - string - Wasabi Bucket name
   public function update($params = []) {
     if (!$this->id) {
       throw new \Error('Current object has no ID');
@@ -189,20 +318,38 @@ class RemoteServer {
     if ($params['aws_secret_key'] && !is_string($params['aws_secret_key'])) {
       throw new \InvalidArgumentException('Bad parameter: $aws_secret_key must be of type string; received ' . gettype($aws_secret_key));
     }
+    if ($params['password'] && !is_string($params['password'])) {
+      throw new \InvalidArgumentException('Bad parameter: $password must be of type string; received ' . gettype($password));
+    }
+    if ($params['private_key'] && !is_string($params['private_key'])) {
+      throw new \InvalidArgumentException('Bad parameter: $private_key must be of type string; received ' . gettype($private_key));
+    }
+    if ($params['google_cloud_storage_credentials_json'] && !is_string($params['google_cloud_storage_credentials_json'])) {
+      throw new \InvalidArgumentException('Bad parameter: $google_cloud_storage_credentials_json must be of type string; received ' . gettype($google_cloud_storage_credentials_json));
+    }
+    if ($params['wasabi_access_key'] && !is_string($params['wasabi_access_key'])) {
+      throw new \InvalidArgumentException('Bad parameter: $wasabi_access_key must be of type string; received ' . gettype($wasabi_access_key));
+    }
+    if ($params['wasabi_secret_key'] && !is_string($params['wasabi_secret_key'])) {
+      throw new \InvalidArgumentException('Bad parameter: $wasabi_secret_key must be of type string; received ' . gettype($wasabi_secret_key));
+    }
+    if ($params['backblaze_b2_key_id'] && !is_string($params['backblaze_b2_key_id'])) {
+      throw new \InvalidArgumentException('Bad parameter: $backblaze_b2_key_id must be of type string; received ' . gettype($backblaze_b2_key_id));
+    }
+    if ($params['backblaze_b2_application_key'] && !is_string($params['backblaze_b2_application_key'])) {
+      throw new \InvalidArgumentException('Bad parameter: $backblaze_b2_application_key must be of type string; received ' . gettype($backblaze_b2_application_key));
+    }
     if ($params['hostname'] && !is_string($params['hostname'])) {
       throw new \InvalidArgumentException('Bad parameter: $hostname must be of type string; received ' . gettype($hostname));
     }
     if ($params['name'] && !is_string($params['name'])) {
       throw new \InvalidArgumentException('Bad parameter: $name must be of type string; received ' . gettype($name));
     }
-    if ($params['password'] && !is_string($params['password'])) {
-      throw new \InvalidArgumentException('Bad parameter: $password must be of type string; received ' . gettype($password));
+    if ($params['max_connections'] && !is_int($params['max_connections'])) {
+      throw new \InvalidArgumentException('Bad parameter: $max_connections must be of type int; received ' . gettype($max_connections));
     }
-    if ($params['port'] && !is_string($params['port'])) {
-      throw new \InvalidArgumentException('Bad parameter: $port must be of type string; received ' . gettype($port));
-    }
-    if ($params['private_key'] && !is_string($params['private_key'])) {
-      throw new \InvalidArgumentException('Bad parameter: $private_key must be of type string; received ' . gettype($private_key));
+    if ($params['port'] && !is_int($params['port'])) {
+      throw new \InvalidArgumentException('Bad parameter: $port must be of type int; received ' . gettype($port));
     }
     if ($params['s3_bucket'] && !is_string($params['s3_bucket'])) {
       throw new \InvalidArgumentException('Bad parameter: $s3_bucket must be of type string; received ' . gettype($s3_bucket));
@@ -221,6 +368,24 @@ class RemoteServer {
     }
     if ($params['username'] && !is_string($params['username'])) {
       throw new \InvalidArgumentException('Bad parameter: $username must be of type string; received ' . gettype($username));
+    }
+    if ($params['google_cloud_storage_bucket'] && !is_string($params['google_cloud_storage_bucket'])) {
+      throw new \InvalidArgumentException('Bad parameter: $google_cloud_storage_bucket must be of type string; received ' . gettype($google_cloud_storage_bucket));
+    }
+    if ($params['google_cloud_storage_project_id'] && !is_string($params['google_cloud_storage_project_id'])) {
+      throw new \InvalidArgumentException('Bad parameter: $google_cloud_storage_project_id must be of type string; received ' . gettype($google_cloud_storage_project_id));
+    }
+    if ($params['backblaze_b2_bucket'] && !is_string($params['backblaze_b2_bucket'])) {
+      throw new \InvalidArgumentException('Bad parameter: $backblaze_b2_bucket must be of type string; received ' . gettype($backblaze_b2_bucket));
+    }
+    if ($params['backblaze_b2_s3_endpoint'] && !is_string($params['backblaze_b2_s3_endpoint'])) {
+      throw new \InvalidArgumentException('Bad parameter: $backblaze_b2_s3_endpoint must be of type string; received ' . gettype($backblaze_b2_s3_endpoint));
+    }
+    if ($params['wasabi_bucket'] && !is_string($params['wasabi_bucket'])) {
+      throw new \InvalidArgumentException('Bad parameter: $wasabi_bucket must be of type string; received ' . gettype($wasabi_bucket));
+    }
+    if ($params['wasabi_region'] && !is_string($params['wasabi_region'])) {
+      throw new \InvalidArgumentException('Bad parameter: $wasabi_region must be of type string; received ' . gettype($wasabi_region));
     }
 
     if (!$params['id']) {
@@ -335,17 +500,29 @@ class RemoteServer {
   // Parameters:
   //   aws_access_key - string - AWS Access Key.
   //   aws_secret_key - string - AWS secret key.
-  //   hostname - string - Hostname.
-  //   name - string - Internal reference name for server.
   //   password - string - Password if needed.
-  //   port - string - Port.
   //   private_key - string - Private key if needed.
-  //   s3_bucket - string - S3 bucket name.
-  //   s3_region - string - S3 region.
-  //   server_certificate - string - Certificate for this server.
-  //   server_type - string - Type of server.  Can be ftp, sftp, or s3.
-  //   ssl - string - SSL requirements.  Can be if_available, require, require_implicit, never.
-  //   username - string - Server username if needed.
+  //   google_cloud_storage_credentials_json - string - A JSON file that contains the private key. To generate see https://cloud.google.com/storage/docs/json_api/v1/how-tos/authorizing#APIKey
+  //   wasabi_access_key - string - Wasabi access key.
+  //   wasabi_secret_key - string - Wasabi secret key.
+  //   backblaze_b2_key_id - string - Backblaze B2 Cloud Storage keyID.
+  //   backblaze_b2_application_key - string - Backblaze B2 Cloud Storage applicationKey.
+  //   hostname - string - Hostname or IP address
+  //   name - string - Internal name for your reference
+  //   max_connections - integer - Max number of parallel connections.  Ignored for S3 connections (we will parallelize these as much as possible).
+  //   port - integer - Port for remote server.  Not needed for S3.
+  //   s3_bucket - string - S3 bucket name
+  //   s3_region - string - S3 region
+  //   server_certificate - string - Remote server certificate
+  //   server_type - string - Remote server type.
+  //   ssl - string - Should we require SSL?
+  //   username - string - Remote server username.  Not needed for S3 buckets.
+  //   google_cloud_storage_bucket - string - Google Cloud Storage bucket name
+  //   google_cloud_storage_project_id - string - Google Cloud Project ID
+  //   backblaze_b2_bucket - string - Backblaze B2 Cloud Storage Bucket name
+  //   backblaze_b2_s3_endpoint - string - Backblaze B2 Cloud Storage S3 Endpoint
+  //   wasabi_bucket - string - Wasabi region
+  //   wasabi_region - string - Wasabi Bucket name
   public static function create($params = [], $options = []) {
     if ($params['aws_access_key'] && !is_string($params['aws_access_key'])) {
       throw new \InvalidArgumentException('Bad parameter: $aws_access_key must be of type string; received ' . gettype($aws_access_key));
@@ -353,6 +530,34 @@ class RemoteServer {
 
     if ($params['aws_secret_key'] && !is_string($params['aws_secret_key'])) {
       throw new \InvalidArgumentException('Bad parameter: $aws_secret_key must be of type string; received ' . gettype($aws_secret_key));
+    }
+
+    if ($params['password'] && !is_string($params['password'])) {
+      throw new \InvalidArgumentException('Bad parameter: $password must be of type string; received ' . gettype($password));
+    }
+
+    if ($params['private_key'] && !is_string($params['private_key'])) {
+      throw new \InvalidArgumentException('Bad parameter: $private_key must be of type string; received ' . gettype($private_key));
+    }
+
+    if ($params['google_cloud_storage_credentials_json'] && !is_string($params['google_cloud_storage_credentials_json'])) {
+      throw new \InvalidArgumentException('Bad parameter: $google_cloud_storage_credentials_json must be of type string; received ' . gettype($google_cloud_storage_credentials_json));
+    }
+
+    if ($params['wasabi_access_key'] && !is_string($params['wasabi_access_key'])) {
+      throw new \InvalidArgumentException('Bad parameter: $wasabi_access_key must be of type string; received ' . gettype($wasabi_access_key));
+    }
+
+    if ($params['wasabi_secret_key'] && !is_string($params['wasabi_secret_key'])) {
+      throw new \InvalidArgumentException('Bad parameter: $wasabi_secret_key must be of type string; received ' . gettype($wasabi_secret_key));
+    }
+
+    if ($params['backblaze_b2_key_id'] && !is_string($params['backblaze_b2_key_id'])) {
+      throw new \InvalidArgumentException('Bad parameter: $backblaze_b2_key_id must be of type string; received ' . gettype($backblaze_b2_key_id));
+    }
+
+    if ($params['backblaze_b2_application_key'] && !is_string($params['backblaze_b2_application_key'])) {
+      throw new \InvalidArgumentException('Bad parameter: $backblaze_b2_application_key must be of type string; received ' . gettype($backblaze_b2_application_key));
     }
 
     if ($params['hostname'] && !is_string($params['hostname'])) {
@@ -363,16 +568,12 @@ class RemoteServer {
       throw new \InvalidArgumentException('Bad parameter: $name must be of type string; received ' . gettype($name));
     }
 
-    if ($params['password'] && !is_string($params['password'])) {
-      throw new \InvalidArgumentException('Bad parameter: $password must be of type string; received ' . gettype($password));
+    if ($params['max_connections'] && !is_int($params['max_connections'])) {
+      throw new \InvalidArgumentException('Bad parameter: $max_connections must be of type int; received ' . gettype($max_connections));
     }
 
-    if ($params['port'] && !is_string($params['port'])) {
-      throw new \InvalidArgumentException('Bad parameter: $port must be of type string; received ' . gettype($port));
-    }
-
-    if ($params['private_key'] && !is_string($params['private_key'])) {
-      throw new \InvalidArgumentException('Bad parameter: $private_key must be of type string; received ' . gettype($private_key));
+    if ($params['port'] && !is_int($params['port'])) {
+      throw new \InvalidArgumentException('Bad parameter: $port must be of type int; received ' . gettype($port));
     }
 
     if ($params['s3_bucket'] && !is_string($params['s3_bucket'])) {
@@ -397,6 +598,30 @@ class RemoteServer {
 
     if ($params['username'] && !is_string($params['username'])) {
       throw new \InvalidArgumentException('Bad parameter: $username must be of type string; received ' . gettype($username));
+    }
+
+    if ($params['google_cloud_storage_bucket'] && !is_string($params['google_cloud_storage_bucket'])) {
+      throw new \InvalidArgumentException('Bad parameter: $google_cloud_storage_bucket must be of type string; received ' . gettype($google_cloud_storage_bucket));
+    }
+
+    if ($params['google_cloud_storage_project_id'] && !is_string($params['google_cloud_storage_project_id'])) {
+      throw new \InvalidArgumentException('Bad parameter: $google_cloud_storage_project_id must be of type string; received ' . gettype($google_cloud_storage_project_id));
+    }
+
+    if ($params['backblaze_b2_bucket'] && !is_string($params['backblaze_b2_bucket'])) {
+      throw new \InvalidArgumentException('Bad parameter: $backblaze_b2_bucket must be of type string; received ' . gettype($backblaze_b2_bucket));
+    }
+
+    if ($params['backblaze_b2_s3_endpoint'] && !is_string($params['backblaze_b2_s3_endpoint'])) {
+      throw new \InvalidArgumentException('Bad parameter: $backblaze_b2_s3_endpoint must be of type string; received ' . gettype($backblaze_b2_s3_endpoint));
+    }
+
+    if ($params['wasabi_bucket'] && !is_string($params['wasabi_bucket'])) {
+      throw new \InvalidArgumentException('Bad parameter: $wasabi_bucket must be of type string; received ' . gettype($wasabi_bucket));
+    }
+
+    if ($params['wasabi_region'] && !is_string($params['wasabi_region'])) {
+      throw new \InvalidArgumentException('Bad parameter: $wasabi_region must be of type string; received ' . gettype($wasabi_region));
     }
 
     $response = Api::sendRequest('/remote_servers', 'POST', $params);

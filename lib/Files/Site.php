@@ -59,6 +59,11 @@ class Site {
     return $this->attributes['admin_user_id'];
   }
 
+  // boolean # Are manual Bundle names allowed?
+  public function getAllowBundleNames() {
+    return $this->attributes['allow_bundle_names'];
+  }
+
   // string # List of allowed file types
   public function getAllowedFileTypes() {
     return $this->attributes['allowed_file_types'];
@@ -364,7 +369,12 @@ class Site {
     return $this->attributes['password_require_special'];
   }
 
-  // boolean # Require bundles' passwords to conform to the same requirements as users' passwords?
+  // boolean # Require passwords that have not been previously breached? (see https://haveibeenpwned.com/)
+  public function getPasswordRequireUnbreached() {
+    return $this->attributes['password_require_unbreached'];
+  }
+
+  // boolean # Require bundles' passwords, and passwords for other items (inboxes, public shares, etc.) to conform to the same requirements as users' passwords?
   public function getPasswordRequirementsApplyToBundles() {
     return $this->attributes['password_requirements_apply_to_bundles'];
   }
@@ -566,6 +576,7 @@ class Site {
   //   subdomain - string - Site subdomain
   //   domain - string - Custom domain
   //   email - string - Main email for this site
+  //   allow_bundle_names - boolean - Are manual Bundle names allowed?
   //   bundle_expiration - integer - Site-wide Bundle expiration in days
   //   overage_notify - boolean - Notify site email of overages?
   //   welcome_email_enabled - boolean - Will the welcome email be sent to new users?
@@ -599,12 +610,13 @@ class Site {
   //   password_require_mixed - boolean - Require lower and upper case letters in passwords?
   //   password_require_special - boolean - Require special characters in password?
   //   password_require_number - boolean - Require a number in passwords?
+  //   password_require_unbreached - boolean - Require passwords that have not been previously breached? (see https://haveibeenpwned.com/)
   //   sftp_user_root_enabled - boolean - Use user FTP roots also for SFTP?
   //   disable_password_reset - boolean - Is password reset disabled?
   //   immutable_files - boolean - Are files protected from modification?
   //   session_pinned_by_ip - boolean - Are sessions locked to the same IP? (i.e. do users need to log in again if they change IPs?)
   //   bundle_password_required - boolean - Do Bundles require password protection?
-  //   password_requirements_apply_to_bundles - boolean - Require bundles' passwords to conform to the same requirements as users' passwords?
+  //   password_requirements_apply_to_bundles - boolean - Require bundles' passwords, and passwords for other items (inboxes, public shares, etc.) to conform to the same requirements as users' passwords?
   //   opt_out_global - boolean - Use servers in the USA only?
   //   use_provided_modified_at - boolean - Allow uploaders to set `provided_modified_at` for uploaded files?
   //   custom_namespace - boolean - Is this site using a custom namespace for users?
@@ -654,7 +666,6 @@ class Site {
   //   icon128_delete - boolean - If true, will delete the file stored in icon128
   //   logo_file - file
   //   logo_delete - boolean - If true, will delete the file stored in logo
-  //   days_until_2fa_required - integer - When enabling 2FA, set this to a delay period in days.
   //   disable_2fa_with_delay - boolean - If set to true, we will begin the process of disabling 2FA on this site.
   //   ldap_password_change - string - New LDAP password.
   //   ldap_password_change_confirmation - string - Confirm new LDAP password.
@@ -858,10 +869,6 @@ class Site {
 
     if ($params['ldap_base_dn'] && !is_string($params['ldap_base_dn'])) {
       throw new \InvalidArgumentException('Bad parameter: $ldap_base_dn must be of type string; received ' . gettype($ldap_base_dn));
-    }
-
-    if ($params['days_until_2fa_required'] && !is_int($params['days_until_2fa_required'])) {
-      throw new \InvalidArgumentException('Bad parameter: $days_until_2fa_required must be of type int; received ' . gettype($days_until_2fa_required));
     }
 
     if ($params['ldap_password_change'] && !is_string($params['ldap_password_change'])) {

@@ -110,6 +110,15 @@ class User {
     return $this->attributes['avatar_url'] = $value;
   }
 
+  // boolean # Allow this user to perform operations on the account, payments, and invoices?
+  public function getBillingPermission() {
+    return $this->attributes['billing_permission'];
+  }
+
+  public function setBillingPermission($value) {
+    return $this->attributes['billing_permission'] = $value;
+  }
+
   // boolean # Allow this user to skip site-wide IP blacklists?
   public function getBypassSiteAllowedIps() {
     return $this->attributes['bypass_site_allowed_ips'];
@@ -160,7 +169,7 @@ class User {
     return $this->attributes['ftp_permission'] = $value;
   }
 
-  // array # List of group IDs of which this user is a member
+  // array # Comma-separated list of group IDs of which this user is a member
   public function getGroupIds() {
     return $this->attributes['group_ids'];
   }
@@ -572,6 +581,7 @@ class User {
   //   attachments_permission - boolean - Can the user create Bundles (aka Share Links)?  This field will be aliased or renamed in the future to `bundles_permission`.
   //   authenticate_until - string - Scheduled Date/Time at which user will be deactivated
   //   authentication_method - string - How is this user authenticated?
+  //   billing_permission - boolean - Allow this user to perform operations on the account, payments, and invoices?
   //   bypass_site_allowed_ips - boolean - Allow this user to skip site-wide IP blacklists?
   //   dav_permission - boolean - Can the user connect with WebDAV?
   //   disabled - boolean - Is user disabled? Disabled users cannot log in, and do not count for billing purposes.  Users can be automatically disabled after an inactivity period via a Site setting.
@@ -809,6 +819,7 @@ class User {
   //   attachments_permission - boolean - Can the user create Bundles (aka Share Links)?  This field will be aliased or renamed in the future to `bundles_permission`.
   //   authenticate_until - string - Scheduled Date/Time at which user will be deactivated
   //   authentication_method - string - How is this user authenticated?
+  //   billing_permission - boolean - Allow this user to perform operations on the account, payments, and invoices?
   //   bypass_site_allowed_ips - boolean - Allow this user to skip site-wide IP blacklists?
   //   dav_permission - boolean - Can the user connect with WebDAV?
   //   disabled - boolean - Is user disabled? Disabled users cannot log in, and do not count for billing purposes.  Users can be automatically disabled after an inactivity period via a Site setting.

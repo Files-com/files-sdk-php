@@ -288,6 +288,7 @@ class Bundle {
   //   expires_at - string - Bundle expiration date/time.
   //   description - string - Bundle public description
   //   note - string - Bundle internal note
+  //   code - string - Bundle name
   public static function create($params = [], $options = []) {
     if (!$params['paths']) {
       throw new \Error('Parameter missing: paths');
@@ -315,6 +316,10 @@ class Bundle {
 
     if ($params['note'] && !is_string($params['note'])) {
       throw new \InvalidArgumentException('Bad parameter: $note must be of type string; received ' . gettype($note));
+    }
+
+    if ($params['code'] && !is_string($params['code'])) {
+      throw new \InvalidArgumentException('Bad parameter: $code must be of type string; received ' . gettype($code));
     }
 
     $response = Api::sendRequest('/bundles', 'POST', $params);

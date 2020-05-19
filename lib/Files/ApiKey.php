@@ -231,6 +231,12 @@ class ApiKey {
     return self::list($params, $options);
   }
 
+  public static function findCurrent($params = [], $options = []) {
+    $response = Api::sendRequest('/api_key', 'GET');
+
+    return new ApiKey((array)$response->data, $options);
+  }
+
   // Parameters:
   //   id (required) - integer - Api Key ID.
   public static function find($id, $params = [], $options = []) {
@@ -255,12 +261,6 @@ class ApiKey {
 
   public static function get($id, $params = [], $options = []) {
     return self::find($id, $params, $options);
-  }
-
-  public static function get($params = [], $options = []) {
-    $response = Api::sendRequest('/api_key', 'GET');
-
-    return new ApiKey((array)$response->data, $options);
   }
 
   // Parameters:
@@ -294,7 +294,7 @@ class ApiKey {
   //   name - string - Internal name for key.  For your reference only.
   //   permission_set - string - Leave blank, or set to `desktop_app` to restrict the key to only desktop app functions.
   //   expires_at - string - Have the key expire at this date/time.
-  public static function update($params = [], $options = []) {
+  public static function updateCurrent($params = [], $options = []) {
     if ($params['name'] && !is_string($params['name'])) {
       throw new \InvalidArgumentException('Bad parameter: $name must be of type string; received ' . gettype($name));
     }
@@ -312,13 +312,9 @@ class ApiKey {
     return new ApiKey((array)$response->data, $options);
   }
 
-  public static function delete($params = [], $options = []) {
+  public static function deleteCurrent($params = [], $options = []) {
     $response = Api::sendRequest('/api_key', 'DELETE');
 
     return $response->data;
-  }
-
-  public static function destroy($params = [], $options = []) {
-    return self::delete($params, $options);
   }
 }

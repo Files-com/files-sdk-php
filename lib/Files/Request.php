@@ -101,6 +101,40 @@ class Request {
     return $this->attributes['group_ids'] = $value;
   }
 
+  // List Requests
+  //
+  // Parameters:
+  //   page - integer - Current page number.
+  //   per_page - integer - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
+  //   action - string - Deprecated: If set to `count` returns a count of matching records rather than the records themselves.
+  //   mine - boolean - Only show requests of the current user?  (Defaults to true if current user is not a site admin.)
+  public function folders($params = []) {
+    if (!$this->id) {
+      throw new \Error('Current object has no ID');
+    }
+
+    if (!is_array($params)) {
+      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+    }
+
+    $params['id'] = $this->id;
+
+    if ($params['page'] && !is_int($params['page'])) {
+      throw new \InvalidArgumentException('Bad parameter: $page must be of type int; received ' . gettype($page));
+    }
+    if ($params['per_page'] && !is_int($params['per_page'])) {
+      throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
+    }
+    if ($params['action'] && !is_string($params['action'])) {
+      throw new \InvalidArgumentException('Bad parameter: $action must be of type string; received ' . gettype($action));
+    }
+    if ($params['path'] && !is_string($params['path'])) {
+      throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
+    }
+
+    return Api::sendRequest('/requests/folders/' . rawurlencode($params['path']) . '', 'GET', $params);
+  }
+
   public function save() {
     if ($this->attributes['path']) {
       throw new \BadMethodCallException('The Request object doesn\'t support updates.');
@@ -116,50 +150,13 @@ class Request {
   //   per_page - integer - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
   //   action - string - Deprecated: If set to `count` returns a count of matching records rather than the records themselves.
   //   mine - boolean - Only show requests of the current user?  (Defaults to true if current user is not a site admin.)
-  public static function list($params = [], $options = []) {
-    if ($params['page'] && !is_int($params['page'])) {
-      throw new \InvalidArgumentException('Bad parameter: $page must be of type int; received ' . gettype($page));
-    }
-
-    if ($params['per_page'] && !is_int($params['per_page'])) {
-      throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
-    }
-
-    if ($params['action'] && !is_string($params['action'])) {
-      throw new \InvalidArgumentException('Bad parameter: $action must be of type string; received ' . gettype($action));
-    }
-
-    $response = Api::sendRequest('/requests', 'GET', $params);
-
-    $return_array = [];
-
-    foreach ($response->data as $obj) {
-      $return_array[] = new Request((array)$obj, $options);
-    }
-
-    return $return_array;
-  }
-
-  public static function all($params = [], $options = []) {
-    return self::list($params, $options);
-  }
-
-  // Parameters:
-  //   page - integer - Current page number.
-  //   per_page - integer - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
-  //   action - string - Deprecated: If set to `count` returns a count of matching records rather than the records themselves.
-  //   path (required) - string - Path to operate on.
-  //   mine - boolean - Only show requests of the current user?  (Defaults to true if current user is not a site admin.)
-  public static function listFor($path, $params = [], $options = []) {
+  //   path - string - Path to show requests for.  If omitted, shows all paths. Send `/` to represent the root directory.
+  public static function list($path, $params = [], $options = []) {
     if (!is_array($params)) {
       throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
     }
 
     $params['path'] = $path;
-
-    if (!$params['path']) {
-      throw new \Error('Parameter missing: path');
-    }
 
     if ($params['page'] && !is_int($params['page'])) {
       throw new \InvalidArgumentException('Bad parameter: $page must be of type int; received ' . gettype($page));
@@ -177,7 +174,7 @@ class Request {
       throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
     }
 
-    $response = Api::sendRequest('/requests/folders/' . rawurlencode($params['path']) . '', 'GET', $params);
+    $response = Api::sendRequest('/requests', 'GET', $params);
 
     $return_array = [];
 
@@ -186,6 +183,10 @@ class Request {
     }
 
     return $return_array;
+  }
+
+  public static function all($path, $params = [], $options = []) {
+    return self::list($path, $params, $options);
   }
 
   // Parameters:

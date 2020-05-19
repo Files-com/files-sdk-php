@@ -7,7 +7,7 @@ The Files.com PHP SDK provides convenient Files.com API access to applications w
 
 To install the package:
 
-    composer install files.com
+    composer install files.com/files-php-sdk
 
 
 ### Requirements

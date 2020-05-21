@@ -49,12 +49,12 @@ class UsageSnapshot {
     return $this->attributes['created_at'];
   }
 
-  // float # Current site usage as of report
+  // double # Current site usage as of report
   public function getCurrentStorage() {
     return $this->attributes['current_storage'];
   }
 
-  // float # Site usage report highest usage in time period
+  // double # Site usage report highest usage in time period
   public function getHighWaterStorage() {
     return $this->attributes['high_water_storage'];
   }
@@ -79,17 +79,17 @@ class UsageSnapshot {
     return $this->attributes['usage_by_top_level_dir'];
   }
 
-  // float # Usage for root folder
+  // double # Usage for root folder
   public function getRootStorage() {
     return $this->attributes['root_storage'];
   }
 
-  // float # Usage for files that are deleted but uploaded within last 30 days
+  // double # Usage for files that are deleted but uploaded within last 30 days
   public function getDeletedFilesCountedInMinimum() {
     return $this->attributes['deleted_files_counted_in_minimum'];
   }
 
-  // float # Usage for files that are deleted but retained as backups
+  // double # Usage for files that are deleted but retained as backups
   public function getDeletedFilesStorage() {
     return $this->attributes['deleted_files_storage'];
   }

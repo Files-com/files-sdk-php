@@ -34,12 +34,12 @@ class AccountLineItem {
     return $this->attributes['id'];
   }
 
-  // float # Line item amount
+  // double # Line item amount
   public function getAmount() {
     return $this->attributes['amount'];
   }
 
-  // float # Line item balance
+  // double # Line item balance
   public function getBalance() {
     return $this->attributes['balance'];
   }

@@ -314,7 +314,7 @@ class Site {
     return $this->attributes['max_prior_passwords'];
   }
 
-  // float # Next billing amount
+  // double # Next billing amount
   public function getNextBillingAmount() {
     return $this->attributes['next_billing_amount'];
   }
@@ -459,7 +459,7 @@ class Site {
     return $this->attributes['smtp_username'];
   }
 
-  // int64 # Session expiry in hours
+  // double # Session expiry in hours
   public function getSessionExpiry() {
     return $this->attributes['session_expiry'];
   }
@@ -592,7 +592,7 @@ class Site {
   //   desktop_app_session_lifetime - integer - Desktop app session lifetime (in hours)
   //   folder_permissions_groups_only - boolean - If true, permissions for this site must be bound to a group (not a user). Otherwise, permissions must be bound to a user.
   //   welcome_screen - string - Does the welcome screen appear?
-  //   session_expiry - integer - Session expiry in hours
+  //   session_expiry - number - Session expiry in hours
   //   ssl_required - boolean - Is SSL required?  Disabling this is insecure.
   //   tls_disabled - boolean - Is TLS disabled(site setting)?
   //   user_lockout - boolean - Will users be locked out after incorrect login attempts?
@@ -713,10 +713,6 @@ class Site {
 
     if ($params['welcome_screen'] && !is_string($params['welcome_screen'])) {
       throw new \InvalidArgumentException('Bad parameter: $welcome_screen must be of type string; received ' . gettype($welcome_screen));
-    }
-
-    if ($params['session_expiry'] && !is_int($params['session_expiry'])) {
-      throw new \InvalidArgumentException('Bad parameter: $session_expiry must be of type int; received ' . gettype($session_expiry));
     }
 
     if ($params['user_lockout_tries'] && !is_int($params['user_lockout_tries'])) {

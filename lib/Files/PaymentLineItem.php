@@ -29,7 +29,7 @@ class PaymentLineItem {
     return !!$this->attributes['id'];
   }
 
-  // float # Payment line item amount
+  // double # Payment line item amount
   public function getAmount() {
     return $this->attributes['amount'];
   }

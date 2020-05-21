@@ -128,6 +128,15 @@ class User {
     return $this->attributes['bypass_site_allowed_ips'] = $value;
   }
 
+  // boolean # Exempt this user from being disabled based on inactivity?
+  public function getBypassInactiveDisable() {
+    return $this->attributes['bypass_inactive_disable'];
+  }
+
+  public function setBypassInactiveDisable($value) {
+    return $this->attributes['bypass_inactive_disable'] = $value;
+  }
+
   // date-time # When this user was created
   public function getCreatedAt() {
     return $this->attributes['created_at'];
@@ -582,6 +591,7 @@ class User {
   //   authenticate_until - string - Scheduled Date/Time at which user will be deactivated
   //   authentication_method - string - How is this user authenticated?
   //   billing_permission - boolean - Allow this user to perform operations on the account, payments, and invoices?
+  //   bypass_inactive_disable - boolean - Exempt this user from being disabled based on inactivity?
   //   bypass_site_allowed_ips - boolean - Allow this user to skip site-wide IP blacklists?
   //   dav_permission - boolean - Can the user connect with WebDAV?
   //   disabled - boolean - Is user disabled? Disabled users cannot log in, and do not count for billing purposes.  Users can be automatically disabled after an inactivity period via a Site setting.
@@ -820,6 +830,7 @@ class User {
   //   authenticate_until - string - Scheduled Date/Time at which user will be deactivated
   //   authentication_method - string - How is this user authenticated?
   //   billing_permission - boolean - Allow this user to perform operations on the account, payments, and invoices?
+  //   bypass_inactive_disable - boolean - Exempt this user from being disabled based on inactivity?
   //   bypass_site_allowed_ips - boolean - Allow this user to skip site-wide IP blacklists?
   //   dav_permission - boolean - Can the user connect with WebDAV?
   //   disabled - boolean - Is user disabled? Disabled users cannot log in, and do not count for billing purposes.  Users can be automatically disabled after an inactivity period via a Site setting.

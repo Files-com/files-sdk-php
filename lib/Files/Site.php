@@ -64,11 +64,6 @@ class Site {
     return $this->attributes['allow_bundle_names'];
   }
 
-  // string # List of allowed file types
-  public function getAllowedFileTypes() {
-    return $this->attributes['allowed_file_types'];
-  }
-
   // string # List of allowed IP addresses
   public function getAllowedIps() {
     return $this->attributes['allowed_ips'];
@@ -600,7 +595,6 @@ class Site {
   //   user_lockout_within - integer - Number of hours for user lockout window
   //   user_lockout_lock_period - integer - How many hours to lock user out for failed password?
   //   include_password_in_welcome_email - boolean - Include password in emails to new users?
-  //   allowed_file_types - string - List of allowed file types
   //   allowed_ips - string - List of allowed IP addresses
   //   days_to_retain_backups - integer - Number of days to keep deleted files
   //   max_prior_passwords - integer - Number of prior passwords to disallow
@@ -725,10 +719,6 @@ class Site {
 
     if ($params['user_lockout_lock_period'] && !is_int($params['user_lockout_lock_period'])) {
       throw new \InvalidArgumentException('Bad parameter: $user_lockout_lock_period must be of type int; received ' . gettype($user_lockout_lock_period));
-    }
-
-    if ($params['allowed_file_types'] && !is_string($params['allowed_file_types'])) {
-      throw new \InvalidArgumentException('Bad parameter: $allowed_file_types must be of type string; received ' . gettype($allowed_file_types));
     }
 
     if ($params['allowed_ips'] && !is_string($params['allowed_ips'])) {

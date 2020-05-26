@@ -178,6 +178,53 @@ class Bundle {
     return Api::sendRequest('/bundles/' . $params['id'] . '/share', 'POST', $params);
   }
 
+  // Parameters:
+  //   password - string - Password for this bundle.
+  //   expires_at - string - Bundle expiration date/time
+  //   description - string - Public description
+  //   note - string - Bundle internal note
+  //   code - string - Bundle code.  This code forms the end part of the Public URL.
+  public function update($params = []) {
+    if (!$this->id) {
+      throw new \Error('Current object has no ID');
+    }
+
+    if (!is_array($params)) {
+      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+    }
+
+    $params['id'] = $this->id;
+
+    if ($params['id'] && !is_int($params['id'])) {
+      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+    }
+    if ($params['password'] && !is_string($params['password'])) {
+      throw new \InvalidArgumentException('Bad parameter: $password must be of type string; received ' . gettype($password));
+    }
+    if ($params['expires_at'] && !is_string($params['expires_at'])) {
+      throw new \InvalidArgumentException('Bad parameter: $expires_at must be of type string; received ' . gettype($expires_at));
+    }
+    if ($params['description'] && !is_string($params['description'])) {
+      throw new \InvalidArgumentException('Bad parameter: $description must be of type string; received ' . gettype($description));
+    }
+    if ($params['note'] && !is_string($params['note'])) {
+      throw new \InvalidArgumentException('Bad parameter: $note must be of type string; received ' . gettype($note));
+    }
+    if ($params['code'] && !is_string($params['code'])) {
+      throw new \InvalidArgumentException('Bad parameter: $code must be of type string; received ' . gettype($code));
+    }
+
+    if (!$params['id']) {
+      if ($this->id) {
+        $params['id'] = $this->id;
+      } else {
+        throw new \Error('Parameter missing: id');
+      }
+    }
+
+    return Api::sendRequest('/bundles/' . $params['id'] . '', 'PATCH', $params);
+  }
+
   public function delete($params = []) {
     if (!$this->id) {
       throw new \Error('Current object has no ID');
@@ -210,7 +257,7 @@ class Bundle {
 
   public function save() {
     if ($this->attributes['id']) {
-      throw new \BadMethodCallException('The Bundle object doesn\'t support updates.');
+      return $this->update($this->attributes);
     } else {
       $new_obj = self::create($this->attributes, $this->options);
       $this->attributes = $new_obj->attributes;
@@ -283,12 +330,12 @@ class Bundle {
 
   // Parameters:
   //   user_id - integer - User ID.  Provide a value of `0` to operate the current session's user.
-  //   paths (required) - array - A list of paths to include in this bundle.
   //   password - string - Password for this bundle.
-  //   expires_at - string - Bundle expiration date/time.
-  //   description - string - Bundle public description
+  //   expires_at - string - Bundle expiration date/time
+  //   description - string - Public description
   //   note - string - Bundle internal note
-  //   code - string - Bundle name
+  //   code - string - Bundle code.  This code forms the end part of the Public URL.
+  //   paths (required) - array - A list of paths to include in this bundle.
   public static function create($params = [], $options = []) {
     if (!$params['paths']) {
       throw new \Error('Parameter missing: paths');
@@ -296,10 +343,6 @@ class Bundle {
 
     if ($params['user_id'] && !is_int($params['user_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
-    }
-
-    if ($params['paths'] && !is_array($params['paths'])) {
-      throw new \InvalidArgumentException('Bad parameter: $paths must be of type array; received ' . gettype($paths));
     }
 
     if ($params['password'] && !is_string($params['password'])) {
@@ -320,6 +363,10 @@ class Bundle {
 
     if ($params['code'] && !is_string($params['code'])) {
       throw new \InvalidArgumentException('Bad parameter: $code must be of type string; received ' . gettype($code));
+    }
+
+    if ($params['paths'] && !is_array($params['paths'])) {
+      throw new \InvalidArgumentException('Bad parameter: $paths must be of type array; received ' . gettype($paths));
     }
 
     $response = Api::sendRequest('/bundles', 'POST', $params);

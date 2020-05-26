@@ -39,6 +39,16 @@ class SsoStrategy {
     return $this->attributes['provider'];
   }
 
+  // string # Custom label for the SSO provider on the login page.
+  public function getLabel() {
+    return $this->attributes['label'];
+  }
+
+  // string # URL holding a custom logo for the SSO provider on the login page.
+  public function getLogoUrl() {
+    return $this->attributes['logo_url'];
+  }
+
   // int64 # ID
   public function getId() {
     return $this->attributes['id'];

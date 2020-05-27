@@ -330,12 +330,12 @@ class Bundle {
 
   // Parameters:
   //   user_id - integer - User ID.  Provide a value of `0` to operate the current session's user.
+  //   paths (required) - array - A list of paths to include in this bundle.
   //   password - string - Password for this bundle.
   //   expires_at - string - Bundle expiration date/time
   //   description - string - Public description
   //   note - string - Bundle internal note
   //   code - string - Bundle code.  This code forms the end part of the Public URL.
-  //   paths (required) - array - A list of paths to include in this bundle.
   public static function create($params = [], $options = []) {
     if (!$params['paths']) {
       throw new \Error('Parameter missing: paths');
@@ -343,6 +343,10 @@ class Bundle {
 
     if ($params['user_id'] && !is_int($params['user_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
+    }
+
+    if ($params['paths'] && !is_array($params['paths'])) {
+      throw new \InvalidArgumentException('Bad parameter: $paths must be of type array; received ' . gettype($paths));
     }
 
     if ($params['password'] && !is_string($params['password'])) {
@@ -363,10 +367,6 @@ class Bundle {
 
     if ($params['code'] && !is_string($params['code'])) {
       throw new \InvalidArgumentException('Bad parameter: $code must be of type string; received ' . gettype($code));
-    }
-
-    if ($params['paths'] && !is_array($params['paths'])) {
-      throw new \InvalidArgumentException('Bad parameter: $paths must be of type array; received ' . gettype($paths));
     }
 
     $response = Api::sendRequest('/bundles', 'POST', $params);

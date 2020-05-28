@@ -98,8 +98,8 @@ class History {
   //   start_at - string - Leave blank or set to a date/time to filter earlier entries.
   //   end_at - string - Leave blank or set to a date/time to filter later entries.
   //   display - string - Display format. Leave blank or set to `full` or `parent`.
-  //   page - integer - Current page number.
-  //   per_page - integer - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
+  //   page - int64 - Current page number.
+  //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
   //   action - string - Deprecated: If set to `count` returns a count of matching records rather than the records themselves.
   //   path (required) - string - Path to operate on.
   public static function listForFile($path, $params = [], $options = []) {
@@ -156,8 +156,8 @@ class History {
   //   start_at - string - Leave blank or set to a date/time to filter earlier entries.
   //   end_at - string - Leave blank or set to a date/time to filter later entries.
   //   display - string - Display format. Leave blank or set to `full` or `parent`.
-  //   page - integer - Current page number.
-  //   per_page - integer - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
+  //   page - int64 - Current page number.
+  //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
   //   action - string - Deprecated: If set to `count` returns a count of matching records rather than the records themselves.
   //   path (required) - string - Path to operate on.
   public static function listForFolder($path, $params = [], $options = []) {
@@ -214,10 +214,10 @@ class History {
   //   start_at - string - Leave blank or set to a date/time to filter earlier entries.
   //   end_at - string - Leave blank or set to a date/time to filter later entries.
   //   display - string - Display format. Leave blank or set to `full` or `parent`.
-  //   page - integer - Current page number.
-  //   per_page - integer - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
+  //   page - int64 - Current page number.
+  //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
   //   action - string - Deprecated: If set to `count` returns a count of matching records rather than the records themselves.
-  //   user_id (required) - integer - User ID.
+  //   user_id (required) - int64 - User ID.
   public static function listForUser($user_id, $params = [], $options = []) {
     if (!is_array($params)) {
       throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
@@ -272,8 +272,8 @@ class History {
   //   start_at - string - Leave blank or set to a date/time to filter earlier entries.
   //   end_at - string - Leave blank or set to a date/time to filter later entries.
   //   display - string - Display format. Leave blank or set to `full` or `parent`.
-  //   page - integer - Current page number.
-  //   per_page - integer - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
+  //   page - int64 - Current page number.
+  //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
   //   action - string - Deprecated: If set to `count` returns a count of matching records rather than the records themselves.
   public static function listLogins($params = [], $options = []) {
     if ($params['start_at'] && !is_string($params['start_at'])) {
@@ -315,8 +315,8 @@ class History {
   //   start_at - string - Leave blank or set to a date/time to filter earlier entries.
   //   end_at - string - Leave blank or set to a date/time to filter later entries.
   //   display - string - Display format. Leave blank or set to `full` or `parent`.
-  //   page - integer - Current page number.
-  //   per_page - integer - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
+  //   page - int64 - Current page number.
+  //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
   //   action - string - Deprecated: If set to `count` returns a count of matching records rather than the records themselves.
   public static function list($params = [], $options = []) {
     if ($params['start_at'] && !is_string($params['start_at'])) {

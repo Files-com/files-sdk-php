@@ -106,8 +106,8 @@ class FileCommentReaction {
   }
 
   // Parameters:
-  //   user_id - integer - User ID.  Provide a value of `0` to operate the current session's user.
-  //   file_comment_id (required) - integer - ID of file comment to attach reaction to.
+  //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
+  //   file_comment_id (required) - int64 - ID of file comment to attach reaction to.
   //   emoji (required) - string - Emoji to react with.
   public static function create($params = [], $options = []) {
     if (!$params['file_comment_id']) {

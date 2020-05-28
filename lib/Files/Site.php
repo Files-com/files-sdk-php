@@ -572,7 +572,7 @@ class Site {
   //   domain - string - Custom domain
   //   email - string - Main email for this site
   //   allow_bundle_names - boolean - Are manual Bundle names allowed?
-  //   bundle_expiration - integer - Site-wide Bundle expiration in days
+  //   bundle_expiration - int64 - Site-wide Bundle expiration in days
   //   overage_notify - boolean - Notify site email of overages?
   //   welcome_email_enabled - boolean - Will the welcome email be sent to new users?
   //   ask_about_overwrites - boolean - If false, rename conflicting files instead of asking for overwrite confirmation.  Only applies to web interface.
@@ -584,22 +584,22 @@ class Site {
   //   default_time_zone - string - Site default time zone
   //   desktop_app - boolean - Is the desktop app enabled?
   //   desktop_app_session_ip_pinning - boolean - Is desktop app session IP pinning enabled?
-  //   desktop_app_session_lifetime - integer - Desktop app session lifetime (in hours)
+  //   desktop_app_session_lifetime - int64 - Desktop app session lifetime (in hours)
   //   folder_permissions_groups_only - boolean - If true, permissions for this site must be bound to a group (not a user). Otherwise, permissions must be bound to a user.
   //   welcome_screen - string - Does the welcome screen appear?
-  //   session_expiry - number - Session expiry in hours
+  //   session_expiry - double - Session expiry in hours
   //   ssl_required - boolean - Is SSL required?  Disabling this is insecure.
   //   tls_disabled - boolean - Is TLS disabled(site setting)?
   //   user_lockout - boolean - Will users be locked out after incorrect login attempts?
-  //   user_lockout_tries - integer - Number of login tries within `user_lockout_within` hours before users are locked out
-  //   user_lockout_within - integer - Number of hours for user lockout window
-  //   user_lockout_lock_period - integer - How many hours to lock user out for failed password?
+  //   user_lockout_tries - int64 - Number of login tries within `user_lockout_within` hours before users are locked out
+  //   user_lockout_within - int64 - Number of hours for user lockout window
+  //   user_lockout_lock_period - int64 - How many hours to lock user out for failed password?
   //   include_password_in_welcome_email - boolean - Include password in emails to new users?
   //   allowed_ips - string - List of allowed IP addresses
-  //   days_to_retain_backups - integer - Number of days to keep deleted files
-  //   max_prior_passwords - integer - Number of prior passwords to disallow
-  //   password_validity_days - integer - Number of days password is valid
-  //   password_min_length - integer - Shortest password length for users
+  //   days_to_retain_backups - int64 - Number of days to keep deleted files
+  //   max_prior_passwords - int64 - Number of prior passwords to disallow
+  //   password_validity_days - int64 - Number of days password is valid
+  //   password_min_length - int64 - Shortest password length for users
   //   password_require_letter - boolean - Require a letter in passwords?
   //   password_require_mixed - boolean - Require lower and upper case letters in passwords?
   //   password_require_special - boolean - Require special characters in password?
@@ -614,7 +614,7 @@ class Site {
   //   opt_out_global - boolean - Use servers in the USA only?
   //   use_provided_modified_at - boolean - Allow uploaders to set `provided_modified_at` for uploaded files?
   //   custom_namespace - boolean - Is this site using a custom namespace for users?
-  //   disable_users_from_inactivity_period_days - integer - If greater than zero, users will unable to login if they do not show activity within this number of days.
+  //   disable_users_from_inactivity_period_days - int64 - If greater than zero, users will unable to login if they do not show activity within this number of days.
   //   allowed_2fa_method_sms - boolean - Is SMS two factor authentication allowed?
   //   allowed_2fa_method_u2f - boolean - Is U2F two factor authentication allowed?
   //   allowed_2fa_method_totp - boolean - Is TOTP two factor authentication allowed?
@@ -633,13 +633,13 @@ class Site {
   //   smtp_authentication - string - SMTP server authentication type
   //   smtp_from - string - From address to use when mailing through custom SMTP
   //   smtp_username - string - SMTP server username
-  //   smtp_port - integer - SMTP server port
+  //   smtp_port - int64 - SMTP server port
   //   ldap_enabled - boolean - Main LDAP setting: is LDAP enabled?
   //   ldap_type - string - LDAP type
   //   ldap_host - string - LDAP host
   //   ldap_host_2 - string - LDAP backup host
   //   ldap_host_3 - string - LDAP backup host
-  //   ldap_port - integer - LDAP port
+  //   ldap_port - int64 - LDAP port
   //   ldap_secure - boolean - Use secure LDAP?
   //   ldap_username - string - Username for signing in to LDAP server.
   //   ldap_username_field - string - LDAP username field

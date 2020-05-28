@@ -145,11 +145,11 @@ class MessageComment {
   }
 
   // Parameters:
-  //   user_id - integer - User ID.  Provide a value of `0` to operate the current session's user.
-  //   page - integer - Current page number.
-  //   per_page - integer - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
+  //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
+  //   page - int64 - Current page number.
+  //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
   //   action - string - Deprecated: If set to `count` returns a count of matching records rather than the records themselves.
-  //   message_id (required) - integer - Message comment to return comments for.
+  //   message_id (required) - int64 - Message comment to return comments for.
   public static function list($params = [], $options = []) {
     if (!$params['message_id']) {
       throw new \Error('Parameter missing: message_id');
@@ -191,7 +191,7 @@ class MessageComment {
   }
 
   // Parameters:
-  //   id (required) - integer - Message Comment ID.
+  //   id (required) - int64 - Message Comment ID.
   public static function find($id, $params = [], $options = []) {
     if (!is_array($params)) {
       throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
@@ -217,7 +217,7 @@ class MessageComment {
   }
 
   // Parameters:
-  //   user_id - integer - User ID.  Provide a value of `0` to operate the current session's user.
+  //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
   //   body (required) - string - Comment body.
   public static function create($params = [], $options = []) {
     if (!$params['body']) {

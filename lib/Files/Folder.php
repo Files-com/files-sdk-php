@@ -193,8 +193,8 @@ class Folder {
   }
 
   // Parameters:
-  //   page - integer - Current page number.
-  //   per_page - integer - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
+  //   page - int64 - Current page number.
+  //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
   //   action - string - Action to take.  Can be `count`, `count_nrs` (non recursive), `size`, `permissions`, or blank.
   //   path (required) - string - Path to operate on.
   //   cursor - string - Send cursor to resume an existing list from the point at which you left off.  Get a cursor from an existing list via the X-Files-Cursor header.

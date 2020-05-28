@@ -581,7 +581,7 @@ class User {
   //   change_password_confirmation - string - Optional, but if provided, we will ensure that it matches the value sent in `change_password`.
   //   email - string - User's email.
   //   grant_permission - string - Permission to grant on the user root.  Can be blank or `full`, `read`, `write`, `preview`, or `history`.
-  //   group_id - integer - Group ID to associate this user with.
+  //   group_id - int64 - Group ID to associate this user with.
   //   group_ids - string - A list of group ids to associate this user with.  Comma delimited.
   //   password - string - User password.
   //   password_confirmation - string - Optional, but if provided, we will ensure that it matches the value sent in `password`.
@@ -597,10 +597,10 @@ class User {
   //   disabled - boolean - Is user disabled? Disabled users cannot log in, and do not count for billing purposes.  Users can be automatically disabled after an inactivity period via a Site setting.
   //   ftp_permission - boolean - Can the user access with FTP/FTPS?
   //   language - string - Preferred language
-  //   notification_daily_send_time - integer - Hour of the day at which daily notifications should be sent. Can be in range 0 to 23
+  //   notification_daily_send_time - int64 - Hour of the day at which daily notifications should be sent. Can be in range 0 to 23
   //   name - string - User's full name
   //   notes - string - Any internal notes on the user
-  //   password_validity_days - integer - Number of days to allow user to use the same password
+  //   password_validity_days - int64 - Number of days to allow user to use the same password
   //   receive_admin_alerts - boolean - Should the user receive admin alerts such a certificate expiration notifications and overages?
   //   require_password_change - boolean - Is a password change required upon next user login?
   //   restapi_permission - boolean - Can this user access the REST API?
@@ -609,7 +609,7 @@ class User {
   //   site_admin - boolean - Is the user an administrator for this site?
   //   skip_welcome_screen - boolean - Skip Welcome page in the UI?
   //   ssl_required - string - SSL required setting
-  //   sso_strategy_id - integer - SSO (Single Sign On) strategy ID for the user, if applicable.
+  //   sso_strategy_id - int64 - SSO (Single Sign On) strategy ID for the user, if applicable.
   //   subscribe_to_newsletter - boolean - Is the user subscribed to the newsletter?
   //   time_zone - string - User time zone
   //   user_root - string - Root folder for FTP (and optionally SFTP if the appropriate site-wide setting is set.)  Note that this is not used for API, Desktop, or Web interface.
@@ -744,8 +744,8 @@ class User {
   }
 
   // Parameters:
-  //   page - integer - Current page number.
-  //   per_page - integer - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
+  //   page - int64 - Current page number.
+  //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
   //   action - string - Deprecated: If set to `count` returns a count of matching records rather than the records themselves.
   //   q[username] - string - List users matching username.
   //   q[email] - string - List users matching email.
@@ -788,7 +788,7 @@ class User {
   }
 
   // Parameters:
-  //   id (required) - integer - User ID.
+  //   id (required) - int64 - User ID.
   public static function find($id, $params = [], $options = []) {
     if (!is_array($params)) {
       throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
@@ -820,7 +820,7 @@ class User {
   //   change_password_confirmation - string - Optional, but if provided, we will ensure that it matches the value sent in `change_password`.
   //   email - string - User's email.
   //   grant_permission - string - Permission to grant on the user root.  Can be blank or `full`, `read`, `write`, `preview`, or `history`.
-  //   group_id - integer - Group ID to associate this user with.
+  //   group_id - int64 - Group ID to associate this user with.
   //   group_ids - string - A list of group ids to associate this user with.  Comma delimited.
   //   password - string - User password.
   //   password_confirmation - string - Optional, but if provided, we will ensure that it matches the value sent in `password`.
@@ -836,10 +836,10 @@ class User {
   //   disabled - boolean - Is user disabled? Disabled users cannot log in, and do not count for billing purposes.  Users can be automatically disabled after an inactivity period via a Site setting.
   //   ftp_permission - boolean - Can the user access with FTP/FTPS?
   //   language - string - Preferred language
-  //   notification_daily_send_time - integer - Hour of the day at which daily notifications should be sent. Can be in range 0 to 23
+  //   notification_daily_send_time - int64 - Hour of the day at which daily notifications should be sent. Can be in range 0 to 23
   //   name - string - User's full name
   //   notes - string - Any internal notes on the user
-  //   password_validity_days - integer - Number of days to allow user to use the same password
+  //   password_validity_days - int64 - Number of days to allow user to use the same password
   //   receive_admin_alerts - boolean - Should the user receive admin alerts such a certificate expiration notifications and overages?
   //   require_password_change - boolean - Is a password change required upon next user login?
   //   restapi_permission - boolean - Can this user access the REST API?
@@ -848,7 +848,7 @@ class User {
   //   site_admin - boolean - Is the user an administrator for this site?
   //   skip_welcome_screen - boolean - Skip Welcome page in the UI?
   //   ssl_required - string - SSL required setting
-  //   sso_strategy_id - integer - SSO (Single Sign On) strategy ID for the user, if applicable.
+  //   sso_strategy_id - int64 - SSO (Single Sign On) strategy ID for the user, if applicable.
   //   subscribe_to_newsletter - boolean - Is the user subscribed to the newsletter?
   //   time_zone - string - User time zone
   //   user_root - string - Root folder for FTP (and optionally SFTP if the appropriate site-wide setting is set.)  Note that this is not used for API, Desktop, or Web interface.

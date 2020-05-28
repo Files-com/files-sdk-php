@@ -167,8 +167,8 @@ class Group {
   }
 
   // Parameters:
-  //   page - integer - Current page number.
-  //   per_page - integer - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
+  //   page - int64 - Current page number.
+  //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
   //   action - string - Deprecated: If set to `count` returns a count of matching records rather than the records themselves.
   //   ids - string - Comma-separated list of group ids to include in results.
   public static function list($params = [], $options = []) {
@@ -204,7 +204,7 @@ class Group {
   }
 
   // Parameters:
-  //   id (required) - integer - Group ID.
+  //   id (required) - int64 - Group ID.
   public static function find($id, $params = [], $options = []) {
     if (!is_array($params)) {
       throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));

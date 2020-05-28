@@ -112,8 +112,8 @@ class Permission {
   }
 
   // Parameters:
-  //   page - integer - Current page number.
-  //   per_page - integer - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
+  //   page - int64 - Current page number.
+  //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
   //   action - string - Deprecated: If set to `count` returns a count of matching records rather than the records themselves.
   //   path - string - Permission path.  If provided, will scope permissions to this path.
   //   group_id - string - Group ID.  If provided, will scope permissions to this group.
@@ -166,11 +166,11 @@ class Permission {
   }
 
   // Parameters:
-  //   group_id - integer - Group ID
+  //   group_id - int64 - Group ID
   //   path - string - Folder path
   //   permission - string -  Permission type.  Can be `admin`, `full`, `readonly`, `writeonly`, `previewonly`, or `history`
   //   recursive - boolean - Apply to subfolders recursively?
-  //   user_id - integer - User ID.  Provide `username` or `user_id`
+  //   user_id - int64 - User ID.  Provide `username` or `user_id`
   //   username - string - User username.  Provide `username` or `user_id`
   public static function create($path, $params = [], $options = []) {
     if (!is_array($params)) {
@@ -205,7 +205,7 @@ class Permission {
   }
 
   // Parameters:
-  //   id (required) - integer - Permission ID.
+  //   id (required) - int64 - Permission ID.
   public static function delete($id, $params = [], $options = []) {
     if (!is_array($params)) {
       throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));

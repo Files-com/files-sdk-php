@@ -211,11 +211,11 @@ class Notification {
   }
 
   // Parameters:
-  //   user_id - integer - Show notifications for this User ID.
-  //   page - integer - Current page number.
-  //   per_page - integer - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
+  //   user_id - int64 - Show notifications for this User ID.
+  //   page - int64 - Current page number.
+  //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
   //   action - string - Deprecated: If set to `count` returns a count of matching records rather than the records themselves.
-  //   group_id - integer - Show notifications for this Group ID.
+  //   group_id - int64 - Show notifications for this Group ID.
   public static function list($params = [], $options = []) {
     if ($params['user_id'] && !is_int($params['user_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
@@ -253,7 +253,7 @@ class Notification {
   }
 
   // Parameters:
-  //   id (required) - integer - Notification ID.
+  //   id (required) - int64 - Notification ID.
   public static function find($id, $params = [], $options = []) {
     if (!is_array($params)) {
       throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
@@ -279,11 +279,11 @@ class Notification {
   }
 
   // Parameters:
-  //   user_id - integer - The id of the user to notify. Provide `user_id`, `username` or `group_id`.
+  //   user_id - int64 - The id of the user to notify. Provide `user_id`, `username` or `group_id`.
   //   notify_on_copy - boolean - If `true`, copying or moving resources into this path will trigger a notification, in addition to just uploads.
   //   notify_user_actions - boolean - If `true` actions initiated by the user will still result in a notification
   //   send_interval - string - The time interval that notifications are aggregated by.  Can be `five_minutes`, `fifteen_minutes`, `hourly`, or `daily`.
-  //   group_id - integer - The ID of the group to notify.  Provide `user_id`, `username` or `group_id`.
+  //   group_id - int64 - The ID of the group to notify.  Provide `user_id`, `username` or `group_id`.
   //   path - string - Path
   //   username - string - The username of the user to notify.  Provide `user_id`, `username` or `group_id`.
   public static function create($params = [], $options = []) {

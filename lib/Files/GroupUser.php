@@ -84,8 +84,8 @@ class GroupUser {
   }
 
   // Parameters:
-  //   group_id (required) - integer - Group ID to add user to.
-  //   user_id (required) - integer - User ID to add to group.
+  //   group_id (required) - int64 - Group ID to add user to.
+  //   user_id (required) - int64 - User ID to add to group.
   //   admin - boolean - Is the user a group administrator?
   public function update($params = []) {
     if (!$this->id) {
@@ -170,11 +170,11 @@ class GroupUser {
   }
 
   // Parameters:
-  //   user_id - integer - User ID.  If provided, will return groups of which this user is a member.
-  //   page - integer - Current page number.
-  //   per_page - integer - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
+  //   user_id - int64 - User ID.  If provided, will return groups of which this user is a member.
+  //   page - int64 - Current page number.
+  //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
   //   action - string - Deprecated: If set to `count` returns a count of matching records rather than the records themselves.
-  //   group_id - integer - Group ID.  If provided, will return members of this group.
+  //   group_id - int64 - Group ID.  If provided, will return members of this group.
   public static function list($params = [], $options = []) {
     if ($params['user_id'] && !is_int($params['user_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));

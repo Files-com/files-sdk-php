@@ -159,9 +159,9 @@ class PublicKey {
   }
 
   // Parameters:
-  //   user_id - integer - User ID.  Provide a value of `0` to operate the current session's user.
-  //   page - integer - Current page number.
-  //   per_page - integer - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
+  //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
+  //   page - int64 - Current page number.
+  //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
   //   action - string - Deprecated: If set to `count` returns a count of matching records rather than the records themselves.
   public static function list($params = [], $options = []) {
     if ($params['user_id'] && !is_int($params['user_id'])) {
@@ -196,7 +196,7 @@ class PublicKey {
   }
 
   // Parameters:
-  //   id (required) - integer - Public Key ID.
+  //   id (required) - int64 - Public Key ID.
   public static function find($id, $params = [], $options = []) {
     if (!is_array($params)) {
       throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
@@ -222,7 +222,7 @@ class PublicKey {
   }
 
   // Parameters:
-  //   user_id - integer - User ID.  Provide a value of `0` to operate the current session's user.
+  //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
   //   title (required) - string - Internal reference for key.
   //   public_key (required) - string - Actual contents of SSH key.
   public static function create($params = [], $options = []) {

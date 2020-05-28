@@ -9,62 +9,17 @@ if (!version_compare(PHP_VERSION, '5.5.0') < 0) {
   exit;
 }
 
-if (!is_file(dirname(__FILE__) . '/../vendor/autoload.php')) {
+$isDevelopment = getenv('FILES_SESSION_ENV') === 'development';
+$autoloadPath = $isDevelopment ? '/../vendor/autoload.php' : '/../../../autoload.php';
+
+if (!is_file(__DIR__ . $autoloadPath)) {
   trigger_error('Required dependencies not installed. See packagist.org for instructions.', E_USER_ERROR);
   exit;
 }
 
-require_once dirname(__FILE__) . '/../vendor/autoload.php';
-require_once dirname(__FILE__) . '/Api.php';
-require_once dirname(__FILE__) . '/Logger.php';
-
-require_once dirname(__FILE__) . '/Files/AccountLineItem.php';
-require_once dirname(__FILE__) . '/Files/Action.php';
-require_once dirname(__FILE__) . '/Files/ApiKey.php';
-require_once dirname(__FILE__) . '/Files/As2Key.php';
-require_once dirname(__FILE__) . '/Files/Auto.php';
-require_once dirname(__FILE__) . '/Files/Automation.php';
-require_once dirname(__FILE__) . '/Files/Behavior.php';
-require_once dirname(__FILE__) . '/Files/Bundle.php';
-require_once dirname(__FILE__) . '/Files/DnsRecord.php';
-require_once dirname(__FILE__) . '/Files/Errors.php';
-require_once dirname(__FILE__) . '/Files/File.php';
-require_once dirname(__FILE__) . '/Files/FileAction.php';
-require_once dirname(__FILE__) . '/Files/FileComment.php';
-require_once dirname(__FILE__) . '/Files/FileCommentReaction.php';
-require_once dirname(__FILE__) . '/Files/FilePartUpload.php';
-require_once dirname(__FILE__) . '/Files/Folder.php';
-require_once dirname(__FILE__) . '/Files/Group.php';
-require_once dirname(__FILE__) . '/Files/GroupUser.php';
-require_once dirname(__FILE__) . '/Files/History.php';
-require_once dirname(__FILE__) . '/Files/HistoryExport.php';
-require_once dirname(__FILE__) . '/Files/Image.php';
-require_once dirname(__FILE__) . '/Files/Invoice.php';
-require_once dirname(__FILE__) . '/Files/InvoiceLineItem.php';
-require_once dirname(__FILE__) . '/Files/IpAddress.php';
-require_once dirname(__FILE__) . '/Files/Lock.php';
-require_once dirname(__FILE__) . '/Files/Message.php';
-require_once dirname(__FILE__) . '/Files/MessageComment.php';
-require_once dirname(__FILE__) . '/Files/MessageCommentReaction.php';
-require_once dirname(__FILE__) . '/Files/MessageReaction.php';
-require_once dirname(__FILE__) . '/Files/Notification.php';
-require_once dirname(__FILE__) . '/Files/Payment.php';
-require_once dirname(__FILE__) . '/Files/PaymentLineItem.php';
-require_once dirname(__FILE__) . '/Files/Permission.php';
-require_once dirname(__FILE__) . '/Files/Preview.php';
-require_once dirname(__FILE__) . '/Files/Project.php';
-require_once dirname(__FILE__) . '/Files/PublicKey.php';
-require_once dirname(__FILE__) . '/Files/RemoteServer.php';
-require_once dirname(__FILE__) . '/Files/Request.php';
-require_once dirname(__FILE__) . '/Files/Session.php';
-require_once dirname(__FILE__) . '/Files/Site.php';
-require_once dirname(__FILE__) . '/Files/SsoStrategy.php';
-require_once dirname(__FILE__) . '/Files/Status.php';
-require_once dirname(__FILE__) . '/Files/Style.php';
-require_once dirname(__FILE__) . '/Files/UsageDailySnapshot.php';
-require_once dirname(__FILE__) . '/Files/UsageSnapshot.php';
-require_once dirname(__FILE__) . '/Files/User.php';
-require_once dirname(__FILE__) . '/Files/UserCipherUse.php';
+require_once __DIR__ . $autoloadPath;
+require_once __DIR__ . '/Api.php';
+require_once __DIR__ . '/Logger.php';
 
 class Files {
   private static $apiKey = null;

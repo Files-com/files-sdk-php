@@ -4,6 +4,12 @@ declare(strict_types=1);
 
 namespace Files;
 
+use Files\Model\ApiKey;
+use Files\Model\File;
+use Files\Model\Folder;
+use Files\Model\Session;
+use Files\Model\User;
+
 require dirname(__FILE__) . '/../lib/Files.php';
 
 // name of an existing folder in your root to create/delete test files and folders
@@ -44,7 +50,7 @@ function testUserListAndUpdate() {
   Logger::info('***** testUserListAndUpdate() succeeded! *****');
 }
 
-function assert_user_created_and_delete($user, $name) {
+function asserUserCreatedAndDelete($user, $name) {
   assert($user->isLoaded() === true);
 
   $saved_user = User::find($user->id);
@@ -71,7 +77,7 @@ function testUserCreateAndDelete() {
 
   $user->save();
 
-  assert_user_created_and_delete($user, $name);
+  asserUserCreatedAndDelete($user, $name);
 
   Logger::info('***** testUserCreateAndDelete() succeeded! *****');
 }
@@ -84,7 +90,7 @@ function testUserStaticCreateAndDelete() {
     'username' => $name,
   ]);
 
-  assert_user_created_and_delete($user, $name);
+  asserUserCreatedAndDelete($user, $name);
 
   Logger::info('***** testUserCreateAndDelete() succeeded! *****');
 }
@@ -124,7 +130,7 @@ function createTestFile() {
 }
 
 function testFolderCreateListAndDelete() {
-  [$rootDir, $dirName, $testFolder] = createTestFolder();
+  list($rootDir, $dirName, $testFolder) = createTestFolder();
 
   $dirFiles = Folder::listFor($rootDir);
 
@@ -142,7 +148,7 @@ function testFolderCreateListAndDelete() {
 }
 
 function testFileUploadFindCopyAndDelete() {
-  [$rootDir, $dirName, $testFolder] = createTestFolder();
+  list($rootDir, $dirName, $testFolder) = createTestFolder();
 
   $tempName = 'upload-' . date('Ymd_His') . '.txt';
   $tempPath = tempnam(sys_get_temp_dir(), $tempName);

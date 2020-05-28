@@ -104,7 +104,7 @@ class Api {
     $isExternal = preg_match('@^[a-zA-Z]+://@', $path);
 
     if (!$isExternal) {
-      $sessionId = Files::getSessionId();
+      $sessionId = @$options['session_id'] ?: Files::getSessionId();
 
       if ($sessionId) {
         $headers['X-FilesAPI-Auth'] = $sessionId;
@@ -113,7 +113,7 @@ class Api {
 
         // api key cannot be used when creating a session
         if (!$isCreatingSession) {
-          $apiKey = Files::getApiKey();
+          $apiKey = @$options['api_key'] ?: Files::getApiKey();
 
           if (!$apiKey) {
             trigger_error('API key has not been set - use Files::setApiKey() to set it', E_USER_ERROR);

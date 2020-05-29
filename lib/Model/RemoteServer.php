@@ -115,6 +115,15 @@ class RemoteServer {
     return $this->attributes['server_certificate'] = $value;
   }
 
+  // string # Remote server SSH Host Key. If provided, we will require that the server host key matches the provided key. Uses OpenSSH format similar to what would go into ~/.ssh/known_hosts
+  public function getServerHostKey() {
+    return $this->attributes['server_host_key'];
+  }
+
+  public function setServerHostKey($value) {
+    return $this->attributes['server_host_key'] = $value;
+  }
+
   // string # Remote server type.
   public function getServerType() {
     return $this->attributes['server_type'];
@@ -294,6 +303,7 @@ class RemoteServer {
   //   s3_bucket - string - S3 bucket name
   //   s3_region - string - S3 region
   //   server_certificate - string - Remote server certificate
+  //   server_host_key - string - Remote server SSH Host Key. If provided, we will require that the server host key matches the provided key. Uses OpenSSH format similar to what would go into ~/.ssh/known_hosts
   //   server_type - string - Remote server type.
   //   ssl - string - Should we require SSL?
   //   username - string - Remote server username.  Not needed for S3 buckets.
@@ -364,6 +374,9 @@ class RemoteServer {
     }
     if ($params['server_certificate'] && !is_string($params['server_certificate'])) {
       throw new \InvalidArgumentException('Bad parameter: $server_certificate must be of type string; received ' . gettype($server_certificate));
+    }
+    if ($params['server_host_key'] && !is_string($params['server_host_key'])) {
+      throw new \InvalidArgumentException('Bad parameter: $server_host_key must be of type string; received ' . gettype($server_host_key));
     }
     if ($params['server_type'] && !is_string($params['server_type'])) {
       throw new \InvalidArgumentException('Bad parameter: $server_type must be of type string; received ' . gettype($server_type));
@@ -519,6 +532,7 @@ class RemoteServer {
   //   s3_bucket - string - S3 bucket name
   //   s3_region - string - S3 region
   //   server_certificate - string - Remote server certificate
+  //   server_host_key - string - Remote server SSH Host Key. If provided, we will require that the server host key matches the provided key. Uses OpenSSH format similar to what would go into ~/.ssh/known_hosts
   //   server_type - string - Remote server type.
   //   ssl - string - Should we require SSL?
   //   username - string - Remote server username.  Not needed for S3 buckets.
@@ -591,6 +605,10 @@ class RemoteServer {
 
     if ($params['server_certificate'] && !is_string($params['server_certificate'])) {
       throw new \InvalidArgumentException('Bad parameter: $server_certificate must be of type string; received ' . gettype($server_certificate));
+    }
+
+    if ($params['server_host_key'] && !is_string($params['server_host_key'])) {
+      throw new \InvalidArgumentException('Bad parameter: $server_host_key must be of type string; received ' . gettype($server_host_key));
     }
 
     if ($params['server_type'] && !is_string($params['server_type'])) {

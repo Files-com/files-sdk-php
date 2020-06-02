@@ -144,6 +144,11 @@ class SsoStrategy {
     return $this->attributes['provision_ftp_permission'];
   }
 
+  // string # Should we sync groups from this strategy?
+  public function getProvisionGroupAction() {
+    return $this->attributes['provision_group_action'];
+  }
+
   // boolean # Auto-provisioned users get SFTP permission?
   public function getProvisionSftpPermission() {
     return $this->attributes['provision_sftp_permission'];
@@ -152,6 +157,66 @@ class SsoStrategy {
   // string # Default time zone for auto provisioned users.
   public function getProvisionTimeZone() {
     return $this->attributes['provision_time_zone'];
+  }
+
+  // string # Should we sync users from this strategy?
+  public function getProvisionUserAction() {
+    return $this->attributes['provision_user_action'];
+  }
+
+  // string # Base DN for looking up users in LDAP server
+  public function getLdapBaseDn() {
+    return $this->attributes['ldap_base_dn'];
+  }
+
+  // string # Domain name that will be appended to LDAP usernames
+  public function getLdapDomain() {
+    return $this->attributes['ldap_domain'];
+  }
+
+  // boolean # Is strategy enabled?
+  public function getEnabled() {
+    return $this->attributes['enabled'];
+  }
+
+  // string # LDAP host
+  public function getLdapHost() {
+    return $this->attributes['ldap_host'];
+  }
+
+  // string # LDAP backup host
+  public function getLdapHost2() {
+    return $this->attributes['ldap_host_2'];
+  }
+
+  // string # LDAP backup host
+  public function getLdapHost3() {
+    return $this->attributes['ldap_host_3'];
+  }
+
+  // int64 # LDAP port
+  public function getLdapPort() {
+    return $this->attributes['ldap_port'];
+  }
+
+  // boolean # Use secure LDAP?
+  public function getLdapSecure() {
+    return $this->attributes['ldap_secure'];
+  }
+
+  // string # Comma or newline separated list of group names (with optional wildcards) - if provided, only users in these groups will be added or synced.
+  public function getLdapUserIncludeGroups() {
+    return $this->attributes['ldap_user_include_groups'];
+  }
+
+  // string # Username for signing in to LDAP server.
+  public function getLdapUsername() {
+    return $this->attributes['ldap_username'];
+  }
+
+  // string # LDAP username field
+  public function getLdapUsernameField() {
+    return $this->attributes['ldap_username_field'];
   }
 
   // Parameters:

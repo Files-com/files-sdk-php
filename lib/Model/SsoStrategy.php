@@ -109,6 +109,16 @@ class SsoStrategy {
     return $this->attributes['provision_groups'];
   }
 
+  // boolean # Auto-deprovision users?
+  public function getDeprovisionUsers() {
+    return $this->attributes['deprovision_users'];
+  }
+
+  // boolean # Auto-deprovision group membership based on group memberships on the SSO side?
+  public function getDeprovisionGroups() {
+    return $this->attributes['deprovision_groups'];
+  }
+
   // string # Comma-separated list of group names for groups to automatically add all auto-provisioned users to.
   public function getProvisionGroupDefault() {
     return $this->attributes['provision_group_default'];
@@ -144,11 +154,6 @@ class SsoStrategy {
     return $this->attributes['provision_ftp_permission'];
   }
 
-  // string # Should we sync groups from this strategy?
-  public function getProvisionGroupAction() {
-    return $this->attributes['provision_group_action'];
-  }
-
   // boolean # Auto-provisioned users get SFTP permission?
   public function getProvisionSftpPermission() {
     return $this->attributes['provision_sftp_permission'];
@@ -157,11 +162,6 @@ class SsoStrategy {
   // string # Default time zone for auto provisioned users.
   public function getProvisionTimeZone() {
     return $this->attributes['provision_time_zone'];
-  }
-
-  // string # Should we sync users from this strategy?
-  public function getProvisionUserAction() {
-    return $this->attributes['provision_user_action'];
   }
 
   // string # Base DN for looking up users in LDAP server

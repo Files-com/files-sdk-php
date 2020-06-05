@@ -202,7 +202,7 @@ class Behavior {
   //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
   //   action - string - Deprecated: If set to `count` returns a count of matching records rather than the records themselves.
   //   path (required) - string - Path to operate on.
-  //   recursive - string - Show behaviors below this path?
+  //   recursive - string - Show behaviors above this path?
   //   behavior - string - If set only shows folder behaviors matching this behavior type.
   public static function listFor($path, $params = [], $options = []) {
     if (!is_array($params)) {

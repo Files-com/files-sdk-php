@@ -381,7 +381,7 @@ class User {
     return $this->attributes['subscribe_to_newsletter'] = $value;
   }
 
-  // boolean # Is this user managed by an external source (such as LDAP)?
+  // boolean # Is this user managed by a SsoStrategy?
   public function getExternallyManaged() {
     return $this->attributes['externally_managed'];
   }

@@ -174,6 +174,16 @@ class Site {
     return $this->attributes['email'];
   }
 
+  // boolean # If true, groups can be manually created / modified / deleted by Site Admins. Otherwise, groups can only be managed via your SSO provider.
+  public function getNonSsoGroupsAllowed() {
+    return $this->attributes['non_sso_groups_allowed'];
+  }
+
+  // boolean # If true, users can be manually created / modified / deleted by Site Admins. Otherwise, users can only be managed via your SSO provider.
+  public function getNonSsoUsersAllowed() {
+    return $this->attributes['non_sso_users_allowed'];
+  }
+
   // boolean # If true, permissions for this site must be bound to a group (not a user). Otherwise, permissions must be bound to a user.
   public function getFolderPermissionsGroupsOnly() {
     return $this->attributes['folder_permissions_groups_only'];
@@ -620,6 +630,8 @@ class Site {
   //   use_provided_modified_at - boolean - Allow uploaders to set `provided_modified_at` for uploaded files?
   //   custom_namespace - boolean - Is this site using a custom namespace for users?
   //   disable_users_from_inactivity_period_days - int64 - If greater than zero, users will unable to login if they do not show activity within this number of days.
+  //   non_sso_groups_allowed - boolean - If true, groups can be manually created / modified / deleted by Site Admins. Otherwise, groups can only be managed via your SSO provider.
+  //   non_sso_users_allowed - boolean - If true, users can be manually created / modified / deleted by Site Admins. Otherwise, users can only be managed via your SSO provider.
   //   allowed_2fa_method_sms - boolean - Is SMS two factor authentication allowed?
   //   allowed_2fa_method_u2f - boolean - Is U2F two factor authentication allowed?
   //   allowed_2fa_method_totp - boolean - Is TOTP two factor authentication allowed?

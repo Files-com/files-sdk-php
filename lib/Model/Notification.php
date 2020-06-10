@@ -221,6 +221,8 @@ class Notification {
   //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
   //   action - string - Deprecated: If set to `count` returns a count of matching records rather than the records themselves.
   //   group_id - int64 - Show notifications for this Group ID.
+  //   path - string - Show notifications for this Path.
+  //   include_ancestors - boolean - If `include_ancestors` is `true` and `path` is specified, include notifications for any parent paths. Ignored if `path` is not specified.
   public static function list($params = [], $options = []) {
     if ($params['user_id'] && !is_int($params['user_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
@@ -240,6 +242,10 @@ class Notification {
 
     if ($params['group_id'] && !is_int($params['group_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $group_id must be of type int; received ' . gettype($group_id));
+    }
+
+    if ($params['path'] && !is_string($params['path'])) {
+      throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
     }
 
     $response = Api::sendRequest('/notifications', 'GET', $params, $options);

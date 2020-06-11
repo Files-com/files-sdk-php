@@ -34,15 +34,6 @@ class Bundle {
     return !!$this->attributes['id'];
   }
 
-  // int64 # Bundle ID
-  public function getId() {
-    return $this->attributes['id'];
-  }
-
-  public function setId($value) {
-    return $this->attributes['id'] = $value;
-  }
-
   // string # Bundle code.  This code forms the end part of the Public URL.
   public function getCode() {
     return $this->attributes['code'];
@@ -52,9 +43,13 @@ class Bundle {
     return $this->attributes['code'] = $value;
   }
 
-  // date-time # Bundle created at date/time
-  public function getCreatedAt() {
-    return $this->attributes['created_at'];
+  // string # Public URL of Share Link
+  public function getUrl() {
+    return $this->attributes['url'];
+  }
+
+  public function setUrl($value) {
+    return $this->attributes['url'] = $value;
   }
 
   // string # Public description
@@ -66,33 +61,6 @@ class Bundle {
     return $this->attributes['description'] = $value;
   }
 
-  // date-time # Bundle expiration date/time
-  public function getExpiresAt() {
-    return $this->attributes['expires_at'];
-  }
-
-  public function setExpiresAt($value) {
-    return $this->attributes['expires_at'] = $value;
-  }
-
-  // array # A list of paths in this bundle
-  public function getPaths() {
-    return $this->attributes['paths'];
-  }
-
-  public function setPaths($value) {
-    return $this->attributes['paths'] = $value;
-  }
-
-  // string # Bundle internal note
-  public function getNote() {
-    return $this->attributes['note'];
-  }
-
-  public function setNote($value) {
-    return $this->attributes['note'] = $value;
-  }
-
   // boolean # Is this bundle password protected?
   public function getPasswordProtected() {
     return $this->attributes['password_protected'];
@@ -102,13 +70,45 @@ class Bundle {
     return $this->attributes['password_protected'] = $value;
   }
 
-  // string # Public URL of Share Link
-  public function getUrl() {
-    return $this->attributes['url'];
+  // boolean # Show a registration page that captures the downloader's name and email address?
+  public function getRequireRegistration() {
+    return $this->attributes['require_registration'];
   }
 
-  public function setUrl($value) {
-    return $this->attributes['url'] = $value;
+  public function setRequireRegistration($value) {
+    return $this->attributes['require_registration'] = $value;
+  }
+
+  // int64 # Bundle ID
+  public function getId() {
+    return $this->attributes['id'];
+  }
+
+  public function setId($value) {
+    return $this->attributes['id'] = $value;
+  }
+
+  // date-time # Bundle created at date/time
+  public function getCreatedAt() {
+    return $this->attributes['created_at'];
+  }
+
+  // date-time # Bundle expiration date/time
+  public function getExpiresAt() {
+    return $this->attributes['expires_at'];
+  }
+
+  public function setExpiresAt($value) {
+    return $this->attributes['expires_at'] = $value;
+  }
+
+  // string # Bundle internal note
+  public function getNote() {
+    return $this->attributes['note'];
+  }
+
+  public function setNote($value) {
+    return $this->attributes['note'] = $value;
   }
 
   // int64 # Bundle creator user ID
@@ -127,6 +127,15 @@ class Bundle {
 
   public function setUsername($value) {
     return $this->attributes['username'] = $value;
+  }
+
+  // array # A list of paths in this bundle
+  public function getPaths() {
+    return $this->attributes['paths'];
+  }
+
+  public function setPaths($value) {
+    return $this->attributes['paths'] = $value;
   }
 
   // string # Password for this bundle.
@@ -189,6 +198,7 @@ class Bundle {
   //   description - string - Public description
   //   note - string - Bundle internal note
   //   code - string - Bundle code.  This code forms the end part of the Public URL.
+  //   require_registration - boolean - Show a registration page that captures the downloader's name and email address?
   public function update($params = []) {
     if (!$this->id) {
       throw new \Error('Current object has no ID');
@@ -341,6 +351,7 @@ class Bundle {
   //   description - string - Public description
   //   note - string - Bundle internal note
   //   code - string - Bundle code.  This code forms the end part of the Public URL.
+  //   require_registration - boolean - Show a registration page that captures the downloader's name and email address?
   public static function create($params = [], $options = []) {
     if (!$params['paths']) {
       throw new \Error('Parameter missing: paths');

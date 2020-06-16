@@ -34,7 +34,7 @@ class SsoStrategy {
     return !!$this->attributes['id'];
   }
 
-  // string # SSO Protocol
+  // array # SSO Protocol
   public function getProtocol() {
     return $this->attributes['protocol'];
   }
@@ -202,11 +202,6 @@ class SsoStrategy {
   // boolean # Use secure LDAP?
   public function getLdapSecure() {
     return $this->attributes['ldap_secure'];
-  }
-
-  // string # Comma or newline separated list of group names (with optional wildcards) - if provided, only users in these groups will be added or synced.
-  public function getLdapUserIncludeGroups() {
-    return $this->attributes['ldap_user_include_groups'];
   }
 
   // string # Username for signing in to LDAP server.

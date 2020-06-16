@@ -34,7 +34,7 @@ class Auto {
     return !!$this->attributes['id'];
   }
 
-  // object # Additional data
+  // object
   public function getDynamic() {
     return $this->attributes['dynamic'];
   }

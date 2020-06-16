@@ -311,6 +311,8 @@ class Behavior {
   //   url (required) - string - URL for testing the webhook.
   //   method - string - HTTP method(GET or POST).
   //   encoding - string - HTTP encoding method.  Can be JSON, XML, or RAW (form data).
+  //   headers - object - Additional request headers.
+  //   body - object - Additional body parameters.
   public static function webhookTest($params = [], $options = []) {
     if (!$params['url']) {
       throw new \Error('Parameter missing: url');

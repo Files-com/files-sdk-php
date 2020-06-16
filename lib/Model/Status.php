@@ -49,6 +49,7 @@ class Status {
     return $this->attributes['status'];
   }
 
+  // Additional data
   public function getData() {
     return $this->attributes['data'];
   }

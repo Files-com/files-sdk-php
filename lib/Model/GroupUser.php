@@ -35,21 +35,30 @@ class GroupUser {
   }
 
   // string # Group name
-  public function getName() {
-    return $this->attributes['name'];
+  public function getGroupName() {
+    return $this->attributes['group_name'];
   }
 
-  public function setName($value) {
-    return $this->attributes['name'] = $value;
+  public function setGroupName($value) {
+    return $this->attributes['group_name'] = $value;
   }
 
   // int64 # Group ID
-  public function getId() {
-    return $this->attributes['id'];
+  public function getGroupId() {
+    return $this->attributes['group_id'];
   }
 
-  public function setId($value) {
-    return $this->attributes['id'] = $value;
+  public function setGroupId($value) {
+    return $this->attributes['group_id'] = $value;
+  }
+
+  // int64 # User ID
+  public function getUserId() {
+    return $this->attributes['user_id'];
+  }
+
+  public function setUserId($value) {
+    return $this->attributes['user_id'] = $value;
   }
 
   // boolean # Is this user an administrator of this group?
@@ -70,22 +79,22 @@ class GroupUser {
     return $this->attributes['usernames'] = $value;
   }
 
-  // int64 # Group ID to add user to.
-  public function getGroupId() {
-    return $this->attributes['group_id'];
+  // string
+  public function getName() {
+    return $this->attributes['name'];
   }
 
-  public function setGroupId($value) {
-    return $this->attributes['group_id'] = $value;
+  public function setName($value) {
+    return $this->attributes['name'] = $value;
   }
 
-  // int64 # User ID to add to group.
-  public function getUserId() {
-    return $this->attributes['user_id'];
+  // string
+  public function getId() {
+    return $this->attributes['id'];
   }
 
-  public function setUserId($value) {
-    return $this->attributes['user_id'] = $value;
+  public function setId($value) {
+    return $this->attributes['id'] = $value;
   }
 
   // Parameters:
@@ -175,11 +184,11 @@ class GroupUser {
   }
 
   // Parameters:
-  //   user_id - int64 - User ID.  If provided, will return groups of which this user is a member.
+  //   user_id - int64 - User ID.  If provided, will return group_users of this user.
   //   page - int64 - Current page number.
   //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
   //   action - string - Deprecated: If set to `count` returns a count of matching records rather than the records themselves.
-  //   group_id - int64 - Group ID.  If provided, will return members of this group.
+  //   group_id - int64 - Group ID.  If provided, will return group_users of this group.
   public static function list($params = [], $options = []) {
     if ($params['user_id'] && !is_int($params['user_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));

@@ -79,16 +79,7 @@ class GroupUser {
     return $this->attributes['usernames'] = $value;
   }
 
-  // string
-  public function getName() {
-    return $this->attributes['name'];
-  }
-
-  public function setName($value) {
-    return $this->attributes['name'] = $value;
-  }
-
-  // string
+  // int64 # Group User ID.
   public function getId() {
     return $this->attributes['id'];
   }

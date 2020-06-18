@@ -205,6 +205,33 @@ class RemoteServer {
     return $this->attributes['wasabi_region'] = $value;
   }
 
+  // string # Rackspace username used to login to the Rackspace Cloud Control Panel.
+  public function getRackspaceUsername() {
+    return $this->attributes['rackspace_username'];
+  }
+
+  public function setRackspaceUsername($value) {
+    return $this->attributes['rackspace_username'] = $value;
+  }
+
+  // string # Three letter airport code for Rackspace region. See https://support.rackspace.com/how-to/about-regions/
+  public function getRackspaceRegion() {
+    return $this->attributes['rackspace_region'];
+  }
+
+  public function setRackspaceRegion($value) {
+    return $this->attributes['rackspace_region'] = $value;
+  }
+
+  // string # The name of the container (top level directory) where files will sync.
+  public function getRackspaceContainer() {
+    return $this->attributes['rackspace_container'];
+  }
+
+  public function setRackspaceContainer($value) {
+    return $this->attributes['rackspace_container'] = $value;
+  }
+
   // string # AWS Access Key.
   public function getAwsAccessKey() {
     return $this->attributes['aws_access_key'];
@@ -286,6 +313,15 @@ class RemoteServer {
     return $this->attributes['backblaze_b2_application_key'] = $value;
   }
 
+  // string # Rackspace API key from the Rackspace Cloud Control Panel.
+  public function getRackspaceApiKey() {
+    return $this->attributes['rackspace_api_key'];
+  }
+
+  public function setRackspaceApiKey($value) {
+    return $this->attributes['rackspace_api_key'] = $value;
+  }
+
   // Parameters:
   //   aws_access_key - string - AWS Access Key.
   //   aws_secret_key - string - AWS secret key.
@@ -296,6 +332,7 @@ class RemoteServer {
   //   wasabi_secret_key - string - Wasabi secret key.
   //   backblaze_b2_key_id - string - Backblaze B2 Cloud Storage keyID.
   //   backblaze_b2_application_key - string - Backblaze B2 Cloud Storage applicationKey.
+  //   rackspace_api_key - string - Rackspace API key from the Rackspace Cloud Control Panel.
   //   hostname - string - Hostname or IP address
   //   name - string - Internal name for your reference
   //   max_connections - int64 - Max number of parallel connections.  Ignored for S3 connections (we will parallelize these as much as possible).
@@ -313,6 +350,9 @@ class RemoteServer {
   //   backblaze_b2_s3_endpoint - string - Backblaze B2 Cloud Storage S3 Endpoint
   //   wasabi_bucket - string - Wasabi region
   //   wasabi_region - string - Wasabi Bucket name
+  //   rackspace_username - string - Rackspace username used to login to the Rackspace Cloud Control Panel.
+  //   rackspace_region - string - Three letter airport code for Rackspace region. See https://support.rackspace.com/how-to/about-regions/
+  //   rackspace_container - string - The name of the container (top level directory) where files will sync.
   public function update($params = []) {
     if (!$this->id) {
       throw new \Error('Current object has no ID');
@@ -353,6 +393,9 @@ class RemoteServer {
     }
     if ($params['backblaze_b2_application_key'] && !is_string($params['backblaze_b2_application_key'])) {
       throw new \InvalidArgumentException('Bad parameter: $backblaze_b2_application_key must be of type string; received ' . gettype($backblaze_b2_application_key));
+    }
+    if ($params['rackspace_api_key'] && !is_string($params['rackspace_api_key'])) {
+      throw new \InvalidArgumentException('Bad parameter: $rackspace_api_key must be of type string; received ' . gettype($rackspace_api_key));
     }
     if ($params['hostname'] && !is_string($params['hostname'])) {
       throw new \InvalidArgumentException('Bad parameter: $hostname must be of type string; received ' . gettype($hostname));
@@ -404,6 +447,15 @@ class RemoteServer {
     }
     if ($params['wasabi_region'] && !is_string($params['wasabi_region'])) {
       throw new \InvalidArgumentException('Bad parameter: $wasabi_region must be of type string; received ' . gettype($wasabi_region));
+    }
+    if ($params['rackspace_username'] && !is_string($params['rackspace_username'])) {
+      throw new \InvalidArgumentException('Bad parameter: $rackspace_username must be of type string; received ' . gettype($rackspace_username));
+    }
+    if ($params['rackspace_region'] && !is_string($params['rackspace_region'])) {
+      throw new \InvalidArgumentException('Bad parameter: $rackspace_region must be of type string; received ' . gettype($rackspace_region));
+    }
+    if ($params['rackspace_container'] && !is_string($params['rackspace_container'])) {
+      throw new \InvalidArgumentException('Bad parameter: $rackspace_container must be of type string; received ' . gettype($rackspace_container));
     }
 
     if (!$params['id']) {
@@ -525,6 +577,7 @@ class RemoteServer {
   //   wasabi_secret_key - string - Wasabi secret key.
   //   backblaze_b2_key_id - string - Backblaze B2 Cloud Storage keyID.
   //   backblaze_b2_application_key - string - Backblaze B2 Cloud Storage applicationKey.
+  //   rackspace_api_key - string - Rackspace API key from the Rackspace Cloud Control Panel.
   //   hostname - string - Hostname or IP address
   //   name - string - Internal name for your reference
   //   max_connections - int64 - Max number of parallel connections.  Ignored for S3 connections (we will parallelize these as much as possible).
@@ -542,6 +595,9 @@ class RemoteServer {
   //   backblaze_b2_s3_endpoint - string - Backblaze B2 Cloud Storage S3 Endpoint
   //   wasabi_bucket - string - Wasabi region
   //   wasabi_region - string - Wasabi Bucket name
+  //   rackspace_username - string - Rackspace username used to login to the Rackspace Cloud Control Panel.
+  //   rackspace_region - string - Three letter airport code for Rackspace region. See https://support.rackspace.com/how-to/about-regions/
+  //   rackspace_container - string - The name of the container (top level directory) where files will sync.
   public static function create($params = [], $options = []) {
     if ($params['aws_access_key'] && !is_string($params['aws_access_key'])) {
       throw new \InvalidArgumentException('Bad parameter: $aws_access_key must be of type string; received ' . gettype($aws_access_key));
@@ -577,6 +633,10 @@ class RemoteServer {
 
     if ($params['backblaze_b2_application_key'] && !is_string($params['backblaze_b2_application_key'])) {
       throw new \InvalidArgumentException('Bad parameter: $backblaze_b2_application_key must be of type string; received ' . gettype($backblaze_b2_application_key));
+    }
+
+    if ($params['rackspace_api_key'] && !is_string($params['rackspace_api_key'])) {
+      throw new \InvalidArgumentException('Bad parameter: $rackspace_api_key must be of type string; received ' . gettype($rackspace_api_key));
     }
 
     if ($params['hostname'] && !is_string($params['hostname'])) {
@@ -645,6 +705,18 @@ class RemoteServer {
 
     if ($params['wasabi_region'] && !is_string($params['wasabi_region'])) {
       throw new \InvalidArgumentException('Bad parameter: $wasabi_region must be of type string; received ' . gettype($wasabi_region));
+    }
+
+    if ($params['rackspace_username'] && !is_string($params['rackspace_username'])) {
+      throw new \InvalidArgumentException('Bad parameter: $rackspace_username must be of type string; received ' . gettype($rackspace_username));
+    }
+
+    if ($params['rackspace_region'] && !is_string($params['rackspace_region'])) {
+      throw new \InvalidArgumentException('Bad parameter: $rackspace_region must be of type string; received ' . gettype($rackspace_region));
+    }
+
+    if ($params['rackspace_container'] && !is_string($params['rackspace_container'])) {
+      throw new \InvalidArgumentException('Bad parameter: $rackspace_container must be of type string; received ' . gettype($rackspace_container));
     }
 
     $response = Api::sendRequest('/remote_servers', 'POST', $params, $options);

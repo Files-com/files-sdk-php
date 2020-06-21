@@ -232,6 +232,42 @@ class RemoteServer {
     return $this->attributes['rackspace_container'] = $value;
   }
 
+  // string # Returns link to login with an Oauth provider
+  public function getAuthSetupLink() {
+    return $this->attributes['auth_setup_link'];
+  }
+
+  public function setAuthSetupLink($value) {
+    return $this->attributes['auth_setup_link'] = $value;
+  }
+
+  // string # Either `in_setup` or `complete`
+  public function getAuthStatus() {
+    return $this->attributes['auth_status'];
+  }
+
+  public function setAuthStatus($value) {
+    return $this->attributes['auth_status'] = $value;
+  }
+
+  // string # Describes the authorized account
+  public function getAuthAccountName() {
+    return $this->attributes['auth_account_name'];
+  }
+
+  public function setAuthAccountName($value) {
+    return $this->attributes['auth_account_name'] = $value;
+  }
+
+  // string # Either personnel or business_other account types
+  public function getOneDriveAccountType() {
+    return $this->attributes['one_drive_account_type'];
+  }
+
+  public function setOneDriveAccountType($value) {
+    return $this->attributes['one_drive_account_type'] = $value;
+  }
+
   // string # AWS Access Key.
   public function getAwsAccessKey() {
     return $this->attributes['aws_access_key'];
@@ -322,6 +358,15 @@ class RemoteServer {
     return $this->attributes['rackspace_api_key'] = $value;
   }
 
+  // boolean # Reset authenticated account
+  public function getResetAuthentication() {
+    return $this->attributes['reset_authentication'];
+  }
+
+  public function setResetAuthentication($value) {
+    return $this->attributes['reset_authentication'] = $value;
+  }
+
   // Parameters:
   //   aws_access_key - string - AWS Access Key.
   //   aws_secret_key - string - AWS secret key.
@@ -333,6 +378,7 @@ class RemoteServer {
   //   backblaze_b2_key_id - string - Backblaze B2 Cloud Storage keyID.
   //   backblaze_b2_application_key - string - Backblaze B2 Cloud Storage applicationKey.
   //   rackspace_api_key - string - Rackspace API key from the Rackspace Cloud Control Panel.
+  //   reset_authentication - boolean - Reset authenticated account
   //   hostname - string - Hostname or IP address
   //   name - string - Internal name for your reference
   //   max_connections - int64 - Max number of parallel connections.  Ignored for S3 connections (we will parallelize these as much as possible).
@@ -353,6 +399,7 @@ class RemoteServer {
   //   rackspace_username - string - Rackspace username used to login to the Rackspace Cloud Control Panel.
   //   rackspace_region - string - Three letter airport code for Rackspace region. See https://support.rackspace.com/how-to/about-regions/
   //   rackspace_container - string - The name of the container (top level directory) where files will sync.
+  //   one_drive_account_type - string - Either personnel or business_other account types
   public function update($params = []) {
     if (!$this->id) {
       throw new \Error('Current object has no ID');
@@ -456,6 +503,9 @@ class RemoteServer {
     }
     if ($params['rackspace_container'] && !is_string($params['rackspace_container'])) {
       throw new \InvalidArgumentException('Bad parameter: $rackspace_container must be of type string; received ' . gettype($rackspace_container));
+    }
+    if ($params['one_drive_account_type'] && !is_string($params['one_drive_account_type'])) {
+      throw new \InvalidArgumentException('Bad parameter: $one_drive_account_type must be of type string; received ' . gettype($one_drive_account_type));
     }
 
     if (!$params['id']) {
@@ -578,6 +628,7 @@ class RemoteServer {
   //   backblaze_b2_key_id - string - Backblaze B2 Cloud Storage keyID.
   //   backblaze_b2_application_key - string - Backblaze B2 Cloud Storage applicationKey.
   //   rackspace_api_key - string - Rackspace API key from the Rackspace Cloud Control Panel.
+  //   reset_authentication - boolean - Reset authenticated account
   //   hostname - string - Hostname or IP address
   //   name - string - Internal name for your reference
   //   max_connections - int64 - Max number of parallel connections.  Ignored for S3 connections (we will parallelize these as much as possible).
@@ -598,6 +649,7 @@ class RemoteServer {
   //   rackspace_username - string - Rackspace username used to login to the Rackspace Cloud Control Panel.
   //   rackspace_region - string - Three letter airport code for Rackspace region. See https://support.rackspace.com/how-to/about-regions/
   //   rackspace_container - string - The name of the container (top level directory) where files will sync.
+  //   one_drive_account_type - string - Either personnel or business_other account types
   public static function create($params = [], $options = []) {
     if ($params['aws_access_key'] && !is_string($params['aws_access_key'])) {
       throw new \InvalidArgumentException('Bad parameter: $aws_access_key must be of type string; received ' . gettype($aws_access_key));
@@ -717,6 +769,10 @@ class RemoteServer {
 
     if ($params['rackspace_container'] && !is_string($params['rackspace_container'])) {
       throw new \InvalidArgumentException('Bad parameter: $rackspace_container must be of type string; received ' . gettype($rackspace_container));
+    }
+
+    if ($params['one_drive_account_type'] && !is_string($params['one_drive_account_type'])) {
+      throw new \InvalidArgumentException('Bad parameter: $one_drive_account_type must be of type string; received ' . gettype($one_drive_account_type));
     }
 
     $response = Api::sendRequest('/remote_servers', 'POST', $params, $options);

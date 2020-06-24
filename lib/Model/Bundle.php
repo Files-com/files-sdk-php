@@ -79,6 +79,15 @@ class Bundle {
     return $this->attributes['require_registration'] = $value;
   }
 
+  // string # Legal text that must be agreed to prior to accessing Bundle.
+  public function getClickwrapBody() {
+    return $this->attributes['clickwrap_body'];
+  }
+
+  public function setClickwrapBody($value) {
+    return $this->attributes['clickwrap_body'] = $value;
+  }
+
   // int64 # Bundle ID
   public function getId() {
     return $this->attributes['id'];
@@ -127,6 +136,15 @@ class Bundle {
 
   public function setUsername($value) {
     return $this->attributes['username'] = $value;
+  }
+
+  // int64 # ID of the clickwrap to use with this bundle.
+  public function getClickwrapId() {
+    return $this->attributes['clickwrap_id'];
+  }
+
+  public function setClickwrapId($value) {
+    return $this->attributes['clickwrap_id'] = $value;
   }
 
   // array # A list of paths in this bundle
@@ -199,6 +217,7 @@ class Bundle {
   //   note - string - Bundle internal note
   //   code - string - Bundle code.  This code forms the end part of the Public URL.
   //   require_registration - boolean - Show a registration page that captures the downloader's name and email address?
+  //   clickwrap_id - int64 - ID of the clickwrap to use with this bundle.
   public function update($params = []) {
     if (!$this->id) {
       throw new \Error('Current object has no ID');
@@ -227,6 +246,9 @@ class Bundle {
     }
     if ($params['code'] && !is_string($params['code'])) {
       throw new \InvalidArgumentException('Bad parameter: $code must be of type string; received ' . gettype($code));
+    }
+    if ($params['clickwrap_id'] && !is_int($params['clickwrap_id'])) {
+      throw new \InvalidArgumentException('Bad parameter: $clickwrap_id must be of type int; received ' . gettype($clickwrap_id));
     }
 
     if (!$params['id']) {
@@ -352,6 +374,7 @@ class Bundle {
   //   note - string - Bundle internal note
   //   code - string - Bundle code.  This code forms the end part of the Public URL.
   //   require_registration - boolean - Show a registration page that captures the downloader's name and email address?
+  //   clickwrap_id - int64 - ID of the clickwrap to use with this bundle.
   public static function create($params = [], $options = []) {
     if (!$params['paths']) {
       throw new \Error('Parameter missing: paths');
@@ -383,6 +406,10 @@ class Bundle {
 
     if ($params['code'] && !is_string($params['code'])) {
       throw new \InvalidArgumentException('Bad parameter: $code must be of type string; received ' . gettype($code));
+    }
+
+    if ($params['clickwrap_id'] && !is_int($params['clickwrap_id'])) {
+      throw new \InvalidArgumentException('Bad parameter: $clickwrap_id must be of type int; received ' . gettype($clickwrap_id));
     }
 
     $response = Api::sendRequest('/bundles', 'POST', $params, $options);

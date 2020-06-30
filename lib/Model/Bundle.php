@@ -111,6 +111,15 @@ class Bundle {
     return $this->attributes['expires_at'] = $value;
   }
 
+  // int64 # Maximum number of times bundle can be accessed
+  public function getMaxUses() {
+    return $this->attributes['max_uses'];
+  }
+
+  public function setMaxUses($value) {
+    return $this->attributes['max_uses'] = $value;
+  }
+
   // string # Bundle internal note
   public function getNote() {
     return $this->attributes['note'];
@@ -145,6 +154,15 @@ class Bundle {
 
   public function setClickwrapId($value) {
     return $this->attributes['clickwrap_id'] = $value;
+  }
+
+  // int64 # ID of the associated inbox, if available.
+  public function getInboxId() {
+    return $this->attributes['inbox_id'];
+  }
+
+  public function setInboxId($value) {
+    return $this->attributes['inbox_id'] = $value;
   }
 
   // array # A list of paths in this bundle
@@ -213,11 +231,13 @@ class Bundle {
   // Parameters:
   //   password - string - Password for this bundle.
   //   expires_at - string - Bundle expiration date/time
+  //   max_uses - int64 - Maximum number of times bundle can be accessed
   //   description - string - Public description
   //   note - string - Bundle internal note
   //   code - string - Bundle code.  This code forms the end part of the Public URL.
   //   require_registration - boolean - Show a registration page that captures the downloader's name and email address?
   //   clickwrap_id - int64 - ID of the clickwrap to use with this bundle.
+  //   inbox_id - int64 - ID of the associated inbox, if available.
   public function update($params = []) {
     if (!$this->id) {
       throw new \Error('Current object has no ID');
@@ -238,6 +258,9 @@ class Bundle {
     if ($params['expires_at'] && !is_string($params['expires_at'])) {
       throw new \InvalidArgumentException('Bad parameter: $expires_at must be of type string; received ' . gettype($expires_at));
     }
+    if ($params['max_uses'] && !is_int($params['max_uses'])) {
+      throw new \InvalidArgumentException('Bad parameter: $max_uses must be of type int; received ' . gettype($max_uses));
+    }
     if ($params['description'] && !is_string($params['description'])) {
       throw new \InvalidArgumentException('Bad parameter: $description must be of type string; received ' . gettype($description));
     }
@@ -249,6 +272,9 @@ class Bundle {
     }
     if ($params['clickwrap_id'] && !is_int($params['clickwrap_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $clickwrap_id must be of type int; received ' . gettype($clickwrap_id));
+    }
+    if ($params['inbox_id'] && !is_int($params['inbox_id'])) {
+      throw new \InvalidArgumentException('Bad parameter: $inbox_id must be of type int; received ' . gettype($inbox_id));
     }
 
     if (!$params['id']) {
@@ -370,11 +396,13 @@ class Bundle {
   //   paths (required) - array(string) - A list of paths to include in this bundle.
   //   password - string - Password for this bundle.
   //   expires_at - string - Bundle expiration date/time
+  //   max_uses - int64 - Maximum number of times bundle can be accessed
   //   description - string - Public description
   //   note - string - Bundle internal note
   //   code - string - Bundle code.  This code forms the end part of the Public URL.
   //   require_registration - boolean - Show a registration page that captures the downloader's name and email address?
   //   clickwrap_id - int64 - ID of the clickwrap to use with this bundle.
+  //   inbox_id - int64 - ID of the associated inbox, if available.
   public static function create($params = [], $options = []) {
     if (!$params['paths']) {
       throw new \Error('Parameter missing: paths');
@@ -396,6 +424,10 @@ class Bundle {
       throw new \InvalidArgumentException('Bad parameter: $expires_at must be of type string; received ' . gettype($expires_at));
     }
 
+    if ($params['max_uses'] && !is_int($params['max_uses'])) {
+      throw new \InvalidArgumentException('Bad parameter: $max_uses must be of type int; received ' . gettype($max_uses));
+    }
+
     if ($params['description'] && !is_string($params['description'])) {
       throw new \InvalidArgumentException('Bad parameter: $description must be of type string; received ' . gettype($description));
     }
@@ -410,6 +442,10 @@ class Bundle {
 
     if ($params['clickwrap_id'] && !is_int($params['clickwrap_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $clickwrap_id must be of type int; received ' . gettype($clickwrap_id));
+    }
+
+    if ($params['inbox_id'] && !is_int($params['inbox_id'])) {
+      throw new \InvalidArgumentException('Bad parameter: $inbox_id must be of type int; received ' . gettype($inbox_id));
     }
 
     $response = Api::sendRequest('/bundles', 'POST', $params, $options);

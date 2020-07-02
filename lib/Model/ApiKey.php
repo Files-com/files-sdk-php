@@ -93,7 +93,7 @@ class ApiKey {
     return $this->attributes['name'] = $value;
   }
 
-  // string # Permissions for this API Key.  Keys with the `desktop_app` permission set only have the ability to do the functions provided in our Desktop App (File and Share Link operations.)  We hope to offer additional permission sets in the future, such as for a Site Admin to give a key with no administrator privileges.  If you have ideas for permission sets, please let us know.
+  // string # Permissions for this API Key.  Keys with the `desktop_app` permission set only have the ability to do the functions provided in our Desktop App (File and Share Link operations).  Additional permission sets may become available in the future, such as for a Site Admin to give a key with no administrator privileges.  If you have ideas for permission sets, please let us know.
   public function getPermissionSet() {
     return $this->attributes['permission_set'];
   }
@@ -121,9 +121,9 @@ class ApiKey {
   }
 
   // Parameters:
-  //   name - string - Internal name for key.  For your reference only.
-  //   permission_set - string - Leave blank, or set to 'desktop_app' to restrict the key to only desktop app functions.
-  //   expires_at - string - Have the key expire at this date/time.
+  //   name - string - Internal name for the API Key.  For your use.
+  //   expires_at - string - API Key expiration date
+  //   permission_set - string - Permissions for this API Key.  Keys with the `desktop_app` permission set only have the ability to do the functions provided in our Desktop App (File and Share Link operations).  Additional permission sets may become available in the future, such as for a Site Admin to give a key with no administrator privileges.  If you have ideas for permission sets, please let us know.
   public function update($params = []) {
     if (!$this->id) {
       throw new \Error('Current object has no ID');
@@ -141,11 +141,11 @@ class ApiKey {
     if ($params['name'] && !is_string($params['name'])) {
       throw new \InvalidArgumentException('Bad parameter: $name must be of type string; received ' . gettype($name));
     }
-    if ($params['permission_set'] && !is_string($params['permission_set'])) {
-      throw new \InvalidArgumentException('Bad parameter: $permission_set must be of type string; received ' . gettype($permission_set));
-    }
     if ($params['expires_at'] && !is_string($params['expires_at'])) {
       throw new \InvalidArgumentException('Bad parameter: $expires_at must be of type string; received ' . gettype($expires_at));
+    }
+    if ($params['permission_set'] && !is_string($params['permission_set'])) {
+      throw new \InvalidArgumentException('Bad parameter: $permission_set must be of type string; received ' . gettype($permission_set));
     }
 
     if (!$params['id']) {
@@ -270,9 +270,9 @@ class ApiKey {
 
   // Parameters:
   //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
-  //   name - string - Internal name for key.  For your reference only.
-  //   permission_set - string - Leave blank, or set to 'desktop_app' to restrict the key to only desktop app functions.
-  //   expires_at - string - Have the key expire at this date/time.
+  //   name - string - Internal name for the API Key.  For your use.
+  //   expires_at - string - API Key expiration date
+  //   permission_set - string - Permissions for this API Key.  Keys with the `desktop_app` permission set only have the ability to do the functions provided in our Desktop App (File and Share Link operations).  Additional permission sets may become available in the future, such as for a Site Admin to give a key with no administrator privileges.  If you have ideas for permission sets, please let us know.
   public static function create($params = [], $options = []) {
     if ($params['user_id'] && !is_int($params['user_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
@@ -282,12 +282,12 @@ class ApiKey {
       throw new \InvalidArgumentException('Bad parameter: $name must be of type string; received ' . gettype($name));
     }
 
-    if ($params['permission_set'] && !is_string($params['permission_set'])) {
-      throw new \InvalidArgumentException('Bad parameter: $permission_set must be of type string; received ' . gettype($permission_set));
-    }
-
     if ($params['expires_at'] && !is_string($params['expires_at'])) {
       throw new \InvalidArgumentException('Bad parameter: $expires_at must be of type string; received ' . gettype($expires_at));
+    }
+
+    if ($params['permission_set'] && !is_string($params['permission_set'])) {
+      throw new \InvalidArgumentException('Bad parameter: $permission_set must be of type string; received ' . gettype($permission_set));
     }
 
     $response = Api::sendRequest('/api_keys', 'POST', $params, $options);
@@ -296,20 +296,20 @@ class ApiKey {
   }
 
   // Parameters:
-  //   name - string - Internal name for key.  For your reference only.
-  //   permission_set - string - Leave blank, or set to `desktop_app` to restrict the key to only desktop app functions.
-  //   expires_at - string - Have the key expire at this date/time.
+  //   expires_at - string - API Key expiration date
+  //   name - string - Internal name for the API Key.  For your use.
+  //   permission_set - string - Permissions for this API Key.  Keys with the `desktop_app` permission set only have the ability to do the functions provided in our Desktop App (File and Share Link operations).  Additional permission sets may become available in the future, such as for a Site Admin to give a key with no administrator privileges.  If you have ideas for permission sets, please let us know.
   public static function updateCurrent($params = [], $options = []) {
+    if ($params['expires_at'] && !is_string($params['expires_at'])) {
+      throw new \InvalidArgumentException('Bad parameter: $expires_at must be of type string; received ' . gettype($expires_at));
+    }
+
     if ($params['name'] && !is_string($params['name'])) {
       throw new \InvalidArgumentException('Bad parameter: $name must be of type string; received ' . gettype($name));
     }
 
     if ($params['permission_set'] && !is_string($params['permission_set'])) {
       throw new \InvalidArgumentException('Bad parameter: $permission_set must be of type string; received ' . gettype($permission_set));
-    }
-
-    if ($params['expires_at'] && !is_string($params['expires_at'])) {
-      throw new \InvalidArgumentException('Bad parameter: $expires_at must be of type string; received ' . gettype($expires_at));
     }
 
     $response = Api::sendRequest('/api_key', 'PATCH', $params, $options);

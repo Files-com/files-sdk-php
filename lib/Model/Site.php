@@ -544,6 +544,11 @@ class Site {
     return $this->attributes['user_lockout_within'];
   }
 
+  // boolean # Enable User Requests feature
+  public function getUserRequestsEnabled() {
+    return $this->attributes['user_requests_enabled'];
+  }
+
   // string # Custom text send in user welcome email
   public function getWelcomeCustomText() {
     return $this->attributes['welcome_custom_text'];
@@ -638,6 +643,7 @@ class Site {
   //   non_sso_groups_allowed - boolean - If true, groups can be manually created / modified / deleted by Site Admins. Otherwise, groups can only be managed via your SSO provider.
   //   non_sso_users_allowed - boolean - If true, users can be manually created / modified / deleted by Site Admins. Otherwise, users can only be managed via your SSO provider.
   //   sharing_enabled - boolean - Allow bundle creation
+  //   user_requests_enabled - boolean - Enable User Requests feature
   //   allowed_2fa_method_sms - boolean - Is SMS two factor authentication allowed?
   //   allowed_2fa_method_u2f - boolean - Is U2F two factor authentication allowed?
   //   allowed_2fa_method_totp - boolean - Is TOTP two factor authentication allowed?

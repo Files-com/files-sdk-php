@@ -183,7 +183,7 @@ class User {
     return $this->attributes['ftp_permission'] = $value;
   }
 
-  // array # Comma-separated list of group IDs of which this user is a member
+  // string # Comma-separated list of group IDs of which this user is a member
   public function getGroupIds() {
     return $this->attributes['group_ids'];
   }

@@ -462,7 +462,7 @@ class User {
     return $this->attributes['change_password_confirmation'] = $value;
   }
 
-  // string # Permission to grant on the user root.  Can be blank or `full`, `read`, `write`, `preview`, or `history`.
+  // string # Permission to grant on the user root.  Can be blank or `full`, `read`, `write`, `list`, or `history`.
   public function getGrantPermission() {
     return $this->attributes['grant_permission'];
   }
@@ -594,7 +594,7 @@ class User {
   //   change_password - string - Used for changing a password on an existing user.
   //   change_password_confirmation - string - Optional, but if provided, we will ensure that it matches the value sent in `change_password`.
   //   email - string - User's email.
-  //   grant_permission - string - Permission to grant on the user root.  Can be blank or `full`, `read`, `write`, `preview`, or `history`.
+  //   grant_permission - string - Permission to grant on the user root.  Can be blank or `full`, `read`, `write`, `list`, or `history`.
   //   group_id - int64 - Group ID to associate this user with.
   //   group_ids - string - A list of group ids to associate this user with.  Comma delimited.
   //   password - string - User password.
@@ -839,7 +839,7 @@ class User {
   //   change_password - string - Used for changing a password on an existing user.
   //   change_password_confirmation - string - Optional, but if provided, we will ensure that it matches the value sent in `change_password`.
   //   email - string - User's email.
-  //   grant_permission - string - Permission to grant on the user root.  Can be blank or `full`, `read`, `write`, `preview`, or `history`.
+  //   grant_permission - string - Permission to grant on the user root.  Can be blank or `full`, `read`, `write`, `list`, or `history`.
   //   group_id - int64 - Group ID to associate this user with.
   //   group_ids - string - A list of group ids to associate this user with.  Comma delimited.
   //   password - string - User password.

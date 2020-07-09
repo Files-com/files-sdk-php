@@ -268,6 +268,24 @@ class RemoteServer {
     return $this->attributes['one_drive_account_type'] = $value;
   }
 
+  // string # Azure Blob Storage Account name
+  public function getAzureBlobStorageAccount() {
+    return $this->attributes['azure_blob_storage_account'];
+  }
+
+  public function setAzureBlobStorageAccount($value) {
+    return $this->attributes['azure_blob_storage_account'] = $value;
+  }
+
+  // string # Azure Blob Storage Container name
+  public function getAzureBlobStorageContainer() {
+    return $this->attributes['azure_blob_storage_container'];
+  }
+
+  public function setAzureBlobStorageContainer($value) {
+    return $this->attributes['azure_blob_storage_container'] = $value;
+  }
+
   // string # AWS Access Key.
   public function getAwsAccessKey() {
     return $this->attributes['aws_access_key'];
@@ -367,6 +385,15 @@ class RemoteServer {
     return $this->attributes['reset_authentication'] = $value;
   }
 
+  // string # Azure Blob Storage secret key.
+  public function getAzureBlobStorageAccessKey() {
+    return $this->attributes['azure_blob_storage_access_key'];
+  }
+
+  public function setAzureBlobStorageAccessKey($value) {
+    return $this->attributes['azure_blob_storage_access_key'] = $value;
+  }
+
   // Parameters:
   //   aws_access_key - string - AWS Access Key.
   //   aws_secret_key - string - AWS secret key.
@@ -379,6 +406,7 @@ class RemoteServer {
   //   backblaze_b2_application_key - string - Backblaze B2 Cloud Storage applicationKey.
   //   rackspace_api_key - string - Rackspace API key from the Rackspace Cloud Control Panel.
   //   reset_authentication - boolean - Reset authenticated account
+  //   azure_blob_storage_access_key - string - Azure Blob Storage secret key.
   //   hostname - string - Hostname or IP address
   //   name - string - Internal name for your reference
   //   max_connections - int64 - Max number of parallel connections.  Ignored for S3 connections (we will parallelize these as much as possible).
@@ -400,6 +428,8 @@ class RemoteServer {
   //   rackspace_region - string - Three letter airport code for Rackspace region. See https://support.rackspace.com/how-to/about-regions/
   //   rackspace_container - string - The name of the container (top level directory) where files will sync.
   //   one_drive_account_type - string - Either personal or business_other account types
+  //   azure_blob_storage_account - string - Azure Blob Storage Account name
+  //   azure_blob_storage_container - string - Azure Blob Storage Container name
   public function update($params = []) {
     if (!$this->id) {
       throw new \Error('Current object has no ID');
@@ -443,6 +473,9 @@ class RemoteServer {
     }
     if ($params['rackspace_api_key'] && !is_string($params['rackspace_api_key'])) {
       throw new \InvalidArgumentException('Bad parameter: $rackspace_api_key must be of type string; received ' . gettype($rackspace_api_key));
+    }
+    if ($params['azure_blob_storage_access_key'] && !is_string($params['azure_blob_storage_access_key'])) {
+      throw new \InvalidArgumentException('Bad parameter: $azure_blob_storage_access_key must be of type string; received ' . gettype($azure_blob_storage_access_key));
     }
     if ($params['hostname'] && !is_string($params['hostname'])) {
       throw new \InvalidArgumentException('Bad parameter: $hostname must be of type string; received ' . gettype($hostname));
@@ -506,6 +539,12 @@ class RemoteServer {
     }
     if ($params['one_drive_account_type'] && !is_string($params['one_drive_account_type'])) {
       throw new \InvalidArgumentException('Bad parameter: $one_drive_account_type must be of type string; received ' . gettype($one_drive_account_type));
+    }
+    if ($params['azure_blob_storage_account'] && !is_string($params['azure_blob_storage_account'])) {
+      throw new \InvalidArgumentException('Bad parameter: $azure_blob_storage_account must be of type string; received ' . gettype($azure_blob_storage_account));
+    }
+    if ($params['azure_blob_storage_container'] && !is_string($params['azure_blob_storage_container'])) {
+      throw new \InvalidArgumentException('Bad parameter: $azure_blob_storage_container must be of type string; received ' . gettype($azure_blob_storage_container));
     }
 
     if (!$params['id']) {
@@ -629,6 +668,7 @@ class RemoteServer {
   //   backblaze_b2_application_key - string - Backblaze B2 Cloud Storage applicationKey.
   //   rackspace_api_key - string - Rackspace API key from the Rackspace Cloud Control Panel.
   //   reset_authentication - boolean - Reset authenticated account
+  //   azure_blob_storage_access_key - string - Azure Blob Storage secret key.
   //   hostname - string - Hostname or IP address
   //   name - string - Internal name for your reference
   //   max_connections - int64 - Max number of parallel connections.  Ignored for S3 connections (we will parallelize these as much as possible).
@@ -650,6 +690,8 @@ class RemoteServer {
   //   rackspace_region - string - Three letter airport code for Rackspace region. See https://support.rackspace.com/how-to/about-regions/
   //   rackspace_container - string - The name of the container (top level directory) where files will sync.
   //   one_drive_account_type - string - Either personal or business_other account types
+  //   azure_blob_storage_account - string - Azure Blob Storage Account name
+  //   azure_blob_storage_container - string - Azure Blob Storage Container name
   public static function create($params = [], $options = []) {
     if ($params['aws_access_key'] && !is_string($params['aws_access_key'])) {
       throw new \InvalidArgumentException('Bad parameter: $aws_access_key must be of type string; received ' . gettype($aws_access_key));
@@ -689,6 +731,10 @@ class RemoteServer {
 
     if ($params['rackspace_api_key'] && !is_string($params['rackspace_api_key'])) {
       throw new \InvalidArgumentException('Bad parameter: $rackspace_api_key must be of type string; received ' . gettype($rackspace_api_key));
+    }
+
+    if ($params['azure_blob_storage_access_key'] && !is_string($params['azure_blob_storage_access_key'])) {
+      throw new \InvalidArgumentException('Bad parameter: $azure_blob_storage_access_key must be of type string; received ' . gettype($azure_blob_storage_access_key));
     }
 
     if ($params['hostname'] && !is_string($params['hostname'])) {
@@ -773,6 +819,14 @@ class RemoteServer {
 
     if ($params['one_drive_account_type'] && !is_string($params['one_drive_account_type'])) {
       throw new \InvalidArgumentException('Bad parameter: $one_drive_account_type must be of type string; received ' . gettype($one_drive_account_type));
+    }
+
+    if ($params['azure_blob_storage_account'] && !is_string($params['azure_blob_storage_account'])) {
+      throw new \InvalidArgumentException('Bad parameter: $azure_blob_storage_account must be of type string; received ' . gettype($azure_blob_storage_account));
+    }
+
+    if ($params['azure_blob_storage_container'] && !is_string($params['azure_blob_storage_container'])) {
+      throw new \InvalidArgumentException('Bad parameter: $azure_blob_storage_container must be of type string; received ' . gettype($azure_blob_storage_container));
     }
 
     $response = Api::sendRequest('/remote_servers', 'POST', $params, $options);

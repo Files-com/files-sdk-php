@@ -140,6 +140,9 @@ class GroupUser {
     return Api::sendRequest('/group_users/' . $params['id'] . '', 'PATCH', $params, $this->options);
   }
 
+  // Parameters:
+  //   group_id (required) - int64 - Group ID from which to remove user.
+  //   user_id (required) - int64 - User ID to remove from group.
   public function delete($params = []) {
     if (!$this->id) {
       throw new \Error('Current object has no ID');
@@ -154,12 +157,34 @@ class GroupUser {
     if ($params['id'] && !is_int($params['id'])) {
       throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
     }
+    if ($params['group_id'] && !is_int($params['group_id'])) {
+      throw new \InvalidArgumentException('Bad parameter: $group_id must be of type int; received ' . gettype($group_id));
+    }
+    if ($params['user_id'] && !is_int($params['user_id'])) {
+      throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
+    }
 
     if (!$params['id']) {
       if ($this->id) {
         $params['id'] = $this->id;
       } else {
         throw new \Error('Parameter missing: id');
+      }
+    }
+
+    if (!$params['group_id']) {
+      if ($this->group_id) {
+        $params['group_id'] = $this->group_id;
+      } else {
+        throw new \Error('Parameter missing: group_id');
+      }
+    }
+
+    if (!$params['user_id']) {
+      if ($this->user_id) {
+        $params['user_id'] = $this->user_id;
+      } else {
+        throw new \Error('Parameter missing: user_id');
       }
     }
 

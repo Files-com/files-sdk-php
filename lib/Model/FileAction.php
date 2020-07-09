@@ -38,6 +38,7 @@ class FileAction {
   //
   // Parameters:
   //   destination (required) - string - Copy destination path.
+  //   structure - boolean - Copy structure only?
   public function copy($params = []) {
     if (!$this->id) {
       throw new \Error('Current object has no ID');

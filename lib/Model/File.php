@@ -402,6 +402,7 @@ class File {
   // Parameters:
   //   action - string - Can be blank, `redirect` or `stat`.  If set to `stat`, we will return file information but without a download URL, and without logging a download.  If set to `redirect` we will serve a 302 redirect directly to the file.  This is used for integrations with Zapier, and is not recommended for most integrations.
   //   id - int64 - If provided, lookup the file by id instead of path.
+  //   preview_size - string - Request a preview size.  Can be `small` (default), `large`, `xlarge`, or `pdf`.
   //   with_previews - boolean - Include file preview information?
   //   with_priority_color - boolean - Include file priority color information?
   public function download($params = []) {
@@ -423,6 +424,9 @@ class File {
     }
     if ($params['id'] && !is_int($params['id'])) {
       throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+    }
+    if ($params['preview_size'] && !is_string($params['preview_size'])) {
+      throw new \InvalidArgumentException('Bad parameter: $preview_size must be of type string; received ' . gettype($preview_size));
     }
 
     if (!$params['path']) {

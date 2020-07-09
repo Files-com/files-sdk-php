@@ -91,6 +91,8 @@ class Behavior {
   // Parameters:
   //   value - string - The value of the folder behavior.  Can be a integer, array, or hash depending on the type of folder behavior.
   //   attachment_file - file - Certain behaviors may require a file, for instance, the "watermark" behavior requires a watermark image
+  //   behavior - string - Behavior type.
+  //   path - string - Folder behaviors path.
   public function update($params = []) {
     if (!$this->id) {
       throw new \Error('Current object has no ID');
@@ -107,6 +109,12 @@ class Behavior {
     }
     if ($params['value'] && !is_string($params['value'])) {
       throw new \InvalidArgumentException('Bad parameter: $value must be of type string; received ' . gettype($value));
+    }
+    if ($params['behavior'] && !is_string($params['behavior'])) {
+      throw new \InvalidArgumentException('Bad parameter: $behavior must be of type string; received ' . gettype($behavior));
+    }
+    if ($params['path'] && !is_string($params['path'])) {
+      throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
     }
 
     if (!$params['id']) {
@@ -313,6 +321,7 @@ class Behavior {
   //   encoding - string - HTTP encoding method.  Can be JSON, XML, or RAW (form data).
   //   headers - object - Additional request headers.
   //   body - object - Additional body parameters.
+  //   action - string - action for test body
   public static function webhookTest($params = [], $options = []) {
     if (!$params['url']) {
       throw new \Error('Parameter missing: url');
@@ -328,6 +337,10 @@ class Behavior {
 
     if ($params['encoding'] && !is_string($params['encoding'])) {
       throw new \InvalidArgumentException('Bad parameter: $encoding must be of type string; received ' . gettype($encoding));
+    }
+
+    if ($params['action'] && !is_string($params['action'])) {
+      throw new \InvalidArgumentException('Bad parameter: $action must be of type string; received ' . gettype($action));
     }
 
     $response = Api::sendRequest('/behaviors/webhook/test', 'POST', $params, $options);

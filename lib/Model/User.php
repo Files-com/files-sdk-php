@@ -264,6 +264,15 @@ class User {
     return $this->attributes['notification_daily_send_time'] = $value;
   }
 
+  // boolean # Enable integration with Office for the web?
+  public function getOfficeIntegrationEnabled() {
+    return $this->attributes['office_integration_enabled'];
+  }
+
+  public function setOfficeIntegrationEnabled($value) {
+    return $this->attributes['office_integration_enabled'] = $value;
+  }
+
   // date-time # Last time the user's password was set
   public function getPasswordSetAt() {
     return $this->attributes['password_set_at'];
@@ -615,6 +624,7 @@ class User {
   //   notification_daily_send_time - int64 - Hour of the day at which daily notifications should be sent. Can be in range 0 to 23
   //   name - string - User's full name
   //   notes - string - Any internal notes on the user
+  //   office_integration_enabled - boolean - Enable integration with Office for the web?
   //   password_validity_days - int64 - Number of days to allow user to use the same password
   //   receive_admin_alerts - boolean - Should the user receive admin alerts such a certificate expiration notifications and overages?
   //   require_password_change - boolean - Is a password change required upon next user login?
@@ -865,6 +875,7 @@ class User {
   //   notification_daily_send_time - int64 - Hour of the day at which daily notifications should be sent. Can be in range 0 to 23
   //   name - string - User's full name
   //   notes - string - Any internal notes on the user
+  //   office_integration_enabled - boolean - Enable integration with Office for the web?
   //   password_validity_days - int64 - Number of days to allow user to use the same password
   //   receive_admin_alerts - boolean - Should the user receive admin alerts such a certificate expiration notifications and overages?
   //   require_password_change - boolean - Is a password change required upon next user login?

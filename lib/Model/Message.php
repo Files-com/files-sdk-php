@@ -79,7 +79,7 @@ class Message {
     return $this->attributes['user_id'] = $value;
   }
 
-  // int64 # Project to attach the message to.
+  // int64 # Project to which the message should be attached.
   public function getProjectId() {
     return $this->attributes['project_id'];
   }
@@ -89,7 +89,7 @@ class Message {
   }
 
   // Parameters:
-  //   project_id (required) - int64 - Project to attach the message to.
+  //   project_id (required) - int64 - Project to which the message should be attached.
   //   subject (required) - string - Message subject.
   //   body (required) - string - Message body.
   public function update($params = []) {
@@ -196,7 +196,7 @@ class Message {
   //   page - int64 - Current page number.
   //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
   //   action - string - Deprecated: If set to `count` returns a count of matching records rather than the records themselves.
-  //   project_id (required) - int64 - Project to return messages for.
+  //   project_id (required) - int64 - Project for which to return messages.
   public static function list($params = [], $options = []) {
     if (!$params['project_id']) {
       throw new \Error('Parameter missing: project_id');
@@ -265,7 +265,7 @@ class Message {
 
   // Parameters:
   //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
-  //   project_id (required) - int64 - Project to attach the message to.
+  //   project_id (required) - int64 - Project to which the message should be attached.
   //   subject (required) - string - Message subject.
   //   body (required) - string - Message body.
   public static function create($params = [], $options = []) {

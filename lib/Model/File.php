@@ -401,7 +401,6 @@ class File {
   //
   // Parameters:
   //   action - string - Can be blank, `redirect` or `stat`.  If set to `stat`, we will return file information but without a download URL, and without logging a download.  If set to `redirect` we will serve a 302 redirect directly to the file.  This is used for integrations with Zapier, and is not recommended for most integrations.
-  //   id - int64 - If provided, lookup the file by id instead of path.
   //   preview_size - string - Request a preview size.  Can be `small` (default), `large`, `xlarge`, or `pdf`.
   //   with_previews - boolean - Include file preview information?
   //   with_priority_color - boolean - Include file priority color information?
@@ -422,9 +421,6 @@ class File {
     if ($params['action'] && !is_string($params['action'])) {
       throw new \InvalidArgumentException('Bad parameter: $action must be of type string; received ' . gettype($action));
     }
-    if ($params['id'] && !is_int($params['id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
-    }
     if ($params['preview_size'] && !is_string($params['preview_size'])) {
       throw new \InvalidArgumentException('Bad parameter: $preview_size must be of type string; received ' . gettype($preview_size));
     }
@@ -437,7 +433,7 @@ class File {
       }
     }
 
-    return Api::sendRequest('/files/' . rawurlencode($params['path']) . '', 'GET', $params, $this->options);
+    return Api::sendRequest('/files/' . $params['path'] . '', 'GET', $params, $this->options);
   }
 
   // Parameters:
@@ -472,7 +468,7 @@ class File {
       }
     }
 
-    return Api::sendRequest('/files/' . rawurlencode($params['path']) . '', 'PATCH', $params, $this->options);
+    return Api::sendRequest('/files/' . $params['path'] . '', 'PATCH', $params, $this->options);
   }
 
   // Parameters:
@@ -500,7 +496,7 @@ class File {
       }
     }
 
-    return Api::sendRequest('/files/' . rawurlencode($params['path']) . '', 'DELETE', $params, $this->options);
+    return Api::sendRequest('/files/' . $params['path'] . '', 'DELETE', $params, $this->options);
   }
 
   public function destroy($params = []) {
@@ -583,7 +579,7 @@ class File {
       throw new \InvalidArgumentException('Bad parameter: $structure must be of type string; received ' . gettype($structure));
     }
 
-    $response = Api::sendRequest('/files/' . rawurlencode($params['path']) . '', 'POST', $params, $options);
+    $response = Api::sendRequest('/files/' . $params['path'] . '', 'POST', $params, $options);
 
     return new File((array)$response->data, $options);
   }

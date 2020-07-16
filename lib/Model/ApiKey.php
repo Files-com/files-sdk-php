@@ -93,6 +93,15 @@ class ApiKey {
     return $this->attributes['name'] = $value;
   }
 
+  // string # Folder path restriction for this api key. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
+  public function getPath() {
+    return $this->attributes['path'];
+  }
+
+  public function setPath($value) {
+    return $this->attributes['path'] = $value;
+  }
+
   // string # Permissions for this API Key.  Keys with the `desktop_app` permission set only have the ability to do the functions provided in our Desktop App (File and Share Link operations).  Additional permission sets may become available in the future, such as for a Site Admin to give a key with no administrator privileges.  If you have ideas for permission sets, please let us know.
   public function getPermissionSet() {
     return $this->attributes['permission_set'];
@@ -204,6 +213,14 @@ class ApiKey {
   //   page - int64 - Current page number.
   //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
   //   action - string - Deprecated: If set to `count` returns a count of matching records rather than the records themselves.
+  //   cursor - string - Send cursor to resume an existing list from the point at which you left off.  Get a cursor from an existing list via the X-Files-Cursor-Next header.
+  //   sort_by - object - If set, sort records by the specified field in either 'asc' or 'desc' direction (e.g. sort_by[last_login_at]=desc). Valid fields are `deleted_at` and `expires_at`.
+  //   filter - object - If set, return records where the specifiied field is equal to the supplied value. Valid fields are `expires_at`.
+  //   filter_gt - object - If set, return records where the specifiied field is greater than the supplied value. Valid fields are `expires_at`.
+  //   filter_gteq - object - If set, return records where the specifiied field is greater than or equal to the supplied value. Valid fields are `expires_at`.
+  //   filter_like - object - If set, return records where the specifiied field is equal to the supplied value. Valid fields are `expires_at`.
+  //   filter_lt - object - If set, return records where the specifiied field is less than the supplied value. Valid fields are `expires_at`.
+  //   filter_lteq - object - If set, return records where the specifiied field is less than or equal to the supplied value. Valid fields are `expires_at`.
   public static function list($params = [], $options = []) {
     if ($params['user_id'] && !is_int($params['user_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
@@ -219,6 +236,10 @@ class ApiKey {
 
     if ($params['action'] && !is_string($params['action'])) {
       throw new \InvalidArgumentException('Bad parameter: $action must be of type string; received ' . gettype($action));
+    }
+
+    if ($params['cursor'] && !is_string($params['cursor'])) {
+      throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
     }
 
     $response = Api::sendRequest('/api_keys', 'GET', $params, $options);
@@ -273,6 +294,7 @@ class ApiKey {
   //   name - string - Internal name for the API Key.  For your use.
   //   expires_at - string - API Key expiration date
   //   permission_set - string - Permissions for this API Key.  Keys with the `desktop_app` permission set only have the ability to do the functions provided in our Desktop App (File and Share Link operations).  Additional permission sets may become available in the future, such as for a Site Admin to give a key with no administrator privileges.  If you have ideas for permission sets, please let us know.
+  //   path - string - Folder path restriction for this api key.
   public static function create($params = [], $options = []) {
     if ($params['user_id'] && !is_int($params['user_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
@@ -288,6 +310,10 @@ class ApiKey {
 
     if ($params['permission_set'] && !is_string($params['permission_set'])) {
       throw new \InvalidArgumentException('Bad parameter: $permission_set must be of type string; received ' . gettype($permission_set));
+    }
+
+    if ($params['path'] && !is_string($params['path'])) {
+      throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
     }
 
     $response = Api::sendRequest('/api_keys', 'POST', $params, $options);

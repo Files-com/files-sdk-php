@@ -151,7 +151,7 @@ class Lock {
       }
     }
 
-    return Api::sendRequest('/locks/' . rawurlencode($params['path']) . '', 'DELETE', $params, $this->options);
+    return Api::sendRequest('/locks/' . $params['path'] . '', 'DELETE', $params, $this->options);
   }
 
   public function destroy($params = []) {
@@ -201,7 +201,7 @@ class Lock {
       throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
     }
 
-    $response = Api::sendRequest('/locks/' . rawurlencode($params['path']) . '', 'GET', $params, $options);
+    $response = Api::sendRequest('/locks/' . $params['path'] . '', 'GET', $params, $options);
 
     $return_array = [];
 
@@ -234,7 +234,7 @@ class Lock {
       throw new \InvalidArgumentException('Bad parameter: $timeout must be of type int; received ' . gettype($timeout));
     }
 
-    $response = Api::sendRequest('/locks/' . rawurlencode($params['path']) . '', 'POST', $params, $options);
+    $response = Api::sendRequest('/locks/' . $params['path'] . '', 'POST', $params, $options);
 
     return new Lock((array)$response->data, $options);
   }

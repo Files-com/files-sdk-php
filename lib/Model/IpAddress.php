@@ -85,4 +85,32 @@ class IpAddress {
   public static function all($params = [], $options = []) {
     return self::list($params, $options);
   }
+
+  // Parameters:
+  //   page - int64 - Current page number.
+  //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
+  //   action - string - Deprecated: If set to `count` returns a count of matching records rather than the records themselves.
+  public static function getReserved($params = [], $options = []) {
+    if ($params['page'] && !is_int($params['page'])) {
+      throw new \InvalidArgumentException('Bad parameter: $page must be of type int; received ' . gettype($page));
+    }
+
+    if ($params['per_page'] && !is_int($params['per_page'])) {
+      throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
+    }
+
+    if ($params['action'] && !is_string($params['action'])) {
+      throw new \InvalidArgumentException('Bad parameter: $action must be of type string; received ' . gettype($action));
+    }
+
+    $response = Api::sendRequest('/ip_addresses/reserved', 'GET', $params, $options);
+
+    $return_array = [];
+
+    foreach ($response->data as $obj) {
+      $return_array[] = new PublicIpAddress((array)$obj, $options);
+    }
+
+    return $return_array;
+  }
 }

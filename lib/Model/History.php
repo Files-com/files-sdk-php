@@ -106,6 +106,8 @@ class History {
   //   page - int64 - Current page number.
   //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
   //   action - string - Deprecated: If set to `count` returns a count of matching records rather than the records themselves.
+  //   cursor - string - Send cursor to resume an existing list from the point at which you left off.  Get a cursor from an existing list via the X-Files-Cursor-Next header.
+  //   sort_by - object - If set, sort records by the specified field in either 'asc' or 'desc' direction (e.g. sort_by[last_login_at]=desc). Valid fields are `user_id` and `created_at`.
   //   path (required) - string - Path to operate on.
   public static function listForFile($path, $params = [], $options = []) {
     if (!is_array($params)) {
@@ -142,11 +144,15 @@ class History {
       throw new \InvalidArgumentException('Bad parameter: $action must be of type string; received ' . gettype($action));
     }
 
+    if ($params['cursor'] && !is_string($params['cursor'])) {
+      throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
+    }
+
     if ($params['path'] && !is_string($params['path'])) {
       throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
     }
 
-    $response = Api::sendRequest('/history/files(/*path)', 'GET', $params, $options);
+    $response = Api::sendRequest('/history/files/' . $params['path'] . '', 'GET', $params, $options);
 
     $return_array = [];
 
@@ -164,6 +170,8 @@ class History {
   //   page - int64 - Current page number.
   //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
   //   action - string - Deprecated: If set to `count` returns a count of matching records rather than the records themselves.
+  //   cursor - string - Send cursor to resume an existing list from the point at which you left off.  Get a cursor from an existing list via the X-Files-Cursor-Next header.
+  //   sort_by - object - If set, sort records by the specified field in either 'asc' or 'desc' direction (e.g. sort_by[last_login_at]=desc). Valid fields are `user_id` and `created_at`.
   //   path (required) - string - Path to operate on.
   public static function listForFolder($path, $params = [], $options = []) {
     if (!is_array($params)) {
@@ -200,11 +208,15 @@ class History {
       throw new \InvalidArgumentException('Bad parameter: $action must be of type string; received ' . gettype($action));
     }
 
+    if ($params['cursor'] && !is_string($params['cursor'])) {
+      throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
+    }
+
     if ($params['path'] && !is_string($params['path'])) {
       throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
     }
 
-    $response = Api::sendRequest('/history/folders(/*path)', 'GET', $params, $options);
+    $response = Api::sendRequest('/history/folders/' . $params['path'] . '', 'GET', $params, $options);
 
     $return_array = [];
 
@@ -222,6 +234,8 @@ class History {
   //   page - int64 - Current page number.
   //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
   //   action - string - Deprecated: If set to `count` returns a count of matching records rather than the records themselves.
+  //   cursor - string - Send cursor to resume an existing list from the point at which you left off.  Get a cursor from an existing list via the X-Files-Cursor-Next header.
+  //   sort_by - object - If set, sort records by the specified field in either 'asc' or 'desc' direction (e.g. sort_by[last_login_at]=desc). Valid fields are `user_id` and `created_at`.
   //   user_id (required) - int64 - User ID.
   public static function listForUser($user_id, $params = [], $options = []) {
     if (!is_array($params)) {
@@ -258,6 +272,10 @@ class History {
       throw new \InvalidArgumentException('Bad parameter: $action must be of type string; received ' . gettype($action));
     }
 
+    if ($params['cursor'] && !is_string($params['cursor'])) {
+      throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
+    }
+
     if ($params['user_id'] && !is_int($params['user_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
     }
@@ -280,6 +298,8 @@ class History {
   //   page - int64 - Current page number.
   //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
   //   action - string - Deprecated: If set to `count` returns a count of matching records rather than the records themselves.
+  //   cursor - string - Send cursor to resume an existing list from the point at which you left off.  Get a cursor from an existing list via the X-Files-Cursor-Next header.
+  //   sort_by - object - If set, sort records by the specified field in either 'asc' or 'desc' direction (e.g. sort_by[last_login_at]=desc). Valid fields are `user_id` and `created_at`.
   public static function listLogins($params = [], $options = []) {
     if ($params['start_at'] && !is_string($params['start_at'])) {
       throw new \InvalidArgumentException('Bad parameter: $start_at must be of type string; received ' . gettype($start_at));
@@ -305,6 +325,10 @@ class History {
       throw new \InvalidArgumentException('Bad parameter: $action must be of type string; received ' . gettype($action));
     }
 
+    if ($params['cursor'] && !is_string($params['cursor'])) {
+      throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
+    }
+
     $response = Api::sendRequest('/history/login', 'GET', $params, $options);
 
     $return_array = [];
@@ -323,6 +347,14 @@ class History {
   //   page - int64 - Current page number.
   //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
   //   action - string - Deprecated: If set to `count` returns a count of matching records rather than the records themselves.
+  //   cursor - string - Send cursor to resume an existing list from the point at which you left off.  Get a cursor from an existing list via the X-Files-Cursor-Next header.
+  //   sort_by - object - If set, sort records by the specified field in either 'asc' or 'desc' direction (e.g. sort_by[last_login_at]=desc). Valid fields are `site_id`, `path`, `created_at`, `folder` or `user_id`.
+  //   filter - object - If set, return records where the specifiied field is equal to the supplied value. Valid fields are `user_id`, `folder` or `path`.
+  //   filter_gt - object - If set, return records where the specifiied field is greater than the supplied value. Valid fields are `user_id`, `folder` or `path`.
+  //   filter_gteq - object - If set, return records where the specifiied field is greater than or equal to the supplied value. Valid fields are `user_id`, `folder` or `path`.
+  //   filter_like - object - If set, return records where the specifiied field is equal to the supplied value. Valid fields are `user_id`, `folder` or `path`.
+  //   filter_lt - object - If set, return records where the specifiied field is less than the supplied value. Valid fields are `user_id`, `folder` or `path`.
+  //   filter_lteq - object - If set, return records where the specifiied field is less than or equal to the supplied value. Valid fields are `user_id`, `folder` or `path`.
   public static function list($params = [], $options = []) {
     if ($params['start_at'] && !is_string($params['start_at'])) {
       throw new \InvalidArgumentException('Bad parameter: $start_at must be of type string; received ' . gettype($start_at));
@@ -346,6 +378,10 @@ class History {
 
     if ($params['action'] && !is_string($params['action'])) {
       throw new \InvalidArgumentException('Bad parameter: $action must be of type string; received ' . gettype($action));
+    }
+
+    if ($params['cursor'] && !is_string($params['cursor'])) {
+      throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
     }
 
     $response = Api::sendRequest('/history', 'GET', $params, $options);

@@ -73,7 +73,7 @@ class FileAction {
       }
     }
 
-    return Api::sendRequest('/file_actions/copy/' . rawurlencode($params['path']) . '', 'POST', $params, $this->options);
+    return Api::sendRequest('/file_actions/copy/' . $params['path'] . '', 'POST', $params, $this->options);
   }
 
   // Move file/folder
@@ -114,7 +114,7 @@ class FileAction {
       }
     }
 
-    return Api::sendRequest('/file_actions/move/' . rawurlencode($params['path']) . '', 'POST', $params, $this->options);
+    return Api::sendRequest('/file_actions/move/' . $params['path'] . '', 'POST', $params, $this->options);
   }
 
   // Begin file upload
@@ -161,6 +161,6 @@ class FileAction {
       }
     }
 
-    return Api::sendRequest('/file_actions/begin_upload/' . rawurlencode($params['path']) . '', 'POST', $params, $this->options);
+    return Api::sendRequest('/file_actions/begin_upload/' . $params['path'] . '', 'POST', $params, $this->options);
   }
 }

@@ -106,40 +106,6 @@ class Request {
     return $this->attributes['group_ids'] = $value;
   }
 
-  // List Requests
-  //
-  // Parameters:
-  //   page - int64 - Current page number.
-  //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
-  //   action - string - Deprecated: If set to `count` returns a count of matching records rather than the records themselves.
-  //   mine - boolean - Only show requests of the current user?  (Defaults to true if current user is not a site admin.)
-  public function folders($params = []) {
-    if (!$this->id) {
-      throw new \Error('Current object has no ID');
-    }
-
-    if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
-    }
-
-    $params['id'] = $this->id;
-
-    if ($params['page'] && !is_int($params['page'])) {
-      throw new \InvalidArgumentException('Bad parameter: $page must be of type int; received ' . gettype($page));
-    }
-    if ($params['per_page'] && !is_int($params['per_page'])) {
-      throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
-    }
-    if ($params['action'] && !is_string($params['action'])) {
-      throw new \InvalidArgumentException('Bad parameter: $action must be of type string; received ' . gettype($action));
-    }
-    if ($params['path'] && !is_string($params['path'])) {
-      throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
-    }
-
-    return Api::sendRequest('/requests/folders/' . rawurlencode($params['path']) . '', 'GET', $params, $this->options);
-  }
-
   public function save() {
     if ($this->attributes['path']) {
       throw new \BadMethodCallException('The Request object doesn\'t support updates.');
@@ -154,6 +120,8 @@ class Request {
   //   page - int64 - Current page number.
   //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
   //   action - string - Deprecated: If set to `count` returns a count of matching records rather than the records themselves.
+  //   cursor - string - Send cursor to resume an existing list from the point at which you left off.  Get a cursor from an existing list via the X-Files-Cursor-Next header.
+  //   sort_by - object - If set, sort records by the specified field in either 'asc' or 'desc' direction (e.g. sort_by[last_login_at]=desc). Valid fields are `site_id`, `folder_id` or `destination`.
   //   mine - boolean - Only show requests of the current user?  (Defaults to true if current user is not a site admin.)
   //   path - string - Path to show requests for.  If omitted, shows all paths. Send `/` to represent the root directory.
   public static function list($path, $params = [], $options = []) {
@@ -175,6 +143,10 @@ class Request {
       throw new \InvalidArgumentException('Bad parameter: $action must be of type string; received ' . gettype($action));
     }
 
+    if ($params['cursor'] && !is_string($params['cursor'])) {
+      throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
+    }
+
     if ($params['path'] && !is_string($params['path'])) {
       throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
     }
@@ -192,6 +164,56 @@ class Request {
 
   public static function all($path, $params = [], $options = []) {
     return self::list($path, $params, $options);
+  }
+
+  // Parameters:
+  //   page - int64 - Current page number.
+  //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
+  //   action - string - Deprecated: If set to `count` returns a count of matching records rather than the records themselves.
+  //   cursor - string - Send cursor to resume an existing list from the point at which you left off.  Get a cursor from an existing list via the X-Files-Cursor-Next header.
+  //   sort_by - object - If set, sort records by the specified field in either 'asc' or 'desc' direction (e.g. sort_by[last_login_at]=desc). Valid fields are `site_id`, `folder_id` or `destination`.
+  //   mine - boolean - Only show requests of the current user?  (Defaults to true if current user is not a site admin.)
+  //   path (required) - string - Path to show requests for.  If omitted, shows all paths. Send `/` to represent the root directory.
+  public static function findFolder($path, $params = [], $options = []) {
+    if (!is_array($params)) {
+      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+    }
+
+    $params['path'] = $path;
+
+    if (!$params['path']) {
+      throw new \Error('Parameter missing: path');
+    }
+
+    if ($params['page'] && !is_int($params['page'])) {
+      throw new \InvalidArgumentException('Bad parameter: $page must be of type int; received ' . gettype($page));
+    }
+
+    if ($params['per_page'] && !is_int($params['per_page'])) {
+      throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
+    }
+
+    if ($params['action'] && !is_string($params['action'])) {
+      throw new \InvalidArgumentException('Bad parameter: $action must be of type string; received ' . gettype($action));
+    }
+
+    if ($params['cursor'] && !is_string($params['cursor'])) {
+      throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
+    }
+
+    if ($params['path'] && !is_string($params['path'])) {
+      throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
+    }
+
+    $response = Api::sendRequest('/requests/folders/' . $params['path'] . '', 'GET', $params, $options);
+
+    $return_array = [];
+
+    foreach ($response->data as $obj) {
+      $return_array[] = new Request((array)$obj, $options);
+    }
+
+    return $return_array;
   }
 
   // Parameters:

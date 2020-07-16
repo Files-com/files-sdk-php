@@ -252,7 +252,7 @@ class Folder {
       throw new \InvalidArgumentException('Bad parameter: $search must be of type string; received ' . gettype($search));
     }
 
-    $response = Api::sendRequest('/folders/' . rawurlencode($params['path']) . '', 'GET', $params, $options);
+    $response = Api::sendRequest('/folders/' . $params['path'] . '', 'GET', $params, $options);
 
     $return_array = [];
 
@@ -280,7 +280,7 @@ class Folder {
       throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
     }
 
-    $response = Api::sendRequest('/folders/' . rawurlencode($params['path']) . '', 'POST', $params, $options);
+    $response = Api::sendRequest('/folders/' . $params['path'] . '', 'POST', $params, $options);
 
     return new File((array)$response->data, $options);
   }

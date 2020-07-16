@@ -181,7 +181,7 @@ class FileComment {
       throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
     }
 
-    $response = Api::sendRequest('/file_comments/files/' . rawurlencode($params['path']) . '', 'GET', $params, $options);
+    $response = Api::sendRequest('/file_comments/files/' . $params['path'] . '', 'GET', $params, $options);
 
     $return_array = [];
 

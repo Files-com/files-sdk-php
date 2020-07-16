@@ -112,7 +112,7 @@ class Style {
       }
     }
 
-    return Api::sendRequest('/styles/' . rawurlencode($params['path']) . '', 'PATCH', $params, $this->options);
+    return Api::sendRequest('/styles/' . $params['path'] . '', 'PATCH', $params, $this->options);
   }
 
   public function delete($params = []) {
@@ -138,7 +138,7 @@ class Style {
       }
     }
 
-    return Api::sendRequest('/styles/' . rawurlencode($params['path']) . '', 'DELETE', $params, $this->options);
+    return Api::sendRequest('/styles/' . $params['path'] . '', 'DELETE', $params, $this->options);
   }
 
   public function destroy($params = []) {
@@ -151,7 +151,7 @@ class Style {
 
   // Parameters:
   //   path (required) - string - Style path.
-  public static function list($path, $params = [], $options = []) {
+  public static function find($path, $params = [], $options = []) {
     if (!is_array($params)) {
       throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
     }
@@ -166,12 +166,12 @@ class Style {
       throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
     }
 
-    $response = Api::sendRequest('/styles/' . rawurlencode($params['path']) . '', 'GET', $params, $options);
+    $response = Api::sendRequest('/styles/' . $params['path'] . '', 'GET', $params, $options);
 
     return new Style((array)$response->data, $options);
   }
 
-  public static function all($path, $params = [], $options = []) {
-    return self::list($path, $params, $options);
+  public static function get($path, $params = [], $options = []) {
+    return self::find($path, $params, $options);
   }
 }

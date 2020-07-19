@@ -34,7 +34,7 @@ class Session {
     return !!$this->attributes['id'];
   }
 
-  // int64 # Session ID
+  // string # Session ID
   public function getId() {
     return $this->attributes['id'];
   }

@@ -49,6 +49,11 @@ class App {
     return $this->attributes['documentation_links'];
   }
 
+  // string # App icon
+  public function getIconUrl() {
+    return $this->attributes['icon_url'];
+  }
+
   // string # Full size logo for the App
   public function getLogoUrl() {
     return $this->attributes['logo_url'];

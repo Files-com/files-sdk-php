@@ -188,13 +188,9 @@ class Folder {
   }
 
   public function save() {
-    if ($this->attributes['path']) {
-      throw new \BadMethodCallException('The Folder object doesn\'t support updates.');
-    } else {
-      $new_obj = self::create($this->attributes, $this->options);
+      $new_obj = self::create($this->path, $this->attributes, $this->options);
       $this->attributes = $new_obj->attributes;
       return true;
-    }
   }
 
   // Parameters:

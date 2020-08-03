@@ -504,13 +504,9 @@ class File {
   }
 
   public function save() {
-    if ($this->attributes['path']) {
-      return $this->update($this->attributes);
-    } else {
-      $new_obj = self::create($this->attributes, $this->options);
+      $new_obj = self::create($this->path, $this->attributes, $this->options);
       $this->attributes = $new_obj->attributes;
       return true;
-    }
   }
 
   // Parameters:

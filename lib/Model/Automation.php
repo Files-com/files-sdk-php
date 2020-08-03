@@ -253,13 +253,13 @@ class Automation {
   }
 
   public function save() {
-    if ($this->attributes['id']) {
-      return $this->update($this->attributes);
-    } else {
-      $new_obj = self::create($this->attributes, $this->options);
-      $this->attributes = $new_obj->attributes;
-      return true;
-    }
+      if ($this->attributes['id']) {
+        return $this->update($this->attributes);
+      } else {
+        $new_obj = self::create($this->attributes, $this->options);
+        $this->attributes = $new_obj->attributes;
+        return true;
+      }
   }
 
   // Parameters:

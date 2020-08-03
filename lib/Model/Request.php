@@ -106,8 +106,38 @@ class Request {
     return $this->attributes['group_ids'] = $value;
   }
 
+  public function delete($params = []) {
+    if (!$this->id) {
+      throw new \Error('Current object has no ID');
+    }
+
+    if (!is_array($params)) {
+      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+    }
+
+    $params['id'] = $this->id;
+
+    if ($params['id'] && !is_int($params['id'])) {
+      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+    }
+
+    if (!$params['id']) {
+      if ($this->id) {
+        $params['id'] = $this->id;
+      } else {
+        throw new \Error('Parameter missing: id');
+      }
+    }
+
+    return Api::sendRequest('/requests/' . $params['id'] . '', 'DELETE', $params, $this->options);
+  }
+
+  public function destroy($params = []) {
+    return $this->delete($params);
+  }
+
   public function save() {
-    if ($this->attributes['path']) {
+    if ($this->attributes['id']) {
       throw new \BadMethodCallException('The Request object doesn\'t support updates.');
     } else {
       $new_obj = self::create($this->attributes, $this->options);
@@ -124,13 +154,7 @@ class Request {
   //   sort_by - object - If set, sort records by the specified field in either 'asc' or 'desc' direction (e.g. sort_by[last_login_at]=desc). Valid fields are `site_id`, `folder_id` or `destination`.
   //   mine - boolean - Only show requests of the current user?  (Defaults to true if current user is not a site admin.)
   //   path - string - Path to show requests for.  If omitted, shows all paths. Send `/` to represent the root directory.
-  public static function list($path, $params = [], $options = []) {
-    if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
-    }
-
-    $params['path'] = $path;
-
+  public static function list($params = [], $options = []) {
     if ($params['page'] && !is_int($params['page'])) {
       throw new \InvalidArgumentException('Bad parameter: $page must be of type int; received ' . gettype($page));
     }
@@ -162,8 +186,8 @@ class Request {
     return $return_array;
   }
 
-  public static function all($path, $params = [], $options = []) {
-    return self::list($path, $params, $options);
+  public static function all($params = [], $options = []) {
+    return self::list($params, $options);
   }
 
   // Parameters:
@@ -174,7 +198,7 @@ class Request {
   //   sort_by - object - If set, sort records by the specified field in either 'asc' or 'desc' direction (e.g. sort_by[last_login_at]=desc). Valid fields are `site_id`, `folder_id` or `destination`.
   //   mine - boolean - Only show requests of the current user?  (Defaults to true if current user is not a site admin.)
   //   path (required) - string - Path to show requests for.  If omitted, shows all paths. Send `/` to represent the root directory.
-  public static function findFolder($path, $params = [], $options = []) {
+  public static function getFolder($path, $params = [], $options = []) {
     if (!is_array($params)) {
       throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
     }
@@ -221,13 +245,7 @@ class Request {
   //   destination (required) - string - Destination filename (without extension) to request.
   //   user_ids - string - A list of user IDs to request the file from. If sent as a string, it should be comma-delimited.
   //   group_ids - string - A list of group IDs to request the file from. If sent as a string, it should be comma-delimited.
-  public static function create($path, $params = [], $options = []) {
-    if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
-    }
-
-    $params['path'] = $path;
-
+  public static function create($params = [], $options = []) {
     if (!$params['path']) {
       throw new \Error('Parameter missing: path');
     }
@@ -255,31 +273,5 @@ class Request {
     $response = Api::sendRequest('/requests', 'POST', $params, $options);
 
     return new Request((array)$response->data, $options);
-  }
-
-  // Parameters:
-  //   id (required) - int64 - Request ID.
-  public static function delete($id, $params = [], $options = []) {
-    if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
-    }
-
-    $params['id'] = $id;
-
-    if (!$params['id']) {
-      throw new \Error('Parameter missing: id');
-    }
-
-    if ($params['id'] && !is_int($params['id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
-    }
-
-    $response = Api::sendRequest('/requests/' . $params['id'] . '', 'DELETE', $params, $options);
-
-    return $response->data;
-  }
-
-  public static function destroy($id, $params = [], $options = []) {
-    return self::delete($id, $params, $options);
   }
 }

@@ -106,8 +106,38 @@ class Permission {
     return $this->attributes['recursive'] = $value;
   }
 
+  public function delete($params = []) {
+    if (!$this->id) {
+      throw new \Error('Current object has no ID');
+    }
+
+    if (!is_array($params)) {
+      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+    }
+
+    $params['id'] = $this->id;
+
+    if ($params['id'] && !is_int($params['id'])) {
+      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+    }
+
+    if (!$params['id']) {
+      if ($this->id) {
+        $params['id'] = $this->id;
+      } else {
+        throw new \Error('Parameter missing: id');
+      }
+    }
+
+    return Api::sendRequest('/permissions/' . $params['id'] . '', 'DELETE', $params, $this->options);
+  }
+
+  public function destroy($params = []) {
+    return $this->delete($params);
+  }
+
   public function save() {
-    if ($this->attributes['path']) {
+    if ($this->attributes['id']) {
       throw new \BadMethodCallException('The Permission object doesn\'t support updates.');
     } else {
       $new_obj = self::create($this->attributes, $this->options);
@@ -132,13 +162,7 @@ class Permission {
   //   group_id - string - DEPRECATED: Group ID.  If provided, will scope permissions to this group. Use `filter[group_id]` instead.`
   //   user_id - string - DEPRECATED: User ID.  If provided, will scope permissions to this user. Use `filter[user_id]` instead.`
   //   include_groups - boolean - If searching by user or group, also include user's permissions that are inherited from its groups?
-  public static function list($path, $params = [], $options = []) {
-    if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
-    }
-
-    $params['path'] = $path;
-
+  public static function list($params = [], $options = []) {
     if ($params['page'] && !is_int($params['page'])) {
       throw new \InvalidArgumentException('Bad parameter: $page must be of type int; received ' . gettype($page));
     }
@@ -178,8 +202,8 @@ class Permission {
     return $return_array;
   }
 
-  public static function all($path, $params = [], $options = []) {
-    return self::list($path, $params, $options);
+  public static function all($params = [], $options = []) {
+    return self::list($params, $options);
   }
 
   // Parameters:
@@ -189,13 +213,7 @@ class Permission {
   //   recursive - boolean - Apply to subfolders recursively?
   //   user_id - int64 - User ID.  Provide `username` or `user_id`
   //   username - string - User username.  Provide `username` or `user_id`
-  public static function create($path, $params = [], $options = []) {
-    if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
-    }
-
-    $params['path'] = $path;
-
+  public static function create($params = [], $options = []) {
     if ($params['group_id'] && !is_int($params['group_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $group_id must be of type int; received ' . gettype($group_id));
     }
@@ -219,31 +237,5 @@ class Permission {
     $response = Api::sendRequest('/permissions', 'POST', $params, $options);
 
     return new Permission((array)$response->data, $options);
-  }
-
-  // Parameters:
-  //   id (required) - int64 - Permission ID.
-  public static function delete($id, $params = [], $options = []) {
-    if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
-    }
-
-    $params['id'] = $id;
-
-    if (!$params['id']) {
-      throw new \Error('Parameter missing: id');
-    }
-
-    if ($params['id'] && !is_int($params['id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
-    }
-
-    $response = Api::sendRequest('/permissions/' . $params['id'] . '', 'DELETE', $params, $options);
-
-    return $response->data;
-  }
-
-  public static function destroy($id, $params = [], $options = []) {
-    return self::delete($id, $params, $options);
   }
 }

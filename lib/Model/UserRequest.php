@@ -34,6 +34,15 @@ class UserRequest {
     return !!$this->attributes['id'];
   }
 
+  // int64 # ID
+  public function getId() {
+    return $this->attributes['id'];
+  }
+
+  public function setId($value) {
+    return $this->attributes['id'] = $value;
+  }
+
   // string # User's full name
   public function getName() {
     return $this->attributes['name'];

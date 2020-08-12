@@ -74,6 +74,11 @@ class FilePartUpload {
     return $this->attributes['next_partsize'];
   }
 
+  // boolean # If true, parts may be uploaded in parallel
+  public function getParallelParts() {
+    return $this->attributes['parallel_parts'];
+  }
+
   // string # Additional upload parameters
   public function getParameters() {
     return $this->attributes['parameters'];

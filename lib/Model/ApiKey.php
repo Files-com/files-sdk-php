@@ -257,8 +257,15 @@ class ApiKey {
     return self::list($params, $options);
   }
 
+  // Parameters:
+  //   format - string
+  //   api_key - object
   public static function findCurrent($params = [], $options = []) {
-    $response = Api::sendRequest('/api_key', 'GET', $options);
+    if ($params['format'] && !is_string($params['format'])) {
+      throw new \InvalidArgumentException('Bad parameter: $format must be of type string; received ' . gettype($format));
+    }
+
+    $response = Api::sendRequest('/api_key', 'GET', $params, $options);
 
     return new ApiKey((array)$response->data, $options);
   }
@@ -343,8 +350,15 @@ class ApiKey {
     return new ApiKey((array)$response->data, $options);
   }
 
+  // Parameters:
+  //   format - string
+  //   api_key - object
   public static function deleteCurrent($params = [], $options = []) {
-    $response = Api::sendRequest('/api_key', 'DELETE', $options);
+    if ($params['format'] && !is_string($params['format'])) {
+      throw new \InvalidArgumentException('Bad parameter: $format must be of type string; received ' . gettype($format));
+    }
+
+    $response = Api::sendRequest('/api_key', 'DELETE', $params, $options);
 
     return $response->data;
   }

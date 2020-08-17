@@ -10,11 +10,11 @@ use Files\Logger;
 require_once __DIR__ . '/../Files.php';
 
 /**
- * Class BundleDownload
+ * Class ExternalEvent
  *
  * @package Files
  */
-class BundleDownload {
+class ExternalEvent {
   private $attributes = [];
   private $options = [];
 
@@ -34,17 +34,22 @@ class BundleDownload {
     return !!$this->attributes['id'];
   }
 
-  // string # Download method (file or full_zip)
-  public function getDownloadMethod() {
-    return $this->attributes['download_method'];
+  // string # Type of event being recorded. Valid values: `remote_server_sync`, `lockout`, `ldap_login`, `saml_login`
+  public function getEventType() {
+    return $this->attributes['event_type'];
   }
 
-  // string # Download path This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
-  public function getPath() {
-    return $this->attributes['path'];
+  // string # Status of event. Valid values: `error`
+  public function getStatus() {
+    return $this->attributes['status'];
   }
 
-  // date-time # Download date/time
+  // string # Event body
+  public function getBody() {
+    return $this->attributes['body'];
+  }
+
+  // date-time # External event create date/time
   public function getCreatedAt() {
     return $this->attributes['created_at'];
   }
@@ -54,12 +59,14 @@ class BundleDownload {
   //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
   //   action - string - Deprecated: If set to `count` returns a count of matching records rather than the records themselves.
   //   cursor - string - Send cursor to resume an existing list from the point at which you left off.  Get a cursor from an existing list via the X-Files-Cursor-Next header.
-  //   bundle_registration_id (required) - int64 - BundleRegistration ID
+  //   sort_by - object - If set, sort records by the specified field in either 'asc' or 'desc' direction (e.g. sort_by[last_login_at]=desc). Valid fields are `remote_server_type`, `site_id`, `event_type`, `created_at` or `status`.
+  //   filter - object - If set, return records where the specifiied field is equal to the supplied value. Valid fields are `created_at`, `event_type`, `remote_server_type` or `status`.
+  //   filter_gt - object - If set, return records where the specifiied field is greater than the supplied value. Valid fields are `created_at`, `event_type`, `remote_server_type` or `status`.
+  //   filter_gteq - object - If set, return records where the specifiied field is greater than or equal to the supplied value. Valid fields are `created_at`, `event_type`, `remote_server_type` or `status`.
+  //   filter_like - object - If set, return records where the specifiied field is equal to the supplied value. Valid fields are `created_at`, `event_type`, `remote_server_type` or `status`.
+  //   filter_lt - object - If set, return records where the specifiied field is less than the supplied value. Valid fields are `created_at`, `event_type`, `remote_server_type` or `status`.
+  //   filter_lteq - object - If set, return records where the specifiied field is less than or equal to the supplied value. Valid fields are `created_at`, `event_type`, `remote_server_type` or `status`.
   public static function list($params = [], $options = []) {
-    if (!$params['bundle_registration_id']) {
-      throw new \Error('Parameter missing: bundle_registration_id');
-    }
-
     if ($params['page'] && !is_int($params['page'])) {
       throw new \InvalidArgumentException('Bad parameter: $page must be of type int; received ' . gettype($page));
     }
@@ -76,16 +83,12 @@ class BundleDownload {
       throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
     }
 
-    if ($params['bundle_registration_id'] && !is_int($params['bundle_registration_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $bundle_registration_id must be of type int; received ' . gettype($bundle_registration_id));
-    }
-
-    $response = Api::sendRequest('/bundle_downloads', 'GET', $params, $options);
+    $response = Api::sendRequest('/external_events', 'GET', $params, $options);
 
     $return_array = [];
 
     foreach ($response->data as $obj) {
-      $return_array[] = new BundleDownload((array)$obj, $options);
+      $return_array[] = new ExternalEvent((array)$obj, $options);
     }
 
     return $return_array;

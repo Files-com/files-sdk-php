@@ -135,6 +135,7 @@ class Project {
   //   page - int64 - Current page number.
   //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
   //   action - string - Deprecated: If set to `count` returns a count of matching records rather than the records themselves.
+  //   cursor - string - Send cursor to resume an existing list from the point at which you left off.  Get a cursor from an existing list via the X-Files-Cursor-Next header.
   public static function list($params = [], $options = []) {
     if ($params['page'] && !is_int($params['page'])) {
       throw new \InvalidArgumentException('Bad parameter: $page must be of type int; received ' . gettype($page));
@@ -146,6 +147,10 @@ class Project {
 
     if ($params['action'] && !is_string($params['action'])) {
       throw new \InvalidArgumentException('Bad parameter: $action must be of type string; received ' . gettype($action));
+    }
+
+    if ($params['cursor'] && !is_string($params['cursor'])) {
+      throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
     }
 
     $response = Api::sendRequest('/projects', 'GET', $params, $options);

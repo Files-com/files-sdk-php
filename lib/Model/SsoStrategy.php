@@ -119,6 +119,11 @@ class SsoStrategy {
     return $this->attributes['deprovision_groups'];
   }
 
+  // string # Method used for deprovisioning users.
+  public function getDeprovisionBehavior() {
+    return $this->attributes['deprovision_behavior'];
+  }
+
   // string # Comma-separated list of group names for groups to automatically add all auto-provisioned users to.
   public function getProvisionGroupDefault() {
     return $this->attributes['provision_group_default'];

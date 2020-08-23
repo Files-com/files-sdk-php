@@ -49,7 +49,7 @@ class FilePartUpload {
     return $this->attributes['ask_about_overwrites'];
   }
 
-  // string # Currently unused
+  // int64 # Currently unused
   public function getAvailableParts() {
     return $this->attributes['available_parts'];
   }
@@ -69,7 +69,7 @@ class FilePartUpload {
     return $this->attributes['http_method'];
   }
 
-  // string # Currently unused
+  // int64 # Currently unused
   public function getNextPartsize() {
     return $this->attributes['next_partsize'];
   }
@@ -79,17 +79,17 @@ class FilePartUpload {
     return $this->attributes['parallel_parts'];
   }
 
-  // string # Additional upload parameters
+  // object # Additional upload parameters
   public function getParameters() {
     return $this->attributes['parameters'];
   }
 
-  // string # Currently unused
+  // int64 # Currently unused
   public function getPartNumber() {
     return $this->attributes['part_number'];
   }
 
-  // string # Currently unused
+  // int64 # Currently unused
   public function getPartsize() {
     return $this->attributes['partsize'];
   }

@@ -34,15 +34,6 @@ class Folder {
     return !!$this->attributes['id'];
   }
 
-  // int64 # File/Folder ID
-  public function getId() {
-    return $this->attributes['id'];
-  }
-
-  public function setId($value) {
-    return $this->attributes['id'] = $value;
-  }
-
   // string # File/Folder path This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
   public function getPath() {
     return $this->attributes['path'];

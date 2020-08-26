@@ -69,6 +69,11 @@ class SsoStrategy {
     return $this->attributes['saml_provider_issuer_url'];
   }
 
+  // string # Custom identity provider metadata
+  public function getSamlProviderMetadataContent() {
+    return $this->attributes['saml_provider_metadata_content'];
+  }
+
   // string # Metadata URL for the SAML identity provider
   public function getSamlProviderMetadataUrl() {
     return $this->attributes['saml_provider_metadata_url'];

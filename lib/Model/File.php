@@ -42,14 +42,14 @@ class File {
     $partData['headers'] = $response->headers;
     $partData['parameters'] = $params;
 
-    return new FilePartUpload($partData);
+    return new FileUploadPart($partData);
   }
 
-  private static function continueUpload($path, $partNumber, $firstFilePartUpload) {
+  private static function continueUpload($path, $partNumber, $firstFileUploadPart) {
     $params = [
       'action' => 'put',
       'part' => $partNumber,
-      'ref' => $firstFilePartUpload->ref,
+      'ref' => $firstFileUploadPart->ref,
     ];
 
     $response = Api::sendRequest('/files/' . rawurlencode($path), 'POST', $params);
@@ -58,38 +58,38 @@ class File {
     $partData['headers'] = $response->headers;
     $partData['parameters'] = $params;
 
-    return new FilePartUpload($partData);
+    return new FileUploadPart($partData);
   }
 
-  private static function completeUpload($filePartUpload) {
+  private static function completeUpload($fileUploadPart) {
     $params = [
       'action' => 'end',
-      'ref' => $filePartUpload->ref,
+      'ref' => $fileUploadPart->ref,
     ];
 
-    $response = Api::sendRequest('/files/' . rawurlencode($filePartUpload->path), 'POST', $params);
+    $response = Api::sendRequest('/files/' . rawurlencode($fileUploadPart->path), 'POST', $params);
   }
 
   public static function uploadFile($destinationPath, $sourceFilePath) {
-    $filePartUpload = self::openUpload($destinationPath);
+    $fileUploadPart = self::openUpload($destinationPath);
 
-    Logger::debug('File::uploadFile() filePartUpload = ' . print_r($filePartUpload, true));
+    Logger::debug('File::uploadFile() fileUploadPart = ' . print_r($fileUploadPart, true));
 
     $sourceFileHandle = fopen($sourceFilePath, 'rb');
 
     $filesize = filesize($sourceFilePath);
-    $totalParts = ceil($filesize / $filePartUpload->partsize);
+    $totalParts = ceil($filesize / $fileUploadPart->partsize);
 
     if ($totalParts === 1) {
-      Api::sendFile($filePartUpload->upload_uri, 'PUT', $sourceFileHandle);
+      Api::sendFile($fileUploadPart->upload_uri, 'PUT', $sourceFileHandle);
     } else {
       // send part 1
-      $partFilePath = tempnam(sys_get_temp_dir(), basename($filePartUpload->path));
+      $partFilePath = tempnam(sys_get_temp_dir(), basename($fileUploadPart->path));
       $partFileHandle = fopen($partFilePath, 'w+b');
-      stream_copy_to_stream($sourceFileHandle, $partFileHandle, $filePartUpload->partsize);
+      stream_copy_to_stream($sourceFileHandle, $partFileHandle, $fileUploadPart->partsize);
       rewind($partFileHandle);
 
-      Api::sendFile($filePartUpload->upload_uri, 'PUT', $partFileHandle);
+      Api::sendFile($fileUploadPart->upload_uri, 'PUT', $partFileHandle);
 
       unlink($partFilePath);
 
@@ -103,20 +103,20 @@ class File {
         $sourceOffset = ftell($sourceFileHandle);
 
         do {
-          $nextFilePartUpload = self::continueUpload($destinationPath, $part, $filePartUpload);
+          $nextFileUploadPart = self::continueUpload($destinationPath, $part, $fileUploadPart);
 
-          $partFilePath = tempnam(sys_get_temp_dir(), basename($filePartUpload->path) . '~part' . $part);
+          $partFilePath = tempnam(sys_get_temp_dir(), basename($fileUploadPart->path) . '~part' . $part);
           $partFileHandle = fopen($partFilePath, 'w+b');
 
           if ($retries > 0) {
             fseek($sourceFileHandle, $sourceOffset);
           }
 
-          stream_copy_to_stream($sourceFileHandle, $partFileHandle, $nextFilePartUpload->partsize);
+          stream_copy_to_stream($sourceFileHandle, $partFileHandle, $nextFileUploadPart->partsize);
 
           rewind($partFileHandle);
 
-          $response = Api::sendFile($nextFilePartUpload->upload_uri, 'PUT', $partFileHandle);
+          $response = Api::sendFile($nextFileUploadPart->upload_uri, 'PUT', $partFileHandle);
 
           unlink($partFilePath);
         } while (!$response && ++$retries <= Files::$maxNetworkRetries);
@@ -128,7 +128,7 @@ class File {
       }
     }
 
-    self::completeUpload($filePartUpload);
+    self::completeUpload($fileUploadPart);
 
     return !$failed;
   }

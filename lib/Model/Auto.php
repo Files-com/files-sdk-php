@@ -27,15 +27,15 @@ class Auto {
   }
 
   public function __get($name) {
-    return $this->attributes[$name];
+    return @$this->attributes[$name];
   }
 
   public function isLoaded() {
-    return !!$this->attributes['id'];
+    return !!@$this->attributes['id'];
   }
 
   // object
   public function getDynamic() {
-    return $this->attributes['dynamic'];
+    return @$this->attributes['dynamic'];
   }
 }

@@ -27,16 +27,16 @@ class Request {
   }
 
   public function __get($name) {
-    return $this->attributes[$name];
+    return @$this->attributes[$name];
   }
 
   public function isLoaded() {
-    return !!$this->attributes['id'];
+    return !!@$this->attributes['id'];
   }
 
   // int64 # Request ID
   public function getId() {
-    return $this->attributes['id'];
+    return @$this->attributes['id'];
   }
 
   public function setId($value) {
@@ -45,7 +45,7 @@ class Request {
 
   // string # Folder path This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
   public function getPath() {
-    return $this->attributes['path'];
+    return @$this->attributes['path'];
   }
 
   public function setPath($value) {
@@ -54,7 +54,7 @@ class Request {
 
   // string # Source filename, if applicable
   public function getSource() {
-    return $this->attributes['source'];
+    return @$this->attributes['source'];
   }
 
   public function setSource($value) {
@@ -63,7 +63,7 @@ class Request {
 
   // string # Destination filename
   public function getDestination() {
-    return $this->attributes['destination'];
+    return @$this->attributes['destination'];
   }
 
   public function setDestination($value) {
@@ -72,7 +72,7 @@ class Request {
 
   // string # ID of automation that created request
   public function getAutomationId() {
-    return $this->attributes['automation_id'];
+    return @$this->attributes['automation_id'];
   }
 
   public function setAutomationId($value) {
@@ -81,7 +81,7 @@ class Request {
 
   // string # User making the request (if applicable)
   public function getUserDisplayName() {
-    return $this->attributes['user_display_name'];
+    return @$this->attributes['user_display_name'];
   }
 
   public function setUserDisplayName($value) {
@@ -90,7 +90,7 @@ class Request {
 
   // string # A list of user IDs to request the file from. If sent as a string, it should be comma-delimited.
   public function getUserIds() {
-    return $this->attributes['user_ids'];
+    return @$this->attributes['user_ids'];
   }
 
   public function setUserIds($value) {
@@ -99,7 +99,7 @@ class Request {
 
   // string # A list of group IDs to request the file from. If sent as a string, it should be comma-delimited.
   public function getGroupIds() {
-    return $this->attributes['group_ids'];
+    return @$this->attributes['group_ids'];
   }
 
   public function setGroupIds($value) {
@@ -108,7 +108,7 @@ class Request {
 
   public function delete($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no ID');
+      throw new \Error('Current object has no id');
     }
 
     if (!is_array($params)) {
@@ -117,19 +117,19 @@ class Request {
 
     $params['id'] = $this->id;
 
-    if ($params['id'] && !is_int($params['id'])) {
+    if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
     }
 
-    if (!$params['id']) {
+    if (!@$params['id']) {
       if ($this->id) {
-        $params['id'] = $this->id;
+        $params['id'] = @$this->id;
       } else {
         throw new \Error('Parameter missing: id');
       }
     }
 
-    return Api::sendRequest('/requests/' . $params['id'] . '', 'DELETE', $params, $this->options);
+    return Api::sendRequest('/requests/' . @$params['id'] . '', 'DELETE', $params, $this->options);
   }
 
   public function destroy($params = []) {
@@ -137,7 +137,7 @@ class Request {
   }
 
   public function save() {
-      if ($this->attributes['id']) {
+      if (@$this->attributes['id']) {
         throw new \BadMethodCallException('The Request object doesn\'t support updates.');
       } else {
         $new_obj = self::create($this->attributes, $this->options);
@@ -155,23 +155,23 @@ class Request {
   //   mine - boolean - Only show requests of the current user?  (Defaults to true if current user is not a site admin.)
   //   path - string - Path to show requests for.  If omitted, shows all paths. Send `/` to represent the root directory.
   public static function list($params = [], $options = []) {
-    if ($params['page'] && !is_int($params['page'])) {
+    if (@$params['page'] && !is_int(@$params['page'])) {
       throw new \InvalidArgumentException('Bad parameter: $page must be of type int; received ' . gettype($page));
     }
 
-    if ($params['per_page'] && !is_int($params['per_page'])) {
+    if (@$params['per_page'] && !is_int(@$params['per_page'])) {
       throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
     }
 
-    if ($params['action'] && !is_string($params['action'])) {
+    if (@$params['action'] && !is_string(@$params['action'])) {
       throw new \InvalidArgumentException('Bad parameter: $action must be of type string; received ' . gettype($action));
     }
 
-    if ($params['cursor'] && !is_string($params['cursor'])) {
+    if (@$params['cursor'] && !is_string(@$params['cursor'])) {
       throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
     }
 
-    if ($params['path'] && !is_string($params['path'])) {
+    if (@$params['path'] && !is_string(@$params['path'])) {
       throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
     }
 
@@ -205,31 +205,31 @@ class Request {
 
     $params['path'] = $path;
 
-    if (!$params['path']) {
+    if (!@$params['path']) {
       throw new \Error('Parameter missing: path');
     }
 
-    if ($params['page'] && !is_int($params['page'])) {
+    if (@$params['page'] && !is_int(@$params['page'])) {
       throw new \InvalidArgumentException('Bad parameter: $page must be of type int; received ' . gettype($page));
     }
 
-    if ($params['per_page'] && !is_int($params['per_page'])) {
+    if (@$params['per_page'] && !is_int(@$params['per_page'])) {
       throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
     }
 
-    if ($params['action'] && !is_string($params['action'])) {
+    if (@$params['action'] && !is_string(@$params['action'])) {
       throw new \InvalidArgumentException('Bad parameter: $action must be of type string; received ' . gettype($action));
     }
 
-    if ($params['cursor'] && !is_string($params['cursor'])) {
+    if (@$params['cursor'] && !is_string(@$params['cursor'])) {
       throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
     }
 
-    if ($params['path'] && !is_string($params['path'])) {
+    if (@$params['path'] && !is_string(@$params['path'])) {
       throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
     }
 
-    $response = Api::sendRequest('/requests/folders/' . $params['path'] . '', 'GET', $params, $options);
+    $response = Api::sendRequest('/requests/folders/' . @$params['path'] . '', 'GET', $params, $options);
 
     $return_array = [];
 
@@ -246,32 +246,32 @@ class Request {
   //   user_ids - string - A list of user IDs to request the file from. If sent as a string, it should be comma-delimited.
   //   group_ids - string - A list of group IDs to request the file from. If sent as a string, it should be comma-delimited.
   public static function create($params = [], $options = []) {
-    if (!$params['path']) {
+    if (!@$params['path']) {
       throw new \Error('Parameter missing: path');
     }
 
-    if (!$params['destination']) {
+    if (!@$params['destination']) {
       throw new \Error('Parameter missing: destination');
     }
 
-    if ($params['path'] && !is_string($params['path'])) {
+    if (@$params['path'] && !is_string(@$params['path'])) {
       throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
     }
 
-    if ($params['destination'] && !is_string($params['destination'])) {
+    if (@$params['destination'] && !is_string(@$params['destination'])) {
       throw new \InvalidArgumentException('Bad parameter: $destination must be of type string; received ' . gettype($destination));
     }
 
-    if ($params['user_ids'] && !is_string($params['user_ids'])) {
+    if (@$params['user_ids'] && !is_string(@$params['user_ids'])) {
       throw new \InvalidArgumentException('Bad parameter: $user_ids must be of type string; received ' . gettype($user_ids));
     }
 
-    if ($params['group_ids'] && !is_string($params['group_ids'])) {
+    if (@$params['group_ids'] && !is_string(@$params['group_ids'])) {
       throw new \InvalidArgumentException('Bad parameter: $group_ids must be of type string; received ' . gettype($group_ids));
     }
 
     $response = Api::sendRequest('/requests', 'POST', $params, $options);
 
-    return new Request((array)$response->data, $options);
+    return new Request((array)(@$response->data ?: []), $options);
   }
 }

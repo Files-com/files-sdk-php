@@ -27,16 +27,16 @@ class Style {
   }
 
   public function __get($name) {
-    return $this->attributes[$name];
+    return @$this->attributes[$name];
   }
 
   public function isLoaded() {
-    return !!$this->attributes['id'];
+    return !!@$this->attributes['path'];
   }
 
   // int64 # Style ID
   public function getId() {
-    return $this->attributes['id'];
+    return @$this->attributes['id'];
   }
 
   public function setId($value) {
@@ -45,7 +45,7 @@ class Style {
 
   // string # Folder path This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
   public function getPath() {
-    return $this->attributes['path'];
+    return @$this->attributes['path'];
   }
 
   public function setPath($value) {
@@ -54,7 +54,7 @@ class Style {
 
   // Logo
   public function getLogo() {
-    return $this->attributes['logo'];
+    return @$this->attributes['logo'];
   }
 
   public function setLogo($value) {
@@ -63,7 +63,7 @@ class Style {
 
   // Logo thumbnail
   public function getThumbnail() {
-    return $this->attributes['thumbnail'];
+    return @$this->attributes['thumbnail'];
   }
 
   public function setThumbnail($value) {
@@ -72,7 +72,7 @@ class Style {
 
   // file # Logo for custom branding.
   public function getFile() {
-    return $this->attributes['file'];
+    return @$this->attributes['file'];
   }
 
   public function setFile($value) {
@@ -82,63 +82,63 @@ class Style {
   // Parameters:
   //   file (required) - file - Logo for custom branding.
   public function update($params = []) {
-    if (!$this->id) {
-      throw new \Error('Current object has no ID');
+    if (!$this->path) {
+      throw new \Error('Current object has no path');
     }
 
     if (!is_array($params)) {
       throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
     }
 
-    $params['id'] = $this->id;
+    $params['path'] = $this->path;
 
-    if ($params['path'] && !is_string($params['path'])) {
+    if (@$params['path'] && !is_string(@$params['path'])) {
       throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
     }
 
-    if (!$params['path']) {
+    if (!@$params['path']) {
       if ($this->path) {
-        $params['path'] = $this->path;
+        $params['path'] = @$this->path;
       } else {
         throw new \Error('Parameter missing: path');
       }
     }
 
-    if (!$params['file']) {
+    if (!@$params['file']) {
       if ($this->file) {
-        $params['file'] = $this->file;
+        $params['file'] = @$this->file;
       } else {
         throw new \Error('Parameter missing: file');
       }
     }
 
-    return Api::sendRequest('/styles/' . $params['path'] . '', 'PATCH', $params, $this->options);
+    return Api::sendRequest('/styles/' . @$params['path'] . '', 'PATCH', $params, $this->options);
   }
 
   public function delete($params = []) {
-    if (!$this->id) {
-      throw new \Error('Current object has no ID');
+    if (!$this->path) {
+      throw new \Error('Current object has no path');
     }
 
     if (!is_array($params)) {
       throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
     }
 
-    $params['id'] = $this->id;
+    $params['path'] = $this->path;
 
-    if ($params['path'] && !is_string($params['path'])) {
+    if (@$params['path'] && !is_string(@$params['path'])) {
       throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
     }
 
-    if (!$params['path']) {
+    if (!@$params['path']) {
       if ($this->path) {
-        $params['path'] = $this->path;
+        $params['path'] = @$this->path;
       } else {
         throw new \Error('Parameter missing: path');
       }
     }
 
-    return Api::sendRequest('/styles/' . $params['path'] . '', 'DELETE', $params, $this->options);
+    return Api::sendRequest('/styles/' . @$params['path'] . '', 'DELETE', $params, $this->options);
   }
 
   public function destroy($params = []) {
@@ -158,17 +158,17 @@ class Style {
 
     $params['path'] = $path;
 
-    if (!$params['path']) {
+    if (!@$params['path']) {
       throw new \Error('Parameter missing: path');
     }
 
-    if ($params['path'] && !is_string($params['path'])) {
+    if (@$params['path'] && !is_string(@$params['path'])) {
       throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
     }
 
-    $response = Api::sendRequest('/styles/' . $params['path'] . '', 'GET', $params, $options);
+    $response = Api::sendRequest('/styles/' . @$params['path'] . '', 'GET', $params, $options);
 
-    return new Style((array)$response->data, $options);
+    return new Style((array)(@$response->data ?: []), $options);
   }
 
   public static function get($path, $params = [], $options = []) {

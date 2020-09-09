@@ -27,16 +27,16 @@ class PublicKey {
   }
 
   public function __get($name) {
-    return $this->attributes[$name];
+    return @$this->attributes[$name];
   }
 
   public function isLoaded() {
-    return !!$this->attributes['id'];
+    return !!@$this->attributes['id'];
   }
 
   // int64 # Public key ID
   public function getId() {
-    return $this->attributes['id'];
+    return @$this->attributes['id'];
   }
 
   public function setId($value) {
@@ -45,7 +45,7 @@ class PublicKey {
 
   // string # Public key title
   public function getTitle() {
-    return $this->attributes['title'];
+    return @$this->attributes['title'];
   }
 
   public function setTitle($value) {
@@ -54,12 +54,12 @@ class PublicKey {
 
   // date-time # Public key created at date/time
   public function getCreatedAt() {
-    return $this->attributes['created_at'];
+    return @$this->attributes['created_at'];
   }
 
   // string # Public key fingerprint
   public function getFingerprint() {
-    return $this->attributes['fingerprint'];
+    return @$this->attributes['fingerprint'];
   }
 
   public function setFingerprint($value) {
@@ -68,7 +68,7 @@ class PublicKey {
 
   // int64 # User ID.  Provide a value of `0` to operate the current session's user.
   public function getUserId() {
-    return $this->attributes['user_id'];
+    return @$this->attributes['user_id'];
   }
 
   public function setUserId($value) {
@@ -77,7 +77,7 @@ class PublicKey {
 
   // string # Actual contents of SSH key.
   public function getPublicKey() {
-    return $this->attributes['public_key'];
+    return @$this->attributes['public_key'];
   }
 
   public function setPublicKey($value) {
@@ -88,7 +88,7 @@ class PublicKey {
   //   title (required) - string - Internal reference for key.
   public function update($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no ID');
+      throw new \Error('Current object has no id');
     }
 
     if (!is_array($params)) {
@@ -97,35 +97,35 @@ class PublicKey {
 
     $params['id'] = $this->id;
 
-    if ($params['id'] && !is_int($params['id'])) {
+    if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
     }
-    if ($params['title'] && !is_string($params['title'])) {
+    if (@$params['title'] && !is_string(@$params['title'])) {
       throw new \InvalidArgumentException('Bad parameter: $title must be of type string; received ' . gettype($title));
     }
 
-    if (!$params['id']) {
+    if (!@$params['id']) {
       if ($this->id) {
-        $params['id'] = $this->id;
+        $params['id'] = @$this->id;
       } else {
         throw new \Error('Parameter missing: id');
       }
     }
 
-    if (!$params['title']) {
+    if (!@$params['title']) {
       if ($this->title) {
-        $params['title'] = $this->title;
+        $params['title'] = @$this->title;
       } else {
         throw new \Error('Parameter missing: title');
       }
     }
 
-    return Api::sendRequest('/public_keys/' . $params['id'] . '', 'PATCH', $params, $this->options);
+    return Api::sendRequest('/public_keys/' . @$params['id'] . '', 'PATCH', $params, $this->options);
   }
 
   public function delete($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no ID');
+      throw new \Error('Current object has no id');
     }
 
     if (!is_array($params)) {
@@ -134,19 +134,19 @@ class PublicKey {
 
     $params['id'] = $this->id;
 
-    if ($params['id'] && !is_int($params['id'])) {
+    if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
     }
 
-    if (!$params['id']) {
+    if (!@$params['id']) {
       if ($this->id) {
-        $params['id'] = $this->id;
+        $params['id'] = @$this->id;
       } else {
         throw new \Error('Parameter missing: id');
       }
     }
 
-    return Api::sendRequest('/public_keys/' . $params['id'] . '', 'DELETE', $params, $this->options);
+    return Api::sendRequest('/public_keys/' . @$params['id'] . '', 'DELETE', $params, $this->options);
   }
 
   public function destroy($params = []) {
@@ -154,7 +154,7 @@ class PublicKey {
   }
 
   public function save() {
-      if ($this->attributes['id']) {
+      if (@$this->attributes['id']) {
         return $this->update($this->attributes);
       } else {
         $new_obj = self::create($this->attributes, $this->options);
@@ -170,23 +170,23 @@ class PublicKey {
   //   action - string - Deprecated: If set to `count` returns a count of matching records rather than the records themselves.
   //   cursor - string - Send cursor to resume an existing list from the point at which you left off.  Get a cursor from an existing list via the X-Files-Cursor-Next header.
   public static function list($params = [], $options = []) {
-    if ($params['user_id'] && !is_int($params['user_id'])) {
+    if (@$params['user_id'] && !is_int(@$params['user_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
     }
 
-    if ($params['page'] && !is_int($params['page'])) {
+    if (@$params['page'] && !is_int(@$params['page'])) {
       throw new \InvalidArgumentException('Bad parameter: $page must be of type int; received ' . gettype($page));
     }
 
-    if ($params['per_page'] && !is_int($params['per_page'])) {
+    if (@$params['per_page'] && !is_int(@$params['per_page'])) {
       throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
     }
 
-    if ($params['action'] && !is_string($params['action'])) {
+    if (@$params['action'] && !is_string(@$params['action'])) {
       throw new \InvalidArgumentException('Bad parameter: $action must be of type string; received ' . gettype($action));
     }
 
-    if ($params['cursor'] && !is_string($params['cursor'])) {
+    if (@$params['cursor'] && !is_string(@$params['cursor'])) {
       throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
     }
 
@@ -214,17 +214,17 @@ class PublicKey {
 
     $params['id'] = $id;
 
-    if (!$params['id']) {
+    if (!@$params['id']) {
       throw new \Error('Parameter missing: id');
     }
 
-    if ($params['id'] && !is_int($params['id'])) {
+    if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
     }
 
-    $response = Api::sendRequest('/public_keys/' . $params['id'] . '', 'GET', $params, $options);
+    $response = Api::sendRequest('/public_keys/' . @$params['id'] . '', 'GET', $params, $options);
 
-    return new PublicKey((array)$response->data, $options);
+    return new PublicKey((array)(@$response->data ?: []), $options);
   }
 
   public static function get($id, $params = [], $options = []) {
@@ -236,28 +236,28 @@ class PublicKey {
   //   title (required) - string - Internal reference for key.
   //   public_key (required) - string - Actual contents of SSH key.
   public static function create($params = [], $options = []) {
-    if (!$params['title']) {
+    if (!@$params['title']) {
       throw new \Error('Parameter missing: title');
     }
 
-    if (!$params['public_key']) {
+    if (!@$params['public_key']) {
       throw new \Error('Parameter missing: public_key');
     }
 
-    if ($params['user_id'] && !is_int($params['user_id'])) {
+    if (@$params['user_id'] && !is_int(@$params['user_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
     }
 
-    if ($params['title'] && !is_string($params['title'])) {
+    if (@$params['title'] && !is_string(@$params['title'])) {
       throw new \InvalidArgumentException('Bad parameter: $title must be of type string; received ' . gettype($title));
     }
 
-    if ($params['public_key'] && !is_string($params['public_key'])) {
+    if (@$params['public_key'] && !is_string(@$params['public_key'])) {
       throw new \InvalidArgumentException('Bad parameter: $public_key must be of type string; received ' . gettype($public_key));
     }
 
     $response = Api::sendRequest('/public_keys', 'POST', $params, $options);
 
-    return new PublicKey((array)$response->data, $options);
+    return new PublicKey((array)(@$response->data ?: []), $options);
   }
 }

@@ -27,16 +27,16 @@ class MessageReaction {
   }
 
   public function __get($name) {
-    return $this->attributes[$name];
+    return @$this->attributes[$name];
   }
 
   public function isLoaded() {
-    return !!$this->attributes['id'];
+    return !!@$this->attributes['id'];
   }
 
   // int64 # Reaction ID
   public function getId() {
-    return $this->attributes['id'];
+    return @$this->attributes['id'];
   }
 
   public function setId($value) {
@@ -45,7 +45,7 @@ class MessageReaction {
 
   // string # Emoji used in the reaction.
   public function getEmoji() {
-    return $this->attributes['emoji'];
+    return @$this->attributes['emoji'];
   }
 
   public function setEmoji($value) {
@@ -54,7 +54,7 @@ class MessageReaction {
 
   // int64 # User ID.  Provide a value of `0` to operate the current session's user.
   public function getUserId() {
-    return $this->attributes['user_id'];
+    return @$this->attributes['user_id'];
   }
 
   public function setUserId($value) {
@@ -63,7 +63,7 @@ class MessageReaction {
 
   public function delete($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no ID');
+      throw new \Error('Current object has no id');
     }
 
     if (!is_array($params)) {
@@ -72,19 +72,19 @@ class MessageReaction {
 
     $params['id'] = $this->id;
 
-    if ($params['id'] && !is_int($params['id'])) {
+    if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
     }
 
-    if (!$params['id']) {
+    if (!@$params['id']) {
       if ($this->id) {
-        $params['id'] = $this->id;
+        $params['id'] = @$this->id;
       } else {
         throw new \Error('Parameter missing: id');
       }
     }
 
-    return Api::sendRequest('/message_reactions/' . $params['id'] . '', 'DELETE', $params, $this->options);
+    return Api::sendRequest('/message_reactions/' . @$params['id'] . '', 'DELETE', $params, $this->options);
   }
 
   public function destroy($params = []) {
@@ -92,7 +92,7 @@ class MessageReaction {
   }
 
   public function save() {
-      if ($this->attributes['id']) {
+      if (@$this->attributes['id']) {
         throw new \BadMethodCallException('The MessageReaction object doesn\'t support updates.');
       } else {
         $new_obj = self::create($this->attributes, $this->options);
@@ -109,31 +109,31 @@ class MessageReaction {
   //   cursor - string - Send cursor to resume an existing list from the point at which you left off.  Get a cursor from an existing list via the X-Files-Cursor-Next header.
   //   message_id (required) - int64 - Message to return reactions for.
   public static function list($params = [], $options = []) {
-    if (!$params['message_id']) {
+    if (!@$params['message_id']) {
       throw new \Error('Parameter missing: message_id');
     }
 
-    if ($params['user_id'] && !is_int($params['user_id'])) {
+    if (@$params['user_id'] && !is_int(@$params['user_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
     }
 
-    if ($params['page'] && !is_int($params['page'])) {
+    if (@$params['page'] && !is_int(@$params['page'])) {
       throw new \InvalidArgumentException('Bad parameter: $page must be of type int; received ' . gettype($page));
     }
 
-    if ($params['per_page'] && !is_int($params['per_page'])) {
+    if (@$params['per_page'] && !is_int(@$params['per_page'])) {
       throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
     }
 
-    if ($params['action'] && !is_string($params['action'])) {
+    if (@$params['action'] && !is_string(@$params['action'])) {
       throw new \InvalidArgumentException('Bad parameter: $action must be of type string; received ' . gettype($action));
     }
 
-    if ($params['cursor'] && !is_string($params['cursor'])) {
+    if (@$params['cursor'] && !is_string(@$params['cursor'])) {
       throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
     }
 
-    if ($params['message_id'] && !is_int($params['message_id'])) {
+    if (@$params['message_id'] && !is_int(@$params['message_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $message_id must be of type int; received ' . gettype($message_id));
     }
 
@@ -161,17 +161,17 @@ class MessageReaction {
 
     $params['id'] = $id;
 
-    if (!$params['id']) {
+    if (!@$params['id']) {
       throw new \Error('Parameter missing: id');
     }
 
-    if ($params['id'] && !is_int($params['id'])) {
+    if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
     }
 
-    $response = Api::sendRequest('/message_reactions/' . $params['id'] . '', 'GET', $params, $options);
+    $response = Api::sendRequest('/message_reactions/' . @$params['id'] . '', 'GET', $params, $options);
 
-    return new MessageReaction((array)$response->data, $options);
+    return new MessageReaction((array)(@$response->data ?: []), $options);
   }
 
   public static function get($id, $params = [], $options = []) {
@@ -182,20 +182,20 @@ class MessageReaction {
   //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
   //   emoji (required) - string - Emoji to react with.
   public static function create($params = [], $options = []) {
-    if (!$params['emoji']) {
+    if (!@$params['emoji']) {
       throw new \Error('Parameter missing: emoji');
     }
 
-    if ($params['user_id'] && !is_int($params['user_id'])) {
+    if (@$params['user_id'] && !is_int(@$params['user_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
     }
 
-    if ($params['emoji'] && !is_string($params['emoji'])) {
+    if (@$params['emoji'] && !is_string(@$params['emoji'])) {
       throw new \InvalidArgumentException('Bad parameter: $emoji must be of type string; received ' . gettype($emoji));
     }
 
     $response = Api::sendRequest('/message_reactions', 'POST', $params, $options);
 
-    return new MessageReaction((array)$response->data, $options);
+    return new MessageReaction((array)(@$response->data ?: []), $options);
   }
 }

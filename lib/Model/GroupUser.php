@@ -27,16 +27,16 @@ class GroupUser {
   }
 
   public function __get($name) {
-    return $this->attributes[$name];
+    return @$this->attributes[$name];
   }
 
   public function isLoaded() {
-    return !!$this->attributes['id'];
+    return !!@$this->attributes['id'];
   }
 
   // string # Group name
   public function getGroupName() {
-    return $this->attributes['group_name'];
+    return @$this->attributes['group_name'];
   }
 
   public function setGroupName($value) {
@@ -45,7 +45,7 @@ class GroupUser {
 
   // int64 # Group ID
   public function getGroupId() {
-    return $this->attributes['group_id'];
+    return @$this->attributes['group_id'];
   }
 
   public function setGroupId($value) {
@@ -54,7 +54,7 @@ class GroupUser {
 
   // int64 # User ID
   public function getUserId() {
-    return $this->attributes['user_id'];
+    return @$this->attributes['user_id'];
   }
 
   public function setUserId($value) {
@@ -63,7 +63,7 @@ class GroupUser {
 
   // boolean # Is this user an administrator of this group?
   public function getAdmin() {
-    return $this->attributes['admin'];
+    return @$this->attributes['admin'];
   }
 
   public function setAdmin($value) {
@@ -72,7 +72,7 @@ class GroupUser {
 
   // array # A list of usernames for users in this group
   public function getUsernames() {
-    return $this->attributes['usernames'];
+    return @$this->attributes['usernames'];
   }
 
   public function setUsernames($value) {
@@ -81,7 +81,7 @@ class GroupUser {
 
   // int64 # Group User ID.
   public function getId() {
-    return $this->attributes['id'];
+    return @$this->attributes['id'];
   }
 
   public function setId($value) {
@@ -94,7 +94,7 @@ class GroupUser {
   //   admin - boolean - Is the user a group administrator?
   public function update($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no ID');
+      throw new \Error('Current object has no id');
     }
 
     if (!is_array($params)) {
@@ -103,41 +103,41 @@ class GroupUser {
 
     $params['id'] = $this->id;
 
-    if ($params['id'] && !is_int($params['id'])) {
+    if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
     }
-    if ($params['group_id'] && !is_int($params['group_id'])) {
+    if (@$params['group_id'] && !is_int(@$params['group_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $group_id must be of type int; received ' . gettype($group_id));
     }
-    if ($params['user_id'] && !is_int($params['user_id'])) {
+    if (@$params['user_id'] && !is_int(@$params['user_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
     }
 
-    if (!$params['id']) {
+    if (!@$params['id']) {
       if ($this->id) {
-        $params['id'] = $this->id;
+        $params['id'] = @$this->id;
       } else {
         throw new \Error('Parameter missing: id');
       }
     }
 
-    if (!$params['group_id']) {
+    if (!@$params['group_id']) {
       if ($this->group_id) {
-        $params['group_id'] = $this->group_id;
+        $params['group_id'] = @$this->group_id;
       } else {
         throw new \Error('Parameter missing: group_id');
       }
     }
 
-    if (!$params['user_id']) {
+    if (!@$params['user_id']) {
       if ($this->user_id) {
-        $params['user_id'] = $this->user_id;
+        $params['user_id'] = @$this->user_id;
       } else {
         throw new \Error('Parameter missing: user_id');
       }
     }
 
-    return Api::sendRequest('/group_users/' . $params['id'] . '', 'PATCH', $params, $this->options);
+    return Api::sendRequest('/group_users/' . @$params['id'] . '', 'PATCH', $params, $this->options);
   }
 
   // Parameters:
@@ -145,7 +145,7 @@ class GroupUser {
   //   user_id (required) - int64 - User ID to remove from group.
   public function delete($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no ID');
+      throw new \Error('Current object has no id');
     }
 
     if (!is_array($params)) {
@@ -154,41 +154,41 @@ class GroupUser {
 
     $params['id'] = $this->id;
 
-    if ($params['id'] && !is_int($params['id'])) {
+    if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
     }
-    if ($params['group_id'] && !is_int($params['group_id'])) {
+    if (@$params['group_id'] && !is_int(@$params['group_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $group_id must be of type int; received ' . gettype($group_id));
     }
-    if ($params['user_id'] && !is_int($params['user_id'])) {
+    if (@$params['user_id'] && !is_int(@$params['user_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
     }
 
-    if (!$params['id']) {
+    if (!@$params['id']) {
       if ($this->id) {
-        $params['id'] = $this->id;
+        $params['id'] = @$this->id;
       } else {
         throw new \Error('Parameter missing: id');
       }
     }
 
-    if (!$params['group_id']) {
+    if (!@$params['group_id']) {
       if ($this->group_id) {
-        $params['group_id'] = $this->group_id;
+        $params['group_id'] = @$this->group_id;
       } else {
         throw new \Error('Parameter missing: group_id');
       }
     }
 
-    if (!$params['user_id']) {
+    if (!@$params['user_id']) {
       if ($this->user_id) {
-        $params['user_id'] = $this->user_id;
+        $params['user_id'] = @$this->user_id;
       } else {
         throw new \Error('Parameter missing: user_id');
       }
     }
 
-    return Api::sendRequest('/group_users/' . $params['id'] . '', 'DELETE', $params, $this->options);
+    return Api::sendRequest('/group_users/' . @$params['id'] . '', 'DELETE', $params, $this->options);
   }
 
   public function destroy($params = []) {
@@ -207,27 +207,27 @@ class GroupUser {
   //   cursor - string - Send cursor to resume an existing list from the point at which you left off.  Get a cursor from an existing list via the X-Files-Cursor-Next header.
   //   group_id - int64 - Group ID.  If provided, will return group_users of this group.
   public static function list($params = [], $options = []) {
-    if ($params['user_id'] && !is_int($params['user_id'])) {
+    if (@$params['user_id'] && !is_int(@$params['user_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
     }
 
-    if ($params['page'] && !is_int($params['page'])) {
+    if (@$params['page'] && !is_int(@$params['page'])) {
       throw new \InvalidArgumentException('Bad parameter: $page must be of type int; received ' . gettype($page));
     }
 
-    if ($params['per_page'] && !is_int($params['per_page'])) {
+    if (@$params['per_page'] && !is_int(@$params['per_page'])) {
       throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
     }
 
-    if ($params['action'] && !is_string($params['action'])) {
+    if (@$params['action'] && !is_string(@$params['action'])) {
       throw new \InvalidArgumentException('Bad parameter: $action must be of type string; received ' . gettype($action));
     }
 
-    if ($params['cursor'] && !is_string($params['cursor'])) {
+    if (@$params['cursor'] && !is_string(@$params['cursor'])) {
       throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
     }
 
-    if ($params['group_id'] && !is_int($params['group_id'])) {
+    if (@$params['group_id'] && !is_int(@$params['group_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $group_id must be of type int; received ' . gettype($group_id));
     }
 

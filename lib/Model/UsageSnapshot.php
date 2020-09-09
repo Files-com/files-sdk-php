@@ -27,76 +27,76 @@ class UsageSnapshot {
   }
 
   public function __get($name) {
-    return $this->attributes[$name];
+    return @$this->attributes[$name];
   }
 
   public function isLoaded() {
-    return !!$this->attributes['id'];
+    return !!@$this->attributes['id'];
   }
 
   // int64 # Site usage ID
   public function getId() {
-    return $this->attributes['id'];
+    return @$this->attributes['id'];
   }
 
   // date-time # Site usage report start date/time
   public function getStartAt() {
-    return $this->attributes['start_at'];
+    return @$this->attributes['start_at'];
   }
 
   // date-time # Site usage report end date/time
   public function getEndAt() {
-    return $this->attributes['end_at'];
+    return @$this->attributes['end_at'];
   }
 
   // date-time # Site usage report created at date/time
   public function getCreatedAt() {
-    return $this->attributes['created_at'];
+    return @$this->attributes['created_at'];
   }
 
   // double # Current site usage as of report
   public function getCurrentStorage() {
-    return $this->attributes['current_storage'];
+    return @$this->attributes['current_storage'];
   }
 
   // double # Site usage report highest usage in time period
   public function getHighWaterStorage() {
-    return $this->attributes['high_water_storage'];
+    return @$this->attributes['high_water_storage'];
   }
 
   // int64 # Number of downloads in report time period
   public function getTotalDownloads() {
-    return $this->attributes['total_downloads'];
+    return @$this->attributes['total_downloads'];
   }
 
   // int64 # Number of uploads in time period
   public function getTotalUploads() {
-    return $this->attributes['total_uploads'];
+    return @$this->attributes['total_uploads'];
   }
 
   // date-time # The last time this site usage report was updated
   public function getUpdatedAt() {
-    return $this->attributes['updated_at'];
+    return @$this->attributes['updated_at'];
   }
 
   // object # A map of root folders to their total usage
   public function getUsageByTopLevelDir() {
-    return $this->attributes['usage_by_top_level_dir'];
+    return @$this->attributes['usage_by_top_level_dir'];
   }
 
   // double # Usage for root folder
   public function getRootStorage() {
-    return $this->attributes['root_storage'];
+    return @$this->attributes['root_storage'];
   }
 
   // double # Usage for files that are deleted but uploaded within last 30 days
   public function getDeletedFilesCountedInMinimum() {
-    return $this->attributes['deleted_files_counted_in_minimum'];
+    return @$this->attributes['deleted_files_counted_in_minimum'];
   }
 
   // double # Usage for files that are deleted but retained as backups
   public function getDeletedFilesStorage() {
-    return $this->attributes['deleted_files_storage'];
+    return @$this->attributes['deleted_files_storage'];
   }
 
   // Parameters:
@@ -105,19 +105,19 @@ class UsageSnapshot {
   //   action - string - Deprecated: If set to `count` returns a count of matching records rather than the records themselves.
   //   cursor - string - Send cursor to resume an existing list from the point at which you left off.  Get a cursor from an existing list via the X-Files-Cursor-Next header.
   public static function list($params = [], $options = []) {
-    if ($params['page'] && !is_int($params['page'])) {
+    if (@$params['page'] && !is_int(@$params['page'])) {
       throw new \InvalidArgumentException('Bad parameter: $page must be of type int; received ' . gettype($page));
     }
 
-    if ($params['per_page'] && !is_int($params['per_page'])) {
+    if (@$params['per_page'] && !is_int(@$params['per_page'])) {
       throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
     }
 
-    if ($params['action'] && !is_string($params['action'])) {
+    if (@$params['action'] && !is_string(@$params['action'])) {
       throw new \InvalidArgumentException('Bad parameter: $action must be of type string; received ' . gettype($action));
     }
 
-    if ($params['cursor'] && !is_string($params['cursor'])) {
+    if (@$params['cursor'] && !is_string(@$params['cursor'])) {
       throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
     }
 

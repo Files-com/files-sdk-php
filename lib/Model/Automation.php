@@ -27,16 +27,16 @@ class Automation {
   }
 
   public function __get($name) {
-    return $this->attributes[$name];
+    return @$this->attributes[$name];
   }
 
   public function isLoaded() {
-    return !!$this->attributes['id'];
+    return !!@$this->attributes['id'];
   }
 
   // int64 # Automation ID
   public function getId() {
-    return $this->attributes['id'];
+    return @$this->attributes['id'];
   }
 
   public function setId($value) {
@@ -45,7 +45,7 @@ class Automation {
 
   // string # Automation type
   public function getAutomation() {
-    return $this->attributes['automation'];
+    return @$this->attributes['automation'];
   }
 
   public function setAutomation($value) {
@@ -54,7 +54,7 @@ class Automation {
 
   // string # Source Path
   public function getSource() {
-    return $this->attributes['source'];
+    return @$this->attributes['source'];
   }
 
   public function setSource($value) {
@@ -63,7 +63,7 @@ class Automation {
 
   // string # Destination Path
   public function getDestination() {
-    return $this->attributes['destination'];
+    return @$this->attributes['destination'];
   }
 
   public function setDestination($value) {
@@ -72,7 +72,7 @@ class Automation {
 
   // string # If set, this string in the destination path will be replaced with the value in `destination_replace_to`.
   public function getDestinationReplaceFrom() {
-    return $this->attributes['destination_replace_from'];
+    return @$this->attributes['destination_replace_from'];
   }
 
   public function setDestinationReplaceFrom($value) {
@@ -81,7 +81,7 @@ class Automation {
 
   // string # If set, this string will replace the value `destination_replace_from` in the destination filename. You can use special patterns here.
   public function getDestinationReplaceTo() {
-    return $this->attributes['destination_replace_to'];
+    return @$this->attributes['destination_replace_to'];
   }
 
   public function setDestinationReplaceTo($value) {
@@ -90,7 +90,7 @@ class Automation {
 
   // string # How often to run this automation?  One of: `day`, `week`, `week_end`, `month`, `month_end`, `quarter`, `quarter_end`, `year`, `year_end`
   public function getInterval() {
-    return $this->attributes['interval'];
+    return @$this->attributes['interval'];
   }
 
   public function setInterval($value) {
@@ -99,7 +99,7 @@ class Automation {
 
   // string # Date this automation will next run.
   public function getNextProcessOn() {
-    return $this->attributes['next_process_on'];
+    return @$this->attributes['next_process_on'];
   }
 
   public function setNextProcessOn($value) {
@@ -108,7 +108,7 @@ class Automation {
 
   // string # Path on which this Automation runs.  Supports globs. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
   public function getPath() {
-    return $this->attributes['path'];
+    return @$this->attributes['path'];
   }
 
   public function setPath($value) {
@@ -117,7 +117,7 @@ class Automation {
 
   // boolean # Does this automation run in real time?  This is a read-only property based on automation type.
   public function getRealtime() {
-    return $this->attributes['realtime'];
+    return @$this->attributes['realtime'];
   }
 
   public function setRealtime($value) {
@@ -126,7 +126,7 @@ class Automation {
 
   // int64 # User ID of the Automation's creator.
   public function getUserId() {
-    return $this->attributes['user_id'];
+    return @$this->attributes['user_id'];
   }
 
   public function setUserId($value) {
@@ -135,7 +135,7 @@ class Automation {
 
   // array # IDs of Users for the Automation (i.e. who to Request File from)
   public function getUserIds() {
-    return $this->attributes['user_ids'];
+    return @$this->attributes['user_ids'];
   }
 
   public function setUserIds($value) {
@@ -144,7 +144,7 @@ class Automation {
 
   // array # IDs of Groups for the Automation (i.e. who to Request File from)
   public function getGroupIds() {
-    return $this->attributes['group_ids'];
+    return @$this->attributes['group_ids'];
   }
 
   public function setGroupIds($value) {
@@ -163,7 +163,7 @@ class Automation {
   //   group_ids - string - A list of group IDs the automation is associated with. If sent as a string, it should be comma-delimited.
   public function update($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no ID');
+      throw new \Error('Current object has no id');
     }
 
     if (!is_array($params)) {
@@ -172,59 +172,59 @@ class Automation {
 
     $params['id'] = $this->id;
 
-    if ($params['id'] && !is_int($params['id'])) {
+    if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
     }
-    if ($params['automation'] && !is_string($params['automation'])) {
+    if (@$params['automation'] && !is_string(@$params['automation'])) {
       throw new \InvalidArgumentException('Bad parameter: $automation must be of type string; received ' . gettype($automation));
     }
-    if ($params['source'] && !is_string($params['source'])) {
+    if (@$params['source'] && !is_string(@$params['source'])) {
       throw new \InvalidArgumentException('Bad parameter: $source must be of type string; received ' . gettype($source));
     }
-    if ($params['destination'] && !is_string($params['destination'])) {
+    if (@$params['destination'] && !is_string(@$params['destination'])) {
       throw new \InvalidArgumentException('Bad parameter: $destination must be of type string; received ' . gettype($destination));
     }
-    if ($params['destination_replace_from'] && !is_string($params['destination_replace_from'])) {
+    if (@$params['destination_replace_from'] && !is_string(@$params['destination_replace_from'])) {
       throw new \InvalidArgumentException('Bad parameter: $destination_replace_from must be of type string; received ' . gettype($destination_replace_from));
     }
-    if ($params['destination_replace_to'] && !is_string($params['destination_replace_to'])) {
+    if (@$params['destination_replace_to'] && !is_string(@$params['destination_replace_to'])) {
       throw new \InvalidArgumentException('Bad parameter: $destination_replace_to must be of type string; received ' . gettype($destination_replace_to));
     }
-    if ($params['interval'] && !is_string($params['interval'])) {
+    if (@$params['interval'] && !is_string(@$params['interval'])) {
       throw new \InvalidArgumentException('Bad parameter: $interval must be of type string; received ' . gettype($interval));
     }
-    if ($params['path'] && !is_string($params['path'])) {
+    if (@$params['path'] && !is_string(@$params['path'])) {
       throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
     }
-    if ($params['user_ids'] && !is_string($params['user_ids'])) {
+    if (@$params['user_ids'] && !is_string(@$params['user_ids'])) {
       throw new \InvalidArgumentException('Bad parameter: $user_ids must be of type string; received ' . gettype($user_ids));
     }
-    if ($params['group_ids'] && !is_string($params['group_ids'])) {
+    if (@$params['group_ids'] && !is_string(@$params['group_ids'])) {
       throw new \InvalidArgumentException('Bad parameter: $group_ids must be of type string; received ' . gettype($group_ids));
     }
 
-    if (!$params['id']) {
+    if (!@$params['id']) {
       if ($this->id) {
-        $params['id'] = $this->id;
+        $params['id'] = @$this->id;
       } else {
         throw new \Error('Parameter missing: id');
       }
     }
 
-    if (!$params['automation']) {
+    if (!@$params['automation']) {
       if ($this->automation) {
-        $params['automation'] = $this->automation;
+        $params['automation'] = @$this->automation;
       } else {
         throw new \Error('Parameter missing: automation');
       }
     }
 
-    return Api::sendRequest('/automations/' . $params['id'] . '', 'PATCH', $params, $this->options);
+    return Api::sendRequest('/automations/' . @$params['id'] . '', 'PATCH', $params, $this->options);
   }
 
   public function delete($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no ID');
+      throw new \Error('Current object has no id');
     }
 
     if (!is_array($params)) {
@@ -233,19 +233,19 @@ class Automation {
 
     $params['id'] = $this->id;
 
-    if ($params['id'] && !is_int($params['id'])) {
+    if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
     }
 
-    if (!$params['id']) {
+    if (!@$params['id']) {
       if ($this->id) {
-        $params['id'] = $this->id;
+        $params['id'] = @$this->id;
       } else {
         throw new \Error('Parameter missing: id');
       }
     }
 
-    return Api::sendRequest('/automations/' . $params['id'] . '', 'DELETE', $params, $this->options);
+    return Api::sendRequest('/automations/' . @$params['id'] . '', 'DELETE', $params, $this->options);
   }
 
   public function destroy($params = []) {
@@ -253,7 +253,7 @@ class Automation {
   }
 
   public function save() {
-      if ($this->attributes['id']) {
+      if (@$this->attributes['id']) {
         return $this->update($this->attributes);
       } else {
         $new_obj = self::create($this->attributes, $this->options);
@@ -276,23 +276,23 @@ class Automation {
   //   filter_lteq - object - If set, return records where the specifiied field is less than or equal to the supplied value. Valid fields are `automation`.
   //   automation - string - DEPRECATED: Type of automation to filter by. Use `filter[automation]` instead.
   public static function list($params = [], $options = []) {
-    if ($params['page'] && !is_int($params['page'])) {
+    if (@$params['page'] && !is_int(@$params['page'])) {
       throw new \InvalidArgumentException('Bad parameter: $page must be of type int; received ' . gettype($page));
     }
 
-    if ($params['per_page'] && !is_int($params['per_page'])) {
+    if (@$params['per_page'] && !is_int(@$params['per_page'])) {
       throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
     }
 
-    if ($params['action'] && !is_string($params['action'])) {
+    if (@$params['action'] && !is_string(@$params['action'])) {
       throw new \InvalidArgumentException('Bad parameter: $action must be of type string; received ' . gettype($action));
     }
 
-    if ($params['cursor'] && !is_string($params['cursor'])) {
+    if (@$params['cursor'] && !is_string(@$params['cursor'])) {
       throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
     }
 
-    if ($params['automation'] && !is_string($params['automation'])) {
+    if (@$params['automation'] && !is_string(@$params['automation'])) {
       throw new \InvalidArgumentException('Bad parameter: $automation must be of type string; received ' . gettype($automation));
     }
 
@@ -320,17 +320,17 @@ class Automation {
 
     $params['id'] = $id;
 
-    if (!$params['id']) {
+    if (!@$params['id']) {
       throw new \Error('Parameter missing: id');
     }
 
-    if ($params['id'] && !is_int($params['id'])) {
+    if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
     }
 
-    $response = Api::sendRequest('/automations/' . $params['id'] . '', 'GET', $params, $options);
+    $response = Api::sendRequest('/automations/' . @$params['id'] . '', 'GET', $params, $options);
 
-    return new Automation((array)$response->data, $options);
+    return new Automation((array)(@$response->data ?: []), $options);
   }
 
   public static function get($id, $params = [], $options = []) {
@@ -348,48 +348,48 @@ class Automation {
   //   user_ids - string - A list of user IDs the automation is associated with. If sent as a string, it should be comma-delimited.
   //   group_ids - string - A list of group IDs the automation is associated with. If sent as a string, it should be comma-delimited.
   public static function create($params = [], $options = []) {
-    if (!$params['automation']) {
+    if (!@$params['automation']) {
       throw new \Error('Parameter missing: automation');
     }
 
-    if ($params['automation'] && !is_string($params['automation'])) {
+    if (@$params['automation'] && !is_string(@$params['automation'])) {
       throw new \InvalidArgumentException('Bad parameter: $automation must be of type string; received ' . gettype($automation));
     }
 
-    if ($params['source'] && !is_string($params['source'])) {
+    if (@$params['source'] && !is_string(@$params['source'])) {
       throw new \InvalidArgumentException('Bad parameter: $source must be of type string; received ' . gettype($source));
     }
 
-    if ($params['destination'] && !is_string($params['destination'])) {
+    if (@$params['destination'] && !is_string(@$params['destination'])) {
       throw new \InvalidArgumentException('Bad parameter: $destination must be of type string; received ' . gettype($destination));
     }
 
-    if ($params['destination_replace_from'] && !is_string($params['destination_replace_from'])) {
+    if (@$params['destination_replace_from'] && !is_string(@$params['destination_replace_from'])) {
       throw new \InvalidArgumentException('Bad parameter: $destination_replace_from must be of type string; received ' . gettype($destination_replace_from));
     }
 
-    if ($params['destination_replace_to'] && !is_string($params['destination_replace_to'])) {
+    if (@$params['destination_replace_to'] && !is_string(@$params['destination_replace_to'])) {
       throw new \InvalidArgumentException('Bad parameter: $destination_replace_to must be of type string; received ' . gettype($destination_replace_to));
     }
 
-    if ($params['interval'] && !is_string($params['interval'])) {
+    if (@$params['interval'] && !is_string(@$params['interval'])) {
       throw new \InvalidArgumentException('Bad parameter: $interval must be of type string; received ' . gettype($interval));
     }
 
-    if ($params['path'] && !is_string($params['path'])) {
+    if (@$params['path'] && !is_string(@$params['path'])) {
       throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
     }
 
-    if ($params['user_ids'] && !is_string($params['user_ids'])) {
+    if (@$params['user_ids'] && !is_string(@$params['user_ids'])) {
       throw new \InvalidArgumentException('Bad parameter: $user_ids must be of type string; received ' . gettype($user_ids));
     }
 
-    if ($params['group_ids'] && !is_string($params['group_ids'])) {
+    if (@$params['group_ids'] && !is_string(@$params['group_ids'])) {
       throw new \InvalidArgumentException('Bad parameter: $group_ids must be of type string; received ' . gettype($group_ids));
     }
 
     $response = Api::sendRequest('/automations', 'POST', $params, $options);
 
-    return new Automation((array)$response->data, $options);
+    return new Automation((array)(@$response->data ?: []), $options);
   }
 }

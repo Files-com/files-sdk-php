@@ -27,31 +27,31 @@ class UsageDailySnapshot {
   }
 
   public function __get($name) {
-    return $this->attributes[$name];
+    return @$this->attributes[$name];
   }
 
   public function isLoaded() {
-    return !!$this->attributes['id'];
+    return !!@$this->attributes['id'];
   }
 
   // int64 # ID of the usage record
   public function getId() {
-    return $this->attributes['id'];
+    return @$this->attributes['id'];
   }
 
   // date # The date of this usage record
   public function getDate() {
-    return $this->attributes['date'];
+    return @$this->attributes['date'];
   }
 
   // int64 # The quantity of storage held for this site
   public function getCurrentStorage() {
-    return $this->attributes['current_storage'];
+    return @$this->attributes['current_storage'];
   }
 
   // array # Usage broken down by each top-level folder
   public function getUsageByTopLevelDir() {
-    return $this->attributes['usage_by_top_level_dir'];
+    return @$this->attributes['usage_by_top_level_dir'];
   }
 
   // Parameters:
@@ -67,19 +67,19 @@ class UsageDailySnapshot {
   //   filter_lt - object - If set, return records where the specifiied field is less than the supplied value. Valid fields are `date` and `usage_snapshot_id`.
   //   filter_lteq - object - If set, return records where the specifiied field is less than or equal to the supplied value. Valid fields are `date` and `usage_snapshot_id`.
   public static function list($params = [], $options = []) {
-    if ($params['page'] && !is_int($params['page'])) {
+    if (@$params['page'] && !is_int(@$params['page'])) {
       throw new \InvalidArgumentException('Bad parameter: $page must be of type int; received ' . gettype($page));
     }
 
-    if ($params['per_page'] && !is_int($params['per_page'])) {
+    if (@$params['per_page'] && !is_int(@$params['per_page'])) {
       throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
     }
 
-    if ($params['action'] && !is_string($params['action'])) {
+    if (@$params['action'] && !is_string(@$params['action'])) {
       throw new \InvalidArgumentException('Bad parameter: $action must be of type string; received ' . gettype($action));
     }
 
-    if ($params['cursor'] && !is_string($params['cursor'])) {
+    if (@$params['cursor'] && !is_string(@$params['cursor'])) {
       throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
     }
 

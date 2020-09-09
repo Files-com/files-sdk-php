@@ -27,16 +27,16 @@ class UserRequest {
   }
 
   public function __get($name) {
-    return $this->attributes[$name];
+    return @$this->attributes[$name];
   }
 
   public function isLoaded() {
-    return !!$this->attributes['id'];
+    return !!@$this->attributes['id'];
   }
 
   // int64 # ID
   public function getId() {
-    return $this->attributes['id'];
+    return @$this->attributes['id'];
   }
 
   public function setId($value) {
@@ -45,7 +45,7 @@ class UserRequest {
 
   // string # User's full name
   public function getName() {
-    return $this->attributes['name'];
+    return @$this->attributes['name'];
   }
 
   public function setName($value) {
@@ -54,7 +54,7 @@ class UserRequest {
 
   // email # User email address
   public function getEmail() {
-    return $this->attributes['email'];
+    return @$this->attributes['email'];
   }
 
   public function setEmail($value) {
@@ -63,7 +63,7 @@ class UserRequest {
 
   // string # Details of the user's request
   public function getDetails() {
-    return $this->attributes['details'];
+    return @$this->attributes['details'];
   }
 
   public function setDetails($value) {
@@ -72,7 +72,7 @@ class UserRequest {
 
   public function delete($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no ID');
+      throw new \Error('Current object has no id');
     }
 
     if (!is_array($params)) {
@@ -81,19 +81,19 @@ class UserRequest {
 
     $params['id'] = $this->id;
 
-    if ($params['id'] && !is_int($params['id'])) {
+    if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
     }
 
-    if (!$params['id']) {
+    if (!@$params['id']) {
       if ($this->id) {
-        $params['id'] = $this->id;
+        $params['id'] = @$this->id;
       } else {
         throw new \Error('Parameter missing: id');
       }
     }
 
-    return Api::sendRequest('/user_requests/' . $params['id'] . '', 'DELETE', $params, $this->options);
+    return Api::sendRequest('/user_requests/' . @$params['id'] . '', 'DELETE', $params, $this->options);
   }
 
   public function destroy($params = []) {
@@ -101,7 +101,7 @@ class UserRequest {
   }
 
   public function save() {
-      if ($this->attributes['id']) {
+      if (@$this->attributes['id']) {
         throw new \BadMethodCallException('The UserRequest object doesn\'t support updates.');
       } else {
         $new_obj = self::create($this->attributes, $this->options);
@@ -116,19 +116,19 @@ class UserRequest {
   //   action - string - Deprecated: If set to `count` returns a count of matching records rather than the records themselves.
   //   cursor - string - Send cursor to resume an existing list from the point at which you left off.  Get a cursor from an existing list via the X-Files-Cursor-Next header.
   public static function list($params = [], $options = []) {
-    if ($params['page'] && !is_int($params['page'])) {
+    if (@$params['page'] && !is_int(@$params['page'])) {
       throw new \InvalidArgumentException('Bad parameter: $page must be of type int; received ' . gettype($page));
     }
 
-    if ($params['per_page'] && !is_int($params['per_page'])) {
+    if (@$params['per_page'] && !is_int(@$params['per_page'])) {
       throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
     }
 
-    if ($params['action'] && !is_string($params['action'])) {
+    if (@$params['action'] && !is_string(@$params['action'])) {
       throw new \InvalidArgumentException('Bad parameter: $action must be of type string; received ' . gettype($action));
     }
 
-    if ($params['cursor'] && !is_string($params['cursor'])) {
+    if (@$params['cursor'] && !is_string(@$params['cursor'])) {
       throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
     }
 
@@ -156,17 +156,17 @@ class UserRequest {
 
     $params['id'] = $id;
 
-    if (!$params['id']) {
+    if (!@$params['id']) {
       throw new \Error('Parameter missing: id');
     }
 
-    if ($params['id'] && !is_int($params['id'])) {
+    if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
     }
 
-    $response = Api::sendRequest('/user_requests/' . $params['id'] . '', 'GET', $params, $options);
+    $response = Api::sendRequest('/user_requests/' . @$params['id'] . '', 'GET', $params, $options);
 
-    return new UserRequest((array)$response->data, $options);
+    return new UserRequest((array)(@$response->data ?: []), $options);
   }
 
   public static function get($id, $params = [], $options = []) {
@@ -178,32 +178,32 @@ class UserRequest {
   //   email (required) - string - Email of user requested
   //   details (required) - string - Details of the user request
   public static function create($params = [], $options = []) {
-    if (!$params['name']) {
+    if (!@$params['name']) {
       throw new \Error('Parameter missing: name');
     }
 
-    if (!$params['email']) {
+    if (!@$params['email']) {
       throw new \Error('Parameter missing: email');
     }
 
-    if (!$params['details']) {
+    if (!@$params['details']) {
       throw new \Error('Parameter missing: details');
     }
 
-    if ($params['name'] && !is_string($params['name'])) {
+    if (@$params['name'] && !is_string(@$params['name'])) {
       throw new \InvalidArgumentException('Bad parameter: $name must be of type string; received ' . gettype($name));
     }
 
-    if ($params['email'] && !is_string($params['email'])) {
+    if (@$params['email'] && !is_string(@$params['email'])) {
       throw new \InvalidArgumentException('Bad parameter: $email must be of type string; received ' . gettype($email));
     }
 
-    if ($params['details'] && !is_string($params['details'])) {
+    if (@$params['details'] && !is_string(@$params['details'])) {
       throw new \InvalidArgumentException('Bad parameter: $details must be of type string; received ' . gettype($details));
     }
 
     $response = Api::sendRequest('/user_requests', 'POST', $params, $options);
 
-    return new UserRequest((array)$response->data, $options);
+    return new UserRequest((array)(@$response->data ?: []), $options);
   }
 }

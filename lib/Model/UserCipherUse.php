@@ -27,41 +27,41 @@ class UserCipherUse {
   }
 
   public function __get($name) {
-    return $this->attributes[$name];
+    return @$this->attributes[$name];
   }
 
   public function isLoaded() {
-    return !!$this->attributes['id'];
+    return !!@$this->attributes['id'];
   }
 
   // int64 # UserCipherUse ID
   public function getId() {
-    return $this->attributes['id'];
+    return @$this->attributes['id'];
   }
 
   // string # The protocol and cipher employed
   public function getProtocolCipher() {
-    return $this->attributes['protocol_cipher'];
+    return @$this->attributes['protocol_cipher'];
   }
 
   // date-time # The earliest recorded use of this combination of interface and protocol and cipher (for this user)
   public function getCreatedAt() {
-    return $this->attributes['created_at'];
+    return @$this->attributes['created_at'];
   }
 
   // string # The interface accessed
   public function getInterface() {
-    return $this->attributes['interface'];
+    return @$this->attributes['interface'];
   }
 
   // date-time # The most recent use of this combination of interface and protocol and cipher (for this user)
   public function getUpdatedAt() {
-    return $this->attributes['updated_at'];
+    return @$this->attributes['updated_at'];
   }
 
   // int64 # ID of the user who performed this access
   public function getUserId() {
-    return $this->attributes['user_id'];
+    return @$this->attributes['user_id'];
   }
 
   // Parameters:
@@ -71,23 +71,23 @@ class UserCipherUse {
   //   action - string - Deprecated: If set to `count` returns a count of matching records rather than the records themselves.
   //   cursor - string - Send cursor to resume an existing list from the point at which you left off.  Get a cursor from an existing list via the X-Files-Cursor-Next header.
   public static function list($params = [], $options = []) {
-    if ($params['user_id'] && !is_int($params['user_id'])) {
+    if (@$params['user_id'] && !is_int(@$params['user_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
     }
 
-    if ($params['page'] && !is_int($params['page'])) {
+    if (@$params['page'] && !is_int(@$params['page'])) {
       throw new \InvalidArgumentException('Bad parameter: $page must be of type int; received ' . gettype($page));
     }
 
-    if ($params['per_page'] && !is_int($params['per_page'])) {
+    if (@$params['per_page'] && !is_int(@$params['per_page'])) {
       throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
     }
 
-    if ($params['action'] && !is_string($params['action'])) {
+    if (@$params['action'] && !is_string(@$params['action'])) {
       throw new \InvalidArgumentException('Bad parameter: $action must be of type string; received ' . gettype($action));
     }
 
-    if ($params['cursor'] && !is_string($params['cursor'])) {
+    if (@$params['cursor'] && !is_string(@$params['cursor'])) {
       throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
     }
 

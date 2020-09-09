@@ -27,16 +27,16 @@ class Group {
   }
 
   public function __get($name) {
-    return $this->attributes[$name];
+    return @$this->attributes[$name];
   }
 
   public function isLoaded() {
-    return !!$this->attributes['id'];
+    return !!@$this->attributes['id'];
   }
 
   // int64 # Group ID
   public function getId() {
-    return $this->attributes['id'];
+    return @$this->attributes['id'];
   }
 
   public function setId($value) {
@@ -45,7 +45,7 @@ class Group {
 
   // string # Group name
   public function getName() {
-    return $this->attributes['name'];
+    return @$this->attributes['name'];
   }
 
   public function setName($value) {
@@ -54,7 +54,7 @@ class Group {
 
   // array # List of user IDs who are group administrators (separated by commas)
   public function getAdminIds() {
-    return $this->attributes['admin_ids'];
+    return @$this->attributes['admin_ids'];
   }
 
   public function setAdminIds($value) {
@@ -63,7 +63,7 @@ class Group {
 
   // string # Notes about this group
   public function getNotes() {
-    return $this->attributes['notes'];
+    return @$this->attributes['notes'];
   }
 
   public function setNotes($value) {
@@ -72,7 +72,7 @@ class Group {
 
   // array # List of user IDs who belong to this group (separated by commas)
   public function getUserIds() {
-    return $this->attributes['user_ids'];
+    return @$this->attributes['user_ids'];
   }
 
   public function setUserIds($value) {
@@ -81,7 +81,7 @@ class Group {
 
   // array # List of usernames who belong to this group (separated by commas)
   public function getUsernames() {
-    return $this->attributes['usernames'];
+    return @$this->attributes['usernames'];
   }
 
   public function setUsernames($value) {
@@ -95,7 +95,7 @@ class Group {
   //   admin_ids - string - A list of group admin user ids. If sent as a string, should be comma-delimited.
   public function update($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no ID');
+      throw new \Error('Current object has no id');
     }
 
     if (!is_array($params)) {
@@ -104,36 +104,36 @@ class Group {
 
     $params['id'] = $this->id;
 
-    if ($params['id'] && !is_int($params['id'])) {
+    if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
     }
-    if ($params['name'] && !is_string($params['name'])) {
+    if (@$params['name'] && !is_string(@$params['name'])) {
       throw new \InvalidArgumentException('Bad parameter: $name must be of type string; received ' . gettype($name));
     }
-    if ($params['notes'] && !is_string($params['notes'])) {
+    if (@$params['notes'] && !is_string(@$params['notes'])) {
       throw new \InvalidArgumentException('Bad parameter: $notes must be of type string; received ' . gettype($notes));
     }
-    if ($params['user_ids'] && !is_string($params['user_ids'])) {
+    if (@$params['user_ids'] && !is_string(@$params['user_ids'])) {
       throw new \InvalidArgumentException('Bad parameter: $user_ids must be of type string; received ' . gettype($user_ids));
     }
-    if ($params['admin_ids'] && !is_string($params['admin_ids'])) {
+    if (@$params['admin_ids'] && !is_string(@$params['admin_ids'])) {
       throw new \InvalidArgumentException('Bad parameter: $admin_ids must be of type string; received ' . gettype($admin_ids));
     }
 
-    if (!$params['id']) {
+    if (!@$params['id']) {
       if ($this->id) {
-        $params['id'] = $this->id;
+        $params['id'] = @$this->id;
       } else {
         throw new \Error('Parameter missing: id');
       }
     }
 
-    return Api::sendRequest('/groups/' . $params['id'] . '', 'PATCH', $params, $this->options);
+    return Api::sendRequest('/groups/' . @$params['id'] . '', 'PATCH', $params, $this->options);
   }
 
   public function delete($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no ID');
+      throw new \Error('Current object has no id');
     }
 
     if (!is_array($params)) {
@@ -142,19 +142,19 @@ class Group {
 
     $params['id'] = $this->id;
 
-    if ($params['id'] && !is_int($params['id'])) {
+    if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
     }
 
-    if (!$params['id']) {
+    if (!@$params['id']) {
       if ($this->id) {
-        $params['id'] = $this->id;
+        $params['id'] = @$this->id;
       } else {
         throw new \Error('Parameter missing: id');
       }
     }
 
-    return Api::sendRequest('/groups/' . $params['id'] . '', 'DELETE', $params, $this->options);
+    return Api::sendRequest('/groups/' . @$params['id'] . '', 'DELETE', $params, $this->options);
   }
 
   public function destroy($params = []) {
@@ -162,7 +162,7 @@ class Group {
   }
 
   public function save() {
-      if ($this->attributes['id']) {
+      if (@$this->attributes['id']) {
         return $this->update($this->attributes);
       } else {
         $new_obj = self::create($this->attributes, $this->options);
@@ -185,23 +185,23 @@ class Group {
   //   filter_lteq - object - If set, return records where the specifiied field is less than or equal to the supplied value. Valid fields are `name`.
   //   ids - string - Comma-separated list of group ids to include in results.
   public static function list($params = [], $options = []) {
-    if ($params['page'] && !is_int($params['page'])) {
+    if (@$params['page'] && !is_int(@$params['page'])) {
       throw new \InvalidArgumentException('Bad parameter: $page must be of type int; received ' . gettype($page));
     }
 
-    if ($params['per_page'] && !is_int($params['per_page'])) {
+    if (@$params['per_page'] && !is_int(@$params['per_page'])) {
       throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
     }
 
-    if ($params['action'] && !is_string($params['action'])) {
+    if (@$params['action'] && !is_string(@$params['action'])) {
       throw new \InvalidArgumentException('Bad parameter: $action must be of type string; received ' . gettype($action));
     }
 
-    if ($params['cursor'] && !is_string($params['cursor'])) {
+    if (@$params['cursor'] && !is_string(@$params['cursor'])) {
       throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
     }
 
-    if ($params['ids'] && !is_string($params['ids'])) {
+    if (@$params['ids'] && !is_string(@$params['ids'])) {
       throw new \InvalidArgumentException('Bad parameter: $ids must be of type string; received ' . gettype($ids));
     }
 
@@ -229,17 +229,17 @@ class Group {
 
     $params['id'] = $id;
 
-    if (!$params['id']) {
+    if (!@$params['id']) {
       throw new \Error('Parameter missing: id');
     }
 
-    if ($params['id'] && !is_int($params['id'])) {
+    if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
     }
 
-    $response = Api::sendRequest('/groups/' . $params['id'] . '', 'GET', $params, $options);
+    $response = Api::sendRequest('/groups/' . @$params['id'] . '', 'GET', $params, $options);
 
-    return new Group((array)$response->data, $options);
+    return new Group((array)(@$response->data ?: []), $options);
   }
 
   public static function get($id, $params = [], $options = []) {
@@ -252,24 +252,24 @@ class Group {
   //   user_ids - string - A list of user ids. If sent as a string, should be comma-delimited.
   //   admin_ids - string - A list of group admin user ids. If sent as a string, should be comma-delimited.
   public static function create($params = [], $options = []) {
-    if ($params['name'] && !is_string($params['name'])) {
+    if (@$params['name'] && !is_string(@$params['name'])) {
       throw new \InvalidArgumentException('Bad parameter: $name must be of type string; received ' . gettype($name));
     }
 
-    if ($params['notes'] && !is_string($params['notes'])) {
+    if (@$params['notes'] && !is_string(@$params['notes'])) {
       throw new \InvalidArgumentException('Bad parameter: $notes must be of type string; received ' . gettype($notes));
     }
 
-    if ($params['user_ids'] && !is_string($params['user_ids'])) {
+    if (@$params['user_ids'] && !is_string(@$params['user_ids'])) {
       throw new \InvalidArgumentException('Bad parameter: $user_ids must be of type string; received ' . gettype($user_ids));
     }
 
-    if ($params['admin_ids'] && !is_string($params['admin_ids'])) {
+    if (@$params['admin_ids'] && !is_string(@$params['admin_ids'])) {
       throw new \InvalidArgumentException('Bad parameter: $admin_ids must be of type string; received ' . gettype($admin_ids));
     }
 
     $response = Api::sendRequest('/groups', 'POST', $params, $options);
 
-    return new Group((array)$response->data, $options);
+    return new Group((array)(@$response->data ?: []), $options);
   }
 }

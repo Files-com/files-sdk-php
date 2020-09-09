@@ -17,7 +17,7 @@ class Logger {
   private static $isPaused = false;
 
   public static function getOutputStream() {
-    return $stream ?: fopen('php://stdout', 'w');
+    return self::$stream ?: fopen('php://stdout', 'w');
   }
 
   public static function setOutputStream($stream) {

@@ -27,76 +27,76 @@ class App {
   }
 
   public function __get($name) {
-    return $this->attributes[$name];
+    return @$this->attributes[$name];
   }
 
   public function isLoaded() {
-    return !!$this->attributes['id'];
+    return !!@$this->attributes['id'];
   }
 
   // string # Name of the App
   public function getName() {
-    return $this->attributes['name'];
+    return @$this->attributes['name'];
   }
 
   // string # Long form description of the App
   public function getExtendedDescription() {
-    return $this->attributes['extended_description'];
+    return @$this->attributes['extended_description'];
   }
 
   // string # Collection of named links to documentation
   public function getDocumentationLinks() {
-    return $this->attributes['documentation_links'];
+    return @$this->attributes['documentation_links'];
   }
 
   // string # App icon
   public function getIconUrl() {
-    return $this->attributes['icon_url'];
+    return @$this->attributes['icon_url'];
   }
 
   // string # Full size logo for the App
   public function getLogoUrl() {
-    return $this->attributes['logo_url'];
+    return @$this->attributes['logo_url'];
   }
 
   // string # Screenshots of the App
   public function getScreenshotListUrls() {
-    return $this->attributes['screenshot_list_urls'];
+    return @$this->attributes['screenshot_list_urls'];
   }
 
   // string # Logo thumbnail for the App
   public function getLogoThumbnailUrl() {
-    return $this->attributes['logo_thumbnail_url'];
+    return @$this->attributes['logo_thumbnail_url'];
   }
 
   // string # Associated SSO Strategy type, if any
   public function getSsoStrategyType() {
-    return $this->attributes['sso_strategy_type'];
+    return @$this->attributes['sso_strategy_type'];
   }
 
   // string # Associated Remote Server type, if any
   public function getRemoteServerType() {
-    return $this->attributes['remote_server_type'];
+    return @$this->attributes['remote_server_type'];
   }
 
   // string # Associated Folder Behavior type, if any
   public function getFolderBehaviorType() {
-    return $this->attributes['folder_behavior_type'];
+    return @$this->attributes['folder_behavior_type'];
   }
 
   // string # Link to external homepage
   public function getExternalHomepageUrl() {
-    return $this->attributes['external_homepage_url'];
+    return @$this->attributes['external_homepage_url'];
   }
 
   // string # The type of the App
   public function getAppType() {
-    return $this->attributes['app_type'];
+    return @$this->attributes['app_type'];
   }
 
   // boolean # Is featured on the App listing?
   public function getFeatured() {
-    return $this->attributes['featured'];
+    return @$this->attributes['featured'];
   }
 
   // Parameters:
@@ -112,19 +112,19 @@ class App {
   //   filter_lt - object - If set, return records where the specifiied field is less than the supplied value. Valid fields are `name` and `app_type`.
   //   filter_lteq - object - If set, return records where the specifiied field is less than or equal to the supplied value. Valid fields are `name` and `app_type`.
   public static function list($params = [], $options = []) {
-    if ($params['page'] && !is_int($params['page'])) {
+    if (@$params['page'] && !is_int(@$params['page'])) {
       throw new \InvalidArgumentException('Bad parameter: $page must be of type int; received ' . gettype($page));
     }
 
-    if ($params['per_page'] && !is_int($params['per_page'])) {
+    if (@$params['per_page'] && !is_int(@$params['per_page'])) {
       throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
     }
 
-    if ($params['action'] && !is_string($params['action'])) {
+    if (@$params['action'] && !is_string(@$params['action'])) {
       throw new \InvalidArgumentException('Bad parameter: $action must be of type string; received ' . gettype($action));
     }
 
-    if ($params['cursor'] && !is_string($params['cursor'])) {
+    if (@$params['cursor'] && !is_string(@$params['cursor'])) {
       throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
     }
 

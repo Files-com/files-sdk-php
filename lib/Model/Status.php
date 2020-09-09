@@ -27,35 +27,35 @@ class Status {
   }
 
   public function __get($name) {
-    return $this->attributes[$name];
+    return @$this->attributes[$name];
   }
 
   public function isLoaded() {
-    return !!$this->attributes['id'];
+    return !!@$this->attributes['id'];
   }
 
   // int64 # Status http code
   public function getCode() {
-    return $this->attributes['code'];
+    return @$this->attributes['code'];
   }
 
   // string # Error message
   public function getMessage() {
-    return $this->attributes['message'];
+    return @$this->attributes['message'];
   }
 
   // string # Status message
   public function getStatus() {
-    return $this->attributes['status'];
+    return @$this->attributes['status'];
   }
 
   // Additional data
   public function getData() {
-    return $this->attributes['data'];
+    return @$this->attributes['data'];
   }
 
   // array # A list of api errors
   public function getErrors() {
-    return $this->attributes['errors'];
+    return @$this->attributes['errors'];
   }
 }

@@ -27,20 +27,20 @@ class Errors {
   }
 
   public function __get($name) {
-    return $this->attributes[$name];
+    return @$this->attributes[$name];
   }
 
   public function isLoaded() {
-    return !!$this->attributes['id'];
+    return !!@$this->attributes['id'];
   }
 
   // array # A list of fields where errors occur
   public function getFields() {
-    return $this->attributes['fields'];
+    return @$this->attributes['fields'];
   }
 
   // array # A list of error messages
   public function getMessages() {
-    return $this->attributes['messages'];
+    return @$this->attributes['messages'];
   }
 }

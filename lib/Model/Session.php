@@ -27,16 +27,16 @@ class Session {
   }
 
   public function __get($name) {
-    return $this->attributes[$name];
+    return @$this->attributes[$name];
   }
 
   public function isLoaded() {
-    return !!$this->attributes['id'];
+    return !!@$this->attributes['id'];
   }
 
   // string # Session ID
   public function getId() {
-    return $this->attributes['id'];
+    return @$this->attributes['id'];
   }
 
   public function setId($value) {
@@ -45,7 +45,7 @@ class Session {
 
   // string # Session language
   public function getLanguage() {
-    return $this->attributes['language'];
+    return @$this->attributes['language'];
   }
 
   public function setLanguage($value) {
@@ -54,7 +54,7 @@ class Session {
 
   // string # Login token. If set, this token will allow your user to log in via browser at the domain in `login_token_domain`.
   public function getLoginToken() {
-    return $this->attributes['login_token'];
+    return @$this->attributes['login_token'];
   }
 
   public function setLoginToken($value) {
@@ -63,7 +63,7 @@ class Session {
 
   // string # Domain to use with `login_token`.
   public function getLoginTokenDomain() {
-    return $this->attributes['login_token_domain'];
+    return @$this->attributes['login_token_domain'];
   }
 
   public function setLoginTokenDomain($value) {
@@ -72,7 +72,7 @@ class Session {
 
   // int64 # Maximum number of files to retrieve per folder for a directory listing.  This is based on the user's plan.
   public function getMaxDirListingSize() {
-    return $this->attributes['max_dir_listing_size'];
+    return @$this->attributes['max_dir_listing_size'];
   }
 
   public function setMaxDirListingSize($value) {
@@ -81,7 +81,7 @@ class Session {
 
   // boolean # Can access multiple regions?
   public function getMultipleRegions() {
-    return $this->attributes['multiple_regions'];
+    return @$this->attributes['multiple_regions'];
   }
 
   public function setMultipleRegions($value) {
@@ -90,7 +90,7 @@ class Session {
 
   // boolean # Is this session read only?
   public function getReadOnly() {
-    return $this->attributes['read_only'];
+    return @$this->attributes['read_only'];
   }
 
   public function setReadOnly($value) {
@@ -99,7 +99,7 @@ class Session {
 
   // string # Initial root path to start the user's session in.
   public function getRootPath() {
-    return $this->attributes['root_path'];
+    return @$this->attributes['root_path'];
   }
 
   public function setRootPath($value) {
@@ -108,7 +108,7 @@ class Session {
 
   // int64 # Site ID
   public function getSiteId() {
-    return $this->attributes['site_id'];
+    return @$this->attributes['site_id'];
   }
 
   public function setSiteId($value) {
@@ -117,7 +117,7 @@ class Session {
 
   // boolean # Is SSL required for this user?  (If so, ensure all your communications with this user use SSL.)
   public function getSslRequired() {
-    return $this->attributes['ssl_required'];
+    return @$this->attributes['ssl_required'];
   }
 
   public function setSslRequired($value) {
@@ -126,7 +126,7 @@ class Session {
 
   // boolean # Is strong TLS disabled for this user? (If this is set to true, the site administrator has signaled that it is ok to use less secure TLS versions for this user.)
   public function getTlsDisabled() {
-    return $this->attributes['tls_disabled'];
+    return @$this->attributes['tls_disabled'];
   }
 
   public function setTlsDisabled($value) {
@@ -135,7 +135,7 @@ class Session {
 
   // boolean # If true, this user needs to add a Two Factor Authentication method before performing any further actions.
   public function getTwoFactorSetupNeeded() {
-    return $this->attributes['two_factor_setup_needed'];
+    return @$this->attributes['two_factor_setup_needed'];
   }
 
   public function setTwoFactorSetupNeeded($value) {
@@ -144,7 +144,7 @@ class Session {
 
   // boolean # Sent only if 2FA setup is needed. Is SMS two factor authentication allowed?
   public function getAllowed2faMethodSms() {
-    return $this->attributes['allowed_2fa_method_sms'];
+    return @$this->attributes['allowed_2fa_method_sms'];
   }
 
   public function setAllowed2faMethodSms($value) {
@@ -153,7 +153,7 @@ class Session {
 
   // boolean # Sent only if 2FA setup is needed. Is TOTP two factor authentication allowed?
   public function getAllowed2faMethodTotp() {
-    return $this->attributes['allowed_2fa_method_totp'];
+    return @$this->attributes['allowed_2fa_method_totp'];
   }
 
   public function setAllowed2faMethodTotp($value) {
@@ -162,7 +162,7 @@ class Session {
 
   // boolean # Sent only if 2FA setup is needed. Is U2F two factor authentication allowed?
   public function getAllowed2faMethodU2f() {
-    return $this->attributes['allowed_2fa_method_u2f'];
+    return @$this->attributes['allowed_2fa_method_u2f'];
   }
 
   public function setAllowed2faMethodU2f($value) {
@@ -171,7 +171,7 @@ class Session {
 
   // boolean # Sent only if 2FA setup is needed. Is Yubikey two factor authentication allowed?
   public function getAllowed2faMethodYubi() {
-    return $this->attributes['allowed_2fa_method_yubi'];
+    return @$this->attributes['allowed_2fa_method_yubi'];
   }
 
   public function setAllowed2faMethodYubi($value) {
@@ -180,7 +180,7 @@ class Session {
 
   // boolean # Allow the user to provide file/folder modified at dates?  If false, the server will always use the current date/time.
   public function getUseProvidedModifiedAt() {
-    return $this->attributes['use_provided_modified_at'];
+    return @$this->attributes['use_provided_modified_at'];
   }
 
   public function setUseProvidedModifiedAt($value) {
@@ -189,7 +189,7 @@ class Session {
 
   // boolean # Does this user want to use Windows line-ending emulation?  (CR vs CRLF)
   public function getWindowsModeFtp() {
-    return $this->attributes['windows_mode_ftp'];
+    return @$this->attributes['windows_mode_ftp'];
   }
 
   public function setWindowsModeFtp($value) {
@@ -198,7 +198,7 @@ class Session {
 
   // string # Username to sign in as
   public function getUsername() {
-    return $this->attributes['username'];
+    return @$this->attributes['username'];
   }
 
   public function setUsername($value) {
@@ -207,7 +207,7 @@ class Session {
 
   // string # Password for sign in
   public function getPassword() {
-    return $this->attributes['password'];
+    return @$this->attributes['password'];
   }
 
   public function setPassword($value) {
@@ -216,7 +216,7 @@ class Session {
 
   // string # If this user has a 2FA device, provide its OTP or code here.
   public function getOtp() {
-    return $this->attributes['otp'];
+    return @$this->attributes['otp'];
   }
 
   public function setOtp($value) {
@@ -225,7 +225,7 @@ class Session {
 
   // string # Identifier for a partially-completed login
   public function getPartialSessionId() {
-    return $this->attributes['partial_session_id'];
+    return @$this->attributes['partial_session_id'];
   }
 
   public function setPartialSessionId($value) {
@@ -233,7 +233,7 @@ class Session {
   }
 
   public function save() {
-      if ($this->attributes['id']) {
+      if (@$this->attributes['id']) {
         throw new \BadMethodCallException('The Session object doesn\'t support updates.');
       } else {
         $new_obj = self::create($this->attributes, $this->options);
@@ -248,32 +248,32 @@ class Session {
   //   otp - string - If this user has a 2FA device, provide its OTP or code here.
   //   partial_session_id - string - Identifier for a partially-completed login
   public static function create($params = [], $options = []) {
-    if ($params['username'] && !is_string($params['username'])) {
+    if (@$params['username'] && !is_string(@$params['username'])) {
       throw new \InvalidArgumentException('Bad parameter: $username must be of type string; received ' . gettype($username));
     }
 
-    if ($params['password'] && !is_string($params['password'])) {
+    if (@$params['password'] && !is_string(@$params['password'])) {
       throw new \InvalidArgumentException('Bad parameter: $password must be of type string; received ' . gettype($password));
     }
 
-    if ($params['otp'] && !is_string($params['otp'])) {
+    if (@$params['otp'] && !is_string(@$params['otp'])) {
       throw new \InvalidArgumentException('Bad parameter: $otp must be of type string; received ' . gettype($otp));
     }
 
-    if ($params['partial_session_id'] && !is_string($params['partial_session_id'])) {
+    if (@$params['partial_session_id'] && !is_string(@$params['partial_session_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $partial_session_id must be of type string; received ' . gettype($partial_session_id));
     }
 
     $response = Api::sendRequest('/sessions', 'POST', $params, $options);
 
-    return new Session((array)$response->data, $options);
+    return new Session((array)(@$response->data ?: []), $options);
   }
 
   // Parameters:
   //   format - string
   //   session - object
   public static function delete($params = [], $options = []) {
-    if ($params['format'] && !is_string($params['format'])) {
+    if (@$params['format'] && !is_string(@$params['format'])) {
       throw new \InvalidArgumentException('Bad parameter: $format must be of type string; received ' . gettype($format));
     }
 

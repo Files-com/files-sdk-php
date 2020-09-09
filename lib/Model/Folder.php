@@ -27,16 +27,16 @@ class Folder {
   }
 
   public function __get($name) {
-    return $this->attributes[$name];
+    return @$this->attributes[$name];
   }
 
   public function isLoaded() {
-    return !!$this->attributes['id'];
+    return !!@$this->attributes['path'];
   }
 
   // string # File/Folder path This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
   public function getPath() {
-    return $this->attributes['path'];
+    return @$this->attributes['path'];
   }
 
   public function setPath($value) {
@@ -45,7 +45,7 @@ class Folder {
 
   // string # File/Folder display name
   public function getDisplayName() {
-    return $this->attributes['display_name'];
+    return @$this->attributes['display_name'];
   }
 
   public function setDisplayName($value) {
@@ -54,7 +54,7 @@ class Folder {
 
   // string # Type: `directory` or `file`.
   public function getType() {
-    return $this->attributes['type'];
+    return @$this->attributes['type'];
   }
 
   public function setType($value) {
@@ -63,7 +63,7 @@ class Folder {
 
   // int64 # File/Folder size
   public function getSize() {
-    return $this->attributes['size'];
+    return @$this->attributes['size'];
   }
 
   public function setSize($value) {
@@ -72,7 +72,7 @@ class Folder {
 
   // date-time # File last modified date/time, according to the server.  This is the timestamp of the last Files.com operation of the file, regardless of what modified timestamp was sent.
   public function getMtime() {
-    return $this->attributes['mtime'];
+    return @$this->attributes['mtime'];
   }
 
   public function setMtime($value) {
@@ -81,7 +81,7 @@ class Folder {
 
   // date-time # File last modified date/time, according to the client who set it.  Files.com allows desktop, FTP, SFTP, and WebDAV clients to set modified at times.  This allows Desktop<->Cloud syncing to preserve modified at times.
   public function getProvidedMtime() {
-    return $this->attributes['provided_mtime'];
+    return @$this->attributes['provided_mtime'];
   }
 
   public function setProvidedMtime($value) {
@@ -90,7 +90,7 @@ class Folder {
 
   // string # File CRC32 checksum. This is sometimes delayed, so if you get a blank response, wait and try again.
   public function getCrc32() {
-    return $this->attributes['crc32'];
+    return @$this->attributes['crc32'];
   }
 
   public function setCrc32($value) {
@@ -99,7 +99,7 @@ class Folder {
 
   // string # File MD5 checksum. This is sometimes delayed, so if you get a blank response, wait and try again.
   public function getMd5() {
-    return $this->attributes['md5'];
+    return @$this->attributes['md5'];
   }
 
   public function setMd5($value) {
@@ -108,7 +108,7 @@ class Folder {
 
   // string # MIME Type.  This is determined by the filename extension and is not stored separately internally.
   public function getMimeType() {
-    return $this->attributes['mime_type'];
+    return @$this->attributes['mime_type'];
   }
 
   public function setMimeType($value) {
@@ -117,7 +117,7 @@ class Folder {
 
   // string # Region location
   public function getRegion() {
-    return $this->attributes['region'];
+    return @$this->attributes['region'];
   }
 
   public function setRegion($value) {
@@ -126,7 +126,7 @@ class Folder {
 
   // string # A short string representing the current user's permissions.  Can be `r`,`w`,`p`, or any combination
   public function getPermissions() {
-    return $this->attributes['permissions'];
+    return @$this->attributes['permissions'];
   }
 
   public function setPermissions($value) {
@@ -135,7 +135,7 @@ class Folder {
 
   // boolean # Are subfolders locked and unable to be modified?
   public function getSubfoldersLocked() {
-    return $this->attributes['subfolders_locked'];
+    return @$this->attributes['subfolders_locked'];
   }
 
   public function setSubfoldersLocked($value) {
@@ -144,7 +144,7 @@ class Folder {
 
   // string # Link to download file. Provided only in response to a download request.
   public function getDownloadUri() {
-    return $this->attributes['download_uri'];
+    return @$this->attributes['download_uri'];
   }
 
   public function setDownloadUri($value) {
@@ -153,7 +153,7 @@ class Folder {
 
   // string # Bookmark/priority color of file/folder
   public function getPriorityColor() {
-    return $this->attributes['priority_color'];
+    return @$this->attributes['priority_color'];
   }
 
   public function setPriorityColor($value) {
@@ -162,7 +162,7 @@ class Folder {
 
   // int64 # File preview ID
   public function getPreviewId() {
-    return $this->attributes['preview_id'];
+    return @$this->attributes['preview_id'];
   }
 
   public function setPreviewId($value) {
@@ -171,7 +171,7 @@ class Folder {
 
   // File preview
   public function getPreview() {
-    return $this->attributes['preview'];
+    return @$this->attributes['preview'];
   }
 
   public function setPreview($value) {
@@ -203,43 +203,43 @@ class Folder {
 
     $params['path'] = $path;
 
-    if (!$params['path']) {
+    if (!@$params['path']) {
       throw new \Error('Parameter missing: path');
     }
 
-    if ($params['page'] && !is_int($params['page'])) {
+    if (@$params['page'] && !is_int(@$params['page'])) {
       throw new \InvalidArgumentException('Bad parameter: $page must be of type int; received ' . gettype($page));
     }
 
-    if ($params['per_page'] && !is_int($params['per_page'])) {
+    if (@$params['per_page'] && !is_int(@$params['per_page'])) {
       throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
     }
 
-    if ($params['action'] && !is_string($params['action'])) {
+    if (@$params['action'] && !is_string(@$params['action'])) {
       throw new \InvalidArgumentException('Bad parameter: $action must be of type string; received ' . gettype($action));
     }
 
-    if ($params['cursor'] && !is_string($params['cursor'])) {
+    if (@$params['cursor'] && !is_string(@$params['cursor'])) {
       throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
     }
 
-    if ($params['path'] && !is_string($params['path'])) {
+    if (@$params['path'] && !is_string(@$params['path'])) {
       throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
     }
 
-    if ($params['filter'] && !is_string($params['filter'])) {
+    if (@$params['filter'] && !is_string(@$params['filter'])) {
       throw new \InvalidArgumentException('Bad parameter: $filter must be of type string; received ' . gettype($filter));
     }
 
-    if ($params['preview_size'] && !is_string($params['preview_size'])) {
+    if (@$params['preview_size'] && !is_string(@$params['preview_size'])) {
       throw new \InvalidArgumentException('Bad parameter: $preview_size must be of type string; received ' . gettype($preview_size));
     }
 
-    if ($params['search'] && !is_string($params['search'])) {
+    if (@$params['search'] && !is_string(@$params['search'])) {
       throw new \InvalidArgumentException('Bad parameter: $search must be of type string; received ' . gettype($search));
     }
 
-    $response = Api::sendRequest('/folders/' . $params['path'] . '', 'GET', $params, $options);
+    $response = Api::sendRequest('/folders/' . @$params['path'] . '', 'GET', $params, $options);
 
     $return_array = [];
 
@@ -259,16 +259,16 @@ class Folder {
 
     $params['path'] = $path;
 
-    if (!$params['path']) {
+    if (!@$params['path']) {
       throw new \Error('Parameter missing: path');
     }
 
-    if ($params['path'] && !is_string($params['path'])) {
+    if (@$params['path'] && !is_string(@$params['path'])) {
       throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
     }
 
-    $response = Api::sendRequest('/folders/' . $params['path'] . '', 'POST', $params, $options);
+    $response = Api::sendRequest('/folders/' . @$params['path'] . '', 'POST', $params, $options);
 
-    return new File((array)$response->data, $options);
+    return new File((array)(@$response->data ?: []), $options);
   }
 }

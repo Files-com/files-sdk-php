@@ -96,7 +96,7 @@ class Api {
 
   public static function sendRequest($path, $verb, $params = null, $options = []) {
     $options = $options ?: [];
-    $headers = array_merge($options['headers'] ?: [], [
+    $headers = array_merge(@$options['headers'] ?: [], [
       'Accept' => 'application/json',
       'User-Agent' => 'Files-PHP-SDK',
     ]);

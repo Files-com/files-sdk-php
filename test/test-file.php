@@ -96,7 +96,7 @@ function testUserStaticCreateAndDelete() {
 }
 
 function findFile($targetFile, $fileList) {
-  $matches = array_filter($fileList, function($element) use ($targetFile) { return $element->id === $targetFile->id; });
+  $matches = array_filter($fileList, function($element) use ($targetFile) { return $element->path === $targetFile->path; });
   return $matches ? current($matches) : new File();
 }
 

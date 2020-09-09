@@ -27,76 +27,76 @@ class History {
   }
 
   public function __get($name) {
-    return $this->attributes[$name];
+    return @$this->attributes[$name];
   }
 
   public function isLoaded() {
-    return !!$this->attributes['id'];
+    return !!@$this->attributes['path'];
   }
 
   // int64 # Action ID
   public function getId() {
-    return $this->attributes['id'];
+    return @$this->attributes['id'];
   }
 
   // string # Path This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
   public function getPath() {
-    return $this->attributes['path'];
+    return @$this->attributes['path'];
   }
 
   // date-time # Action occurrence date/time
   public function getWhen() {
-    return $this->attributes['when'];
+    return @$this->attributes['when'];
   }
 
   // string # The destination path for this action, if applicable
   public function getDestination() {
-    return $this->attributes['destination'];
+    return @$this->attributes['destination'];
   }
 
   // string # Friendly displayed output
   public function getDisplay() {
-    return $this->attributes['display'];
+    return @$this->attributes['display'];
   }
 
   // string # IP Address that performed this action
   public function getIp() {
-    return $this->attributes['ip'];
+    return @$this->attributes['ip'];
   }
 
   // string # The source path for this action, if applicable
   public function getSource() {
-    return $this->attributes['source'];
+    return @$this->attributes['source'];
   }
 
   // array # Targets
   public function getTargets() {
-    return $this->attributes['targets'];
+    return @$this->attributes['targets'];
   }
 
   // int64 # User ID
   public function getUserId() {
-    return $this->attributes['user_id'];
+    return @$this->attributes['user_id'];
   }
 
   // string # Username
   public function getUsername() {
-    return $this->attributes['username'];
+    return @$this->attributes['username'];
   }
 
   // string # Type of action
   public function getAction() {
-    return $this->attributes['action'];
+    return @$this->attributes['action'];
   }
 
   // string # Failure type.  If action was a user login or session failure, why did it fail?
   public function getFailureType() {
-    return $this->attributes['failure_type'];
+    return @$this->attributes['failure_type'];
   }
 
   // string # Interface on which this action occurred.
   public function getInterface() {
-    return $this->attributes['interface'];
+    return @$this->attributes['interface'];
   }
 
   // Parameters:
@@ -116,43 +116,43 @@ class History {
 
     $params['path'] = $path;
 
-    if (!$params['path']) {
+    if (!@$params['path']) {
       throw new \Error('Parameter missing: path');
     }
 
-    if ($params['start_at'] && !is_string($params['start_at'])) {
+    if (@$params['start_at'] && !is_string(@$params['start_at'])) {
       throw new \InvalidArgumentException('Bad parameter: $start_at must be of type string; received ' . gettype($start_at));
     }
 
-    if ($params['end_at'] && !is_string($params['end_at'])) {
+    if (@$params['end_at'] && !is_string(@$params['end_at'])) {
       throw new \InvalidArgumentException('Bad parameter: $end_at must be of type string; received ' . gettype($end_at));
     }
 
-    if ($params['display'] && !is_string($params['display'])) {
+    if (@$params['display'] && !is_string(@$params['display'])) {
       throw new \InvalidArgumentException('Bad parameter: $display must be of type string; received ' . gettype($display));
     }
 
-    if ($params['page'] && !is_int($params['page'])) {
+    if (@$params['page'] && !is_int(@$params['page'])) {
       throw new \InvalidArgumentException('Bad parameter: $page must be of type int; received ' . gettype($page));
     }
 
-    if ($params['per_page'] && !is_int($params['per_page'])) {
+    if (@$params['per_page'] && !is_int(@$params['per_page'])) {
       throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
     }
 
-    if ($params['action'] && !is_string($params['action'])) {
+    if (@$params['action'] && !is_string(@$params['action'])) {
       throw new \InvalidArgumentException('Bad parameter: $action must be of type string; received ' . gettype($action));
     }
 
-    if ($params['cursor'] && !is_string($params['cursor'])) {
+    if (@$params['cursor'] && !is_string(@$params['cursor'])) {
       throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
     }
 
-    if ($params['path'] && !is_string($params['path'])) {
+    if (@$params['path'] && !is_string(@$params['path'])) {
       throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
     }
 
-    $response = Api::sendRequest('/history/files/' . $params['path'] . '', 'GET', $params, $options);
+    $response = Api::sendRequest('/history/files/' . @$params['path'] . '', 'GET', $params, $options);
 
     $return_array = [];
 
@@ -180,43 +180,43 @@ class History {
 
     $params['path'] = $path;
 
-    if (!$params['path']) {
+    if (!@$params['path']) {
       throw new \Error('Parameter missing: path');
     }
 
-    if ($params['start_at'] && !is_string($params['start_at'])) {
+    if (@$params['start_at'] && !is_string(@$params['start_at'])) {
       throw new \InvalidArgumentException('Bad parameter: $start_at must be of type string; received ' . gettype($start_at));
     }
 
-    if ($params['end_at'] && !is_string($params['end_at'])) {
+    if (@$params['end_at'] && !is_string(@$params['end_at'])) {
       throw new \InvalidArgumentException('Bad parameter: $end_at must be of type string; received ' . gettype($end_at));
     }
 
-    if ($params['display'] && !is_string($params['display'])) {
+    if (@$params['display'] && !is_string(@$params['display'])) {
       throw new \InvalidArgumentException('Bad parameter: $display must be of type string; received ' . gettype($display));
     }
 
-    if ($params['page'] && !is_int($params['page'])) {
+    if (@$params['page'] && !is_int(@$params['page'])) {
       throw new \InvalidArgumentException('Bad parameter: $page must be of type int; received ' . gettype($page));
     }
 
-    if ($params['per_page'] && !is_int($params['per_page'])) {
+    if (@$params['per_page'] && !is_int(@$params['per_page'])) {
       throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
     }
 
-    if ($params['action'] && !is_string($params['action'])) {
+    if (@$params['action'] && !is_string(@$params['action'])) {
       throw new \InvalidArgumentException('Bad parameter: $action must be of type string; received ' . gettype($action));
     }
 
-    if ($params['cursor'] && !is_string($params['cursor'])) {
+    if (@$params['cursor'] && !is_string(@$params['cursor'])) {
       throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
     }
 
-    if ($params['path'] && !is_string($params['path'])) {
+    if (@$params['path'] && !is_string(@$params['path'])) {
       throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
     }
 
-    $response = Api::sendRequest('/history/folders/' . $params['path'] . '', 'GET', $params, $options);
+    $response = Api::sendRequest('/history/folders/' . @$params['path'] . '', 'GET', $params, $options);
 
     $return_array = [];
 
@@ -244,43 +244,43 @@ class History {
 
     $params['user_id'] = $user_id;
 
-    if (!$params['user_id']) {
+    if (!@$params['user_id']) {
       throw new \Error('Parameter missing: user_id');
     }
 
-    if ($params['start_at'] && !is_string($params['start_at'])) {
+    if (@$params['start_at'] && !is_string(@$params['start_at'])) {
       throw new \InvalidArgumentException('Bad parameter: $start_at must be of type string; received ' . gettype($start_at));
     }
 
-    if ($params['end_at'] && !is_string($params['end_at'])) {
+    if (@$params['end_at'] && !is_string(@$params['end_at'])) {
       throw new \InvalidArgumentException('Bad parameter: $end_at must be of type string; received ' . gettype($end_at));
     }
 
-    if ($params['display'] && !is_string($params['display'])) {
+    if (@$params['display'] && !is_string(@$params['display'])) {
       throw new \InvalidArgumentException('Bad parameter: $display must be of type string; received ' . gettype($display));
     }
 
-    if ($params['page'] && !is_int($params['page'])) {
+    if (@$params['page'] && !is_int(@$params['page'])) {
       throw new \InvalidArgumentException('Bad parameter: $page must be of type int; received ' . gettype($page));
     }
 
-    if ($params['per_page'] && !is_int($params['per_page'])) {
+    if (@$params['per_page'] && !is_int(@$params['per_page'])) {
       throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
     }
 
-    if ($params['action'] && !is_string($params['action'])) {
+    if (@$params['action'] && !is_string(@$params['action'])) {
       throw new \InvalidArgumentException('Bad parameter: $action must be of type string; received ' . gettype($action));
     }
 
-    if ($params['cursor'] && !is_string($params['cursor'])) {
+    if (@$params['cursor'] && !is_string(@$params['cursor'])) {
       throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
     }
 
-    if ($params['user_id'] && !is_int($params['user_id'])) {
+    if (@$params['user_id'] && !is_int(@$params['user_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
     }
 
-    $response = Api::sendRequest('/history/users/' . $params['user_id'] . '', 'GET', $params, $options);
+    $response = Api::sendRequest('/history/users/' . @$params['user_id'] . '', 'GET', $params, $options);
 
     $return_array = [];
 
@@ -301,31 +301,31 @@ class History {
   //   cursor - string - Send cursor to resume an existing list from the point at which you left off.  Get a cursor from an existing list via the X-Files-Cursor-Next header.
   //   sort_by - object - If set, sort records by the specified field in either 'asc' or 'desc' direction (e.g. sort_by[last_login_at]=desc). Valid fields are `user_id` and `created_at`.
   public static function listLogins($params = [], $options = []) {
-    if ($params['start_at'] && !is_string($params['start_at'])) {
+    if (@$params['start_at'] && !is_string(@$params['start_at'])) {
       throw new \InvalidArgumentException('Bad parameter: $start_at must be of type string; received ' . gettype($start_at));
     }
 
-    if ($params['end_at'] && !is_string($params['end_at'])) {
+    if (@$params['end_at'] && !is_string(@$params['end_at'])) {
       throw new \InvalidArgumentException('Bad parameter: $end_at must be of type string; received ' . gettype($end_at));
     }
 
-    if ($params['display'] && !is_string($params['display'])) {
+    if (@$params['display'] && !is_string(@$params['display'])) {
       throw new \InvalidArgumentException('Bad parameter: $display must be of type string; received ' . gettype($display));
     }
 
-    if ($params['page'] && !is_int($params['page'])) {
+    if (@$params['page'] && !is_int(@$params['page'])) {
       throw new \InvalidArgumentException('Bad parameter: $page must be of type int; received ' . gettype($page));
     }
 
-    if ($params['per_page'] && !is_int($params['per_page'])) {
+    if (@$params['per_page'] && !is_int(@$params['per_page'])) {
       throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
     }
 
-    if ($params['action'] && !is_string($params['action'])) {
+    if (@$params['action'] && !is_string(@$params['action'])) {
       throw new \InvalidArgumentException('Bad parameter: $action must be of type string; received ' . gettype($action));
     }
 
-    if ($params['cursor'] && !is_string($params['cursor'])) {
+    if (@$params['cursor'] && !is_string(@$params['cursor'])) {
       throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
     }
 
@@ -356,31 +356,31 @@ class History {
   //   filter_lt - object - If set, return records where the specifiied field is less than the supplied value. Valid fields are `user_id`, `folder` or `path`.
   //   filter_lteq - object - If set, return records where the specifiied field is less than or equal to the supplied value. Valid fields are `user_id`, `folder` or `path`.
   public static function list($params = [], $options = []) {
-    if ($params['start_at'] && !is_string($params['start_at'])) {
+    if (@$params['start_at'] && !is_string(@$params['start_at'])) {
       throw new \InvalidArgumentException('Bad parameter: $start_at must be of type string; received ' . gettype($start_at));
     }
 
-    if ($params['end_at'] && !is_string($params['end_at'])) {
+    if (@$params['end_at'] && !is_string(@$params['end_at'])) {
       throw new \InvalidArgumentException('Bad parameter: $end_at must be of type string; received ' . gettype($end_at));
     }
 
-    if ($params['display'] && !is_string($params['display'])) {
+    if (@$params['display'] && !is_string(@$params['display'])) {
       throw new \InvalidArgumentException('Bad parameter: $display must be of type string; received ' . gettype($display));
     }
 
-    if ($params['page'] && !is_int($params['page'])) {
+    if (@$params['page'] && !is_int(@$params['page'])) {
       throw new \InvalidArgumentException('Bad parameter: $page must be of type int; received ' . gettype($page));
     }
 
-    if ($params['per_page'] && !is_int($params['per_page'])) {
+    if (@$params['per_page'] && !is_int(@$params['per_page'])) {
       throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
     }
 
-    if ($params['action'] && !is_string($params['action'])) {
+    if (@$params['action'] && !is_string(@$params['action'])) {
       throw new \InvalidArgumentException('Bad parameter: $action must be of type string; received ' . gettype($action));
     }
 
-    if ($params['cursor'] && !is_string($params['cursor'])) {
+    if (@$params['cursor'] && !is_string(@$params['cursor'])) {
       throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
     }
 

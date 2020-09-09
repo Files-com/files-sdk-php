@@ -27,20 +27,20 @@ class Image {
   }
 
   public function __get($name) {
-    return $this->attributes[$name];
+    return @$this->attributes[$name];
   }
 
   public function isLoaded() {
-    return !!$this->attributes['id'];
+    return !!@$this->attributes['id'];
   }
 
   // string # Image name
   public function getName() {
-    return $this->attributes['name'];
+    return @$this->attributes['name'];
   }
 
   // string # Image URI
   public function getUri() {
-    return $this->attributes['uri'];
+    return @$this->attributes['uri'];
   }
 }

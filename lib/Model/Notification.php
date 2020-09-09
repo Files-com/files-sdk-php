@@ -27,16 +27,16 @@ class Notification {
   }
 
   public function __get($name) {
-    return $this->attributes[$name];
+    return @$this->attributes[$name];
   }
 
   public function isLoaded() {
-    return !!$this->attributes['id'];
+    return !!@$this->attributes['id'];
   }
 
   // int64 # Notification ID
   public function getId() {
-    return $this->attributes['id'];
+    return @$this->attributes['id'];
   }
 
   public function setId($value) {
@@ -45,7 +45,7 @@ class Notification {
 
   // string # Folder path to notify on This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
   public function getPath() {
-    return $this->attributes['path'];
+    return @$this->attributes['path'];
   }
 
   public function setPath($value) {
@@ -54,7 +54,7 @@ class Notification {
 
   // int64 # Notification group id
   public function getGroupId() {
-    return $this->attributes['group_id'];
+    return @$this->attributes['group_id'];
   }
 
   public function setGroupId($value) {
@@ -63,7 +63,7 @@ class Notification {
 
   // string # Group name if applicable
   public function getGroupName() {
-    return $this->attributes['group_name'];
+    return @$this->attributes['group_name'];
   }
 
   public function setGroupName($value) {
@@ -72,7 +72,7 @@ class Notification {
 
   // boolean # Trigger notification on notification user actions?
   public function getNotifyUserActions() {
-    return $this->attributes['notify_user_actions'];
+    return @$this->attributes['notify_user_actions'];
   }
 
   public function setNotifyUserActions($value) {
@@ -81,7 +81,7 @@ class Notification {
 
   // boolean # Triggers notification when moving or copying files to this path
   public function getNotifyOnCopy() {
-    return $this->attributes['notify_on_copy'];
+    return @$this->attributes['notify_on_copy'];
   }
 
   public function setNotifyOnCopy($value) {
@@ -90,7 +90,7 @@ class Notification {
 
   // string # The time interval that notifications are aggregated to
   public function getSendInterval() {
-    return $this->attributes['send_interval'];
+    return @$this->attributes['send_interval'];
   }
 
   public function setSendInterval($value) {
@@ -99,7 +99,7 @@ class Notification {
 
   // boolean # Is the user unsubscribed from this notification?
   public function getUnsubscribed() {
-    return $this->attributes['unsubscribed'];
+    return @$this->attributes['unsubscribed'];
   }
 
   public function setUnsubscribed($value) {
@@ -108,7 +108,7 @@ class Notification {
 
   // string # The reason that the user unsubscribed
   public function getUnsubscribedReason() {
-    return $this->attributes['unsubscribed_reason'];
+    return @$this->attributes['unsubscribed_reason'];
   }
 
   public function setUnsubscribedReason($value) {
@@ -117,7 +117,7 @@ class Notification {
 
   // int64 # Notification user ID
   public function getUserId() {
-    return $this->attributes['user_id'];
+    return @$this->attributes['user_id'];
   }
 
   public function setUserId($value) {
@@ -126,7 +126,7 @@ class Notification {
 
   // string # Notification username
   public function getUsername() {
-    return $this->attributes['username'];
+    return @$this->attributes['username'];
   }
 
   public function setUsername($value) {
@@ -135,7 +135,7 @@ class Notification {
 
   // boolean # If true, it means that the recipient at this user's email address has manually unsubscribed from all emails, or had their email "hard bounce", which means that we are unable to send mail to this user's current email address. Notifications will resume if the user changes their email address.
   public function getSuppressedEmail() {
-    return $this->attributes['suppressed_email'];
+    return @$this->attributes['suppressed_email'];
   }
 
   public function setSuppressedEmail($value) {
@@ -148,7 +148,7 @@ class Notification {
   //   send_interval - string - The time interval that notifications are aggregated by.  Can be `five_minutes`, `fifteen_minutes`, `hourly`, or `daily`.
   public function update($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no ID');
+      throw new \Error('Current object has no id');
     }
 
     if (!is_array($params)) {
@@ -157,27 +157,27 @@ class Notification {
 
     $params['id'] = $this->id;
 
-    if ($params['id'] && !is_int($params['id'])) {
+    if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
     }
-    if ($params['send_interval'] && !is_string($params['send_interval'])) {
+    if (@$params['send_interval'] && !is_string(@$params['send_interval'])) {
       throw new \InvalidArgumentException('Bad parameter: $send_interval must be of type string; received ' . gettype($send_interval));
     }
 
-    if (!$params['id']) {
+    if (!@$params['id']) {
       if ($this->id) {
-        $params['id'] = $this->id;
+        $params['id'] = @$this->id;
       } else {
         throw new \Error('Parameter missing: id');
       }
     }
 
-    return Api::sendRequest('/notifications/' . $params['id'] . '', 'PATCH', $params, $this->options);
+    return Api::sendRequest('/notifications/' . @$params['id'] . '', 'PATCH', $params, $this->options);
   }
 
   public function delete($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no ID');
+      throw new \Error('Current object has no id');
     }
 
     if (!is_array($params)) {
@@ -186,19 +186,19 @@ class Notification {
 
     $params['id'] = $this->id;
 
-    if ($params['id'] && !is_int($params['id'])) {
+    if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
     }
 
-    if (!$params['id']) {
+    if (!@$params['id']) {
       if ($this->id) {
-        $params['id'] = $this->id;
+        $params['id'] = @$this->id;
       } else {
         throw new \Error('Parameter missing: id');
       }
     }
 
-    return Api::sendRequest('/notifications/' . $params['id'] . '', 'DELETE', $params, $this->options);
+    return Api::sendRequest('/notifications/' . @$params['id'] . '', 'DELETE', $params, $this->options);
   }
 
   public function destroy($params = []) {
@@ -206,7 +206,7 @@ class Notification {
   }
 
   public function save() {
-      if ($this->attributes['id']) {
+      if (@$this->attributes['id']) {
         return $this->update($this->attributes);
       } else {
         $new_obj = self::create($this->attributes, $this->options);
@@ -232,31 +232,31 @@ class Notification {
   //   path - string - Show notifications for this Path.
   //   include_ancestors - boolean - If `include_ancestors` is `true` and `path` is specified, include notifications for any parent paths. Ignored if `path` is not specified.
   public static function list($params = [], $options = []) {
-    if ($params['user_id'] && !is_int($params['user_id'])) {
+    if (@$params['user_id'] && !is_int(@$params['user_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
     }
 
-    if ($params['page'] && !is_int($params['page'])) {
+    if (@$params['page'] && !is_int(@$params['page'])) {
       throw new \InvalidArgumentException('Bad parameter: $page must be of type int; received ' . gettype($page));
     }
 
-    if ($params['per_page'] && !is_int($params['per_page'])) {
+    if (@$params['per_page'] && !is_int(@$params['per_page'])) {
       throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
     }
 
-    if ($params['action'] && !is_string($params['action'])) {
+    if (@$params['action'] && !is_string(@$params['action'])) {
       throw new \InvalidArgumentException('Bad parameter: $action must be of type string; received ' . gettype($action));
     }
 
-    if ($params['cursor'] && !is_string($params['cursor'])) {
+    if (@$params['cursor'] && !is_string(@$params['cursor'])) {
       throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
     }
 
-    if ($params['group_id'] && !is_int($params['group_id'])) {
+    if (@$params['group_id'] && !is_int(@$params['group_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $group_id must be of type int; received ' . gettype($group_id));
     }
 
-    if ($params['path'] && !is_string($params['path'])) {
+    if (@$params['path'] && !is_string(@$params['path'])) {
       throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
     }
 
@@ -284,17 +284,17 @@ class Notification {
 
     $params['id'] = $id;
 
-    if (!$params['id']) {
+    if (!@$params['id']) {
       throw new \Error('Parameter missing: id');
     }
 
-    if ($params['id'] && !is_int($params['id'])) {
+    if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
     }
 
-    $response = Api::sendRequest('/notifications/' . $params['id'] . '', 'GET', $params, $options);
+    $response = Api::sendRequest('/notifications/' . @$params['id'] . '', 'GET', $params, $options);
 
-    return new Notification((array)$response->data, $options);
+    return new Notification((array)(@$response->data ?: []), $options);
   }
 
   public static function get($id, $params = [], $options = []) {
@@ -310,28 +310,28 @@ class Notification {
   //   path - string - Path
   //   username - string - The username of the user to notify.  Provide `user_id`, `username` or `group_id`.
   public static function create($params = [], $options = []) {
-    if ($params['user_id'] && !is_int($params['user_id'])) {
+    if (@$params['user_id'] && !is_int(@$params['user_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
     }
 
-    if ($params['send_interval'] && !is_string($params['send_interval'])) {
+    if (@$params['send_interval'] && !is_string(@$params['send_interval'])) {
       throw new \InvalidArgumentException('Bad parameter: $send_interval must be of type string; received ' . gettype($send_interval));
     }
 
-    if ($params['group_id'] && !is_int($params['group_id'])) {
+    if (@$params['group_id'] && !is_int(@$params['group_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $group_id must be of type int; received ' . gettype($group_id));
     }
 
-    if ($params['path'] && !is_string($params['path'])) {
+    if (@$params['path'] && !is_string(@$params['path'])) {
       throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
     }
 
-    if ($params['username'] && !is_string($params['username'])) {
+    if (@$params['username'] && !is_string(@$params['username'])) {
       throw new \InvalidArgumentException('Bad parameter: $username must be of type string; received ' . gettype($username));
     }
 
     $response = Api::sendRequest('/notifications', 'POST', $params, $options);
 
-    return new Notification((array)$response->data, $options);
+    return new Notification((array)(@$response->data ?: []), $options);
   }
 }

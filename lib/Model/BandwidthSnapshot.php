@@ -27,56 +27,56 @@ class BandwidthSnapshot {
   }
 
   public function __get($name) {
-    return $this->attributes[$name];
+    return @$this->attributes[$name];
   }
 
   public function isLoaded() {
-    return !!$this->attributes['id'];
+    return !!@$this->attributes['id'];
   }
 
   // int64 # Site bandwidth ID
   public function getId() {
-    return $this->attributes['id'];
+    return @$this->attributes['id'];
   }
 
   // double # Site bandwidth report bytes received
   public function getBytesReceived() {
-    return $this->attributes['bytes_received'];
+    return @$this->attributes['bytes_received'];
   }
 
   // double # Site bandwidth report bytes sent
   public function getBytesSent() {
-    return $this->attributes['bytes_sent'];
+    return @$this->attributes['bytes_sent'];
   }
 
   // double # Site bandwidth report get requests
   public function getRequestsGet() {
-    return $this->attributes['requests_get'];
+    return @$this->attributes['requests_get'];
   }
 
   // double # Site bandwidth report put requests
   public function getRequestsPut() {
-    return $this->attributes['requests_put'];
+    return @$this->attributes['requests_put'];
   }
 
   // double # Site bandwidth report other requests
   public function getRequestsOther() {
-    return $this->attributes['requests_other'];
+    return @$this->attributes['requests_other'];
   }
 
   // date-time # Time the site bandwidth report was logged
   public function getLoggedAt() {
-    return $this->attributes['logged_at'];
+    return @$this->attributes['logged_at'];
   }
 
   // date-time # Site bandwidth report created at date/time
   public function getCreatedAt() {
-    return $this->attributes['created_at'];
+    return @$this->attributes['created_at'];
   }
 
   // date-time # The last time this site bandwidth report was updated
   public function getUpdatedAt() {
-    return $this->attributes['updated_at'];
+    return @$this->attributes['updated_at'];
   }
 
   // Parameters:
@@ -92,19 +92,19 @@ class BandwidthSnapshot {
   //   filter_lt - object - If set, return records where the specifiied field is less than the supplied value. Valid fields are `logged_at`.
   //   filter_lteq - object - If set, return records where the specifiied field is less than or equal to the supplied value. Valid fields are `logged_at`.
   public static function list($params = [], $options = []) {
-    if ($params['page'] && !is_int($params['page'])) {
+    if (@$params['page'] && !is_int(@$params['page'])) {
       throw new \InvalidArgumentException('Bad parameter: $page must be of type int; received ' . gettype($page));
     }
 
-    if ($params['per_page'] && !is_int($params['per_page'])) {
+    if (@$params['per_page'] && !is_int(@$params['per_page'])) {
       throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
     }
 
-    if ($params['action'] && !is_string($params['action'])) {
+    if (@$params['action'] && !is_string(@$params['action'])) {
       throw new \InvalidArgumentException('Bad parameter: $action must be of type string; received ' . gettype($action));
     }
 
-    if ($params['cursor'] && !is_string($params['cursor'])) {
+    if (@$params['cursor'] && !is_string(@$params['cursor'])) {
       throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
     }
 

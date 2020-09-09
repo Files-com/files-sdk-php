@@ -27,26 +27,26 @@ class BundleDownload {
   }
 
   public function __get($name) {
-    return $this->attributes[$name];
+    return @$this->attributes[$name];
   }
 
   public function isLoaded() {
-    return !!$this->attributes['id'];
+    return !!@$this->attributes['id'];
   }
 
   // string # Download method (file or full_zip)
   public function getDownloadMethod() {
-    return $this->attributes['download_method'];
+    return @$this->attributes['download_method'];
   }
 
   // string # Download path This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
   public function getPath() {
-    return $this->attributes['path'];
+    return @$this->attributes['path'];
   }
 
   // date-time # Download date/time
   public function getCreatedAt() {
-    return $this->attributes['created_at'];
+    return @$this->attributes['created_at'];
   }
 
   // Parameters:
@@ -56,27 +56,27 @@ class BundleDownload {
   //   cursor - string - Send cursor to resume an existing list from the point at which you left off.  Get a cursor from an existing list via the X-Files-Cursor-Next header.
   //   bundle_registration_id (required) - int64 - BundleRegistration ID
   public static function list($params = [], $options = []) {
-    if (!$params['bundle_registration_id']) {
+    if (!@$params['bundle_registration_id']) {
       throw new \Error('Parameter missing: bundle_registration_id');
     }
 
-    if ($params['page'] && !is_int($params['page'])) {
+    if (@$params['page'] && !is_int(@$params['page'])) {
       throw new \InvalidArgumentException('Bad parameter: $page must be of type int; received ' . gettype($page));
     }
 
-    if ($params['per_page'] && !is_int($params['per_page'])) {
+    if (@$params['per_page'] && !is_int(@$params['per_page'])) {
       throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
     }
 
-    if ($params['action'] && !is_string($params['action'])) {
+    if (@$params['action'] && !is_string(@$params['action'])) {
       throw new \InvalidArgumentException('Bad parameter: $action must be of type string; received ' . gettype($action));
     }
 
-    if ($params['cursor'] && !is_string($params['cursor'])) {
+    if (@$params['cursor'] && !is_string(@$params['cursor'])) {
       throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
     }
 
-    if ($params['bundle_registration_id'] && !is_int($params['bundle_registration_id'])) {
+    if (@$params['bundle_registration_id'] && !is_int(@$params['bundle_registration_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $bundle_registration_id must be of type int; received ' . gettype($bundle_registration_id));
     }
 

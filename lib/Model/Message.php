@@ -27,16 +27,16 @@ class Message {
   }
 
   public function __get($name) {
-    return $this->attributes[$name];
+    return @$this->attributes[$name];
   }
 
   public function isLoaded() {
-    return !!$this->attributes['id'];
+    return !!@$this->attributes['id'];
   }
 
   // int64 # Message ID
   public function getId() {
-    return $this->attributes['id'];
+    return @$this->attributes['id'];
   }
 
   public function setId($value) {
@@ -45,7 +45,7 @@ class Message {
 
   // string # Message subject.
   public function getSubject() {
-    return $this->attributes['subject'];
+    return @$this->attributes['subject'];
   }
 
   public function setSubject($value) {
@@ -54,7 +54,7 @@ class Message {
 
   // string # Message body.
   public function getBody() {
-    return $this->attributes['body'];
+    return @$this->attributes['body'];
   }
 
   public function setBody($value) {
@@ -63,7 +63,7 @@ class Message {
 
   // array # Comments.
   public function getComments() {
-    return $this->attributes['comments'];
+    return @$this->attributes['comments'];
   }
 
   public function setComments($value) {
@@ -72,7 +72,7 @@ class Message {
 
   // int64 # User ID.  Provide a value of `0` to operate the current session's user.
   public function getUserId() {
-    return $this->attributes['user_id'];
+    return @$this->attributes['user_id'];
   }
 
   public function setUserId($value) {
@@ -81,7 +81,7 @@ class Message {
 
   // int64 # Project to which the message should be attached.
   public function getProjectId() {
-    return $this->attributes['project_id'];
+    return @$this->attributes['project_id'];
   }
 
   public function setProjectId($value) {
@@ -94,7 +94,7 @@ class Message {
   //   body (required) - string - Message body.
   public function update($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no ID');
+      throw new \Error('Current object has no id');
     }
 
     if (!is_array($params)) {
@@ -103,57 +103,57 @@ class Message {
 
     $params['id'] = $this->id;
 
-    if ($params['id'] && !is_int($params['id'])) {
+    if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
     }
-    if ($params['project_id'] && !is_int($params['project_id'])) {
+    if (@$params['project_id'] && !is_int(@$params['project_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $project_id must be of type int; received ' . gettype($project_id));
     }
-    if ($params['subject'] && !is_string($params['subject'])) {
+    if (@$params['subject'] && !is_string(@$params['subject'])) {
       throw new \InvalidArgumentException('Bad parameter: $subject must be of type string; received ' . gettype($subject));
     }
-    if ($params['body'] && !is_string($params['body'])) {
+    if (@$params['body'] && !is_string(@$params['body'])) {
       throw new \InvalidArgumentException('Bad parameter: $body must be of type string; received ' . gettype($body));
     }
 
-    if (!$params['id']) {
+    if (!@$params['id']) {
       if ($this->id) {
-        $params['id'] = $this->id;
+        $params['id'] = @$this->id;
       } else {
         throw new \Error('Parameter missing: id');
       }
     }
 
-    if (!$params['project_id']) {
+    if (!@$params['project_id']) {
       if ($this->project_id) {
-        $params['project_id'] = $this->project_id;
+        $params['project_id'] = @$this->project_id;
       } else {
         throw new \Error('Parameter missing: project_id');
       }
     }
 
-    if (!$params['subject']) {
+    if (!@$params['subject']) {
       if ($this->subject) {
-        $params['subject'] = $this->subject;
+        $params['subject'] = @$this->subject;
       } else {
         throw new \Error('Parameter missing: subject');
       }
     }
 
-    if (!$params['body']) {
+    if (!@$params['body']) {
       if ($this->body) {
-        $params['body'] = $this->body;
+        $params['body'] = @$this->body;
       } else {
         throw new \Error('Parameter missing: body');
       }
     }
 
-    return Api::sendRequest('/messages/' . $params['id'] . '', 'PATCH', $params, $this->options);
+    return Api::sendRequest('/messages/' . @$params['id'] . '', 'PATCH', $params, $this->options);
   }
 
   public function delete($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no ID');
+      throw new \Error('Current object has no id');
     }
 
     if (!is_array($params)) {
@@ -162,19 +162,19 @@ class Message {
 
     $params['id'] = $this->id;
 
-    if ($params['id'] && !is_int($params['id'])) {
+    if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
     }
 
-    if (!$params['id']) {
+    if (!@$params['id']) {
       if ($this->id) {
-        $params['id'] = $this->id;
+        $params['id'] = @$this->id;
       } else {
         throw new \Error('Parameter missing: id');
       }
     }
 
-    return Api::sendRequest('/messages/' . $params['id'] . '', 'DELETE', $params, $this->options);
+    return Api::sendRequest('/messages/' . @$params['id'] . '', 'DELETE', $params, $this->options);
   }
 
   public function destroy($params = []) {
@@ -182,7 +182,7 @@ class Message {
   }
 
   public function save() {
-      if ($this->attributes['id']) {
+      if (@$this->attributes['id']) {
         return $this->update($this->attributes);
       } else {
         $new_obj = self::create($this->attributes, $this->options);
@@ -199,31 +199,31 @@ class Message {
   //   cursor - string - Send cursor to resume an existing list from the point at which you left off.  Get a cursor from an existing list via the X-Files-Cursor-Next header.
   //   project_id (required) - int64 - Project for which to return messages.
   public static function list($params = [], $options = []) {
-    if (!$params['project_id']) {
+    if (!@$params['project_id']) {
       throw new \Error('Parameter missing: project_id');
     }
 
-    if ($params['user_id'] && !is_int($params['user_id'])) {
+    if (@$params['user_id'] && !is_int(@$params['user_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
     }
 
-    if ($params['page'] && !is_int($params['page'])) {
+    if (@$params['page'] && !is_int(@$params['page'])) {
       throw new \InvalidArgumentException('Bad parameter: $page must be of type int; received ' . gettype($page));
     }
 
-    if ($params['per_page'] && !is_int($params['per_page'])) {
+    if (@$params['per_page'] && !is_int(@$params['per_page'])) {
       throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
     }
 
-    if ($params['action'] && !is_string($params['action'])) {
+    if (@$params['action'] && !is_string(@$params['action'])) {
       throw new \InvalidArgumentException('Bad parameter: $action must be of type string; received ' . gettype($action));
     }
 
-    if ($params['cursor'] && !is_string($params['cursor'])) {
+    if (@$params['cursor'] && !is_string(@$params['cursor'])) {
       throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
     }
 
-    if ($params['project_id'] && !is_int($params['project_id'])) {
+    if (@$params['project_id'] && !is_int(@$params['project_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $project_id must be of type int; received ' . gettype($project_id));
     }
 
@@ -251,17 +251,17 @@ class Message {
 
     $params['id'] = $id;
 
-    if (!$params['id']) {
+    if (!@$params['id']) {
       throw new \Error('Parameter missing: id');
     }
 
-    if ($params['id'] && !is_int($params['id'])) {
+    if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
     }
 
-    $response = Api::sendRequest('/messages/' . $params['id'] . '', 'GET', $params, $options);
+    $response = Api::sendRequest('/messages/' . @$params['id'] . '', 'GET', $params, $options);
 
-    return new Message((array)$response->data, $options);
+    return new Message((array)(@$response->data ?: []), $options);
   }
 
   public static function get($id, $params = [], $options = []) {
@@ -274,36 +274,36 @@ class Message {
   //   subject (required) - string - Message subject.
   //   body (required) - string - Message body.
   public static function create($params = [], $options = []) {
-    if (!$params['project_id']) {
+    if (!@$params['project_id']) {
       throw new \Error('Parameter missing: project_id');
     }
 
-    if (!$params['subject']) {
+    if (!@$params['subject']) {
       throw new \Error('Parameter missing: subject');
     }
 
-    if (!$params['body']) {
+    if (!@$params['body']) {
       throw new \Error('Parameter missing: body');
     }
 
-    if ($params['user_id'] && !is_int($params['user_id'])) {
+    if (@$params['user_id'] && !is_int(@$params['user_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
     }
 
-    if ($params['project_id'] && !is_int($params['project_id'])) {
+    if (@$params['project_id'] && !is_int(@$params['project_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $project_id must be of type int; received ' . gettype($project_id));
     }
 
-    if ($params['subject'] && !is_string($params['subject'])) {
+    if (@$params['subject'] && !is_string(@$params['subject'])) {
       throw new \InvalidArgumentException('Bad parameter: $subject must be of type string; received ' . gettype($subject));
     }
 
-    if ($params['body'] && !is_string($params['body'])) {
+    if (@$params['body'] && !is_string(@$params['body'])) {
       throw new \InvalidArgumentException('Bad parameter: $body must be of type string; received ' . gettype($body));
     }
 
     $response = Api::sendRequest('/messages', 'POST', $params, $options);
 
-    return new Message((array)$response->data, $options);
+    return new Message((array)(@$response->data ?: []), $options);
   }
 }

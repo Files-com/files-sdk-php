@@ -27,16 +27,16 @@ class Lock {
   }
 
   public function __get($name) {
-    return $this->attributes[$name];
+    return @$this->attributes[$name];
   }
 
   public function isLoaded() {
-    return !!$this->attributes['id'];
+    return !!@$this->attributes['path'];
   }
 
   // string # Path This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
   public function getPath() {
-    return $this->attributes['path'];
+    return @$this->attributes['path'];
   }
 
   public function setPath($value) {
@@ -45,7 +45,7 @@ class Lock {
 
   // int64 # Lock timeout
   public function getTimeout() {
-    return $this->attributes['timeout'];
+    return @$this->attributes['timeout'];
   }
 
   public function setTimeout($value) {
@@ -54,7 +54,7 @@ class Lock {
 
   // string # Lock depth (0 or infinity)
   public function getDepth() {
-    return $this->attributes['depth'];
+    return @$this->attributes['depth'];
   }
 
   public function setDepth($value) {
@@ -63,7 +63,7 @@ class Lock {
 
   // string # Owner of lock.  This can be any arbitrary string.
   public function getOwner() {
-    return $this->attributes['owner'];
+    return @$this->attributes['owner'];
   }
 
   public function setOwner($value) {
@@ -72,7 +72,7 @@ class Lock {
 
   // string # Lock scope(shared or exclusive)
   public function getScope() {
-    return $this->attributes['scope'];
+    return @$this->attributes['scope'];
   }
 
   public function setScope($value) {
@@ -81,7 +81,7 @@ class Lock {
 
   // string # Lock token.  Use to release lock.
   public function getToken() {
-    return $this->attributes['token'];
+    return @$this->attributes['token'];
   }
 
   public function setToken($value) {
@@ -90,7 +90,7 @@ class Lock {
 
   // string # Lock type
   public function getType() {
-    return $this->attributes['type'];
+    return @$this->attributes['type'];
   }
 
   public function setType($value) {
@@ -99,7 +99,7 @@ class Lock {
 
   // int64 # Lock creator user ID
   public function getUserId() {
-    return $this->attributes['user_id'];
+    return @$this->attributes['user_id'];
   }
 
   public function setUserId($value) {
@@ -108,7 +108,7 @@ class Lock {
 
   // string # Lock creator username
   public function getUsername() {
-    return $this->attributes['username'];
+    return @$this->attributes['username'];
   }
 
   public function setUsername($value) {
@@ -118,40 +118,40 @@ class Lock {
   // Parameters:
   //   token (required) - string - Lock token
   public function delete($params = []) {
-    if (!$this->id) {
-      throw new \Error('Current object has no ID');
+    if (!$this->path) {
+      throw new \Error('Current object has no path');
     }
 
     if (!is_array($params)) {
       throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
     }
 
-    $params['id'] = $this->id;
+    $params['path'] = $this->path;
 
-    if ($params['path'] && !is_string($params['path'])) {
+    if (@$params['path'] && !is_string(@$params['path'])) {
       throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
     }
-    if ($params['token'] && !is_string($params['token'])) {
+    if (@$params['token'] && !is_string(@$params['token'])) {
       throw new \InvalidArgumentException('Bad parameter: $token must be of type string; received ' . gettype($token));
     }
 
-    if (!$params['path']) {
+    if (!@$params['path']) {
       if ($this->path) {
-        $params['path'] = $this->path;
+        $params['path'] = @$this->path;
       } else {
         throw new \Error('Parameter missing: path');
       }
     }
 
-    if (!$params['token']) {
+    if (!@$params['token']) {
       if ($this->token) {
-        $params['token'] = $this->token;
+        $params['token'] = @$this->token;
       } else {
         throw new \Error('Parameter missing: token');
       }
     }
 
-    return Api::sendRequest('/locks/' . $params['path'] . '', 'DELETE', $params, $this->options);
+    return Api::sendRequest('/locks/' . @$params['path'] . '', 'DELETE', $params, $this->options);
   }
 
   public function destroy($params = []) {
@@ -178,31 +178,31 @@ class Lock {
 
     $params['path'] = $path;
 
-    if (!$params['path']) {
+    if (!@$params['path']) {
       throw new \Error('Parameter missing: path');
     }
 
-    if ($params['page'] && !is_int($params['page'])) {
+    if (@$params['page'] && !is_int(@$params['page'])) {
       throw new \InvalidArgumentException('Bad parameter: $page must be of type int; received ' . gettype($page));
     }
 
-    if ($params['per_page'] && !is_int($params['per_page'])) {
+    if (@$params['per_page'] && !is_int(@$params['per_page'])) {
       throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
     }
 
-    if ($params['action'] && !is_string($params['action'])) {
+    if (@$params['action'] && !is_string(@$params['action'])) {
       throw new \InvalidArgumentException('Bad parameter: $action must be of type string; received ' . gettype($action));
     }
 
-    if ($params['cursor'] && !is_string($params['cursor'])) {
+    if (@$params['cursor'] && !is_string(@$params['cursor'])) {
       throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
     }
 
-    if ($params['path'] && !is_string($params['path'])) {
+    if (@$params['path'] && !is_string(@$params['path'])) {
       throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
     }
 
-    $response = Api::sendRequest('/locks/' . $params['path'] . '', 'GET', $params, $options);
+    $response = Api::sendRequest('/locks/' . @$params['path'] . '', 'GET', $params, $options);
 
     $return_array = [];
 
@@ -223,20 +223,20 @@ class Lock {
 
     $params['path'] = $path;
 
-    if (!$params['path']) {
+    if (!@$params['path']) {
       throw new \Error('Parameter missing: path');
     }
 
-    if ($params['path'] && !is_string($params['path'])) {
+    if (@$params['path'] && !is_string(@$params['path'])) {
       throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
     }
 
-    if ($params['timeout'] && !is_int($params['timeout'])) {
+    if (@$params['timeout'] && !is_int(@$params['timeout'])) {
       throw new \InvalidArgumentException('Bad parameter: $timeout must be of type int; received ' . gettype($timeout));
     }
 
-    $response = Api::sendRequest('/locks/' . $params['path'] . '', 'POST', $params, $options);
+    $response = Api::sendRequest('/locks/' . @$params['path'] . '', 'POST', $params, $options);
 
-    return new Lock((array)$response->data, $options);
+    return new Lock((array)(@$response->data ?: []), $options);
   }
 }

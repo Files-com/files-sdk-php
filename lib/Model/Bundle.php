@@ -27,16 +27,16 @@ class Bundle {
   }
 
   public function __get($name) {
-    return $this->attributes[$name];
+    return @$this->attributes[$name];
   }
 
   public function isLoaded() {
-    return !!$this->attributes['id'];
+    return !!@$this->attributes['id'];
   }
 
   // string # Bundle code.  This code forms the end part of the Public URL.
   public function getCode() {
-    return $this->attributes['code'];
+    return @$this->attributes['code'];
   }
 
   public function setCode($value) {
@@ -45,7 +45,7 @@ class Bundle {
 
   // string # Public URL of Share Link
   public function getUrl() {
-    return $this->attributes['url'];
+    return @$this->attributes['url'];
   }
 
   public function setUrl($value) {
@@ -54,7 +54,7 @@ class Bundle {
 
   // string # Public description
   public function getDescription() {
-    return $this->attributes['description'];
+    return @$this->attributes['description'];
   }
 
   public function setDescription($value) {
@@ -63,7 +63,7 @@ class Bundle {
 
   // boolean # Is this bundle password protected?
   public function getPasswordProtected() {
-    return $this->attributes['password_protected'];
+    return @$this->attributes['password_protected'];
   }
 
   public function setPasswordProtected($value) {
@@ -72,7 +72,7 @@ class Bundle {
 
   // boolean # Show a registration page that captures the downloader's name and email address?
   public function getRequireRegistration() {
-    return $this->attributes['require_registration'];
+    return @$this->attributes['require_registration'];
   }
 
   public function setRequireRegistration($value) {
@@ -81,7 +81,7 @@ class Bundle {
 
   // boolean # Only allow access to recipients who have explicitly received the share via an email sent through the Files.com UI?
   public function getRequireShareRecipient() {
-    return $this->attributes['require_share_recipient'];
+    return @$this->attributes['require_share_recipient'];
   }
 
   public function setRequireShareRecipient($value) {
@@ -90,7 +90,7 @@ class Bundle {
 
   // string # Legal text that must be agreed to prior to accessing Bundle.
   public function getClickwrapBody() {
-    return $this->attributes['clickwrap_body'];
+    return @$this->attributes['clickwrap_body'];
   }
 
   public function setClickwrapBody($value) {
@@ -99,7 +99,7 @@ class Bundle {
 
   // int64 # Bundle ID
   public function getId() {
-    return $this->attributes['id'];
+    return @$this->attributes['id'];
   }
 
   public function setId($value) {
@@ -108,12 +108,12 @@ class Bundle {
 
   // date-time # Bundle created at date/time
   public function getCreatedAt() {
-    return $this->attributes['created_at'];
+    return @$this->attributes['created_at'];
   }
 
   // date-time # Bundle expiration date/time
   public function getExpiresAt() {
-    return $this->attributes['expires_at'];
+    return @$this->attributes['expires_at'];
   }
 
   public function setExpiresAt($value) {
@@ -122,7 +122,7 @@ class Bundle {
 
   // int64 # Maximum number of times bundle can be accessed
   public function getMaxUses() {
-    return $this->attributes['max_uses'];
+    return @$this->attributes['max_uses'];
   }
 
   public function setMaxUses($value) {
@@ -131,7 +131,7 @@ class Bundle {
 
   // string # Bundle internal note
   public function getNote() {
-    return $this->attributes['note'];
+    return @$this->attributes['note'];
   }
 
   public function setNote($value) {
@@ -140,7 +140,7 @@ class Bundle {
 
   // int64 # Bundle creator user ID
   public function getUserId() {
-    return $this->attributes['user_id'];
+    return @$this->attributes['user_id'];
   }
 
   public function setUserId($value) {
@@ -149,7 +149,7 @@ class Bundle {
 
   // string # Bundle creator username
   public function getUsername() {
-    return $this->attributes['username'];
+    return @$this->attributes['username'];
   }
 
   public function setUsername($value) {
@@ -158,7 +158,7 @@ class Bundle {
 
   // int64 # ID of the clickwrap to use with this bundle.
   public function getClickwrapId() {
-    return $this->attributes['clickwrap_id'];
+    return @$this->attributes['clickwrap_id'];
   }
 
   public function setClickwrapId($value) {
@@ -167,7 +167,7 @@ class Bundle {
 
   // int64 # ID of the associated inbox, if available.
   public function getInboxId() {
-    return $this->attributes['inbox_id'];
+    return @$this->attributes['inbox_id'];
   }
 
   public function setInboxId($value) {
@@ -176,7 +176,7 @@ class Bundle {
 
   // array # A list of paths in this bundle
   public function getPaths() {
-    return $this->attributes['paths'];
+    return @$this->attributes['paths'];
   }
 
   public function setPaths($value) {
@@ -185,7 +185,7 @@ class Bundle {
 
   // string # Password for this bundle.
   public function getPassword() {
-    return $this->attributes['password'];
+    return @$this->attributes['password'];
   }
 
   public function setPassword($value) {
@@ -199,7 +199,7 @@ class Bundle {
   //   note - string - Note to include in email.
   public function share($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no ID');
+      throw new \Error('Current object has no id');
     }
 
     if (!is_array($params)) {
@@ -208,33 +208,33 @@ class Bundle {
 
     $params['id'] = $this->id;
 
-    if ($params['id'] && !is_int($params['id'])) {
+    if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
     }
-    if ($params['to'] && !is_array($params['to'])) {
+    if (@$params['to'] && !is_array(@$params['to'])) {
       throw new \InvalidArgumentException('Bad parameter: $to must be of type array; received ' . gettype($to));
     }
-    if ($params['note'] && !is_string($params['note'])) {
+    if (@$params['note'] && !is_string(@$params['note'])) {
       throw new \InvalidArgumentException('Bad parameter: $note must be of type string; received ' . gettype($note));
     }
 
-    if (!$params['id']) {
+    if (!@$params['id']) {
       if ($this->id) {
-        $params['id'] = $this->id;
+        $params['id'] = @$this->id;
       } else {
         throw new \Error('Parameter missing: id');
       }
     }
 
-    if (!$params['to']) {
+    if (!@$params['to']) {
       if ($this->to) {
-        $params['to'] = $this->to;
+        $params['to'] = @$this->to;
       } else {
         throw new \Error('Parameter missing: to');
       }
     }
 
-    return Api::sendRequest('/bundles/' . $params['id'] . '/share', 'POST', $params, $this->options);
+    return Api::sendRequest('/bundles/' . @$params['id'] . '/share', 'POST', $params, $this->options);
   }
 
   // Parameters:
@@ -250,7 +250,7 @@ class Bundle {
   //   require_share_recipient - boolean - Only allow access to recipients who have explicitly received the share via an email sent through the Files.com UI?
   public function update($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no ID');
+      throw new \Error('Current object has no id');
     }
 
     if (!is_array($params)) {
@@ -259,48 +259,48 @@ class Bundle {
 
     $params['id'] = $this->id;
 
-    if ($params['id'] && !is_int($params['id'])) {
+    if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
     }
-    if ($params['password'] && !is_string($params['password'])) {
+    if (@$params['password'] && !is_string(@$params['password'])) {
       throw new \InvalidArgumentException('Bad parameter: $password must be of type string; received ' . gettype($password));
     }
-    if ($params['clickwrap_id'] && !is_int($params['clickwrap_id'])) {
+    if (@$params['clickwrap_id'] && !is_int(@$params['clickwrap_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $clickwrap_id must be of type int; received ' . gettype($clickwrap_id));
     }
-    if ($params['code'] && !is_string($params['code'])) {
+    if (@$params['code'] && !is_string(@$params['code'])) {
       throw new \InvalidArgumentException('Bad parameter: $code must be of type string; received ' . gettype($code));
     }
-    if ($params['description'] && !is_string($params['description'])) {
+    if (@$params['description'] && !is_string(@$params['description'])) {
       throw new \InvalidArgumentException('Bad parameter: $description must be of type string; received ' . gettype($description));
     }
-    if ($params['expires_at'] && !is_string($params['expires_at'])) {
+    if (@$params['expires_at'] && !is_string(@$params['expires_at'])) {
       throw new \InvalidArgumentException('Bad parameter: $expires_at must be of type string; received ' . gettype($expires_at));
     }
-    if ($params['inbox_id'] && !is_int($params['inbox_id'])) {
+    if (@$params['inbox_id'] && !is_int(@$params['inbox_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $inbox_id must be of type int; received ' . gettype($inbox_id));
     }
-    if ($params['max_uses'] && !is_int($params['max_uses'])) {
+    if (@$params['max_uses'] && !is_int(@$params['max_uses'])) {
       throw new \InvalidArgumentException('Bad parameter: $max_uses must be of type int; received ' . gettype($max_uses));
     }
-    if ($params['note'] && !is_string($params['note'])) {
+    if (@$params['note'] && !is_string(@$params['note'])) {
       throw new \InvalidArgumentException('Bad parameter: $note must be of type string; received ' . gettype($note));
     }
 
-    if (!$params['id']) {
+    if (!@$params['id']) {
       if ($this->id) {
-        $params['id'] = $this->id;
+        $params['id'] = @$this->id;
       } else {
         throw new \Error('Parameter missing: id');
       }
     }
 
-    return Api::sendRequest('/bundles/' . $params['id'] . '', 'PATCH', $params, $this->options);
+    return Api::sendRequest('/bundles/' . @$params['id'] . '', 'PATCH', $params, $this->options);
   }
 
   public function delete($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no ID');
+      throw new \Error('Current object has no id');
     }
 
     if (!is_array($params)) {
@@ -309,19 +309,19 @@ class Bundle {
 
     $params['id'] = $this->id;
 
-    if ($params['id'] && !is_int($params['id'])) {
+    if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
     }
 
-    if (!$params['id']) {
+    if (!@$params['id']) {
       if ($this->id) {
-        $params['id'] = $this->id;
+        $params['id'] = @$this->id;
       } else {
         throw new \Error('Parameter missing: id');
       }
     }
 
-    return Api::sendRequest('/bundles/' . $params['id'] . '', 'DELETE', $params, $this->options);
+    return Api::sendRequest('/bundles/' . @$params['id'] . '', 'DELETE', $params, $this->options);
   }
 
   public function destroy($params = []) {
@@ -329,7 +329,7 @@ class Bundle {
   }
 
   public function save() {
-      if ($this->attributes['id']) {
+      if (@$this->attributes['id']) {
         return $this->update($this->attributes);
       } else {
         $new_obj = self::create($this->attributes, $this->options);
@@ -352,23 +352,23 @@ class Bundle {
   //   filter_lt - object - If set, return records where the specifiied field is less than the supplied value. Valid fields are `created_at`.
   //   filter_lteq - object - If set, return records where the specifiied field is less than or equal to the supplied value. Valid fields are `created_at`.
   public static function list($params = [], $options = []) {
-    if ($params['user_id'] && !is_int($params['user_id'])) {
+    if (@$params['user_id'] && !is_int(@$params['user_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
     }
 
-    if ($params['page'] && !is_int($params['page'])) {
+    if (@$params['page'] && !is_int(@$params['page'])) {
       throw new \InvalidArgumentException('Bad parameter: $page must be of type int; received ' . gettype($page));
     }
 
-    if ($params['per_page'] && !is_int($params['per_page'])) {
+    if (@$params['per_page'] && !is_int(@$params['per_page'])) {
       throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
     }
 
-    if ($params['action'] && !is_string($params['action'])) {
+    if (@$params['action'] && !is_string(@$params['action'])) {
       throw new \InvalidArgumentException('Bad parameter: $action must be of type string; received ' . gettype($action));
     }
 
-    if ($params['cursor'] && !is_string($params['cursor'])) {
+    if (@$params['cursor'] && !is_string(@$params['cursor'])) {
       throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
     }
 
@@ -396,17 +396,17 @@ class Bundle {
 
     $params['id'] = $id;
 
-    if (!$params['id']) {
+    if (!@$params['id']) {
       throw new \Error('Parameter missing: id');
     }
 
-    if ($params['id'] && !is_int($params['id'])) {
+    if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
     }
 
-    $response = Api::sendRequest('/bundles/' . $params['id'] . '', 'GET', $params, $options);
+    $response = Api::sendRequest('/bundles/' . @$params['id'] . '', 'GET', $params, $options);
 
-    return new Bundle((array)$response->data, $options);
+    return new Bundle((array)(@$response->data ?: []), $options);
   }
 
   public static function get($id, $params = [], $options = []) {
@@ -427,52 +427,52 @@ class Bundle {
   //   inbox_id - int64 - ID of the associated inbox, if available.
   //   require_share_recipient - boolean - Only allow access to recipients who have explicitly received the share via an email sent through the Files.com UI?
   public static function create($params = [], $options = []) {
-    if (!$params['paths']) {
+    if (!@$params['paths']) {
       throw new \Error('Parameter missing: paths');
     }
 
-    if ($params['user_id'] && !is_int($params['user_id'])) {
+    if (@$params['user_id'] && !is_int(@$params['user_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
     }
 
-    if ($params['paths'] && !is_array($params['paths'])) {
+    if (@$params['paths'] && !is_array(@$params['paths'])) {
       throw new \InvalidArgumentException('Bad parameter: $paths must be of type array; received ' . gettype($paths));
     }
 
-    if ($params['password'] && !is_string($params['password'])) {
+    if (@$params['password'] && !is_string(@$params['password'])) {
       throw new \InvalidArgumentException('Bad parameter: $password must be of type string; received ' . gettype($password));
     }
 
-    if ($params['expires_at'] && !is_string($params['expires_at'])) {
+    if (@$params['expires_at'] && !is_string(@$params['expires_at'])) {
       throw new \InvalidArgumentException('Bad parameter: $expires_at must be of type string; received ' . gettype($expires_at));
     }
 
-    if ($params['max_uses'] && !is_int($params['max_uses'])) {
+    if (@$params['max_uses'] && !is_int(@$params['max_uses'])) {
       throw new \InvalidArgumentException('Bad parameter: $max_uses must be of type int; received ' . gettype($max_uses));
     }
 
-    if ($params['description'] && !is_string($params['description'])) {
+    if (@$params['description'] && !is_string(@$params['description'])) {
       throw new \InvalidArgumentException('Bad parameter: $description must be of type string; received ' . gettype($description));
     }
 
-    if ($params['note'] && !is_string($params['note'])) {
+    if (@$params['note'] && !is_string(@$params['note'])) {
       throw new \InvalidArgumentException('Bad parameter: $note must be of type string; received ' . gettype($note));
     }
 
-    if ($params['code'] && !is_string($params['code'])) {
+    if (@$params['code'] && !is_string(@$params['code'])) {
       throw new \InvalidArgumentException('Bad parameter: $code must be of type string; received ' . gettype($code));
     }
 
-    if ($params['clickwrap_id'] && !is_int($params['clickwrap_id'])) {
+    if (@$params['clickwrap_id'] && !is_int(@$params['clickwrap_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $clickwrap_id must be of type int; received ' . gettype($clickwrap_id));
     }
 
-    if ($params['inbox_id'] && !is_int($params['inbox_id'])) {
+    if (@$params['inbox_id'] && !is_int(@$params['inbox_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $inbox_id must be of type int; received ' . gettype($inbox_id));
     }
 
     $response = Api::sendRequest('/bundles', 'POST', $params, $options);
 
-    return new Bundle((array)$response->data, $options);
+    return new Bundle((array)(@$response->data ?: []), $options);
   }
 }

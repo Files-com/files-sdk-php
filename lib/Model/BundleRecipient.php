@@ -27,36 +27,36 @@ class BundleRecipient {
   }
 
   public function __get($name) {
-    return $this->attributes[$name];
+    return @$this->attributes[$name];
   }
 
   public function isLoaded() {
-    return !!$this->attributes['id'];
+    return !!@$this->attributes['id'];
   }
 
   // string # The recipient's company.
   public function getCompany() {
-    return $this->attributes['company'];
+    return @$this->attributes['company'];
   }
 
   // string # The recipient's name.
   public function getName() {
-    return $this->attributes['name'];
+    return @$this->attributes['name'];
   }
 
   // string # A note sent to the recipient with the bundle.
   public function getNote() {
-    return $this->attributes['note'];
+    return @$this->attributes['note'];
   }
 
   // string # The recipient's email address.
   public function getRecipient() {
-    return $this->attributes['recipient'];
+    return @$this->attributes['recipient'];
   }
 
   // date-time # When the Bundle was shared with this recipient.
   public function getSentAt() {
-    return $this->attributes['sent_at'];
+    return @$this->attributes['sent_at'];
   }
 
   // Parameters:
@@ -67,31 +67,31 @@ class BundleRecipient {
   //   cursor - string - Send cursor to resume an existing list from the point at which you left off.  Get a cursor from an existing list via the X-Files-Cursor-Next header.
   //   bundle_id (required) - int64 - List recipients for the bundle with this ID.
   public static function list($params = [], $options = []) {
-    if (!$params['bundle_id']) {
+    if (!@$params['bundle_id']) {
       throw new \Error('Parameter missing: bundle_id');
     }
 
-    if ($params['user_id'] && !is_int($params['user_id'])) {
+    if (@$params['user_id'] && !is_int(@$params['user_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
     }
 
-    if ($params['page'] && !is_int($params['page'])) {
+    if (@$params['page'] && !is_int(@$params['page'])) {
       throw new \InvalidArgumentException('Bad parameter: $page must be of type int; received ' . gettype($page));
     }
 
-    if ($params['per_page'] && !is_int($params['per_page'])) {
+    if (@$params['per_page'] && !is_int(@$params['per_page'])) {
       throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
     }
 
-    if ($params['action'] && !is_string($params['action'])) {
+    if (@$params['action'] && !is_string(@$params['action'])) {
       throw new \InvalidArgumentException('Bad parameter: $action must be of type string; received ' . gettype($action));
     }
 
-    if ($params['cursor'] && !is_string($params['cursor'])) {
+    if (@$params['cursor'] && !is_string(@$params['cursor'])) {
       throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
     }
 
-    if ($params['bundle_id'] && !is_int($params['bundle_id'])) {
+    if (@$params['bundle_id'] && !is_int(@$params['bundle_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $bundle_id must be of type int; received ' . gettype($bundle_id));
     }
 

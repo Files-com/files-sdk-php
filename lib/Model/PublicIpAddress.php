@@ -27,20 +27,20 @@ class PublicIpAddress {
   }
 
   public function __get($name) {
-    return $this->attributes[$name];
+    return @$this->attributes[$name];
   }
 
   public function isLoaded() {
-    return !!$this->attributes['id'];
+    return !!@$this->attributes['id'];
   }
 
   // string # The public IP address.
   public function getIpAddress() {
-    return $this->attributes['ip_address'];
+    return @$this->attributes['ip_address'];
   }
 
   // string # The name of the frontend server.
   public function getServerName() {
-    return $this->attributes['server_name'];
+    return @$this->attributes['server_name'];
   }
 }

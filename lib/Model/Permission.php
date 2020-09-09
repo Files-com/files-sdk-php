@@ -27,16 +27,16 @@ class Permission {
   }
 
   public function __get($name) {
-    return $this->attributes[$name];
+    return @$this->attributes[$name];
   }
 
   public function isLoaded() {
-    return !!$this->attributes['id'];
+    return !!@$this->attributes['id'];
   }
 
   // int64 # Permission ID
   public function getId() {
-    return $this->attributes['id'];
+    return @$this->attributes['id'];
   }
 
   public function setId($value) {
@@ -45,7 +45,7 @@ class Permission {
 
   // string # Folder path This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
   public function getPath() {
-    return $this->attributes['path'];
+    return @$this->attributes['path'];
   }
 
   public function setPath($value) {
@@ -54,7 +54,7 @@ class Permission {
 
   // int64 # User ID
   public function getUserId() {
-    return $this->attributes['user_id'];
+    return @$this->attributes['user_id'];
   }
 
   public function setUserId($value) {
@@ -63,7 +63,7 @@ class Permission {
 
   // string # User's username
   public function getUsername() {
-    return $this->attributes['username'];
+    return @$this->attributes['username'];
   }
 
   public function setUsername($value) {
@@ -72,7 +72,7 @@ class Permission {
 
   // int64 # Group ID
   public function getGroupId() {
-    return $this->attributes['group_id'];
+    return @$this->attributes['group_id'];
   }
 
   public function setGroupId($value) {
@@ -81,7 +81,7 @@ class Permission {
 
   // string # Group name if applicable
   public function getGroupName() {
-    return $this->attributes['group_name'];
+    return @$this->attributes['group_name'];
   }
 
   public function setGroupName($value) {
@@ -90,7 +90,7 @@ class Permission {
 
   // string # Permission type
   public function getPermission() {
-    return $this->attributes['permission'];
+    return @$this->attributes['permission'];
   }
 
   public function setPermission($value) {
@@ -99,7 +99,7 @@ class Permission {
 
   // boolean # Does this permission apply to subfolders?
   public function getRecursive() {
-    return $this->attributes['recursive'];
+    return @$this->attributes['recursive'];
   }
 
   public function setRecursive($value) {
@@ -108,7 +108,7 @@ class Permission {
 
   public function delete($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no ID');
+      throw new \Error('Current object has no id');
     }
 
     if (!is_array($params)) {
@@ -117,19 +117,19 @@ class Permission {
 
     $params['id'] = $this->id;
 
-    if ($params['id'] && !is_int($params['id'])) {
+    if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
     }
 
-    if (!$params['id']) {
+    if (!@$params['id']) {
       if ($this->id) {
-        $params['id'] = $this->id;
+        $params['id'] = @$this->id;
       } else {
         throw new \Error('Parameter missing: id');
       }
     }
 
-    return Api::sendRequest('/permissions/' . $params['id'] . '', 'DELETE', $params, $this->options);
+    return Api::sendRequest('/permissions/' . @$params['id'] . '', 'DELETE', $params, $this->options);
   }
 
   public function destroy($params = []) {
@@ -137,7 +137,7 @@ class Permission {
   }
 
   public function save() {
-      if ($this->attributes['id']) {
+      if (@$this->attributes['id']) {
         throw new \BadMethodCallException('The Permission object doesn\'t support updates.');
       } else {
         $new_obj = self::create($this->attributes, $this->options);
@@ -163,31 +163,31 @@ class Permission {
   //   user_id - string - DEPRECATED: User ID.  If provided, will scope permissions to this user. Use `filter[user_id]` instead.`
   //   include_groups - boolean - If searching by user or group, also include user's permissions that are inherited from its groups?
   public static function list($params = [], $options = []) {
-    if ($params['page'] && !is_int($params['page'])) {
+    if (@$params['page'] && !is_int(@$params['page'])) {
       throw new \InvalidArgumentException('Bad parameter: $page must be of type int; received ' . gettype($page));
     }
 
-    if ($params['per_page'] && !is_int($params['per_page'])) {
+    if (@$params['per_page'] && !is_int(@$params['per_page'])) {
       throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
     }
 
-    if ($params['action'] && !is_string($params['action'])) {
+    if (@$params['action'] && !is_string(@$params['action'])) {
       throw new \InvalidArgumentException('Bad parameter: $action must be of type string; received ' . gettype($action));
     }
 
-    if ($params['cursor'] && !is_string($params['cursor'])) {
+    if (@$params['cursor'] && !is_string(@$params['cursor'])) {
       throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
     }
 
-    if ($params['path'] && !is_string($params['path'])) {
+    if (@$params['path'] && !is_string(@$params['path'])) {
       throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
     }
 
-    if ($params['group_id'] && !is_string($params['group_id'])) {
+    if (@$params['group_id'] && !is_string(@$params['group_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $group_id must be of type string; received ' . gettype($group_id));
     }
 
-    if ($params['user_id'] && !is_string($params['user_id'])) {
+    if (@$params['user_id'] && !is_string(@$params['user_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $user_id must be of type string; received ' . gettype($user_id));
     }
 
@@ -214,28 +214,28 @@ class Permission {
   //   user_id - int64 - User ID.  Provide `username` or `user_id`
   //   username - string - User username.  Provide `username` or `user_id`
   public static function create($params = [], $options = []) {
-    if ($params['group_id'] && !is_int($params['group_id'])) {
+    if (@$params['group_id'] && !is_int(@$params['group_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $group_id must be of type int; received ' . gettype($group_id));
     }
 
-    if ($params['path'] && !is_string($params['path'])) {
+    if (@$params['path'] && !is_string(@$params['path'])) {
       throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
     }
 
-    if ($params['permission'] && !is_string($params['permission'])) {
+    if (@$params['permission'] && !is_string(@$params['permission'])) {
       throw new \InvalidArgumentException('Bad parameter: $permission must be of type string; received ' . gettype($permission));
     }
 
-    if ($params['user_id'] && !is_int($params['user_id'])) {
+    if (@$params['user_id'] && !is_int(@$params['user_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
     }
 
-    if ($params['username'] && !is_string($params['username'])) {
+    if (@$params['username'] && !is_string(@$params['username'])) {
       throw new \InvalidArgumentException('Bad parameter: $username must be of type string; received ' . gettype($username));
     }
 
     $response = Api::sendRequest('/permissions', 'POST', $params, $options);
 
-    return new Permission((array)$response->data, $options);
+    return new Permission((array)(@$response->data ?: []), $options);
   }
 }

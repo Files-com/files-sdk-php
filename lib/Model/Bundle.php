@@ -174,6 +174,15 @@ class Bundle {
     return $this->attributes['inbox_id'] = $value;
   }
 
+  // boolean # Does this bundle have an associated inbox?
+  public function getHasInbox() {
+    return @$this->attributes['has_inbox'];
+  }
+
+  public function setHasInbox($value) {
+    return $this->attributes['has_inbox'] = $value;
+  }
+
   // array # A list of paths in this bundle
   public function getPaths() {
     return @$this->attributes['paths'];

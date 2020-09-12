@@ -61,7 +61,7 @@ class HistoryExport {
     return $this->attributes['end_at'] = $value;
   }
 
-  // string # Status of export.  Will be: `building` or `ready`
+  // string # Status of export.  Will be: `building`, `ready`, or `failed`
   public function getStatus() {
     return @$this->attributes['status'];
   }

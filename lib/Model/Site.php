@@ -174,6 +174,11 @@ class Site {
     return @$this->attributes['email'];
   }
 
+  // email # Reply-to email for this site
+  public function getReplyToEmail() {
+    return @$this->attributes['reply_to_email'];
+  }
+
   // boolean # If true, groups can be manually created / modified / deleted by Site Admins. Otherwise, groups can only be managed via your SSO provider.
   public function getNonSsoGroupsAllowed() {
     return @$this->attributes['non_sso_groups_allowed'];
@@ -615,6 +620,7 @@ class Site {
   //   subdomain - string - Site subdomain
   //   domain - string - Custom domain
   //   email - string - Main email for this site
+  //   reply_to_email - string - Reply-to email for this site
   //   allow_bundle_names - boolean - Are manual Bundle names allowed?
   //   bundle_expiration - int64 - Site-wide Bundle expiration in days
   //   overage_notify - boolean - Notify site email of overages?
@@ -728,6 +734,10 @@ class Site {
 
     if (@$params['email'] && !is_string(@$params['email'])) {
       throw new \InvalidArgumentException('Bad parameter: $email must be of type string; received ' . gettype($email));
+    }
+
+    if (@$params['reply_to_email'] && !is_string(@$params['reply_to_email'])) {
+      throw new \InvalidArgumentException('Bad parameter: $reply_to_email must be of type string; received ' . gettype($reply_to_email));
     }
 
     if (@$params['bundle_expiration'] && !is_int(@$params['bundle_expiration'])) {

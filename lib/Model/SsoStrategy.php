@@ -174,6 +174,11 @@ class SsoStrategy {
     return @$this->attributes['provision_time_zone'];
   }
 
+  // string # Default company for auto provisioned users.
+  public function getProvisionCompany() {
+    return @$this->attributes['provision_company'];
+  }
+
   // string # Base DN for looking up users in LDAP server
   public function getLdapBaseDn() {
     return @$this->attributes['ldap_base_dn'];

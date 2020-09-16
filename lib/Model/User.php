@@ -327,6 +327,15 @@ class User {
     return $this->attributes['require_2fa'] = $value;
   }
 
+  // boolean # Is 2fa required to sign in?
+  public function getActive2fa() {
+    return @$this->attributes['active_2fa'];
+  }
+
+  public function setActive2fa($value) {
+    return $this->attributes['active_2fa'] = $value;
+  }
+
   // boolean # Is a password change required upon next user login?
   public function getRequirePasswordChange() {
     return @$this->attributes['require_password_change'];

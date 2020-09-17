@@ -99,7 +99,7 @@ class HistoryExportResult {
     return @$this->attributes['failure_type'];
   }
 
-  // string # Inteface through which the action was taken. Valid values: `web`, `ftp`, `robot`, `jsapi`, `webdesktopapi`, `sftp`, `dav`, `desktop`, `restapi`, `scim`
+  // string # Inteface through which the action was taken. Valid values: `web`, `ftp`, `robot`, `jsapi`, `webdesktopapi`, `sftp`, `dav`, `desktop`, `restapi`, `scim`, `office`
   public function getInterface() {
     return @$this->attributes['interface'];
   }

@@ -327,7 +327,7 @@ class User {
     return $this->attributes['require_2fa'] = $value;
   }
 
-  // boolean # Is 2fa required to sign in?
+  // boolean # Is 2fa active for the user?
   public function getActive2fa() {
     return @$this->attributes['active_2fa'];
   }

@@ -88,6 +88,15 @@ class Notification {
     return $this->attributes['notify_on_copy'] = $value;
   }
 
+  // boolean # Enable notifications for each subfolder in this path
+  public function getRecursive() {
+    return @$this->attributes['recursive'];
+  }
+
+  public function setRecursive($value) {
+    return $this->attributes['recursive'] = $value;
+  }
+
   // string # The time interval that notifications are aggregated to
   public function getSendInterval() {
     return @$this->attributes['send_interval'];
@@ -145,6 +154,7 @@ class Notification {
   // Parameters:
   //   notify_on_copy - boolean - If `true`, copying or moving resources into this path will trigger a notification, in addition to just uploads.
   //   notify_user_actions - boolean - If `true` actions initiated by the user will still result in a notification
+  //   recursive - boolean - If `true`, enable notifications for each subfolder in this path
   //   send_interval - string - The time interval that notifications are aggregated by.  Can be `five_minutes`, `fifteen_minutes`, `hourly`, or `daily`.
   public function update($params = []) {
     if (!$this->id) {
@@ -305,6 +315,7 @@ class Notification {
   //   user_id - int64 - The id of the user to notify. Provide `user_id`, `username` or `group_id`.
   //   notify_on_copy - boolean - If `true`, copying or moving resources into this path will trigger a notification, in addition to just uploads.
   //   notify_user_actions - boolean - If `true` actions initiated by the user will still result in a notification
+  //   recursive - boolean - If `true`, enable notifications for each subfolder in this path
   //   send_interval - string - The time interval that notifications are aggregated by.  Can be `five_minutes`, `fifteen_minutes`, `hourly`, or `daily`.
   //   group_id - int64 - The ID of the group to notify.  Provide `user_id`, `username` or `group_id`.
   //   path - string - Path

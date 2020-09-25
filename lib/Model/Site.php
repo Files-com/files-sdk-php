@@ -69,6 +69,11 @@ class Site {
     return @$this->attributes['allow_bundle_names'];
   }
 
+  // string # Comma seperated list of allowed Country codes
+  public function getAllowedCountries() {
+    return @$this->attributes['allowed_countries'];
+  }
+
   // string # List of allowed IP addresses
   public function getAllowedIps() {
     return @$this->attributes['allowed_ips'];
@@ -152,6 +157,11 @@ class Site {
   // int64 # Desktop app session lifetime (in hours)
   public function getDesktopAppSessionLifetime() {
     return @$this->attributes['desktop_app_session_lifetime'];
+  }
+
+  // string # Comma seperated list of disallowed Country codes
+  public function getDisallowedCountries() {
+    return @$this->attributes['disallowed_countries'];
   }
 
   // boolean # Are notifications disabled?
@@ -646,7 +656,9 @@ class Site {
   //   user_lockout_within - int64 - Number of hours for user lockout window
   //   user_lockout_lock_period - int64 - How many hours to lock user out for failed password?
   //   include_password_in_welcome_email - boolean - Include password in emails to new users?
+  //   allowed_countries - string - Comma seperated list of allowed Country codes
   //   allowed_ips - string - List of allowed IP addresses
+  //   disallowed_countries - string - Comma seperated list of disallowed Country codes
   //   days_to_retain_backups - int64 - Number of days to keep deleted files
   //   max_prior_passwords - int64 - Number of prior passwords to disallow
   //   password_validity_days - int64 - Number of days password is valid
@@ -780,8 +792,16 @@ class Site {
       throw new \InvalidArgumentException('Bad parameter: $user_lockout_lock_period must be of type int; received ' . gettype($user_lockout_lock_period));
     }
 
+    if (@$params['allowed_countries'] && !is_string(@$params['allowed_countries'])) {
+      throw new \InvalidArgumentException('Bad parameter: $allowed_countries must be of type string; received ' . gettype($allowed_countries));
+    }
+
     if (@$params['allowed_ips'] && !is_string(@$params['allowed_ips'])) {
       throw new \InvalidArgumentException('Bad parameter: $allowed_ips must be of type string; received ' . gettype($allowed_ips));
+    }
+
+    if (@$params['disallowed_countries'] && !is_string(@$params['disallowed_countries'])) {
+      throw new \InvalidArgumentException('Bad parameter: $disallowed_countries must be of type string; received ' . gettype($disallowed_countries));
     }
 
     if (@$params['days_to_retain_backups'] && !is_int(@$params['days_to_retain_backups'])) {

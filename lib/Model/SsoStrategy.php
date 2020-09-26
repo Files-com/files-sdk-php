@@ -149,6 +149,11 @@ class SsoStrategy {
     return @$this->attributes['provision_group_required'];
   }
 
+  // string # Comma-separated list of group names whose members will be created as Site Admins.
+  public function getProvisionSiteAdminGroups() {
+    return @$this->attributes['provision_site_admin_groups'];
+  }
+
   // boolean # Auto-provisioned users get Sharing permission?
   public function getProvisionAttachmentsPermission() {
     return @$this->attributes['provision_attachments_permission'];

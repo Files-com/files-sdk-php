@@ -98,7 +98,7 @@ class Api {
     $options = $options ?: [];
     $headers = array_merge(@$options['headers'] ?: [], [
       'Accept' => 'application/json',
-      'User-Agent' => 'Files.com PHP SDK v1.0',
+      'User-Agent' => 'Files-PHP-SDK',
     ]);
 
     $isExternal = preg_match('@^[a-zA-Z]+://@', $path);

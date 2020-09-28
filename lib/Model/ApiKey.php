@@ -353,7 +353,7 @@ class ApiKey {
   // Parameters:
   //   format - string
   //   api_key - object
-  public static function current($params = [], $options = []) {
+  public static function deleteCurrent($params = [], $options = []) {
     if (@$params['format'] && !is_string(@$params['format'])) {
       throw new \InvalidArgumentException('Bad parameter: $format must be of type string; received ' . gettype($format));
     }

@@ -318,7 +318,7 @@ class User {
     return $this->attributes['receive_admin_alerts'] = $value;
   }
 
-  // boolean # Is 2fa required to sign in?
+  // string # 2FA required setting
   public function getRequire2fa() {
     return @$this->attributes['require_2fa'];
   }
@@ -655,6 +655,7 @@ class User {
   //   ssl_required - string - SSL required setting
   //   sso_strategy_id - int64 - SSO (Single Sign On) strategy ID for the user, if applicable.
   //   subscribe_to_newsletter - boolean - Is the user subscribed to the newsletter?
+  //   require_2fa - string - 2FA required setting
   //   time_zone - string - User time zone
   //   user_root - string - Root folder for FTP (and optionally SFTP if the appropriate site-wide setting is set.)  Note that this is not used for API, Desktop, or Web interface.
   //   username - string - User's username
@@ -731,6 +732,9 @@ class User {
     }
     if (@$params['sso_strategy_id'] && !is_int(@$params['sso_strategy_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $sso_strategy_id must be of type int; received ' . gettype($sso_strategy_id));
+    }
+    if (@$params['require_2fa'] && !is_string(@$params['require_2fa'])) {
+      throw new \InvalidArgumentException('Bad parameter: $require_2fa must be of type string; received ' . gettype($require_2fa));
     }
     if (@$params['time_zone'] && !is_string(@$params['time_zone'])) {
       throw new \InvalidArgumentException('Bad parameter: $time_zone must be of type string; received ' . gettype($time_zone));
@@ -920,6 +924,7 @@ class User {
   //   ssl_required - string - SSL required setting
   //   sso_strategy_id - int64 - SSO (Single Sign On) strategy ID for the user, if applicable.
   //   subscribe_to_newsletter - boolean - Is the user subscribed to the newsletter?
+  //   require_2fa - string - 2FA required setting
   //   time_zone - string - User time zone
   //   user_root - string - Root folder for FTP (and optionally SFTP if the appropriate site-wide setting is set.)  Note that this is not used for API, Desktop, or Web interface.
   //   username - string - User's username
@@ -1002,6 +1007,10 @@ class User {
 
     if (@$params['sso_strategy_id'] && !is_int(@$params['sso_strategy_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $sso_strategy_id must be of type int; received ' . gettype($sso_strategy_id));
+    }
+
+    if (@$params['require_2fa'] && !is_string(@$params['require_2fa'])) {
+      throw new \InvalidArgumentException('Bad parameter: $require_2fa must be of type string; received ' . gettype($require_2fa));
     }
 
     if (@$params['time_zone'] && !is_string(@$params['time_zone'])) {

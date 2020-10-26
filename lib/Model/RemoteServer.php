@@ -322,6 +322,15 @@ class RemoteServer {
     return $this->attributes['private_key'] = $value;
   }
 
+  // string # SSL client certificate.
+  public function getSslCertificate() {
+    return @$this->attributes['ssl_certificate'];
+  }
+
+  public function setSslCertificate($value) {
+    return $this->attributes['ssl_certificate'] = $value;
+  }
+
   // string # A JSON file that contains the private key. To generate see https://cloud.google.com/storage/docs/json_api/v1/how-tos/authorizing#APIKey
   public function getGoogleCloudStorageCredentialsJson() {
     return @$this->attributes['google_cloud_storage_credentials_json'];
@@ -399,6 +408,7 @@ class RemoteServer {
   //   aws_secret_key - string - AWS secret key.
   //   password - string - Password if needed.
   //   private_key - string - Private key if needed.
+  //   ssl_certificate - string - SSL client certificate.
   //   google_cloud_storage_credentials_json - string - A JSON file that contains the private key. To generate see https://cloud.google.com/storage/docs/json_api/v1/how-tos/authorizing#APIKey
   //   wasabi_access_key - string - Wasabi access key.
   //   wasabi_secret_key - string - Wasabi secret key.
@@ -455,6 +465,9 @@ class RemoteServer {
     }
     if (@$params['private_key'] && !is_string(@$params['private_key'])) {
       throw new \InvalidArgumentException('Bad parameter: $private_key must be of type string; received ' . gettype($private_key));
+    }
+    if (@$params['ssl_certificate'] && !is_string(@$params['ssl_certificate'])) {
+      throw new \InvalidArgumentException('Bad parameter: $ssl_certificate must be of type string; received ' . gettype($ssl_certificate));
     }
     if (@$params['google_cloud_storage_credentials_json'] && !is_string(@$params['google_cloud_storage_credentials_json'])) {
       throw new \InvalidArgumentException('Bad parameter: $google_cloud_storage_credentials_json must be of type string; received ' . gettype($google_cloud_storage_credentials_json));
@@ -666,6 +679,7 @@ class RemoteServer {
   //   aws_secret_key - string - AWS secret key.
   //   password - string - Password if needed.
   //   private_key - string - Private key if needed.
+  //   ssl_certificate - string - SSL client certificate.
   //   google_cloud_storage_credentials_json - string - A JSON file that contains the private key. To generate see https://cloud.google.com/storage/docs/json_api/v1/how-tos/authorizing#APIKey
   //   wasabi_access_key - string - Wasabi access key.
   //   wasabi_secret_key - string - Wasabi secret key.
@@ -712,6 +726,10 @@ class RemoteServer {
 
     if (@$params['private_key'] && !is_string(@$params['private_key'])) {
       throw new \InvalidArgumentException('Bad parameter: $private_key must be of type string; received ' . gettype($private_key));
+    }
+
+    if (@$params['ssl_certificate'] && !is_string(@$params['ssl_certificate'])) {
+      throw new \InvalidArgumentException('Bad parameter: $ssl_certificate must be of type string; received ' . gettype($ssl_certificate));
     }
 
     if (@$params['google_cloud_storage_credentials_json'] && !is_string(@$params['google_cloud_storage_credentials_json'])) {

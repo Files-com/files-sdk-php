@@ -9,6 +9,15 @@ use GuzzleHttp\Handler\CurlHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 
+function middlewareRemoveHeader($header) {
+  return function ($handler) use ($header) {
+    return function ($request, $options) use ($handler, $header) {
+      $request = $request->withoutHeader($header);
+      return $handler($request, $options);
+    };
+  };
+}
+
 class Api {
   private static function pushRetryHandler($handlerStack) {
     $shouldRetry = function($retries, $request, $response, $exception) {
@@ -52,6 +61,11 @@ class Api {
 
     $handlerStack = HandlerStack::create(new CurlHandler());
     self::pushRetryHandler($handlerStack);
+
+    // for security, Content-Length is disallowed on GET requests
+    if (strtoupper($verb) === 'GET') {
+      $handlerStack->push(middlewareRemoveHeader('Content-Length'));
+    }
 
     $client = new Client([
       'connect_timeout' => Files::$connectTimeout,

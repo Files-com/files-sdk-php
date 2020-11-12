@@ -61,24 +61,6 @@ class HistoryExport {
     return $this->attributes['end_at'] = $value;
   }
 
-  // string # Export format
-  public function getExportAs() {
-    return @$this->attributes['export_as'];
-  }
-
-  public function setExportAs($value) {
-    return $this->attributes['export_as'] = $value;
-  }
-
-  // boolean # Is a file export, downloadable using the results_url
-  public function getFileExport() {
-    return @$this->attributes['file_export'];
-  }
-
-  public function setFileExport($value) {
-    return $this->attributes['file_export'] = $value;
-  }
-
   // string # Status of export.  Will be: `building`, `ready`, or `failed`
   public function getStatus() {
     return @$this->attributes['status'];
@@ -317,7 +299,6 @@ class HistoryExport {
   //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
   //   start_at - string - Start date/time of export range.
   //   end_at - string - End date/time of export range.
-  //   export_as - string - Export format
   //   query_action - string - Filter results by this this action type. Valid values: `create`, `read`, `update`, `destroy`, `move`, `login`, `failedlogin`, `copy`, `user_create`, `user_update`, `user_destroy`, `group_create`, `group_update`, `group_destroy`, `permission_create`, `permission_destroy`, `api_key_create`, `api_key_update`, `api_key_destroy`
   //   query_interface - string - Filter results by this this interface type. Valid values: `web`, `ftp`, `robot`, `jsapi`, `webdesktopapi`, `sftp`, `dav`, `desktop`, `restapi`, `scim`, `office`
   //   query_user_id - string - Return results that are actions performed by the user indiciated by this User ID
@@ -348,10 +329,6 @@ class HistoryExport {
 
     if (@$params['end_at'] && !is_string(@$params['end_at'])) {
       throw new \InvalidArgumentException('Bad parameter: $end_at must be of type string; received ' . gettype($end_at));
-    }
-
-    if (@$params['export_as'] && !is_string(@$params['export_as'])) {
-      throw new \InvalidArgumentException('Bad parameter: $export_as must be of type string; received ' . gettype($export_as));
     }
 
     if (@$params['query_action'] && !is_string(@$params['query_action'])) {

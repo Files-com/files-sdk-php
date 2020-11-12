@@ -185,10 +185,8 @@ class Folder {
   }
 
   // Parameters:
-  //   page - int64 - Current page number.
-  //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
-  //   action - string - Action to take.  Can be `count`, `size`, `permissions`, or blank.
   //   cursor - string - Send cursor to resume an existing list from the point at which you left off.  Get a cursor from an existing list via the X-Files-Cursor header.
+  //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
   //   path (required) - string - Path to operate on.
   //   filter - string - If specified, will to filter folders/files list by this string.  Wildcards of `*` and `?` are acceptable here.
   //   preview_size - string - Request a preview size.  Can be `small` (default), `large`, `xlarge`, or `pdf`.
@@ -207,20 +205,12 @@ class Folder {
       throw new \Error('Parameter missing: path');
     }
 
-    if (@$params['page'] && !is_int(@$params['page'])) {
-      throw new \InvalidArgumentException('Bad parameter: $page must be of type int; received ' . gettype($page));
+    if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+      throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
     }
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
       throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
-    }
-
-    if (@$params['action'] && !is_string(@$params['action'])) {
-      throw new \InvalidArgumentException('Bad parameter: $action must be of type string; received ' . gettype($action));
-    }
-
-    if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
     }
 
     if (@$params['path'] && !is_string(@$params['path'])) {

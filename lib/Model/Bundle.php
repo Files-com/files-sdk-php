@@ -206,6 +206,7 @@ class Bundle {
   // Parameters:
   //   to (required) - array(string) - A list of email addresses to share this bundle with.
   //   note - string - Note to include in email.
+  //   recipients - array(object) - A list of recipients to share this bundle with.
   public function share($params = []) {
     if (!$this->id) {
       throw new \Error('Current object has no id');
@@ -225,6 +226,9 @@ class Bundle {
     }
     if (@$params['note'] && !is_string(@$params['note'])) {
       throw new \InvalidArgumentException('Bad parameter: $note must be of type string; received ' . gettype($note));
+    }
+    if (@$params['recipients'] && !is_array(@$params['recipients'])) {
+      throw new \InvalidArgumentException('Bad parameter: $recipients must be of type array; received ' . gettype($recipients));
     }
 
     if (!@$params['id']) {
@@ -349,10 +353,8 @@ class Bundle {
 
   // Parameters:
   //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
-  //   page - int64 - Current page number.
+  //   cursor - string - Used for pagination.  Send a cursor value to resume an existing list from the point at which you left off.  Get a cursor from an existing list via the X-Files-Cursor-Next header.
   //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
-  //   action - string - Deprecated: If set to `count` returns a count of matching records rather than the records themselves.
-  //   cursor - string - Send cursor to resume an existing list from the point at which you left off.  Get a cursor from an existing list via the X-Files-Cursor-Next header.
   //   sort_by - object - If set, sort records by the specified field in either 'asc' or 'desc' direction (e.g. sort_by[last_login_at]=desc). Valid fields are `site_id`, `created_at` or `code`.
   //   filter - object - If set, return records where the specifiied field is equal to the supplied value. Valid fields are `created_at`.
   //   filter_gt - object - If set, return records where the specifiied field is greater than the supplied value. Valid fields are `created_at`.
@@ -365,20 +367,12 @@ class Bundle {
       throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
     }
 
-    if (@$params['page'] && !is_int(@$params['page'])) {
-      throw new \InvalidArgumentException('Bad parameter: $page must be of type int; received ' . gettype($page));
+    if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+      throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
     }
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
       throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
-    }
-
-    if (@$params['action'] && !is_string(@$params['action'])) {
-      throw new \InvalidArgumentException('Bad parameter: $action must be of type string; received ' . gettype($action));
-    }
-
-    if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
     }
 
     $response = Api::sendRequest('/bundles', 'GET', $params, $options);

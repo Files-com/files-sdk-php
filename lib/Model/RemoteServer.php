@@ -665,6 +665,199 @@ class RemoteServer {
   }
 
   // Parameters:
+  //   remote_server_id - int64 - RemoteServer ID
+  //   root - string - Remote path to list
+  //   aws_access_key - string - AWS Access Key.
+  //   aws_secret_key - string - AWS secret key.
+  //   password - string - Password if needed.
+  //   private_key - string - Private key if needed.
+  //   ssl_certificate - string - SSL client certificate.
+  //   google_cloud_storage_credentials_json - string - A JSON file that contains the private key. To generate see https://cloud.google.com/storage/docs/json_api/v1/how-tos/authorizing#APIKey
+  //   wasabi_access_key - string - Wasabi access key.
+  //   wasabi_secret_key - string - Wasabi secret key.
+  //   backblaze_b2_key_id - string - Backblaze B2 Cloud Storage keyID.
+  //   backblaze_b2_application_key - string - Backblaze B2 Cloud Storage applicationKey.
+  //   rackspace_api_key - string - Rackspace API key from the Rackspace Cloud Control Panel.
+  //   reset_authentication - boolean - Reset authenticated account
+  //   azure_blob_storage_access_key - string - Azure Blob Storage secret key.
+  //   hostname - string
+  //   name - string
+  //   max_connections - int64
+  //   port - int64
+  //   s3_bucket - string
+  //   s3_region - string
+  //   server_certificate - string
+  //   server_host_key - string
+  //   server_type - string
+  //   ssl - string
+  //   username - string
+  //   google_cloud_storage_bucket - string
+  //   google_cloud_storage_project_id - string
+  //   backblaze_b2_bucket - string
+  //   backblaze_b2_s3_endpoint - string
+  //   wasabi_bucket - string
+  //   wasabi_region - string
+  //   rackspace_username - string
+  //   rackspace_region - string
+  //   rackspace_container - string
+  //   one_drive_account_type - string
+  //   azure_blob_storage_account - string
+  //   azure_blob_storage_container - string
+  public static function listForTesting($params = [], $options = []) {
+    if (@$params['remote_server_id'] && !is_int(@$params['remote_server_id'])) {
+      throw new \InvalidArgumentException('Bad parameter: $remote_server_id must be of type int; received ' . gettype($remote_server_id));
+    }
+
+    if (@$params['root'] && !is_string(@$params['root'])) {
+      throw new \InvalidArgumentException('Bad parameter: $root must be of type string; received ' . gettype($root));
+    }
+
+    if (@$params['aws_access_key'] && !is_string(@$params['aws_access_key'])) {
+      throw new \InvalidArgumentException('Bad parameter: $aws_access_key must be of type string; received ' . gettype($aws_access_key));
+    }
+
+    if (@$params['aws_secret_key'] && !is_string(@$params['aws_secret_key'])) {
+      throw new \InvalidArgumentException('Bad parameter: $aws_secret_key must be of type string; received ' . gettype($aws_secret_key));
+    }
+
+    if (@$params['password'] && !is_string(@$params['password'])) {
+      throw new \InvalidArgumentException('Bad parameter: $password must be of type string; received ' . gettype($password));
+    }
+
+    if (@$params['private_key'] && !is_string(@$params['private_key'])) {
+      throw new \InvalidArgumentException('Bad parameter: $private_key must be of type string; received ' . gettype($private_key));
+    }
+
+    if (@$params['ssl_certificate'] && !is_string(@$params['ssl_certificate'])) {
+      throw new \InvalidArgumentException('Bad parameter: $ssl_certificate must be of type string; received ' . gettype($ssl_certificate));
+    }
+
+    if (@$params['google_cloud_storage_credentials_json'] && !is_string(@$params['google_cloud_storage_credentials_json'])) {
+      throw new \InvalidArgumentException('Bad parameter: $google_cloud_storage_credentials_json must be of type string; received ' . gettype($google_cloud_storage_credentials_json));
+    }
+
+    if (@$params['wasabi_access_key'] && !is_string(@$params['wasabi_access_key'])) {
+      throw new \InvalidArgumentException('Bad parameter: $wasabi_access_key must be of type string; received ' . gettype($wasabi_access_key));
+    }
+
+    if (@$params['wasabi_secret_key'] && !is_string(@$params['wasabi_secret_key'])) {
+      throw new \InvalidArgumentException('Bad parameter: $wasabi_secret_key must be of type string; received ' . gettype($wasabi_secret_key));
+    }
+
+    if (@$params['backblaze_b2_key_id'] && !is_string(@$params['backblaze_b2_key_id'])) {
+      throw new \InvalidArgumentException('Bad parameter: $backblaze_b2_key_id must be of type string; received ' . gettype($backblaze_b2_key_id));
+    }
+
+    if (@$params['backblaze_b2_application_key'] && !is_string(@$params['backblaze_b2_application_key'])) {
+      throw new \InvalidArgumentException('Bad parameter: $backblaze_b2_application_key must be of type string; received ' . gettype($backblaze_b2_application_key));
+    }
+
+    if (@$params['rackspace_api_key'] && !is_string(@$params['rackspace_api_key'])) {
+      throw new \InvalidArgumentException('Bad parameter: $rackspace_api_key must be of type string; received ' . gettype($rackspace_api_key));
+    }
+
+    if (@$params['azure_blob_storage_access_key'] && !is_string(@$params['azure_blob_storage_access_key'])) {
+      throw new \InvalidArgumentException('Bad parameter: $azure_blob_storage_access_key must be of type string; received ' . gettype($azure_blob_storage_access_key));
+    }
+
+    if (@$params['hostname'] && !is_string(@$params['hostname'])) {
+      throw new \InvalidArgumentException('Bad parameter: $hostname must be of type string; received ' . gettype($hostname));
+    }
+
+    if (@$params['name'] && !is_string(@$params['name'])) {
+      throw new \InvalidArgumentException('Bad parameter: $name must be of type string; received ' . gettype($name));
+    }
+
+    if (@$params['max_connections'] && !is_int(@$params['max_connections'])) {
+      throw new \InvalidArgumentException('Bad parameter: $max_connections must be of type int; received ' . gettype($max_connections));
+    }
+
+    if (@$params['port'] && !is_int(@$params['port'])) {
+      throw new \InvalidArgumentException('Bad parameter: $port must be of type int; received ' . gettype($port));
+    }
+
+    if (@$params['s3_bucket'] && !is_string(@$params['s3_bucket'])) {
+      throw new \InvalidArgumentException('Bad parameter: $s3_bucket must be of type string; received ' . gettype($s3_bucket));
+    }
+
+    if (@$params['s3_region'] && !is_string(@$params['s3_region'])) {
+      throw new \InvalidArgumentException('Bad parameter: $s3_region must be of type string; received ' . gettype($s3_region));
+    }
+
+    if (@$params['server_certificate'] && !is_string(@$params['server_certificate'])) {
+      throw new \InvalidArgumentException('Bad parameter: $server_certificate must be of type string; received ' . gettype($server_certificate));
+    }
+
+    if (@$params['server_host_key'] && !is_string(@$params['server_host_key'])) {
+      throw new \InvalidArgumentException('Bad parameter: $server_host_key must be of type string; received ' . gettype($server_host_key));
+    }
+
+    if (@$params['server_type'] && !is_string(@$params['server_type'])) {
+      throw new \InvalidArgumentException('Bad parameter: $server_type must be of type string; received ' . gettype($server_type));
+    }
+
+    if (@$params['ssl'] && !is_string(@$params['ssl'])) {
+      throw new \InvalidArgumentException('Bad parameter: $ssl must be of type string; received ' . gettype($ssl));
+    }
+
+    if (@$params['username'] && !is_string(@$params['username'])) {
+      throw new \InvalidArgumentException('Bad parameter: $username must be of type string; received ' . gettype($username));
+    }
+
+    if (@$params['google_cloud_storage_bucket'] && !is_string(@$params['google_cloud_storage_bucket'])) {
+      throw new \InvalidArgumentException('Bad parameter: $google_cloud_storage_bucket must be of type string; received ' . gettype($google_cloud_storage_bucket));
+    }
+
+    if (@$params['google_cloud_storage_project_id'] && !is_string(@$params['google_cloud_storage_project_id'])) {
+      throw new \InvalidArgumentException('Bad parameter: $google_cloud_storage_project_id must be of type string; received ' . gettype($google_cloud_storage_project_id));
+    }
+
+    if (@$params['backblaze_b2_bucket'] && !is_string(@$params['backblaze_b2_bucket'])) {
+      throw new \InvalidArgumentException('Bad parameter: $backblaze_b2_bucket must be of type string; received ' . gettype($backblaze_b2_bucket));
+    }
+
+    if (@$params['backblaze_b2_s3_endpoint'] && !is_string(@$params['backblaze_b2_s3_endpoint'])) {
+      throw new \InvalidArgumentException('Bad parameter: $backblaze_b2_s3_endpoint must be of type string; received ' . gettype($backblaze_b2_s3_endpoint));
+    }
+
+    if (@$params['wasabi_bucket'] && !is_string(@$params['wasabi_bucket'])) {
+      throw new \InvalidArgumentException('Bad parameter: $wasabi_bucket must be of type string; received ' . gettype($wasabi_bucket));
+    }
+
+    if (@$params['wasabi_region'] && !is_string(@$params['wasabi_region'])) {
+      throw new \InvalidArgumentException('Bad parameter: $wasabi_region must be of type string; received ' . gettype($wasabi_region));
+    }
+
+    if (@$params['rackspace_username'] && !is_string(@$params['rackspace_username'])) {
+      throw new \InvalidArgumentException('Bad parameter: $rackspace_username must be of type string; received ' . gettype($rackspace_username));
+    }
+
+    if (@$params['rackspace_region'] && !is_string(@$params['rackspace_region'])) {
+      throw new \InvalidArgumentException('Bad parameter: $rackspace_region must be of type string; received ' . gettype($rackspace_region));
+    }
+
+    if (@$params['rackspace_container'] && !is_string(@$params['rackspace_container'])) {
+      throw new \InvalidArgumentException('Bad parameter: $rackspace_container must be of type string; received ' . gettype($rackspace_container));
+    }
+
+    if (@$params['one_drive_account_type'] && !is_string(@$params['one_drive_account_type'])) {
+      throw new \InvalidArgumentException('Bad parameter: $one_drive_account_type must be of type string; received ' . gettype($one_drive_account_type));
+    }
+
+    if (@$params['azure_blob_storage_account'] && !is_string(@$params['azure_blob_storage_account'])) {
+      throw new \InvalidArgumentException('Bad parameter: $azure_blob_storage_account must be of type string; received ' . gettype($azure_blob_storage_account));
+    }
+
+    if (@$params['azure_blob_storage_container'] && !is_string(@$params['azure_blob_storage_container'])) {
+      throw new \InvalidArgumentException('Bad parameter: $azure_blob_storage_container must be of type string; received ' . gettype($azure_blob_storage_container));
+    }
+
+    $response = Api::sendRequest('/remote_servers/list_for_testing', 'GET', $params, $options);
+
+    return new File((array)(@$response->data ?: []), $options);
+  }
+
+  // Parameters:
   //   aws_access_key - string - AWS Access Key.
   //   aws_secret_key - string - AWS secret key.
   //   password - string - Password if needed.

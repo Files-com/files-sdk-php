@@ -151,8 +151,26 @@ class Automation {
     return $this->attributes['group_ids'] = $value;
   }
 
+  // string # How this automation is triggered to run. One of: `realtime` or `custom_schedule`.
+  public function getTrigger() {
+    return @$this->attributes['trigger'];
+  }
+
+  public function setTrigger($value) {
+    return $this->attributes['trigger'] = $value;
+  }
+
+  // object # Custom schedule description for when the automation should be run.
+  public function getSchedule() {
+    return @$this->attributes['schedule'];
+  }
+
+  public function setSchedule($value) {
+    return $this->attributes['schedule'] = $value;
+  }
+
   // Parameters:
-  //   automation (required) - string - Type of automation.  One of: `create_folder`, `request_file`, `request_move`
+  //   automation (required) - string - Automation type
   //   source - string - Source Path
   //   destination - string - Destination Path
   //   destination_replace_from - string - If set, this string in the destination path will be replaced with the value in `destination_replace_to`.
@@ -161,6 +179,8 @@ class Automation {
   //   path - string - Path on which this Automation runs.  Supports globs.
   //   user_ids - string - A list of user IDs the automation is associated with. If sent as a string, it should be comma-delimited.
   //   group_ids - string - A list of group IDs the automation is associated with. If sent as a string, it should be comma-delimited.
+  //   schedule - object - Custom schedule for running this automation.
+  //   trigger - string - How this automation is triggered to run. One of: `realtime` or `custom_schedule`.
   public function update($params = []) {
     if (!$this->id) {
       throw new \Error('Current object has no id');
@@ -201,6 +221,9 @@ class Automation {
     }
     if (@$params['group_ids'] && !is_string(@$params['group_ids'])) {
       throw new \InvalidArgumentException('Bad parameter: $group_ids must be of type string; received ' . gettype($group_ids));
+    }
+    if (@$params['trigger'] && !is_string(@$params['trigger'])) {
+      throw new \InvalidArgumentException('Bad parameter: $trigger must be of type string; received ' . gettype($trigger));
     }
 
     if (!@$params['id']) {
@@ -328,7 +351,7 @@ class Automation {
   }
 
   // Parameters:
-  //   automation (required) - string - Type of automation.  One of: `create_folder`, `request_file`, `request_move`
+  //   automation (required) - string - Automation type
   //   source - string - Source Path
   //   destination - string - Destination Path
   //   destination_replace_from - string - If set, this string in the destination path will be replaced with the value in `destination_replace_to`.
@@ -337,6 +360,8 @@ class Automation {
   //   path - string - Path on which this Automation runs.  Supports globs.
   //   user_ids - string - A list of user IDs the automation is associated with. If sent as a string, it should be comma-delimited.
   //   group_ids - string - A list of group IDs the automation is associated with. If sent as a string, it should be comma-delimited.
+  //   schedule - object - Custom schedule for running this automation.
+  //   trigger - string - How this automation is triggered to run. One of: `realtime` or `custom_schedule`.
   public static function create($params = [], $options = []) {
     if (!@$params['automation']) {
       throw new \Error('Parameter missing: automation');
@@ -376,6 +401,10 @@ class Automation {
 
     if (@$params['group_ids'] && !is_string(@$params['group_ids'])) {
       throw new \InvalidArgumentException('Bad parameter: $group_ids must be of type string; received ' . gettype($group_ids));
+    }
+
+    if (@$params['trigger'] && !is_string(@$params['trigger'])) {
+      throw new \InvalidArgumentException('Bad parameter: $trigger must be of type string; received ' . gettype($trigger));
     }
 
     $response = Api::sendRequest('/automations', 'POST', $params, $options);

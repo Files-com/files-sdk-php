@@ -251,6 +251,7 @@ class Bundle {
   }
 
   // Parameters:
+  //   paths - array(string) - A list of paths to include in this bundle.
   //   password - string - Password for this bundle.
   //   clickwrap_id - int64 - ID of the clickwrap to use with this bundle.
   //   code - string - Bundle code.  This code forms the end part of the Public URL.
@@ -274,6 +275,9 @@ class Bundle {
 
     if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+    }
+    if (@$params['paths'] && !is_array(@$params['paths'])) {
+      throw new \InvalidArgumentException('Bad parameter: $paths must be of type array; received ' . gettype($paths));
     }
     if (@$params['password'] && !is_string(@$params['password'])) {
       throw new \InvalidArgumentException('Bad parameter: $password must be of type string; received ' . gettype($password));

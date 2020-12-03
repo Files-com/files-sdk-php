@@ -52,6 +52,42 @@ class Automation {
     return $this->attributes['automation'] = $value;
   }
 
+  // string # How this automation is triggered to run. One of: `realtime` or `custom_schedule`.
+  public function getTrigger() {
+    return @$this->attributes['trigger'];
+  }
+
+  public function setTrigger($value) {
+    return $this->attributes['trigger'] = $value;
+  }
+
+  // string # If trigger is `daily`, this specifies how often to run this automation.  One of: `day`, `week`, `week_end`, `month`, `month_end`, `quarter`, `quarter_end`, `year`, `year_end`
+  public function getInterval() {
+    return @$this->attributes['interval'];
+  }
+
+  public function setInterval($value) {
+    return $this->attributes['interval'] = $value;
+  }
+
+  // string # If trigger is `daily`, date this automation will next run.
+  public function getNextProcessOn() {
+    return @$this->attributes['next_process_on'];
+  }
+
+  public function setNextProcessOn($value) {
+    return $this->attributes['next_process_on'] = $value;
+  }
+
+  // object # If trigger is `custom_schedule`, Custom schedule description for when the automation should be run.
+  public function getSchedule() {
+    return @$this->attributes['schedule'];
+  }
+
+  public function setSchedule($value) {
+    return $this->attributes['schedule'] = $value;
+  }
+
   // string # Source Path
   public function getSource() {
     return @$this->attributes['source'];
@@ -88,24 +124,6 @@ class Automation {
     return $this->attributes['destination_replace_to'] = $value;
   }
 
-  // string # How often to run this automation?  One of: `day`, `week`, `week_end`, `month`, `month_end`, `quarter`, `quarter_end`, `year`, `year_end`
-  public function getInterval() {
-    return @$this->attributes['interval'];
-  }
-
-  public function setInterval($value) {
-    return $this->attributes['interval'] = $value;
-  }
-
-  // string # Date this automation will next run.
-  public function getNextProcessOn() {
-    return @$this->attributes['next_process_on'];
-  }
-
-  public function setNextProcessOn($value) {
-    return $this->attributes['next_process_on'] = $value;
-  }
-
   // string # Path on which this Automation runs.  Supports globs. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
   public function getPath() {
     return @$this->attributes['path'];
@@ -113,15 +131,6 @@ class Automation {
 
   public function setPath($value) {
     return $this->attributes['path'] = $value;
-  }
-
-  // boolean # Does this automation run in real time?  This is a read-only property based on automation type.
-  public function getRealtime() {
-    return @$this->attributes['realtime'];
-  }
-
-  public function setRealtime($value) {
-    return $this->attributes['realtime'] = $value;
   }
 
   // int64 # User ID of the Automation's creator.
@@ -149,24 +158,6 @@ class Automation {
 
   public function setGroupIds($value) {
     return $this->attributes['group_ids'] = $value;
-  }
-
-  // string # How this automation is triggered to run. One of: `realtime` or `custom_schedule`.
-  public function getTrigger() {
-    return @$this->attributes['trigger'];
-  }
-
-  public function setTrigger($value) {
-    return $this->attributes['trigger'] = $value;
-  }
-
-  // object # Custom schedule description for when the automation should be run.
-  public function getSchedule() {
-    return @$this->attributes['schedule'];
-  }
-
-  public function setSchedule($value) {
-    return $this->attributes['schedule'] = $value;
   }
 
   // Parameters:

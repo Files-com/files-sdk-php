@@ -52,7 +52,7 @@ class Automation {
     return $this->attributes['automation'] = $value;
   }
 
-  // string # How this automation is triggered to run. One of: `realtime` or `custom_schedule`.
+  // string # How this automation is triggered to run. One of: `realtime`, `daily`, `custom_schedule`, `webhook`, or `email`.
   public function getTrigger() {
     return @$this->attributes['trigger'];
   }
@@ -171,7 +171,7 @@ class Automation {
   //   user_ids - string - A list of user IDs the automation is associated with. If sent as a string, it should be comma-delimited.
   //   group_ids - string - A list of group IDs the automation is associated with. If sent as a string, it should be comma-delimited.
   //   schedule - object - Custom schedule for running this automation.
-  //   trigger - string - How this automation is triggered to run. One of: `realtime` or `custom_schedule`.
+  //   trigger - string - How this automation is triggered to run. One of: `realtime`, `daily`, `custom_schedule`, `webhook`, or `email`.
   public function update($params = []) {
     if (!$this->id) {
       throw new \Error('Current object has no id');
@@ -352,7 +352,7 @@ class Automation {
   //   user_ids - string - A list of user IDs the automation is associated with. If sent as a string, it should be comma-delimited.
   //   group_ids - string - A list of group IDs the automation is associated with. If sent as a string, it should be comma-delimited.
   //   schedule - object - Custom schedule for running this automation.
-  //   trigger - string - How this automation is triggered to run. One of: `realtime` or `custom_schedule`.
+  //   trigger - string - How this automation is triggered to run. One of: `realtime`, `daily`, `custom_schedule`, `webhook`, or `email`.
   public static function create($params = [], $options = []) {
     if (!@$params['automation']) {
       throw new \Error('Parameter missing: automation');

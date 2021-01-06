@@ -97,6 +97,15 @@ class Bundle {
     return $this->attributes['clickwrap_body'] = $value;
   }
 
+  // Custom Form to use
+  public function getFormFieldSet() {
+    return @$this->attributes['form_field_set'];
+  }
+
+  public function setFormFieldSet($value) {
+    return $this->attributes['form_field_set'] = $value;
+  }
+
   // int64 # Bundle ID
   public function getId() {
     return @$this->attributes['id'];
@@ -201,6 +210,15 @@ class Bundle {
     return $this->attributes['password'] = $value;
   }
 
+  // int64 # Id of Form Field Set to use with this bundle
+  public function getFormFieldSetId() {
+    return @$this->attributes['form_field_set_id'];
+  }
+
+  public function setFormFieldSetId($value) {
+    return $this->attributes['form_field_set_id'] = $value;
+  }
+
   // Send email(s) with a link to bundle
   //
   // Parameters:
@@ -253,6 +271,7 @@ class Bundle {
   // Parameters:
   //   paths - array(string) - A list of paths to include in this bundle.
   //   password - string - Password for this bundle.
+  //   form_field_set_id - int64 - Id of Form Field Set to use with this bundle
   //   clickwrap_id - int64 - ID of the clickwrap to use with this bundle.
   //   code - string - Bundle code.  This code forms the end part of the Public URL.
   //   description - string - Public description
@@ -281,6 +300,9 @@ class Bundle {
     }
     if (@$params['password'] && !is_string(@$params['password'])) {
       throw new \InvalidArgumentException('Bad parameter: $password must be of type string; received ' . gettype($password));
+    }
+    if (@$params['form_field_set_id'] && !is_int(@$params['form_field_set_id'])) {
+      throw new \InvalidArgumentException('Bad parameter: $form_field_set_id must be of type int; received ' . gettype($form_field_set_id));
     }
     if (@$params['clickwrap_id'] && !is_int(@$params['clickwrap_id'])) {
       throw new \InvalidArgumentException('Bad parameter: $clickwrap_id must be of type int; received ' . gettype($clickwrap_id));
@@ -359,7 +381,7 @@ class Bundle {
   //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
   //   cursor - string - Used for pagination.  Send a cursor value to resume an existing list from the point at which you left off.  Get a cursor from an existing list via the X-Files-Cursor-Next header.
   //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
-  //   sort_by - object - If set, sort records by the specified field in either 'asc' or 'desc' direction (e.g. sort_by[last_login_at]=desc). Valid fields are `site_id`, `created_at` or `code`.
+  //   sort_by - object - If set, sort records by the specified field in either 'asc' or 'desc' direction (e.g. sort_by[last_login_at]=desc). Valid fields are `created_at` and `code`.
   //   filter - object - If set, return records where the specifiied field is equal to the supplied value. Valid fields are `created_at`.
   //   filter_gt - object - If set, return records where the specifiied field is greater than the supplied value. Valid fields are `created_at`.
   //   filter_gteq - object - If set, return records where the specifiied field is greater than or equal to the supplied value. Valid fields are `created_at`.
@@ -424,6 +446,7 @@ class Bundle {
   //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
   //   paths (required) - array(string) - A list of paths to include in this bundle.
   //   password - string - Password for this bundle.
+  //   form_field_set_id - int64 - Id of Form Field Set to use with this bundle
   //   expires_at - string - Bundle expiration date/time
   //   max_uses - int64 - Maximum number of times bundle can be accessed
   //   description - string - Public description
@@ -448,6 +471,10 @@ class Bundle {
 
     if (@$params['password'] && !is_string(@$params['password'])) {
       throw new \InvalidArgumentException('Bad parameter: $password must be of type string; received ' . gettype($password));
+    }
+
+    if (@$params['form_field_set_id'] && !is_int(@$params['form_field_set_id'])) {
+      throw new \InvalidArgumentException('Bad parameter: $form_field_set_id must be of type int; received ' . gettype($form_field_set_id));
     }
 
     if (@$params['expires_at'] && !is_string(@$params['expires_at'])) {

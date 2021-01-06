@@ -160,6 +160,15 @@ class Automation {
     return $this->attributes['group_ids'] = $value;
   }
 
+  // string # If trigger is `webhook`, this is the URL of the webhook to trigger the Automation.
+  public function getWebhookUrl() {
+    return @$this->attributes['webhook_url'];
+  }
+
+  public function setWebhookUrl($value) {
+    return $this->attributes['webhook_url'] = $value;
+  }
+
   // Parameters:
   //   automation (required) - string - Automation type
   //   source - string - Source Path
@@ -279,7 +288,7 @@ class Automation {
   // Parameters:
   //   cursor - string - Used for pagination.  Send a cursor value to resume an existing list from the point at which you left off.  Get a cursor from an existing list via the X-Files-Cursor-Next header.
   //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
-  //   sort_by - object - If set, sort records by the specified field in either 'asc' or 'desc' direction (e.g. sort_by[last_login_at]=desc). Valid fields are `site_id` and `automation`.
+  //   sort_by - object - If set, sort records by the specified field in either 'asc' or 'desc' direction (e.g. sort_by[last_login_at]=desc). Valid fields are `automation`.
   //   filter - object - If set, return records where the specifiied field is equal to the supplied value. Valid fields are `automation`.
   //   filter_gt - object - If set, return records where the specifiied field is greater than the supplied value. Valid fields are `automation`.
   //   filter_gteq - object - If set, return records where the specifiied field is greater than or equal to the supplied value. Valid fields are `automation`.

@@ -34,7 +34,7 @@ class Status {
     return !!@$this->attributes['id'];
   }
 
-  // int64 # Status http code
+  // int64 # Status HTTP code
   public function getCode() {
     return @$this->attributes['code'];
   }
@@ -57,5 +57,15 @@ class Status {
   // array # A list of api errors
   public function getErrors() {
     return @$this->attributes['errors'];
+  }
+
+  // int64 # Required Clickwrap id
+  public function getClickwrapId() {
+    return @$this->attributes['clickwrap_id'];
+  }
+
+  // string # Required Clickwrap body
+  public function getClickwrapBody() {
+    return @$this->attributes['clickwrap_body'];
   }
 }

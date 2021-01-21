@@ -10,11 +10,11 @@ use Files\Logger;
 require_once __DIR__ . '/../Files.php';
 
 /**
- * Class BundleRecipient
+ * Class InboxRecipient
  *
  * @package Files
  */
-class BundleRecipient {
+class InboxRecipient {
   private $attributes = [];
   private $options = [];
 
@@ -52,7 +52,7 @@ class BundleRecipient {
     return $this->attributes['name'] = $value;
   }
 
-  // string # A note sent to the recipient with the bundle.
+  // string # A note sent to the recipient with the inbox.
   public function getNote() {
     return @$this->attributes['note'];
   }
@@ -70,7 +70,7 @@ class BundleRecipient {
     return $this->attributes['recipient'] = $value;
   }
 
-  // date-time # When the Bundle was shared with this recipient.
+  // date-time # When the Inbox was shared with this recipient.
   public function getSentAt() {
     return @$this->attributes['sent_at'];
   }
@@ -88,13 +88,13 @@ class BundleRecipient {
     return $this->attributes['user_id'] = $value;
   }
 
-  // int64 # Bundle to share.
-  public function getBundleId() {
-    return @$this->attributes['bundle_id'];
+  // int64 # Inbox to share.
+  public function getInboxId() {
+    return @$this->attributes['inbox_id'];
   }
 
-  public function setBundleId($value) {
-    return $this->attributes['bundle_id'] = $value;
+  public function setInboxId($value) {
+    return $this->attributes['inbox_id'] = $value;
   }
 
   // boolean # Set to true to share the link with the recipient upon creation.
@@ -108,7 +108,7 @@ class BundleRecipient {
 
   public function save() {
       if (@$this->attributes['id']) {
-        throw new \BadMethodCallException('The BundleRecipient object doesn\'t support updates.');
+        throw new \BadMethodCallException('The InboxRecipient object doesn\'t support updates.');
       } else {
         $new_obj = self::create($this->attributes, $this->options);
         $this->attributes = $new_obj->attributes;
@@ -127,10 +127,10 @@ class BundleRecipient {
   //   filter_like - object - If set, return records where the specifiied field is equal to the supplied value. Valid fields are `has_registrations`.
   //   filter_lt - object - If set, return records where the specifiied field is less than the supplied value. Valid fields are `has_registrations`.
   //   filter_lteq - object - If set, return records where the specifiied field is less than or equal to the supplied value. Valid fields are `has_registrations`.
-  //   bundle_id (required) - int64 - List recipients for the bundle with this ID.
+  //   inbox_id (required) - int64 - List recipients for the inbox with this ID.
   public static function list($params = [], $options = []) {
-    if (!@$params['bundle_id']) {
-      throw new \Error('Parameter missing: bundle_id');
+    if (!@$params['inbox_id']) {
+      throw new \Error('Parameter missing: inbox_id');
     }
 
     if (@$params['user_id'] && !is_int(@$params['user_id'])) {
@@ -145,16 +145,16 @@ class BundleRecipient {
       throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
     }
 
-    if (@$params['bundle_id'] && !is_int(@$params['bundle_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $bundle_id must be of type int; received ' . gettype($bundle_id));
+    if (@$params['inbox_id'] && !is_int(@$params['inbox_id'])) {
+      throw new \InvalidArgumentException('Bad parameter: $inbox_id must be of type int; received ' . gettype($inbox_id));
     }
 
-    $response = Api::sendRequest('/bundle_recipients', 'GET', $params, $options);
+    $response = Api::sendRequest('/inbox_recipients', 'GET', $params, $options);
 
     $return_array = [];
 
     foreach ($response->data as $obj) {
-      $return_array[] = new BundleRecipient((array)$obj, $options);
+      $return_array[] = new InboxRecipient((array)$obj, $options);
     }
 
     return $return_array;
@@ -166,15 +166,15 @@ class BundleRecipient {
 
   // Parameters:
   //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
-  //   bundle_id (required) - int64 - Bundle to share.
-  //   recipient (required) - string - Email addresses to share this bundle with.
+  //   inbox_id (required) - int64 - Inbox to share.
+  //   recipient (required) - string - Email addresses to share this inbox with.
   //   name - string - Name of recipient.
   //   company - string - Company of recipient.
   //   note - string - Note to include in email.
   //   share_after_create - boolean - Set to true to share the link with the recipient upon creation.
   public static function create($params = [], $options = []) {
-    if (!@$params['bundle_id']) {
-      throw new \Error('Parameter missing: bundle_id');
+    if (!@$params['inbox_id']) {
+      throw new \Error('Parameter missing: inbox_id');
     }
 
     if (!@$params['recipient']) {
@@ -185,8 +185,8 @@ class BundleRecipient {
       throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
     }
 
-    if (@$params['bundle_id'] && !is_int(@$params['bundle_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $bundle_id must be of type int; received ' . gettype($bundle_id));
+    if (@$params['inbox_id'] && !is_int(@$params['inbox_id'])) {
+      throw new \InvalidArgumentException('Bad parameter: $inbox_id must be of type int; received ' . gettype($inbox_id));
     }
 
     if (@$params['recipient'] && !is_string(@$params['recipient'])) {
@@ -205,8 +205,8 @@ class BundleRecipient {
       throw new \InvalidArgumentException('Bad parameter: $note must be of type string; received ' . gettype($note));
     }
 
-    $response = Api::sendRequest('/bundle_recipients', 'POST', $params, $options);
+    $response = Api::sendRequest('/inbox_recipients', 'POST', $params, $options);
 
-    return new BundleRecipient((array)(@$response->data ?: []), $options);
+    return new InboxRecipient((array)(@$response->data ?: []), $options);
   }
 }

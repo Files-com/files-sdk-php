@@ -52,7 +52,7 @@ class Automation {
     return $this->attributes['automation'] = $value;
   }
 
-  // string # How this automation is triggered to run. One of: `realtime`, `daily`, `custom_schedule`, `webhook`, or `email`.
+  // string # How this automation is triggered to run. One of: `realtime`, `daily`, `custom_schedule`, `webhook`, `email`, or `action`.
   public function getTrigger() {
     return @$this->attributes['trigger'];
   }
@@ -169,6 +169,24 @@ class Automation {
     return $this->attributes['webhook_url'] = $value;
   }
 
+  // string # If trigger is `action`, this is the list of action types on which to trigger the automation. Valid actions are create, read, update, destroy, move, copy
+  public function getTriggerActions() {
+    return @$this->attributes['trigger_actions'];
+  }
+
+  public function setTriggerActions($value) {
+    return $this->attributes['trigger_actions'] = $value;
+  }
+
+  // string # If trigger is `action`, this is the path to watch for the specified trigger actions.
+  public function getTriggerActionPath() {
+    return @$this->attributes['trigger_action_path'];
+  }
+
+  public function setTriggerActionPath($value) {
+    return $this->attributes['trigger_action_path'] = $value;
+  }
+
   // Parameters:
   //   automation (required) - string - Automation type
   //   source - string - Source Path
@@ -180,7 +198,9 @@ class Automation {
   //   user_ids - string - A list of user IDs the automation is associated with. If sent as a string, it should be comma-delimited.
   //   group_ids - string - A list of group IDs the automation is associated with. If sent as a string, it should be comma-delimited.
   //   schedule - object - Custom schedule for running this automation.
-  //   trigger - string - How this automation is triggered to run. One of: `realtime`, `daily`, `custom_schedule`, `webhook`, or `email`.
+  //   trigger - string - How this automation is triggered to run. One of: `realtime`, `daily`, `custom_schedule`, `webhook`, `email`, or `action`.
+  //   trigger_actions - array(string) - If trigger is `action`, this is the list of action types on which to trigger the automation. Valid actions are create, read, update, destroy, move, copy
+  //   trigger_action_path - string - If trigger is `action`, this is the path to watch for the specified trigger actions.
   public function update($params = []) {
     if (!$this->id) {
       throw new \Error('Current object has no id');
@@ -224,6 +244,12 @@ class Automation {
     }
     if (@$params['trigger'] && !is_string(@$params['trigger'])) {
       throw new \InvalidArgumentException('Bad parameter: $trigger must be of type string; received ' . gettype($trigger));
+    }
+    if (@$params['trigger_actions'] && !is_array(@$params['trigger_actions'])) {
+      throw new \InvalidArgumentException('Bad parameter: $trigger_actions must be of type array; received ' . gettype($trigger_actions));
+    }
+    if (@$params['trigger_action_path'] && !is_string(@$params['trigger_action_path'])) {
+      throw new \InvalidArgumentException('Bad parameter: $trigger_action_path must be of type string; received ' . gettype($trigger_action_path));
     }
 
     if (!@$params['id']) {
@@ -361,7 +387,9 @@ class Automation {
   //   user_ids - string - A list of user IDs the automation is associated with. If sent as a string, it should be comma-delimited.
   //   group_ids - string - A list of group IDs the automation is associated with. If sent as a string, it should be comma-delimited.
   //   schedule - object - Custom schedule for running this automation.
-  //   trigger - string - How this automation is triggered to run. One of: `realtime`, `daily`, `custom_schedule`, `webhook`, or `email`.
+  //   trigger - string - How this automation is triggered to run. One of: `realtime`, `daily`, `custom_schedule`, `webhook`, `email`, or `action`.
+  //   trigger_actions - array(string) - If trigger is `action`, this is the list of action types on which to trigger the automation. Valid actions are create, read, update, destroy, move, copy
+  //   trigger_action_path - string - If trigger is `action`, this is the path to watch for the specified trigger actions.
   public static function create($params = [], $options = []) {
     if (!@$params['automation']) {
       throw new \Error('Parameter missing: automation');
@@ -405,6 +433,14 @@ class Automation {
 
     if (@$params['trigger'] && !is_string(@$params['trigger'])) {
       throw new \InvalidArgumentException('Bad parameter: $trigger must be of type string; received ' . gettype($trigger));
+    }
+
+    if (@$params['trigger_actions'] && !is_array(@$params['trigger_actions'])) {
+      throw new \InvalidArgumentException('Bad parameter: $trigger_actions must be of type array; received ' . gettype($trigger_actions));
+    }
+
+    if (@$params['trigger_action_path'] && !is_string(@$params['trigger_action_path'])) {
+      throw new \InvalidArgumentException('Bad parameter: $trigger_action_path must be of type string; received ' . gettype($trigger_action_path));
     }
 
     $response = Api::sendRequest('/automations', 'POST', $params, $options);

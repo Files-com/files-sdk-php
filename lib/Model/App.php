@@ -89,6 +89,16 @@ class App {
     return @$this->attributes['external_homepage_url'];
   }
 
+  // string # Marketing video page
+  public function getMarketingYoutubeUrl() {
+    return @$this->attributes['marketing_youtube_url'];
+  }
+
+  // string # Tutorial video page
+  public function getTutorialYoutubeUrl() {
+    return @$this->attributes['tutorial_youtube_url'];
+  }
+
   // string # The type of the App
   public function getAppType() {
     return @$this->attributes['app_type'];

@@ -164,7 +164,7 @@ class SsoStrategy {
     return @$this->attributes['provision_site_admin_groups'];
   }
 
-  // boolean # Auto-provisioned users get Sharing permission?
+  // boolean # DEPRECATED: Auto-provisioned users get Sharing permission. Use a Group with the Bundle permission instead.
   public function getProvisionAttachmentsPermission() {
     return @$this->attributes['provision_attachments_permission'];
   }

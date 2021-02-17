@@ -43,6 +43,15 @@ class HistoryExport {
     return $this->attributes['id'] = $value;
   }
 
+  // string # Version of the history for the export.
+  public function getHistoryVersion() {
+    return @$this->attributes['history_version'];
+  }
+
+  public function setHistoryVersion($value) {
+    return $this->attributes['history_version'] = $value;
+  }
+
   // date-time # Start date/time of export range.
   public function getStartAt() {
     return @$this->attributes['start_at'];

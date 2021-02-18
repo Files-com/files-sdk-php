@@ -61,6 +61,15 @@ class RemoteServer {
     return $this->attributes['hostname'] = $value;
   }
 
+  // string # Initial home folder on remote server
+  public function getRemoteHomePath() {
+    return @$this->attributes['remote_home_path'];
+  }
+
+  public function setRemoteHomePath($value) {
+    return $this->attributes['remote_home_path'] = $value;
+  }
+
   // string # Internal name for your reference
   public function getName() {
     return @$this->attributes['name'];

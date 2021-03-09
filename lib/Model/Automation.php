@@ -97,13 +97,22 @@ class Automation {
     return $this->attributes['source'] = $value;
   }
 
-  // string # Destination Path
+  // string # DEPRECATED: Destination Path
   public function getDestination() {
     return @$this->attributes['destination'];
   }
 
   public function setDestination($value) {
     return $this->attributes['destination'] = $value;
+  }
+
+  // string # Destination Path
+  public function getDestinations() {
+    return @$this->attributes['destinations'];
+  }
+
+  public function setDestinations($value) {
+    return $this->attributes['destinations'] = $value;
   }
 
   // string # If set, this string in the destination path will be replaced with the value in `destination_replace_to`.
@@ -199,7 +208,8 @@ class Automation {
   // Parameters:
   //   automation (required) - string - Automation type
   //   source - string - Source Path
-  //   destination - string - Destination Path
+  //   destination - string - DEPRECATED: Destination Path
+  //   destinations - array(string) - A list of String destination paths or Hash of folder_path and optional file_path.
   //   destination_replace_from - string - If set, this string in the destination path will be replaced with the value in `destination_replace_to`.
   //   destination_replace_to - string - If set, this string will replace the value `destination_replace_from` in the destination filename. You can use special patterns here.
   //   interval - string - How often to run this automation? One of: `day`, `week`, `week_end`, `month`, `month_end`, `quarter`, `quarter_end`, `year`, `year_end`
@@ -233,6 +243,9 @@ class Automation {
     }
     if (@$params['destination'] && !is_string(@$params['destination'])) {
       throw new \InvalidArgumentException('Bad parameter: $destination must be of type string; received ' . gettype($destination));
+    }
+    if (@$params['destinations'] && !is_array(@$params['destinations'])) {
+      throw new \InvalidArgumentException('Bad parameter: $destinations must be of type array; received ' . gettype($destinations));
     }
     if (@$params['destination_replace_from'] && !is_string(@$params['destination_replace_from'])) {
       throw new \InvalidArgumentException('Bad parameter: $destination_replace_from must be of type string; received ' . gettype($destination_replace_from));
@@ -389,7 +402,8 @@ class Automation {
   // Parameters:
   //   automation (required) - string - Automation type
   //   source - string - Source Path
-  //   destination - string - Destination Path
+  //   destination - string - DEPRECATED: Destination Path
+  //   destinations - array(string) - A list of String destination paths or Hash of folder_path and optional file_path.
   //   destination_replace_from - string - If set, this string in the destination path will be replaced with the value in `destination_replace_to`.
   //   destination_replace_to - string - If set, this string will replace the value `destination_replace_from` in the destination filename. You can use special patterns here.
   //   interval - string - How often to run this automation? One of: `day`, `week`, `week_end`, `month`, `month_end`, `quarter`, `quarter_end`, `year`, `year_end`
@@ -416,6 +430,10 @@ class Automation {
 
     if (@$params['destination'] && !is_string(@$params['destination'])) {
       throw new \InvalidArgumentException('Bad parameter: $destination must be of type string; received ' . gettype($destination));
+    }
+
+    if (@$params['destinations'] && !is_array(@$params['destinations'])) {
+      throw new \InvalidArgumentException('Bad parameter: $destinations must be of type array; received ' . gettype($destinations));
     }
 
     if (@$params['destination_replace_from'] && !is_string(@$params['destination_replace_from'])) {

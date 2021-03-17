@@ -50,7 +50,7 @@ function testUserListAndUpdate() {
   Logger::info('***** testUserListAndUpdate() succeeded! *****');
 }
 
-function asserUserCreatedAndDelete($user, $name) {
+function assertUserCreatedAndDelete($user, $name) {
   assert($user->isLoaded() === true);
 
   $saved_user = User::find($user->id);
@@ -77,7 +77,7 @@ function testUserCreateAndDelete() {
 
   $user->save();
 
-  asserUserCreatedAndDelete($user, $name);
+  assertUserCreatedAndDelete($user, $name);
 
   Logger::info('***** testUserCreateAndDelete() succeeded! *****');
 }
@@ -90,7 +90,7 @@ function testUserStaticCreateAndDelete() {
     'username' => $name,
   ]);
 
-  asserUserCreatedAndDelete($user, $name);
+  assertUserCreatedAndDelete($user, $name);
 
   Logger::info('***** testUserCreateAndDelete() succeeded! *****');
 }
@@ -137,12 +137,8 @@ function testFolderCreateListAndDelete() {
   $foundFolder = findFile($testFolder, $dirFiles);
   assert($foundFolder->isLoaded() === true);
 
-  $foundFolder->delete();
-
-  $dirFiles = Folder::listFor($rootDir);
-  $foundFolder = findFile($testFolder, $dirFiles);
-
-  assert($foundFolder->isLoaded() === false);
+  $result = $foundFolder->delete();
+  assert($result->status >= 200 && $result->status < 300);
 
   Logger::info('***** testFolderCreateListAndDelete() succeeded! *****');
 }
@@ -164,7 +160,7 @@ function testFileUploadFindCopyAndDelete() {
   assert($foundFile->isLoaded());
 
   $copyResponse = $foundFile->copyTo($rootDir . $dirName . '/copied-file.txt');
-  assert($copyResponse->status === 204);
+  assert($copyResponse->status >= 200 && $copyResponse->status < 300);
 
   $foundFile->delete();
 

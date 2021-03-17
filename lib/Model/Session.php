@@ -269,8 +269,15 @@ class Session {
     return new Session((array)(@$response->data ?: []), $options);
   }
 
+  // Parameters:
+  //   format - string
+  //   session - object
   public static function delete($params = [], $options = []) {
-    $response = Api::sendRequest('/sessions', 'DELETE', $options);
+    if (@$params['format'] && !is_string(@$params['format'])) {
+      throw new \InvalidArgumentException('Bad parameter: $format must be of type string; received ' . gettype($format));
+    }
+
+    $response = Api::sendRequest('/sessions', 'DELETE', $params, $options);
 
     return $response->data;
   }

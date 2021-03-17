@@ -19,7 +19,7 @@
     "ext-curl": "*",
     "ext-json": "*",
     "ext-mbstring": "*",
-    "guzzlehttp/guzzle": "*",
+    "guzzlehttp/guzzle": "^6",
     "psr/log": "^1.1"
   },
   "autoload": {

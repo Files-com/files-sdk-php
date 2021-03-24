@@ -54,6 +54,11 @@ class UsageSnapshot {
     return @$this->attributes['created_at'];
   }
 
+  // double # Site usage report highest usage in time period
+  public function getHighWaterUserCount() {
+    return @$this->attributes['high_water_user_count'];
+  }
+
   // double # Current site usage as of report
   public function getCurrentStorage() {
     return @$this->attributes['current_storage'];

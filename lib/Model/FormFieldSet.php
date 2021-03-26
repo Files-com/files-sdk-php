@@ -70,6 +70,33 @@ class FormFieldSet {
     return $this->attributes['form_fields'] = $value;
   }
 
+  // boolean # Any associated InboxRegistrations or BundleRegistrations can be saved without providing name
+  public function getSkipName() {
+    return @$this->attributes['skip_name'];
+  }
+
+  public function setSkipName($value) {
+    return $this->attributes['skip_name'] = $value;
+  }
+
+  // boolean # Any associated InboxRegistrations or BundleRegistrations can be saved without providing email
+  public function getSkipEmail() {
+    return @$this->attributes['skip_email'];
+  }
+
+  public function setSkipEmail($value) {
+    return $this->attributes['skip_email'] = $value;
+  }
+
+  // boolean # Any associated InboxRegistrations or BundleRegistrations can be saved without providing company
+  public function getSkipCompany() {
+    return @$this->attributes['skip_company'];
+  }
+
+  public function setSkipCompany($value) {
+    return $this->attributes['skip_company'] = $value;
+  }
+
   // int64 # User ID.  Provide a value of `0` to operate the current session's user.
   public function getUserId() {
     return @$this->attributes['user_id'];
@@ -81,6 +108,9 @@ class FormFieldSet {
 
   // Parameters:
   //   title - string - Title to be displayed
+  //   skip_email - boolean - Skip validating form email
+  //   skip_name - boolean - Skip validating form name
+  //   skip_company - boolean - Skip validating company
   //   form_fields - array(object)
   public function update($params = []) {
     if (!$this->id) {
@@ -215,6 +245,9 @@ class FormFieldSet {
   // Parameters:
   //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
   //   title - string - Title to be displayed
+  //   skip_email - boolean - Skip validating form email
+  //   skip_name - boolean - Skip validating form name
+  //   skip_company - boolean - Skip validating company
   //   form_fields - array(object)
   public static function create($params = [], $options = []) {
     if (@$params['user_id'] && !is_int(@$params['user_id'])) {

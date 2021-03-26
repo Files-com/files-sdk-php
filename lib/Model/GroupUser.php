@@ -196,7 +196,13 @@ class GroupUser {
   }
 
   public function save() {
-    return $this->update($this->attributes);
+      if (@$this->attributes['id']) {
+        return $this->update($this->attributes);
+      } else {
+        $new_obj = self::create($this->attributes, $this->options);
+        $this->attributes = $new_obj->attributes;
+        return true;
+      }
   }
 
   // Parameters:
@@ -234,5 +240,31 @@ class GroupUser {
 
   public static function all($params = [], $options = []) {
     return self::list($params, $options);
+  }
+
+  // Parameters:
+  //   group_id (required) - int64 - Group ID to add user to.
+  //   user_id (required) - int64 - User ID to add to group.
+  //   admin - boolean - Is the user a group administrator?
+  public static function create($params = [], $options = []) {
+    if (!@$params['group_id']) {
+      throw new \Error('Parameter missing: group_id');
+    }
+
+    if (!@$params['user_id']) {
+      throw new \Error('Parameter missing: user_id');
+    }
+
+    if (@$params['group_id'] && !is_int(@$params['group_id'])) {
+      throw new \InvalidArgumentException('Bad parameter: $group_id must be of type int; received ' . gettype($group_id));
+    }
+
+    if (@$params['user_id'] && !is_int(@$params['user_id'])) {
+      throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
+    }
+
+    $response = Api::sendRequest('/group_users', 'POST', $params, $options);
+
+    return new GroupUser((array)(@$response->data ?: []), $options);
   }
 }

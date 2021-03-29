@@ -599,28 +599,14 @@ class Site {
     return @$this->attributes['disable_users_from_inactivity_period_days'];
   }
 
-  // Parameters:
-  //   format - string
-  //   site - object
   public static function get($params = [], $options = []) {
-    if (@$params['format'] && !is_string(@$params['format'])) {
-      throw new \InvalidArgumentException('Bad parameter: $format must be of type string; received ' . gettype($format));
-    }
-
-    $response = Api::sendRequest('/site', 'GET', $params, $options);
+    $response = Api::sendRequest('/site', 'GET', $options);
 
     return new Site((array)(@$response->data ?: []), $options);
   }
 
-  // Parameters:
-  //   format - string
-  //   site - object
   public static function getUsage($params = [], $options = []) {
-    if (@$params['format'] && !is_string(@$params['format'])) {
-      throw new \InvalidArgumentException('Bad parameter: $format must be of type string; received ' . gettype($format));
-    }
-
-    $response = Api::sendRequest('/site/usage', 'GET', $params, $options);
+    $response = Api::sendRequest('/site/usage', 'GET', $options);
 
     return new UsageSnapshot((array)(@$response->data ?: []), $options);
   }

@@ -34,7 +34,7 @@ class SsoStrategy {
     return !!@$this->attributes['id'];
   }
 
-  // array # SSO Protocol
+  // string # SSO Protocol
   public function getProtocol() {
     return @$this->attributes['protocol'];
   }

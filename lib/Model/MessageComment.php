@@ -52,7 +52,7 @@ class MessageComment {
     return $this->attributes['body'] = $value;
   }
 
-  // array # Reactions to this comment.
+  // Reactions to this comment.
   public function getReactions() {
     return @$this->attributes['reactions'];
   }

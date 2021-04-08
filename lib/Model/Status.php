@@ -54,7 +54,7 @@ class Status {
     return @$this->attributes['data'];
   }
 
-  // array # A list of api errors
+  // A list of api errors
   public function getErrors() {
     return @$this->attributes['errors'];
   }

@@ -52,7 +52,7 @@ class Group {
     return $this->attributes['name'] = $value;
   }
 
-  // array # List of user IDs who are group administrators (separated by commas)
+  // string # List of user IDs who are group administrators (separated by commas)
   public function getAdminIds() {
     return @$this->attributes['admin_ids'];
   }

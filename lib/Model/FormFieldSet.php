@@ -61,7 +61,7 @@ class FormFieldSet {
     return $this->attributes['form_layout'] = $value;
   }
 
-  // array # Associated form fields
+  // Associated form fields
   public function getFormFields() {
     return @$this->attributes['form_fields'];
   }

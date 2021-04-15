@@ -54,6 +54,11 @@ class InboxRegistration {
     return @$this->attributes['email'];
   }
 
+  // string # Clickwrap text that was shown to the registrant
+  public function getClickwrapBody() {
+    return @$this->attributes['clickwrap_body'];
+  }
+
   // int64 # Id of associated form field set
   public function getFormFieldSetId() {
     return @$this->attributes['form_field_set_id'];

@@ -159,6 +159,11 @@ class SsoStrategy {
     return @$this->attributes['provision_group_required'];
   }
 
+  // string # Comma-separated list of group names whose members will be created with email_signup authentication.
+  public function getProvisionEmailSignupGroups() {
+    return @$this->attributes['provision_email_signup_groups'];
+  }
+
   // string # Comma-separated list of group names whose members will be created as Site Admins.
   public function getProvisionSiteAdminGroups() {
     return @$this->attributes['provision_site_admin_groups'];

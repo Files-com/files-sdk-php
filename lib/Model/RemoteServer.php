@@ -277,15 +277,6 @@ class RemoteServer {
     return $this->attributes['one_drive_account_type'] = $value;
   }
 
-  // string # Cloud hosted sharepoint hostname
-  public function getSharepointHostname() {
-    return @$this->attributes['sharepoint_hostname'];
-  }
-
-  public function setSharepointHostname($value) {
-    return $this->attributes['sharepoint_hostname'] = $value;
-  }
-
   // string # Azure Blob Storage Account name
   public function getAzureBlobStorageAccount() {
     return @$this->attributes['azure_blob_storage_account'];
@@ -456,7 +447,6 @@ class RemoteServer {
   //   rackspace_region - string - Three letter airport code for Rackspace region. See https://support.rackspace.com/how-to/about-regions/
   //   rackspace_container - string - The name of the container (top level directory) where files will sync.
   //   one_drive_account_type - string - Either personal or business_other account types
-  //   sharepoint_hostname - string - Cloud hosted sharepoint hostname
   //   azure_blob_storage_account - string - Azure Blob Storage Account name
   //   azure_blob_storage_container - string - Azure Blob Storage Container name
   public function update($params = []) {
@@ -571,9 +561,6 @@ class RemoteServer {
     }
     if (@$params['one_drive_account_type'] && !is_string(@$params['one_drive_account_type'])) {
       throw new \InvalidArgumentException('Bad parameter: $one_drive_account_type must be of type string; received ' . gettype($one_drive_account_type));
-    }
-    if (@$params['sharepoint_hostname'] && !is_string(@$params['sharepoint_hostname'])) {
-      throw new \InvalidArgumentException('Bad parameter: $sharepoint_hostname must be of type string; received ' . gettype($sharepoint_hostname));
     }
     if (@$params['azure_blob_storage_account'] && !is_string(@$params['azure_blob_storage_account'])) {
       throw new \InvalidArgumentException('Bad parameter: $azure_blob_storage_account must be of type string; received ' . gettype($azure_blob_storage_account));
@@ -721,7 +708,6 @@ class RemoteServer {
   //   rackspace_region - string - Three letter airport code for Rackspace region. See https://support.rackspace.com/how-to/about-regions/
   //   rackspace_container - string - The name of the container (top level directory) where files will sync.
   //   one_drive_account_type - string - Either personal or business_other account types
-  //   sharepoint_hostname - string - Cloud hosted sharepoint hostname
   //   azure_blob_storage_account - string - Azure Blob Storage Account name
   //   azure_blob_storage_container - string - Azure Blob Storage Container name
   public static function create($params = [], $options = []) {
@@ -855,10 +841,6 @@ class RemoteServer {
 
     if (@$params['one_drive_account_type'] && !is_string(@$params['one_drive_account_type'])) {
       throw new \InvalidArgumentException('Bad parameter: $one_drive_account_type must be of type string; received ' . gettype($one_drive_account_type));
-    }
-
-    if (@$params['sharepoint_hostname'] && !is_string(@$params['sharepoint_hostname'])) {
-      throw new \InvalidArgumentException('Bad parameter: $sharepoint_hostname must be of type string; received ' . gettype($sharepoint_hostname));
     }
 
     if (@$params['azure_blob_storage_account'] && !is_string(@$params['azure_blob_storage_account'])) {

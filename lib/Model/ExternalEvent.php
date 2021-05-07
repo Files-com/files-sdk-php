@@ -34,6 +34,11 @@ class ExternalEvent {
     return !!@$this->attributes['id'];
   }
 
+  // int64 # Event ID
+  public function getId() {
+    return @$this->attributes['id'];
+  }
+
   // string # Type of event being recorded.
   public function getEventType() {
     return @$this->attributes['event_type'];
@@ -86,5 +91,31 @@ class ExternalEvent {
 
   public static function all($params = [], $options = []) {
     return self::list($params, $options);
+  }
+
+  // Parameters:
+  //   id (required) - int64 - External Event ID.
+  public static function find($id, $params = [], $options = []) {
+    if (!is_array($params)) {
+      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+    }
+
+    $params['id'] = $id;
+
+    if (!@$params['id']) {
+      throw new \Error('Parameter missing: id');
+    }
+
+    if (@$params['id'] && !is_int(@$params['id'])) {
+      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+    }
+
+    $response = Api::sendRequest('/external_events/' . @$params['id'] . '', 'GET', $params, $options);
+
+    return new ExternalEvent((array)(@$response->data ?: []), $options);
+  }
+
+  public static function get($id, $params = [], $options = []) {
+    return self::find($id, $params, $options);
   }
 }

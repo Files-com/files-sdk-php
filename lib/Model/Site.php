@@ -359,6 +359,11 @@ class Site {
     return @$this->attributes['office_integration_available'];
   }
 
+  // string # Link to scheduling a meeting with our Sales team
+  public function getOncehubLink() {
+    return @$this->attributes['oncehub_link'];
+  }
+
   // boolean # Use servers in the USA only?
   public function getOptOutGlobal() {
     return @$this->attributes['opt_out_global'];

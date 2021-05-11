@@ -124,11 +124,6 @@ class Site {
     return @$this->attributes['color2_top_text'];
   }
 
-  // string # Site main contact name
-  public function getContactName() {
-    return @$this->attributes['contact_name'];
-  }
-
   // date-time # Time this site was created
   public function getCreatedAt() {
     return @$this->attributes['created_at'];

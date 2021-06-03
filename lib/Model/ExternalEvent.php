@@ -59,11 +59,6 @@ class ExternalEvent {
     return @$this->attributes['created_at'];
   }
 
-  // string # Link to log file.
-  public function getBodyUrl() {
-    return @$this->attributes['body_url'];
-  }
-
   // Parameters:
   //   cursor - string - Used for pagination.  Send a cursor value to resume an existing list from the point at which you left off.  Get a cursor from an existing list via the X-Files-Cursor-Next header.
   //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).

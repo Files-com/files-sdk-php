@@ -196,7 +196,7 @@ class RemoteServer {
     return $this->attributes['backblaze_b2_bucket'] = $value;
   }
 
-  // string # Wasabi region
+  // string # Wasabi Bucket name
   public function getWasabiBucket() {
     return @$this->attributes['wasabi_bucket'];
   }
@@ -205,7 +205,7 @@ class RemoteServer {
     return $this->attributes['wasabi_bucket'] = $value;
   }
 
-  // string # Wasabi Bucket name
+  // string # Wasabi region
   public function getWasabiRegion() {
     return @$this->attributes['wasabi_region'];
   }
@@ -293,6 +293,33 @@ class RemoteServer {
 
   public function setAzureBlobStorageContainer($value) {
     return $this->attributes['azure_blob_storage_container'] = $value;
+  }
+
+  // string # S3-compatible Bucket name
+  public function getS3CompatibleBucket() {
+    return @$this->attributes['s3_compatible_bucket'];
+  }
+
+  public function setS3CompatibleBucket($value) {
+    return $this->attributes['s3_compatible_bucket'] = $value;
+  }
+
+  // string # S3-compatible Bucket name
+  public function getS3CompatibleRegion() {
+    return @$this->attributes['s3_compatible_region'];
+  }
+
+  public function setS3CompatibleRegion($value) {
+    return $this->attributes['s3_compatible_region'] = $value;
+  }
+
+  // string # S3-compatible endpoint
+  public function getS3CompatibleEndpoint() {
+    return @$this->attributes['s3_compatible_endpoint'];
+  }
+
+  public function setS3CompatibleEndpoint($value) {
+    return $this->attributes['s3_compatible_endpoint'] = $value;
   }
 
   // string # AWS Access Key.
@@ -412,6 +439,24 @@ class RemoteServer {
     return $this->attributes['azure_blob_storage_access_key'] = $value;
   }
 
+  // string # S3-compatible access key
+  public function getS3CompatibleAccessKey() {
+    return @$this->attributes['s3_compatible_access_key'];
+  }
+
+  public function setS3CompatibleAccessKey($value) {
+    return $this->attributes['s3_compatible_access_key'] = $value;
+  }
+
+  // string # S3-compatible secret key
+  public function getS3CompatibleSecretKey() {
+    return @$this->attributes['s3_compatible_secret_key'];
+  }
+
+  public function setS3CompatibleSecretKey($value) {
+    return $this->attributes['s3_compatible_secret_key'] = $value;
+  }
+
   // Parameters:
   //   aws_access_key - string - AWS Access Key.
   //   aws_secret_key - string - AWS secret key.
@@ -441,14 +486,19 @@ class RemoteServer {
   //   google_cloud_storage_project_id - string - Google Cloud Project ID
   //   backblaze_b2_bucket - string - Backblaze B2 Cloud Storage Bucket name
   //   backblaze_b2_s3_endpoint - string - Backblaze B2 Cloud Storage S3 Endpoint
-  //   wasabi_bucket - string - Wasabi region
-  //   wasabi_region - string - Wasabi Bucket name
+  //   wasabi_bucket - string - Wasabi Bucket name
+  //   wasabi_region - string - Wasabi region
   //   rackspace_username - string - Rackspace username used to login to the Rackspace Cloud Control Panel.
   //   rackspace_region - string - Three letter airport code for Rackspace region. See https://support.rackspace.com/how-to/about-regions/
   //   rackspace_container - string - The name of the container (top level directory) where files will sync.
   //   one_drive_account_type - string - Either personal or business_other account types
   //   azure_blob_storage_account - string - Azure Blob Storage Account name
   //   azure_blob_storage_container - string - Azure Blob Storage Container name
+  //   s3_compatible_bucket - string - S3-compatible Bucket name
+  //   s3_compatible_region - string - S3-compatible Bucket name
+  //   s3_compatible_endpoint - string - S3-compatible endpoint
+  //   s3_compatible_access_key - string - S3-compatible access key
+  //   s3_compatible_secret_key - string - S3-compatible secret key
   public function update($params = []) {
     if (!$this->id) {
       throw new \Error('Current object has no id');
@@ -567,6 +617,21 @@ class RemoteServer {
     }
     if (@$params['azure_blob_storage_container'] && !is_string(@$params['azure_blob_storage_container'])) {
       throw new \InvalidArgumentException('Bad parameter: $azure_blob_storage_container must be of type string; received ' . gettype($azure_blob_storage_container));
+    }
+    if (@$params['s3_compatible_bucket'] && !is_string(@$params['s3_compatible_bucket'])) {
+      throw new \InvalidArgumentException('Bad parameter: $s3_compatible_bucket must be of type string; received ' . gettype($s3_compatible_bucket));
+    }
+    if (@$params['s3_compatible_region'] && !is_string(@$params['s3_compatible_region'])) {
+      throw new \InvalidArgumentException('Bad parameter: $s3_compatible_region must be of type string; received ' . gettype($s3_compatible_region));
+    }
+    if (@$params['s3_compatible_endpoint'] && !is_string(@$params['s3_compatible_endpoint'])) {
+      throw new \InvalidArgumentException('Bad parameter: $s3_compatible_endpoint must be of type string; received ' . gettype($s3_compatible_endpoint));
+    }
+    if (@$params['s3_compatible_access_key'] && !is_string(@$params['s3_compatible_access_key'])) {
+      throw new \InvalidArgumentException('Bad parameter: $s3_compatible_access_key must be of type string; received ' . gettype($s3_compatible_access_key));
+    }
+    if (@$params['s3_compatible_secret_key'] && !is_string(@$params['s3_compatible_secret_key'])) {
+      throw new \InvalidArgumentException('Bad parameter: $s3_compatible_secret_key must be of type string; received ' . gettype($s3_compatible_secret_key));
     }
 
     if (!@$params['id']) {
@@ -702,14 +767,19 @@ class RemoteServer {
   //   google_cloud_storage_project_id - string - Google Cloud Project ID
   //   backblaze_b2_bucket - string - Backblaze B2 Cloud Storage Bucket name
   //   backblaze_b2_s3_endpoint - string - Backblaze B2 Cloud Storage S3 Endpoint
-  //   wasabi_bucket - string - Wasabi region
-  //   wasabi_region - string - Wasabi Bucket name
+  //   wasabi_bucket - string - Wasabi Bucket name
+  //   wasabi_region - string - Wasabi region
   //   rackspace_username - string - Rackspace username used to login to the Rackspace Cloud Control Panel.
   //   rackspace_region - string - Three letter airport code for Rackspace region. See https://support.rackspace.com/how-to/about-regions/
   //   rackspace_container - string - The name of the container (top level directory) where files will sync.
   //   one_drive_account_type - string - Either personal or business_other account types
   //   azure_blob_storage_account - string - Azure Blob Storage Account name
   //   azure_blob_storage_container - string - Azure Blob Storage Container name
+  //   s3_compatible_bucket - string - S3-compatible Bucket name
+  //   s3_compatible_region - string - S3-compatible Bucket name
+  //   s3_compatible_endpoint - string - S3-compatible endpoint
+  //   s3_compatible_access_key - string - S3-compatible access key
+  //   s3_compatible_secret_key - string - S3-compatible secret key
   public static function create($params = [], $options = []) {
     if (@$params['aws_access_key'] && !is_string(@$params['aws_access_key'])) {
       throw new \InvalidArgumentException('Bad parameter: $aws_access_key must be of type string; received ' . gettype($aws_access_key));
@@ -849,6 +919,26 @@ class RemoteServer {
 
     if (@$params['azure_blob_storage_container'] && !is_string(@$params['azure_blob_storage_container'])) {
       throw new \InvalidArgumentException('Bad parameter: $azure_blob_storage_container must be of type string; received ' . gettype($azure_blob_storage_container));
+    }
+
+    if (@$params['s3_compatible_bucket'] && !is_string(@$params['s3_compatible_bucket'])) {
+      throw new \InvalidArgumentException('Bad parameter: $s3_compatible_bucket must be of type string; received ' . gettype($s3_compatible_bucket));
+    }
+
+    if (@$params['s3_compatible_region'] && !is_string(@$params['s3_compatible_region'])) {
+      throw new \InvalidArgumentException('Bad parameter: $s3_compatible_region must be of type string; received ' . gettype($s3_compatible_region));
+    }
+
+    if (@$params['s3_compatible_endpoint'] && !is_string(@$params['s3_compatible_endpoint'])) {
+      throw new \InvalidArgumentException('Bad parameter: $s3_compatible_endpoint must be of type string; received ' . gettype($s3_compatible_endpoint));
+    }
+
+    if (@$params['s3_compatible_access_key'] && !is_string(@$params['s3_compatible_access_key'])) {
+      throw new \InvalidArgumentException('Bad parameter: $s3_compatible_access_key must be of type string; received ' . gettype($s3_compatible_access_key));
+    }
+
+    if (@$params['s3_compatible_secret_key'] && !is_string(@$params['s3_compatible_secret_key'])) {
+      throw new \InvalidArgumentException('Bad parameter: $s3_compatible_secret_key must be of type string; received ' . gettype($s3_compatible_secret_key));
     }
 
     $response = Api::sendRequest('/remote_servers', 'POST', $params, $options);

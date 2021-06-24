@@ -39,9 +39,17 @@ class ExternalEvent {
     return @$this->attributes['id'];
   }
 
+  public function setId($value) {
+    return $this->attributes['id'] = $value;
+  }
+
   // string # Type of event being recorded.
   public function getEventType() {
     return @$this->attributes['event_type'];
+  }
+
+  public function setEventType($value) {
+    return $this->attributes['event_type'] = $value;
   }
 
   // string # Status of event.
@@ -49,9 +57,17 @@ class ExternalEvent {
     return @$this->attributes['status'];
   }
 
+  public function setStatus($value) {
+    return $this->attributes['status'] = $value;
+  }
+
   // string # Event body
   public function getBody() {
     return @$this->attributes['body'];
+  }
+
+  public function setBody($value) {
+    return $this->attributes['body'] = $value;
   }
 
   // date-time # External event create date/time
@@ -62,6 +78,20 @@ class ExternalEvent {
   // string # Link to log file.
   public function getBodyUrl() {
     return @$this->attributes['body_url'];
+  }
+
+  public function setBodyUrl($value) {
+    return $this->attributes['body_url'] = $value;
+  }
+
+  public function save() {
+      if (@$this->attributes['id']) {
+        throw new \BadMethodCallException('The ExternalEvent object doesn\'t support updates.');
+      } else {
+        $new_obj = self::create($this->attributes, $this->options);
+        $this->attributes = $new_obj->attributes;
+        return true;
+      }
   }
 
   // Parameters:
@@ -122,5 +152,30 @@ class ExternalEvent {
 
   public static function get($id, $params = [], $options = []) {
     return self::find($id, $params, $options);
+  }
+
+  // Parameters:
+  //   status (required) - string - Status of event.
+  //   body (required) - string - Event body
+  public static function create($params = [], $options = []) {
+    if (!@$params['status']) {
+      throw new \Error('Parameter missing: status');
+    }
+
+    if (!@$params['body']) {
+      throw new \Error('Parameter missing: body');
+    }
+
+    if (@$params['status'] && !is_string(@$params['status'])) {
+      throw new \InvalidArgumentException('Bad parameter: $status must be of type string; received ' . gettype($status));
+    }
+
+    if (@$params['body'] && !is_string(@$params['body'])) {
+      throw new \InvalidArgumentException('Bad parameter: $body must be of type string; received ' . gettype($body));
+    }
+
+    $response = Api::sendRequest('/external_events', 'POST', $params, $options);
+
+    return new ExternalEvent((array)(@$response->data ?: []), $options);
   }
 }

@@ -44,6 +44,11 @@ class App {
     return @$this->attributes['extended_description'];
   }
 
+  // string # Short description of the App
+  public function getShortDescription() {
+    return @$this->attributes['short_description'];
+  }
+
   // string # Collection of named links to documentation
   public function getDocumentationLinks() {
     return @$this->attributes['documentation_links'];

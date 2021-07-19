@@ -84,6 +84,51 @@ class ExternalEvent {
     return $this->attributes['body_url'] = $value;
   }
 
+  // int64 # Folder Behavior ID
+  public function getFolderBehaviorId() {
+    return @$this->attributes['folder_behavior_id'];
+  }
+
+  public function setFolderBehaviorId($value) {
+    return $this->attributes['folder_behavior_id'] = $value;
+  }
+
+  // int64 # For sync events, the number of files handled successfully.
+  public function getSuccessfulFiles() {
+    return @$this->attributes['successful_files'];
+  }
+
+  public function setSuccessfulFiles($value) {
+    return $this->attributes['successful_files'] = $value;
+  }
+
+  // int64 # For sync events, the number of files that encountered errors.
+  public function getErroredFiles() {
+    return @$this->attributes['errored_files'];
+  }
+
+  public function setErroredFiles($value) {
+    return $this->attributes['errored_files'] = $value;
+  }
+
+  // int64 # For sync events, the total number of bytes synced.
+  public function getBytesSynced() {
+    return @$this->attributes['bytes_synced'];
+  }
+
+  public function setBytesSynced($value) {
+    return $this->attributes['bytes_synced'] = $value;
+  }
+
+  // string # Associated Remote Server type, if any
+  public function getRemoteServerType() {
+    return @$this->attributes['remote_server_type'];
+  }
+
+  public function setRemoteServerType($value) {
+    return $this->attributes['remote_server_type'] = $value;
+  }
+
   public function save() {
       if (@$this->attributes['id']) {
         throw new \BadMethodCallException('The ExternalEvent object doesn\'t support updates.');
@@ -97,13 +142,13 @@ class ExternalEvent {
   // Parameters:
   //   cursor - string - Used for pagination.  Send a cursor value to resume an existing list from the point at which you left off.  Get a cursor from an existing list via the X-Files-Cursor-Next header.
   //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
-  //   sort_by - object - If set, sort records by the specified field in either 'asc' or 'desc' direction (e.g. sort_by[last_login_at]=desc). Valid fields are `remote_server_type`, `event_type`, `created_at` or `status`.
-  //   filter - object - If set, return records where the specifiied field is equal to the supplied value. Valid fields are `created_at`, `event_type`, `remote_server_type` or `status`.
-  //   filter_gt - object - If set, return records where the specifiied field is greater than the supplied value. Valid fields are `created_at`, `event_type`, `remote_server_type` or `status`.
-  //   filter_gteq - object - If set, return records where the specifiied field is greater than or equal to the supplied value. Valid fields are `created_at`, `event_type`, `remote_server_type` or `status`.
-  //   filter_like - object - If set, return records where the specifiied field is equal to the supplied value. Valid fields are `created_at`, `event_type`, `remote_server_type` or `status`.
-  //   filter_lt - object - If set, return records where the specifiied field is less than the supplied value. Valid fields are `created_at`, `event_type`, `remote_server_type` or `status`.
-  //   filter_lteq - object - If set, return records where the specifiied field is less than or equal to the supplied value. Valid fields are `created_at`, `event_type`, `remote_server_type` or `status`.
+  //   sort_by - object - If set, sort records by the specified field in either 'asc' or 'desc' direction (e.g. sort_by[last_login_at]=desc). Valid fields are `remote_server_type`, `event_type`, `created_at`, `status`, `site_id` or `folder_behavior_id`.
+  //   filter - object - If set, return records where the specifiied field is equal to the supplied value. Valid fields are `created_at`, `event_type`, `remote_server_type`, `status` or `folder_behavior_id`.
+  //   filter_gt - object - If set, return records where the specifiied field is greater than the supplied value. Valid fields are `created_at`, `event_type`, `remote_server_type`, `status` or `folder_behavior_id`.
+  //   filter_gteq - object - If set, return records where the specifiied field is greater than or equal to the supplied value. Valid fields are `created_at`, `event_type`, `remote_server_type`, `status` or `folder_behavior_id`.
+  //   filter_like - object - If set, return records where the specifiied field is equal to the supplied value. Valid fields are `created_at`, `event_type`, `remote_server_type`, `status` or `folder_behavior_id`.
+  //   filter_lt - object - If set, return records where the specifiied field is less than the supplied value. Valid fields are `created_at`, `event_type`, `remote_server_type`, `status` or `folder_behavior_id`.
+  //   filter_lteq - object - If set, return records where the specifiied field is less than or equal to the supplied value. Valid fields are `created_at`, `event_type`, `remote_server_type`, `status` or `folder_behavior_id`.
   public static function list($params = [], $options = []) {
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
       throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));

@@ -43,7 +43,7 @@ class Lock {
     return $this->attributes['path'] = $value;
   }
 
-  // int64 # Lock timeout
+  // int64 # Lock timeout in seconds
   public function getTimeout() {
     return @$this->attributes['timeout'];
   }
@@ -52,7 +52,7 @@ class Lock {
     return $this->attributes['timeout'] = $value;
   }
 
-  // string # Lock depth (0 or infinity)
+  // string # DEPRECATED: Lock depth
   public function getDepth() {
     return @$this->attributes['depth'];
   }
@@ -61,7 +61,16 @@ class Lock {
     return $this->attributes['depth'] = $value;
   }
 
-  // string # Owner of lock.  This can be any arbitrary string.
+  // boolean # Does lock apply to subfolders?
+  public function getRecursive() {
+    return @$this->attributes['recursive'];
+  }
+
+  public function setRecursive($value) {
+    return $this->attributes['recursive'] = $value;
+  }
+
+  // string # Owner of the lock.  This can be any arbitrary string.
   public function getOwner() {
     return @$this->attributes['owner'];
   }
@@ -70,13 +79,22 @@ class Lock {
     return $this->attributes['owner'] = $value;
   }
 
-  // string # Lock scope(shared or exclusive)
+  // string # DEPRECATED: Lock scope
   public function getScope() {
     return @$this->attributes['scope'];
   }
 
   public function setScope($value) {
     return $this->attributes['scope'] = $value;
+  }
+
+  // boolean # Is lock exclusive?
+  public function getExclusive() {
+    return @$this->attributes['exclusive'];
+  }
+
+  public function setExclusive($value) {
+    return $this->attributes['exclusive'] = $value;
   }
 
   // string # Lock token.  Use to release lock.
@@ -88,13 +106,22 @@ class Lock {
     return $this->attributes['token'] = $value;
   }
 
-  // string # Lock type
+  // string # DEPRECATED: Lock type
   public function getType() {
     return @$this->attributes['type'];
   }
 
   public function setType($value) {
     return $this->attributes['type'] = $value;
+  }
+
+  // boolean # Can lock be modified by users other than its creator?
+  public function getAllowAccessByAnyUser() {
+    return @$this->attributes['allow_access_by_any_user'];
+  }
+
+  public function setAllowAccessByAnyUser($value) {
+    return $this->attributes['allow_access_by_any_user'] = $value;
   }
 
   // int64 # Lock creator user ID
@@ -205,6 +232,9 @@ class Lock {
 
   // Parameters:
   //   path (required) - string - Path
+  //   allow_access_by_any_user - boolean - Allow lock to be updated by any user?
+  //   exclusive - boolean - Is lock exclusive?
+  //   recursive - string - Does lock apply to subfolders?
   //   timeout - int64 - Lock timeout length
   public static function create($path, $params = [], $options = []) {
     if (!is_array($params)) {
@@ -219,6 +249,10 @@ class Lock {
 
     if (@$params['path'] && !is_string(@$params['path'])) {
       throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
+    }
+
+    if (@$params['recursive'] && !is_string(@$params['recursive'])) {
+      throw new \InvalidArgumentException('Bad parameter: $recursive must be of type string; received ' . gettype($recursive));
     }
 
     if (@$params['timeout'] && !is_int(@$params['timeout'])) {

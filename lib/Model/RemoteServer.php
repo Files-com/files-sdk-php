@@ -322,6 +322,15 @@ class RemoteServer {
     return $this->attributes['s3_compatible_endpoint'] = $value;
   }
 
+  // boolean # `true` if remote server only accepts connections from dedicated IPs
+  public function getEnableDedicatedIps() {
+    return @$this->attributes['enable_dedicated_ips'];
+  }
+
+  public function setEnableDedicatedIps($value) {
+    return $this->attributes['enable_dedicated_ips'] = $value;
+  }
+
   // string # AWS Access Key.
   public function getAwsAccessKey() {
     return @$this->attributes['aws_access_key'];
@@ -497,6 +506,7 @@ class RemoteServer {
   //   s3_compatible_bucket - string - S3-compatible Bucket name
   //   s3_compatible_region - string - S3-compatible Bucket name
   //   s3_compatible_endpoint - string - S3-compatible endpoint
+  //   enable_dedicated_ips - boolean - `true` if remote server only accepts connections from dedicated IPs
   //   s3_compatible_access_key - string - S3-compatible access key
   //   s3_compatible_secret_key - string - S3-compatible secret key
   public function update($params = []) {
@@ -778,6 +788,7 @@ class RemoteServer {
   //   s3_compatible_bucket - string - S3-compatible Bucket name
   //   s3_compatible_region - string - S3-compatible Bucket name
   //   s3_compatible_endpoint - string - S3-compatible endpoint
+  //   enable_dedicated_ips - boolean - `true` if remote server only accepts connections from dedicated IPs
   //   s3_compatible_access_key - string - S3-compatible access key
   //   s3_compatible_secret_key - string - S3-compatible secret key
   public static function create($params = [], $options = []) {

@@ -124,6 +124,15 @@ class WebhookTest {
     return $this->attributes['body'] = $value;
   }
 
+  // string # raw body text
+  public function getRawBody() {
+    return @$this->attributes['raw_body'];
+  }
+
+  public function setRawBody($value) {
+    return $this->attributes['raw_body'] = $value;
+  }
+
   // string # action for test body
   public function getAction() {
     return @$this->attributes['action'];
@@ -149,6 +158,7 @@ class WebhookTest {
   //   encoding - string - HTTP encoding method.  Can be JSON, XML, or RAW (form data).
   //   headers - object - Additional request headers.
   //   body - object - Additional body parameters.
+  //   raw_body - string - raw body text
   //   action - string - action for test body
   public static function create($params = [], $options = []) {
     if (!@$params['url']) {
@@ -165,6 +175,10 @@ class WebhookTest {
 
     if (@$params['encoding'] && !is_string(@$params['encoding'])) {
       throw new \InvalidArgumentException('Bad parameter: $encoding must be of type string; received ' . gettype($encoding));
+    }
+
+    if (@$params['raw_body'] && !is_string(@$params['raw_body'])) {
+      throw new \InvalidArgumentException('Bad parameter: $raw_body must be of type string; received ' . gettype($raw_body));
     }
 
     if (@$params['action'] && !is_string(@$params['action'])) {

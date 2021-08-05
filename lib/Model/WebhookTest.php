@@ -133,6 +133,24 @@ class WebhookTest {
     return $this->attributes['raw_body'] = $value;
   }
 
+  // boolean # Send the file data as the request body?
+  public function getFileAsBody() {
+    return @$this->attributes['file_as_body'];
+  }
+
+  public function setFileAsBody($value) {
+    return $this->attributes['file_as_body'] = $value;
+  }
+
+  // string # Send the file data as a named parameter in the request POST body
+  public function getFileFormField() {
+    return @$this->attributes['file_form_field'];
+  }
+
+  public function setFileFormField($value) {
+    return $this->attributes['file_form_field'] = $value;
+  }
+
   // string # action for test body
   public function getAction() {
     return @$this->attributes['action'];
@@ -159,6 +177,8 @@ class WebhookTest {
   //   headers - object - Additional request headers.
   //   body - object - Additional body parameters.
   //   raw_body - string - raw body text
+  //   file_as_body - boolean - Send the file data as the request body?
+  //   file_form_field - string - Send the file data as a named parameter in the request POST body
   //   action - string - action for test body
   public static function create($params = [], $options = []) {
     if (!@$params['url']) {
@@ -179,6 +199,10 @@ class WebhookTest {
 
     if (@$params['raw_body'] && !is_string(@$params['raw_body'])) {
       throw new \InvalidArgumentException('Bad parameter: $raw_body must be of type string; received ' . gettype($raw_body));
+    }
+
+    if (@$params['file_form_field'] && !is_string(@$params['file_form_field'])) {
+      throw new \InvalidArgumentException('Bad parameter: $file_form_field must be of type string; received ' . gettype($file_form_field));
     }
 
     if (@$params['action'] && !is_string(@$params['action'])) {

@@ -169,6 +169,21 @@ class Site {
     return @$this->attributes['desktop_app_session_lifetime'];
   }
 
+  // boolean # Is the mobile app enabled?
+  public function getMobileApp() {
+    return @$this->attributes['mobile_app'];
+  }
+
+  // boolean # Is mobile app session IP pinning enabled?
+  public function getMobileAppSessionIpPinning() {
+    return @$this->attributes['mobile_app_session_ip_pinning'];
+  }
+
+  // int64 # Mobile app session lifetime (in hours)
+  public function getMobileAppSessionLifetime() {
+    return @$this->attributes['mobile_app_session_lifetime'];
+  }
+
   // string # Comma seperated list of disallowed Country codes
   public function getDisallowedCountries() {
     return @$this->attributes['disallowed_countries'];
@@ -646,6 +661,9 @@ class Site {
   //   desktop_app - boolean - Is the desktop app enabled?
   //   desktop_app_session_ip_pinning - boolean - Is desktop app session IP pinning enabled?
   //   desktop_app_session_lifetime - int64 - Desktop app session lifetime (in hours)
+  //   mobile_app - boolean - Is the mobile app enabled?
+  //   mobile_app_session_ip_pinning - boolean - Is mobile app session IP pinning enabled?
+  //   mobile_app_session_lifetime - int64 - Mobile app session lifetime (in hours)
   //   folder_permissions_groups_only - boolean - If true, permissions for this site must be bound to a group (not a user). Otherwise, permissions must be bound to a user.
   //   welcome_screen - string - Does the welcome screen appear?
   //   office_integration_available - boolean - Allow users to use Office for the web?
@@ -776,6 +794,10 @@ class Site {
 
     if (@$params['desktop_app_session_lifetime'] && !is_int(@$params['desktop_app_session_lifetime'])) {
       throw new \InvalidArgumentException('Bad parameter: $desktop_app_session_lifetime must be of type int; received ' . gettype($desktop_app_session_lifetime));
+    }
+
+    if (@$params['mobile_app_session_lifetime'] && !is_int(@$params['mobile_app_session_lifetime'])) {
+      throw new \InvalidArgumentException('Bad parameter: $mobile_app_session_lifetime must be of type int; received ' . gettype($mobile_app_session_lifetime));
     }
 
     if (@$params['welcome_screen'] && !is_string(@$params['welcome_screen'])) {

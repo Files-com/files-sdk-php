@@ -158,27 +158,27 @@ class Notification {
   //   send_interval - string - The time interval that notifications are aggregated by.  Can be `five_minutes`, `fifteen_minutes`, `hourly`, or `daily`.
   public function update($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no id');
+      throw new \Files\EmptyPropertyException('The current Notification object has no $id value');
     }
 
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['id'] = $this->id;
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
     if (@$params['send_interval'] && !is_string(@$params['send_interval'])) {
-      throw new \InvalidArgumentException('Bad parameter: $send_interval must be of type string; received ' . gettype($send_interval));
+      throw new \Files\InvalidParameterException('$send_interval must be of type string; received ' . gettype($send_interval));
     }
 
     if (!@$params['id']) {
       if ($this->id) {
         $params['id'] = @$this->id;
       } else {
-        throw new \Error('Parameter missing: id');
+        throw new \Files\MissingParameterException('Parameter missing: id');
       }
     }
 
@@ -187,24 +187,24 @@ class Notification {
 
   public function delete($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no id');
+      throw new \Files\EmptyPropertyException('The current Notification object has no $id value');
     }
 
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['id'] = $this->id;
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
 
     if (!@$params['id']) {
       if ($this->id) {
         $params['id'] = @$this->id;
       } else {
-        throw new \Error('Parameter missing: id');
+        throw new \Files\MissingParameterException('Parameter missing: id');
       }
     }
 
@@ -241,23 +241,23 @@ class Notification {
   //   include_ancestors - boolean - If `include_ancestors` is `true` and `path` is specified, include notifications for any parent paths. Ignored if `path` is not specified.
   public static function list($params = [], $options = []) {
     if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
+      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype($user_id));
     }
 
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
+      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
     }
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-      throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
+      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
     }
 
     if (@$params['group_id'] && !is_int(@$params['group_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $group_id must be of type int; received ' . gettype($group_id));
+      throw new \Files\InvalidParameterException('$group_id must be of type int; received ' . gettype($group_id));
     }
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
     }
 
     $response = Api::sendRequest('/notifications', 'GET', $params, $options);
@@ -279,17 +279,17 @@ class Notification {
   //   id (required) - int64 - Notification ID.
   public static function find($id, $params = [], $options = []) {
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['id'] = $id;
 
     if (!@$params['id']) {
-      throw new \Error('Parameter missing: id');
+      throw new \Files\MissingParameterException('Parameter missing: id');
     }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
 
     $response = Api::sendRequest('/notifications/' . @$params['id'] . '', 'GET', $params, $options);
@@ -312,23 +312,23 @@ class Notification {
   //   username - string - The username of the user to notify.  Provide `user_id`, `username` or `group_id`.
   public static function create($params = [], $options = []) {
     if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
+      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype($user_id));
     }
 
     if (@$params['send_interval'] && !is_string(@$params['send_interval'])) {
-      throw new \InvalidArgumentException('Bad parameter: $send_interval must be of type string; received ' . gettype($send_interval));
+      throw new \Files\InvalidParameterException('$send_interval must be of type string; received ' . gettype($send_interval));
     }
 
     if (@$params['group_id'] && !is_int(@$params['group_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $group_id must be of type int; received ' . gettype($group_id));
+      throw new \Files\InvalidParameterException('$group_id must be of type int; received ' . gettype($group_id));
     }
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
     }
 
     if (@$params['username'] && !is_string(@$params['username'])) {
-      throw new \InvalidArgumentException('Bad parameter: $username must be of type string; received ' . gettype($username));
+      throw new \Files\InvalidParameterException('$username must be of type string; received ' . gettype($username));
     }
 
     $response = Api::sendRequest('/notifications', 'POST', $params, $options);

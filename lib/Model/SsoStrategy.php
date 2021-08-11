@@ -254,11 +254,11 @@ class SsoStrategy {
   //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
   public static function list($params = [], $options = []) {
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
+      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
     }
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-      throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
+      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
     }
 
     $response = Api::sendRequest('/sso_strategies', 'GET', $params, $options);
@@ -280,17 +280,17 @@ class SsoStrategy {
   //   id (required) - int64 - Sso Strategy ID.
   public static function find($id, $params = [], $options = []) {
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['id'] = $id;
 
     if (!@$params['id']) {
-      throw new \Error('Parameter missing: id');
+      throw new \Files\MissingParameterException('Parameter missing: id');
     }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
 
     $response = Api::sendRequest('/sso_strategies/' . @$params['id'] . '', 'GET', $params, $options);

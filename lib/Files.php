@@ -18,6 +18,7 @@ if (!is_file(__DIR__ . $autoloadPath)) {
 }
 
 require_once __DIR__ . $autoloadPath;
+require_once __DIR__ . '/Errors.php';
 require_once __DIR__ . '/Api.php';
 require_once __DIR__ . '/Logger.php';
 

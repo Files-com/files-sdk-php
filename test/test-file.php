@@ -28,27 +28,16 @@ if (!$api_domain) {
   exit;
 }
 
+//
+// initialize
+//
+
 Files::setApiKey($api_key);
 Files::setBaseUrl('https://' . $api_domain);
 
-function testUserListAndUpdate() {
-  $all_users = User::all();
-  $first_user = $all_users[0];
-
-  $old_name = $first_user->name;
-  $new_name = 'edited name - ' . date('Y-m-d H:i:s');
-
-  $first_user->setName($new_name);
-  $first_user->save();
-
-  $updated_user = User::find($first_user->id);
-
-  assert($updated_user->isLoaded());
-  assert($old_name !== $new_name);
-  assert($updated_user->name === $new_name);
-
-  Logger::info('***** testUserListAndUpdate() succeeded! *****');
-}
+//
+// utilities
+//
 
 function assertUserCreatedAndDelete($user, $name) {
   assert($user->isLoaded() === true);
@@ -60,39 +49,15 @@ function assertUserCreatedAndDelete($user, $name) {
 
   $saved_user->delete();
 
-  Logger::pause();
-  $gone_user = User::find($user->id);
-  Logger::unpause();
+  $userNoLongerExists = false;
 
-  assert($gone_user->isLoaded() === false);
-}
+  try {
+    User::find($user->id);
+  } catch (NotFoundException $error) {
+    $userNoLongerExists = true;
+  }
 
-function testUserCreateAndDelete() {
-  $name = 'created-user_' . date('Ymd-His');
-
-  $user = new User([
-    'name' => $name,
-    'username' => $name,
-  ]);
-
-  $user->save();
-
-  assertUserCreatedAndDelete($user, $name);
-
-  Logger::info('***** testUserCreateAndDelete() succeeded! *****');
-}
-
-function testUserStaticCreateAndDelete() {
-  $name = 'created-user_' . date('Ymd-His');
-
-  $user = User::create([
-    'name' => $name,
-    'username' => $name,
-  ]);
-
-  assertUserCreatedAndDelete($user, $name);
-
-  Logger::info('***** testUserCreateAndDelete() succeeded! *****');
+  assert($userNoLongerExists === true);
 }
 
 function findFile($targetFile, $fileList) {
@@ -127,6 +92,130 @@ function createTestFile() {
     $dirName,
     $folder,
   ];
+}
+
+//
+// define tests
+//
+
+function testErrors() {
+  global $api_key;
+  global $api_domain;
+
+  //
+  // invalid configuration
+  //
+
+  Files::setApiKey(null);
+  Files::setBaseUrl(null);
+
+  $caughtExpectedException = false;
+
+  try {
+    User::all();
+  } catch (ConfigurationException $error) {
+    $caughtExpectedException = true;
+  }
+
+  assert($caughtExpectedException === true);
+
+  Files::setApiKey($api_key);
+  Files::setBaseUrl('https://' . $api_domain);
+
+  //
+  // deleting a folder with no path specified
+  //
+
+  $nonExistentFile = new File();
+
+  $caughtExpectedException = false;
+
+  try {
+    $nonExistentFile->delete();
+  } catch (EmptyPropertyException $error) {
+    $caughtExpectedException = true;
+  }
+
+  assert($caughtExpectedException === true);
+
+  //
+  // deleting a non-existent path
+  //
+
+  $nonExistentFile->path = '_fake_path_so_this_should_404_';
+
+  $caughtExpectedException = false;
+
+  try {
+    $nonExistentFile->delete();
+  } catch (NotFoundException $error) {
+    $caughtExpectedException = true;
+  }
+
+  assert($caughtExpectedException === true);
+
+  //
+  // create the root folder path
+  //
+
+  $caughtExpectedException = false;
+
+  try {
+    $folder = Folder::create('.');
+  } catch (ProcessingFailure\DestinationExistsException $error) {
+    $caughtExpectedException = true;
+  }
+
+  assert($caughtExpectedException === true);
+
+  Logger::info('***** testErrors() succeeded! *****');
+}
+
+function testUserListAndUpdate() {
+  $all_users = User::all();
+  $first_user = $all_users[0];
+
+  $old_name = $first_user->name;
+  $new_name = 'edited name - ' . date('Y-m-d H:i:s');
+
+  $first_user->setName($new_name);
+  $first_user->save();
+
+  $updated_user = User::find($first_user->id);
+
+  assert($updated_user->isLoaded());
+  assert($old_name !== $new_name);
+  assert($updated_user->name === $new_name);
+
+  Logger::info('***** testUserListAndUpdate() succeeded! *****');
+}
+
+function testUserCreateAndDelete() {
+  $name = 'created-user_' . date('Ymd-His');
+
+  $user = new User([
+    'name' => $name,
+    'username' => $name,
+  ]);
+
+  $user->save();
+
+  assertUserCreatedAndDelete($user, $name);
+
+  Logger::info('***** testUserCreateAndDelete() succeeded! *****');
+}
+
+function testUserStaticCreateAndDelete() {
+  $name = 'created-user_' . date('Ymd-His');
+
+  $user = User::create([
+    'name' => $name,
+    'username' => $name,
+  ]);
+
+  assertUserCreatedAndDelete($user, $name);
+
+  Logger::info('***** testUserStaticCreateAndDelete() succeeded! *****');
 }
 
 function testFolderCreateListAndDelete() {
@@ -164,10 +253,15 @@ function testFileUploadFindCopyAndDelete() {
 
   $foundFile->delete();
 
-  Logger::pause();
-  $foundFile = File::find($rootDir . $dirName . '/' . $tempName);
-  assert(!$foundFile->isLoaded());
-  Logger::unpause();
+  $fileNoLongerExists = false;
+
+  try {
+    File::find($rootDir . $dirName . '/' . $tempName);
+  } catch (NotFoundException $error) {
+    $fileNoLongerExists = true;
+  }
+
+  assert($fileNoLongerExists === true);
 
   $foundFile = File::find($rootDir . $dirName . '/upload-data.txt');
   assert($foundFile->isLoaded());
@@ -201,8 +295,13 @@ function testSession() {
   Logger::info('***** testSession() succeeded! *****');
 }
 
+//
+// run tests
+//
+
 assert_options(ASSERT_BAIL, 1);
 
+testErrors();
 testUserListAndUpdate();
 testUserCreateAndDelete();
 testUserStaticCreateAndDelete();

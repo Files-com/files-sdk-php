@@ -95,33 +95,33 @@ class Behavior {
   //   path - string - Folder behaviors path.
   public function update($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no id');
+      throw new \Files\EmptyPropertyException('The current Behavior object has no $id value');
     }
 
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['id'] = $this->id;
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
     if (@$params['value'] && !is_string(@$params['value'])) {
-      throw new \InvalidArgumentException('Bad parameter: $value must be of type string; received ' . gettype($value));
+      throw new \Files\InvalidParameterException('$value must be of type string; received ' . gettype($value));
     }
     if (@$params['behavior'] && !is_string(@$params['behavior'])) {
-      throw new \InvalidArgumentException('Bad parameter: $behavior must be of type string; received ' . gettype($behavior));
+      throw new \Files\InvalidParameterException('$behavior must be of type string; received ' . gettype($behavior));
     }
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
     }
 
     if (!@$params['id']) {
       if ($this->id) {
         $params['id'] = @$this->id;
       } else {
-        throw new \Error('Parameter missing: id');
+        throw new \Files\MissingParameterException('Parameter missing: id');
       }
     }
 
@@ -130,24 +130,24 @@ class Behavior {
 
   public function delete($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no id');
+      throw new \Files\EmptyPropertyException('The current Behavior object has no $id value');
     }
 
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['id'] = $this->id;
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
 
     if (!@$params['id']) {
       if ($this->id) {
         $params['id'] = @$this->id;
       } else {
-        throw new \Error('Parameter missing: id');
+        throw new \Files\MissingParameterException('Parameter missing: id');
       }
     }
 
@@ -181,15 +181,15 @@ class Behavior {
   //   behavior - string - If set, only shows folder behaviors matching this behavior type.
   public static function list($params = [], $options = []) {
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
+      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
     }
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-      throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
+      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
     }
 
     if (@$params['behavior'] && !is_string(@$params['behavior'])) {
-      throw new \InvalidArgumentException('Bad parameter: $behavior must be of type string; received ' . gettype($behavior));
+      throw new \Files\InvalidParameterException('$behavior must be of type string; received ' . gettype($behavior));
     }
 
     $response = Api::sendRequest('/behaviors', 'GET', $params, $options);
@@ -211,17 +211,17 @@ class Behavior {
   //   id (required) - int64 - Behavior ID.
   public static function find($id, $params = [], $options = []) {
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['id'] = $id;
 
     if (!@$params['id']) {
-      throw new \Error('Parameter missing: id');
+      throw new \Files\MissingParameterException('Parameter missing: id');
     }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
 
     $response = Api::sendRequest('/behaviors/' . @$params['id'] . '', 'GET', $params, $options);
@@ -248,33 +248,33 @@ class Behavior {
   //   behavior - string - DEPRECATED: If set only shows folder behaviors matching this behavior type. Use `filter[behavior]` instead.
   public static function listFor($path, $params = [], $options = []) {
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['path'] = $path;
 
     if (!@$params['path']) {
-      throw new \Error('Parameter missing: path');
+      throw new \Files\MissingParameterException('Parameter missing: path');
     }
 
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
+      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
     }
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-      throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
+      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
     }
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
     }
 
     if (@$params['recursive'] && !is_string(@$params['recursive'])) {
-      throw new \InvalidArgumentException('Bad parameter: $recursive must be of type string; received ' . gettype($recursive));
+      throw new \Files\InvalidParameterException('$recursive must be of type string; received ' . gettype($recursive));
     }
 
     if (@$params['behavior'] && !is_string(@$params['behavior'])) {
-      throw new \InvalidArgumentException('Bad parameter: $behavior must be of type string; received ' . gettype($behavior));
+      throw new \Files\InvalidParameterException('$behavior must be of type string; received ' . gettype($behavior));
     }
 
     $response = Api::sendRequest('/behaviors/folders/' . @$params['path'] . '', 'GET', $params, $options);
@@ -295,23 +295,23 @@ class Behavior {
   //   behavior (required) - string - Behavior type.
   public static function create($params = [], $options = []) {
     if (!@$params['path']) {
-      throw new \Error('Parameter missing: path');
+      throw new \Files\MissingParameterException('Parameter missing: path');
     }
 
     if (!@$params['behavior']) {
-      throw new \Error('Parameter missing: behavior');
+      throw new \Files\MissingParameterException('Parameter missing: behavior');
     }
 
     if (@$params['value'] && !is_string(@$params['value'])) {
-      throw new \InvalidArgumentException('Bad parameter: $value must be of type string; received ' . gettype($value));
+      throw new \Files\InvalidParameterException('$value must be of type string; received ' . gettype($value));
     }
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
     }
 
     if (@$params['behavior'] && !is_string(@$params['behavior'])) {
-      throw new \InvalidArgumentException('Bad parameter: $behavior must be of type string; received ' . gettype($behavior));
+      throw new \Files\InvalidParameterException('$behavior must be of type string; received ' . gettype($behavior));
     }
 
     $response = Api::sendRequest('/behaviors', 'POST', $params, $options);
@@ -328,23 +328,23 @@ class Behavior {
   //   action - string - action for test body
   public static function webhookTest($params = [], $options = []) {
     if (!@$params['url']) {
-      throw new \Error('Parameter missing: url');
+      throw new \Files\MissingParameterException('Parameter missing: url');
     }
 
     if (@$params['url'] && !is_string(@$params['url'])) {
-      throw new \InvalidArgumentException('Bad parameter: $url must be of type string; received ' . gettype($url));
+      throw new \Files\InvalidParameterException('$url must be of type string; received ' . gettype($url));
     }
 
     if (@$params['method'] && !is_string(@$params['method'])) {
-      throw new \InvalidArgumentException('Bad parameter: $method must be of type string; received ' . gettype($method));
+      throw new \Files\InvalidParameterException('$method must be of type string; received ' . gettype($method));
     }
 
     if (@$params['encoding'] && !is_string(@$params['encoding'])) {
-      throw new \InvalidArgumentException('Bad parameter: $encoding must be of type string; received ' . gettype($encoding));
+      throw new \Files\InvalidParameterException('$encoding must be of type string; received ' . gettype($encoding));
     }
 
     if (@$params['action'] && !is_string(@$params['action'])) {
-      throw new \InvalidArgumentException('Bad parameter: $action must be of type string; received ' . gettype($action));
+      throw new \Files\InvalidParameterException('$action must be of type string; received ' . gettype($action));
     }
 
     $response = Api::sendRequest('/behaviors/webhook/test', 'POST', $params, $options);

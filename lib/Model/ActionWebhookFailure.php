@@ -37,24 +37,24 @@ class ActionWebhookFailure {
   // retry Action Webhook Failure
   public function retry($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no id');
+      throw new \Files\EmptyPropertyException('The current ActionWebhookFailure object has no $id value');
     }
 
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['id'] = $this->id;
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
 
     if (!@$params['id']) {
       if ($this->id) {
         $params['id'] = @$this->id;
       } else {
-        throw new \Error('Parameter missing: id');
+        throw new \Files\MissingParameterException('Parameter missing: id');
       }
     }
 

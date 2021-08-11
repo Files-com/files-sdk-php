@@ -94,33 +94,33 @@ class Message {
   //   body (required) - string - Message body.
   public function update($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no id');
+      throw new \Files\EmptyPropertyException('The current Message object has no $id value');
     }
 
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['id'] = $this->id;
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
     if (@$params['project_id'] && !is_int(@$params['project_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $project_id must be of type int; received ' . gettype($project_id));
+      throw new \Files\InvalidParameterException('$project_id must be of type int; received ' . gettype($project_id));
     }
     if (@$params['subject'] && !is_string(@$params['subject'])) {
-      throw new \InvalidArgumentException('Bad parameter: $subject must be of type string; received ' . gettype($subject));
+      throw new \Files\InvalidParameterException('$subject must be of type string; received ' . gettype($subject));
     }
     if (@$params['body'] && !is_string(@$params['body'])) {
-      throw new \InvalidArgumentException('Bad parameter: $body must be of type string; received ' . gettype($body));
+      throw new \Files\InvalidParameterException('$body must be of type string; received ' . gettype($body));
     }
 
     if (!@$params['id']) {
       if ($this->id) {
         $params['id'] = @$this->id;
       } else {
-        throw new \Error('Parameter missing: id');
+        throw new \Files\MissingParameterException('Parameter missing: id');
       }
     }
 
@@ -128,7 +128,7 @@ class Message {
       if ($this->project_id) {
         $params['project_id'] = @$this->project_id;
       } else {
-        throw new \Error('Parameter missing: project_id');
+        throw new \Files\MissingParameterException('Parameter missing: project_id');
       }
     }
 
@@ -136,7 +136,7 @@ class Message {
       if ($this->subject) {
         $params['subject'] = @$this->subject;
       } else {
-        throw new \Error('Parameter missing: subject');
+        throw new \Files\MissingParameterException('Parameter missing: subject');
       }
     }
 
@@ -144,7 +144,7 @@ class Message {
       if ($this->body) {
         $params['body'] = @$this->body;
       } else {
-        throw new \Error('Parameter missing: body');
+        throw new \Files\MissingParameterException('Parameter missing: body');
       }
     }
 
@@ -153,24 +153,24 @@ class Message {
 
   public function delete($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no id');
+      throw new \Files\EmptyPropertyException('The current Message object has no $id value');
     }
 
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['id'] = $this->id;
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
 
     if (!@$params['id']) {
       if ($this->id) {
         $params['id'] = @$this->id;
       } else {
-        throw new \Error('Parameter missing: id');
+        throw new \Files\MissingParameterException('Parameter missing: id');
       }
     }
 
@@ -198,23 +198,23 @@ class Message {
   //   project_id (required) - int64 - Project for which to return messages.
   public static function list($params = [], $options = []) {
     if (!@$params['project_id']) {
-      throw new \Error('Parameter missing: project_id');
+      throw new \Files\MissingParameterException('Parameter missing: project_id');
     }
 
     if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
+      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype($user_id));
     }
 
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
+      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
     }
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-      throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
+      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
     }
 
     if (@$params['project_id'] && !is_int(@$params['project_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $project_id must be of type int; received ' . gettype($project_id));
+      throw new \Files\InvalidParameterException('$project_id must be of type int; received ' . gettype($project_id));
     }
 
     $response = Api::sendRequest('/messages', 'GET', $params, $options);
@@ -236,17 +236,17 @@ class Message {
   //   id (required) - int64 - Message ID.
   public static function find($id, $params = [], $options = []) {
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['id'] = $id;
 
     if (!@$params['id']) {
-      throw new \Error('Parameter missing: id');
+      throw new \Files\MissingParameterException('Parameter missing: id');
     }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
 
     $response = Api::sendRequest('/messages/' . @$params['id'] . '', 'GET', $params, $options);
@@ -265,31 +265,31 @@ class Message {
   //   body (required) - string - Message body.
   public static function create($params = [], $options = []) {
     if (!@$params['project_id']) {
-      throw new \Error('Parameter missing: project_id');
+      throw new \Files\MissingParameterException('Parameter missing: project_id');
     }
 
     if (!@$params['subject']) {
-      throw new \Error('Parameter missing: subject');
+      throw new \Files\MissingParameterException('Parameter missing: subject');
     }
 
     if (!@$params['body']) {
-      throw new \Error('Parameter missing: body');
+      throw new \Files\MissingParameterException('Parameter missing: body');
     }
 
     if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
+      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype($user_id));
     }
 
     if (@$params['project_id'] && !is_int(@$params['project_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $project_id must be of type int; received ' . gettype($project_id));
+      throw new \Files\InvalidParameterException('$project_id must be of type int; received ' . gettype($project_id));
     }
 
     if (@$params['subject'] && !is_string(@$params['subject'])) {
-      throw new \InvalidArgumentException('Bad parameter: $subject must be of type string; received ' . gettype($subject));
+      throw new \Files\InvalidParameterException('$subject must be of type string; received ' . gettype($subject));
     }
 
     if (@$params['body'] && !is_string(@$params['body'])) {
-      throw new \InvalidArgumentException('Bad parameter: $body must be of type string; received ' . gettype($body));
+      throw new \Files\InvalidParameterException('$body must be of type string; received ' . gettype($body));
     }
 
     $response = Api::sendRequest('/messages', 'POST', $params, $options);

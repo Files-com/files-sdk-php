@@ -62,19 +62,19 @@ class InboxUpload {
   //   inbox_id - int64 - Inbox ID
   public static function list($params = [], $options = []) {
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
+      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
     }
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-      throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
+      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
     }
 
     if (@$params['inbox_registration_id'] && !is_int(@$params['inbox_registration_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $inbox_registration_id must be of type int; received ' . gettype($inbox_registration_id));
+      throw new \Files\InvalidParameterException('$inbox_registration_id must be of type int; received ' . gettype($inbox_registration_id));
     }
 
     if (@$params['inbox_id'] && !is_int(@$params['inbox_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $inbox_id must be of type int; received ' . gettype($inbox_id));
+      throw new \Files\InvalidParameterException('$inbox_id must be of type int; received ' . gettype($inbox_id));
     }
 
     $response = Api::sendRequest('/inbox_uploads', 'GET', $params, $options);

@@ -74,27 +74,27 @@ class MessageComment {
   //   body (required) - string - Comment body.
   public function update($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no id');
+      throw new \Files\EmptyPropertyException('The current MessageComment object has no $id value');
     }
 
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['id'] = $this->id;
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
     if (@$params['body'] && !is_string(@$params['body'])) {
-      throw new \InvalidArgumentException('Bad parameter: $body must be of type string; received ' . gettype($body));
+      throw new \Files\InvalidParameterException('$body must be of type string; received ' . gettype($body));
     }
 
     if (!@$params['id']) {
       if ($this->id) {
         $params['id'] = @$this->id;
       } else {
-        throw new \Error('Parameter missing: id');
+        throw new \Files\MissingParameterException('Parameter missing: id');
       }
     }
 
@@ -102,7 +102,7 @@ class MessageComment {
       if ($this->body) {
         $params['body'] = @$this->body;
       } else {
-        throw new \Error('Parameter missing: body');
+        throw new \Files\MissingParameterException('Parameter missing: body');
       }
     }
 
@@ -111,24 +111,24 @@ class MessageComment {
 
   public function delete($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no id');
+      throw new \Files\EmptyPropertyException('The current MessageComment object has no $id value');
     }
 
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['id'] = $this->id;
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
 
     if (!@$params['id']) {
       if ($this->id) {
         $params['id'] = @$this->id;
       } else {
-        throw new \Error('Parameter missing: id');
+        throw new \Files\MissingParameterException('Parameter missing: id');
       }
     }
 
@@ -156,23 +156,23 @@ class MessageComment {
   //   message_id (required) - int64 - Message comment to return comments for.
   public static function list($params = [], $options = []) {
     if (!@$params['message_id']) {
-      throw new \Error('Parameter missing: message_id');
+      throw new \Files\MissingParameterException('Parameter missing: message_id');
     }
 
     if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
+      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype($user_id));
     }
 
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
+      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
     }
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-      throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
+      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
     }
 
     if (@$params['message_id'] && !is_int(@$params['message_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $message_id must be of type int; received ' . gettype($message_id));
+      throw new \Files\InvalidParameterException('$message_id must be of type int; received ' . gettype($message_id));
     }
 
     $response = Api::sendRequest('/message_comments', 'GET', $params, $options);
@@ -194,17 +194,17 @@ class MessageComment {
   //   id (required) - int64 - Message Comment ID.
   public static function find($id, $params = [], $options = []) {
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['id'] = $id;
 
     if (!@$params['id']) {
-      throw new \Error('Parameter missing: id');
+      throw new \Files\MissingParameterException('Parameter missing: id');
     }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
 
     $response = Api::sendRequest('/message_comments/' . @$params['id'] . '', 'GET', $params, $options);
@@ -221,15 +221,15 @@ class MessageComment {
   //   body (required) - string - Comment body.
   public static function create($params = [], $options = []) {
     if (!@$params['body']) {
-      throw new \Error('Parameter missing: body');
+      throw new \Files\MissingParameterException('Parameter missing: body');
     }
 
     if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
+      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype($user_id));
     }
 
     if (@$params['body'] && !is_string(@$params['body'])) {
-      throw new \InvalidArgumentException('Bad parameter: $body must be of type string; received ' . gettype($body));
+      throw new \Files\InvalidParameterException('$body must be of type string; received ' . gettype($body));
     }
 
     $response = Api::sendRequest('/message_comments', 'POST', $params, $options);

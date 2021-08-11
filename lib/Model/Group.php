@@ -95,36 +95,36 @@ class Group {
   //   admin_ids - string - A list of group admin user ids. If sent as a string, should be comma-delimited.
   public function update($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no id');
+      throw new \Files\EmptyPropertyException('The current Group object has no $id value');
     }
 
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['id'] = $this->id;
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
     if (@$params['name'] && !is_string(@$params['name'])) {
-      throw new \InvalidArgumentException('Bad parameter: $name must be of type string; received ' . gettype($name));
+      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype($name));
     }
     if (@$params['notes'] && !is_string(@$params['notes'])) {
-      throw new \InvalidArgumentException('Bad parameter: $notes must be of type string; received ' . gettype($notes));
+      throw new \Files\InvalidParameterException('$notes must be of type string; received ' . gettype($notes));
     }
     if (@$params['user_ids'] && !is_string(@$params['user_ids'])) {
-      throw new \InvalidArgumentException('Bad parameter: $user_ids must be of type string; received ' . gettype($user_ids));
+      throw new \Files\InvalidParameterException('$user_ids must be of type string; received ' . gettype($user_ids));
     }
     if (@$params['admin_ids'] && !is_string(@$params['admin_ids'])) {
-      throw new \InvalidArgumentException('Bad parameter: $admin_ids must be of type string; received ' . gettype($admin_ids));
+      throw new \Files\InvalidParameterException('$admin_ids must be of type string; received ' . gettype($admin_ids));
     }
 
     if (!@$params['id']) {
       if ($this->id) {
         $params['id'] = @$this->id;
       } else {
-        throw new \Error('Parameter missing: id');
+        throw new \Files\MissingParameterException('Parameter missing: id');
       }
     }
 
@@ -133,24 +133,24 @@ class Group {
 
   public function delete($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no id');
+      throw new \Files\EmptyPropertyException('The current Group object has no $id value');
     }
 
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['id'] = $this->id;
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
 
     if (!@$params['id']) {
       if ($this->id) {
         $params['id'] = @$this->id;
       } else {
-        throw new \Error('Parameter missing: id');
+        throw new \Files\MissingParameterException('Parameter missing: id');
       }
     }
 
@@ -184,15 +184,15 @@ class Group {
   //   ids - string - Comma-separated list of group ids to include in results.
   public static function list($params = [], $options = []) {
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
+      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
     }
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-      throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
+      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
     }
 
     if (@$params['ids'] && !is_string(@$params['ids'])) {
-      throw new \InvalidArgumentException('Bad parameter: $ids must be of type string; received ' . gettype($ids));
+      throw new \Files\InvalidParameterException('$ids must be of type string; received ' . gettype($ids));
     }
 
     $response = Api::sendRequest('/groups', 'GET', $params, $options);
@@ -214,17 +214,17 @@ class Group {
   //   id (required) - int64 - Group ID.
   public static function find($id, $params = [], $options = []) {
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['id'] = $id;
 
     if (!@$params['id']) {
-      throw new \Error('Parameter missing: id');
+      throw new \Files\MissingParameterException('Parameter missing: id');
     }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
 
     $response = Api::sendRequest('/groups/' . @$params['id'] . '', 'GET', $params, $options);
@@ -243,19 +243,19 @@ class Group {
   //   admin_ids - string - A list of group admin user ids. If sent as a string, should be comma-delimited.
   public static function create($params = [], $options = []) {
     if (@$params['name'] && !is_string(@$params['name'])) {
-      throw new \InvalidArgumentException('Bad parameter: $name must be of type string; received ' . gettype($name));
+      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype($name));
     }
 
     if (@$params['notes'] && !is_string(@$params['notes'])) {
-      throw new \InvalidArgumentException('Bad parameter: $notes must be of type string; received ' . gettype($notes));
+      throw new \Files\InvalidParameterException('$notes must be of type string; received ' . gettype($notes));
     }
 
     if (@$params['user_ids'] && !is_string(@$params['user_ids'])) {
-      throw new \InvalidArgumentException('Bad parameter: $user_ids must be of type string; received ' . gettype($user_ids));
+      throw new \Files\InvalidParameterException('$user_ids must be of type string; received ' . gettype($user_ids));
     }
 
     if (@$params['admin_ids'] && !is_string(@$params['admin_ids'])) {
-      throw new \InvalidArgumentException('Bad parameter: $admin_ids must be of type string; received ' . gettype($admin_ids));
+      throw new \Files\InvalidParameterException('$admin_ids must be of type string; received ' . gettype($admin_ids));
     }
 
     $response = Api::sendRequest('/groups', 'POST', $params, $options);

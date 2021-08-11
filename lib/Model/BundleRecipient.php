@@ -108,7 +108,7 @@ class BundleRecipient {
 
   public function save() {
       if (@$this->attributes['id']) {
-        throw new \BadMethodCallException('The BundleRecipient object doesn\'t support updates.');
+        throw new \Files\NotImplementedException('The BundleRecipient object doesn\'t support updates.');
       } else {
         $new_obj = self::create($this->attributes, $this->options);
         $this->attributes = $new_obj->attributes;
@@ -130,23 +130,23 @@ class BundleRecipient {
   //   bundle_id (required) - int64 - List recipients for the bundle with this ID.
   public static function list($params = [], $options = []) {
     if (!@$params['bundle_id']) {
-      throw new \Error('Parameter missing: bundle_id');
+      throw new \Files\MissingParameterException('Parameter missing: bundle_id');
     }
 
     if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
+      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype($user_id));
     }
 
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
+      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
     }
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-      throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
+      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
     }
 
     if (@$params['bundle_id'] && !is_int(@$params['bundle_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $bundle_id must be of type int; received ' . gettype($bundle_id));
+      throw new \Files\InvalidParameterException('$bundle_id must be of type int; received ' . gettype($bundle_id));
     }
 
     $response = Api::sendRequest('/bundle_recipients', 'GET', $params, $options);
@@ -174,35 +174,35 @@ class BundleRecipient {
   //   share_after_create - boolean - Set to true to share the link with the recipient upon creation.
   public static function create($params = [], $options = []) {
     if (!@$params['bundle_id']) {
-      throw new \Error('Parameter missing: bundle_id');
+      throw new \Files\MissingParameterException('Parameter missing: bundle_id');
     }
 
     if (!@$params['recipient']) {
-      throw new \Error('Parameter missing: recipient');
+      throw new \Files\MissingParameterException('Parameter missing: recipient');
     }
 
     if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
+      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype($user_id));
     }
 
     if (@$params['bundle_id'] && !is_int(@$params['bundle_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $bundle_id must be of type int; received ' . gettype($bundle_id));
+      throw new \Files\InvalidParameterException('$bundle_id must be of type int; received ' . gettype($bundle_id));
     }
 
     if (@$params['recipient'] && !is_string(@$params['recipient'])) {
-      throw new \InvalidArgumentException('Bad parameter: $recipient must be of type string; received ' . gettype($recipient));
+      throw new \Files\InvalidParameterException('$recipient must be of type string; received ' . gettype($recipient));
     }
 
     if (@$params['name'] && !is_string(@$params['name'])) {
-      throw new \InvalidArgumentException('Bad parameter: $name must be of type string; received ' . gettype($name));
+      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype($name));
     }
 
     if (@$params['company'] && !is_string(@$params['company'])) {
-      throw new \InvalidArgumentException('Bad parameter: $company must be of type string; received ' . gettype($company));
+      throw new \Files\InvalidParameterException('$company must be of type string; received ' . gettype($company));
     }
 
     if (@$params['note'] && !is_string(@$params['note'])) {
-      throw new \InvalidArgumentException('Bad parameter: $note must be of type string; received ' . gettype($note));
+      throw new \Files\InvalidParameterException('$note must be of type string; received ' . gettype($note));
     }
 
     $response = Api::sendRequest('/bundle_recipients', 'POST', $params, $options);

@@ -108,24 +108,24 @@ class Request {
 
   public function delete($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no id');
+      throw new \Files\EmptyPropertyException('The current Request object has no $id value');
     }
 
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['id'] = $this->id;
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
 
     if (!@$params['id']) {
       if ($this->id) {
         $params['id'] = @$this->id;
       } else {
-        throw new \Error('Parameter missing: id');
+        throw new \Files\MissingParameterException('Parameter missing: id');
       }
     }
 
@@ -138,7 +138,7 @@ class Request {
 
   public function save() {
       if (@$this->attributes['id']) {
-        throw new \BadMethodCallException('The Request object doesn\'t support updates.');
+        throw new \Files\NotImplementedException('The Request object doesn\'t support updates.');
       } else {
         $new_obj = self::create($this->attributes, $this->options);
         $this->attributes = $new_obj->attributes;
@@ -154,15 +154,15 @@ class Request {
   //   path - string - Path to show requests for.  If omitted, shows all paths. Send `/` to represent the root directory.
   public static function list($params = [], $options = []) {
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
+      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
     }
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-      throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
+      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
     }
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
     }
 
     $response = Api::sendRequest('/requests', 'GET', $params, $options);
@@ -188,25 +188,25 @@ class Request {
   //   path (required) - string - Path to show requests for.  If omitted, shows all paths. Send `/` to represent the root directory.
   public static function getFolder($path, $params = [], $options = []) {
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['path'] = $path;
 
     if (!@$params['path']) {
-      throw new \Error('Parameter missing: path');
+      throw new \Files\MissingParameterException('Parameter missing: path');
     }
 
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
+      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
     }
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-      throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
+      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
     }
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
     }
 
     $response = Api::sendRequest('/requests/folders/' . @$params['path'] . '', 'GET', $params, $options);
@@ -227,27 +227,27 @@ class Request {
   //   group_ids - string - A list of group IDs to request the file from. If sent as a string, it should be comma-delimited.
   public static function create($params = [], $options = []) {
     if (!@$params['path']) {
-      throw new \Error('Parameter missing: path');
+      throw new \Files\MissingParameterException('Parameter missing: path');
     }
 
     if (!@$params['destination']) {
-      throw new \Error('Parameter missing: destination');
+      throw new \Files\MissingParameterException('Parameter missing: destination');
     }
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
     }
 
     if (@$params['destination'] && !is_string(@$params['destination'])) {
-      throw new \InvalidArgumentException('Bad parameter: $destination must be of type string; received ' . gettype($destination));
+      throw new \Files\InvalidParameterException('$destination must be of type string; received ' . gettype($destination));
     }
 
     if (@$params['user_ids'] && !is_string(@$params['user_ids'])) {
-      throw new \InvalidArgumentException('Bad parameter: $user_ids must be of type string; received ' . gettype($user_ids));
+      throw new \Files\InvalidParameterException('$user_ids must be of type string; received ' . gettype($user_ids));
     }
 
     if (@$params['group_ids'] && !is_string(@$params['group_ids'])) {
-      throw new \InvalidArgumentException('Bad parameter: $group_ids must be of type string; received ' . gettype($group_ids));
+      throw new \Files\InvalidParameterException('$group_ids must be of type string; received ' . gettype($group_ids));
     }
 
     $response = Api::sendRequest('/requests', 'POST', $params, $options);

@@ -234,7 +234,7 @@ class Session {
 
   public function save() {
       if (@$this->attributes['id']) {
-        throw new \BadMethodCallException('The Session object doesn\'t support updates.');
+        throw new \Files\NotImplementedException('The Session object doesn\'t support updates.');
       } else {
         $new_obj = self::create($this->attributes, $this->options);
         $this->attributes = $new_obj->attributes;
@@ -249,19 +249,19 @@ class Session {
   //   partial_session_id - string - Identifier for a partially-completed login
   public static function create($params = [], $options = []) {
     if (@$params['username'] && !is_string(@$params['username'])) {
-      throw new \InvalidArgumentException('Bad parameter: $username must be of type string; received ' . gettype($username));
+      throw new \Files\InvalidParameterException('$username must be of type string; received ' . gettype($username));
     }
 
     if (@$params['password'] && !is_string(@$params['password'])) {
-      throw new \InvalidArgumentException('Bad parameter: $password must be of type string; received ' . gettype($password));
+      throw new \Files\InvalidParameterException('$password must be of type string; received ' . gettype($password));
     }
 
     if (@$params['otp'] && !is_string(@$params['otp'])) {
-      throw new \InvalidArgumentException('Bad parameter: $otp must be of type string; received ' . gettype($otp));
+      throw new \Files\InvalidParameterException('$otp must be of type string; received ' . gettype($otp));
     }
 
     if (@$params['partial_session_id'] && !is_string(@$params['partial_session_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $partial_session_id must be of type string; received ' . gettype($partial_session_id));
+      throw new \Files\InvalidParameterException('$partial_session_id must be of type string; received ' . gettype($partial_session_id));
     }
 
     $response = Api::sendRequest('/sessions', 'POST', $params, $options);

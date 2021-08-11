@@ -67,19 +67,19 @@ class BundleDownload {
   //   bundle_registration_id - int64 - BundleRegistration ID
   public static function list($params = [], $options = []) {
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
+      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
     }
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-      throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
+      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
     }
 
     if (@$params['bundle_id'] && !is_int(@$params['bundle_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $bundle_id must be of type int; received ' . gettype($bundle_id));
+      throw new \Files\InvalidParameterException('$bundle_id must be of type int; received ' . gettype($bundle_id));
     }
 
     if (@$params['bundle_registration_id'] && !is_int(@$params['bundle_registration_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $bundle_registration_id must be of type int; received ' . gettype($bundle_registration_id));
+      throw new \Files\InvalidParameterException('$bundle_registration_id must be of type int; received ' . gettype($bundle_registration_id));
     }
 
     $response = Api::sendRequest('/bundle_downloads', 'GET', $params, $options);

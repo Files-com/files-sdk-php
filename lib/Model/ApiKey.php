@@ -135,33 +135,33 @@ class ApiKey {
   //   permission_set - string - Permissions for this API Key.  Keys with the `desktop_app` permission set only have the ability to do the functions provided in our Desktop App (File and Share Link operations).  Additional permission sets may become available in the future, such as for a Site Admin to give a key with no administrator privileges.  If you have ideas for permission sets, please let us know.
   public function update($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no id');
+      throw new \Files\EmptyPropertyException('The current ApiKey object has no $id value');
     }
 
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['id'] = $this->id;
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
     if (@$params['name'] && !is_string(@$params['name'])) {
-      throw new \InvalidArgumentException('Bad parameter: $name must be of type string; received ' . gettype($name));
+      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype($name));
     }
     if (@$params['expires_at'] && !is_string(@$params['expires_at'])) {
-      throw new \InvalidArgumentException('Bad parameter: $expires_at must be of type string; received ' . gettype($expires_at));
+      throw new \Files\InvalidParameterException('$expires_at must be of type string; received ' . gettype($expires_at));
     }
     if (@$params['permission_set'] && !is_string(@$params['permission_set'])) {
-      throw new \InvalidArgumentException('Bad parameter: $permission_set must be of type string; received ' . gettype($permission_set));
+      throw new \Files\InvalidParameterException('$permission_set must be of type string; received ' . gettype($permission_set));
     }
 
     if (!@$params['id']) {
       if ($this->id) {
         $params['id'] = @$this->id;
       } else {
-        throw new \Error('Parameter missing: id');
+        throw new \Files\MissingParameterException('Parameter missing: id');
       }
     }
 
@@ -170,24 +170,24 @@ class ApiKey {
 
   public function delete($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no id');
+      throw new \Files\EmptyPropertyException('The current ApiKey object has no $id value');
     }
 
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['id'] = $this->id;
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
 
     if (!@$params['id']) {
       if ($this->id) {
         $params['id'] = @$this->id;
       } else {
-        throw new \Error('Parameter missing: id');
+        throw new \Files\MissingParameterException('Parameter missing: id');
       }
     }
 
@@ -221,15 +221,15 @@ class ApiKey {
   //   filter_lteq - object - If set, return records where the specifiied field is less than or equal to the supplied value. Valid fields are `expires_at`.
   public static function list($params = [], $options = []) {
     if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
+      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype($user_id));
     }
 
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
+      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
     }
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-      throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
+      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
     }
 
     $response = Api::sendRequest('/api_keys', 'GET', $params, $options);
@@ -257,17 +257,17 @@ class ApiKey {
   //   id (required) - int64 - Api Key ID.
   public static function find($id, $params = [], $options = []) {
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['id'] = $id;
 
     if (!@$params['id']) {
-      throw new \Error('Parameter missing: id');
+      throw new \Files\MissingParameterException('Parameter missing: id');
     }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
 
     $response = Api::sendRequest('/api_keys/' . @$params['id'] . '', 'GET', $params, $options);
@@ -287,23 +287,23 @@ class ApiKey {
   //   path - string - Folder path restriction for this api key.
   public static function create($params = [], $options = []) {
     if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
+      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype($user_id));
     }
 
     if (@$params['name'] && !is_string(@$params['name'])) {
-      throw new \InvalidArgumentException('Bad parameter: $name must be of type string; received ' . gettype($name));
+      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype($name));
     }
 
     if (@$params['expires_at'] && !is_string(@$params['expires_at'])) {
-      throw new \InvalidArgumentException('Bad parameter: $expires_at must be of type string; received ' . gettype($expires_at));
+      throw new \Files\InvalidParameterException('$expires_at must be of type string; received ' . gettype($expires_at));
     }
 
     if (@$params['permission_set'] && !is_string(@$params['permission_set'])) {
-      throw new \InvalidArgumentException('Bad parameter: $permission_set must be of type string; received ' . gettype($permission_set));
+      throw new \Files\InvalidParameterException('$permission_set must be of type string; received ' . gettype($permission_set));
     }
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
     }
 
     $response = Api::sendRequest('/api_keys', 'POST', $params, $options);
@@ -317,15 +317,15 @@ class ApiKey {
   //   permission_set - string - Permissions for this API Key.  Keys with the `desktop_app` permission set only have the ability to do the functions provided in our Desktop App (File and Share Link operations).  Additional permission sets may become available in the future, such as for a Site Admin to give a key with no administrator privileges.  If you have ideas for permission sets, please let us know.
   public static function updateCurrent($params = [], $options = []) {
     if (@$params['expires_at'] && !is_string(@$params['expires_at'])) {
-      throw new \InvalidArgumentException('Bad parameter: $expires_at must be of type string; received ' . gettype($expires_at));
+      throw new \Files\InvalidParameterException('$expires_at must be of type string; received ' . gettype($expires_at));
     }
 
     if (@$params['name'] && !is_string(@$params['name'])) {
-      throw new \InvalidArgumentException('Bad parameter: $name must be of type string; received ' . gettype($name));
+      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype($name));
     }
 
     if (@$params['permission_set'] && !is_string(@$params['permission_set'])) {
-      throw new \InvalidArgumentException('Bad parameter: $permission_set must be of type string; received ' . gettype($permission_set));
+      throw new \Files\InvalidParameterException('$permission_set must be of type string; received ' . gettype($permission_set));
     }
 
     $response = Api::sendRequest('/api_key', 'PATCH', $params, $options);

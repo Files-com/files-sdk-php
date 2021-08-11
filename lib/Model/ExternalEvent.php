@@ -131,7 +131,7 @@ class ExternalEvent {
 
   public function save() {
       if (@$this->attributes['id']) {
-        throw new \BadMethodCallException('The ExternalEvent object doesn\'t support updates.');
+        throw new \Files\NotImplementedException('The ExternalEvent object doesn\'t support updates.');
       } else {
         $new_obj = self::create($this->attributes, $this->options);
         $this->attributes = $new_obj->attributes;
@@ -151,11 +151,11 @@ class ExternalEvent {
   //   filter_lteq - object - If set, return records where the specifiied field is less than or equal to the supplied value. Valid fields are `created_at`, `event_type`, `remote_server_type`, `status` or `folder_behavior_id`.
   public static function list($params = [], $options = []) {
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
+      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
     }
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-      throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
+      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
     }
 
     $response = Api::sendRequest('/external_events', 'GET', $params, $options);
@@ -177,17 +177,17 @@ class ExternalEvent {
   //   id (required) - int64 - External Event ID.
   public static function find($id, $params = [], $options = []) {
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['id'] = $id;
 
     if (!@$params['id']) {
-      throw new \Error('Parameter missing: id');
+      throw new \Files\MissingParameterException('Parameter missing: id');
     }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
 
     $response = Api::sendRequest('/external_events/' . @$params['id'] . '', 'GET', $params, $options);
@@ -204,19 +204,19 @@ class ExternalEvent {
   //   body (required) - string - Event body
   public static function create($params = [], $options = []) {
     if (!@$params['status']) {
-      throw new \Error('Parameter missing: status');
+      throw new \Files\MissingParameterException('Parameter missing: status');
     }
 
     if (!@$params['body']) {
-      throw new \Error('Parameter missing: body');
+      throw new \Files\MissingParameterException('Parameter missing: body');
     }
 
     if (@$params['status'] && !is_string(@$params['status'])) {
-      throw new \InvalidArgumentException('Bad parameter: $status must be of type string; received ' . gettype($status));
+      throw new \Files\InvalidParameterException('$status must be of type string; received ' . gettype($status));
     }
 
     if (@$params['body'] && !is_string(@$params['body'])) {
-      throw new \InvalidArgumentException('Bad parameter: $body must be of type string; received ' . gettype($body));
+      throw new \Files\InvalidParameterException('$body must be of type string; received ' . gettype($body));
     }
 
     $response = Api::sendRequest('/external_events', 'POST', $params, $options);

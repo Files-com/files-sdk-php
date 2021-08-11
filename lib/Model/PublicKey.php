@@ -88,27 +88,27 @@ class PublicKey {
   //   title (required) - string - Internal reference for key.
   public function update($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no id');
+      throw new \Files\EmptyPropertyException('The current PublicKey object has no $id value');
     }
 
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['id'] = $this->id;
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
     if (@$params['title'] && !is_string(@$params['title'])) {
-      throw new \InvalidArgumentException('Bad parameter: $title must be of type string; received ' . gettype($title));
+      throw new \Files\InvalidParameterException('$title must be of type string; received ' . gettype($title));
     }
 
     if (!@$params['id']) {
       if ($this->id) {
         $params['id'] = @$this->id;
       } else {
-        throw new \Error('Parameter missing: id');
+        throw new \Files\MissingParameterException('Parameter missing: id');
       }
     }
 
@@ -116,7 +116,7 @@ class PublicKey {
       if ($this->title) {
         $params['title'] = @$this->title;
       } else {
-        throw new \Error('Parameter missing: title');
+        throw new \Files\MissingParameterException('Parameter missing: title');
       }
     }
 
@@ -125,24 +125,24 @@ class PublicKey {
 
   public function delete($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no id');
+      throw new \Files\EmptyPropertyException('The current PublicKey object has no $id value');
     }
 
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['id'] = $this->id;
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
 
     if (!@$params['id']) {
       if ($this->id) {
         $params['id'] = @$this->id;
       } else {
-        throw new \Error('Parameter missing: id');
+        throw new \Files\MissingParameterException('Parameter missing: id');
       }
     }
 
@@ -169,15 +169,15 @@ class PublicKey {
   //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
   public static function list($params = [], $options = []) {
     if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
+      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype($user_id));
     }
 
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
+      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
     }
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-      throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
+      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
     }
 
     $response = Api::sendRequest('/public_keys', 'GET', $params, $options);
@@ -199,17 +199,17 @@ class PublicKey {
   //   id (required) - int64 - Public Key ID.
   public static function find($id, $params = [], $options = []) {
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['id'] = $id;
 
     if (!@$params['id']) {
-      throw new \Error('Parameter missing: id');
+      throw new \Files\MissingParameterException('Parameter missing: id');
     }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
 
     $response = Api::sendRequest('/public_keys/' . @$params['id'] . '', 'GET', $params, $options);
@@ -227,23 +227,23 @@ class PublicKey {
   //   public_key (required) - string - Actual contents of SSH key.
   public static function create($params = [], $options = []) {
     if (!@$params['title']) {
-      throw new \Error('Parameter missing: title');
+      throw new \Files\MissingParameterException('Parameter missing: title');
     }
 
     if (!@$params['public_key']) {
-      throw new \Error('Parameter missing: public_key');
+      throw new \Files\MissingParameterException('Parameter missing: public_key');
     }
 
     if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
+      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype($user_id));
     }
 
     if (@$params['title'] && !is_string(@$params['title'])) {
-      throw new \InvalidArgumentException('Bad parameter: $title must be of type string; received ' . gettype($title));
+      throw new \Files\InvalidParameterException('$title must be of type string; received ' . gettype($title));
     }
 
     if (@$params['public_key'] && !is_string(@$params['public_key'])) {
-      throw new \InvalidArgumentException('Bad parameter: $public_key must be of type string; received ' . gettype($public_key));
+      throw new \Files\InvalidParameterException('$public_key must be of type string; received ' . gettype($public_key));
     }
 
     $response = Api::sendRequest('/public_keys', 'POST', $params, $options);

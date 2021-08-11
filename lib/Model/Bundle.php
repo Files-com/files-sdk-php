@@ -236,33 +236,33 @@ class Bundle {
   //   recipients - array(object) - A list of recipients to share this bundle with. Required unless `to` is used.
   public function share($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no id');
+      throw new \Files\EmptyPropertyException('The current Bundle object has no $id value');
     }
 
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['id'] = $this->id;
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
     if (@$params['to'] && !is_array(@$params['to'])) {
-      throw new \InvalidArgumentException('Bad parameter: $to must be of type array; received ' . gettype($to));
+      throw new \Files\InvalidParameterException('$to must be of type array; received ' . gettype($to));
     }
     if (@$params['note'] && !is_string(@$params['note'])) {
-      throw new \InvalidArgumentException('Bad parameter: $note must be of type string; received ' . gettype($note));
+      throw new \Files\InvalidParameterException('$note must be of type string; received ' . gettype($note));
     }
     if (@$params['recipients'] && !is_array(@$params['recipients'])) {
-      throw new \InvalidArgumentException('Bad parameter: $recipients must be of type array; received ' . gettype($recipients));
+      throw new \Files\InvalidParameterException('$recipients must be of type array; received ' . gettype($recipients));
     }
 
     if (!@$params['id']) {
       if ($this->id) {
         $params['id'] = @$this->id;
       } else {
-        throw new \Error('Parameter missing: id');
+        throw new \Files\MissingParameterException('Parameter missing: id');
       }
     }
 
@@ -285,54 +285,54 @@ class Bundle {
   //   require_share_recipient - boolean - Only allow access to recipients who have explicitly received the share via an email sent through the Files.com UI?
   public function update($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no id');
+      throw new \Files\EmptyPropertyException('The current Bundle object has no $id value');
     }
 
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['id'] = $this->id;
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
     if (@$params['paths'] && !is_array(@$params['paths'])) {
-      throw new \InvalidArgumentException('Bad parameter: $paths must be of type array; received ' . gettype($paths));
+      throw new \Files\InvalidParameterException('$paths must be of type array; received ' . gettype($paths));
     }
     if (@$params['password'] && !is_string(@$params['password'])) {
-      throw new \InvalidArgumentException('Bad parameter: $password must be of type string; received ' . gettype($password));
+      throw new \Files\InvalidParameterException('$password must be of type string; received ' . gettype($password));
     }
     if (@$params['form_field_set_id'] && !is_int(@$params['form_field_set_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $form_field_set_id must be of type int; received ' . gettype($form_field_set_id));
+      throw new \Files\InvalidParameterException('$form_field_set_id must be of type int; received ' . gettype($form_field_set_id));
     }
     if (@$params['clickwrap_id'] && !is_int(@$params['clickwrap_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $clickwrap_id must be of type int; received ' . gettype($clickwrap_id));
+      throw new \Files\InvalidParameterException('$clickwrap_id must be of type int; received ' . gettype($clickwrap_id));
     }
     if (@$params['code'] && !is_string(@$params['code'])) {
-      throw new \InvalidArgumentException('Bad parameter: $code must be of type string; received ' . gettype($code));
+      throw new \Files\InvalidParameterException('$code must be of type string; received ' . gettype($code));
     }
     if (@$params['description'] && !is_string(@$params['description'])) {
-      throw new \InvalidArgumentException('Bad parameter: $description must be of type string; received ' . gettype($description));
+      throw new \Files\InvalidParameterException('$description must be of type string; received ' . gettype($description));
     }
     if (@$params['expires_at'] && !is_string(@$params['expires_at'])) {
-      throw new \InvalidArgumentException('Bad parameter: $expires_at must be of type string; received ' . gettype($expires_at));
+      throw new \Files\InvalidParameterException('$expires_at must be of type string; received ' . gettype($expires_at));
     }
     if (@$params['inbox_id'] && !is_int(@$params['inbox_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $inbox_id must be of type int; received ' . gettype($inbox_id));
+      throw new \Files\InvalidParameterException('$inbox_id must be of type int; received ' . gettype($inbox_id));
     }
     if (@$params['max_uses'] && !is_int(@$params['max_uses'])) {
-      throw new \InvalidArgumentException('Bad parameter: $max_uses must be of type int; received ' . gettype($max_uses));
+      throw new \Files\InvalidParameterException('$max_uses must be of type int; received ' . gettype($max_uses));
     }
     if (@$params['note'] && !is_string(@$params['note'])) {
-      throw new \InvalidArgumentException('Bad parameter: $note must be of type string; received ' . gettype($note));
+      throw new \Files\InvalidParameterException('$note must be of type string; received ' . gettype($note));
     }
 
     if (!@$params['id']) {
       if ($this->id) {
         $params['id'] = @$this->id;
       } else {
-        throw new \Error('Parameter missing: id');
+        throw new \Files\MissingParameterException('Parameter missing: id');
       }
     }
 
@@ -341,24 +341,24 @@ class Bundle {
 
   public function delete($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no id');
+      throw new \Files\EmptyPropertyException('The current Bundle object has no $id value');
     }
 
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['id'] = $this->id;
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
 
     if (!@$params['id']) {
       if ($this->id) {
         $params['id'] = @$this->id;
       } else {
-        throw new \Error('Parameter missing: id');
+        throw new \Files\MissingParameterException('Parameter missing: id');
       }
     }
 
@@ -392,15 +392,15 @@ class Bundle {
   //   filter_lteq - object - If set, return records where the specifiied field is less than or equal to the supplied value. Valid fields are `created_at`.
   public static function list($params = [], $options = []) {
     if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
+      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype($user_id));
     }
 
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
+      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
     }
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-      throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
+      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
     }
 
     $response = Api::sendRequest('/bundles', 'GET', $params, $options);
@@ -422,17 +422,17 @@ class Bundle {
   //   id (required) - int64 - Bundle ID.
   public static function find($id, $params = [], $options = []) {
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['id'] = $id;
 
     if (!@$params['id']) {
-      throw new \Error('Parameter missing: id');
+      throw new \Files\MissingParameterException('Parameter missing: id');
     }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
 
     $response = Api::sendRequest('/bundles/' . @$params['id'] . '', 'GET', $params, $options);
@@ -461,51 +461,51 @@ class Bundle {
   //   require_share_recipient - boolean - Only allow access to recipients who have explicitly received the share via an email sent through the Files.com UI?
   public static function create($params = [], $options = []) {
     if (!@$params['paths']) {
-      throw new \Error('Parameter missing: paths');
+      throw new \Files\MissingParameterException('Parameter missing: paths');
     }
 
     if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
+      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype($user_id));
     }
 
     if (@$params['paths'] && !is_array(@$params['paths'])) {
-      throw new \InvalidArgumentException('Bad parameter: $paths must be of type array; received ' . gettype($paths));
+      throw new \Files\InvalidParameterException('$paths must be of type array; received ' . gettype($paths));
     }
 
     if (@$params['password'] && !is_string(@$params['password'])) {
-      throw new \InvalidArgumentException('Bad parameter: $password must be of type string; received ' . gettype($password));
+      throw new \Files\InvalidParameterException('$password must be of type string; received ' . gettype($password));
     }
 
     if (@$params['form_field_set_id'] && !is_int(@$params['form_field_set_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $form_field_set_id must be of type int; received ' . gettype($form_field_set_id));
+      throw new \Files\InvalidParameterException('$form_field_set_id must be of type int; received ' . gettype($form_field_set_id));
     }
 
     if (@$params['expires_at'] && !is_string(@$params['expires_at'])) {
-      throw new \InvalidArgumentException('Bad parameter: $expires_at must be of type string; received ' . gettype($expires_at));
+      throw new \Files\InvalidParameterException('$expires_at must be of type string; received ' . gettype($expires_at));
     }
 
     if (@$params['max_uses'] && !is_int(@$params['max_uses'])) {
-      throw new \InvalidArgumentException('Bad parameter: $max_uses must be of type int; received ' . gettype($max_uses));
+      throw new \Files\InvalidParameterException('$max_uses must be of type int; received ' . gettype($max_uses));
     }
 
     if (@$params['description'] && !is_string(@$params['description'])) {
-      throw new \InvalidArgumentException('Bad parameter: $description must be of type string; received ' . gettype($description));
+      throw new \Files\InvalidParameterException('$description must be of type string; received ' . gettype($description));
     }
 
     if (@$params['note'] && !is_string(@$params['note'])) {
-      throw new \InvalidArgumentException('Bad parameter: $note must be of type string; received ' . gettype($note));
+      throw new \Files\InvalidParameterException('$note must be of type string; received ' . gettype($note));
     }
 
     if (@$params['code'] && !is_string(@$params['code'])) {
-      throw new \InvalidArgumentException('Bad parameter: $code must be of type string; received ' . gettype($code));
+      throw new \Files\InvalidParameterException('$code must be of type string; received ' . gettype($code));
     }
 
     if (@$params['clickwrap_id'] && !is_int(@$params['clickwrap_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $clickwrap_id must be of type int; received ' . gettype($clickwrap_id));
+      throw new \Files\InvalidParameterException('$clickwrap_id must be of type int; received ' . gettype($clickwrap_id));
     }
 
     if (@$params['inbox_id'] && !is_int(@$params['inbox_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $inbox_id must be of type int; received ' . gettype($inbox_id));
+      throw new \Files\InvalidParameterException('$inbox_id must be of type int; received ' . gettype($inbox_id));
     }
 
     $response = Api::sendRequest('/bundles', 'POST', $params, $options);

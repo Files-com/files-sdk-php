@@ -146,27 +146,27 @@ class Lock {
   //   token (required) - string - Lock token
   public function delete($params = []) {
     if (!$this->path) {
-      throw new \Error('Current object has no path');
+      throw new \Files\EmptyPropertyException('The current Lock object has no $path value');
     }
 
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['path'] = $this->path;
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
     }
     if (@$params['token'] && !is_string(@$params['token'])) {
-      throw new \InvalidArgumentException('Bad parameter: $token must be of type string; received ' . gettype($token));
+      throw new \Files\InvalidParameterException('$token must be of type string; received ' . gettype($token));
     }
 
     if (!@$params['path']) {
       if ($this->path) {
         $params['path'] = @$this->path;
       } else {
-        throw new \Error('Parameter missing: path');
+        throw new \Files\MissingParameterException('Parameter missing: path');
       }
     }
 
@@ -174,7 +174,7 @@ class Lock {
       if ($this->token) {
         $params['token'] = @$this->token;
       } else {
-        throw new \Error('Parameter missing: token');
+        throw new \Files\MissingParameterException('Parameter missing: token');
       }
     }
 
@@ -198,25 +198,25 @@ class Lock {
   //   include_children - boolean - Include locks from children objects?
   public static function listFor($path, $params = [], $options = []) {
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['path'] = $path;
 
     if (!@$params['path']) {
-      throw new \Error('Parameter missing: path');
+      throw new \Files\MissingParameterException('Parameter missing: path');
     }
 
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
+      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
     }
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-      throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
+      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
     }
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
     }
 
     $response = Api::sendRequest('/locks/' . @$params['path'] . '', 'GET', $params, $options);
@@ -238,25 +238,25 @@ class Lock {
   //   timeout - int64 - Lock timeout length
   public static function create($path, $params = [], $options = []) {
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['path'] = $path;
 
     if (!@$params['path']) {
-      throw new \Error('Parameter missing: path');
+      throw new \Files\MissingParameterException('Parameter missing: path');
     }
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
     }
 
     if (@$params['recursive'] && !is_string(@$params['recursive'])) {
-      throw new \InvalidArgumentException('Bad parameter: $recursive must be of type string; received ' . gettype($recursive));
+      throw new \Files\InvalidParameterException('$recursive must be of type string; received ' . gettype($recursive));
     }
 
     if (@$params['timeout'] && !is_int(@$params['timeout'])) {
-      throw new \InvalidArgumentException('Bad parameter: $timeout must be of type int; received ' . gettype($timeout));
+      throw new \Files\InvalidParameterException('$timeout must be of type int; received ' . gettype($timeout));
     }
 
     $response = Api::sendRequest('/locks/' . @$params['path'] . '', 'POST', $params, $options);

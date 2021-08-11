@@ -156,23 +156,23 @@ class HistoryExportResult {
   //   history_export_id (required) - int64 - ID of the associated history export.
   public static function list($params = [], $options = []) {
     if (!@$params['history_export_id']) {
-      throw new \Error('Parameter missing: history_export_id');
+      throw new \Files\MissingParameterException('Parameter missing: history_export_id');
     }
 
     if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
+      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype($user_id));
     }
 
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
+      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
     }
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-      throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
+      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
     }
 
     if (@$params['history_export_id'] && !is_int(@$params['history_export_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $history_export_id must be of type int; received ' . gettype($history_export_id));
+      throw new \Files\InvalidParameterException('$history_export_id must be of type int; received ' . gettype($history_export_id));
     }
 
     $response = Api::sendRequest('/history_export_results', 'GET', $params, $options);

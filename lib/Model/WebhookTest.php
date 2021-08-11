@@ -162,7 +162,7 @@ class WebhookTest {
 
   public function save() {
       if (@$this->attributes['id']) {
-        throw new \BadMethodCallException('The WebhookTest object doesn\'t support updates.');
+        throw new \Files\NotImplementedException('The WebhookTest object doesn\'t support updates.');
       } else {
         $new_obj = self::create($this->attributes, $this->options);
         $this->attributes = $new_obj->attributes;
@@ -182,31 +182,31 @@ class WebhookTest {
   //   action - string - action for test body
   public static function create($params = [], $options = []) {
     if (!@$params['url']) {
-      throw new \Error('Parameter missing: url');
+      throw new \Files\MissingParameterException('Parameter missing: url');
     }
 
     if (@$params['url'] && !is_string(@$params['url'])) {
-      throw new \InvalidArgumentException('Bad parameter: $url must be of type string; received ' . gettype($url));
+      throw new \Files\InvalidParameterException('$url must be of type string; received ' . gettype($url));
     }
 
     if (@$params['method'] && !is_string(@$params['method'])) {
-      throw new \InvalidArgumentException('Bad parameter: $method must be of type string; received ' . gettype($method));
+      throw new \Files\InvalidParameterException('$method must be of type string; received ' . gettype($method));
     }
 
     if (@$params['encoding'] && !is_string(@$params['encoding'])) {
-      throw new \InvalidArgumentException('Bad parameter: $encoding must be of type string; received ' . gettype($encoding));
+      throw new \Files\InvalidParameterException('$encoding must be of type string; received ' . gettype($encoding));
     }
 
     if (@$params['raw_body'] && !is_string(@$params['raw_body'])) {
-      throw new \InvalidArgumentException('Bad parameter: $raw_body must be of type string; received ' . gettype($raw_body));
+      throw new \Files\InvalidParameterException('$raw_body must be of type string; received ' . gettype($raw_body));
     }
 
     if (@$params['file_form_field'] && !is_string(@$params['file_form_field'])) {
-      throw new \InvalidArgumentException('Bad parameter: $file_form_field must be of type string; received ' . gettype($file_form_field));
+      throw new \Files\InvalidParameterException('$file_form_field must be of type string; received ' . gettype($file_form_field));
     }
 
     if (@$params['action'] && !is_string(@$params['action'])) {
-      throw new \InvalidArgumentException('Bad parameter: $action must be of type string; received ' . gettype($action));
+      throw new \Files\InvalidParameterException('$action must be of type string; received ' . gettype($action));
     }
 
     $response = Api::sendRequest('/webhook_tests', 'POST', $params, $options);

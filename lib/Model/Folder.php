@@ -196,37 +196,37 @@ class Folder {
   //   with_priority_color - boolean - Include file priority color information?
   public static function listFor($path, $params = [], $options = []) {
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['path'] = $path;
 
     if (!@$params['path']) {
-      throw new \Error('Parameter missing: path');
+      throw new \Files\MissingParameterException('Parameter missing: path');
     }
 
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
+      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
     }
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-      throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
+      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
     }
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
     }
 
     if (@$params['filter'] && !is_string(@$params['filter'])) {
-      throw new \InvalidArgumentException('Bad parameter: $filter must be of type string; received ' . gettype($filter));
+      throw new \Files\InvalidParameterException('$filter must be of type string; received ' . gettype($filter));
     }
 
     if (@$params['preview_size'] && !is_string(@$params['preview_size'])) {
-      throw new \InvalidArgumentException('Bad parameter: $preview_size must be of type string; received ' . gettype($preview_size));
+      throw new \Files\InvalidParameterException('$preview_size must be of type string; received ' . gettype($preview_size));
     }
 
     if (@$params['search'] && !is_string(@$params['search'])) {
-      throw new \InvalidArgumentException('Bad parameter: $search must be of type string; received ' . gettype($search));
+      throw new \Files\InvalidParameterException('$search must be of type string; received ' . gettype($search));
     }
 
     $response = Api::sendRequest('/folders/' . @$params['path'] . '', 'GET', $params, $options);
@@ -244,17 +244,17 @@ class Folder {
   //   path (required) - string - Path to operate on.
   public static function create($path, $params = [], $options = []) {
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['path'] = $path;
 
     if (!@$params['path']) {
-      throw new \Error('Parameter missing: path');
+      throw new \Files\MissingParameterException('Parameter missing: path');
     }
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
     }
 
     $response = Api::sendRequest('/folders/' . @$params['path'] . '', 'POST', $params, $options);

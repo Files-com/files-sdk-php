@@ -23,7 +23,7 @@ class Api {
     $shouldRetry = function($retries, $request, $response, $exception) {
       if ($retries >= Files::$maxNetworkRetries) {
         Logger::info('Retries exhausted - giving up on this request');
-        return false;
+        handleErrorResponse($exception);
       }
 
       if (is_a($exception, 'GuzzleHttp\\Exception\\ConnectException')) {
@@ -49,8 +49,7 @@ class Api {
     $baseUrl = Files::getBaseUrl();
 
     if (!$isExternal && !$baseUrl) {
-      trigger_error('Base URL has not been set - use Files::setBaseUrl() to set it', E_USER_ERROR);
-      exit;
+      throw new ConfigurationException('Site URL has not been set. Set your site URL using Files::setBaseUrl(<BASE-URL>).');
     }
 
     $url = $isExternal
@@ -76,8 +75,7 @@ class Api {
     try {
       $response = $client->request($verb, $url, $options);
     } catch (\Exception $error) {
-      Logger::error(get_class($error) . ' > ' . $error->getMessage());
-      return null;
+      handleErrorResponse($error);
     }
 
     $statusCode = $response->getStatusCode();
@@ -130,8 +128,7 @@ class Api {
           $apiKey = @$options['api_key'] ?: Files::getApiKey();
 
           if (!$apiKey) {
-            trigger_error('API key has not been set - use Files::setApiKey() to set it', E_USER_ERROR);
-            exit;
+            throw new ConfigurationException('No Files.com API key provided. Set your API key using Files::setApiKey(<API-KEY>). You can generate API keys from the Files.com web interface.');
           }
 
           $headers['X-FilesAPI-Key'] = $apiKey;

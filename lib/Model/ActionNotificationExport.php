@@ -162,7 +162,7 @@ class ActionNotificationExport {
 
   public function save() {
       if (@$this->attributes['id']) {
-        throw new \BadMethodCallException('The ActionNotificationExport object doesn\'t support updates.');
+        throw new \Files\NotImplementedException('The ActionNotificationExport object doesn\'t support updates.');
       } else {
         $new_obj = self::create($this->attributes, $this->options);
         $this->attributes = $new_obj->attributes;
@@ -174,17 +174,17 @@ class ActionNotificationExport {
   //   id (required) - int64 - Action Notification Export ID.
   public static function find($id, $params = [], $options = []) {
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['id'] = $id;
 
     if (!@$params['id']) {
-      throw new \Error('Parameter missing: id');
+      throw new \Files\MissingParameterException('Parameter missing: id');
     }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
 
     $response = Api::sendRequest('/action_notification_exports/' . @$params['id'] . '', 'GET', $params, $options);
@@ -209,39 +209,39 @@ class ActionNotificationExport {
   //   query_folder - string - Return notifications that were triggered by actions in this folder.
   public static function create($params = [], $options = []) {
     if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
+      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype($user_id));
     }
 
     if (@$params['start_at'] && !is_string(@$params['start_at'])) {
-      throw new \InvalidArgumentException('Bad parameter: $start_at must be of type string; received ' . gettype($start_at));
+      throw new \Files\InvalidParameterException('$start_at must be of type string; received ' . gettype($start_at));
     }
 
     if (@$params['end_at'] && !is_string(@$params['end_at'])) {
-      throw new \InvalidArgumentException('Bad parameter: $end_at must be of type string; received ' . gettype($end_at));
+      throw new \Files\InvalidParameterException('$end_at must be of type string; received ' . gettype($end_at));
     }
 
     if (@$params['query_message'] && !is_string(@$params['query_message'])) {
-      throw new \InvalidArgumentException('Bad parameter: $query_message must be of type string; received ' . gettype($query_message));
+      throw new \Files\InvalidParameterException('$query_message must be of type string; received ' . gettype($query_message));
     }
 
     if (@$params['query_request_method'] && !is_string(@$params['query_request_method'])) {
-      throw new \InvalidArgumentException('Bad parameter: $query_request_method must be of type string; received ' . gettype($query_request_method));
+      throw new \Files\InvalidParameterException('$query_request_method must be of type string; received ' . gettype($query_request_method));
     }
 
     if (@$params['query_request_url'] && !is_string(@$params['query_request_url'])) {
-      throw new \InvalidArgumentException('Bad parameter: $query_request_url must be of type string; received ' . gettype($query_request_url));
+      throw new \Files\InvalidParameterException('$query_request_url must be of type string; received ' . gettype($query_request_url));
     }
 
     if (@$params['query_status'] && !is_string(@$params['query_status'])) {
-      throw new \InvalidArgumentException('Bad parameter: $query_status must be of type string; received ' . gettype($query_status));
+      throw new \Files\InvalidParameterException('$query_status must be of type string; received ' . gettype($query_status));
     }
 
     if (@$params['query_path'] && !is_string(@$params['query_path'])) {
-      throw new \InvalidArgumentException('Bad parameter: $query_path must be of type string; received ' . gettype($query_path));
+      throw new \Files\InvalidParameterException('$query_path must be of type string; received ' . gettype($query_path));
     }
 
     if (@$params['query_folder'] && !is_string(@$params['query_folder'])) {
-      throw new \InvalidArgumentException('Bad parameter: $query_folder must be of type string; received ' . gettype($query_folder));
+      throw new \Files\InvalidParameterException('$query_folder must be of type string; received ' . gettype($query_folder));
     }
 
     $response = Api::sendRequest('/action_notification_exports', 'POST', $params, $options);

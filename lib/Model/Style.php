@@ -83,24 +83,24 @@ class Style {
   //   file (required) - file - Logo for custom branding.
   public function update($params = []) {
     if (!$this->path) {
-      throw new \Error('Current object has no path');
+      throw new \Files\EmptyPropertyException('The current Style object has no $path value');
     }
 
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['path'] = $this->path;
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
     }
 
     if (!@$params['path']) {
       if ($this->path) {
         $params['path'] = @$this->path;
       } else {
-        throw new \Error('Parameter missing: path');
+        throw new \Files\MissingParameterException('Parameter missing: path');
       }
     }
 
@@ -108,7 +108,7 @@ class Style {
       if ($this->file) {
         $params['file'] = @$this->file;
       } else {
-        throw new \Error('Parameter missing: file');
+        throw new \Files\MissingParameterException('Parameter missing: file');
       }
     }
 
@@ -117,24 +117,24 @@ class Style {
 
   public function delete($params = []) {
     if (!$this->path) {
-      throw new \Error('Current object has no path');
+      throw new \Files\EmptyPropertyException('The current Style object has no $path value');
     }
 
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['path'] = $this->path;
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
     }
 
     if (!@$params['path']) {
       if ($this->path) {
         $params['path'] = @$this->path;
       } else {
-        throw new \Error('Parameter missing: path');
+        throw new \Files\MissingParameterException('Parameter missing: path');
       }
     }
 
@@ -153,17 +153,17 @@ class Style {
   //   path (required) - string - Style path.
   public static function find($path, $params = [], $options = []) {
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['path'] = $path;
 
     if (!@$params['path']) {
-      throw new \Error('Parameter missing: path');
+      throw new \Files\MissingParameterException('Parameter missing: path');
     }
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
     }
 
     $response = Api::sendRequest('/styles/' . @$params['path'] . '', 'GET', $params, $options);

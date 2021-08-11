@@ -72,24 +72,24 @@ class UserRequest {
 
   public function delete($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no id');
+      throw new \Files\EmptyPropertyException('The current UserRequest object has no $id value');
     }
 
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['id'] = $this->id;
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
 
     if (!@$params['id']) {
       if ($this->id) {
         $params['id'] = @$this->id;
       } else {
-        throw new \Error('Parameter missing: id');
+        throw new \Files\MissingParameterException('Parameter missing: id');
       }
     }
 
@@ -102,7 +102,7 @@ class UserRequest {
 
   public function save() {
       if (@$this->attributes['id']) {
-        throw new \BadMethodCallException('The UserRequest object doesn\'t support updates.');
+        throw new \Files\NotImplementedException('The UserRequest object doesn\'t support updates.');
       } else {
         $new_obj = self::create($this->attributes, $this->options);
         $this->attributes = $new_obj->attributes;
@@ -115,11 +115,11 @@ class UserRequest {
   //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
   public static function list($params = [], $options = []) {
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
+      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
     }
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-      throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
+      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
     }
 
     $response = Api::sendRequest('/user_requests', 'GET', $params, $options);
@@ -141,17 +141,17 @@ class UserRequest {
   //   id (required) - int64 - User Request ID.
   public static function find($id, $params = [], $options = []) {
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['id'] = $id;
 
     if (!@$params['id']) {
-      throw new \Error('Parameter missing: id');
+      throw new \Files\MissingParameterException('Parameter missing: id');
     }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
 
     $response = Api::sendRequest('/user_requests/' . @$params['id'] . '', 'GET', $params, $options);
@@ -169,27 +169,27 @@ class UserRequest {
   //   details (required) - string - Details of the user request
   public static function create($params = [], $options = []) {
     if (!@$params['name']) {
-      throw new \Error('Parameter missing: name');
+      throw new \Files\MissingParameterException('Parameter missing: name');
     }
 
     if (!@$params['email']) {
-      throw new \Error('Parameter missing: email');
+      throw new \Files\MissingParameterException('Parameter missing: email');
     }
 
     if (!@$params['details']) {
-      throw new \Error('Parameter missing: details');
+      throw new \Files\MissingParameterException('Parameter missing: details');
     }
 
     if (@$params['name'] && !is_string(@$params['name'])) {
-      throw new \InvalidArgumentException('Bad parameter: $name must be of type string; received ' . gettype($name));
+      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype($name));
     }
 
     if (@$params['email'] && !is_string(@$params['email'])) {
-      throw new \InvalidArgumentException('Bad parameter: $email must be of type string; received ' . gettype($email));
+      throw new \Files\InvalidParameterException('$email must be of type string; received ' . gettype($email));
     }
 
     if (@$params['details'] && !is_string(@$params['details'])) {
-      throw new \InvalidArgumentException('Bad parameter: $details must be of type string; received ' . gettype($details));
+      throw new \Files\InvalidParameterException('$details must be of type string; received ' . gettype($details));
     }
 
     $response = Api::sendRequest('/user_requests', 'POST', $params, $options);

@@ -109,37 +109,37 @@ class History {
   //   path (required) - string - Path to operate on.
   public static function listForFile($path, $params = [], $options = []) {
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['path'] = $path;
 
     if (!@$params['path']) {
-      throw new \Error('Parameter missing: path');
+      throw new \Files\MissingParameterException('Parameter missing: path');
     }
 
     if (@$params['start_at'] && !is_string(@$params['start_at'])) {
-      throw new \InvalidArgumentException('Bad parameter: $start_at must be of type string; received ' . gettype($start_at));
+      throw new \Files\InvalidParameterException('$start_at must be of type string; received ' . gettype($start_at));
     }
 
     if (@$params['end_at'] && !is_string(@$params['end_at'])) {
-      throw new \InvalidArgumentException('Bad parameter: $end_at must be of type string; received ' . gettype($end_at));
+      throw new \Files\InvalidParameterException('$end_at must be of type string; received ' . gettype($end_at));
     }
 
     if (@$params['display'] && !is_string(@$params['display'])) {
-      throw new \InvalidArgumentException('Bad parameter: $display must be of type string; received ' . gettype($display));
+      throw new \Files\InvalidParameterException('$display must be of type string; received ' . gettype($display));
     }
 
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
+      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
     }
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-      throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
+      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
     }
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
     }
 
     $response = Api::sendRequest('/history/files/' . @$params['path'] . '', 'GET', $params, $options);
@@ -163,37 +163,37 @@ class History {
   //   path (required) - string - Path to operate on.
   public static function listForFolder($path, $params = [], $options = []) {
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['path'] = $path;
 
     if (!@$params['path']) {
-      throw new \Error('Parameter missing: path');
+      throw new \Files\MissingParameterException('Parameter missing: path');
     }
 
     if (@$params['start_at'] && !is_string(@$params['start_at'])) {
-      throw new \InvalidArgumentException('Bad parameter: $start_at must be of type string; received ' . gettype($start_at));
+      throw new \Files\InvalidParameterException('$start_at must be of type string; received ' . gettype($start_at));
     }
 
     if (@$params['end_at'] && !is_string(@$params['end_at'])) {
-      throw new \InvalidArgumentException('Bad parameter: $end_at must be of type string; received ' . gettype($end_at));
+      throw new \Files\InvalidParameterException('$end_at must be of type string; received ' . gettype($end_at));
     }
 
     if (@$params['display'] && !is_string(@$params['display'])) {
-      throw new \InvalidArgumentException('Bad parameter: $display must be of type string; received ' . gettype($display));
+      throw new \Files\InvalidParameterException('$display must be of type string; received ' . gettype($display));
     }
 
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
+      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
     }
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-      throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
+      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
     }
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
     }
 
     $response = Api::sendRequest('/history/folders/' . @$params['path'] . '', 'GET', $params, $options);
@@ -217,37 +217,37 @@ class History {
   //   user_id (required) - int64 - User ID.
   public static function listForUser($user_id, $params = [], $options = []) {
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['user_id'] = $user_id;
 
     if (!@$params['user_id']) {
-      throw new \Error('Parameter missing: user_id');
+      throw new \Files\MissingParameterException('Parameter missing: user_id');
     }
 
     if (@$params['start_at'] && !is_string(@$params['start_at'])) {
-      throw new \InvalidArgumentException('Bad parameter: $start_at must be of type string; received ' . gettype($start_at));
+      throw new \Files\InvalidParameterException('$start_at must be of type string; received ' . gettype($start_at));
     }
 
     if (@$params['end_at'] && !is_string(@$params['end_at'])) {
-      throw new \InvalidArgumentException('Bad parameter: $end_at must be of type string; received ' . gettype($end_at));
+      throw new \Files\InvalidParameterException('$end_at must be of type string; received ' . gettype($end_at));
     }
 
     if (@$params['display'] && !is_string(@$params['display'])) {
-      throw new \InvalidArgumentException('Bad parameter: $display must be of type string; received ' . gettype($display));
+      throw new \Files\InvalidParameterException('$display must be of type string; received ' . gettype($display));
     }
 
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
+      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
     }
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-      throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
+      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
     }
 
     if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
+      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype($user_id));
     }
 
     $response = Api::sendRequest('/history/users/' . @$params['user_id'] . '', 'GET', $params, $options);
@@ -270,23 +270,23 @@ class History {
   //   sort_by - object - If set, sort records by the specified field in either 'asc' or 'desc' direction (e.g. sort_by[last_login_at]=desc). Valid fields are `user_id` and `created_at`.
   public static function listLogins($params = [], $options = []) {
     if (@$params['start_at'] && !is_string(@$params['start_at'])) {
-      throw new \InvalidArgumentException('Bad parameter: $start_at must be of type string; received ' . gettype($start_at));
+      throw new \Files\InvalidParameterException('$start_at must be of type string; received ' . gettype($start_at));
     }
 
     if (@$params['end_at'] && !is_string(@$params['end_at'])) {
-      throw new \InvalidArgumentException('Bad parameter: $end_at must be of type string; received ' . gettype($end_at));
+      throw new \Files\InvalidParameterException('$end_at must be of type string; received ' . gettype($end_at));
     }
 
     if (@$params['display'] && !is_string(@$params['display'])) {
-      throw new \InvalidArgumentException('Bad parameter: $display must be of type string; received ' . gettype($display));
+      throw new \Files\InvalidParameterException('$display must be of type string; received ' . gettype($display));
     }
 
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
+      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
     }
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-      throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
+      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
     }
 
     $response = Api::sendRequest('/history/login', 'GET', $params, $options);
@@ -315,23 +315,23 @@ class History {
   //   filter_lteq - object - If set, return records where the specifiied field is less than or equal to the supplied value. Valid fields are `user_id`, `folder` or `path`.
   public static function list($params = [], $options = []) {
     if (@$params['start_at'] && !is_string(@$params['start_at'])) {
-      throw new \InvalidArgumentException('Bad parameter: $start_at must be of type string; received ' . gettype($start_at));
+      throw new \Files\InvalidParameterException('$start_at must be of type string; received ' . gettype($start_at));
     }
 
     if (@$params['end_at'] && !is_string(@$params['end_at'])) {
-      throw new \InvalidArgumentException('Bad parameter: $end_at must be of type string; received ' . gettype($end_at));
+      throw new \Files\InvalidParameterException('$end_at must be of type string; received ' . gettype($end_at));
     }
 
     if (@$params['display'] && !is_string(@$params['display'])) {
-      throw new \InvalidArgumentException('Bad parameter: $display must be of type string; received ' . gettype($display));
+      throw new \Files\InvalidParameterException('$display must be of type string; received ' . gettype($display));
     }
 
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
+      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
     }
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-      throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
+      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
     }
 
     $response = Api::sendRequest('/history', 'GET', $params, $options);

@@ -753,223 +753,223 @@ class Site {
   //   smtp_password - string - Password for SMTP server.
   public static function update($params = [], $options = []) {
     if (@$params['name'] && !is_string(@$params['name'])) {
-      throw new \InvalidArgumentException('Bad parameter: $name must be of type string; received ' . gettype($name));
+      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype($name));
     }
 
     if (@$params['subdomain'] && !is_string(@$params['subdomain'])) {
-      throw new \InvalidArgumentException('Bad parameter: $subdomain must be of type string; received ' . gettype($subdomain));
+      throw new \Files\InvalidParameterException('$subdomain must be of type string; received ' . gettype($subdomain));
     }
 
     if (@$params['domain'] && !is_string(@$params['domain'])) {
-      throw new \InvalidArgumentException('Bad parameter: $domain must be of type string; received ' . gettype($domain));
+      throw new \Files\InvalidParameterException('$domain must be of type string; received ' . gettype($domain));
     }
 
     if (@$params['email'] && !is_string(@$params['email'])) {
-      throw new \InvalidArgumentException('Bad parameter: $email must be of type string; received ' . gettype($email));
+      throw new \Files\InvalidParameterException('$email must be of type string; received ' . gettype($email));
     }
 
     if (@$params['reply_to_email'] && !is_string(@$params['reply_to_email'])) {
-      throw new \InvalidArgumentException('Bad parameter: $reply_to_email must be of type string; received ' . gettype($reply_to_email));
+      throw new \Files\InvalidParameterException('$reply_to_email must be of type string; received ' . gettype($reply_to_email));
     }
 
     if (@$params['bundle_expiration'] && !is_int(@$params['bundle_expiration'])) {
-      throw new \InvalidArgumentException('Bad parameter: $bundle_expiration must be of type int; received ' . gettype($bundle_expiration));
+      throw new \Files\InvalidParameterException('$bundle_expiration must be of type int; received ' . gettype($bundle_expiration));
     }
 
     if (@$params['welcome_email_cc'] && !is_string(@$params['welcome_email_cc'])) {
-      throw new \InvalidArgumentException('Bad parameter: $welcome_email_cc must be of type string; received ' . gettype($welcome_email_cc));
+      throw new \Files\InvalidParameterException('$welcome_email_cc must be of type string; received ' . gettype($welcome_email_cc));
     }
 
     if (@$params['welcome_custom_text'] && !is_string(@$params['welcome_custom_text'])) {
-      throw new \InvalidArgumentException('Bad parameter: $welcome_custom_text must be of type string; received ' . gettype($welcome_custom_text));
+      throw new \Files\InvalidParameterException('$welcome_custom_text must be of type string; received ' . gettype($welcome_custom_text));
     }
 
     if (@$params['language'] && !is_string(@$params['language'])) {
-      throw new \InvalidArgumentException('Bad parameter: $language must be of type string; received ' . gettype($language));
+      throw new \Files\InvalidParameterException('$language must be of type string; received ' . gettype($language));
     }
 
     if (@$params['default_time_zone'] && !is_string(@$params['default_time_zone'])) {
-      throw new \InvalidArgumentException('Bad parameter: $default_time_zone must be of type string; received ' . gettype($default_time_zone));
+      throw new \Files\InvalidParameterException('$default_time_zone must be of type string; received ' . gettype($default_time_zone));
     }
 
     if (@$params['desktop_app_session_lifetime'] && !is_int(@$params['desktop_app_session_lifetime'])) {
-      throw new \InvalidArgumentException('Bad parameter: $desktop_app_session_lifetime must be of type int; received ' . gettype($desktop_app_session_lifetime));
+      throw new \Files\InvalidParameterException('$desktop_app_session_lifetime must be of type int; received ' . gettype($desktop_app_session_lifetime));
     }
 
     if (@$params['mobile_app_session_lifetime'] && !is_int(@$params['mobile_app_session_lifetime'])) {
-      throw new \InvalidArgumentException('Bad parameter: $mobile_app_session_lifetime must be of type int; received ' . gettype($mobile_app_session_lifetime));
+      throw new \Files\InvalidParameterException('$mobile_app_session_lifetime must be of type int; received ' . gettype($mobile_app_session_lifetime));
     }
 
     if (@$params['welcome_screen'] && !is_string(@$params['welcome_screen'])) {
-      throw new \InvalidArgumentException('Bad parameter: $welcome_screen must be of type string; received ' . gettype($welcome_screen));
+      throw new \Files\InvalidParameterException('$welcome_screen must be of type string; received ' . gettype($welcome_screen));
     }
 
     if (@$params['user_lockout_tries'] && !is_int(@$params['user_lockout_tries'])) {
-      throw new \InvalidArgumentException('Bad parameter: $user_lockout_tries must be of type int; received ' . gettype($user_lockout_tries));
+      throw new \Files\InvalidParameterException('$user_lockout_tries must be of type int; received ' . gettype($user_lockout_tries));
     }
 
     if (@$params['user_lockout_within'] && !is_int(@$params['user_lockout_within'])) {
-      throw new \InvalidArgumentException('Bad parameter: $user_lockout_within must be of type int; received ' . gettype($user_lockout_within));
+      throw new \Files\InvalidParameterException('$user_lockout_within must be of type int; received ' . gettype($user_lockout_within));
     }
 
     if (@$params['user_lockout_lock_period'] && !is_int(@$params['user_lockout_lock_period'])) {
-      throw new \InvalidArgumentException('Bad parameter: $user_lockout_lock_period must be of type int; received ' . gettype($user_lockout_lock_period));
+      throw new \Files\InvalidParameterException('$user_lockout_lock_period must be of type int; received ' . gettype($user_lockout_lock_period));
     }
 
     if (@$params['allowed_countries'] && !is_string(@$params['allowed_countries'])) {
-      throw new \InvalidArgumentException('Bad parameter: $allowed_countries must be of type string; received ' . gettype($allowed_countries));
+      throw new \Files\InvalidParameterException('$allowed_countries must be of type string; received ' . gettype($allowed_countries));
     }
 
     if (@$params['allowed_ips'] && !is_string(@$params['allowed_ips'])) {
-      throw new \InvalidArgumentException('Bad parameter: $allowed_ips must be of type string; received ' . gettype($allowed_ips));
+      throw new \Files\InvalidParameterException('$allowed_ips must be of type string; received ' . gettype($allowed_ips));
     }
 
     if (@$params['disallowed_countries'] && !is_string(@$params['disallowed_countries'])) {
-      throw new \InvalidArgumentException('Bad parameter: $disallowed_countries must be of type string; received ' . gettype($disallowed_countries));
+      throw new \Files\InvalidParameterException('$disallowed_countries must be of type string; received ' . gettype($disallowed_countries));
     }
 
     if (@$params['days_to_retain_backups'] && !is_int(@$params['days_to_retain_backups'])) {
-      throw new \InvalidArgumentException('Bad parameter: $days_to_retain_backups must be of type int; received ' . gettype($days_to_retain_backups));
+      throw new \Files\InvalidParameterException('$days_to_retain_backups must be of type int; received ' . gettype($days_to_retain_backups));
     }
 
     if (@$params['max_prior_passwords'] && !is_int(@$params['max_prior_passwords'])) {
-      throw new \InvalidArgumentException('Bad parameter: $max_prior_passwords must be of type int; received ' . gettype($max_prior_passwords));
+      throw new \Files\InvalidParameterException('$max_prior_passwords must be of type int; received ' . gettype($max_prior_passwords));
     }
 
     if (@$params['password_validity_days'] && !is_int(@$params['password_validity_days'])) {
-      throw new \InvalidArgumentException('Bad parameter: $password_validity_days must be of type int; received ' . gettype($password_validity_days));
+      throw new \Files\InvalidParameterException('$password_validity_days must be of type int; received ' . gettype($password_validity_days));
     }
 
     if (@$params['password_min_length'] && !is_int(@$params['password_min_length'])) {
-      throw new \InvalidArgumentException('Bad parameter: $password_min_length must be of type int; received ' . gettype($password_min_length));
+      throw new \Files\InvalidParameterException('$password_min_length must be of type int; received ' . gettype($password_min_length));
     }
 
     if (@$params['disable_users_from_inactivity_period_days'] && !is_int(@$params['disable_users_from_inactivity_period_days'])) {
-      throw new \InvalidArgumentException('Bad parameter: $disable_users_from_inactivity_period_days must be of type int; received ' . gettype($disable_users_from_inactivity_period_days));
+      throw new \Files\InvalidParameterException('$disable_users_from_inactivity_period_days must be of type int; received ' . gettype($disable_users_from_inactivity_period_days));
     }
 
     if (@$params['require_2fa_user_type'] && !is_string(@$params['require_2fa_user_type'])) {
-      throw new \InvalidArgumentException('Bad parameter: $require_2fa_user_type must be of type string; received ' . gettype($require_2fa_user_type));
+      throw new \Files\InvalidParameterException('$require_2fa_user_type must be of type string; received ' . gettype($require_2fa_user_type));
     }
 
     if (@$params['color2_top'] && !is_string(@$params['color2_top'])) {
-      throw new \InvalidArgumentException('Bad parameter: $color2_top must be of type string; received ' . gettype($color2_top));
+      throw new \Files\InvalidParameterException('$color2_top must be of type string; received ' . gettype($color2_top));
     }
 
     if (@$params['color2_left'] && !is_string(@$params['color2_left'])) {
-      throw new \InvalidArgumentException('Bad parameter: $color2_left must be of type string; received ' . gettype($color2_left));
+      throw new \Files\InvalidParameterException('$color2_left must be of type string; received ' . gettype($color2_left));
     }
 
     if (@$params['color2_link'] && !is_string(@$params['color2_link'])) {
-      throw new \InvalidArgumentException('Bad parameter: $color2_link must be of type string; received ' . gettype($color2_link));
+      throw new \Files\InvalidParameterException('$color2_link must be of type string; received ' . gettype($color2_link));
     }
 
     if (@$params['color2_text'] && !is_string(@$params['color2_text'])) {
-      throw new \InvalidArgumentException('Bad parameter: $color2_text must be of type string; received ' . gettype($color2_text));
+      throw new \Files\InvalidParameterException('$color2_text must be of type string; received ' . gettype($color2_text));
     }
 
     if (@$params['color2_top_text'] && !is_string(@$params['color2_top_text'])) {
-      throw new \InvalidArgumentException('Bad parameter: $color2_top_text must be of type string; received ' . gettype($color2_top_text));
+      throw new \Files\InvalidParameterException('$color2_top_text must be of type string; received ' . gettype($color2_top_text));
     }
 
     if (@$params['site_header'] && !is_string(@$params['site_header'])) {
-      throw new \InvalidArgumentException('Bad parameter: $site_header must be of type string; received ' . gettype($site_header));
+      throw new \Files\InvalidParameterException('$site_header must be of type string; received ' . gettype($site_header));
     }
 
     if (@$params['site_footer'] && !is_string(@$params['site_footer'])) {
-      throw new \InvalidArgumentException('Bad parameter: $site_footer must be of type string; received ' . gettype($site_footer));
+      throw new \Files\InvalidParameterException('$site_footer must be of type string; received ' . gettype($site_footer));
     }
 
     if (@$params['login_help_text'] && !is_string(@$params['login_help_text'])) {
-      throw new \InvalidArgumentException('Bad parameter: $login_help_text must be of type string; received ' . gettype($login_help_text));
+      throw new \Files\InvalidParameterException('$login_help_text must be of type string; received ' . gettype($login_help_text));
     }
 
     if (@$params['smtp_address'] && !is_string(@$params['smtp_address'])) {
-      throw new \InvalidArgumentException('Bad parameter: $smtp_address must be of type string; received ' . gettype($smtp_address));
+      throw new \Files\InvalidParameterException('$smtp_address must be of type string; received ' . gettype($smtp_address));
     }
 
     if (@$params['smtp_authentication'] && !is_string(@$params['smtp_authentication'])) {
-      throw new \InvalidArgumentException('Bad parameter: $smtp_authentication must be of type string; received ' . gettype($smtp_authentication));
+      throw new \Files\InvalidParameterException('$smtp_authentication must be of type string; received ' . gettype($smtp_authentication));
     }
 
     if (@$params['smtp_from'] && !is_string(@$params['smtp_from'])) {
-      throw new \InvalidArgumentException('Bad parameter: $smtp_from must be of type string; received ' . gettype($smtp_from));
+      throw new \Files\InvalidParameterException('$smtp_from must be of type string; received ' . gettype($smtp_from));
     }
 
     if (@$params['smtp_username'] && !is_string(@$params['smtp_username'])) {
-      throw new \InvalidArgumentException('Bad parameter: $smtp_username must be of type string; received ' . gettype($smtp_username));
+      throw new \Files\InvalidParameterException('$smtp_username must be of type string; received ' . gettype($smtp_username));
     }
 
     if (@$params['smtp_port'] && !is_int(@$params['smtp_port'])) {
-      throw new \InvalidArgumentException('Bad parameter: $smtp_port must be of type int; received ' . gettype($smtp_port));
+      throw new \Files\InvalidParameterException('$smtp_port must be of type int; received ' . gettype($smtp_port));
     }
 
     if (@$params['ldap_type'] && !is_string(@$params['ldap_type'])) {
-      throw new \InvalidArgumentException('Bad parameter: $ldap_type must be of type string; received ' . gettype($ldap_type));
+      throw new \Files\InvalidParameterException('$ldap_type must be of type string; received ' . gettype($ldap_type));
     }
 
     if (@$params['ldap_host'] && !is_string(@$params['ldap_host'])) {
-      throw new \InvalidArgumentException('Bad parameter: $ldap_host must be of type string; received ' . gettype($ldap_host));
+      throw new \Files\InvalidParameterException('$ldap_host must be of type string; received ' . gettype($ldap_host));
     }
 
     if (@$params['ldap_host_2'] && !is_string(@$params['ldap_host_2'])) {
-      throw new \InvalidArgumentException('Bad parameter: $ldap_host_2 must be of type string; received ' . gettype($ldap_host_2));
+      throw new \Files\InvalidParameterException('$ldap_host_2 must be of type string; received ' . gettype($ldap_host_2));
     }
 
     if (@$params['ldap_host_3'] && !is_string(@$params['ldap_host_3'])) {
-      throw new \InvalidArgumentException('Bad parameter: $ldap_host_3 must be of type string; received ' . gettype($ldap_host_3));
+      throw new \Files\InvalidParameterException('$ldap_host_3 must be of type string; received ' . gettype($ldap_host_3));
     }
 
     if (@$params['ldap_port'] && !is_int(@$params['ldap_port'])) {
-      throw new \InvalidArgumentException('Bad parameter: $ldap_port must be of type int; received ' . gettype($ldap_port));
+      throw new \Files\InvalidParameterException('$ldap_port must be of type int; received ' . gettype($ldap_port));
     }
 
     if (@$params['ldap_username'] && !is_string(@$params['ldap_username'])) {
-      throw new \InvalidArgumentException('Bad parameter: $ldap_username must be of type string; received ' . gettype($ldap_username));
+      throw new \Files\InvalidParameterException('$ldap_username must be of type string; received ' . gettype($ldap_username));
     }
 
     if (@$params['ldap_username_field'] && !is_string(@$params['ldap_username_field'])) {
-      throw new \InvalidArgumentException('Bad parameter: $ldap_username_field must be of type string; received ' . gettype($ldap_username_field));
+      throw new \Files\InvalidParameterException('$ldap_username_field must be of type string; received ' . gettype($ldap_username_field));
     }
 
     if (@$params['ldap_domain'] && !is_string(@$params['ldap_domain'])) {
-      throw new \InvalidArgumentException('Bad parameter: $ldap_domain must be of type string; received ' . gettype($ldap_domain));
+      throw new \Files\InvalidParameterException('$ldap_domain must be of type string; received ' . gettype($ldap_domain));
     }
 
     if (@$params['ldap_user_action'] && !is_string(@$params['ldap_user_action'])) {
-      throw new \InvalidArgumentException('Bad parameter: $ldap_user_action must be of type string; received ' . gettype($ldap_user_action));
+      throw new \Files\InvalidParameterException('$ldap_user_action must be of type string; received ' . gettype($ldap_user_action));
     }
 
     if (@$params['ldap_group_action'] && !is_string(@$params['ldap_group_action'])) {
-      throw new \InvalidArgumentException('Bad parameter: $ldap_group_action must be of type string; received ' . gettype($ldap_group_action));
+      throw new \Files\InvalidParameterException('$ldap_group_action must be of type string; received ' . gettype($ldap_group_action));
     }
 
     if (@$params['ldap_user_include_groups'] && !is_string(@$params['ldap_user_include_groups'])) {
-      throw new \InvalidArgumentException('Bad parameter: $ldap_user_include_groups must be of type string; received ' . gettype($ldap_user_include_groups));
+      throw new \Files\InvalidParameterException('$ldap_user_include_groups must be of type string; received ' . gettype($ldap_user_include_groups));
     }
 
     if (@$params['ldap_group_exclusion'] && !is_string(@$params['ldap_group_exclusion'])) {
-      throw new \InvalidArgumentException('Bad parameter: $ldap_group_exclusion must be of type string; received ' . gettype($ldap_group_exclusion));
+      throw new \Files\InvalidParameterException('$ldap_group_exclusion must be of type string; received ' . gettype($ldap_group_exclusion));
     }
 
     if (@$params['ldap_group_inclusion'] && !is_string(@$params['ldap_group_inclusion'])) {
-      throw new \InvalidArgumentException('Bad parameter: $ldap_group_inclusion must be of type string; received ' . gettype($ldap_group_inclusion));
+      throw new \Files\InvalidParameterException('$ldap_group_inclusion must be of type string; received ' . gettype($ldap_group_inclusion));
     }
 
     if (@$params['ldap_base_dn'] && !is_string(@$params['ldap_base_dn'])) {
-      throw new \InvalidArgumentException('Bad parameter: $ldap_base_dn must be of type string; received ' . gettype($ldap_base_dn));
+      throw new \Files\InvalidParameterException('$ldap_base_dn must be of type string; received ' . gettype($ldap_base_dn));
     }
 
     if (@$params['ldap_password_change'] && !is_string(@$params['ldap_password_change'])) {
-      throw new \InvalidArgumentException('Bad parameter: $ldap_password_change must be of type string; received ' . gettype($ldap_password_change));
+      throw new \Files\InvalidParameterException('$ldap_password_change must be of type string; received ' . gettype($ldap_password_change));
     }
 
     if (@$params['ldap_password_change_confirmation'] && !is_string(@$params['ldap_password_change_confirmation'])) {
-      throw new \InvalidArgumentException('Bad parameter: $ldap_password_change_confirmation must be of type string; received ' . gettype($ldap_password_change_confirmation));
+      throw new \Files\InvalidParameterException('$ldap_password_change_confirmation must be of type string; received ' . gettype($ldap_password_change_confirmation));
     }
 
     if (@$params['smtp_password'] && !is_string(@$params['smtp_password'])) {
-      throw new \InvalidArgumentException('Bad parameter: $smtp_password must be of type string; received ' . gettype($smtp_password));
+      throw new \Files\InvalidParameterException('$smtp_password must be of type string; received ' . gettype($smtp_password));
     }
 
     $response = Api::sendRequest('/site', 'PATCH', $params, $options);

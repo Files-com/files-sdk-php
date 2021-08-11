@@ -108,24 +108,24 @@ class Permission {
 
   public function delete($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no id');
+      throw new \Files\EmptyPropertyException('The current Permission object has no $id value');
     }
 
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['id'] = $this->id;
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
 
     if (!@$params['id']) {
       if ($this->id) {
         $params['id'] = @$this->id;
       } else {
-        throw new \Error('Parameter missing: id');
+        throw new \Files\MissingParameterException('Parameter missing: id');
       }
     }
 
@@ -138,7 +138,7 @@ class Permission {
 
   public function save() {
       if (@$this->attributes['id']) {
-        throw new \BadMethodCallException('The Permission object doesn\'t support updates.');
+        throw new \Files\NotImplementedException('The Permission object doesn\'t support updates.');
       } else {
         $new_obj = self::create($this->attributes, $this->options);
         $this->attributes = $new_obj->attributes;
@@ -162,23 +162,23 @@ class Permission {
   //   include_groups - boolean - If searching by user or group, also include user's permissions that are inherited from its groups?
   public static function list($params = [], $options = []) {
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
+      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
     }
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-      throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
+      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
     }
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
     }
 
     if (@$params['group_id'] && !is_string(@$params['group_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $group_id must be of type string; received ' . gettype($group_id));
+      throw new \Files\InvalidParameterException('$group_id must be of type string; received ' . gettype($group_id));
     }
 
     if (@$params['user_id'] && !is_string(@$params['user_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $user_id must be of type string; received ' . gettype($user_id));
+      throw new \Files\InvalidParameterException('$user_id must be of type string; received ' . gettype($user_id));
     }
 
     $response = Api::sendRequest('/permissions', 'GET', $params, $options);
@@ -205,23 +205,23 @@ class Permission {
   //   username - string - User username.  Provide `username` or `user_id`
   public static function create($params = [], $options = []) {
     if (@$params['group_id'] && !is_int(@$params['group_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $group_id must be of type int; received ' . gettype($group_id));
+      throw new \Files\InvalidParameterException('$group_id must be of type int; received ' . gettype($group_id));
     }
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
     }
 
     if (@$params['permission'] && !is_string(@$params['permission'])) {
-      throw new \InvalidArgumentException('Bad parameter: $permission must be of type string; received ' . gettype($permission));
+      throw new \Files\InvalidParameterException('$permission must be of type string; received ' . gettype($permission));
     }
 
     if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
+      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype($user_id));
     }
 
     if (@$params['username'] && !is_string(@$params['username'])) {
-      throw new \InvalidArgumentException('Bad parameter: $username must be of type string; received ' . gettype($username));
+      throw new \Files\InvalidParameterException('$username must be of type string; received ' . gettype($username));
     }
 
     $response = Api::sendRequest('/permissions', 'POST', $params, $options);

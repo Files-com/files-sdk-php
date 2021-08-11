@@ -96,39 +96,39 @@ class Clickwrap {
   //   use_with_users - string - Use this Clickwrap for User Registrations?  Note: This only applies to User Registrations where the User is invited to your Files.com site using an E-Mail invitation process where they then set their own password.
   public function update($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no id');
+      throw new \Files\EmptyPropertyException('The current Clickwrap object has no $id value');
     }
 
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['id'] = $this->id;
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
     if (@$params['name'] && !is_string(@$params['name'])) {
-      throw new \InvalidArgumentException('Bad parameter: $name must be of type string; received ' . gettype($name));
+      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype($name));
     }
     if (@$params['body'] && !is_string(@$params['body'])) {
-      throw new \InvalidArgumentException('Bad parameter: $body must be of type string; received ' . gettype($body));
+      throw new \Files\InvalidParameterException('$body must be of type string; received ' . gettype($body));
     }
     if (@$params['use_with_bundles'] && !is_string(@$params['use_with_bundles'])) {
-      throw new \InvalidArgumentException('Bad parameter: $use_with_bundles must be of type string; received ' . gettype($use_with_bundles));
+      throw new \Files\InvalidParameterException('$use_with_bundles must be of type string; received ' . gettype($use_with_bundles));
     }
     if (@$params['use_with_inboxes'] && !is_string(@$params['use_with_inboxes'])) {
-      throw new \InvalidArgumentException('Bad parameter: $use_with_inboxes must be of type string; received ' . gettype($use_with_inboxes));
+      throw new \Files\InvalidParameterException('$use_with_inboxes must be of type string; received ' . gettype($use_with_inboxes));
     }
     if (@$params['use_with_users'] && !is_string(@$params['use_with_users'])) {
-      throw new \InvalidArgumentException('Bad parameter: $use_with_users must be of type string; received ' . gettype($use_with_users));
+      throw new \Files\InvalidParameterException('$use_with_users must be of type string; received ' . gettype($use_with_users));
     }
 
     if (!@$params['id']) {
       if ($this->id) {
         $params['id'] = @$this->id;
       } else {
-        throw new \Error('Parameter missing: id');
+        throw new \Files\MissingParameterException('Parameter missing: id');
       }
     }
 
@@ -137,24 +137,24 @@ class Clickwrap {
 
   public function delete($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no id');
+      throw new \Files\EmptyPropertyException('The current Clickwrap object has no $id value');
     }
 
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['id'] = $this->id;
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
 
     if (!@$params['id']) {
       if ($this->id) {
         $params['id'] = @$this->id;
       } else {
-        throw new \Error('Parameter missing: id');
+        throw new \Files\MissingParameterException('Parameter missing: id');
       }
     }
 
@@ -180,11 +180,11 @@ class Clickwrap {
   //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
   public static function list($params = [], $options = []) {
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
+      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
     }
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-      throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
+      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
     }
 
     $response = Api::sendRequest('/clickwraps', 'GET', $params, $options);
@@ -206,17 +206,17 @@ class Clickwrap {
   //   id (required) - int64 - Clickwrap ID.
   public static function find($id, $params = [], $options = []) {
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['id'] = $id;
 
     if (!@$params['id']) {
-      throw new \Error('Parameter missing: id');
+      throw new \Files\MissingParameterException('Parameter missing: id');
     }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
 
     $response = Api::sendRequest('/clickwraps/' . @$params['id'] . '', 'GET', $params, $options);
@@ -236,23 +236,23 @@ class Clickwrap {
   //   use_with_users - string - Use this Clickwrap for User Registrations?  Note: This only applies to User Registrations where the User is invited to your Files.com site using an E-Mail invitation process where they then set their own password.
   public static function create($params = [], $options = []) {
     if (@$params['name'] && !is_string(@$params['name'])) {
-      throw new \InvalidArgumentException('Bad parameter: $name must be of type string; received ' . gettype($name));
+      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype($name));
     }
 
     if (@$params['body'] && !is_string(@$params['body'])) {
-      throw new \InvalidArgumentException('Bad parameter: $body must be of type string; received ' . gettype($body));
+      throw new \Files\InvalidParameterException('$body must be of type string; received ' . gettype($body));
     }
 
     if (@$params['use_with_bundles'] && !is_string(@$params['use_with_bundles'])) {
-      throw new \InvalidArgumentException('Bad parameter: $use_with_bundles must be of type string; received ' . gettype($use_with_bundles));
+      throw new \Files\InvalidParameterException('$use_with_bundles must be of type string; received ' . gettype($use_with_bundles));
     }
 
     if (@$params['use_with_inboxes'] && !is_string(@$params['use_with_inboxes'])) {
-      throw new \InvalidArgumentException('Bad parameter: $use_with_inboxes must be of type string; received ' . gettype($use_with_inboxes));
+      throw new \Files\InvalidParameterException('$use_with_inboxes must be of type string; received ' . gettype($use_with_inboxes));
     }
 
     if (@$params['use_with_users'] && !is_string(@$params['use_with_users'])) {
-      throw new \InvalidArgumentException('Bad parameter: $use_with_users must be of type string; received ' . gettype($use_with_users));
+      throw new \Files\InvalidParameterException('$use_with_users must be of type string; received ' . gettype($use_with_users));
     }
 
     $response = Api::sendRequest('/clickwraps', 'POST', $params, $options);

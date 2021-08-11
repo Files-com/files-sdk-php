@@ -537,24 +537,24 @@ class User {
   // Unlock user who has been locked out due to failed logins
   public function unlock($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no id');
+      throw new \Files\EmptyPropertyException('The current User object has no $id value');
     }
 
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['id'] = $this->id;
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
 
     if (!@$params['id']) {
       if ($this->id) {
         $params['id'] = @$this->id;
       } else {
-        throw new \Error('Parameter missing: id');
+        throw new \Files\MissingParameterException('Parameter missing: id');
       }
     }
 
@@ -564,24 +564,24 @@ class User {
   // Resend user welcome email
   public function resendWelcomeEmail($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no id');
+      throw new \Files\EmptyPropertyException('The current User object has no $id value');
     }
 
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['id'] = $this->id;
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
 
     if (!@$params['id']) {
       if ($this->id) {
         $params['id'] = @$this->id;
       } else {
-        throw new \Error('Parameter missing: id');
+        throw new \Files\MissingParameterException('Parameter missing: id');
       }
     }
 
@@ -591,24 +591,24 @@ class User {
   // Trigger 2FA Reset process for user who has lost access to their existing 2FA methods
   public function user2faReset($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no id');
+      throw new \Files\EmptyPropertyException('The current User object has no $id value');
     }
 
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['id'] = $this->id;
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
 
     if (!@$params['id']) {
       if ($this->id) {
         $params['id'] = @$this->id;
       } else {
-        throw new \Error('Parameter missing: id');
+        throw new \Files\MissingParameterException('Parameter missing: id');
       }
     }
 
@@ -661,96 +661,96 @@ class User {
   //   username - string - User's username
   public function update($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no id');
+      throw new \Files\EmptyPropertyException('The current User object has no $id value');
     }
 
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['id'] = $this->id;
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
     if (@$params['change_password'] && !is_string(@$params['change_password'])) {
-      throw new \InvalidArgumentException('Bad parameter: $change_password must be of type string; received ' . gettype($change_password));
+      throw new \Files\InvalidParameterException('$change_password must be of type string; received ' . gettype($change_password));
     }
     if (@$params['change_password_confirmation'] && !is_string(@$params['change_password_confirmation'])) {
-      throw new \InvalidArgumentException('Bad parameter: $change_password_confirmation must be of type string; received ' . gettype($change_password_confirmation));
+      throw new \Files\InvalidParameterException('$change_password_confirmation must be of type string; received ' . gettype($change_password_confirmation));
     }
     if (@$params['email'] && !is_string(@$params['email'])) {
-      throw new \InvalidArgumentException('Bad parameter: $email must be of type string; received ' . gettype($email));
+      throw new \Files\InvalidParameterException('$email must be of type string; received ' . gettype($email));
     }
     if (@$params['grant_permission'] && !is_string(@$params['grant_permission'])) {
-      throw new \InvalidArgumentException('Bad parameter: $grant_permission must be of type string; received ' . gettype($grant_permission));
+      throw new \Files\InvalidParameterException('$grant_permission must be of type string; received ' . gettype($grant_permission));
     }
     if (@$params['group_id'] && !is_int(@$params['group_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $group_id must be of type int; received ' . gettype($group_id));
+      throw new \Files\InvalidParameterException('$group_id must be of type int; received ' . gettype($group_id));
     }
     if (@$params['group_ids'] && !is_string(@$params['group_ids'])) {
-      throw new \InvalidArgumentException('Bad parameter: $group_ids must be of type string; received ' . gettype($group_ids));
+      throw new \Files\InvalidParameterException('$group_ids must be of type string; received ' . gettype($group_ids));
     }
     if (@$params['password'] && !is_string(@$params['password'])) {
-      throw new \InvalidArgumentException('Bad parameter: $password must be of type string; received ' . gettype($password));
+      throw new \Files\InvalidParameterException('$password must be of type string; received ' . gettype($password));
     }
     if (@$params['password_confirmation'] && !is_string(@$params['password_confirmation'])) {
-      throw new \InvalidArgumentException('Bad parameter: $password_confirmation must be of type string; received ' . gettype($password_confirmation));
+      throw new \Files\InvalidParameterException('$password_confirmation must be of type string; received ' . gettype($password_confirmation));
     }
     if (@$params['allowed_ips'] && !is_string(@$params['allowed_ips'])) {
-      throw new \InvalidArgumentException('Bad parameter: $allowed_ips must be of type string; received ' . gettype($allowed_ips));
+      throw new \Files\InvalidParameterException('$allowed_ips must be of type string; received ' . gettype($allowed_ips));
     }
     if (@$params['authenticate_until'] && !is_string(@$params['authenticate_until'])) {
-      throw new \InvalidArgumentException('Bad parameter: $authenticate_until must be of type string; received ' . gettype($authenticate_until));
+      throw new \Files\InvalidParameterException('$authenticate_until must be of type string; received ' . gettype($authenticate_until));
     }
     if (@$params['authentication_method'] && !is_string(@$params['authentication_method'])) {
-      throw new \InvalidArgumentException('Bad parameter: $authentication_method must be of type string; received ' . gettype($authentication_method));
+      throw new \Files\InvalidParameterException('$authentication_method must be of type string; received ' . gettype($authentication_method));
     }
     if (@$params['header_text'] && !is_string(@$params['header_text'])) {
-      throw new \InvalidArgumentException('Bad parameter: $header_text must be of type string; received ' . gettype($header_text));
+      throw new \Files\InvalidParameterException('$header_text must be of type string; received ' . gettype($header_text));
     }
     if (@$params['language'] && !is_string(@$params['language'])) {
-      throw new \InvalidArgumentException('Bad parameter: $language must be of type string; received ' . gettype($language));
+      throw new \Files\InvalidParameterException('$language must be of type string; received ' . gettype($language));
     }
     if (@$params['notification_daily_send_time'] && !is_int(@$params['notification_daily_send_time'])) {
-      throw new \InvalidArgumentException('Bad parameter: $notification_daily_send_time must be of type int; received ' . gettype($notification_daily_send_time));
+      throw new \Files\InvalidParameterException('$notification_daily_send_time must be of type int; received ' . gettype($notification_daily_send_time));
     }
     if (@$params['name'] && !is_string(@$params['name'])) {
-      throw new \InvalidArgumentException('Bad parameter: $name must be of type string; received ' . gettype($name));
+      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype($name));
     }
     if (@$params['company'] && !is_string(@$params['company'])) {
-      throw new \InvalidArgumentException('Bad parameter: $company must be of type string; received ' . gettype($company));
+      throw new \Files\InvalidParameterException('$company must be of type string; received ' . gettype($company));
     }
     if (@$params['notes'] && !is_string(@$params['notes'])) {
-      throw new \InvalidArgumentException('Bad parameter: $notes must be of type string; received ' . gettype($notes));
+      throw new \Files\InvalidParameterException('$notes must be of type string; received ' . gettype($notes));
     }
     if (@$params['password_validity_days'] && !is_int(@$params['password_validity_days'])) {
-      throw new \InvalidArgumentException('Bad parameter: $password_validity_days must be of type int; received ' . gettype($password_validity_days));
+      throw new \Files\InvalidParameterException('$password_validity_days must be of type int; received ' . gettype($password_validity_days));
     }
     if (@$params['ssl_required'] && !is_string(@$params['ssl_required'])) {
-      throw new \InvalidArgumentException('Bad parameter: $ssl_required must be of type string; received ' . gettype($ssl_required));
+      throw new \Files\InvalidParameterException('$ssl_required must be of type string; received ' . gettype($ssl_required));
     }
     if (@$params['sso_strategy_id'] && !is_int(@$params['sso_strategy_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $sso_strategy_id must be of type int; received ' . gettype($sso_strategy_id));
+      throw new \Files\InvalidParameterException('$sso_strategy_id must be of type int; received ' . gettype($sso_strategy_id));
     }
     if (@$params['require_2fa'] && !is_string(@$params['require_2fa'])) {
-      throw new \InvalidArgumentException('Bad parameter: $require_2fa must be of type string; received ' . gettype($require_2fa));
+      throw new \Files\InvalidParameterException('$require_2fa must be of type string; received ' . gettype($require_2fa));
     }
     if (@$params['time_zone'] && !is_string(@$params['time_zone'])) {
-      throw new \InvalidArgumentException('Bad parameter: $time_zone must be of type string; received ' . gettype($time_zone));
+      throw new \Files\InvalidParameterException('$time_zone must be of type string; received ' . gettype($time_zone));
     }
     if (@$params['user_root'] && !is_string(@$params['user_root'])) {
-      throw new \InvalidArgumentException('Bad parameter: $user_root must be of type string; received ' . gettype($user_root));
+      throw new \Files\InvalidParameterException('$user_root must be of type string; received ' . gettype($user_root));
     }
     if (@$params['username'] && !is_string(@$params['username'])) {
-      throw new \InvalidArgumentException('Bad parameter: $username must be of type string; received ' . gettype($username));
+      throw new \Files\InvalidParameterException('$username must be of type string; received ' . gettype($username));
     }
 
     if (!@$params['id']) {
       if ($this->id) {
         $params['id'] = @$this->id;
       } else {
-        throw new \Error('Parameter missing: id');
+        throw new \Files\MissingParameterException('Parameter missing: id');
       }
     }
 
@@ -759,24 +759,24 @@ class User {
 
   public function delete($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no id');
+      throw new \Files\EmptyPropertyException('The current User object has no $id value');
     }
 
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['id'] = $this->id;
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
 
     if (!@$params['id']) {
       if ($this->id) {
         $params['id'] = @$this->id;
       } else {
-        throw new \Error('Parameter missing: id');
+        throw new \Files\MissingParameterException('Parameter missing: id');
       }
     }
 
@@ -818,19 +818,19 @@ class User {
   //   search - string - Searches for partial matches of name, username, or email.
   public static function list($params = [], $options = []) {
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
+      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
     }
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-      throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
+      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
     }
 
     if (@$params['ids'] && !is_string(@$params['ids'])) {
-      throw new \InvalidArgumentException('Bad parameter: $ids must be of type string; received ' . gettype($ids));
+      throw new \Files\InvalidParameterException('$ids must be of type string; received ' . gettype($ids));
     }
 
     if (@$params['search'] && !is_string(@$params['search'])) {
-      throw new \InvalidArgumentException('Bad parameter: $search must be of type string; received ' . gettype($search));
+      throw new \Files\InvalidParameterException('$search must be of type string; received ' . gettype($search));
     }
 
     $response = Api::sendRequest('/users', 'GET', $params, $options);
@@ -852,17 +852,17 @@ class User {
   //   id (required) - int64 - User ID.
   public static function find($id, $params = [], $options = []) {
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['id'] = $id;
 
     if (!@$params['id']) {
-      throw new \Error('Parameter missing: id');
+      throw new \Files\MissingParameterException('Parameter missing: id');
     }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
 
     $response = Api::sendRequest('/users/' . @$params['id'] . '', 'GET', $params, $options);
@@ -920,99 +920,99 @@ class User {
   //   username - string - User's username
   public static function create($params = [], $options = []) {
     if (@$params['change_password'] && !is_string(@$params['change_password'])) {
-      throw new \InvalidArgumentException('Bad parameter: $change_password must be of type string; received ' . gettype($change_password));
+      throw new \Files\InvalidParameterException('$change_password must be of type string; received ' . gettype($change_password));
     }
 
     if (@$params['change_password_confirmation'] && !is_string(@$params['change_password_confirmation'])) {
-      throw new \InvalidArgumentException('Bad parameter: $change_password_confirmation must be of type string; received ' . gettype($change_password_confirmation));
+      throw new \Files\InvalidParameterException('$change_password_confirmation must be of type string; received ' . gettype($change_password_confirmation));
     }
 
     if (@$params['email'] && !is_string(@$params['email'])) {
-      throw new \InvalidArgumentException('Bad parameter: $email must be of type string; received ' . gettype($email));
+      throw new \Files\InvalidParameterException('$email must be of type string; received ' . gettype($email));
     }
 
     if (@$params['grant_permission'] && !is_string(@$params['grant_permission'])) {
-      throw new \InvalidArgumentException('Bad parameter: $grant_permission must be of type string; received ' . gettype($grant_permission));
+      throw new \Files\InvalidParameterException('$grant_permission must be of type string; received ' . gettype($grant_permission));
     }
 
     if (@$params['group_id'] && !is_int(@$params['group_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $group_id must be of type int; received ' . gettype($group_id));
+      throw new \Files\InvalidParameterException('$group_id must be of type int; received ' . gettype($group_id));
     }
 
     if (@$params['group_ids'] && !is_string(@$params['group_ids'])) {
-      throw new \InvalidArgumentException('Bad parameter: $group_ids must be of type string; received ' . gettype($group_ids));
+      throw new \Files\InvalidParameterException('$group_ids must be of type string; received ' . gettype($group_ids));
     }
 
     if (@$params['password'] && !is_string(@$params['password'])) {
-      throw new \InvalidArgumentException('Bad parameter: $password must be of type string; received ' . gettype($password));
+      throw new \Files\InvalidParameterException('$password must be of type string; received ' . gettype($password));
     }
 
     if (@$params['password_confirmation'] && !is_string(@$params['password_confirmation'])) {
-      throw new \InvalidArgumentException('Bad parameter: $password_confirmation must be of type string; received ' . gettype($password_confirmation));
+      throw new \Files\InvalidParameterException('$password_confirmation must be of type string; received ' . gettype($password_confirmation));
     }
 
     if (@$params['allowed_ips'] && !is_string(@$params['allowed_ips'])) {
-      throw new \InvalidArgumentException('Bad parameter: $allowed_ips must be of type string; received ' . gettype($allowed_ips));
+      throw new \Files\InvalidParameterException('$allowed_ips must be of type string; received ' . gettype($allowed_ips));
     }
 
     if (@$params['authenticate_until'] && !is_string(@$params['authenticate_until'])) {
-      throw new \InvalidArgumentException('Bad parameter: $authenticate_until must be of type string; received ' . gettype($authenticate_until));
+      throw new \Files\InvalidParameterException('$authenticate_until must be of type string; received ' . gettype($authenticate_until));
     }
 
     if (@$params['authentication_method'] && !is_string(@$params['authentication_method'])) {
-      throw new \InvalidArgumentException('Bad parameter: $authentication_method must be of type string; received ' . gettype($authentication_method));
+      throw new \Files\InvalidParameterException('$authentication_method must be of type string; received ' . gettype($authentication_method));
     }
 
     if (@$params['header_text'] && !is_string(@$params['header_text'])) {
-      throw new \InvalidArgumentException('Bad parameter: $header_text must be of type string; received ' . gettype($header_text));
+      throw new \Files\InvalidParameterException('$header_text must be of type string; received ' . gettype($header_text));
     }
 
     if (@$params['language'] && !is_string(@$params['language'])) {
-      throw new \InvalidArgumentException('Bad parameter: $language must be of type string; received ' . gettype($language));
+      throw new \Files\InvalidParameterException('$language must be of type string; received ' . gettype($language));
     }
 
     if (@$params['notification_daily_send_time'] && !is_int(@$params['notification_daily_send_time'])) {
-      throw new \InvalidArgumentException('Bad parameter: $notification_daily_send_time must be of type int; received ' . gettype($notification_daily_send_time));
+      throw new \Files\InvalidParameterException('$notification_daily_send_time must be of type int; received ' . gettype($notification_daily_send_time));
     }
 
     if (@$params['name'] && !is_string(@$params['name'])) {
-      throw new \InvalidArgumentException('Bad parameter: $name must be of type string; received ' . gettype($name));
+      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype($name));
     }
 
     if (@$params['company'] && !is_string(@$params['company'])) {
-      throw new \InvalidArgumentException('Bad parameter: $company must be of type string; received ' . gettype($company));
+      throw new \Files\InvalidParameterException('$company must be of type string; received ' . gettype($company));
     }
 
     if (@$params['notes'] && !is_string(@$params['notes'])) {
-      throw new \InvalidArgumentException('Bad parameter: $notes must be of type string; received ' . gettype($notes));
+      throw new \Files\InvalidParameterException('$notes must be of type string; received ' . gettype($notes));
     }
 
     if (@$params['password_validity_days'] && !is_int(@$params['password_validity_days'])) {
-      throw new \InvalidArgumentException('Bad parameter: $password_validity_days must be of type int; received ' . gettype($password_validity_days));
+      throw new \Files\InvalidParameterException('$password_validity_days must be of type int; received ' . gettype($password_validity_days));
     }
 
     if (@$params['ssl_required'] && !is_string(@$params['ssl_required'])) {
-      throw new \InvalidArgumentException('Bad parameter: $ssl_required must be of type string; received ' . gettype($ssl_required));
+      throw new \Files\InvalidParameterException('$ssl_required must be of type string; received ' . gettype($ssl_required));
     }
 
     if (@$params['sso_strategy_id'] && !is_int(@$params['sso_strategy_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $sso_strategy_id must be of type int; received ' . gettype($sso_strategy_id));
+      throw new \Files\InvalidParameterException('$sso_strategy_id must be of type int; received ' . gettype($sso_strategy_id));
     }
 
     if (@$params['require_2fa'] && !is_string(@$params['require_2fa'])) {
-      throw new \InvalidArgumentException('Bad parameter: $require_2fa must be of type string; received ' . gettype($require_2fa));
+      throw new \Files\InvalidParameterException('$require_2fa must be of type string; received ' . gettype($require_2fa));
     }
 
     if (@$params['time_zone'] && !is_string(@$params['time_zone'])) {
-      throw new \InvalidArgumentException('Bad parameter: $time_zone must be of type string; received ' . gettype($time_zone));
+      throw new \Files\InvalidParameterException('$time_zone must be of type string; received ' . gettype($time_zone));
     }
 
     if (@$params['user_root'] && !is_string(@$params['user_root'])) {
-      throw new \InvalidArgumentException('Bad parameter: $user_root must be of type string; received ' . gettype($user_root));
+      throw new \Files\InvalidParameterException('$user_root must be of type string; received ' . gettype($user_root));
     }
 
     if (@$params['username'] && !is_string(@$params['username'])) {
-      throw new \InvalidArgumentException('Bad parameter: $username must be of type string; received ' . gettype($username));
+      throw new \Files\InvalidParameterException('$username must be of type string; received ' . gettype($username));
     }
 
     $response = Api::sendRequest('/users', 'POST', $params, $options);

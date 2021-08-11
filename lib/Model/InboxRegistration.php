@@ -75,19 +75,19 @@ class InboxRegistration {
   //   folder_behavior_id (required) - int64 - ID of the associated Inbox.
   public static function list($params = [], $options = []) {
     if (!@$params['folder_behavior_id']) {
-      throw new \Error('Parameter missing: folder_behavior_id');
+      throw new \Files\MissingParameterException('Parameter missing: folder_behavior_id');
     }
 
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \InvalidArgumentException('Bad parameter: $cursor must be of type string; received ' . gettype($cursor));
+      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
     }
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-      throw new \InvalidArgumentException('Bad parameter: $per_page must be of type int; received ' . gettype($per_page));
+      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
     }
 
     if (@$params['folder_behavior_id'] && !is_int(@$params['folder_behavior_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $folder_behavior_id must be of type int; received ' . gettype($folder_behavior_id));
+      throw new \Files\InvalidParameterException('$folder_behavior_id must be of type int; received ' . gettype($folder_behavior_id));
     }
 
     $response = Api::sendRequest('/inbox_registrations', 'GET', $params, $options);

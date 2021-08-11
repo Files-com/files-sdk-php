@@ -72,24 +72,24 @@ class FileCommentReaction {
 
   public function delete($params = []) {
     if (!$this->id) {
-      throw new \Error('Current object has no id');
+      throw new \Files\EmptyPropertyException('The current FileCommentReaction object has no $id value');
     }
 
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['id'] = $this->id;
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
 
     if (!@$params['id']) {
       if ($this->id) {
         $params['id'] = @$this->id;
       } else {
-        throw new \Error('Parameter missing: id');
+        throw new \Files\MissingParameterException('Parameter missing: id');
       }
     }
 
@@ -102,7 +102,7 @@ class FileCommentReaction {
 
   public function save() {
       if (@$this->attributes['id']) {
-        throw new \BadMethodCallException('The FileCommentReaction object doesn\'t support updates.');
+        throw new \Files\NotImplementedException('The FileCommentReaction object doesn\'t support updates.');
       } else {
         $new_obj = self::create($this->attributes, $this->options);
         $this->attributes = $new_obj->attributes;
@@ -116,23 +116,23 @@ class FileCommentReaction {
   //   emoji (required) - string - Emoji to react with.
   public static function create($params = [], $options = []) {
     if (!@$params['file_comment_id']) {
-      throw new \Error('Parameter missing: file_comment_id');
+      throw new \Files\MissingParameterException('Parameter missing: file_comment_id');
     }
 
     if (!@$params['emoji']) {
-      throw new \Error('Parameter missing: emoji');
+      throw new \Files\MissingParameterException('Parameter missing: emoji');
     }
 
     if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $user_id must be of type int; received ' . gettype($user_id));
+      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype($user_id));
     }
 
     if (@$params['file_comment_id'] && !is_int(@$params['file_comment_id'])) {
-      throw new \InvalidArgumentException('Bad parameter: $file_comment_id must be of type int; received ' . gettype($file_comment_id));
+      throw new \Files\InvalidParameterException('$file_comment_id must be of type int; received ' . gettype($file_comment_id));
     }
 
     if (@$params['emoji'] && !is_string(@$params['emoji'])) {
-      throw new \InvalidArgumentException('Bad parameter: $emoji must be of type string; received ' . gettype($emoji));
+      throw new \Files\InvalidParameterException('$emoji must be of type string; received ' . gettype($emoji));
     }
 
     $response = Api::sendRequest('/file_comment_reactions', 'POST', $params, $options);

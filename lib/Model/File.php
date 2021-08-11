@@ -397,30 +397,30 @@ class File {
   //   with_priority_color - boolean - Include file priority color information?
   public function download($params = []) {
     if (!$this->path) {
-      throw new \Error('Current object has no path');
+      throw new \Files\EmptyPropertyException('The current File object has no $path value');
     }
 
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['path'] = $this->path;
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
     }
     if (@$params['action'] && !is_string(@$params['action'])) {
-      throw new \InvalidArgumentException('Bad parameter: $action must be of type string; received ' . gettype($action));
+      throw new \Files\InvalidParameterException('$action must be of type string; received ' . gettype($action));
     }
     if (@$params['preview_size'] && !is_string(@$params['preview_size'])) {
-      throw new \InvalidArgumentException('Bad parameter: $preview_size must be of type string; received ' . gettype($preview_size));
+      throw new \Files\InvalidParameterException('$preview_size must be of type string; received ' . gettype($preview_size));
     }
 
     if (!@$params['path']) {
       if ($this->path) {
         $params['path'] = @$this->path;
       } else {
-        throw new \Error('Parameter missing: path');
+        throw new \Files\MissingParameterException('Parameter missing: path');
       }
     }
 
@@ -432,30 +432,30 @@ class File {
   //   priority_color - string - Priority/Bookmark color of file.
   public function update($params = []) {
     if (!$this->path) {
-      throw new \Error('Current object has no path');
+      throw new \Files\EmptyPropertyException('The current File object has no $path value');
     }
 
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['path'] = $this->path;
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
     }
     if (@$params['provided_mtime'] && !is_string(@$params['provided_mtime'])) {
-      throw new \InvalidArgumentException('Bad parameter: $provided_mtime must be of type string; received ' . gettype($provided_mtime));
+      throw new \Files\InvalidParameterException('$provided_mtime must be of type string; received ' . gettype($provided_mtime));
     }
     if (@$params['priority_color'] && !is_string(@$params['priority_color'])) {
-      throw new \InvalidArgumentException('Bad parameter: $priority_color must be of type string; received ' . gettype($priority_color));
+      throw new \Files\InvalidParameterException('$priority_color must be of type string; received ' . gettype($priority_color));
     }
 
     if (!@$params['path']) {
       if ($this->path) {
         $params['path'] = @$this->path;
       } else {
-        throw new \Error('Parameter missing: path');
+        throw new \Files\MissingParameterException('Parameter missing: path');
       }
     }
 
@@ -466,24 +466,24 @@ class File {
   //   recursive - boolean - If true, will recursively delete folers.  Otherwise, will error on non-empty folders.
   public function delete($params = []) {
     if (!$this->path) {
-      throw new \Error('Current object has no path');
+      throw new \Files\EmptyPropertyException('The current File object has no $path value');
     }
 
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['path'] = $this->path;
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
     }
 
     if (!@$params['path']) {
       if ($this->path) {
         $params['path'] = @$this->path;
       } else {
-        throw new \Error('Parameter missing: path');
+        throw new \Files\MissingParameterException('Parameter missing: path');
       }
     }
 
@@ -502,27 +502,27 @@ class File {
   //   with_priority_color - boolean - Include file priority color information?
   public function metadata($params = []) {
     if (!$this->path) {
-      throw new \Error('Current object has no path');
+      throw new \Files\EmptyPropertyException('The current File object has no $path value');
     }
 
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['path'] = $this->path;
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
     }
     if (@$params['preview_size'] && !is_string(@$params['preview_size'])) {
-      throw new \InvalidArgumentException('Bad parameter: $preview_size must be of type string; received ' . gettype($preview_size));
+      throw new \Files\InvalidParameterException('$preview_size must be of type string; received ' . gettype($preview_size));
     }
 
     if (!@$params['path']) {
       if ($this->path) {
         $params['path'] = @$this->path;
       } else {
-        throw new \Error('Parameter missing: path');
+        throw new \Files\MissingParameterException('Parameter missing: path');
       }
     }
 
@@ -536,27 +536,27 @@ class File {
   //   structure - boolean - Copy structure only?
   public function copy($params = []) {
     if (!$this->path) {
-      throw new \Error('Current object has no path');
+      throw new \Files\EmptyPropertyException('The current File object has no $path value');
     }
 
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['path'] = $this->path;
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
     }
     if (@$params['destination'] && !is_string(@$params['destination'])) {
-      throw new \InvalidArgumentException('Bad parameter: $destination must be of type string; received ' . gettype($destination));
+      throw new \Files\InvalidParameterException('$destination must be of type string; received ' . gettype($destination));
     }
 
     if (!@$params['path']) {
       if ($this->path) {
         $params['path'] = @$this->path;
       } else {
-        throw new \Error('Parameter missing: path');
+        throw new \Files\MissingParameterException('Parameter missing: path');
       }
     }
 
@@ -564,7 +564,7 @@ class File {
       if ($this->destination) {
         $params['destination'] = @$this->destination;
       } else {
-        throw new \Error('Parameter missing: destination');
+        throw new \Files\MissingParameterException('Parameter missing: destination');
       }
     }
 
@@ -577,27 +577,27 @@ class File {
   //   destination (required) - string - Move destination path.
   public function move($params = []) {
     if (!$this->path) {
-      throw new \Error('Current object has no path');
+      throw new \Files\EmptyPropertyException('The current File object has no $path value');
     }
 
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['path'] = $this->path;
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
     }
     if (@$params['destination'] && !is_string(@$params['destination'])) {
-      throw new \InvalidArgumentException('Bad parameter: $destination must be of type string; received ' . gettype($destination));
+      throw new \Files\InvalidParameterException('$destination must be of type string; received ' . gettype($destination));
     }
 
     if (!@$params['path']) {
       if ($this->path) {
         $params['path'] = @$this->path;
       } else {
-        throw new \Error('Parameter missing: path');
+        throw new \Files\MissingParameterException('Parameter missing: path');
       }
     }
 
@@ -605,7 +605,7 @@ class File {
       if ($this->destination) {
         $params['destination'] = @$this->destination;
       } else {
-        throw new \Error('Parameter missing: destination');
+        throw new \Files\MissingParameterException('Parameter missing: destination');
       }
     }
 
@@ -623,36 +623,36 @@ class File {
   //   with_rename - boolean - Allow file rename instead of overwrite?
   public function beginUpload($params = []) {
     if (!$this->path) {
-      throw new \Error('Current object has no path');
+      throw new \Files\EmptyPropertyException('The current File object has no $path value');
     }
 
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['path'] = $this->path;
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
     }
     if (@$params['part'] && !is_int(@$params['part'])) {
-      throw new \InvalidArgumentException('Bad parameter: $part must be of type int; received ' . gettype($part));
+      throw new \Files\InvalidParameterException('$part must be of type int; received ' . gettype($part));
     }
     if (@$params['parts'] && !is_int(@$params['parts'])) {
-      throw new \InvalidArgumentException('Bad parameter: $parts must be of type int; received ' . gettype($parts));
+      throw new \Files\InvalidParameterException('$parts must be of type int; received ' . gettype($parts));
     }
     if (@$params['ref'] && !is_string(@$params['ref'])) {
-      throw new \InvalidArgumentException('Bad parameter: $ref must be of type string; received ' . gettype($ref));
+      throw new \Files\InvalidParameterException('$ref must be of type string; received ' . gettype($ref));
     }
     if (@$params['restart'] && !is_int(@$params['restart'])) {
-      throw new \InvalidArgumentException('Bad parameter: $restart must be of type int; received ' . gettype($restart));
+      throw new \Files\InvalidParameterException('$restart must be of type int; received ' . gettype($restart));
     }
 
     if (!@$params['path']) {
       if ($this->path) {
         $params['path'] = @$this->path;
       } else {
-        throw new \Error('Parameter missing: path');
+        throw new \Files\MissingParameterException('Parameter missing: path');
       }
     }
 
@@ -682,53 +682,53 @@ class File {
   //   with_rename - boolean - Allow file rename instead of overwrite?
   public static function create($path, $params = [], $options = []) {
     if (!is_array($params)) {
-      throw new \InvalidArgumentException('Bad parameter: $params must be of type array; received ' . gettype($params));
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
     $params['path'] = $path;
 
     if (!@$params['path']) {
-      throw new \Error('Parameter missing: path');
+      throw new \Files\MissingParameterException('Parameter missing: path');
     }
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \InvalidArgumentException('Bad parameter: $path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
     }
 
     if (@$params['action'] && !is_string(@$params['action'])) {
-      throw new \InvalidArgumentException('Bad parameter: $action must be of type string; received ' . gettype($action));
+      throw new \Files\InvalidParameterException('$action must be of type string; received ' . gettype($action));
     }
 
     if (@$params['length'] && !is_int(@$params['length'])) {
-      throw new \InvalidArgumentException('Bad parameter: $length must be of type int; received ' . gettype($length));
+      throw new \Files\InvalidParameterException('$length must be of type int; received ' . gettype($length));
     }
 
     if (@$params['part'] && !is_int(@$params['part'])) {
-      throw new \InvalidArgumentException('Bad parameter: $part must be of type int; received ' . gettype($part));
+      throw new \Files\InvalidParameterException('$part must be of type int; received ' . gettype($part));
     }
 
     if (@$params['parts'] && !is_int(@$params['parts'])) {
-      throw new \InvalidArgumentException('Bad parameter: $parts must be of type int; received ' . gettype($parts));
+      throw new \Files\InvalidParameterException('$parts must be of type int; received ' . gettype($parts));
     }
 
     if (@$params['provided_mtime'] && !is_string(@$params['provided_mtime'])) {
-      throw new \InvalidArgumentException('Bad parameter: $provided_mtime must be of type string; received ' . gettype($provided_mtime));
+      throw new \Files\InvalidParameterException('$provided_mtime must be of type string; received ' . gettype($provided_mtime));
     }
 
     if (@$params['ref'] && !is_string(@$params['ref'])) {
-      throw new \InvalidArgumentException('Bad parameter: $ref must be of type string; received ' . gettype($ref));
+      throw new \Files\InvalidParameterException('$ref must be of type string; received ' . gettype($ref));
     }
 
     if (@$params['restart'] && !is_int(@$params['restart'])) {
-      throw new \InvalidArgumentException('Bad parameter: $restart must be of type int; received ' . gettype($restart));
+      throw new \Files\InvalidParameterException('$restart must be of type int; received ' . gettype($restart));
     }
 
     if (@$params['size'] && !is_int(@$params['size'])) {
-      throw new \InvalidArgumentException('Bad parameter: $size must be of type int; received ' . gettype($size));
+      throw new \Files\InvalidParameterException('$size must be of type int; received ' . gettype($size));
     }
 
     if (@$params['structure'] && !is_string(@$params['structure'])) {
-      throw new \InvalidArgumentException('Bad parameter: $structure must be of type string; received ' . gettype($structure));
+      throw new \Files\InvalidParameterException('$structure must be of type string; received ' . gettype($structure));
     }
 
     $response = Api::sendRequest('/files/' . @$params['path'] . '', 'POST', $params, $options);

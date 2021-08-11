@@ -74,6 +74,11 @@ class FileMigration {
     return @$this->attributes['status'];
   }
 
+  // string # Link to download the log file for this migration.
+  public function getLogUrl() {
+    return @$this->attributes['log_url'];
+  }
+
   // Parameters:
   //   id (required) - int64 - File Migration ID.
   public static function find($id, $params = [], $options = []) {

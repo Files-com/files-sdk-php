@@ -89,7 +89,7 @@ class Behavior {
   }
 
   // Parameters:
-  //   value - string - The value of the folder behavior.  Can be a integer, array, or hash depending on the type of folder behavior.
+  //   value - string - The value of the folder behavior.  Can be a integer, array, or hash depending on the type of folder behavior. See The Behavior Types section for example values for each type of behavior.
   //   attachment_file - file - Certain behaviors may require a file, for instance, the "watermark" behavior requires a watermark image
   //   behavior - string - Behavior type.
   //   path - string - Folder behaviors path.
@@ -289,7 +289,7 @@ class Behavior {
   }
 
   // Parameters:
-  //   value - string - The value of the folder behavior.  Can be a integer, array, or hash depending on the type of folder behavior.
+  //   value - string - The value of the folder behavior.  Can be a integer, array, or hash depending on the type of folder behavior. See The Behavior Types section for example values for each type of behavior.
   //   attachment_file - file - Certain behaviors may require a file, for instance, the "watermark" behavior requires a watermark image
   //   path (required) - string - Folder behaviors path.
   //   behavior (required) - string - Behavior type.

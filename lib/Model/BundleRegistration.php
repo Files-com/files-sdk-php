@@ -54,6 +54,11 @@ class BundleRegistration {
     return @$this->attributes['email'];
   }
 
+  // string # Registrant IP Address
+  public function getIp() {
+    return @$this->attributes['ip'];
+  }
+
   // string # InboxRegistration cookie code, if there is an associated InboxRegistration
   public function getInboxCode() {
     return @$this->attributes['inbox_code'];

@@ -70,15 +70,6 @@ class Automation {
     return $this->attributes['interval'] = $value;
   }
 
-  // string # If trigger is `daily`, date this automation will next run.
-  public function getNextProcessOn() {
-    return @$this->attributes['next_process_on'];
-  }
-
-  public function setNextProcessOn($value) {
-    return $this->attributes['next_process_on'] = $value;
-  }
-
   // object # If trigger is `custom_schedule`, Custom schedule description for when the automation should be run.
   public function getSchedule() {
     return @$this->attributes['schedule'];

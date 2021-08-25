@@ -187,6 +187,7 @@ class CantActForOtherUserException extends \Files\NotAuthorizedException {}
 class ContactAdminForPasswordChangeHelpException extends \Files\NotAuthorizedException {}
 class FolderAdminOrBillingPermissionRequiredException extends \Files\NotAuthorizedException {}
 class FolderAdminPermissionRequiredException extends \Files\NotAuthorizedException {}
+class FullPermissionRequiredException extends \Files\NotAuthorizedException {}
 class HistoryPermissionRequiredException extends \Files\NotAuthorizedException {}
 class InsufficientPermissionForParamsException extends \Files\NotAuthorizedException {}
 class MustAuthenticateWithApiKeyException extends \Files\NotAuthorizedException {}
@@ -202,6 +203,7 @@ class ReauthenticationFailedFinalException extends \Files\NotAuthorizedException
 class ReauthenticationNeededActionException extends \Files\NotAuthorizedException {}
 class SelfManagedRequiredException extends \Files\NotAuthorizedException {}
 class SiteAdminRequiredException extends \Files\NotAuthorizedException {}
+class SiteFilesAreImmutableException extends \Files\NotAuthorizedException {}
 class TwoFactorAuthenticationRequiredException extends \Files\NotAuthorizedException {}
 class UserIdWithoutSiteAdminException extends \Files\NotAuthorizedException {}
 class WritePermissionRequiredException extends \Files\NotAuthorizedException {}

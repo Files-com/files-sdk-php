@@ -70,6 +70,15 @@ class Automation {
     return $this->attributes['interval'] = $value;
   }
 
+  // string # Name for this automation.
+  public function getName() {
+    return @$this->attributes['name'];
+  }
+
+  public function setName($value) {
+    return $this->attributes['name'] = $value;
+  }
+
   // object # If trigger is `custom_schedule`, Custom schedule description for when the automation should be run.
   public function getSchedule() {
     return @$this->attributes['schedule'];
@@ -113,6 +122,15 @@ class Automation {
 
   public function setDestinationReplaceTo($value) {
     return $this->attributes['destination_replace_to'] = $value;
+  }
+
+  // string # Description for the this Automation.
+  public function getDescription() {
+    return @$this->attributes['description'];
+  }
+
+  public function setDescription($value) {
+    return $this->attributes['description'] = $value;
   }
 
   // string # Path on which this Automation runs.  Supports globs. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
@@ -208,6 +226,8 @@ class Automation {
   //   user_ids - string - A list of user IDs the automation is associated with. If sent as a string, it should be comma-delimited.
   //   group_ids - string - A list of group IDs the automation is associated with. If sent as a string, it should be comma-delimited.
   //   schedule - object - Custom schedule for running this automation.
+  //   description - string - Description for the this Automation.
+  //   name - string - Name for this automation.
   //   trigger - string - How this automation is triggered to run. One of: `realtime`, `daily`, `custom_schedule`, `webhook`, `email`, or `action`.
   //   trigger_actions - array(string) - If trigger is `action`, this is the list of action types on which to trigger the automation. Valid actions are create, read, update, destroy, move, copy
   //   trigger_action_path - string - If trigger is `action`, this is the path to watch for the specified trigger actions.
@@ -255,6 +275,12 @@ class Automation {
     }
     if (@$params['group_ids'] && !is_string(@$params['group_ids'])) {
       throw new \Files\InvalidParameterException('$group_ids must be of type string; received ' . gettype($group_ids));
+    }
+    if (@$params['description'] && !is_string(@$params['description'])) {
+      throw new \Files\InvalidParameterException('$description must be of type string; received ' . gettype($description));
+    }
+    if (@$params['name'] && !is_string(@$params['name'])) {
+      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype($name));
     }
     if (@$params['trigger'] && !is_string(@$params['trigger'])) {
       throw new \Files\InvalidParameterException('$trigger must be of type string; received ' . gettype($trigger));
@@ -402,6 +428,8 @@ class Automation {
   //   user_ids - string - A list of user IDs the automation is associated with. If sent as a string, it should be comma-delimited.
   //   group_ids - string - A list of group IDs the automation is associated with. If sent as a string, it should be comma-delimited.
   //   schedule - object - Custom schedule for running this automation.
+  //   description - string - Description for the this Automation.
+  //   name - string - Name for this automation.
   //   trigger - string - How this automation is triggered to run. One of: `realtime`, `daily`, `custom_schedule`, `webhook`, `email`, or `action`.
   //   trigger_actions - array(string) - If trigger is `action`, this is the list of action types on which to trigger the automation. Valid actions are create, read, update, destroy, move, copy
   //   trigger_action_path - string - If trigger is `action`, this is the path to watch for the specified trigger actions.
@@ -449,6 +477,14 @@ class Automation {
 
     if (@$params['group_ids'] && !is_string(@$params['group_ids'])) {
       throw new \Files\InvalidParameterException('$group_ids must be of type string; received ' . gettype($group_ids));
+    }
+
+    if (@$params['description'] && !is_string(@$params['description'])) {
+      throw new \Files\InvalidParameterException('$description must be of type string; received ' . gettype($description));
+    }
+
+    if (@$params['name'] && !is_string(@$params['name'])) {
+      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype($name));
     }
 
     if (@$params['trigger'] && !is_string(@$params['trigger'])) {

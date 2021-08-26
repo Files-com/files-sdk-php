@@ -70,6 +70,24 @@ class Behavior {
     return $this->attributes['behavior'] = $value;
   }
 
+  // string # Name for this behavior.
+  public function getName() {
+    return @$this->attributes['name'];
+  }
+
+  public function setName($value) {
+    return $this->attributes['name'] = $value;
+  }
+
+  // string # Description for this behavior.
+  public function getDescription() {
+    return @$this->attributes['description'];
+  }
+
+  public function setDescription($value) {
+    return $this->attributes['description'] = $value;
+  }
+
   // object # Settings for this behavior.  See the section above for an example value to provide here.  Formatting is different for each Behavior type.  May be sent as nested JSON or a single JSON-encoded string.  If using XML encoding for the API call, this data must be sent as a JSON-encoded string.
   public function getValue() {
     return @$this->attributes['value'];
@@ -91,6 +109,8 @@ class Behavior {
   // Parameters:
   //   value - string - The value of the folder behavior.  Can be a integer, array, or hash depending on the type of folder behavior. See The Behavior Types section for example values for each type of behavior.
   //   attachment_file - file - Certain behaviors may require a file, for instance, the "watermark" behavior requires a watermark image
+  //   name - string - Name for this behavior.
+  //   description - string - Description for this behavior.
   //   behavior - string - Behavior type.
   //   path - string - Folder behaviors path.
   public function update($params = []) {
@@ -109,6 +129,12 @@ class Behavior {
     }
     if (@$params['value'] && !is_string(@$params['value'])) {
       throw new \Files\InvalidParameterException('$value must be of type string; received ' . gettype($value));
+    }
+    if (@$params['name'] && !is_string(@$params['name'])) {
+      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype($name));
+    }
+    if (@$params['description'] && !is_string(@$params['description'])) {
+      throw new \Files\InvalidParameterException('$description must be of type string; received ' . gettype($description));
     }
     if (@$params['behavior'] && !is_string(@$params['behavior'])) {
       throw new \Files\InvalidParameterException('$behavior must be of type string; received ' . gettype($behavior));
@@ -291,6 +317,8 @@ class Behavior {
   // Parameters:
   //   value - string - The value of the folder behavior.  Can be a integer, array, or hash depending on the type of folder behavior. See The Behavior Types section for example values for each type of behavior.
   //   attachment_file - file - Certain behaviors may require a file, for instance, the "watermark" behavior requires a watermark image
+  //   name - string - Name for this behavior.
+  //   description - string - Description for this behavior.
   //   path (required) - string - Folder behaviors path.
   //   behavior (required) - string - Behavior type.
   public static function create($params = [], $options = []) {
@@ -304,6 +332,14 @@ class Behavior {
 
     if (@$params['value'] && !is_string(@$params['value'])) {
       throw new \Files\InvalidParameterException('$value must be of type string; received ' . gettype($value));
+    }
+
+    if (@$params['name'] && !is_string(@$params['name'])) {
+      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype($name));
+    }
+
+    if (@$params['description'] && !is_string(@$params['description'])) {
+      throw new \Files\InvalidParameterException('$description must be of type string; received ' . gettype($description));
     }
 
     if (@$params['path'] && !is_string(@$params['path'])) {

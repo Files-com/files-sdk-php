@@ -345,6 +345,15 @@ class User {
     return $this->attributes['require_password_change'] = $value;
   }
 
+  // boolean # Is user's password expired?
+  public function getPasswordExpired() {
+    return @$this->attributes['password_expired'];
+  }
+
+  public function setPasswordExpired($value) {
+    return $this->attributes['password_expired'] = $value;
+  }
+
   // boolean # Can this user access the REST API?
   public function getRestapiPermission() {
     return @$this->attributes['restapi_permission'];

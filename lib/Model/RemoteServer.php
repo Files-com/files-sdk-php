@@ -304,15 +304,6 @@ class RemoteServer {
     return $this->attributes['s3_compatible_bucket'] = $value;
   }
 
-  // string # S3-compatible Bucket name
-  public function getS3CompatibleRegion() {
-    return @$this->attributes['s3_compatible_region'];
-  }
-
-  public function setS3CompatibleRegion($value) {
-    return $this->attributes['s3_compatible_region'] = $value;
-  }
-
   // string # S3-compatible endpoint
   public function getS3CompatibleEndpoint() {
     return @$this->attributes['s3_compatible_endpoint'];
@@ -504,7 +495,6 @@ class RemoteServer {
   //   azure_blob_storage_account - string - Azure Blob Storage Account name
   //   azure_blob_storage_container - string - Azure Blob Storage Container name
   //   s3_compatible_bucket - string - S3-compatible Bucket name
-  //   s3_compatible_region - string - S3-compatible Bucket name
   //   s3_compatible_endpoint - string - S3-compatible endpoint
   //   enable_dedicated_ips - boolean - `true` if remote server only accepts connections from dedicated IPs
   //   s3_compatible_access_key - string - S3-compatible access key
@@ -630,9 +620,6 @@ class RemoteServer {
     }
     if (@$params['s3_compatible_bucket'] && !is_string(@$params['s3_compatible_bucket'])) {
       throw new \Files\InvalidParameterException('$s3_compatible_bucket must be of type string; received ' . gettype($s3_compatible_bucket));
-    }
-    if (@$params['s3_compatible_region'] && !is_string(@$params['s3_compatible_region'])) {
-      throw new \Files\InvalidParameterException('$s3_compatible_region must be of type string; received ' . gettype($s3_compatible_region));
     }
     if (@$params['s3_compatible_endpoint'] && !is_string(@$params['s3_compatible_endpoint'])) {
       throw new \Files\InvalidParameterException('$s3_compatible_endpoint must be of type string; received ' . gettype($s3_compatible_endpoint));
@@ -786,7 +773,6 @@ class RemoteServer {
   //   azure_blob_storage_account - string - Azure Blob Storage Account name
   //   azure_blob_storage_container - string - Azure Blob Storage Container name
   //   s3_compatible_bucket - string - S3-compatible Bucket name
-  //   s3_compatible_region - string - S3-compatible Bucket name
   //   s3_compatible_endpoint - string - S3-compatible endpoint
   //   enable_dedicated_ips - boolean - `true` if remote server only accepts connections from dedicated IPs
   //   s3_compatible_access_key - string - S3-compatible access key
@@ -934,10 +920,6 @@ class RemoteServer {
 
     if (@$params['s3_compatible_bucket'] && !is_string(@$params['s3_compatible_bucket'])) {
       throw new \Files\InvalidParameterException('$s3_compatible_bucket must be of type string; received ' . gettype($s3_compatible_bucket));
-    }
-
-    if (@$params['s3_compatible_region'] && !is_string(@$params['s3_compatible_region'])) {
-      throw new \Files\InvalidParameterException('$s3_compatible_region must be of type string; received ' . gettype($s3_compatible_region));
     }
 
     if (@$params['s3_compatible_endpoint'] && !is_string(@$params['s3_compatible_endpoint'])) {

@@ -112,6 +112,7 @@ class NotAuthorizedException extends FilesException {}
 class NotFoundException extends FilesException {}
 class ProcessingFailureException extends FilesException {}
 class RateLimitedException extends FilesException {}
+class ServiceUnavailableException extends FilesException {}
 class SiteConfigurationException extends FilesException {}
 
 } // namespace Files
@@ -269,6 +270,12 @@ class TooManyLoginAttemptsException extends \Files\RateLimitedException {}
 class TooManyRequestsException extends \Files\RateLimitedException {}
 
 } // namespace Files\RateLimited
+
+namespace Files\ServiceUnavailable {
+
+class UploadsUnavailableException extends \Files\ServiceUnavailableException {}
+
+} // namespace Files\ServiceUnavailable
 
 namespace Files\SiteConfiguration {
 

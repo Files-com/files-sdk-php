@@ -1,0 +1,92 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Files\Model;
+
+use Files\Api;
+use Files\Logger;
+
+require_once __DIR__ . '/../Files.php';
+
+/**
+ * Class AutomationRun
+ *
+ * @package Files
+ */
+class AutomationRun {
+  private $attributes = [];
+  private $options = [];
+
+  function __construct($attributes = [], $options = []) {
+    foreach ($attributes as $key => $value) {
+      $this->attributes[str_replace('?', '', $key)] = $value;
+    }
+
+    $this->options = $options;
+  }
+
+  public function __get($name) {
+    return @$this->attributes[$name];
+  }
+
+  public function isLoaded() {
+    return !!@$this->attributes['id'];
+  }
+
+  // int64 # ID of the associated Automation.
+  public function getAutomationId() {
+    return @$this->attributes['automation_id'];
+  }
+
+  // string # The success status of the AutomationRun. One of `running`, `success`, `partial_failure`, or `failure`.
+  public function getStatus() {
+    return @$this->attributes['status'];
+  }
+
+  // string # Link to status messages log file.
+  public function getStatusMessagesUrl() {
+    return @$this->attributes['status_messages_url'];
+  }
+
+  // Parameters:
+  //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
+  //   cursor - string - Used for pagination.  Send a cursor value to resume an existing list from the point at which you left off.  Get a cursor from an existing list via the X-Files-Cursor-Next header.
+  //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
+  //   automation_id (required) - int64 - ID of the associated Automation.
+  public static function list($params = [], $options = []) {
+    if (!@$params['automation_id']) {
+      throw new \Files\MissingParameterException('Parameter missing: automation_id');
+    }
+
+    if (@$params['user_id'] && !is_int(@$params['user_id'])) {
+      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype($user_id));
+    }
+
+    if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
+    }
+
+    if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
+    }
+
+    if (@$params['automation_id'] && !is_int(@$params['automation_id'])) {
+      throw new \Files\InvalidParameterException('$automation_id must be of type int; received ' . gettype($automation_id));
+    }
+
+    $response = Api::sendRequest('/automation_runs', 'GET', $params, $options);
+
+    $return_array = [];
+
+    foreach ($response->data as $obj) {
+      $return_array[] = new AutomationRun((array)$obj, $options);
+    }
+
+    return $return_array;
+  }
+
+  public static function all($params = [], $options = []) {
+    return self::list($params, $options);
+  }
+}

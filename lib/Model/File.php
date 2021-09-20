@@ -494,41 +494,6 @@ class File {
     return $this->delete($params);
   }
 
-  // Return metadata for file/folder
-  //
-  // Parameters:
-  //   preview_size - string - Request a preview size.  Can be `small` (default), `large`, `xlarge`, or `pdf`.
-  //   with_previews - boolean - Include file preview information?
-  //   with_priority_color - boolean - Include file priority color information?
-  public function metadata($params = []) {
-    if (!$this->path) {
-      throw new \Files\EmptyPropertyException('The current File object has no $path value');
-    }
-
-    if (!is_array($params)) {
-      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
-    }
-
-    $params['path'] = $this->path;
-
-    if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
-    }
-    if (@$params['preview_size'] && !is_string(@$params['preview_size'])) {
-      throw new \Files\InvalidParameterException('$preview_size must be of type string; received ' . gettype($preview_size));
-    }
-
-    if (!@$params['path']) {
-      if ($this->path) {
-        $params['path'] = @$this->path;
-      } else {
-        throw new \Files\MissingParameterException('Parameter missing: path');
-      }
-    }
-
-    return Api::sendRequest('/file_actions/metadata/' . @$params['path'] . '', 'GET', $params, $this->options);
-  }
-
   // Copy file/folder
   //
   // Parameters:
@@ -732,6 +697,35 @@ class File {
     }
 
     $response = Api::sendRequest('/files/' . @$params['path'] . '', 'POST', $params, $options);
+
+    return new File((array)(@$response->data ?: []), $options);
+  }
+
+  // Parameters:
+  //   path (required) - string - Path to operate on.
+  //   preview_size - string - Request a preview size.  Can be `small` (default), `large`, `xlarge`, or `pdf`.
+  //   with_previews - boolean - Include file preview information?
+  //   with_priority_color - boolean - Include file priority color information?
+  public static function findBy($path, $params = [], $options = []) {
+    if (!is_array($params)) {
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+    }
+
+    $params['path'] = $path;
+
+    if (!@$params['path']) {
+      throw new \Files\MissingParameterException('Parameter missing: path');
+    }
+
+    if (@$params['path'] && !is_string(@$params['path'])) {
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
+    }
+
+    if (@$params['preview_size'] && !is_string(@$params['preview_size'])) {
+      throw new \Files\InvalidParameterException('$preview_size must be of type string; received ' . gettype($preview_size));
+    }
+
+    $response = Api::sendRequest('/file_actions/metadata/' . @$params['path'] . '', 'GET', $params, $options);
 
     return new File((array)(@$response->data ?: []), $options);
   }

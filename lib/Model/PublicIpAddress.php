@@ -43,4 +43,14 @@ class PublicIpAddress {
   public function getServerName() {
     return @$this->attributes['server_name'];
   }
+
+  // string
+  public function getFtpEnabled() {
+    return @$this->attributes['ftp_enabled'];
+  }
+
+  // string
+  public function getSftpEnabled() {
+    return @$this->attributes['sftp_enabled'];
+  }
 }

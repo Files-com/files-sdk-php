@@ -106,6 +106,15 @@ class Session {
     return $this->attributes['root_path'] = $value;
   }
 
+  // boolean # Are insecure SFTP ciphers allowed for this user? (If this is set to true, the site administrator has signaled that it is ok to use less secure SSH ciphers for this user.)
+  public function getSftpInsecureCiphers() {
+    return @$this->attributes['sftp_insecure_ciphers'];
+  }
+
+  public function setSftpInsecureCiphers($value) {
+    return $this->attributes['sftp_insecure_ciphers'] = $value;
+  }
+
   // int64 # Site ID
   public function getSiteId() {
     return @$this->attributes['site_id'];
@@ -124,7 +133,7 @@ class Session {
     return $this->attributes['ssl_required'] = $value;
   }
 
-  // boolean # Is strong TLS disabled for this user? (If this is set to true, the site administrator has signaled that it is ok to use less secure TLS versions for this user.)
+  // boolean # Aee insecure TLS versions allowed for this user? (If this is set to true, the site administrator has signaled that it is ok to use less secure TLS versions for this user.)
   public function getTlsDisabled() {
     return @$this->attributes['tls_disabled'];
   }

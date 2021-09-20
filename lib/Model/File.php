@@ -706,7 +706,7 @@ class File {
   //   preview_size - string - Request a preview size.  Can be `small` (default), `large`, `xlarge`, or `pdf`.
   //   with_previews - boolean - Include file preview information?
   //   with_priority_color - boolean - Include file priority color information?
-  public static function findBy($path, $params = [], $options = []) {
+  public static function find($path, $params = [], $options = []) {
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
@@ -728,5 +728,9 @@ class File {
     $response = Api::sendRequest('/file_actions/metadata/' . @$params['path'] . '', 'GET', $params, $options);
 
     return new File((array)(@$response->data ?: []), $options);
+  }
+
+  public static function get($path, $params = [], $options = []) {
+    return self::find($path, $params, $options);
   }
 }

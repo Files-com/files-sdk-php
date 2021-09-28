@@ -26,6 +26,10 @@ class File {
     $this->options = $options;
   }
 
+  public function __set($name, $value) {
+    $this->attributes[$name] = $value;
+  }
+
   public function __get($name) {
     return @$this->attributes[$name];
   }
@@ -71,6 +75,14 @@ class File {
   }
 
   public static function uploadFile($destinationPath, $sourceFilePath) {
+    if (!$destinationPath) {
+      throw new \Files\MissingParameterException('Parameter missing: destinationPath');
+    }
+
+    if (!$sourceFilePath) {
+      throw new \Files\MissingParameterException('Parameter missing: sourceFilePath');
+    }
+
     $fileUploadPart = self::openUpload($destinationPath);
 
     Logger::debug('File::uploadFile() fileUploadPart = ' . print_r($fileUploadPart, true));
@@ -134,6 +146,14 @@ class File {
   }
 
   public static function uploadData($destinationPath, $data) {
+    if (!$destinationPath) {
+      throw new \Files\MissingParameterException('Parameter missing: destinationPath');
+    }
+
+    if (!$data) {
+      throw new \Files\MissingParameterException('Parameter missing: data');
+    }
+
     $tempPath = tempnam(sys_get_temp_dir(), basename($destinationPath));
     file_put_contents($tempPath, $data);
 
@@ -144,23 +164,60 @@ class File {
     return $result;
   }
 
+  public static function deletePath($path) {
+    if (!$path) {
+      throw new \Files\MissingParameterException('Parameter missing: path');
+    }
+
+    $file = new File();
+    return $file->delete(['path' => $path]);
+  }
+
   public static function find($path) {
+    if (!$path) {
+      throw new \Files\MissingParameterException('Parameter missing: path');
+    }
+
     $response = Api::sendRequest('/files/' . rawurlencode($path), 'GET');
     return new File((array)(@$response->data ?: []));
   }
 
   public function get($path) {
-    return self::find($path);
+    if (!$path) {
+      throw new \Files\MissingParameterException('Parameter missing: path');
+    }
+
+    $new_obj = self::find($path);
+    $this->attributes = $new_obj->attributes;
+    return $this;
   }
 
   public function copyTo($destinationFilePath) {
+    if (!$this->path) {
+      throw new \Files\EmptyPropertyException('Empty object property: path');
+    }
+
+    if (!$destinationFilePath) {
+      throw new \Files\MissingParameterException('Parameter missing: destinationFilePath');
+    }
+
     $params = ['destination' => $destinationFilePath];
-    return Api::sendRequest('/file_actions/copy/' . rawurlencode($this->path), 'POST', $params);
+    $response = Api::sendRequest('/file_actions/copy/' . rawurlencode($this->path), 'POST', $params);
+    return $response->data;
   }
 
   public function moveTo($destinationFilePath) {
+    if (!$this->path) {
+      throw new \Files\EmptyPropertyException('Empty object property: path');
+    }
+
+    if (!$destinationFilePath) {
+      throw new \Files\MissingParameterException('Parameter missing: destinationFilePath');
+    }
+
     $params = ['destination' => $destinationFilePath];
-    return Api::sendRequest('/file_actions/move/' . rawurlencode($this->path), 'POST', $params);
+    $response = Api::sendRequest('/file_actions/move/' . rawurlencode($this->path), 'POST', $params);
+    return $response->data;
   }
 
   // string # File/Folder path This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
@@ -396,98 +453,87 @@ class File {
   //   with_previews - boolean - Include file preview information?
   //   with_priority_color - boolean - Include file priority color information?
   public function download($params = []) {
-    if (!$this->path) {
-      throw new \Files\EmptyPropertyException('The current File object has no $path value');
-    }
-
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
-    $params['path'] = $this->path;
-
-    if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
-    }
-    if (@$params['action'] && !is_string(@$params['action'])) {
-      throw new \Files\InvalidParameterException('$action must be of type string; received ' . gettype($action));
-    }
-    if (@$params['preview_size'] && !is_string(@$params['preview_size'])) {
-      throw new \Files\InvalidParameterException('$preview_size must be of type string; received ' . gettype($preview_size));
-    }
-
     if (!@$params['path']) {
-      if ($this->path) {
-        $params['path'] = @$this->path;
+      if (@$this->path) {
+        $params['path'] = $this->path;
       } else {
         throw new \Files\MissingParameterException('Parameter missing: path');
       }
     }
 
-    return Api::sendRequest('/files/' . @$params['path'] . '', 'GET', $params, $this->options);
+    if (@$params['path'] && !is_string(@$params['path'])) {
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
+    }
+
+    if (@$params['action'] && !is_string(@$params['action'])) {
+      throw new \Files\InvalidParameterException('$action must be of type string; received ' . gettype($action));
+    }
+
+    if (@$params['preview_size'] && !is_string(@$params['preview_size'])) {
+      throw new \Files\InvalidParameterException('$preview_size must be of type string; received ' . gettype($preview_size));
+    }
+
+    $response = Api::sendRequest('/files/' . @$params['path'] . '', 'GET', $params, $this->options);
+    return $response->data;
   }
 
   // Parameters:
   //   provided_mtime - string - Modified time of file.
   //   priority_color - string - Priority/Bookmark color of file.
   public function update($params = []) {
-    if (!$this->path) {
-      throw new \Files\EmptyPropertyException('The current File object has no $path value');
-    }
-
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
-    $params['path'] = $this->path;
-
-    if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
-    }
-    if (@$params['provided_mtime'] && !is_string(@$params['provided_mtime'])) {
-      throw new \Files\InvalidParameterException('$provided_mtime must be of type string; received ' . gettype($provided_mtime));
-    }
-    if (@$params['priority_color'] && !is_string(@$params['priority_color'])) {
-      throw new \Files\InvalidParameterException('$priority_color must be of type string; received ' . gettype($priority_color));
-    }
-
     if (!@$params['path']) {
-      if ($this->path) {
-        $params['path'] = @$this->path;
+      if (@$this->path) {
+        $params['path'] = $this->path;
       } else {
         throw new \Files\MissingParameterException('Parameter missing: path');
       }
     }
 
-    return Api::sendRequest('/files/' . @$params['path'] . '', 'PATCH', $params, $this->options);
+    if (@$params['path'] && !is_string(@$params['path'])) {
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
+    }
+
+    if (@$params['provided_mtime'] && !is_string(@$params['provided_mtime'])) {
+      throw new \Files\InvalidParameterException('$provided_mtime must be of type string; received ' . gettype($provided_mtime));
+    }
+
+    if (@$params['priority_color'] && !is_string(@$params['priority_color'])) {
+      throw new \Files\InvalidParameterException('$priority_color must be of type string; received ' . gettype($priority_color));
+    }
+
+    $response = Api::sendRequest('/files/' . @$params['path'] . '', 'PATCH', $params, $this->options);
+    return $response->data;
   }
 
   // Parameters:
   //   recursive - boolean - If true, will recursively delete folers.  Otherwise, will error on non-empty folders.
   public function delete($params = []) {
-    if (!$this->path) {
-      throw new \Files\EmptyPropertyException('The current File object has no $path value');
-    }
-
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
-    $params['path'] = $this->path;
-
-    if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
-    }
-
     if (!@$params['path']) {
-      if ($this->path) {
-        $params['path'] = @$this->path;
+      if (@$this->path) {
+        $params['path'] = $this->path;
       } else {
         throw new \Files\MissingParameterException('Parameter missing: path');
       }
     }
 
-    return Api::sendRequest('/files/' . @$params['path'] . '', 'DELETE', $params, $this->options);
+    if (@$params['path'] && !is_string(@$params['path'])) {
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
+    }
+
+    $response = Api::sendRequest('/files/' . @$params['path'] . '', 'DELETE', $params, $this->options);
+    return $response->data;
   }
 
   public function destroy($params = []) {
@@ -500,40 +546,36 @@ class File {
   //   destination (required) - string - Copy destination path.
   //   structure - boolean - Copy structure only?
   public function copy($params = []) {
-    if (!$this->path) {
-      throw new \Files\EmptyPropertyException('The current File object has no $path value');
-    }
-
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
-    $params['path'] = $this->path;
-
-    if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
-    }
-    if (@$params['destination'] && !is_string(@$params['destination'])) {
-      throw new \Files\InvalidParameterException('$destination must be of type string; received ' . gettype($destination));
-    }
-
     if (!@$params['path']) {
-      if ($this->path) {
-        $params['path'] = @$this->path;
+      if (@$this->path) {
+        $params['path'] = $this->path;
       } else {
         throw new \Files\MissingParameterException('Parameter missing: path');
       }
     }
 
     if (!@$params['destination']) {
-      if ($this->destination) {
-        $params['destination'] = @$this->destination;
+      if (@$this->destination) {
+        $params['destination'] = $this->destination;
       } else {
         throw new \Files\MissingParameterException('Parameter missing: destination');
       }
     }
 
-    return Api::sendRequest('/file_actions/copy/' . @$params['path'] . '', 'POST', $params, $this->options);
+    if (@$params['path'] && !is_string(@$params['path'])) {
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
+    }
+
+    if (@$params['destination'] && !is_string(@$params['destination'])) {
+      throw new \Files\InvalidParameterException('$destination must be of type string; received ' . gettype($destination));
+    }
+
+    $response = Api::sendRequest('/file_actions/copy/' . @$params['path'] . '', 'POST', $params, $this->options);
+    return $response->data;
   }
 
   // Move file/folder
@@ -541,40 +583,36 @@ class File {
   // Parameters:
   //   destination (required) - string - Move destination path.
   public function move($params = []) {
-    if (!$this->path) {
-      throw new \Files\EmptyPropertyException('The current File object has no $path value');
-    }
-
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
-    $params['path'] = $this->path;
-
-    if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
-    }
-    if (@$params['destination'] && !is_string(@$params['destination'])) {
-      throw new \Files\InvalidParameterException('$destination must be of type string; received ' . gettype($destination));
-    }
-
     if (!@$params['path']) {
-      if ($this->path) {
-        $params['path'] = @$this->path;
+      if (@$this->path) {
+        $params['path'] = $this->path;
       } else {
         throw new \Files\MissingParameterException('Parameter missing: path');
       }
     }
 
     if (!@$params['destination']) {
-      if ($this->destination) {
-        $params['destination'] = @$this->destination;
+      if (@$this->destination) {
+        $params['destination'] = $this->destination;
       } else {
         throw new \Files\MissingParameterException('Parameter missing: destination');
       }
     }
 
-    return Api::sendRequest('/file_actions/move/' . @$params['path'] . '', 'POST', $params, $this->options);
+    if (@$params['path'] && !is_string(@$params['path'])) {
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
+    }
+
+    if (@$params['destination'] && !is_string(@$params['destination'])) {
+      throw new \Files\InvalidParameterException('$destination must be of type string; received ' . gettype($destination));
+    }
+
+    $response = Api::sendRequest('/file_actions/move/' . @$params['path'] . '', 'POST', $params, $this->options);
+    return $response->data;
   }
 
   // Begin file upload
@@ -587,41 +625,40 @@ class File {
   //   restart - int64 - File byte offset to restart from.
   //   with_rename - boolean - Allow file rename instead of overwrite?
   public function beginUpload($params = []) {
-    if (!$this->path) {
-      throw new \Files\EmptyPropertyException('The current File object has no $path value');
-    }
-
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
-    $params['path'] = $this->path;
-
-    if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
-    }
-    if (@$params['part'] && !is_int(@$params['part'])) {
-      throw new \Files\InvalidParameterException('$part must be of type int; received ' . gettype($part));
-    }
-    if (@$params['parts'] && !is_int(@$params['parts'])) {
-      throw new \Files\InvalidParameterException('$parts must be of type int; received ' . gettype($parts));
-    }
-    if (@$params['ref'] && !is_string(@$params['ref'])) {
-      throw new \Files\InvalidParameterException('$ref must be of type string; received ' . gettype($ref));
-    }
-    if (@$params['restart'] && !is_int(@$params['restart'])) {
-      throw new \Files\InvalidParameterException('$restart must be of type int; received ' . gettype($restart));
-    }
-
     if (!@$params['path']) {
-      if ($this->path) {
-        $params['path'] = @$this->path;
+      if (@$this->path) {
+        $params['path'] = $this->path;
       } else {
         throw new \Files\MissingParameterException('Parameter missing: path');
       }
     }
 
-    return Api::sendRequest('/file_actions/begin_upload/' . @$params['path'] . '', 'POST', $params, $this->options);
+    if (@$params['path'] && !is_string(@$params['path'])) {
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
+    }
+
+    if (@$params['part'] && !is_int(@$params['part'])) {
+      throw new \Files\InvalidParameterException('$part must be of type int; received ' . gettype($part));
+    }
+
+    if (@$params['parts'] && !is_int(@$params['parts'])) {
+      throw new \Files\InvalidParameterException('$parts must be of type int; received ' . gettype($parts));
+    }
+
+    if (@$params['ref'] && !is_string(@$params['ref'])) {
+      throw new \Files\InvalidParameterException('$ref must be of type string; received ' . gettype($ref));
+    }
+
+    if (@$params['restart'] && !is_int(@$params['restart'])) {
+      throw new \Files\InvalidParameterException('$restart must be of type int; received ' . gettype($restart));
+    }
+
+    $response = Api::sendRequest('/file_actions/begin_upload/' . @$params['path'] . '', 'POST', $params, $this->options);
+    return $response->data;
   }
 
   public function save() {

@@ -26,6 +26,10 @@ class PublicKey {
     $this->options = $options;
   }
 
+  public function __set($name, $value) {
+    $this->attributes[$name] = $value;
+  }
+
   public function __get($name) {
     return @$this->attributes[$name];
   }
@@ -87,66 +91,57 @@ class PublicKey {
   // Parameters:
   //   title (required) - string - Internal reference for key.
   public function update($params = []) {
-    if (!$this->id) {
-      throw new \Files\EmptyPropertyException('The current PublicKey object has no $id value');
-    }
-
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
-    $params['id'] = $this->id;
-
-    if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
-    }
-    if (@$params['title'] && !is_string(@$params['title'])) {
-      throw new \Files\InvalidParameterException('$title must be of type string; received ' . gettype($title));
-    }
-
     if (!@$params['id']) {
-      if ($this->id) {
-        $params['id'] = @$this->id;
+      if (@$this->id) {
+        $params['id'] = $this->id;
       } else {
         throw new \Files\MissingParameterException('Parameter missing: id');
       }
     }
 
     if (!@$params['title']) {
-      if ($this->title) {
-        $params['title'] = @$this->title;
+      if (@$this->title) {
+        $params['title'] = $this->title;
       } else {
         throw new \Files\MissingParameterException('Parameter missing: title');
       }
     }
 
-    return Api::sendRequest('/public_keys/' . @$params['id'] . '', 'PATCH', $params, $this->options);
-  }
-
-  public function delete($params = []) {
-    if (!$this->id) {
-      throw new \Files\EmptyPropertyException('The current PublicKey object has no $id value');
-    }
-
-    if (!is_array($params)) {
-      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
-    }
-
-    $params['id'] = $this->id;
-
     if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
 
+    if (@$params['title'] && !is_string(@$params['title'])) {
+      throw new \Files\InvalidParameterException('$title must be of type string; received ' . gettype($title));
+    }
+
+    $response = Api::sendRequest('/public_keys/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+    return $response->data;
+  }
+
+  public function delete($params = []) {
+    if (!is_array($params)) {
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+    }
+
     if (!@$params['id']) {
-      if ($this->id) {
-        $params['id'] = @$this->id;
+      if (@$this->id) {
+        $params['id'] = $this->id;
       } else {
         throw new \Files\MissingParameterException('Parameter missing: id');
       }
     }
 
-    return Api::sendRequest('/public_keys/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+    if (@$params['id'] && !is_int(@$params['id'])) {
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
+    }
+
+    $response = Api::sendRequest('/public_keys/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+    return $response->data;
   }
 
   public function destroy($params = []) {

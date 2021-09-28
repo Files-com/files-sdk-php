@@ -26,6 +26,10 @@ class GroupUser {
     $this->options = $options;
   }
 
+  public function __set($name, $value) {
+    $this->attributes[$name] = $value;
+  }
+
   public function __get($name) {
     return @$this->attributes[$name];
   }
@@ -93,102 +97,96 @@ class GroupUser {
   //   user_id (required) - int64 - User ID to add to group.
   //   admin - boolean - Is the user a group administrator?
   public function update($params = []) {
-    if (!$this->id) {
-      throw new \Files\EmptyPropertyException('The current GroupUser object has no $id value');
-    }
-
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
-    $params['id'] = $this->id;
-
-    if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
-    }
-    if (@$params['group_id'] && !is_int(@$params['group_id'])) {
-      throw new \Files\InvalidParameterException('$group_id must be of type int; received ' . gettype($group_id));
-    }
-    if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype($user_id));
-    }
-
     if (!@$params['id']) {
-      if ($this->id) {
-        $params['id'] = @$this->id;
+      if (@$this->id) {
+        $params['id'] = $this->id;
       } else {
         throw new \Files\MissingParameterException('Parameter missing: id');
       }
     }
 
     if (!@$params['group_id']) {
-      if ($this->group_id) {
-        $params['group_id'] = @$this->group_id;
+      if (@$this->group_id) {
+        $params['group_id'] = $this->group_id;
       } else {
         throw new \Files\MissingParameterException('Parameter missing: group_id');
       }
     }
 
     if (!@$params['user_id']) {
-      if ($this->user_id) {
-        $params['user_id'] = @$this->user_id;
+      if (@$this->user_id) {
+        $params['user_id'] = $this->user_id;
       } else {
         throw new \Files\MissingParameterException('Parameter missing: user_id');
       }
     }
 
-    return Api::sendRequest('/group_users/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+    if (@$params['id'] && !is_int(@$params['id'])) {
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
+    }
+
+    if (@$params['group_id'] && !is_int(@$params['group_id'])) {
+      throw new \Files\InvalidParameterException('$group_id must be of type int; received ' . gettype($group_id));
+    }
+
+    if (@$params['user_id'] && !is_int(@$params['user_id'])) {
+      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype($user_id));
+    }
+
+    $response = Api::sendRequest('/group_users/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+    return $response->data;
   }
 
   // Parameters:
   //   group_id (required) - int64 - Group ID from which to remove user.
   //   user_id (required) - int64 - User ID to remove from group.
   public function delete($params = []) {
-    if (!$this->id) {
-      throw new \Files\EmptyPropertyException('The current GroupUser object has no $id value');
-    }
-
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
-    $params['id'] = $this->id;
-
-    if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
-    }
-    if (@$params['group_id'] && !is_int(@$params['group_id'])) {
-      throw new \Files\InvalidParameterException('$group_id must be of type int; received ' . gettype($group_id));
-    }
-    if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype($user_id));
-    }
-
     if (!@$params['id']) {
-      if ($this->id) {
-        $params['id'] = @$this->id;
+      if (@$this->id) {
+        $params['id'] = $this->id;
       } else {
         throw new \Files\MissingParameterException('Parameter missing: id');
       }
     }
 
     if (!@$params['group_id']) {
-      if ($this->group_id) {
-        $params['group_id'] = @$this->group_id;
+      if (@$this->group_id) {
+        $params['group_id'] = $this->group_id;
       } else {
         throw new \Files\MissingParameterException('Parameter missing: group_id');
       }
     }
 
     if (!@$params['user_id']) {
-      if ($this->user_id) {
-        $params['user_id'] = @$this->user_id;
+      if (@$this->user_id) {
+        $params['user_id'] = $this->user_id;
       } else {
         throw new \Files\MissingParameterException('Parameter missing: user_id');
       }
     }
 
-    return Api::sendRequest('/group_users/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+    if (@$params['id'] && !is_int(@$params['id'])) {
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
+    }
+
+    if (@$params['group_id'] && !is_int(@$params['group_id'])) {
+      throw new \Files\InvalidParameterException('$group_id must be of type int; received ' . gettype($group_id));
+    }
+
+    if (@$params['user_id'] && !is_int(@$params['user_id'])) {
+      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype($user_id));
+    }
+
+    $response = Api::sendRequest('/group_users/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+    return $response->data;
   }
 
   public function destroy($params = []) {

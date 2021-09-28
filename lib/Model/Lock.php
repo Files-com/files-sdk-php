@@ -26,6 +26,10 @@ class Lock {
     $this->options = $options;
   }
 
+  public function __set($name, $value) {
+    $this->attributes[$name] = $value;
+  }
+
   public function __get($name) {
     return @$this->attributes[$name];
   }
@@ -145,40 +149,36 @@ class Lock {
   // Parameters:
   //   token (required) - string - Lock token
   public function delete($params = []) {
-    if (!$this->path) {
-      throw new \Files\EmptyPropertyException('The current Lock object has no $path value');
-    }
-
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
-    $params['path'] = $this->path;
-
-    if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
-    }
-    if (@$params['token'] && !is_string(@$params['token'])) {
-      throw new \Files\InvalidParameterException('$token must be of type string; received ' . gettype($token));
-    }
-
     if (!@$params['path']) {
-      if ($this->path) {
-        $params['path'] = @$this->path;
+      if (@$this->path) {
+        $params['path'] = $this->path;
       } else {
         throw new \Files\MissingParameterException('Parameter missing: path');
       }
     }
 
     if (!@$params['token']) {
-      if ($this->token) {
-        $params['token'] = @$this->token;
+      if (@$this->token) {
+        $params['token'] = $this->token;
       } else {
         throw new \Files\MissingParameterException('Parameter missing: token');
       }
     }
 
-    return Api::sendRequest('/locks/' . @$params['path'] . '', 'DELETE', $params, $this->options);
+    if (@$params['path'] && !is_string(@$params['path'])) {
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
+    }
+
+    if (@$params['token'] && !is_string(@$params['token'])) {
+      throw new \Files\InvalidParameterException('$token must be of type string; received ' . gettype($token));
+    }
+
+    $response = Api::sendRequest('/locks/' . @$params['path'] . '', 'DELETE', $params, $this->options);
+    return $response->data;
   }
 
   public function destroy($params = []) {

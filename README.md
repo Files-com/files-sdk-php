@@ -58,6 +58,18 @@ Or, you can pass the session ID per-request, in the options array at the end of 
 
     $user = new \Files\Model\User($params, array('session_id' => $session->id));
 
+##### Session example
+
+    $session = \Files\Model\Session::create(['username' => $myUsername, 'password' => $myPassword]);
+    \Files\Files::setSessionId($session->id);
+
+    // do something
+    \Files\Model\ApiKey::list(['user_id' => 0]);
+
+    // clean up when done
+    \Files\Model\Session::destroy();
+    \Files\Files::setSessionId(null);
+
 ### Setting Global Options
 
 You can set the following global properties directly on the `\Files\Files` class:
@@ -76,11 +88,11 @@ You can set the following global properties directly on the `\Files\Files` class
 * `\Files\Files::$minNetworkRetryDelay` - minimum delay in seconds before retrying (default: `0.5`)
 * `\Files\Files::$maxNetworkRetryDelay` - max delay in seconds before retrying (default: `1.5`)
 
-### File Operations
+### Static File Operations
 
-#### List root folder
+#### List files in root folder
 
-    $dirFiles = \Files\Model\Folder::listFor('/');
+    $rootFiles = \Files\Model\Folder::listFor('/');
 
 #### Uploading a file on disk
 
@@ -92,9 +104,30 @@ You can set the following global properties directly on the `\Files\Files` class
 
 #### Getting a file record by path
 
-    $foundFile = File::find($remoteFilePath);
+    $foundFile = \Files\Model\File::find($remoteFilePath);
 
-### Additional Object Documentation
+### File Object Operations
+
+#### Getting a file record by path
+
+    $file = new \Files\Model\File();
+    $file->get($remoteFilePath);
+
+##### Updating metadata
+
+    $file->update([
+      'provided_mtime' => '2000-01-01T01:00:00Z',
+      'priority_color' => 'red',
+    ]);
+
+##### Retrieving metadata
+
+    $file->metadata([
+      'with_previews' => true,
+      'with_priority_color' => true,
+    ]);
+
+### Additional Documentation
 
 Additional docs are available at https://developers.files.com
 

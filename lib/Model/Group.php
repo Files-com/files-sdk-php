@@ -26,6 +26,10 @@ class Group {
     $this->options = $options;
   }
 
+  public function __set($name, $value) {
+    $this->attributes[$name] = $value;
+  }
+
   public function __get($name) {
     return @$this->attributes[$name];
   }
@@ -94,67 +98,61 @@ class Group {
   //   user_ids - string - A list of user ids. If sent as a string, should be comma-delimited.
   //   admin_ids - string - A list of group admin user ids. If sent as a string, should be comma-delimited.
   public function update($params = []) {
-    if (!$this->id) {
-      throw new \Files\EmptyPropertyException('The current Group object has no $id value');
-    }
-
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
-    $params['id'] = $this->id;
+    if (!@$params['id']) {
+      if (@$this->id) {
+        $params['id'] = $this->id;
+      } else {
+        throw new \Files\MissingParameterException('Parameter missing: id');
+      }
+    }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
+
     if (@$params['name'] && !is_string(@$params['name'])) {
       throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype($name));
     }
+
     if (@$params['notes'] && !is_string(@$params['notes'])) {
       throw new \Files\InvalidParameterException('$notes must be of type string; received ' . gettype($notes));
     }
+
     if (@$params['user_ids'] && !is_string(@$params['user_ids'])) {
       throw new \Files\InvalidParameterException('$user_ids must be of type string; received ' . gettype($user_ids));
     }
+
     if (@$params['admin_ids'] && !is_string(@$params['admin_ids'])) {
       throw new \Files\InvalidParameterException('$admin_ids must be of type string; received ' . gettype($admin_ids));
     }
 
-    if (!@$params['id']) {
-      if ($this->id) {
-        $params['id'] = @$this->id;
-      } else {
-        throw new \Files\MissingParameterException('Parameter missing: id');
-      }
-    }
-
-    return Api::sendRequest('/groups/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+    $response = Api::sendRequest('/groups/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+    return $response->data;
   }
 
   public function delete($params = []) {
-    if (!$this->id) {
-      throw new \Files\EmptyPropertyException('The current Group object has no $id value');
-    }
-
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
-    $params['id'] = $this->id;
+    if (!@$params['id']) {
+      if (@$this->id) {
+        $params['id'] = $this->id;
+      } else {
+        throw new \Files\MissingParameterException('Parameter missing: id');
+      }
+    }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
 
-    if (!@$params['id']) {
-      if ($this->id) {
-        $params['id'] = @$this->id;
-      } else {
-        throw new \Files\MissingParameterException('Parameter missing: id');
-      }
-    }
-
-    return Api::sendRequest('/groups/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+    $response = Api::sendRequest('/groups/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+    return $response->data;
   }
 
   public function destroy($params = []) {

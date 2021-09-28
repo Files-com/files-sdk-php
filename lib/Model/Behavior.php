@@ -26,6 +26,10 @@ class Behavior {
     $this->options = $options;
   }
 
+  public function __set($name, $value) {
+    $this->attributes[$name] = $value;
+  }
+
   public function __get($name) {
     return @$this->attributes[$name];
   }
@@ -114,70 +118,65 @@ class Behavior {
   //   behavior - string - Behavior type.
   //   path - string - Folder behaviors path.
   public function update($params = []) {
-    if (!$this->id) {
-      throw new \Files\EmptyPropertyException('The current Behavior object has no $id value');
-    }
-
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
-    $params['id'] = $this->id;
+    if (!@$params['id']) {
+      if (@$this->id) {
+        $params['id'] = $this->id;
+      } else {
+        throw new \Files\MissingParameterException('Parameter missing: id');
+      }
+    }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
+
     if (@$params['value'] && !is_string(@$params['value'])) {
       throw new \Files\InvalidParameterException('$value must be of type string; received ' . gettype($value));
     }
+
     if (@$params['name'] && !is_string(@$params['name'])) {
       throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype($name));
     }
+
     if (@$params['description'] && !is_string(@$params['description'])) {
       throw new \Files\InvalidParameterException('$description must be of type string; received ' . gettype($description));
     }
+
     if (@$params['behavior'] && !is_string(@$params['behavior'])) {
       throw new \Files\InvalidParameterException('$behavior must be of type string; received ' . gettype($behavior));
     }
+
     if (@$params['path'] && !is_string(@$params['path'])) {
       throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
     }
 
-    if (!@$params['id']) {
-      if ($this->id) {
-        $params['id'] = @$this->id;
-      } else {
-        throw new \Files\MissingParameterException('Parameter missing: id');
-      }
-    }
-
-    return Api::sendRequest('/behaviors/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+    $response = Api::sendRequest('/behaviors/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+    return $response->data;
   }
 
   public function delete($params = []) {
-    if (!$this->id) {
-      throw new \Files\EmptyPropertyException('The current Behavior object has no $id value');
-    }
-
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
-    $params['id'] = $this->id;
+    if (!@$params['id']) {
+      if (@$this->id) {
+        $params['id'] = $this->id;
+      } else {
+        throw new \Files\MissingParameterException('Parameter missing: id');
+      }
+    }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
 
-    if (!@$params['id']) {
-      if ($this->id) {
-        $params['id'] = @$this->id;
-      } else {
-        throw new \Files\MissingParameterException('Parameter missing: id');
-      }
-    }
-
-    return Api::sendRequest('/behaviors/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+    $response = Api::sendRequest('/behaviors/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+    return $response->data;
   }
 
   public function destroy($params = []) {

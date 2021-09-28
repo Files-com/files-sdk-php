@@ -26,6 +26,10 @@ class Message {
     $this->options = $options;
   }
 
+  public function __set($name, $value) {
+    $this->attributes[$name] = $value;
+  }
+
   public function __get($name) {
     return @$this->attributes[$name];
   }
@@ -93,88 +97,81 @@ class Message {
   //   subject (required) - string - Message subject.
   //   body (required) - string - Message body.
   public function update($params = []) {
-    if (!$this->id) {
-      throw new \Files\EmptyPropertyException('The current Message object has no $id value');
-    }
-
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
-    $params['id'] = $this->id;
-
-    if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
-    }
-    if (@$params['project_id'] && !is_int(@$params['project_id'])) {
-      throw new \Files\InvalidParameterException('$project_id must be of type int; received ' . gettype($project_id));
-    }
-    if (@$params['subject'] && !is_string(@$params['subject'])) {
-      throw new \Files\InvalidParameterException('$subject must be of type string; received ' . gettype($subject));
-    }
-    if (@$params['body'] && !is_string(@$params['body'])) {
-      throw new \Files\InvalidParameterException('$body must be of type string; received ' . gettype($body));
-    }
-
     if (!@$params['id']) {
-      if ($this->id) {
-        $params['id'] = @$this->id;
+      if (@$this->id) {
+        $params['id'] = $this->id;
       } else {
         throw new \Files\MissingParameterException('Parameter missing: id');
       }
     }
 
     if (!@$params['project_id']) {
-      if ($this->project_id) {
-        $params['project_id'] = @$this->project_id;
+      if (@$this->project_id) {
+        $params['project_id'] = $this->project_id;
       } else {
         throw new \Files\MissingParameterException('Parameter missing: project_id');
       }
     }
 
     if (!@$params['subject']) {
-      if ($this->subject) {
-        $params['subject'] = @$this->subject;
+      if (@$this->subject) {
+        $params['subject'] = $this->subject;
       } else {
         throw new \Files\MissingParameterException('Parameter missing: subject');
       }
     }
 
     if (!@$params['body']) {
-      if ($this->body) {
-        $params['body'] = @$this->body;
+      if (@$this->body) {
+        $params['body'] = $this->body;
       } else {
         throw new \Files\MissingParameterException('Parameter missing: body');
       }
     }
 
-    return Api::sendRequest('/messages/' . @$params['id'] . '', 'PATCH', $params, $this->options);
-  }
-
-  public function delete($params = []) {
-    if (!$this->id) {
-      throw new \Files\EmptyPropertyException('The current Message object has no $id value');
-    }
-
-    if (!is_array($params)) {
-      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
-    }
-
-    $params['id'] = $this->id;
-
     if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
 
+    if (@$params['project_id'] && !is_int(@$params['project_id'])) {
+      throw new \Files\InvalidParameterException('$project_id must be of type int; received ' . gettype($project_id));
+    }
+
+    if (@$params['subject'] && !is_string(@$params['subject'])) {
+      throw new \Files\InvalidParameterException('$subject must be of type string; received ' . gettype($subject));
+    }
+
+    if (@$params['body'] && !is_string(@$params['body'])) {
+      throw new \Files\InvalidParameterException('$body must be of type string; received ' . gettype($body));
+    }
+
+    $response = Api::sendRequest('/messages/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+    return $response->data;
+  }
+
+  public function delete($params = []) {
+    if (!is_array($params)) {
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+    }
+
     if (!@$params['id']) {
-      if ($this->id) {
-        $params['id'] = @$this->id;
+      if (@$this->id) {
+        $params['id'] = $this->id;
       } else {
         throw new \Files\MissingParameterException('Parameter missing: id');
       }
     }
 
-    return Api::sendRequest('/messages/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+    if (@$params['id'] && !is_int(@$params['id'])) {
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
+    }
+
+    $response = Api::sendRequest('/messages/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+    return $response->data;
   }
 
   public function destroy($params = []) {

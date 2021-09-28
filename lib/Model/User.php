@@ -26,6 +26,10 @@ class User {
     $this->options = $options;
   }
 
+  public function __set($name, $value) {
+    $this->attributes[$name] = $value;
+  }
+
   public function __get($name) {
     return @$this->attributes[$name];
   }
@@ -554,83 +558,68 @@ class User {
 
   // Unlock user who has been locked out due to failed logins
   public function unlock($params = []) {
-    if (!$this->id) {
-      throw new \Files\EmptyPropertyException('The current User object has no $id value');
-    }
-
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
-    $params['id'] = $this->id;
-
-    if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
-    }
-
     if (!@$params['id']) {
-      if ($this->id) {
-        $params['id'] = @$this->id;
+      if (@$this->id) {
+        $params['id'] = $this->id;
       } else {
         throw new \Files\MissingParameterException('Parameter missing: id');
       }
     }
 
-    return Api::sendRequest('/users/' . @$params['id'] . '/unlock', 'POST', $params, $this->options);
+    if (@$params['id'] && !is_int(@$params['id'])) {
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
+    }
+
+    $response = Api::sendRequest('/users/' . @$params['id'] . '/unlock', 'POST', $params, $this->options);
+    return $response->data;
   }
 
   // Resend user welcome email
   public function resendWelcomeEmail($params = []) {
-    if (!$this->id) {
-      throw new \Files\EmptyPropertyException('The current User object has no $id value');
-    }
-
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
-    $params['id'] = $this->id;
-
-    if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
-    }
-
     if (!@$params['id']) {
-      if ($this->id) {
-        $params['id'] = @$this->id;
+      if (@$this->id) {
+        $params['id'] = $this->id;
       } else {
         throw new \Files\MissingParameterException('Parameter missing: id');
       }
     }
 
-    return Api::sendRequest('/users/' . @$params['id'] . '/resend_welcome_email', 'POST', $params, $this->options);
+    if (@$params['id'] && !is_int(@$params['id'])) {
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
+    }
+
+    $response = Api::sendRequest('/users/' . @$params['id'] . '/resend_welcome_email', 'POST', $params, $this->options);
+    return $response->data;
   }
 
   // Trigger 2FA Reset process for user who has lost access to their existing 2FA methods
   public function user2faReset($params = []) {
-    if (!$this->id) {
-      throw new \Files\EmptyPropertyException('The current User object has no $id value');
-    }
-
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
-    $params['id'] = $this->id;
-
-    if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
-    }
-
     if (!@$params['id']) {
-      if ($this->id) {
-        $params['id'] = @$this->id;
+      if (@$this->id) {
+        $params['id'] = $this->id;
       } else {
         throw new \Files\MissingParameterException('Parameter missing: id');
       }
     }
 
-    return Api::sendRequest('/users/' . @$params['id'] . '/2fa/reset', 'POST', $params, $this->options);
+    if (@$params['id'] && !is_int(@$params['id'])) {
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
+    }
+
+    $response = Api::sendRequest('/users/' . @$params['id'] . '/2fa/reset', 'POST', $params, $this->options);
+    return $response->data;
   }
 
   // Parameters:
@@ -679,130 +668,145 @@ class User {
   //   user_root - string - Root folder for FTP (and optionally SFTP if the appropriate site-wide setting is set.)  Note that this is not used for API, Desktop, or Web interface.
   //   username - string - User's username
   public function update($params = []) {
-    if (!$this->id) {
-      throw new \Files\EmptyPropertyException('The current User object has no $id value');
-    }
-
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
-    $params['id'] = $this->id;
+    if (!@$params['id']) {
+      if (@$this->id) {
+        $params['id'] = $this->id;
+      } else {
+        throw new \Files\MissingParameterException('Parameter missing: id');
+      }
+    }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
+
     if (@$params['change_password'] && !is_string(@$params['change_password'])) {
       throw new \Files\InvalidParameterException('$change_password must be of type string; received ' . gettype($change_password));
     }
+
     if (@$params['change_password_confirmation'] && !is_string(@$params['change_password_confirmation'])) {
       throw new \Files\InvalidParameterException('$change_password_confirmation must be of type string; received ' . gettype($change_password_confirmation));
     }
+
     if (@$params['email'] && !is_string(@$params['email'])) {
       throw new \Files\InvalidParameterException('$email must be of type string; received ' . gettype($email));
     }
+
     if (@$params['grant_permission'] && !is_string(@$params['grant_permission'])) {
       throw new \Files\InvalidParameterException('$grant_permission must be of type string; received ' . gettype($grant_permission));
     }
+
     if (@$params['group_id'] && !is_int(@$params['group_id'])) {
       throw new \Files\InvalidParameterException('$group_id must be of type int; received ' . gettype($group_id));
     }
+
     if (@$params['group_ids'] && !is_string(@$params['group_ids'])) {
       throw new \Files\InvalidParameterException('$group_ids must be of type string; received ' . gettype($group_ids));
     }
+
     if (@$params['imported_password_hash'] && !is_string(@$params['imported_password_hash'])) {
       throw new \Files\InvalidParameterException('$imported_password_hash must be of type string; received ' . gettype($imported_password_hash));
     }
+
     if (@$params['password'] && !is_string(@$params['password'])) {
       throw new \Files\InvalidParameterException('$password must be of type string; received ' . gettype($password));
     }
+
     if (@$params['password_confirmation'] && !is_string(@$params['password_confirmation'])) {
       throw new \Files\InvalidParameterException('$password_confirmation must be of type string; received ' . gettype($password_confirmation));
     }
+
     if (@$params['allowed_ips'] && !is_string(@$params['allowed_ips'])) {
       throw new \Files\InvalidParameterException('$allowed_ips must be of type string; received ' . gettype($allowed_ips));
     }
+
     if (@$params['authenticate_until'] && !is_string(@$params['authenticate_until'])) {
       throw new \Files\InvalidParameterException('$authenticate_until must be of type string; received ' . gettype($authenticate_until));
     }
+
     if (@$params['authentication_method'] && !is_string(@$params['authentication_method'])) {
       throw new \Files\InvalidParameterException('$authentication_method must be of type string; received ' . gettype($authentication_method));
     }
+
     if (@$params['header_text'] && !is_string(@$params['header_text'])) {
       throw new \Files\InvalidParameterException('$header_text must be of type string; received ' . gettype($header_text));
     }
+
     if (@$params['language'] && !is_string(@$params['language'])) {
       throw new \Files\InvalidParameterException('$language must be of type string; received ' . gettype($language));
     }
+
     if (@$params['notification_daily_send_time'] && !is_int(@$params['notification_daily_send_time'])) {
       throw new \Files\InvalidParameterException('$notification_daily_send_time must be of type int; received ' . gettype($notification_daily_send_time));
     }
+
     if (@$params['name'] && !is_string(@$params['name'])) {
       throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype($name));
     }
+
     if (@$params['company'] && !is_string(@$params['company'])) {
       throw new \Files\InvalidParameterException('$company must be of type string; received ' . gettype($company));
     }
+
     if (@$params['notes'] && !is_string(@$params['notes'])) {
       throw new \Files\InvalidParameterException('$notes must be of type string; received ' . gettype($notes));
     }
+
     if (@$params['password_validity_days'] && !is_int(@$params['password_validity_days'])) {
       throw new \Files\InvalidParameterException('$password_validity_days must be of type int; received ' . gettype($password_validity_days));
     }
+
     if (@$params['ssl_required'] && !is_string(@$params['ssl_required'])) {
       throw new \Files\InvalidParameterException('$ssl_required must be of type string; received ' . gettype($ssl_required));
     }
+
     if (@$params['sso_strategy_id'] && !is_int(@$params['sso_strategy_id'])) {
       throw new \Files\InvalidParameterException('$sso_strategy_id must be of type int; received ' . gettype($sso_strategy_id));
     }
+
     if (@$params['require_2fa'] && !is_string(@$params['require_2fa'])) {
       throw new \Files\InvalidParameterException('$require_2fa must be of type string; received ' . gettype($require_2fa));
     }
+
     if (@$params['time_zone'] && !is_string(@$params['time_zone'])) {
       throw new \Files\InvalidParameterException('$time_zone must be of type string; received ' . gettype($time_zone));
     }
+
     if (@$params['user_root'] && !is_string(@$params['user_root'])) {
       throw new \Files\InvalidParameterException('$user_root must be of type string; received ' . gettype($user_root));
     }
+
     if (@$params['username'] && !is_string(@$params['username'])) {
       throw new \Files\InvalidParameterException('$username must be of type string; received ' . gettype($username));
     }
 
-    if (!@$params['id']) {
-      if ($this->id) {
-        $params['id'] = @$this->id;
-      } else {
-        throw new \Files\MissingParameterException('Parameter missing: id');
-      }
-    }
-
-    return Api::sendRequest('/users/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+    $response = Api::sendRequest('/users/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+    return $response->data;
   }
 
   public function delete($params = []) {
-    if (!$this->id) {
-      throw new \Files\EmptyPropertyException('The current User object has no $id value');
-    }
-
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
-    $params['id'] = $this->id;
+    if (!@$params['id']) {
+      if (@$this->id) {
+        $params['id'] = $this->id;
+      } else {
+        throw new \Files\MissingParameterException('Parameter missing: id');
+      }
+    }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
 
-    if (!@$params['id']) {
-      if ($this->id) {
-        $params['id'] = @$this->id;
-      } else {
-        throw new \Files\MissingParameterException('Parameter missing: id');
-      }
-    }
-
-    return Api::sendRequest('/users/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+    $response = Api::sendRequest('/users/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+    return $response->data;
   }
 
   public function destroy($params = []) {

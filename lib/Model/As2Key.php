@@ -26,6 +26,10 @@ class As2Key {
     $this->options = $options;
   }
 
+  public function __set($name, $value) {
+    $this->attributes[$name] = $value;
+  }
+
   public function __get($name) {
     return @$this->attributes[$name];
   }
@@ -87,66 +91,57 @@ class As2Key {
   // Parameters:
   //   as2_partnership_name (required) - string - AS2 Partnership Name
   public function update($params = []) {
-    if (!$this->id) {
-      throw new \Files\EmptyPropertyException('The current As2Key object has no $id value');
-    }
-
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
-    $params['id'] = $this->id;
-
-    if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
-    }
-    if (@$params['as2_partnership_name'] && !is_string(@$params['as2_partnership_name'])) {
-      throw new \Files\InvalidParameterException('$as2_partnership_name must be of type string; received ' . gettype($as2_partnership_name));
-    }
-
     if (!@$params['id']) {
-      if ($this->id) {
-        $params['id'] = @$this->id;
+      if (@$this->id) {
+        $params['id'] = $this->id;
       } else {
         throw new \Files\MissingParameterException('Parameter missing: id');
       }
     }
 
     if (!@$params['as2_partnership_name']) {
-      if ($this->as2_partnership_name) {
-        $params['as2_partnership_name'] = @$this->as2_partnership_name;
+      if (@$this->as2_partnership_name) {
+        $params['as2_partnership_name'] = $this->as2_partnership_name;
       } else {
         throw new \Files\MissingParameterException('Parameter missing: as2_partnership_name');
       }
     }
 
-    return Api::sendRequest('/as2_keys/' . @$params['id'] . '', 'PATCH', $params, $this->options);
-  }
-
-  public function delete($params = []) {
-    if (!$this->id) {
-      throw new \Files\EmptyPropertyException('The current As2Key object has no $id value');
-    }
-
-    if (!is_array($params)) {
-      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
-    }
-
-    $params['id'] = $this->id;
-
     if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
 
+    if (@$params['as2_partnership_name'] && !is_string(@$params['as2_partnership_name'])) {
+      throw new \Files\InvalidParameterException('$as2_partnership_name must be of type string; received ' . gettype($as2_partnership_name));
+    }
+
+    $response = Api::sendRequest('/as2_keys/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+    return $response->data;
+  }
+
+  public function delete($params = []) {
+    if (!is_array($params)) {
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+    }
+
     if (!@$params['id']) {
-      if ($this->id) {
-        $params['id'] = @$this->id;
+      if (@$this->id) {
+        $params['id'] = $this->id;
       } else {
         throw new \Files\MissingParameterException('Parameter missing: id');
       }
     }
 
-    return Api::sendRequest('/as2_keys/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+    if (@$params['id'] && !is_int(@$params['id'])) {
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
+    }
+
+    $response = Api::sendRequest('/as2_keys/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+    return $response->data;
   }
 
   public function destroy($params = []) {

@@ -26,6 +26,10 @@ class Clickwrap {
     $this->options = $options;
   }
 
+  public function __set($name, $value) {
+    $this->attributes[$name] = $value;
+  }
+
   public function __get($name) {
     return @$this->attributes[$name];
   }
@@ -95,70 +99,65 @@ class Clickwrap {
   //   use_with_inboxes - string - Use this Clickwrap for Inboxes?
   //   use_with_users - string - Use this Clickwrap for User Registrations?  Note: This only applies to User Registrations where the User is invited to your Files.com site using an E-Mail invitation process where they then set their own password.
   public function update($params = []) {
-    if (!$this->id) {
-      throw new \Files\EmptyPropertyException('The current Clickwrap object has no $id value');
-    }
-
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
-    $params['id'] = $this->id;
+    if (!@$params['id']) {
+      if (@$this->id) {
+        $params['id'] = $this->id;
+      } else {
+        throw new \Files\MissingParameterException('Parameter missing: id');
+      }
+    }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
+
     if (@$params['name'] && !is_string(@$params['name'])) {
       throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype($name));
     }
+
     if (@$params['body'] && !is_string(@$params['body'])) {
       throw new \Files\InvalidParameterException('$body must be of type string; received ' . gettype($body));
     }
+
     if (@$params['use_with_bundles'] && !is_string(@$params['use_with_bundles'])) {
       throw new \Files\InvalidParameterException('$use_with_bundles must be of type string; received ' . gettype($use_with_bundles));
     }
+
     if (@$params['use_with_inboxes'] && !is_string(@$params['use_with_inboxes'])) {
       throw new \Files\InvalidParameterException('$use_with_inboxes must be of type string; received ' . gettype($use_with_inboxes));
     }
+
     if (@$params['use_with_users'] && !is_string(@$params['use_with_users'])) {
       throw new \Files\InvalidParameterException('$use_with_users must be of type string; received ' . gettype($use_with_users));
     }
 
-    if (!@$params['id']) {
-      if ($this->id) {
-        $params['id'] = @$this->id;
-      } else {
-        throw new \Files\MissingParameterException('Parameter missing: id');
-      }
-    }
-
-    return Api::sendRequest('/clickwraps/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+    $response = Api::sendRequest('/clickwraps/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+    return $response->data;
   }
 
   public function delete($params = []) {
-    if (!$this->id) {
-      throw new \Files\EmptyPropertyException('The current Clickwrap object has no $id value');
-    }
-
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
-    $params['id'] = $this->id;
+    if (!@$params['id']) {
+      if (@$this->id) {
+        $params['id'] = $this->id;
+      } else {
+        throw new \Files\MissingParameterException('Parameter missing: id');
+      }
+    }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
 
-    if (!@$params['id']) {
-      if ($this->id) {
-        $params['id'] = @$this->id;
-      } else {
-        throw new \Files\MissingParameterException('Parameter missing: id');
-      }
-    }
-
-    return Api::sendRequest('/clickwraps/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+    $response = Api::sendRequest('/clickwraps/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+    return $response->data;
   }
 
   public function destroy($params = []) {

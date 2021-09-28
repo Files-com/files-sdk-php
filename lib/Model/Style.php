@@ -26,6 +26,10 @@ class Style {
     $this->options = $options;
   }
 
+  public function __set($name, $value) {
+    $this->attributes[$name] = $value;
+  }
+
   public function __get($name) {
     return @$this->attributes[$name];
   }
@@ -82,63 +86,53 @@ class Style {
   // Parameters:
   //   file (required) - file - Logo for custom branding.
   public function update($params = []) {
-    if (!$this->path) {
-      throw new \Files\EmptyPropertyException('The current Style object has no $path value');
-    }
-
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
-    $params['path'] = $this->path;
-
-    if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
-    }
-
     if (!@$params['path']) {
-      if ($this->path) {
-        $params['path'] = @$this->path;
+      if (@$this->path) {
+        $params['path'] = $this->path;
       } else {
         throw new \Files\MissingParameterException('Parameter missing: path');
       }
     }
 
     if (!@$params['file']) {
-      if ($this->file) {
-        $params['file'] = @$this->file;
+      if (@$this->file) {
+        $params['file'] = $this->file;
       } else {
         throw new \Files\MissingParameterException('Parameter missing: file');
       }
     }
 
-    return Api::sendRequest('/styles/' . @$params['path'] . '', 'PATCH', $params, $this->options);
-  }
-
-  public function delete($params = []) {
-    if (!$this->path) {
-      throw new \Files\EmptyPropertyException('The current Style object has no $path value');
-    }
-
-    if (!is_array($params)) {
-      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
-    }
-
-    $params['path'] = $this->path;
-
     if (@$params['path'] && !is_string(@$params['path'])) {
       throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
     }
 
+    $response = Api::sendRequest('/styles/' . @$params['path'] . '', 'PATCH', $params, $this->options);
+    return $response->data;
+  }
+
+  public function delete($params = []) {
+    if (!is_array($params)) {
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+    }
+
     if (!@$params['path']) {
-      if ($this->path) {
-        $params['path'] = @$this->path;
+      if (@$this->path) {
+        $params['path'] = $this->path;
       } else {
         throw new \Files\MissingParameterException('Parameter missing: path');
       }
     }
 
-    return Api::sendRequest('/styles/' . @$params['path'] . '', 'DELETE', $params, $this->options);
+    if (@$params['path'] && !is_string(@$params['path'])) {
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
+    }
+
+    $response = Api::sendRequest('/styles/' . @$params['path'] . '', 'DELETE', $params, $this->options);
+    return $response->data;
   }
 
   public function destroy($params = []) {

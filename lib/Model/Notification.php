@@ -26,6 +26,10 @@ class Notification {
     $this->options = $options;
   }
 
+  public function __set($name, $value) {
+    $this->attributes[$name] = $value;
+  }
+
   public function __get($name) {
     return @$this->attributes[$name];
   }
@@ -157,58 +161,49 @@ class Notification {
   //   recursive - boolean - If `true`, enable notifications for each subfolder in this path
   //   send_interval - string - The time interval that notifications are aggregated by.  Can be `five_minutes`, `fifteen_minutes`, `hourly`, or `daily`.
   public function update($params = []) {
-    if (!$this->id) {
-      throw new \Files\EmptyPropertyException('The current Notification object has no $id value');
-    }
-
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
-    $params['id'] = $this->id;
+    if (!@$params['id']) {
+      if (@$this->id) {
+        $params['id'] = $this->id;
+      } else {
+        throw new \Files\MissingParameterException('Parameter missing: id');
+      }
+    }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
+
     if (@$params['send_interval'] && !is_string(@$params['send_interval'])) {
       throw new \Files\InvalidParameterException('$send_interval must be of type string; received ' . gettype($send_interval));
     }
 
-    if (!@$params['id']) {
-      if ($this->id) {
-        $params['id'] = @$this->id;
-      } else {
-        throw new \Files\MissingParameterException('Parameter missing: id');
-      }
-    }
-
-    return Api::sendRequest('/notifications/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+    $response = Api::sendRequest('/notifications/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+    return $response->data;
   }
 
   public function delete($params = []) {
-    if (!$this->id) {
-      throw new \Files\EmptyPropertyException('The current Notification object has no $id value');
-    }
-
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
-    $params['id'] = $this->id;
+    if (!@$params['id']) {
+      if (@$this->id) {
+        $params['id'] = $this->id;
+      } else {
+        throw new \Files\MissingParameterException('Parameter missing: id');
+      }
+    }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
 
-    if (!@$params['id']) {
-      if ($this->id) {
-        $params['id'] = @$this->id;
-      } else {
-        throw new \Files\MissingParameterException('Parameter missing: id');
-      }
-    }
-
-    return Api::sendRequest('/notifications/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+    $response = Api::sendRequest('/notifications/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+    return $response->data;
   }
 
   public function destroy($params = []) {

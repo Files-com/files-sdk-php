@@ -26,6 +26,10 @@ class Project {
     $this->options = $options;
   }
 
+  public function __set($name, $value) {
+    $this->attributes[$name] = $value;
+  }
+
   public function __get($name) {
     return @$this->attributes[$name];
   }
@@ -55,66 +59,57 @@ class Project {
   // Parameters:
   //   global_access (required) - string - Global permissions.  Can be: `none`, `anyone_with_read`, `anyone_with_full`.
   public function update($params = []) {
-    if (!$this->id) {
-      throw new \Files\EmptyPropertyException('The current Project object has no $id value');
-    }
-
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
-    $params['id'] = $this->id;
-
-    if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
-    }
-    if (@$params['global_access'] && !is_string(@$params['global_access'])) {
-      throw new \Files\InvalidParameterException('$global_access must be of type string; received ' . gettype($global_access));
-    }
-
     if (!@$params['id']) {
-      if ($this->id) {
-        $params['id'] = @$this->id;
+      if (@$this->id) {
+        $params['id'] = $this->id;
       } else {
         throw new \Files\MissingParameterException('Parameter missing: id');
       }
     }
 
     if (!@$params['global_access']) {
-      if ($this->global_access) {
-        $params['global_access'] = @$this->global_access;
+      if (@$this->global_access) {
+        $params['global_access'] = $this->global_access;
       } else {
         throw new \Files\MissingParameterException('Parameter missing: global_access');
       }
     }
 
-    return Api::sendRequest('/projects/' . @$params['id'] . '', 'PATCH', $params, $this->options);
-  }
-
-  public function delete($params = []) {
-    if (!$this->id) {
-      throw new \Files\EmptyPropertyException('The current Project object has no $id value');
-    }
-
-    if (!is_array($params)) {
-      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
-    }
-
-    $params['id'] = $this->id;
-
     if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
 
+    if (@$params['global_access'] && !is_string(@$params['global_access'])) {
+      throw new \Files\InvalidParameterException('$global_access must be of type string; received ' . gettype($global_access));
+    }
+
+    $response = Api::sendRequest('/projects/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+    return $response->data;
+  }
+
+  public function delete($params = []) {
+    if (!is_array($params)) {
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+    }
+
     if (!@$params['id']) {
-      if ($this->id) {
-        $params['id'] = @$this->id;
+      if (@$this->id) {
+        $params['id'] = $this->id;
       } else {
         throw new \Files\MissingParameterException('Parameter missing: id');
       }
     }
 
-    return Api::sendRequest('/projects/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+    if (@$params['id'] && !is_int(@$params['id'])) {
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
+    }
+
+    $response = Api::sendRequest('/projects/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+    return $response->data;
   }
 
   public function destroy($params = []) {

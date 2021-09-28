@@ -26,6 +26,10 @@ class Bundle {
     $this->options = $options;
   }
 
+  public function __set($name, $value) {
+    $this->attributes[$name] = $value;
+  }
+
   public function __get($name) {
     return @$this->attributes[$name];
   }
@@ -235,38 +239,36 @@ class Bundle {
   //   note - string - Note to include in email.
   //   recipients - array(object) - A list of recipients to share this bundle with. Required unless `to` is used.
   public function share($params = []) {
-    if (!$this->id) {
-      throw new \Files\EmptyPropertyException('The current Bundle object has no $id value');
-    }
-
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
-    $params['id'] = $this->id;
-
-    if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
-    }
-    if (@$params['to'] && !is_array(@$params['to'])) {
-      throw new \Files\InvalidParameterException('$to must be of type array; received ' . gettype($to));
-    }
-    if (@$params['note'] && !is_string(@$params['note'])) {
-      throw new \Files\InvalidParameterException('$note must be of type string; received ' . gettype($note));
-    }
-    if (@$params['recipients'] && !is_array(@$params['recipients'])) {
-      throw new \Files\InvalidParameterException('$recipients must be of type array; received ' . gettype($recipients));
-    }
-
     if (!@$params['id']) {
-      if ($this->id) {
-        $params['id'] = @$this->id;
+      if (@$this->id) {
+        $params['id'] = $this->id;
       } else {
         throw new \Files\MissingParameterException('Parameter missing: id');
       }
     }
 
-    return Api::sendRequest('/bundles/' . @$params['id'] . '/share', 'POST', $params, $this->options);
+    if (@$params['id'] && !is_int(@$params['id'])) {
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
+    }
+
+    if (@$params['to'] && !is_array(@$params['to'])) {
+      throw new \Files\InvalidParameterException('$to must be of type array; received ' . gettype($to));
+    }
+
+    if (@$params['note'] && !is_string(@$params['note'])) {
+      throw new \Files\InvalidParameterException('$note must be of type string; received ' . gettype($note));
+    }
+
+    if (@$params['recipients'] && !is_array(@$params['recipients'])) {
+      throw new \Files\InvalidParameterException('$recipients must be of type array; received ' . gettype($recipients));
+    }
+
+    $response = Api::sendRequest('/bundles/' . @$params['id'] . '/share', 'POST', $params, $this->options);
+    return $response->data;
   }
 
   // Parameters:
@@ -284,85 +286,85 @@ class Bundle {
   //   require_registration - boolean - Show a registration page that captures the downloader's name and email address?
   //   require_share_recipient - boolean - Only allow access to recipients who have explicitly received the share via an email sent through the Files.com UI?
   public function update($params = []) {
-    if (!$this->id) {
-      throw new \Files\EmptyPropertyException('The current Bundle object has no $id value');
-    }
-
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
-    $params['id'] = $this->id;
+    if (!@$params['id']) {
+      if (@$this->id) {
+        $params['id'] = $this->id;
+      } else {
+        throw new \Files\MissingParameterException('Parameter missing: id');
+      }
+    }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
+
     if (@$params['paths'] && !is_array(@$params['paths'])) {
       throw new \Files\InvalidParameterException('$paths must be of type array; received ' . gettype($paths));
     }
+
     if (@$params['password'] && !is_string(@$params['password'])) {
       throw new \Files\InvalidParameterException('$password must be of type string; received ' . gettype($password));
     }
+
     if (@$params['form_field_set_id'] && !is_int(@$params['form_field_set_id'])) {
       throw new \Files\InvalidParameterException('$form_field_set_id must be of type int; received ' . gettype($form_field_set_id));
     }
+
     if (@$params['clickwrap_id'] && !is_int(@$params['clickwrap_id'])) {
       throw new \Files\InvalidParameterException('$clickwrap_id must be of type int; received ' . gettype($clickwrap_id));
     }
+
     if (@$params['code'] && !is_string(@$params['code'])) {
       throw new \Files\InvalidParameterException('$code must be of type string; received ' . gettype($code));
     }
+
     if (@$params['description'] && !is_string(@$params['description'])) {
       throw new \Files\InvalidParameterException('$description must be of type string; received ' . gettype($description));
     }
+
     if (@$params['expires_at'] && !is_string(@$params['expires_at'])) {
       throw new \Files\InvalidParameterException('$expires_at must be of type string; received ' . gettype($expires_at));
     }
+
     if (@$params['inbox_id'] && !is_int(@$params['inbox_id'])) {
       throw new \Files\InvalidParameterException('$inbox_id must be of type int; received ' . gettype($inbox_id));
     }
+
     if (@$params['max_uses'] && !is_int(@$params['max_uses'])) {
       throw new \Files\InvalidParameterException('$max_uses must be of type int; received ' . gettype($max_uses));
     }
+
     if (@$params['note'] && !is_string(@$params['note'])) {
       throw new \Files\InvalidParameterException('$note must be of type string; received ' . gettype($note));
     }
 
-    if (!@$params['id']) {
-      if ($this->id) {
-        $params['id'] = @$this->id;
-      } else {
-        throw new \Files\MissingParameterException('Parameter missing: id');
-      }
-    }
-
-    return Api::sendRequest('/bundles/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+    $response = Api::sendRequest('/bundles/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+    return $response->data;
   }
 
   public function delete($params = []) {
-    if (!$this->id) {
-      throw new \Files\EmptyPropertyException('The current Bundle object has no $id value');
-    }
-
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
-    $params['id'] = $this->id;
+    if (!@$params['id']) {
+      if (@$this->id) {
+        $params['id'] = $this->id;
+      } else {
+        throw new \Files\MissingParameterException('Parameter missing: id');
+      }
+    }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
 
-    if (!@$params['id']) {
-      if ($this->id) {
-        $params['id'] = @$this->id;
-      } else {
-        throw new \Files\MissingParameterException('Parameter missing: id');
-      }
-    }
-
-    return Api::sendRequest('/bundles/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+    $response = Api::sendRequest('/bundles/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+    return $response->data;
   }
 
   public function destroy($params = []) {

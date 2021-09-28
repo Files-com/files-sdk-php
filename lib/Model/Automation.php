@@ -26,6 +26,10 @@ class Automation {
     $this->options = $options;
   }
 
+  public function __set($name, $value) {
+    $this->attributes[$name] = $value;
+  }
+
   public function __get($name) {
     return @$this->attributes[$name];
   }
@@ -233,108 +237,113 @@ class Automation {
   //   trigger_action_path - string - If trigger is `action`, this is the path to watch for the specified trigger actions.
   //   value - object - A Hash of attributes specific to the automation type.
   public function update($params = []) {
-    if (!$this->id) {
-      throw new \Files\EmptyPropertyException('The current Automation object has no $id value');
-    }
-
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
     }
 
-    $params['id'] = $this->id;
-
-    if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
-    }
-    if (@$params['automation'] && !is_string(@$params['automation'])) {
-      throw new \Files\InvalidParameterException('$automation must be of type string; received ' . gettype($automation));
-    }
-    if (@$params['source'] && !is_string(@$params['source'])) {
-      throw new \Files\InvalidParameterException('$source must be of type string; received ' . gettype($source));
-    }
-    if (@$params['destination'] && !is_string(@$params['destination'])) {
-      throw new \Files\InvalidParameterException('$destination must be of type string; received ' . gettype($destination));
-    }
-    if (@$params['destinations'] && !is_array(@$params['destinations'])) {
-      throw new \Files\InvalidParameterException('$destinations must be of type array; received ' . gettype($destinations));
-    }
-    if (@$params['destination_replace_from'] && !is_string(@$params['destination_replace_from'])) {
-      throw new \Files\InvalidParameterException('$destination_replace_from must be of type string; received ' . gettype($destination_replace_from));
-    }
-    if (@$params['destination_replace_to'] && !is_string(@$params['destination_replace_to'])) {
-      throw new \Files\InvalidParameterException('$destination_replace_to must be of type string; received ' . gettype($destination_replace_to));
-    }
-    if (@$params['interval'] && !is_string(@$params['interval'])) {
-      throw new \Files\InvalidParameterException('$interval must be of type string; received ' . gettype($interval));
-    }
-    if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
-    }
-    if (@$params['user_ids'] && !is_string(@$params['user_ids'])) {
-      throw new \Files\InvalidParameterException('$user_ids must be of type string; received ' . gettype($user_ids));
-    }
-    if (@$params['group_ids'] && !is_string(@$params['group_ids'])) {
-      throw new \Files\InvalidParameterException('$group_ids must be of type string; received ' . gettype($group_ids));
-    }
-    if (@$params['description'] && !is_string(@$params['description'])) {
-      throw new \Files\InvalidParameterException('$description must be of type string; received ' . gettype($description));
-    }
-    if (@$params['name'] && !is_string(@$params['name'])) {
-      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype($name));
-    }
-    if (@$params['trigger'] && !is_string(@$params['trigger'])) {
-      throw new \Files\InvalidParameterException('$trigger must be of type string; received ' . gettype($trigger));
-    }
-    if (@$params['trigger_actions'] && !is_array(@$params['trigger_actions'])) {
-      throw new \Files\InvalidParameterException('$trigger_actions must be of type array; received ' . gettype($trigger_actions));
-    }
-    if (@$params['trigger_action_path'] && !is_string(@$params['trigger_action_path'])) {
-      throw new \Files\InvalidParameterException('$trigger_action_path must be of type string; received ' . gettype($trigger_action_path));
-    }
-
     if (!@$params['id']) {
-      if ($this->id) {
-        $params['id'] = @$this->id;
+      if (@$this->id) {
+        $params['id'] = $this->id;
       } else {
         throw new \Files\MissingParameterException('Parameter missing: id');
       }
     }
 
     if (!@$params['automation']) {
-      if ($this->automation) {
-        $params['automation'] = @$this->automation;
+      if (@$this->automation) {
+        $params['automation'] = $this->automation;
       } else {
         throw new \Files\MissingParameterException('Parameter missing: automation');
       }
     }
 
-    return Api::sendRequest('/automations/' . @$params['id'] . '', 'PATCH', $params, $this->options);
-  }
-
-  public function delete($params = []) {
-    if (!$this->id) {
-      throw new \Files\EmptyPropertyException('The current Automation object has no $id value');
-    }
-
-    if (!is_array($params)) {
-      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
-    }
-
-    $params['id'] = $this->id;
-
     if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
 
+    if (@$params['automation'] && !is_string(@$params['automation'])) {
+      throw new \Files\InvalidParameterException('$automation must be of type string; received ' . gettype($automation));
+    }
+
+    if (@$params['source'] && !is_string(@$params['source'])) {
+      throw new \Files\InvalidParameterException('$source must be of type string; received ' . gettype($source));
+    }
+
+    if (@$params['destination'] && !is_string(@$params['destination'])) {
+      throw new \Files\InvalidParameterException('$destination must be of type string; received ' . gettype($destination));
+    }
+
+    if (@$params['destinations'] && !is_array(@$params['destinations'])) {
+      throw new \Files\InvalidParameterException('$destinations must be of type array; received ' . gettype($destinations));
+    }
+
+    if (@$params['destination_replace_from'] && !is_string(@$params['destination_replace_from'])) {
+      throw new \Files\InvalidParameterException('$destination_replace_from must be of type string; received ' . gettype($destination_replace_from));
+    }
+
+    if (@$params['destination_replace_to'] && !is_string(@$params['destination_replace_to'])) {
+      throw new \Files\InvalidParameterException('$destination_replace_to must be of type string; received ' . gettype($destination_replace_to));
+    }
+
+    if (@$params['interval'] && !is_string(@$params['interval'])) {
+      throw new \Files\InvalidParameterException('$interval must be of type string; received ' . gettype($interval));
+    }
+
+    if (@$params['path'] && !is_string(@$params['path'])) {
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
+    }
+
+    if (@$params['user_ids'] && !is_string(@$params['user_ids'])) {
+      throw new \Files\InvalidParameterException('$user_ids must be of type string; received ' . gettype($user_ids));
+    }
+
+    if (@$params['group_ids'] && !is_string(@$params['group_ids'])) {
+      throw new \Files\InvalidParameterException('$group_ids must be of type string; received ' . gettype($group_ids));
+    }
+
+    if (@$params['description'] && !is_string(@$params['description'])) {
+      throw new \Files\InvalidParameterException('$description must be of type string; received ' . gettype($description));
+    }
+
+    if (@$params['name'] && !is_string(@$params['name'])) {
+      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype($name));
+    }
+
+    if (@$params['trigger'] && !is_string(@$params['trigger'])) {
+      throw new \Files\InvalidParameterException('$trigger must be of type string; received ' . gettype($trigger));
+    }
+
+    if (@$params['trigger_actions'] && !is_array(@$params['trigger_actions'])) {
+      throw new \Files\InvalidParameterException('$trigger_actions must be of type array; received ' . gettype($trigger_actions));
+    }
+
+    if (@$params['trigger_action_path'] && !is_string(@$params['trigger_action_path'])) {
+      throw new \Files\InvalidParameterException('$trigger_action_path must be of type string; received ' . gettype($trigger_action_path));
+    }
+
+    $response = Api::sendRequest('/automations/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+    return $response->data;
+  }
+
+  public function delete($params = []) {
+    if (!is_array($params)) {
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+    }
+
     if (!@$params['id']) {
-      if ($this->id) {
-        $params['id'] = @$this->id;
+      if (@$this->id) {
+        $params['id'] = $this->id;
       } else {
         throw new \Files\MissingParameterException('Parameter missing: id');
       }
     }
 
-    return Api::sendRequest('/automations/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+    if (@$params['id'] && !is_int(@$params['id'])) {
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
+    }
+
+    $response = Api::sendRequest('/automations/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+    return $response->data;
   }
 
   public function destroy($params = []) {

@@ -137,8 +137,13 @@ class Api {
     }
 
     if ($params) {
-      $options['body'] = json_encode($params);
       $headers['Content-Type'] = 'application/json';
+
+      if (strtoupper($verb) === 'GET') {
+        $path .= (parse_url($path, PHP_URL_QUERY) ? '&' : '?') . http_build_query($params, '', '&', PHP_QUERY_RFC3986);
+      } else {
+        $options['body'] = json_encode($params);
+      }
     }
 
     $options['headers'] = $headers;

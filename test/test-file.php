@@ -35,6 +35,9 @@ if (!$api_domain) {
 Files::setApiKey($api_key);
 Files::setBaseUrl('https://' . $api_domain);
 
+// Files::$logLevel = LogLevel::DEBUG;
+// Files::$debugRequest = true;
+
 //
 // utilities
 //
@@ -71,8 +74,7 @@ function createTestFolder() {
   $path = $rootDir . $dirName;
 
   $folder = Folder::create($path);
-
-  $folder->setPath($path);
+  $folder->path = $path;
 
   return [
     $rootDir,
@@ -97,6 +99,36 @@ function createTestFile() {
 //
 // define tests
 //
+
+class RemoteTestEnv {
+  public static $remoteFilePath;
+  public static $testFolder;
+  public static $workingFolderPath;
+
+  public static function init() {
+    list($rootDir, $dirName, static::$testFolder) = createTestFolder();
+
+    self::$workingFolderPath = $rootDir . $dirName . '/';
+
+    $tempName = 'RemoteTestEnv-' . date('Ymd_His') . '.txt';
+    $tempPath = tempnam(sys_get_temp_dir(), $tempName);
+
+    file_put_contents($tempPath, date('Y-m-d H:i:s'));
+
+    self::$remoteFilePath = self::$workingFolderPath . $tempName;
+
+    File::uploadData(self::$remoteFilePath, rand() . "\n" . date('Y-m-d H:i:s'));
+
+    unlink($tempPath);
+  }
+
+  public static function deinit() {
+    File::deletePath(self::$remoteFilePath);
+
+    static::$testFolder->delete(['recursive' => true]);
+  }
+}
+
 
 function testErrors() {
   global $api_key;
@@ -132,7 +164,7 @@ function testErrors() {
 
   try {
     $nonExistentFile->delete();
-  } catch (EmptyPropertyException $error) {
+  } catch (MissingParameterException $error) {
     $caughtExpectedException = true;
   }
 
@@ -226,51 +258,111 @@ function testFolderCreateListAndDelete() {
   $foundFolder = findFile($testFolder, $dirFiles);
   assert($foundFolder->isLoaded() === true);
 
-  $result = $foundFolder->delete();
-  assert($result->status >= 200 && $result->status < 300);
+  $foundFolder->delete(); // if this fails an unhandled exception will be thrown
 
   Logger::info('***** testFolderCreateListAndDelete() succeeded! *****');
 }
 
 function testFileUploadFindCopyAndDelete() {
-  list($rootDir, $dirName, $testFolder) = createTestFolder();
-
-  $tempName = 'upload-' . date('Ymd_His') . '.txt';
+  $tempName = 'testFileUploadFindCopyAndDelete-' . date('Ymd_His') . '.txt';
   $tempPath = tempnam(sys_get_temp_dir(), $tempName);
 
   file_put_contents($tempPath, date('Y-m-d H:i:s'));
 
   Logger::debug('Uploading file at ' . $tempPath . ' which has contents:' . "\n" . substr(file_get_contents($tempPath), 0, 200));
 
-  File::uploadFile($rootDir . $dirName . '/' . $tempName, $tempPath);
-  File::uploadData($rootDir . $dirName . '/upload-data.txt', rand() . "\n" . date('Y-m-d H:i:s'));
+  File::uploadFile(RemoteTestEnv::$workingFolderPath . $tempName, $tempPath);
+  File::uploadData(RemoteTestEnv::$workingFolderPath . 'testFileUploadFindCopyAndDelete-data.txt', rand() . "\n" . date('Y-m-d H:i:s'));
 
-  $foundFile = File::find($rootDir . $dirName . '/' . $tempName);
+  $foundFile = File::find(RemoteTestEnv::$workingFolderPath . $tempName);
   assert($foundFile->isLoaded());
 
-  $copyResponse = $foundFile->copyTo($rootDir . $dirName . '/copied-file.txt');
-  assert($copyResponse->status >= 200 && $copyResponse->status < 300);
+  $copyResponse = $foundFile->copyTo(RemoteTestEnv::$workingFolderPath . 'copied-file.txt');
 
-  $foundFile->delete();
+  assert(!!$copyResponse->status && !!$copyResponse->file_migration_id);
+
+  $foundFile->delete(); // if this fails an unhandled exception will be thrown
 
   $fileNoLongerExists = false;
 
   try {
-    File::find($rootDir . $dirName . '/' . $tempName);
+    File::find(RemoteTestEnv::$workingFolderPath . $tempName);
   } catch (NotFoundException $error) {
     $fileNoLongerExists = true;
   }
 
   assert($fileNoLongerExists === true);
 
-  $foundFile = File::find($rootDir . $dirName . '/upload-data.txt');
+  $foundFile = File::find(RemoteTestEnv::$workingFolderPath . 'testFileUploadFindCopyAndDelete-data.txt');
   assert($foundFile->isLoaded());
-
-  $testFolder->delete(['recursive' => true]);
 
   unlink($tempPath);
 
   Logger::info('***** testFileUploadFindCopyAndDelete() succeeded! *****');
+}
+
+function testUploadDownloadFileAndDelete() {
+  Logger::debug('Uploading file data...');
+
+  $remoteFilePath = RemoteTestEnv::$workingFolderPath . 'testUploadDownloadFileAndDelete-data.txt';
+  File::uploadData($remoteFilePath, rand() . "\n" . date('Y-m-d H:i:s'));
+
+  $file = new File();
+  $file->path = $remoteFilePath;
+
+  Logger::debug('Downloading file at ' . $remoteFilePath);
+
+  $response = $file->download([
+    'with_previews' => true,
+    'with_priority_color' => true
+  ]);
+
+  assert($response->path === $remoteFilePath);
+  assert(!!$response->download_uri);
+
+  Logger::debug('Updating file mtime and color at ' . $remoteFilePath);
+
+  $response = $file->update([
+    'provided_mtime' => '2000-01-01T01:00:00Z',
+    'priority_color' => 'red',
+  ]);
+
+  assert($response->provided_mtime === '2000-01-01T01:00:00Z');
+  assert($response->priority_color === 'red');
+
+  Logger::debug('Deleting file at ' . $remoteFilePath);
+
+  $file->delete(); // if this fails an unhandled exception will be thrown
+
+  Logger::info('***** testUploadDownloadFileAndDelete() succeeded! *****');
+}
+
+function testFileObjectMethods() {
+  Logger::debug('Loading a remote file path into a File object');
+
+  $file = new File();
+  $file->get(RemoteTestEnv::$remoteFilePath);
+
+  assert($file->path === RemoteTestEnv::$remoteFilePath);
+
+  Logger::debug('Setting priority_color metadata for File object');
+
+  $response = $file->update([
+    'priority_color' => 'yellow',
+  ]);
+
+  Logger::debug('Fetching metadata for File object');
+
+  $metadata = $file->metadata([
+    'with_previews' => true,
+    'with_priority_color' => true,
+  ]);
+
+  assert(!!$metadata->preview_id);
+  assert(!!$metadata->preview);
+  assert($metadata->priority_color === 'yellow');
+
+  Logger::info('***** testFileObjectMethods() succeeded! *****');
 }
 
 function testSession() {
@@ -289,7 +381,7 @@ function testSession() {
 
   ApiKey::list(['user_id' => 0]);
 
-  $session::destroy();
+  Session::destroy();
   Files::setSessionId(null);
 
   Logger::info('***** testSession() succeeded! *****');
@@ -301,10 +393,16 @@ function testSession() {
 
 assert_options(ASSERT_BAIL, 1);
 
+RemoteTestEnv::init();
+
 testErrors();
 testUserListAndUpdate();
 testUserCreateAndDelete();
 testUserStaticCreateAndDelete();
 testFolderCreateListAndDelete();
 testFileUploadFindCopyAndDelete();
+testUploadDownloadFileAndDelete();
+testFileObjectMethods();
 testSession();
+
+RemoteTestEnv::deinit();

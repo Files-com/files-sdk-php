@@ -223,6 +223,11 @@ class Site {
     return @$this->attributes['domain_hsts_header'];
   }
 
+  // string # Letsencrypt chain to use when registering SSL Certificate for domain.
+  public function getDomainLetsencryptChain() {
+    return @$this->attributes['domain_letsencrypt_chain'];
+  }
+
   // email # Main email for this site
   public function getEmail() {
     return @$this->attributes['email'];
@@ -680,6 +685,7 @@ class Site {
   //   subdomain - string - Site subdomain
   //   domain - string - Custom domain
   //   domain_hsts_header - boolean - Send HSTS (HTTP Strict Transport Security) header when visitors access the site via a custom domain?
+  //   domain_letsencrypt_chain - string - Letsencrypt chain to use when registering SSL Certificate for domain.
   //   email - string - Main email for this site
   //   reply_to_email - string - Reply-to email for this site
   //   allow_bundle_names - boolean - Are manual Bundle names allowed?
@@ -802,6 +808,10 @@ class Site {
 
     if (@$params['domain'] && !is_string(@$params['domain'])) {
       throw new \Files\InvalidParameterException('$domain must be of type string; received ' . gettype($domain));
+    }
+
+    if (@$params['domain_letsencrypt_chain'] && !is_string(@$params['domain_letsencrypt_chain'])) {
+      throw new \Files\InvalidParameterException('$domain_letsencrypt_chain must be of type string; received ' . gettype($domain_letsencrypt_chain));
     }
 
     if (@$params['email'] && !is_string(@$params['email'])) {

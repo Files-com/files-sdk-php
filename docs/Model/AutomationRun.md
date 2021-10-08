@@ -4,13 +4,19 @@
 
 ```
 {
+  "id": 1,
   "automation_id": 1,
+  "completed_at": "2000-01-01T01:00:00Z",
+  "created_at": "2000-01-01T01:00:00Z",
   "status": "success",
   "status_messages_url": "https://www.example.com/log_file.txt"
 }
 ```
 
+* `id` (int64): ID.
 * `automation_id` (int64): ID of the associated Automation.
+* `completed_at` (date-time): Automation run completion/failure date/time.
+* `created_at` (date-time): Automation run start date/time.
 * `status` (string): The success status of the AutomationRun. One of `running`, `success`, `partial_failure`, or `failure`.
 * `status_messages_url` (string): Link to status messages log file.
 
@@ -41,3 +47,17 @@ $automation_run->list(, [
 * `filter_lt` (object): If set, return records where the specifiied field is less than the supplied value. Valid fields are `status`.
 * `filter_lteq` (object): If set, return records where the specifiied field is less than or equal to the supplied value. Valid fields are `status`.
 * `automation_id` (int64): Required - ID of the associated Automation.
+
+---
+
+## Show Automation Run
+
+```
+$automation_run = new \Files\Model\AutomationRun();
+$automation_run->find($id);
+```
+
+
+### Parameters
+
+* `id` (int64): Required - Automation Run ID.

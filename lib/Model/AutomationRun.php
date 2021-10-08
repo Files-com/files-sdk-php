@@ -38,9 +38,24 @@ class AutomationRun {
     return !!@$this->attributes['id'];
   }
 
+  // int64 # ID.
+  public function getId() {
+    return @$this->attributes['id'];
+  }
+
   // int64 # ID of the associated Automation.
   public function getAutomationId() {
     return @$this->attributes['automation_id'];
+  }
+
+  // date-time # Automation run completion/failure date/time.
+  public function getCompletedAt() {
+    return @$this->attributes['completed_at'];
+  }
+
+  // date-time # Automation run start date/time.
+  public function getCreatedAt() {
+    return @$this->attributes['created_at'];
   }
 
   // string # The success status of the AutomationRun. One of `running`, `success`, `partial_failure`, or `failure`.
@@ -99,5 +114,31 @@ class AutomationRun {
 
   public static function all($params = [], $options = []) {
     return self::list($params, $options);
+  }
+
+  // Parameters:
+  //   id (required) - int64 - Automation Run ID.
+  public static function find($id, $params = [], $options = []) {
+    if (!is_array($params)) {
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+    }
+
+    $params['id'] = $id;
+
+    if (!@$params['id']) {
+      throw new \Files\MissingParameterException('Parameter missing: id');
+    }
+
+    if (@$params['id'] && !is_int(@$params['id'])) {
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
+    }
+
+    $response = Api::sendRequest('/automation_runs/' . @$params['id'] . '', 'GET', $params, $options);
+
+    return new AutomationRun((array)(@$response->data ?: []), $options);
+  }
+
+  public static function get($id, $params = [], $options = []) {
+    return self::find($id, $params, $options);
   }
 }

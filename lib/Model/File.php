@@ -623,6 +623,7 @@ class File {
   //   parts - int64 - How many parts to fetch?
   //   ref - string -
   //   restart - int64 - File byte offset to restart from.
+  //   size - int64 - Total bytes of file being uploaded (include bytes being retained if appending/restarting).
   //   with_rename - boolean - Allow file rename instead of overwrite?
   public function beginUpload($params = []) {
     if (!is_array($params)) {
@@ -655,6 +656,10 @@ class File {
 
     if (@$params['restart'] && !is_int(@$params['restart'])) {
       throw new \Files\InvalidParameterException('$restart must be of type int; received ' . gettype($restart));
+    }
+
+    if (@$params['size'] && !is_int(@$params['size'])) {
+      throw new \Files\InvalidParameterException('$size must be of type int; received ' . gettype($size));
     }
 
     $response = Api::sendRequest('/file_actions/begin_upload/' . @$params['path'] . '', 'POST', $params, $this->options);

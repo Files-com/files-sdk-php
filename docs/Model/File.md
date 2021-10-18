@@ -303,6 +303,7 @@ $file->begin_upload([
   'parts' => 1,
   'ref' => "upload-1",
   'restart' => 1,
+  'size' => 1,
   'with_rename' => true,
 ]);
 ```
@@ -315,6 +316,7 @@ $file->begin_upload([
 * `parts` (int64): How many parts to fetch?
 * `ref` (string): 
 * `restart` (int64): File byte offset to restart from.
+* `size` (int64): Total bytes of file being uploaded (include bytes being retained if appending/restarting).
 * `with_rename` (boolean): Allow file rename instead of overwrite?
 
 ### Example Response

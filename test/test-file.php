@@ -15,6 +15,9 @@ require dirname(__FILE__) . '/../lib/Files.php';
 // name of an existing folder in your root to create/delete test files and folders
 define('SDK_TEST_ROOT_FOLDER', 'sdk-test');
 
+// any user count that will require multiple page requests to fetch all users
+define('USER_COUNT_TO_TRIGGER_PAGINATION', 40);
+
 $api_key = getenv('FILES_API_KEY');
 $api_domain = getenv('FILES_API_DOMAIN');
 
@@ -37,6 +40,7 @@ Files::setBaseUrl('https://' . $api_domain);
 
 // Files::$logLevel = LogLevel::DEBUG;
 // Files::$debugRequest = true;
+// Files::$debugResponseHeaders = true;
 
 //
 // utilities
@@ -201,6 +205,26 @@ function testErrors() {
   assert($caughtExpectedException === true);
 
   Logger::info('***** testErrors() succeeded! *****');
+}
+
+function testAutoPaginate() {
+  $params = ['per_page' => constant('USER_COUNT_TO_TRIGGER_PAGINATION')];
+
+  $savedAutoPaginate = Files::$autoPaginate;
+
+  Files::$autoPaginate = true;
+  $response = Api::sendRequest('/users', 'GET', $params);
+
+  assert($response->autoPaginateRequests > 1);
+
+  Files::$autoPaginate = false;
+  $response = Api::sendRequest('/users', 'GET', $params);
+
+  assert(!$response->autoPaginateRequests);
+
+  Files::$autoPaginate = $savedAutoPaginate;
+
+  Logger::info('***** testAutoPaginate() succeeded! *****');
 }
 
 function testUserListAndUpdate() {
@@ -396,6 +420,7 @@ assert_options(ASSERT_BAIL, 1);
 RemoteTestEnv::init();
 
 testErrors();
+testAutoPaginate();
 testUserListAndUpdate();
 testUserCreateAndDelete();
 testUserStaticCreateAndDelete();

@@ -83,6 +83,11 @@ class BundleRegistration {
     return @$this->attributes['form_field_data'];
   }
 
+  // string # Bundle URL code
+  public function getBundleCode() {
+    return @$this->attributes['bundle_code'];
+  }
+
   // int64 # Id of associated bundle
   public function getBundleId() {
     return @$this->attributes['bundle_id'];

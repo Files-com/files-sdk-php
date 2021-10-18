@@ -62,4 +62,9 @@ class Preview {
   public function getSize() {
     return @$this->attributes['size'];
   }
+
+  // string # Preview status message. Addtional context from the preview generation process about the status
+  public function getStatusMessage() {
+    return @$this->attributes['status_message'];
+  }
 }

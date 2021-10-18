@@ -87,6 +87,7 @@ You can set the following global properties directly on the `\Files\Files` class
 * `\Files\Files::$maxNetworkRetries` - max retries (default: `3`)
 * `\Files\Files::$minNetworkRetryDelay` - minimum delay in seconds before retrying (default: `0.5`)
 * `\Files\Files::$maxNetworkRetryDelay` - max delay in seconds before retrying (default: `1.5`)
+* `\Files\Files::$autoPaginate` - auto-fetch all pages when results span multiple pages (default: `true`)
 
 ### Static File Operations
 

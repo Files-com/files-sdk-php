@@ -24,7 +24,8 @@
     "status": "complete",
     "download_uri": "https://mysite.files.com/...",
     "type": "complete",
-    "size": 1024
+    "size": 1024,
+    "status_message": ""
   }
 }
 ```
@@ -157,7 +158,8 @@ $file->download([
     "status": "complete",
     "download_uri": "https://mysite.files.com/...",
     "type": "complete",
-    "size": 1024
+    "size": 1024,
+    "status_message": ""
   }
 }
 ```
@@ -206,7 +208,8 @@ $file->update([
     "status": "complete",
     "download_uri": "https://mysite.files.com/...",
     "type": "complete",
-    "size": 1024
+    "size": 1024,
+    "status_message": ""
   }
 }
 ```

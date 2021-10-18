@@ -106,7 +106,49 @@ class Api {
     return self::sendVerbatim($url, $verb, $params);
   }
 
-  public static function sendRequest($path, $verb, $params = null, $options = []) {
+  private static function autoPaginate($path, $verb, $params, $options, $response, $metadata = []) {
+    if (Files::$autoPaginate) {
+      $nextCursor = current($response->headers['X-Files-Cursor'] ?: []);
+
+      $autoPaginateCount = @$metadata['autoPaginateCount'];
+      $previousAutoPaginateData = @$metadata['previousAutoPaginateData'];
+
+      if ($nextCursor) {
+        $nextPage = (intval(@$params['page']) ?: 1) + 1;
+
+        $nextParams = $params ?: [];
+        $nextParams['cursor'] = $nextCursor;
+        $nextParams['page'] = $nextPage;
+
+        $nextMetadata = [
+          'autoPaginateCount' => ($autoPaginateCount ?: 1) + 1,
+          'previousAutoPaginateData' => array_merge(
+            $previousAutoPaginateData ?: [],
+            $response->data,
+          ),
+        ];
+
+        Logger::debug('Auto-pagination is enabled and next cursor was received - fetching next page...');
+
+        return self::sendRequest($path, $verb, $nextParams, $options, $nextMetadata);
+      } else if ($previousAutoPaginateData) {
+        Logger::debug('Auto-pagination is enabled the final cursor was processed - pagination complete.');
+
+        return (object)array_merge([
+          $response,
+          'autoPaginateRequests' => $autoPaginateCount,
+          'data' => array_merge(
+            $previousAutoPaginateData,
+            $response->data,
+          ),
+        ]);
+      }
+    }
+
+    return $response;
+  }
+
+  public static function sendRequest($path, $verb, $params = null, $options = [], $metadata = []) {
     $options = $options ?: [];
     $headers = array_merge(@$options['headers'] ?: [], [
       'Accept' => 'application/json',
@@ -136,11 +178,13 @@ class Api {
       }
     }
 
+    $requestPath = $path;
+
     if ($params) {
       $headers['Content-Type'] = 'application/json';
 
       if (strtoupper($verb) === 'GET') {
-        $path .= (parse_url($path, PHP_URL_QUERY) ? '&' : '?') . http_build_query($params, '', '&', PHP_QUERY_RFC3986);
+        $requestPath .= (parse_url($path, PHP_URL_QUERY) ? '&' : '?') . http_build_query($params, '', '&', PHP_QUERY_RFC3986);
       } else {
         $options['body'] = json_encode($params);
       }
@@ -163,6 +207,8 @@ class Api {
       );
     }
 
-    return self::sendVerbatim($path, $verb, $options);
+    $response = self::sendVerbatim($requestPath, $verb, $options);
+
+    return self::autoPaginate($path, $verb, $params, $options, $response, $metadata);
   }
 }

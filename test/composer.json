@@ -6,6 +6,6 @@
     }
   ],
   "require": {
-    "files.com/files-php-sdk": ">=1.0"
+    "files.com/files-php-sdk": "dev-master"
   }
 }

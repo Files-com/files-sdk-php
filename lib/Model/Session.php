@@ -137,7 +137,7 @@ class Session {
     return $this->attributes['ssl_required'] = $value;
   }
 
-  // boolean # Aee insecure TLS versions allowed for this user? (If this is set to true, the site administrator has signaled that it is ok to use less secure TLS versions for this user.)
+  // boolean # Are insecure TLS versions allowed for this user? (If this is set to true, the site administrator has signaled that it is ok to use less secure TLS versions for this user.)
   public function getTlsDisabled() {
     return @$this->attributes['tls_disabled'];
   }

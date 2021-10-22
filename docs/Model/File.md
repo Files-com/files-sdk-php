@@ -257,7 +257,7 @@ $file->copy([
 
 ```json
 {
-  "status": "enqueued",
+  "status": "pending",
   "file_migration_id": "123"
 }
 ```
@@ -284,7 +284,7 @@ $file->move([
 
 ```json
 {
-  "status": "enqueued",
+  "status": "pending",
   "file_migration_id": "123"
 }
 ```

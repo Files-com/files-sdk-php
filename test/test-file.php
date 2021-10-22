@@ -328,13 +328,34 @@ function testFileUploadFindCopyAndDelete() {
 function testUploadDownloadFileAndDelete() {
   Logger::debug('Uploading file data...');
 
+  $fileData = rand() . "\n" . date('Y-m-d H:i:s');
+
   $remoteFilePath = RemoteTestEnv::$workingFolderPath . 'testUploadDownloadFileAndDelete-data.txt';
-  File::uploadData($remoteFilePath, rand() . "\n" . date('Y-m-d H:i:s'));
+  File::uploadData($remoteFilePath, $fileData);
+
+  $tempName = 'testUploadDownloadFileAndDelete-' . date('Ymd_His') . '.txt';
+  $tempPath = tempnam(sys_get_temp_dir(), $tempName);
+
+  // fetch only the first 10 bytes
+  $result = File::partialDownloadToFile($remoteFilePath, $tempPath, 0, 9);
+
+  assert(file_get_contents($tempPath) === substr($fileData, 0, 10));
+  assert($result->received === 10);
+  assert($result->total === strlen($fileData));
+
+  // then download the rest
+  $result = File::resumeDownloadToFile($remoteFilePath, $tempPath);
+
+  assert(file_get_contents($tempPath) === $fileData);
+  assert($result->received === ($result->total - 10));
+  assert($result->total === strlen($fileData));
+
+  unlink($tempPath);
 
   $file = new File();
   $file->path = $remoteFilePath;
 
-  Logger::debug('Downloading file at ' . $remoteFilePath);
+  Logger::debug('Getting download URL for file at ' . $remoteFilePath);
 
   $response = $file->download([
     'with_previews' => true,

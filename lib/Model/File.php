@@ -164,6 +164,86 @@ class File {
     return $result;
   }
 
+  public static function getDownloadUrl($remoteFilePath) {
+    $file = new File();
+    $file->path = $remoteFilePath;
+
+    $response = $file->download();
+    return $response->download_uri;
+  }
+
+  public static function downloadToStream($remoteFilePath, $destinationStream, $startOffset = null, $endOffset = null) {
+    $downloadUrl = self::getDownloadUrl($remoteFilePath);
+
+    $options = [
+      'sink' => $destinationStream,
+    ];
+
+    if ($startOffset !== null || $endOffset !== null) {
+      $rangeStart = $startOffset !== null ? intval($startOffset) : '';
+      $rangeEnd = $endOffset !== null ? intval($endOffset) : '';
+
+      Logger::debug('Downloading file from bytes ' . ($rangeStart ?: '0') . ' to ' . ($rangeEnd ?: 'end'));
+
+      $options['headers'] = [
+        'Range' => "bytes={$rangeStart}-{$rangeEnd}",
+      ];
+    }
+
+    $response = Api::sendRequest($downloadUrl, 'GET', null, $options);
+
+    $fetchedLength = intval($response->headers['Content-Length'][0]);
+    $totalLength = $response->headers['Content-Range']
+      ? intval(explode('/', $response->headers['Content-Range'][0])[1])
+      : $fetchedLength;
+
+    return (object)[
+      'received' => $fetchedLength,
+      'total' => $totalLength
+    ];
+  }
+
+  public static function partialDownloadToFile($remoteFilePath, $destinationPath, $startOffset = null, $endOffset = null) {
+    return self::downloadToStream($remoteFilePath, $destinationPath, $startOffset, $endOffset);
+  }
+
+  public static function resumeDownloadToFile($remoteFilePath, $destinationPath) {
+    $readStream = fopen($destinationPath, 'r');
+    fseek($readStream, 0, SEEK_END);
+    $rangeStart = ftell($readStream);
+    fclose($readStream);
+
+    $stream = fopen($destinationPath, 'a');
+    return self::downloadToStream($remoteFilePath, $stream, $rangeStart);
+  }
+
+  public static function downloadToFile($remoteFilePath, $destinationPath, $enableRetry = true) {
+    $retries = 0;
+    
+    while (true) {
+      try {
+        if (!$retries) {
+          $response = self::downloadToStream($remoteFilePath, $destinationPath);
+        } else {
+          $response = self::resumeDownloadToFile($remoteFilePath, $destinationPath);
+        }
+
+        break;
+      } catch (\Exception $error) {
+        ++$retries;
+
+        if (!$enableRetry || $retries > Files::$maxNetworkRetries) {
+          Logger::info('Retries exhausted - giving up on this file download');
+          handleErrorResponse($error);
+        } else {
+          Logger::info('Retrying file download (retry #' . $retries . ')');
+        }
+      }
+    }
+
+    return $response;
+  }
+
   public static function deletePath($path) {
     if (!$path) {
       throw new \Files\MissingParameterException('Parameter missing: path');

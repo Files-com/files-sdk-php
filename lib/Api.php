@@ -88,12 +88,18 @@ class Api {
       Logger::debug($response->getHeaders());
     }
 
-    return (object)[
+    $result = (object)[
       'status' => $statusCode,
       'reason' => $statusReason,
       'headers' => $response->getHeaders(),
-      'data' => json_decode((string)$response->getBody()),
     ];
+
+    // if the response wasn't redirected into a stream or file, add it to the result
+    if (!@$options['sink']) {
+      $result->data = json_decode((string)$response->getBody());
+    }
+
+    return $result;
   }
 
   public static function sendFile($url, $verb, $body, $headers = []) {
@@ -151,13 +157,14 @@ class Api {
   public static function sendRequest($path, $verb, $params = null, $options = [], $metadata = []) {
     $options = $options ?: [];
     $headers = array_merge(@$options['headers'] ?: [], [
-      'Accept' => 'application/json',
       'User-Agent' => 'Files.com PHP SDK v1.0',
     ]);
 
     $isExternal = preg_match('@^[a-zA-Z]+://@', $path);
 
     if (!$isExternal) {
+      $headers['Accept'] = 'application/json';
+
       $sessionId = @$options['session_id'] ?: Files::getSessionId();
 
       if ($sessionId) {
@@ -209,6 +216,8 @@ class Api {
 
     $response = self::sendVerbatim($requestPath, $verb, $options);
 
-    return self::autoPaginate($path, $verb, $params, $options, $response, $metadata);
+    return $isExternal
+      ? $response
+      : self::autoPaginate($path, $verb, $params, $options, $response, $metadata);
   }
 }

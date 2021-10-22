@@ -103,6 +103,21 @@ You can set the following global properties directly on the `\Files\Files` class
 
     \Files\Model\File::uploadData($destinationFileName, $fileData);
 
+#### Download a file to stream
+
+    \Files\Model\File::downloadToStream($remoteFilePath, $outputStream);
+
+#### Download a file to disk
+
+    // download entire file - with retries enabled
+    \Files\Model\File::downloadToFile($remoteFilePath, $localFilePath);
+
+    // partially download - just the first KB
+    \Files\Model\File::partialDownloadToFile($remoteFilePath, $localFilePath, 0, 1023);
+
+    // resume an incomplete download
+    \Files\Model\File::resumeDownloadToFile($remoteFilePath, $localFilePath);
+
 #### Getting a file record by path
 
     $foundFile = \Files\Model\File::find($remoteFilePath);

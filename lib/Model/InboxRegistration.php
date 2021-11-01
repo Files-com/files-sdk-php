@@ -68,7 +68,7 @@ class InboxRegistration {
     return @$this->attributes['form_field_set_id'];
   }
 
-  // string # Data for form field set with form field ids as keys and user data as values
+  // object # Data for form field set with form field ids as keys and user data as values
   public function getFormFieldData() {
     return @$this->attributes['form_field_data'];
   }

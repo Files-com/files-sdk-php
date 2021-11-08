@@ -196,6 +196,24 @@ class Bundle {
     return $this->attributes['inbox_id'] = $value;
   }
 
+  // Preview watermark image applied to all bundle items.
+  public function getWatermarkAttachment() {
+    return @$this->attributes['watermark_attachment'];
+  }
+
+  public function setWatermarkAttachment($value) {
+    return $this->attributes['watermark_attachment'] = $value;
+  }
+
+  // object # Preview watermark settings applied to all bundle items. Uses the same keys as Behavior.value
+  public function getWatermarkValue() {
+    return @$this->attributes['watermark_value'];
+  }
+
+  public function setWatermarkValue($value) {
+    return $this->attributes['watermark_value'] = $value;
+  }
+
   // boolean # Does this bundle have an associated inbox?
   public function getHasInbox() {
     return @$this->attributes['has_inbox'];
@@ -230,6 +248,24 @@ class Bundle {
 
   public function setFormFieldSetId($value) {
     return $this->attributes['form_field_set_id'] = $value;
+  }
+
+  // file # Preview watermark image applied to all bundle items.
+  public function getWatermarkAttachmentFile() {
+    return @$this->attributes['watermark_attachment_file'];
+  }
+
+  public function setWatermarkAttachmentFile($value) {
+    return $this->attributes['watermark_attachment_file'] = $value;
+  }
+
+  // boolean # If true, will delete the file stored in watermark_attachment
+  public function getWatermarkAttachmentDelete() {
+    return @$this->attributes['watermark_attachment_delete'];
+  }
+
+  public function setWatermarkAttachmentDelete($value) {
+    return $this->attributes['watermark_attachment_delete'] = $value;
   }
 
   // Send email(s) with a link to bundle
@@ -285,6 +321,8 @@ class Bundle {
   //   preview_only - boolean - Restrict users to previewing files only?
   //   require_registration - boolean - Show a registration page that captures the downloader's name and email address?
   //   require_share_recipient - boolean - Only allow access to recipients who have explicitly received the share via an email sent through the Files.com UI?
+  //   watermark_attachment_delete - boolean - If true, will delete the file stored in watermark_attachment
+  //   watermark_attachment_file - file - Preview watermark image applied to all bundle items.
   public function update($params = []) {
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
@@ -461,6 +499,7 @@ class Bundle {
   //   clickwrap_id - int64 - ID of the clickwrap to use with this bundle.
   //   inbox_id - int64 - ID of the associated inbox, if available.
   //   require_share_recipient - boolean - Only allow access to recipients who have explicitly received the share via an email sent through the Files.com UI?
+  //   watermark_attachment_file - file - Preview watermark image applied to all bundle items.
   public static function create($params = [], $options = []) {
     if (!@$params['paths']) {
       throw new \Files\MissingParameterException('Parameter missing: paths');

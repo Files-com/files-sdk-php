@@ -110,6 +110,15 @@ class Behavior {
     return $this->attributes['attachment_file'] = $value;
   }
 
+  // boolean # If true, will delete the file stored in attachment
+  public function getAttachmentDelete() {
+    return @$this->attributes['attachment_delete'];
+  }
+
+  public function setAttachmentDelete($value) {
+    return $this->attributes['attachment_delete'] = $value;
+  }
+
   // Parameters:
   //   value - string - The value of the folder behavior.  Can be a integer, array, or hash depending on the type of folder behavior. See The Behavior Types section for example values for each type of behavior.
   //   attachment_file - file - Certain behaviors may require a file, for instance, the "watermark" behavior requires a watermark image
@@ -117,6 +126,7 @@ class Behavior {
   //   description - string - Description for this behavior.
   //   behavior - string - Behavior type.
   //   path - string - Folder behaviors path.
+  //   attachment_delete - boolean - If true, will delete the file stored in attachment
   public function update($params = []) {
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));

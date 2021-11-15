@@ -43,6 +43,11 @@ class SettingsChange {
     return @$this->attributes['change_details'];
   }
 
+  // string # Markdown-formatted change messages.
+  public function getChanges() {
+    return @$this->attributes['changes'];
+  }
+
   // date-time # The time this change was made
   public function getCreatedAt() {
     return @$this->attributes['created_at'];

@@ -7,8 +7,8 @@ namespace Files {
 function handleErrorResponse($error) {
   $className = null;
 
-  $response = $error->getResponse();
-  $body = $response->getBody()->getContents();
+  $response = @$error->getResponse();
+  $body = @$response->getBody()->getContents();
   $errorData = json_decode($body);
 
   if ($errorData === null) {

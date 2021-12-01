@@ -114,7 +114,7 @@ class Api {
 
   private static function autoPaginate($path, $verb, $params, $options, $response, $metadata = []) {
     if (Files::$autoPaginate) {
-      $nextCursor = current($response->headers['X-Files-Cursor'] ?: []);
+      $nextCursor = current(@$response->headers['X-Files-Cursor'] ?: []);
 
       $autoPaginateCount = @$metadata['autoPaginateCount'];
       $previousAutoPaginateData = @$metadata['previousAutoPaginateData'];
@@ -130,7 +130,7 @@ class Api {
           'autoPaginateCount' => ($autoPaginateCount ?: 1) + 1,
           'previousAutoPaginateData' => array_merge(
             $previousAutoPaginateData ?: [],
-            $response->data,
+            $response->data
           ),
         ];
 
@@ -145,7 +145,7 @@ class Api {
           'autoPaginateRequests' => $autoPaginateCount,
           'data' => array_merge(
             $previousAutoPaginateData,
-            $response->data,
+            $response->data
           ),
         ]);
       }

@@ -38,8 +38,8 @@ class File {
     return !!@$this->attributes['path'];
   }
 
-  private static function openUpload($path) {
-    $params = ['action' => 'put'];
+  private static function openUpload($path, $params = []) {
+    $params = array_merge($params, ['action' => 'put']);
     $response = Api::sendRequest('/files/' . rawurlencode($path), 'POST', $params);
 
     $partData = (array)(@$response->data ?: []);
@@ -74,7 +74,7 @@ class File {
     $response = Api::sendRequest('/files/' . rawurlencode($fileUploadPart->path), 'POST', $params);
   }
 
-  public static function uploadFile($destinationPath, $sourceFilePath) {
+  public static function uploadFile($destinationPath, $sourceFilePath, $params = []) {
     if (!$destinationPath) {
       throw new \Files\MissingParameterException('Parameter missing: destinationPath');
     }
@@ -83,7 +83,7 @@ class File {
       throw new \Files\MissingParameterException('Parameter missing: sourceFilePath');
     }
 
-    $fileUploadPart = self::openUpload($destinationPath);
+    $fileUploadPart = self::openUpload($destinationPath, $params);
 
     Logger::debug('File::uploadFile() fileUploadPart = ' . print_r($fileUploadPart, true));
 
@@ -131,9 +131,9 @@ class File {
           $response = Api::sendFile($nextFileUploadPart->upload_uri, 'PUT', $partFileHandle);
 
           unlink($partFilePath);
-        } while (!$response && ++$retries <= Files::$maxNetworkRetries);
+        } while (!$response && ++$retries <= \Files\Files::$maxNetworkRetries);
 
-        if ($retries > Files::$maxNetworkRetries) {
+        if ($retries > \Files\Files::$maxNetworkRetries) {
           $failed = true;
           break;
         }
@@ -145,7 +145,7 @@ class File {
     return !$failed;
   }
 
-  public static function uploadData($destinationPath, $data) {
+  public static function uploadData($destinationPath, $data, $params = []) {
     if (!$destinationPath) {
       throw new \Files\MissingParameterException('Parameter missing: destinationPath');
     }
@@ -157,7 +157,7 @@ class File {
     $tempPath = tempnam(sys_get_temp_dir(), basename($destinationPath));
     file_put_contents($tempPath, $data);
 
-    $result = self::uploadFile($destinationPath, $tempPath);
+    $result = self::uploadFile($destinationPath, $tempPath, $params);
 
     unlink($tempPath);
 
@@ -232,7 +232,7 @@ class File {
       } catch (\Exception $error) {
         ++$retries;
 
-        if (!$enableRetry || $retries > Files::$maxNetworkRetries) {
+        if (!$enableRetry || $retries > \Files\Files::$maxNetworkRetries) {
           Logger::info('Retries exhausted - giving up on this file download');
           handleErrorResponse($error);
         } else {
@@ -251,25 +251,6 @@ class File {
 
     $file = new File();
     return $file->delete(['path' => $path]);
-  }
-
-  public static function find($path) {
-    if (!$path) {
-      throw new \Files\MissingParameterException('Parameter missing: path');
-    }
-
-    $response = Api::sendRequest('/files/' . rawurlencode($path), 'GET');
-    return new File((array)(@$response->data ?: []));
-  }
-
-  public function get($path) {
-    if (!$path) {
-      throw new \Files\MissingParameterException('Parameter missing: path');
-    }
-
-    $new_obj = self::find($path);
-    $this->attributes = $new_obj->attributes;
-    return $this;
   }
 
   public function copyTo($destinationFilePath) {

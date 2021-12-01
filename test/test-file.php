@@ -385,8 +385,7 @@ function testUploadDownloadFileAndDelete() {
 function testFileObjectMethods() {
   Logger::debug('Loading a remote file path into a File object');
 
-  $file = new File();
-  $file->get(RemoteTestEnv::$remoteFilePath);
+  $file = File::get(RemoteTestEnv::$remoteFilePath);
 
   assert($file->path === RemoteTestEnv::$remoteFilePath);
 
@@ -398,7 +397,7 @@ function testFileObjectMethods() {
 
   Logger::debug('Fetching metadata for File object');
 
-  $metadata = $file->metadata([
+  $metadata = File::find($file->path, [
     'with_previews' => true,
     'with_priority_color' => true,
   ]);

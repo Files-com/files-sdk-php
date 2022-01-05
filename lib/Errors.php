@@ -236,6 +236,7 @@ class DestinationExistsException extends \Files\ProcessingFailureException {}
 class DestinationFolderLimitedException extends \Files\ProcessingFailureException {}
 class DestinationParentConflictException extends \Files\ProcessingFailureException {}
 class DestinationParentDoesNotExistException extends \Files\ProcessingFailureException {}
+class ExpiredPrivateKeyException extends \Files\ProcessingFailureException {}
 class ExpiredPublicKeyException extends \Files\ProcessingFailureException {}
 class ExportFailureException extends \Files\ProcessingFailureException {}
 class ExportNotReadyException extends \Files\ProcessingFailureException {}

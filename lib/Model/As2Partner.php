@@ -10,11 +10,11 @@ use Files\Logger;
 require_once __DIR__ . '/../Files.php';
 
 /**
- * Class As2Key
+ * Class As2Partner
  *
  * @package Files
  */
-class As2Key {
+class As2Partner {
   private $attributes = [];
   private $options = [];
 
@@ -38,7 +38,7 @@ class As2Key {
     return !!@$this->attributes['id'];
   }
 
-  // int64 # AS2 Key ID
+  // int64 # Id of the AS2 Partner.
   public function getId() {
     return @$this->attributes['id'];
   }
@@ -47,49 +47,55 @@ class As2Key {
     return $this->attributes['id'] = $value;
   }
 
-  // string # AS2 Partnership Name
-  public function getAs2PartnershipName() {
-    return @$this->attributes['as2_partnership_name'];
+  // int64 # Id of the AS2 Station associated with this partner.
+  public function getAs2StationId() {
+    return @$this->attributes['as2_station_id'];
   }
 
-  public function setAs2PartnershipName($value) {
-    return $this->attributes['as2_partnership_name'] = $value;
+  public function setAs2StationId($value) {
+    return $this->attributes['as2_station_id'] = $value;
   }
 
-  // date-time # AS2 Key created at date/time
-  public function getCreatedAt() {
-    return @$this->attributes['created_at'];
+  // string # The partner's formal AS2 name.
+  public function getName() {
+    return @$this->attributes['name'];
   }
 
-  // string # Public key fingerprint
-  public function getFingerprint() {
-    return @$this->attributes['fingerprint'];
+  public function setName($value) {
+    return $this->attributes['name'] = $value;
   }
 
-  public function setFingerprint($value) {
-    return $this->attributes['fingerprint'] = $value;
+  // string # Public URI for sending AS2 message to.
+  public function getUri() {
+    return @$this->attributes['uri'];
   }
 
-  // int64 # User ID.  Provide a value of `0` to operate the current session's user.
-  public function getUserId() {
-    return @$this->attributes['user_id'];
+  public function setUri($value) {
+    return $this->attributes['uri'] = $value;
   }
 
-  public function setUserId($value) {
-    return $this->attributes['user_id'] = $value;
+  // string # MD5 hash of public certificate used for message security.
+  public function getPublicCertificateMd5() {
+    return @$this->attributes['public_certificate_md5'];
   }
 
-  // string # Actual contents of Public key.
-  public function getPublicKey() {
-    return @$this->attributes['public_key'];
+  public function setPublicCertificateMd5($value) {
+    return $this->attributes['public_certificate_md5'] = $value;
   }
 
-  public function setPublicKey($value) {
-    return $this->attributes['public_key'] = $value;
+  // string
+  public function getPublicCertificate() {
+    return @$this->attributes['public_certificate'];
+  }
+
+  public function setPublicCertificate($value) {
+    return $this->attributes['public_certificate'] = $value;
   }
 
   // Parameters:
-  //   as2_partnership_name (required) - string - AS2 Partnership Name
+  //   name - string - AS2 Name
+  //   uri - string - URL base for AS2 responses
+  //   public_certificate - string
   public function update($params = []) {
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
@@ -103,23 +109,23 @@ class As2Key {
       }
     }
 
-    if (!@$params['as2_partnership_name']) {
-      if (@$this->as2_partnership_name) {
-        $params['as2_partnership_name'] = $this->as2_partnership_name;
-      } else {
-        throw new \Files\MissingParameterException('Parameter missing: as2_partnership_name');
-      }
-    }
-
     if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
 
-    if (@$params['as2_partnership_name'] && !is_string(@$params['as2_partnership_name'])) {
-      throw new \Files\InvalidParameterException('$as2_partnership_name must be of type string; received ' . gettype($as2_partnership_name));
+    if (@$params['name'] && !is_string(@$params['name'])) {
+      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype($name));
     }
 
-    $response = Api::sendRequest('/as2_keys/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+    if (@$params['uri'] && !is_string(@$params['uri'])) {
+      throw new \Files\InvalidParameterException('$uri must be of type string; received ' . gettype($uri));
+    }
+
+    if (@$params['public_certificate'] && !is_string(@$params['public_certificate'])) {
+      throw new \Files\InvalidParameterException('$public_certificate must be of type string; received ' . gettype($public_certificate));
+    }
+
+    $response = Api::sendRequest('/as2_partners/' . @$params['id'] . '', 'PATCH', $params, $this->options);
     return $response->data;
   }
 
@@ -140,7 +146,7 @@ class As2Key {
       throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
 
-    $response = Api::sendRequest('/as2_keys/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+    $response = Api::sendRequest('/as2_partners/' . @$params['id'] . '', 'DELETE', $params, $this->options);
     return $response->data;
   }
 
@@ -159,14 +165,9 @@ class As2Key {
   }
 
   // Parameters:
-  //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
   //   cursor - string - Used for pagination.  Send a cursor value to resume an existing list from the point at which you left off.  Get a cursor from an existing list via either the X-Files-Cursor-Next header or the X-Files-Cursor-Prev header.
   //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
   public static function list($params = [], $options = []) {
-    if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype($user_id));
-    }
-
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
       throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
     }
@@ -175,12 +176,12 @@ class As2Key {
       throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
     }
 
-    $response = Api::sendRequest('/as2_keys', 'GET', $params, $options);
+    $response = Api::sendRequest('/as2_partners', 'GET', $params, $options);
 
     $return_array = [];
 
     foreach ($response->data as $obj) {
-      $return_array[] = new As2Key((array)$obj, $options);
+      $return_array[] = new As2Partner((array)$obj, $options);
     }
 
     return $return_array;
@@ -191,7 +192,7 @@ class As2Key {
   }
 
   // Parameters:
-  //   id (required) - int64 - As2 Key ID.
+  //   id (required) - int64 - As2 Partner ID.
   public static function find($id, $params = [], $options = []) {
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
@@ -207,9 +208,9 @@ class As2Key {
       throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
     }
 
-    $response = Api::sendRequest('/as2_keys/' . @$params['id'] . '', 'GET', $params, $options);
+    $response = Api::sendRequest('/as2_partners/' . @$params['id'] . '', 'GET', $params, $options);
 
-    return new As2Key((array)(@$response->data ?: []), $options);
+    return new As2Partner((array)(@$response->data ?: []), $options);
   }
 
   public static function get($id, $params = [], $options = []) {
@@ -217,32 +218,45 @@ class As2Key {
   }
 
   // Parameters:
-  //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
-  //   as2_partnership_name (required) - string - AS2 Partnership Name
-  //   public_key (required) - string - Actual contents of Public key.
+  //   name (required) - string - AS2 Name
+  //   uri (required) - string - URL base for AS2 responses
+  //   public_certificate (required) - string
+  //   as2_station_id (required) - int64 - Id of As2Station for this partner
   public static function create($params = [], $options = []) {
-    if (!@$params['as2_partnership_name']) {
-      throw new \Files\MissingParameterException('Parameter missing: as2_partnership_name');
+    if (!@$params['name']) {
+      throw new \Files\MissingParameterException('Parameter missing: name');
     }
 
-    if (!@$params['public_key']) {
-      throw new \Files\MissingParameterException('Parameter missing: public_key');
+    if (!@$params['uri']) {
+      throw new \Files\MissingParameterException('Parameter missing: uri');
     }
 
-    if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype($user_id));
+    if (!@$params['public_certificate']) {
+      throw new \Files\MissingParameterException('Parameter missing: public_certificate');
     }
 
-    if (@$params['as2_partnership_name'] && !is_string(@$params['as2_partnership_name'])) {
-      throw new \Files\InvalidParameterException('$as2_partnership_name must be of type string; received ' . gettype($as2_partnership_name));
+    if (!@$params['as2_station_id']) {
+      throw new \Files\MissingParameterException('Parameter missing: as2_station_id');
     }
 
-    if (@$params['public_key'] && !is_string(@$params['public_key'])) {
-      throw new \Files\InvalidParameterException('$public_key must be of type string; received ' . gettype($public_key));
+    if (@$params['name'] && !is_string(@$params['name'])) {
+      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype($name));
     }
 
-    $response = Api::sendRequest('/as2_keys', 'POST', $params, $options);
+    if (@$params['uri'] && !is_string(@$params['uri'])) {
+      throw new \Files\InvalidParameterException('$uri must be of type string; received ' . gettype($uri));
+    }
 
-    return new As2Key((array)(@$response->data ?: []), $options);
+    if (@$params['public_certificate'] && !is_string(@$params['public_certificate'])) {
+      throw new \Files\InvalidParameterException('$public_certificate must be of type string; received ' . gettype($public_certificate));
+    }
+
+    if (@$params['as2_station_id'] && !is_int(@$params['as2_station_id'])) {
+      throw new \Files\InvalidParameterException('$as2_station_id must be of type int; received ' . gettype($as2_station_id));
+    }
+
+    $response = Api::sendRequest('/as2_partners', 'POST', $params, $options);
+
+    return new As2Partner((array)(@$response->data ?: []), $options);
   }
 }

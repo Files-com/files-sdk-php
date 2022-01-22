@@ -40,6 +40,7 @@
   ],
   "webhook_url": "https://app.files.com/api/webhooks/abc123",
   "trigger_actions": "[ \"create\" ]",
+  "trigger_action_path": "path/to/file/or/folder",
   "value": "{\"limit\": \"1\"}"
 }
 ```
@@ -61,6 +62,7 @@
 * `group_ids` (array): IDs of Groups for the Automation (i.e. who to Request File from)
 * `webhook_url` (string): If trigger is `webhook`, this is the URL of the webhook to trigger the Automation.
 * `trigger_actions` (string): If trigger is `action`, this is the list of action types on which to trigger the automation. Valid actions are create, read, update, destroy, move, copy
+* `trigger_action_path` (string): If trigger is `action`, this is the path to watch for the specified trigger actions.
 * `value` (object): A Hash of attributes specific to the automation type.
 * `destination` (string): DEPRECATED: Destination Path. Use `destinations` instead.
 
@@ -120,6 +122,7 @@ $automation->create(, [
   'schedule' => "{\"days_of_week\": [ 0, 1, 3 ], \"times_of_day\": [ \"7:30\", \"11:30\" ], \"time_zone\": \"Eastern Time (US & Canada)\"}",
   'trigger' => "realtime",
   'trigger_actions' => "[ \"create\" ]",
+  'trigger_action_path' => "path/to/file/or/folder",
   'value' => "{\"limit\": \"1\"}",
 ]);
 ```
@@ -142,6 +145,7 @@ $automation->create(, [
 * `name` (string): Name for this automation.
 * `trigger` (string): How this automation is triggered to run. One of: `realtime`, `daily`, `custom_schedule`, `webhook`, `email`, or `action`.
 * `trigger_actions` (array(string)): If trigger is `action`, this is the list of action types on which to trigger the automation. Valid actions are create, read, update, destroy, move, copy
+* `trigger_action_path` (string): If trigger is `action`, this is the path to watch for the specified trigger actions.
 * `value` (object): A Hash of attributes specific to the automation type.
 
 ---
@@ -161,6 +165,7 @@ $automation->update([
   'schedule' => "{\"days_of_week\": [ 0, 1, 3 ], \"times_of_day\": [ \"7:30\", \"11:30\" ], \"time_zone\": \"Eastern Time (US & Canada)\"}",
   'trigger' => "realtime",
   'trigger_actions' => "[ \"create\" ]",
+  'trigger_action_path' => "path/to/file/or/folder",
   'value' => "{\"limit\": \"1\"}",
 ]);
 ```
@@ -183,6 +188,7 @@ $automation->update([
 * `name` (string): Name for this automation.
 * `trigger` (string): How this automation is triggered to run. One of: `realtime`, `daily`, `custom_schedule`, `webhook`, `email`, or `action`.
 * `trigger_actions` (array(string)): If trigger is `action`, this is the list of action types on which to trigger the automation. Valid actions are create, read, update, destroy, move, copy
+* `trigger_action_path` (string): If trigger is `action`, this is the path to watch for the specified trigger actions.
 * `value` (object): A Hash of attributes specific to the automation type.
 
 ### Example Response
@@ -225,6 +231,7 @@ $automation->update([
   ],
   "webhook_url": "https://app.files.com/api/webhooks/abc123",
   "trigger_actions": "[ \"create\" ]",
+  "trigger_action_path": "path/to/file/or/folder",
   "value": "{\"limit\": \"1\"}"
 }
 ```

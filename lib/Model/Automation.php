@@ -191,15 +191,6 @@ class Automation {
     return $this->attributes['trigger_actions'] = $value;
   }
 
-  // string # If trigger is `action`, this is the path to watch for the specified trigger actions.
-  public function getTriggerActionPath() {
-    return @$this->attributes['trigger_action_path'];
-  }
-
-  public function setTriggerActionPath($value) {
-    return $this->attributes['trigger_action_path'] = $value;
-  }
-
   // object # A Hash of attributes specific to the automation type.
   public function getValue() {
     return @$this->attributes['value'];
@@ -234,7 +225,6 @@ class Automation {
   //   name - string - Name for this automation.
   //   trigger - string - How this automation is triggered to run. One of: `realtime`, `daily`, `custom_schedule`, `webhook`, `email`, or `action`.
   //   trigger_actions - array(string) - If trigger is `action`, this is the list of action types on which to trigger the automation. Valid actions are create, read, update, destroy, move, copy
-  //   trigger_action_path - string - If trigger is `action`, this is the path to watch for the specified trigger actions.
   //   value - object - A Hash of attributes specific to the automation type.
   public function update($params = []) {
     if (!is_array($params)) {
@@ -315,10 +305,6 @@ class Automation {
 
     if (@$params['trigger_actions'] && !is_array(@$params['trigger_actions'])) {
       throw new \Files\InvalidParameterException('$trigger_actions must be of type array; received ' . gettype($trigger_actions));
-    }
-
-    if (@$params['trigger_action_path'] && !is_string(@$params['trigger_action_path'])) {
-      throw new \Files\InvalidParameterException('$trigger_action_path must be of type string; received ' . gettype($trigger_action_path));
     }
 
     $response = Api::sendRequest('/automations/' . @$params['id'] . '', 'PATCH', $params, $this->options);
@@ -441,7 +427,6 @@ class Automation {
   //   name - string - Name for this automation.
   //   trigger - string - How this automation is triggered to run. One of: `realtime`, `daily`, `custom_schedule`, `webhook`, `email`, or `action`.
   //   trigger_actions - array(string) - If trigger is `action`, this is the list of action types on which to trigger the automation. Valid actions are create, read, update, destroy, move, copy
-  //   trigger_action_path - string - If trigger is `action`, this is the path to watch for the specified trigger actions.
   //   value - object - A Hash of attributes specific to the automation type.
   public static function create($params = [], $options = []) {
     if (!@$params['automation']) {
@@ -502,10 +487,6 @@ class Automation {
 
     if (@$params['trigger_actions'] && !is_array(@$params['trigger_actions'])) {
       throw new \Files\InvalidParameterException('$trigger_actions must be of type array; received ' . gettype($trigger_actions));
-    }
-
-    if (@$params['trigger_action_path'] && !is_string(@$params['trigger_action_path'])) {
-      throw new \Files\InvalidParameterException('$trigger_action_path must be of type string; received ' . gettype($trigger_action_path));
     }
 
     $response = Api::sendRequest('/automations', 'POST', $params, $options);

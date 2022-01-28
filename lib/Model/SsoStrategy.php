@@ -213,7 +213,7 @@ class SsoStrategy {
     return @$this->attributes['ldap_domain'];
   }
 
-  // boolean # Is strategy enabled?
+  // boolean # Is strategy enabled?  This may become automatically set to `false` after a high number and duration of failures.
   public function getEnabled() {
     return @$this->attributes['enabled'];
   }

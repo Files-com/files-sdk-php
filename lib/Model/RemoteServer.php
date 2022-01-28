@@ -47,6 +47,15 @@ class RemoteServer {
     return $this->attributes['id'] = $value;
   }
 
+  // boolean # If true, this server has been disabled due to failures.  Make any change or set disabled to false to clear this flag.
+  public function getDisabled() {
+    return @$this->attributes['disabled'];
+  }
+
+  public function setDisabled($value) {
+    return $this->attributes['disabled'] = $value;
+  }
+
   // string # Type of authentication method
   public function getAuthenticationMethod() {
     return @$this->attributes['authentication_method'];

@@ -38,74 +38,99 @@ class UsageSnapshot {
     return !!@$this->attributes['id'];
   }
 
-  // int64 # Site usage ID
+  // int64 # Usage snapshot ID
   public function getId() {
     return @$this->attributes['id'];
   }
 
-  // date-time # Site usage report start date/time
+  // date-time # Usage snapshot start date/time
   public function getStartAt() {
     return @$this->attributes['start_at'];
   }
 
-  // date-time # Site usage report end date/time
+  // date-time # Usage snapshot end date/time
   public function getEndAt() {
     return @$this->attributes['end_at'];
   }
 
-  // date-time # Site usage report created at date/time
+  // date-time # DEPRECATED: Usage snapshot created at date/time
   public function getCreatedAt() {
     return @$this->attributes['created_at'];
   }
 
-  // double # Site usage report highest usage in time period
+  // double # Highest user count number in time period
   public function getHighWaterUserCount() {
     return @$this->attributes['high_water_user_count'];
   }
 
-  // double # Current site usage as of report
+  // double # Current total Storage Usage GB as of end date (not necessarily high water mark, which is used for billing)
   public function getCurrentStorage() {
     return @$this->attributes['current_storage'];
   }
 
-  // double # Site usage report highest usage in time period
+  // double # Highest Storage Usage GB recorded in time period (used for billing)
   public function getHighWaterStorage() {
     return @$this->attributes['high_water_storage'];
   }
 
-  // int64 # Number of downloads in report time period
+  // int64 # DEPRECATED: Number of downloads in report time period
   public function getTotalDownloads() {
     return @$this->attributes['total_downloads'];
   }
 
-  // int64 # Number of uploads in time period
+  // int64 # DEPRECATED: Number of uploads in time period
   public function getTotalUploads() {
     return @$this->attributes['total_uploads'];
   }
 
-  // date-time # The last time this site usage report was updated
+  // date-time # DEPRECATED: The last time this site usage report was updated
   public function getUpdatedAt() {
     return @$this->attributes['updated_at'];
   }
 
-  // object # A map of root folders to their total usage
+  // object # Storage Usage - map of root folders to their usage as of end date (not necessarily high water mark, which is used for billing)
   public function getUsageByTopLevelDir() {
     return @$this->attributes['usage_by_top_level_dir'];
   }
 
-  // double # Usage for root folder
+  // double # Storage Usage for root folder as of end date (not necessarily high water mark, which is used for billing)
   public function getRootStorage() {
     return @$this->attributes['root_storage'];
   }
 
-  // double # Usage for files that are deleted but uploaded within last 30 days
+  // double # Storage Usage for files that are deleted but uploaded within last 30 days as of end date (not necessarily high water mark, which is used for billing)
   public function getDeletedFilesCountedInMinimum() {
     return @$this->attributes['deleted_files_counted_in_minimum'];
   }
 
-  // double # Usage for files that are deleted but retained as backups
+  // double # Storage Usage for files that are deleted but retained as backups as of end date (not necessarily high water mark, which is used for billing)
   public function getDeletedFilesStorage() {
     return @$this->attributes['deleted_files_storage'];
+  }
+
+  // double # Storage + Transfer Usage - Total Billable amount
+  public function getTotalBillableUsage() {
+    return @$this->attributes['total_billable_usage'];
+  }
+
+  // double # Transfer usage for period - Total Billable amount
+  public function getTotalBillableTransferUsage() {
+    return @$this->attributes['total_billable_transfer_usage'];
+  }
+
+  // double # Transfer Usage for period - Outbound GB from Files Native Storage
+  public function getBytesSent() {
+    return @$this->attributes['bytes_sent'];
+  }
+
+  // double # Transfer Usage for period - Inbound GB to Remote Servers (Sync/Mount)
+  public function getSyncBytesReceived() {
+    return @$this->attributes['sync_bytes_received'];
+  }
+
+  // double # Transfer Usage for period - Outbound GB from Remote Servers (Sync/Mount)
+  public function getSyncBytesSent() {
+    return @$this->attributes['sync_bytes_sent'];
   }
 
   // Parameters:

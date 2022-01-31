@@ -48,9 +48,44 @@ class UsageDailySnapshot {
     return @$this->attributes['date'];
   }
 
-  // int64 # The quantity of storage held for this site
+  // boolean # True if the API usage fields `read_api_usage` and `write_api_usage` can be relied upon.  If this is false, we suggest hiding that value from any UI.
+  public function getApiUsageAvailable() {
+    return @$this->attributes['api_usage_available'];
+  }
+
+  // int64 # Read API Calls used on this day. Note: only updated for days before the current day.
+  public function getReadApiUsage() {
+    return @$this->attributes['read_api_usage'];
+  }
+
+  // int64 # Write API Calls used on this day. Note: only updated for days before the current day.
+  public function getWriteApiUsage() {
+    return @$this->attributes['write_api_usage'];
+  }
+
+  // int64 # Number of billable users as of this day.
+  public function getUserCount() {
+    return @$this->attributes['user_count'];
+  }
+
+  // int64 # GB of Files Native Storage used on this day.
   public function getCurrentStorage() {
     return @$this->attributes['current_storage'];
+  }
+
+  // int64 # GB of Files Native Storage used on this day for files that have been deleted and are stored as backups.
+  public function getDeletedFilesStorage() {
+    return @$this->attributes['deleted_files_storage'];
+  }
+
+  // int64 # GB of Files Native Storage used on this day for files that have been permanently deleted but were uploaded less than 30 days ago, and are still billable.
+  public function getDeletedFilesCountedInMinimum() {
+    return @$this->attributes['deleted_files_counted_in_minimum'];
+  }
+
+  // int64 # GB of Files Native Storage used for the root folder.  Included here because this value will not be part of `usage_by_top_level_dir`
+  public function getRootStorage() {
+    return @$this->attributes['root_storage'];
   }
 
   // array # Usage broken down by each top-level folder

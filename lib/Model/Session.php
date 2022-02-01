@@ -182,6 +182,15 @@ class Session {
     return $this->attributes['allowed_2fa_method_u2f'] = $value;
   }
 
+  // boolean # Sent only if 2FA setup is needed. Is WebAuthn two factor authentication allowed?
+  public function getAllowed2faMethodWebauthn() {
+    return @$this->attributes['allowed_2fa_method_webauthn'];
+  }
+
+  public function setAllowed2faMethodWebauthn($value) {
+    return $this->attributes['allowed_2fa_method_webauthn'] = $value;
+  }
+
   // boolean # Sent only if 2FA setup is needed. Is Yubikey two factor authentication allowed?
   public function getAllowed2faMethodYubi() {
     return @$this->attributes['allowed_2fa_method_yubi'];

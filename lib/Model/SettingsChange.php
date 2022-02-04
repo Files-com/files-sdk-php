@@ -38,11 +38,6 @@ class SettingsChange {
     return !!@$this->attributes['id'];
   }
 
-  // object # Specifics on what changed.
-  public function getChangeDetails() {
-    return @$this->attributes['change_details'];
-  }
-
   // string # Markdown-formatted change messages.
   public function getChanges() {
     return @$this->attributes['changes'];

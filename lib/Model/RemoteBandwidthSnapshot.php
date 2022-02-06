@@ -10,11 +10,11 @@ use Files\Logger;
 require_once __DIR__ . '/../Files.php';
 
 /**
- * Class BandwidthSnapshot
+ * Class RemoteBandwidthSnapshot
  *
  * @package Files
  */
-class BandwidthSnapshot {
+class RemoteBandwidthSnapshot {
   private $attributes = [];
   private $options = [];
 
@@ -43,16 +43,6 @@ class BandwidthSnapshot {
     return @$this->attributes['id'];
   }
 
-  // double # Site bandwidth report bytes received
-  public function getBytesReceived() {
-    return @$this->attributes['bytes_received'];
-  }
-
-  // double # Site bandwidth report bytes sent
-  public function getBytesSent() {
-    return @$this->attributes['bytes_sent'];
-  }
-
   // double # Site sync bandwidth report bytes received
   public function getSyncBytesReceived() {
     return @$this->attributes['sync_bytes_received'];
@@ -63,24 +53,14 @@ class BandwidthSnapshot {
     return @$this->attributes['sync_bytes_sent'];
   }
 
-  // double # Site bandwidth report get requests
-  public function getRequestsGet() {
-    return @$this->attributes['requests_get'];
-  }
-
-  // double # Site bandwidth report put requests
-  public function getRequestsPut() {
-    return @$this->attributes['requests_put'];
-  }
-
-  // double # Site bandwidth report other requests
-  public function getRequestsOther() {
-    return @$this->attributes['requests_other'];
-  }
-
   // date-time # Time the site bandwidth report was logged
   public function getLoggedAt() {
     return @$this->attributes['logged_at'];
+  }
+
+  // int64 # ID of related Remote Server
+  public function getRemoteServerId() {
+    return @$this->attributes['remote_server_id'];
   }
 
   // Parameters:
@@ -102,12 +82,12 @@ class BandwidthSnapshot {
       throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
     }
 
-    $response = Api::sendRequest('/bandwidth_snapshots', 'GET', $params, $options);
+    $response = Api::sendRequest('/remote_bandwidth_snapshots', 'GET', $params, $options);
 
     $return_array = [];
 
     foreach ($response->data as $obj) {
-      $return_array[] = new BandwidthSnapshot((array)$obj, $options);
+      $return_array[] = new RemoteBandwidthSnapshot((array)$obj, $options);
     }
 
     return $return_array;

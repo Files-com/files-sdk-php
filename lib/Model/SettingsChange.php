@@ -53,6 +53,16 @@ class SettingsChange {
     return @$this->attributes['user_id'];
   }
 
+  // boolean # true if this change was performed by Files.com support.
+  public function getUserIsFilesSupport() {
+    return @$this->attributes['user_is_files_support'];
+  }
+
+  // string # The username of the user responsible for this change
+  public function getUsername() {
+    return @$this->attributes['username'];
+  }
+
   // Parameters:
   //   cursor - string - Used for pagination.  Send a cursor value to resume an existing list from the point at which you left off.  Get a cursor from an existing list via either the X-Files-Cursor-Next header or the X-Files-Cursor-Prev header.
   //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).

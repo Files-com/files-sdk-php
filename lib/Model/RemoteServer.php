@@ -128,6 +128,15 @@ class RemoteServer {
     return $this->attributes['s3_region'] = $value;
   }
 
+  // string # AWS Access Key.
+  public function getAwsAccessKey() {
+    return @$this->attributes['aws_access_key'];
+  }
+
+  public function setAwsAccessKey($value) {
+    return $this->attributes['aws_access_key'] = $value;
+  }
+
   // string # Remote server certificate
   public function getServerCertificate() {
     return @$this->attributes['server_certificate'];
@@ -225,6 +234,15 @@ class RemoteServer {
 
   public function setWasabiRegion($value) {
     return $this->attributes['wasabi_region'] = $value;
+  }
+
+  // string # Wasabi access key.
+  public function getWasabiAccessKey() {
+    return @$this->attributes['wasabi_access_key'];
+  }
+
+  public function setWasabiAccessKey($value) {
+    return $this->attributes['wasabi_access_key'] = $value;
   }
 
   // string # Rackspace username used to login to the Rackspace Cloud Control Panel.
@@ -326,6 +344,15 @@ class RemoteServer {
     return $this->attributes['s3_compatible_endpoint'] = $value;
   }
 
+  // string # S3-compatible Access Key.
+  public function getS3CompatibleAccessKey() {
+    return @$this->attributes['s3_compatible_access_key'];
+  }
+
+  public function setS3CompatibleAccessKey($value) {
+    return $this->attributes['s3_compatible_access_key'] = $value;
+  }
+
   // boolean # `true` if remote server only accepts connections from dedicated IPs
   public function getEnableDedicatedIps() {
     return @$this->attributes['enable_dedicated_ips'];
@@ -333,15 +360,6 @@ class RemoteServer {
 
   public function setEnableDedicatedIps($value) {
     return $this->attributes['enable_dedicated_ips'] = $value;
-  }
-
-  // string # AWS Access Key.
-  public function getAwsAccessKey() {
-    return @$this->attributes['aws_access_key'];
-  }
-
-  public function setAwsAccessKey($value) {
-    return $this->attributes['aws_access_key'] = $value;
   }
 
   // string # AWS secret key.
@@ -387,15 +405,6 @@ class RemoteServer {
 
   public function setGoogleCloudStorageCredentialsJson($value) {
     return $this->attributes['google_cloud_storage_credentials_json'] = $value;
-  }
-
-  // string # Wasabi access key.
-  public function getWasabiAccessKey() {
-    return @$this->attributes['wasabi_access_key'];
-  }
-
-  public function setWasabiAccessKey($value) {
-    return $this->attributes['wasabi_access_key'] = $value;
   }
 
   // string # Wasabi secret key.
@@ -452,15 +461,6 @@ class RemoteServer {
     return $this->attributes['azure_blob_storage_access_key'] = $value;
   }
 
-  // string # S3-compatible access key
-  public function getS3CompatibleAccessKey() {
-    return @$this->attributes['s3_compatible_access_key'];
-  }
-
-  public function setS3CompatibleAccessKey($value) {
-    return $this->attributes['s3_compatible_access_key'] = $value;
-  }
-
   // string # S3-compatible secret key
   public function getS3CompatibleSecretKey() {
     return @$this->attributes['s3_compatible_secret_key'];
@@ -510,7 +510,7 @@ class RemoteServer {
   //   s3_compatible_bucket - string - S3-compatible Bucket name
   //   s3_compatible_endpoint - string - S3-compatible endpoint
   //   enable_dedicated_ips - boolean - `true` if remote server only accepts connections from dedicated IPs
-  //   s3_compatible_access_key - string - S3-compatible access key
+  //   s3_compatible_access_key - string - S3-compatible Access Key.
   //   s3_compatible_secret_key - string - S3-compatible secret key
   public function update($params = []) {
     if (!is_array($params)) {
@@ -817,7 +817,7 @@ class RemoteServer {
   //   s3_compatible_bucket - string - S3-compatible Bucket name
   //   s3_compatible_endpoint - string - S3-compatible endpoint
   //   enable_dedicated_ips - boolean - `true` if remote server only accepts connections from dedicated IPs
-  //   s3_compatible_access_key - string - S3-compatible access key
+  //   s3_compatible_access_key - string - S3-compatible Access Key.
   //   s3_compatible_secret_key - string - S3-compatible secret key
   public static function create($params = [], $options = []) {
     if (@$params['aws_access_key'] && !is_string(@$params['aws_access_key'])) {

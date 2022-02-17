@@ -244,6 +244,8 @@ class FailedToChangePasswordException extends \Files\ProcessingFailureException 
 class FileLockedException extends \Files\ProcessingFailureException {}
 class FileNotUploadedException extends \Files\ProcessingFailureException {}
 class FilePendingProcessingException extends \Files\ProcessingFailureException {}
+class FileTooBigToDecryptException extends \Files\ProcessingFailureException {}
+class FileTooBigToEncryptException extends \Files\ProcessingFailureException {}
 class FileUploadedToWrongRegionException extends \Files\ProcessingFailureException {}
 class FolderLockedException extends \Files\ProcessingFailureException {}
 class FolderNotEmptyException extends \Files\ProcessingFailureException {}

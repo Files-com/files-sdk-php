@@ -38,6 +38,7 @@
   "azure_blob_storage_container": "container-name",
   "s3_compatible_bucket": "my-bucket",
   "s3_compatible_endpoint": "mys3platform.com",
+  "s3_compatible_region": "us-east-1",
   "s3_compatible_access_key": "",
   "enable_dedicated_ips": true
 }
@@ -77,6 +78,7 @@
 * `azure_blob_storage_container` (string): Azure Blob Storage Container name
 * `s3_compatible_bucket` (string): S3-compatible Bucket name
 * `s3_compatible_endpoint` (string): S3-compatible endpoint
+* `s3_compatible_region` (string): S3-compatible endpoint
 * `s3_compatible_access_key` (string): S3-compatible Access Key.
 * `enable_dedicated_ips` (boolean): `true` if remote server only accepts connections from dedicated IPs
 * `aws_secret_key` (string): AWS secret key.
@@ -156,6 +158,7 @@ $remote_server->create(, [
   'azure_blob_storage_container' => "container-name",
   's3_compatible_bucket' => "my-bucket",
   's3_compatible_endpoint' => "mys3platform.com",
+  's3_compatible_region' => "us-east-1",
   'enable_dedicated_ips' => true,
 ]);
 ```
@@ -201,6 +204,7 @@ $remote_server->create(, [
 * `azure_blob_storage_container` (string): Azure Blob Storage Container name
 * `s3_compatible_bucket` (string): S3-compatible Bucket name
 * `s3_compatible_endpoint` (string): S3-compatible endpoint
+* `s3_compatible_region` (string): S3-compatible endpoint
 * `enable_dedicated_ips` (boolean): `true` if remote server only accepts connections from dedicated IPs
 * `s3_compatible_access_key` (string): S3-compatible Access Key.
 * `s3_compatible_secret_key` (string): S3-compatible secret key
@@ -239,6 +243,7 @@ $remote_server->update([
   'azure_blob_storage_container' => "container-name",
   's3_compatible_bucket' => "my-bucket",
   's3_compatible_endpoint' => "mys3platform.com",
+  's3_compatible_region' => "us-east-1",
   'enable_dedicated_ips' => true,
 ]);
 ```
@@ -284,6 +289,7 @@ $remote_server->update([
 * `azure_blob_storage_container` (string): Azure Blob Storage Container name
 * `s3_compatible_bucket` (string): S3-compatible Bucket name
 * `s3_compatible_endpoint` (string): S3-compatible endpoint
+* `s3_compatible_region` (string): S3-compatible endpoint
 * `enable_dedicated_ips` (boolean): `true` if remote server only accepts connections from dedicated IPs
 * `s3_compatible_access_key` (string): S3-compatible Access Key.
 * `s3_compatible_secret_key` (string): S3-compatible secret key
@@ -326,6 +332,7 @@ $remote_server->update([
   "azure_blob_storage_container": "container-name",
   "s3_compatible_bucket": "my-bucket",
   "s3_compatible_endpoint": "mys3platform.com",
+  "s3_compatible_region": "us-east-1",
   "s3_compatible_access_key": "",
   "enable_dedicated_ips": true
 }

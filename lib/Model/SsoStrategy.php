@@ -253,6 +253,28 @@ class SsoStrategy {
     return @$this->attributes['ldap_username_field'];
   }
 
+  // Synchronize provisioning data with the SSO remote server
+  public function sync($params = []) {
+    if (!is_array($params)) {
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+    }
+
+    if (!@$params['id']) {
+      if (@$this->id) {
+        $params['id'] = $this->id;
+      } else {
+        throw new \Files\MissingParameterException('Parameter missing: id');
+      }
+    }
+
+    if (@$params['id'] && !is_int(@$params['id'])) {
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
+    }
+
+    $response = Api::sendRequest('/sso_strategies/' . @$params['id'] . '/sync', 'POST', $params, $this->options);
+    return $response->data;
+  }
+
   // Parameters:
   //   cursor - string - Used for pagination.  Send a cursor value to resume an existing list from the point at which you left off.  Get a cursor from an existing list via either the X-Files-Cursor-Next header or the X-Files-Cursor-Prev header.
   //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).

@@ -53,12 +53,12 @@ class Status {
     return @$this->attributes['status'];
   }
 
-  // Additional data
+  // Auto # Additional data
   public function getData() {
     return @$this->attributes['data'];
   }
 
-  // A list of api errors
+  // Errors # A list of api errors
   public function getErrors() {
     return @$this->attributes['errors'];
   }

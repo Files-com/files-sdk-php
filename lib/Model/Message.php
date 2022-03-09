@@ -65,7 +65,7 @@ class Message {
     return $this->attributes['body'] = $value;
   }
 
-  // Comments.
+  // MessageComment # Comments.
   public function getComments() {
     return @$this->attributes['comments'];
   }

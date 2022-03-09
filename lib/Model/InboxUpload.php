@@ -38,6 +38,7 @@ class InboxUpload {
     return !!@$this->attributes['id'];
   }
 
+  // InboxRegistration
   public function getInboxRegistration() {
     return @$this->attributes['inbox_registration'];
   }

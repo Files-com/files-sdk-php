@@ -110,7 +110,7 @@ class Bundle {
     return $this->attributes['clickwrap_body'] = $value;
   }
 
-  // Custom Form to use
+  // FormFieldSet # Custom Form to use
   public function getFormFieldSet() {
     return @$this->attributes['form_field_set'];
   }
@@ -196,7 +196,7 @@ class Bundle {
     return $this->attributes['inbox_id'] = $value;
   }
 
-  // Preview watermark image applied to all bundle items.
+  // Image # Preview watermark image applied to all bundle items.
   public function getWatermarkAttachment() {
     return @$this->attributes['watermark_attachment'];
   }

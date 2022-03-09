@@ -173,7 +173,7 @@ class Folder {
     return $this->attributes['preview_id'] = $value;
   }
 
-  // File preview
+  // Preview # File preview
   public function getPreview() {
     return @$this->attributes['preview'];
   }

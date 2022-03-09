@@ -56,7 +56,7 @@ class Style {
     return $this->attributes['path'] = $value;
   }
 
-  // Logo
+  // Image # Logo
   public function getLogo() {
     return @$this->attributes['logo'];
   }
@@ -65,7 +65,7 @@ class Style {
     return $this->attributes['logo'] = $value;
   }
 
-  // Logo thumbnail
+  // Image # Logo thumbnail
   public function getThumbnail() {
     return @$this->attributes['thumbnail'];
   }

@@ -56,7 +56,7 @@ class FileComment {
     return $this->attributes['body'] = $value;
   }
 
-  // Reactions to this comment.
+  // FileCommentReaction # Reactions to this comment.
   public function getReactions() {
     return @$this->attributes['reactions'];
   }

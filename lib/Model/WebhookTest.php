@@ -65,7 +65,7 @@ class WebhookTest {
     return $this->attributes['status'] = $value;
   }
 
-  // Additional data
+  // Auto # Additional data
   public function getData() {
     return @$this->attributes['data'];
   }

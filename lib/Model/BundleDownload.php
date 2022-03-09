@@ -38,6 +38,7 @@ class BundleDownload {
     return !!@$this->attributes['id'];
   }
 
+  // BundleRegistration
   public function getBundleRegistration() {
     return @$this->attributes['bundle_registration'];
   }

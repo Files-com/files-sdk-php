@@ -56,7 +56,7 @@ class MessageComment {
     return $this->attributes['body'] = $value;
   }
 
-  // Reactions to this comment.
+  // MessageCommentReaction # Reactions to this comment.
   public function getReactions() {
     return @$this->attributes['reactions'];
   }

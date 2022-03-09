@@ -108,7 +108,7 @@ class Site {
     return @$this->attributes['bundle_require_share_recipient'];
   }
 
-  // Preview watermark image applied to all bundle items.
+  // Image # Preview watermark image applied to all bundle items.
   public function getBundleWatermarkAttachment() {
     return @$this->attributes['bundle_watermark_attachment'];
   }
@@ -268,22 +268,22 @@ class Site {
     return @$this->attributes['hipaa'];
   }
 
-  // Branded icon 128x128
+  // Image # Branded icon 128x128
   public function getIcon128() {
     return @$this->attributes['icon128'];
   }
 
-  // Branded icon 16x16
+  // Image # Branded icon 16x16
   public function getIcon16() {
     return @$this->attributes['icon16'];
   }
 
-  // Branded icon 32x32
+  // Image # Branded icon 32x32
   public function getIcon32() {
     return @$this->attributes['icon32'];
   }
 
-  // Branded icon 48x48
+  // Image # Branded icon 48x48
   public function getIcon48() {
     return @$this->attributes['icon48'];
   }
@@ -388,7 +388,7 @@ class Site {
     return @$this->attributes['login_help_text'];
   }
 
-  // Branded logo
+  // Image # Branded logo
   public function getLogo() {
     return @$this->attributes['logo'];
   }
@@ -498,7 +498,7 @@ class Site {
     return @$this->attributes['require_2fa_user_type'];
   }
 
-  // Current session
+  // Session # Current session
   public function getSession() {
     return @$this->attributes['session'];
   }
@@ -613,7 +613,7 @@ class Site {
     return @$this->attributes['use_provided_modified_at'];
   }
 
-  // User of current session
+  // User # User of current session
   public function getUser() {
     return @$this->attributes['user'];
   }

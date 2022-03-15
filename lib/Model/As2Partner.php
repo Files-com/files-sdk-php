@@ -83,6 +83,51 @@ class As2Partner {
     return $this->attributes['public_certificate_md5'] = $value;
   }
 
+  // string # Subject of public certificate used for message security.
+  public function getPublicCertificateSubject() {
+    return @$this->attributes['public_certificate_subject'];
+  }
+
+  public function setPublicCertificateSubject($value) {
+    return $this->attributes['public_certificate_subject'] = $value;
+  }
+
+  // string # Issuer of public certificate used for message security.
+  public function getPublicCertificateIssuer() {
+    return @$this->attributes['public_certificate_issuer'];
+  }
+
+  public function setPublicCertificateIssuer($value) {
+    return $this->attributes['public_certificate_issuer'] = $value;
+  }
+
+  // string # Serial of public certificate used for message security.
+  public function getPublicCertificateSerial() {
+    return @$this->attributes['public_certificate_serial'];
+  }
+
+  public function setPublicCertificateSerial($value) {
+    return $this->attributes['public_certificate_serial'] = $value;
+  }
+
+  // string # Not before value of public certificate used for message security.
+  public function getPublicCertificateNotBefore() {
+    return @$this->attributes['public_certificate_not_before'];
+  }
+
+  public function setPublicCertificateNotBefore($value) {
+    return $this->attributes['public_certificate_not_before'] = $value;
+  }
+
+  // string # Not after value of public certificate used for message security.
+  public function getPublicCertificateNotAfter() {
+    return @$this->attributes['public_certificate_not_after'];
+  }
+
+  public function setPublicCertificateNotAfter($value) {
+    return $this->attributes['public_certificate_not_after'] = $value;
+  }
+
   // string
   public function getPublicCertificate() {
     return @$this->attributes['public_certificate'];

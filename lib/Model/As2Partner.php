@@ -74,6 +74,15 @@ class As2Partner {
     return $this->attributes['uri'] = $value;
   }
 
+  // string # Remote server certificate security setting
+  public function getServerCertificate() {
+    return @$this->attributes['server_certificate'];
+  }
+
+  public function setServerCertificate($value) {
+    return $this->attributes['server_certificate'] = $value;
+  }
+
   // string # MD5 hash of public certificate used for message security.
   public function getPublicCertificateMd5() {
     return @$this->attributes['public_certificate_md5'];
@@ -140,6 +149,7 @@ class As2Partner {
   // Parameters:
   //   name - string - AS2 Name
   //   uri - string - URL base for AS2 responses
+  //   server_certificate - string - Remote server certificate security setting
   //   public_certificate - string
   public function update($params = []) {
     if (!is_array($params)) {
@@ -164,6 +174,10 @@ class As2Partner {
 
     if (@$params['uri'] && !is_string(@$params['uri'])) {
       throw new \Files\InvalidParameterException('$uri must be of type string; received ' . gettype($uri));
+    }
+
+    if (@$params['server_certificate'] && !is_string(@$params['server_certificate'])) {
+      throw new \Files\InvalidParameterException('$server_certificate must be of type string; received ' . gettype($server_certificate));
     }
 
     if (@$params['public_certificate'] && !is_string(@$params['public_certificate'])) {
@@ -267,6 +281,7 @@ class As2Partner {
   //   uri (required) - string - URL base for AS2 responses
   //   public_certificate (required) - string
   //   as2_station_id (required) - int64 - Id of As2Station for this partner
+  //   server_certificate - string - Remote server certificate security setting
   public static function create($params = [], $options = []) {
     if (!@$params['name']) {
       throw new \Files\MissingParameterException('Parameter missing: name');
@@ -298,6 +313,10 @@ class As2Partner {
 
     if (@$params['as2_station_id'] && !is_int(@$params['as2_station_id'])) {
       throw new \Files\InvalidParameterException('$as2_station_id must be of type int; received ' . gettype($as2_station_id));
+    }
+
+    if (@$params['server_certificate'] && !is_string(@$params['server_certificate'])) {
+      throw new \Files\InvalidParameterException('$server_certificate must be of type string; received ' . gettype($server_certificate));
     }
 
     $response = Api::sendRequest('/as2_partners', 'POST', $params, $options);

@@ -137,6 +137,15 @@ class As2Station {
     return $this->attributes['public_certificate_not_after'] = $value;
   }
 
+  // string # MD5 hash of private key password used for message security.
+  public function getPrivateKeyPasswordMd5() {
+    return @$this->attributes['private_key_password_md5'];
+  }
+
+  public function setPrivateKeyPasswordMd5($value) {
+    return $this->attributes['private_key_password_md5'] = $value;
+  }
+
   // string
   public function getPublicCertificate() {
     return @$this->attributes['public_certificate'];
@@ -155,10 +164,20 @@ class As2Station {
     return $this->attributes['private_key'] = $value;
   }
 
+  // string
+  public function getPrivateKeyPassword() {
+    return @$this->attributes['private_key_password'];
+  }
+
+  public function setPrivateKeyPassword($value) {
+    return $this->attributes['private_key_password'] = $value;
+  }
+
   // Parameters:
   //   name - string - AS2 Name
   //   public_certificate - string
   //   private_key - string
+  //   private_key_password - string
   public function update($params = []) {
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
@@ -186,6 +205,10 @@ class As2Station {
 
     if (@$params['private_key'] && !is_string(@$params['private_key'])) {
       throw new \Files\InvalidParameterException('$private_key must be of type string; received ' . gettype($private_key));
+    }
+
+    if (@$params['private_key_password'] && !is_string(@$params['private_key_password'])) {
+      throw new \Files\InvalidParameterException('$private_key_password must be of type string; received ' . gettype($private_key_password));
     }
 
     $response = Api::sendRequest('/as2_stations/' . @$params['id'] . '', 'PATCH', $params, $this->options);
@@ -284,6 +307,7 @@ class As2Station {
   //   name (required) - string - AS2 Name
   //   public_certificate (required) - string
   //   private_key (required) - string
+  //   private_key_password - string
   public static function create($params = [], $options = []) {
     if (!@$params['name']) {
       throw new \Files\MissingParameterException('Parameter missing: name');
@@ -307,6 +331,10 @@ class As2Station {
 
     if (@$params['private_key'] && !is_string(@$params['private_key'])) {
       throw new \Files\InvalidParameterException('$private_key must be of type string; received ' . gettype($private_key));
+    }
+
+    if (@$params['private_key_password'] && !is_string(@$params['private_key_password'])) {
+      throw new \Files\InvalidParameterException('$private_key_password must be of type string; received ' . gettype($private_key_password));
     }
 
     $response = Api::sendRequest('/as2_stations', 'POST', $params, $options);

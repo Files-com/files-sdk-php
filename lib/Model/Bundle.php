@@ -119,6 +119,33 @@ class Bundle {
     return $this->attributes['form_field_set'] = $value;
   }
 
+  // boolean # BundleRegistrations can be saved without providing name?
+  public function getSkipName() {
+    return @$this->attributes['skip_name'];
+  }
+
+  public function setSkipName($value) {
+    return $this->attributes['skip_name'] = $value;
+  }
+
+  // boolean # BundleRegistrations can be saved without providing email?
+  public function getSkipEmail() {
+    return @$this->attributes['skip_email'];
+  }
+
+  public function setSkipEmail($value) {
+    return $this->attributes['skip_email'] = $value;
+  }
+
+  // boolean # BundleRegistrations can be saved without providing company?
+  public function getSkipCompany() {
+    return @$this->attributes['skip_company'];
+  }
+
+  public function setSkipCompany($value) {
+    return $this->attributes['skip_company'] = $value;
+  }
+
   // int64 # Bundle ID
   public function getId() {
     return @$this->attributes['id'];

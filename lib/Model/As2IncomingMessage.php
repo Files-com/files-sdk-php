@@ -68,7 +68,7 @@ class As2IncomingMessage {
     return @$this->attributes['activity_log'];
   }
 
-  // string # Result of processing. Valid values: `unable_to_find_station`, `unable_to_find_partner`, `unable_to_validate_signature`, `decrypt_fail`, `file_save_fail`, `success`
+  // string # Result of processing.
   public function getProcessingResult() {
     return @$this->attributes['processing_result'];
   }

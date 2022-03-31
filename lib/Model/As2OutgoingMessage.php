@@ -63,7 +63,7 @@ class As2OutgoingMessage {
     return @$this->attributes['activity_log'];
   }
 
-  // string # Result of processing. Valid values: `send_failed`, `send_success`, `send_no_mdn`
+  // string # Result of processing.
   public function getProcessingResult() {
     return @$this->attributes['processing_result'];
   }

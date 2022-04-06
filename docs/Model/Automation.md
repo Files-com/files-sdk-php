@@ -6,6 +6,7 @@
 {
   "id": 1,
   "automation": "create_folder",
+  "disabled": true,
   "trigger": "realtime",
   "interval": "week",
   "name": "",
@@ -46,6 +47,7 @@
 
 * `id` (int64): Automation ID
 * `automation` (string): Automation type
+* `disabled` (boolean): If true, this automation will not run.
 * `trigger` (string): How this automation is triggered to run. One of: `realtime`, `daily`, `custom_schedule`, `webhook`, `email`, or `action`.
 * `interval` (string): If trigger is `daily`, this specifies how often to run this automation.  One of: `day`, `week`, `week_end`, `month`, `month_end`, `quarter`, `quarter_end`, `year`, `year_end`
 * `name` (string): Name for this automation.
@@ -118,6 +120,7 @@ $automation->create(, [
   'user_ids' => [1,2],
   'group_ids' => [1,2],
   'schedule' => "{\"days_of_week\": [ 0, 1, 3 ], \"times_of_day\": [ \"7:30\", \"11:30\" ], \"time_zone\": \"Eastern Time (US & Canada)\"}",
+  'disabled' => true,
   'trigger' => "realtime",
   'trigger_actions' => "[ \"create\" ]",
   'value' => "{\"limit\": \"1\"}",
@@ -139,6 +142,7 @@ $automation->create(, [
 * `group_ids` (string): A list of group IDs the automation is associated with. If sent as a string, it should be comma-delimited.
 * `schedule` (object): Custom schedule for running this automation.
 * `description` (string): Description for the this Automation.
+* `disabled` (boolean): If true, this automation will not run.
 * `name` (string): Name for this automation.
 * `trigger` (string): How this automation is triggered to run. One of: `realtime`, `daily`, `custom_schedule`, `webhook`, `email`, or `action`.
 * `trigger_actions` (array(string)): If trigger is `action`, this is the list of action types on which to trigger the automation. Valid actions are create, read, update, destroy, move, copy
@@ -159,6 +163,7 @@ $automation->update([
   'user_ids' => [1,2],
   'group_ids' => [1,2],
   'schedule' => "{\"days_of_week\": [ 0, 1, 3 ], \"times_of_day\": [ \"7:30\", \"11:30\" ], \"time_zone\": \"Eastern Time (US & Canada)\"}",
+  'disabled' => true,
   'trigger' => "realtime",
   'trigger_actions' => "[ \"create\" ]",
   'value' => "{\"limit\": \"1\"}",
@@ -180,6 +185,7 @@ $automation->update([
 * `group_ids` (string): A list of group IDs the automation is associated with. If sent as a string, it should be comma-delimited.
 * `schedule` (object): Custom schedule for running this automation.
 * `description` (string): Description for the this Automation.
+* `disabled` (boolean): If true, this automation will not run.
 * `name` (string): Name for this automation.
 * `trigger` (string): How this automation is triggered to run. One of: `realtime`, `daily`, `custom_schedule`, `webhook`, `email`, or `action`.
 * `trigger_actions` (array(string)): If trigger is `action`, this is the list of action types on which to trigger the automation. Valid actions are create, read, update, destroy, move, copy
@@ -191,6 +197,7 @@ $automation->update([
 {
   "id": 1,
   "automation": "create_folder",
+  "disabled": true,
   "trigger": "realtime",
   "interval": "week",
   "name": "",

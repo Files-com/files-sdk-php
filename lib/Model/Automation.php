@@ -56,6 +56,15 @@ class Automation {
     return $this->attributes['automation'] = $value;
   }
 
+  // boolean # If true, this automation will not run.
+  public function getDisabled() {
+    return @$this->attributes['disabled'];
+  }
+
+  public function setDisabled($value) {
+    return $this->attributes['disabled'] = $value;
+  }
+
   // string # How this automation is triggered to run. One of: `realtime`, `daily`, `custom_schedule`, `webhook`, `email`, or `action`.
   public function getTrigger() {
     return @$this->attributes['trigger'];
@@ -222,6 +231,7 @@ class Automation {
   //   group_ids - string - A list of group IDs the automation is associated with. If sent as a string, it should be comma-delimited.
   //   schedule - object - Custom schedule for running this automation.
   //   description - string - Description for the this Automation.
+  //   disabled - boolean - If true, this automation will not run.
   //   name - string - Name for this automation.
   //   trigger - string - How this automation is triggered to run. One of: `realtime`, `daily`, `custom_schedule`, `webhook`, `email`, or `action`.
   //   trigger_actions - array(string) - If trigger is `action`, this is the list of action types on which to trigger the automation. Valid actions are create, read, update, destroy, move, copy
@@ -424,6 +434,7 @@ class Automation {
   //   group_ids - string - A list of group IDs the automation is associated with. If sent as a string, it should be comma-delimited.
   //   schedule - object - Custom schedule for running this automation.
   //   description - string - Description for the this Automation.
+  //   disabled - boolean - If true, this automation will not run.
   //   name - string - Name for this automation.
   //   trigger - string - How this automation is triggered to run. One of: `realtime`, `daily`, `custom_schedule`, `webhook`, `email`, or `action`.
   //   trigger_actions - array(string) - If trigger is `action`, this is the list of action types on which to trigger the automation. Valid actions are create, read, update, destroy, move, copy

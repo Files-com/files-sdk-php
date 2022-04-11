@@ -48,6 +48,11 @@ class As2OutgoingMessage {
     return @$this->attributes['as2_partner_id'];
   }
 
+  // int64 # Id of the AS2 Station associated with this message.
+  public function getAs2StationId() {
+    return @$this->attributes['as2_station_id'];
+  }
+
   // string # UUID assigned to this message.
   public function getUuid() {
     return @$this->attributes['uuid'];
@@ -68,9 +73,24 @@ class As2OutgoingMessage {
     return @$this->attributes['processing_result'];
   }
 
-  // string # AS2 Message Integrity Check
+  // string # AS2 Message Integrity Check SHA1
   public function getMic() {
     return @$this->attributes['mic'];
+  }
+
+  // string # AS2 Message Integrity Check SHA256
+  public function getMicSha256() {
+    return @$this->attributes['mic_sha_256'];
+  }
+
+  // string # AS2 TO
+  public function getAs2To() {
+    return @$this->attributes['as2_to'];
+  }
+
+  // string # AS2 FROM
+  public function getAs2From() {
+    return @$this->attributes['as2_from'];
   }
 
   // string # AS2 Message Id
@@ -91,6 +111,71 @@ class As2OutgoingMessage {
   // date-time # Message creation date/time
   public function getCreatedAt() {
     return @$this->attributes['created_at'];
+  }
+
+  // string # HTTP Response Code received for this message
+  public function getHttpResponseCode() {
+    return @$this->attributes['http_response_code'];
+  }
+
+  // object # HTTP Headers received for this message.
+  public function getHttpResponseHeaders() {
+    return @$this->attributes['http_response_headers'];
+  }
+
+  // boolean # Did the partner give a response body?
+  public function getMdnReceived() {
+    return @$this->attributes['mdn_received'];
+  }
+
+  // boolean # Is the response in MDN format?
+  public function getMdnValid() {
+    return @$this->attributes['mdn_valid'];
+  }
+
+  // boolean # MDN signature verified?
+  public function getMdnSignatureVerified() {
+    return @$this->attributes['mdn_signature_verified'];
+  }
+
+  // boolean # MDN message id matched?
+  public function getMdnMessageIdMatched() {
+    return @$this->attributes['mdn_message_id_matched'];
+  }
+
+  // boolean # MDN MIC matched?
+  public function getMdnMicMatched() {
+    return @$this->attributes['mdn_mic_matched'];
+  }
+
+  // boolean # MDN disposition indicate a successful processing?
+  public function getMdnProcessingSuccess() {
+    return @$this->attributes['mdn_processing_success'];
+  }
+
+  // string # URL to download the original file contents
+  public function getRawUri() {
+    return @$this->attributes['raw_uri'];
+  }
+
+  // string # URL to download the file contents encoded as smime
+  public function getSmimeUri() {
+    return @$this->attributes['smime_uri'];
+  }
+
+  // string # URL to download the file contents as smime with signature
+  public function getSmimeSignedUri() {
+    return @$this->attributes['smime_signed_uri'];
+  }
+
+  // string # URL to download the encrypted signed smime that is to sent as AS2 body
+  public function getEncryptedUri() {
+    return @$this->attributes['encrypted_uri'];
+  }
+
+  // string # URL to download the http response body
+  public function getMdnResponseUri() {
+    return @$this->attributes['mdn_response_uri'];
   }
 
   // Parameters:

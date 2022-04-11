@@ -48,6 +48,11 @@ class As2IncomingMessage {
     return @$this->attributes['as2_partner_id'];
   }
 
+  // int64 # Id of the AS2 Station associated with this message.
+  public function getAs2StationId() {
+    return @$this->attributes['as2_station_id'];
+  }
+
   // string # UUID assigned to this message.
   public function getUuid() {
     return @$this->attributes['uuid'];
@@ -71,6 +76,16 @@ class As2IncomingMessage {
   // string # Result of processing.
   public function getProcessingResult() {
     return @$this->attributes['processing_result'];
+  }
+
+  // string # AS2 Message Integrity Check
+  public function getMic() {
+    return @$this->attributes['mic'];
+  }
+
+  // string # AS2 Message Integrity Check Algorithm Used
+  public function getMicAlgo() {
+    return @$this->attributes['mic_algo'];
   }
 
   // string # AS2 TO header of message
@@ -103,9 +118,74 @@ class As2IncomingMessage {
     return @$this->attributes['attachment_filename'];
   }
 
+  // string # IP Address of the Sender
+  public function getIp() {
+    return @$this->attributes['ip'];
+  }
+
   // date-time # Message creation date/time
   public function getCreatedAt() {
     return @$this->attributes['created_at'];
+  }
+
+  // string # HTTP Response Code sent for this message
+  public function getHttpResponseCode() {
+    return @$this->attributes['http_response_code'];
+  }
+
+  // object # HTTP Headers sent for this message.
+  public function getHttpResponseHeaders() {
+    return @$this->attributes['http_response_headers'];
+  }
+
+  // boolean # Message body received?
+  public function getMessageReceived() {
+    return @$this->attributes['message_received'];
+  }
+
+  // boolean # Message decrypted successfully?
+  public function getMessageDecrypted() {
+    return @$this->attributes['message_decrypted'];
+  }
+
+  // boolean # Message signature verified?
+  public function getMessageSignatureVerified() {
+    return @$this->attributes['message_signature_verified'];
+  }
+
+  // boolean # Message processed successfully?
+  public function getMessageProcessingSuccess() {
+    return @$this->attributes['message_processing_success'];
+  }
+
+  // boolean # MDN returned?
+  public function getMessageMdnReturned() {
+    return @$this->attributes['message_mdn_returned'];
+  }
+
+  // string # URL to download the encrypted signed smime that is to sent as AS2 body
+  public function getEncryptedUri() {
+    return @$this->attributes['encrypted_uri'];
+  }
+
+  // string # URL to download the file contents as smime with signature
+  public function getSmimeSignedUri() {
+    return @$this->attributes['smime_signed_uri'];
+  }
+
+  // string # URL to download the file contents encoded as smime
+  public function getSmimeUri() {
+    return @$this->attributes['smime_uri'];
+  }
+
+  // string # URL to download the original file contents
+  public function getRawUri() {
+    return @$this->attributes['raw_uri'];
+  }
+
+  // string # URL to download the http response body
+  public function getMdnResponseUri() {
+    return @$this->attributes['mdn_response_uri'];
   }
 
   // Parameters:

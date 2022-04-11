@@ -74,6 +74,15 @@ class As2Station {
     return $this->attributes['domain'] = $value;
   }
 
+  // string # Serial of public certificate used for message security in hex format.
+  public function getHexPublicCertificateSerial() {
+    return @$this->attributes['hex_public_certificate_serial'];
+  }
+
+  public function setHexPublicCertificateSerial($value) {
+    return $this->attributes['hex_public_certificate_serial'] = $value;
+  }
+
   // string # MD5 hash of public certificate used for message security.
   public function getPublicCertificateMd5() {
     return @$this->attributes['public_certificate_md5'];

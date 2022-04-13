@@ -138,6 +138,21 @@ class As2IncomingMessage {
     return @$this->attributes['http_response_headers'];
   }
 
+  // string # Incoming Message Recipient(the Client Cert used to encrypt this message)'s serial
+  public function getRecipientSerial() {
+    return @$this->attributes['recipient_serial'];
+  }
+
+  // string # Incoming Message Recipient(the Client Cert used to encrypt this message)'s serial in hex format.
+  public function getHexRecipientSerial() {
+    return @$this->attributes['hex_recipient_serial'];
+  }
+
+  // string # Incoming Message Recipient(the Client Cert used to encrypt this message)'s issuer
+  public function getRecipientIssuer() {
+    return @$this->attributes['recipient_issuer'];
+  }
+
   // boolean # Message body received?
   public function getMessageReceived() {
     return @$this->attributes['message_received'];

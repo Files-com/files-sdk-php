@@ -108,6 +108,11 @@ class As2IncomingMessage {
     return @$this->attributes['subject'];
   }
 
+  // string # Date Header
+  public function getDate() {
+    return @$this->attributes['date'];
+  }
+
   // string # Encrypted Payload Body Size
   public function getBodySize() {
     return @$this->attributes['body_size'];

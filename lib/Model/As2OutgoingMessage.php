@@ -93,6 +93,11 @@ class As2OutgoingMessage {
     return @$this->attributes['as2_from'];
   }
 
+  // string # Date Header
+  public function getDate() {
+    return @$this->attributes['date'];
+  }
+
   // string # AS2 Message Id
   public function getMessageId() {
     return @$this->attributes['message_id'];

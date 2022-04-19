@@ -182,6 +182,15 @@ class Folder {
     return $this->attributes['preview'] = $value;
   }
 
+  // boolean # Create parent directories if they do not exist?
+  public function getMkdirParents() {
+    return @$this->attributes['mkdir_parents'];
+  }
+
+  public function setMkdirParents($value) {
+    return $this->attributes['mkdir_parents'] = $value;
+  }
+
   public function save() {
       $new_obj = self::create($this->path, $this->attributes, $this->options);
       $this->attributes = $new_obj->attributes;
@@ -246,6 +255,7 @@ class Folder {
 
   // Parameters:
   //   path (required) - string - Path to operate on.
+  //   mkdir_parents - boolean - Create parent directories if they do not exist?
   public static function create($path, $params = [], $options = []) {
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));

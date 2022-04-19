@@ -45,6 +45,7 @@
 * `priority_color` (string): Bookmark/priority color of file/folder
 * `preview_id` (int64): File preview ID
 * `preview` (Preview): File preview
+* `mkdir_parents` (boolean): Create parent directories if they do not exist?
 
 ---
 
@@ -79,10 +80,13 @@ $folder->listFor($path, [
 
 ```
 $folder = new \Files\Model\Folder();
-$folder->create($path);
+$folder->create($path, [
+  'mkdir_parents' => true,
+]);
 ```
 
 
 ### Parameters
 
 * `path` (string): Required - Path to operate on.
+* `mkdir_parents` (boolean): Create parent directories if they do not exist?

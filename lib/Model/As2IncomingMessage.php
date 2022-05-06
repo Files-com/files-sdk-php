@@ -78,6 +78,11 @@ class As2IncomingMessage {
     return @$this->attributes['processing_result'];
   }
 
+  // string # Result of processing description.
+  public function getProcessingResultDescription() {
+    return @$this->attributes['processing_result_description'];
+  }
+
   // string # AS2 Message Integrity Check
   public function getMic() {
     return @$this->attributes['mic'];

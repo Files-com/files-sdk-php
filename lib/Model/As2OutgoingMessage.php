@@ -73,6 +73,11 @@ class As2OutgoingMessage {
     return @$this->attributes['processing_result'];
   }
 
+  // string # Result of processing description.
+  public function getProcessingResultDescription() {
+    return @$this->attributes['processing_result_description'];
+  }
+
   // string # AS2 Message Integrity Check SHA1
   public function getMic() {
     return @$this->attributes['mic'];
@@ -126,6 +131,11 @@ class As2OutgoingMessage {
   // object # HTTP Headers received for this message.
   public function getHttpResponseHeaders() {
     return @$this->attributes['http_response_headers'];
+  }
+
+  // double # HTTP transmission duration in seceonds
+  public function getHttpTransmissionDuration() {
+    return @$this->attributes['http_transmission_duration'];
   }
 
   // boolean # Did the partner give a response body?

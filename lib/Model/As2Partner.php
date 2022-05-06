@@ -102,12 +102,12 @@ class As2Partner {
   }
 
   // string # Subject of public certificate used for message security.
-  public function getPublicCertificateSubjec() {
-    return @$this->attributes['public_certificate_subjec'];
+  public function getPublicCertificateSubject() {
+    return @$this->attributes['public_certificate_subject'];
   }
 
-  public function setPublicCertificateSubjec($value) {
-    return $this->attributes['public_certificate_subjec'] = $value;
+  public function setPublicCertificateSubject($value) {
+    return $this->attributes['public_certificate_subject'] = $value;
   }
 
   // string # Issuer of public certificate used for message security.

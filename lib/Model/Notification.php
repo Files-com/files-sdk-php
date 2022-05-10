@@ -110,6 +110,15 @@ class Notification {
     return $this->attributes['send_interval'] = $value;
   }
 
+  // string # Custom message to include in notification emails.
+  public function getMessage() {
+    return @$this->attributes['message'];
+  }
+
+  public function setMessage($value) {
+    return $this->attributes['message'] = $value;
+  }
+
   // boolean # Is the user unsubscribed from this notification?
   public function getUnsubscribed() {
     return @$this->attributes['unsubscribed'];
@@ -160,6 +169,7 @@ class Notification {
   //   notify_user_actions - boolean - If `true` actions initiated by the user will still result in a notification
   //   recursive - boolean - If `true`, enable notifications for each subfolder in this path
   //   send_interval - string - The time interval that notifications are aggregated by.  Can be `five_minutes`, `fifteen_minutes`, `hourly`, or `daily`.
+  //   message - string - Custom message to include in notification emails.
   public function update($params = []) {
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
@@ -179,6 +189,10 @@ class Notification {
 
     if (@$params['send_interval'] && !is_string(@$params['send_interval'])) {
       throw new \Files\InvalidParameterException('$send_interval must be of type string; received ' . gettype($send_interval));
+    }
+
+    if (@$params['message'] && !is_string(@$params['message'])) {
+      throw new \Files\InvalidParameterException('$message must be of type string; received ' . gettype($message));
     }
 
     $response = Api::sendRequest('/notifications/' . @$params['id'] . '', 'PATCH', $params, $this->options);
@@ -302,6 +316,7 @@ class Notification {
   //   notify_user_actions - boolean - If `true` actions initiated by the user will still result in a notification
   //   recursive - boolean - If `true`, enable notifications for each subfolder in this path
   //   send_interval - string - The time interval that notifications are aggregated by.  Can be `five_minutes`, `fifteen_minutes`, `hourly`, or `daily`.
+  //   message - string - Custom message to include in notification emails.
   //   group_id - int64 - The ID of the group to notify.  Provide `user_id`, `username` or `group_id`.
   //   path - string - Path
   //   username - string - The username of the user to notify.  Provide `user_id`, `username` or `group_id`.
@@ -312,6 +327,10 @@ class Notification {
 
     if (@$params['send_interval'] && !is_string(@$params['send_interval'])) {
       throw new \Files\InvalidParameterException('$send_interval must be of type string; received ' . gettype($send_interval));
+    }
+
+    if (@$params['message'] && !is_string(@$params['message'])) {
+      throw new \Files\InvalidParameterException('$message must be of type string; received ' . gettype($message));
     }
 
     if (@$params['group_id'] && !is_int(@$params['group_id'])) {

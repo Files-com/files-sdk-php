@@ -10,6 +10,7 @@
   "allowed_2fa_method_u2f": true,
   "allowed_2fa_method_webauthn": true,
   "allowed_2fa_method_yubi": true,
+  "allowed_2fa_method_bypass_for_ftp_sftp_dav": true,
   "admin_user_id": 1,
   "allow_bundle_names": true,
   "allowed_countries": "US,DE",
@@ -231,6 +232,7 @@
 * `allowed_2fa_method_u2f` (boolean): Is U2F two factor authentication allowed?
 * `allowed_2fa_method_webauthn` (boolean): Is WebAuthn two factor authentication allowed?
 * `allowed_2fa_method_yubi` (boolean): Is yubikey two factor authentication allowed?
+* `allowed_2fa_method_bypass_for_ftp_sftp_dav` (boolean): Are users allowed to configure their two factor authentication to be bypassed for FTP/SFTP/WebDAV?
 * `admin_user_id` (int64): User ID for the main site administrator
 * `allow_bundle_names` (boolean): Are manual Bundle names allowed?
 * `allowed_countries` (string): Comma seperated list of allowed Country codes
@@ -448,6 +450,7 @@ $site->update(, [
   'allowed_2fa_method_totp' => true,
   'allowed_2fa_method_webauthn' => true,
   'allowed_2fa_method_yubi' => true,
+  'allowed_2fa_method_bypass_for_ftp_sftp_dav' => true,
   'require_2fa' => true,
   'require_2fa_user_type' => "`site_admins`",
   'color2_top' => "#000000",
@@ -557,6 +560,7 @@ $site->update(, [
 * `allowed_2fa_method_totp` (boolean): Is TOTP two factor authentication allowed?
 * `allowed_2fa_method_webauthn` (boolean): Is WebAuthn two factor authentication allowed?
 * `allowed_2fa_method_yubi` (boolean): Is yubikey two factor authentication allowed?
+* `allowed_2fa_method_bypass_for_ftp_sftp_dav` (boolean): Are users allowed to configure their two factor authentication to be bypassed for FTP/SFTP/WebDAV?
 * `require_2fa` (boolean): Require two-factor authentication for all users?
 * `require_2fa_user_type` (string): What type of user is required to use two-factor authentication (when require_2fa is set to `true` for this site)?
 * `color2_top` (string): Top bar background color

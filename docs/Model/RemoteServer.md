@@ -35,6 +35,7 @@
   "auth_account_name": "me@example.com",
   "one_drive_account_type": "personal",
   "azure_blob_storage_account": "storage-account-name",
+  "azure_blob_storage_sas_token": "storage-sas-token",
   "azure_blob_storage_container": "container-name",
   "s3_compatible_bucket": "my-bucket",
   "s3_compatible_endpoint": "mys3platform.com",
@@ -75,6 +76,7 @@
 * `auth_account_name` (string): Describes the authorized account
 * `one_drive_account_type` (string): Either personal or business_other account types
 * `azure_blob_storage_account` (string): Azure Blob Storage Account name
+* `azure_blob_storage_sas_token` (string): Shared Access Signature (SAS) token
 * `azure_blob_storage_container` (string): Azure Blob Storage Container name
 * `s3_compatible_bucket` (string): S3-compatible Bucket name
 * `s3_compatible_endpoint` (string): S3-compatible endpoint
@@ -156,6 +158,7 @@ $remote_server->create(, [
   'one_drive_account_type' => "personal",
   'azure_blob_storage_account' => "storage-account-name",
   'azure_blob_storage_container' => "container-name",
+  'azure_blob_storage_sas_token' => "storage-sas-token",
   's3_compatible_bucket' => "my-bucket",
   's3_compatible_endpoint' => "mys3platform.com",
   's3_compatible_region' => "us-east-1",
@@ -202,6 +205,7 @@ $remote_server->create(, [
 * `one_drive_account_type` (string): Either personal or business_other account types
 * `azure_blob_storage_account` (string): Azure Blob Storage Account name
 * `azure_blob_storage_container` (string): Azure Blob Storage Container name
+* `azure_blob_storage_sas_token` (string): Shared Access Signature (SAS) token
 * `s3_compatible_bucket` (string): S3-compatible Bucket name
 * `s3_compatible_endpoint` (string): S3-compatible endpoint
 * `s3_compatible_region` (string): S3-compatible endpoint
@@ -241,6 +245,7 @@ $remote_server->update([
   'one_drive_account_type' => "personal",
   'azure_blob_storage_account' => "storage-account-name",
   'azure_blob_storage_container' => "container-name",
+  'azure_blob_storage_sas_token' => "storage-sas-token",
   's3_compatible_bucket' => "my-bucket",
   's3_compatible_endpoint' => "mys3platform.com",
   's3_compatible_region' => "us-east-1",
@@ -287,6 +292,7 @@ $remote_server->update([
 * `one_drive_account_type` (string): Either personal or business_other account types
 * `azure_blob_storage_account` (string): Azure Blob Storage Account name
 * `azure_blob_storage_container` (string): Azure Blob Storage Container name
+* `azure_blob_storage_sas_token` (string): Shared Access Signature (SAS) token
 * `s3_compatible_bucket` (string): S3-compatible Bucket name
 * `s3_compatible_endpoint` (string): S3-compatible endpoint
 * `s3_compatible_region` (string): S3-compatible endpoint
@@ -329,6 +335,7 @@ $remote_server->update([
   "auth_account_name": "me@example.com",
   "one_drive_account_type": "personal",
   "azure_blob_storage_account": "storage-account-name",
+  "azure_blob_storage_sas_token": "storage-sas-token",
   "azure_blob_storage_container": "container-name",
   "s3_compatible_bucket": "my-bucket",
   "s3_compatible_endpoint": "mys3platform.com",

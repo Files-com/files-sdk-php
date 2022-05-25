@@ -74,6 +74,33 @@ class Notification {
     return $this->attributes['group_name'] = $value;
   }
 
+  // int64 # Only notify on actions made by a member of one of the specified groups
+  public function getTriggeringGroupIds() {
+    return @$this->attributes['triggering_group_ids'];
+  }
+
+  public function setTriggeringGroupIds($value) {
+    return $this->attributes['triggering_group_ids'] = $value;
+  }
+
+  // int64 # Only notify on actions made one of the specified users
+  public function getTriggeringUserIds() {
+    return @$this->attributes['triggering_user_ids'];
+  }
+
+  public function setTriggeringUserIds($value) {
+    return $this->attributes['triggering_user_ids'] = $value;
+  }
+
+  // boolean # Notify when actions are performed by a share recipient?
+  public function getTriggerByShareRecipients() {
+    return @$this->attributes['trigger_by_share_recipients'];
+  }
+
+  public function setTriggerByShareRecipients($value) {
+    return $this->attributes['trigger_by_share_recipients'] = $value;
+  }
+
   // boolean # Trigger notification on notification user actions?
   public function getNotifyUserActions() {
     return @$this->attributes['notify_user_actions'];
@@ -83,13 +110,49 @@ class Notification {
     return $this->attributes['notify_user_actions'] = $value;
   }
 
-  // boolean # Triggers notification when moving or copying files to this path
+  // boolean # Triggers notification when copying files to this path
   public function getNotifyOnCopy() {
     return @$this->attributes['notify_on_copy'];
   }
 
   public function setNotifyOnCopy($value) {
     return $this->attributes['notify_on_copy'] = $value;
+  }
+
+  // boolean # Triggers notification when deleting files from this path
+  public function getNotifyOnDelete() {
+    return @$this->attributes['notify_on_delete'];
+  }
+
+  public function setNotifyOnDelete($value) {
+    return $this->attributes['notify_on_delete'] = $value;
+  }
+
+  // boolean # Triggers notification when downloading files from this path
+  public function getNotifyOnDownload() {
+    return @$this->attributes['notify_on_download'];
+  }
+
+  public function setNotifyOnDownload($value) {
+    return $this->attributes['notify_on_download'] = $value;
+  }
+
+  // boolean # Triggers notification when moving files to this path
+  public function getNotifyOnMove() {
+    return @$this->attributes['notify_on_move'];
+  }
+
+  public function setNotifyOnMove($value) {
+    return $this->attributes['notify_on_move'] = $value;
+  }
+
+  // boolean # Triggers notification when uploading new files to this path
+  public function getNotifyOnUpload() {
+    return @$this->attributes['notify_on_upload'];
+  }
+
+  public function setNotifyOnUpload($value) {
+    return $this->attributes['notify_on_upload'] = $value;
   }
 
   // boolean # Enable notifications for each subfolder in this path
@@ -117,6 +180,15 @@ class Notification {
 
   public function setMessage($value) {
     return $this->attributes['message'] = $value;
+  }
+
+  // array # Array of filenames (possibly with wildcards) to match for action path
+  public function getTriggeringFilenames() {
+    return @$this->attributes['triggering_filenames'];
+  }
+
+  public function setTriggeringFilenames($value) {
+    return $this->attributes['triggering_filenames'] = $value;
   }
 
   // boolean # Is the user unsubscribed from this notification?
@@ -166,10 +238,18 @@ class Notification {
 
   // Parameters:
   //   notify_on_copy - boolean - If `true`, copying or moving resources into this path will trigger a notification, in addition to just uploads.
+  //   notify_on_delete - boolean - Triggers notification when deleting files from this path
+  //   notify_on_download - boolean - Triggers notification when downloading files from this path
+  //   notify_on_move - boolean - Triggers notification when moving files to this path
+  //   notify_on_upload - boolean - Triggers notification when uploading new files to this path
   //   notify_user_actions - boolean - If `true` actions initiated by the user will still result in a notification
   //   recursive - boolean - If `true`, enable notifications for each subfolder in this path
   //   send_interval - string - The time interval that notifications are aggregated by.  Can be `five_minutes`, `fifteen_minutes`, `hourly`, or `daily`.
   //   message - string - Custom message to include in notification emails.
+  //   triggering_filenames - array(string) - Array of filenames (possibly with wildcards) to match for action path
+  //   triggering_group_ids - array(int64) - Only notify on actions made by a member of one of the specified groups
+  //   triggering_user_ids - array(int64) - Only notify on actions made one of the specified users
+  //   trigger_by_share_recipients - boolean - Notify when actions are performed by a share recipient?
   public function update($params = []) {
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
@@ -193,6 +273,18 @@ class Notification {
 
     if (@$params['message'] && !is_string(@$params['message'])) {
       throw new \Files\InvalidParameterException('$message must be of type string; received ' . gettype($message));
+    }
+
+    if (@$params['triggering_filenames'] && !is_array(@$params['triggering_filenames'])) {
+      throw new \Files\InvalidParameterException('$triggering_filenames must be of type array; received ' . gettype($triggering_filenames));
+    }
+
+    if (@$params['triggering_group_ids'] && !is_array(@$params['triggering_group_ids'])) {
+      throw new \Files\InvalidParameterException('$triggering_group_ids must be of type array; received ' . gettype($triggering_group_ids));
+    }
+
+    if (@$params['triggering_user_ids'] && !is_array(@$params['triggering_user_ids'])) {
+      throw new \Files\InvalidParameterException('$triggering_user_ids must be of type array; received ' . gettype($triggering_user_ids));
     }
 
     $response = Api::sendRequest('/notifications/' . @$params['id'] . '', 'PATCH', $params, $this->options);
@@ -313,10 +405,18 @@ class Notification {
   // Parameters:
   //   user_id - int64 - The id of the user to notify. Provide `user_id`, `username` or `group_id`.
   //   notify_on_copy - boolean - If `true`, copying or moving resources into this path will trigger a notification, in addition to just uploads.
+  //   notify_on_delete - boolean - Triggers notification when deleting files from this path
+  //   notify_on_download - boolean - Triggers notification when downloading files from this path
+  //   notify_on_move - boolean - Triggers notification when moving files to this path
+  //   notify_on_upload - boolean - Triggers notification when uploading new files to this path
   //   notify_user_actions - boolean - If `true` actions initiated by the user will still result in a notification
   //   recursive - boolean - If `true`, enable notifications for each subfolder in this path
   //   send_interval - string - The time interval that notifications are aggregated by.  Can be `five_minutes`, `fifteen_minutes`, `hourly`, or `daily`.
   //   message - string - Custom message to include in notification emails.
+  //   triggering_filenames - array(string) - Array of filenames (possibly with wildcards) to match for action path
+  //   triggering_group_ids - array(int64) - Only notify on actions made by a member of one of the specified groups
+  //   triggering_user_ids - array(int64) - Only notify on actions made one of the specified users
+  //   trigger_by_share_recipients - boolean - Notify when actions are performed by a share recipient?
   //   group_id - int64 - The ID of the group to notify.  Provide `user_id`, `username` or `group_id`.
   //   path - string - Path
   //   username - string - The username of the user to notify.  Provide `user_id`, `username` or `group_id`.
@@ -331,6 +431,18 @@ class Notification {
 
     if (@$params['message'] && !is_string(@$params['message'])) {
       throw new \Files\InvalidParameterException('$message must be of type string; received ' . gettype($message));
+    }
+
+    if (@$params['triggering_filenames'] && !is_array(@$params['triggering_filenames'])) {
+      throw new \Files\InvalidParameterException('$triggering_filenames must be of type array; received ' . gettype($triggering_filenames));
+    }
+
+    if (@$params['triggering_group_ids'] && !is_array(@$params['triggering_group_ids'])) {
+      throw new \Files\InvalidParameterException('$triggering_group_ids must be of type array; received ' . gettype($triggering_group_ids));
+    }
+
+    if (@$params['triggering_user_ids'] && !is_array(@$params['triggering_user_ids'])) {
+      throw new \Files\InvalidParameterException('$triggering_user_ids must be of type array; received ' . gettype($triggering_user_ids));
     }
 
     if (@$params['group_id'] && !is_int(@$params['group_id'])) {

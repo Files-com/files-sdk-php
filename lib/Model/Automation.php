@@ -56,6 +56,15 @@ class Automation {
     return $this->attributes['automation'] = $value;
   }
 
+  // boolean # Indicates if the automation has been deleted.
+  public function getDeleted() {
+    return @$this->attributes['deleted'];
+  }
+
+  public function setDeleted($value) {
+    return $this->attributes['deleted'] = $value;
+  }
+
   // boolean # If true, this automation will not run.
   public function getDisabled() {
     return @$this->attributes['disabled'];
@@ -81,6 +90,15 @@ class Automation {
 
   public function setInterval($value) {
     return $this->attributes['interval'] = $value;
+  }
+
+  // date-time # Time when automation was last modified. Does not change for name or description updates.
+  public function getLastModifiedAt() {
+    return @$this->attributes['last_modified_at'];
+  }
+
+  public function setLastModifiedAt($value) {
+    return $this->attributes['last_modified_at'] = $value;
   }
 
   // string # Name for this automation.
@@ -218,8 +236,16 @@ class Automation {
     return $this->attributes['destination'] = $value;
   }
 
+  // int64 # Set to the ID of automation used a clone template. For
+  public function getClonedFrom() {
+    return @$this->attributes['cloned_from'];
+  }
+
+  public function setClonedFrom($value) {
+    return $this->attributes['cloned_from'] = $value;
+  }
+
   // Parameters:
-  //   automation (required) - string - Automation type
   //   source - string - Source Path
   //   destination - string - DEPRECATED: Destination Path. Use `destinations` instead.
   //   destinations - array(string) - A list of String destination paths or Hash of folder_path and optional file_path.
@@ -236,6 +262,7 @@ class Automation {
   //   trigger - string - How this automation is triggered to run. One of: `realtime`, `daily`, `custom_schedule`, `webhook`, `email`, or `action`.
   //   trigger_actions - array(string) - If trigger is `action`, this is the list of action types on which to trigger the automation. Valid actions are create, read, update, destroy, move, copy
   //   value - object - A Hash of attributes specific to the automation type.
+  //   automation - string - Automation type
   public function update($params = []) {
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
@@ -249,20 +276,8 @@ class Automation {
       }
     }
 
-    if (!@$params['automation']) {
-      if (@$this->automation) {
-        $params['automation'] = $this->automation;
-      } else {
-        throw new \Files\MissingParameterException('Parameter missing: automation');
-      }
-    }
-
     if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
-    }
-
-    if (@$params['automation'] && !is_string(@$params['automation'])) {
-      throw new \Files\InvalidParameterException('$automation must be of type string; received ' . gettype($automation));
     }
 
     if (@$params['source'] && !is_string(@$params['source'])) {
@@ -317,6 +332,10 @@ class Automation {
       throw new \Files\InvalidParameterException('$trigger_actions must be of type array; received ' . gettype($trigger_actions));
     }
 
+    if (@$params['automation'] && !is_string(@$params['automation'])) {
+      throw new \Files\InvalidParameterException('$automation must be of type string; received ' . gettype($automation));
+    }
+
     $response = Api::sendRequest('/automations/' . @$params['id'] . '', 'PATCH', $params, $this->options);
     return $response->data;
   }
@@ -359,13 +378,14 @@ class Automation {
   // Parameters:
   //   cursor - string - Used for pagination.  Send a cursor value to resume an existing list from the point at which you left off.  Get a cursor from an existing list via either the X-Files-Cursor-Next header or the X-Files-Cursor-Prev header.
   //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
-  //   sort_by - object - If set, sort records by the specified field in either 'asc' or 'desc' direction (e.g. sort_by[last_login_at]=desc). Valid fields are `automation`.
-  //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `automation`.
-  //   filter_gt - object - If set, return records where the specified field is greater than the supplied value. Valid fields are `automation`.
-  //   filter_gteq - object - If set, return records where the specified field is greater than or equal to the supplied value. Valid fields are `automation`.
-  //   filter_like - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `automation`.
-  //   filter_lt - object - If set, return records where the specified field is less than the supplied value. Valid fields are `automation`.
-  //   filter_lteq - object - If set, return records where the specified field is less than or equal to the supplied value. Valid fields are `automation`.
+  //   sort_by - object - If set, sort records by the specified field in either 'asc' or 'desc' direction (e.g. sort_by[last_login_at]=desc). Valid fields are `automation`, `last_modified_at` or `disabled`.
+  //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `automation`, `last_modified_at` or `disabled`. Valid field combinations are `[ disabled, automation ]`.
+  //   filter_gt - object - If set, return records where the specified field is greater than the supplied value. Valid fields are `automation`, `last_modified_at` or `disabled`. Valid field combinations are `[ disabled, automation ]`.
+  //   filter_gteq - object - If set, return records where the specified field is greater than or equal to the supplied value. Valid fields are `automation`, `last_modified_at` or `disabled`. Valid field combinations are `[ disabled, automation ]`.
+  //   filter_like - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `automation`, `last_modified_at` or `disabled`. Valid field combinations are `[ disabled, automation ]`.
+  //   filter_lt - object - If set, return records where the specified field is less than the supplied value. Valid fields are `automation`, `last_modified_at` or `disabled`. Valid field combinations are `[ disabled, automation ]`.
+  //   filter_lteq - object - If set, return records where the specified field is less than or equal to the supplied value. Valid fields are `automation`, `last_modified_at` or `disabled`. Valid field combinations are `[ disabled, automation ]`.
+  //   with_deleted - boolean - Set to true to include deleted automations in the results.
   //   automation - string - DEPRECATED: Type of automation to filter by. Use `filter[automation]` instead.
   public static function list($params = [], $options = []) {
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
@@ -422,7 +442,6 @@ class Automation {
   }
 
   // Parameters:
-  //   automation (required) - string - Automation type
   //   source - string - Source Path
   //   destination - string - DEPRECATED: Destination Path. Use `destinations` instead.
   //   destinations - array(string) - A list of String destination paths or Hash of folder_path and optional file_path.
@@ -439,13 +458,11 @@ class Automation {
   //   trigger - string - How this automation is triggered to run. One of: `realtime`, `daily`, `custom_schedule`, `webhook`, `email`, or `action`.
   //   trigger_actions - array(string) - If trigger is `action`, this is the list of action types on which to trigger the automation. Valid actions are create, read, update, destroy, move, copy
   //   value - object - A Hash of attributes specific to the automation type.
+  //   automation (required) - string - Automation type
+  //   cloned_from - int64 - Set to the ID of automation used a clone template. For
   public static function create($params = [], $options = []) {
     if (!@$params['automation']) {
       throw new \Files\MissingParameterException('Parameter missing: automation');
-    }
-
-    if (@$params['automation'] && !is_string(@$params['automation'])) {
-      throw new \Files\InvalidParameterException('$automation must be of type string; received ' . gettype($automation));
     }
 
     if (@$params['source'] && !is_string(@$params['source'])) {
@@ -498,6 +515,14 @@ class Automation {
 
     if (@$params['trigger_actions'] && !is_array(@$params['trigger_actions'])) {
       throw new \Files\InvalidParameterException('$trigger_actions must be of type array; received ' . gettype($trigger_actions));
+    }
+
+    if (@$params['automation'] && !is_string(@$params['automation'])) {
+      throw new \Files\InvalidParameterException('$automation must be of type string; received ' . gettype($automation));
+    }
+
+    if (@$params['cloned_from'] && !is_int(@$params['cloned_from'])) {
+      throw new \Files\InvalidParameterException('$cloned_from must be of type int; received ' . gettype($cloned_from));
     }
 
     $response = Api::sendRequest('/automations', 'POST', $params, $options);

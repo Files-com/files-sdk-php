@@ -335,6 +335,33 @@ class RemoteServer {
     return $this->attributes['azure_blob_storage_container'] = $value;
   }
 
+  // string # Azure File Storage Account name
+  public function getAzureFilesStorageAccount() {
+    return @$this->attributes['azure_files_storage_account'];
+  }
+
+  public function setAzureFilesStorageAccount($value) {
+    return $this->attributes['azure_files_storage_account'] = $value;
+  }
+
+  // string # Shared Access Signature (SAS) token
+  public function getAzureFilesSasToken() {
+    return @$this->attributes['azure_files_sas_token'];
+  }
+
+  public function setAzureFilesSasToken($value) {
+    return $this->attributes['azure_files_sas_token'] = $value;
+  }
+
+  // string # Azure File Storage Share name
+  public function getAzureFilesShareName() {
+    return @$this->attributes['azure_files_share_name'];
+  }
+
+  public function setAzureFilesShareName($value) {
+    return $this->attributes['azure_files_share_name'] = $value;
+  }
+
   // string # S3-compatible Bucket name
   public function getS3CompatibleBucket() {
     return @$this->attributes['s3_compatible_bucket'];
@@ -479,6 +506,15 @@ class RemoteServer {
     return $this->attributes['azure_blob_storage_access_key'] = $value;
   }
 
+  // string # Azure File Storage access key.
+  public function getAzureFilesStorageAccessKey() {
+    return @$this->attributes['azure_files_storage_access_key'];
+  }
+
+  public function setAzureFilesStorageAccessKey($value) {
+    return $this->attributes['azure_files_storage_access_key'] = $value;
+  }
+
   // string # S3-compatible secret key
   public function getS3CompatibleSecretKey() {
     return @$this->attributes['s3_compatible_secret_key'];
@@ -502,6 +538,7 @@ class RemoteServer {
   //   rackspace_api_key - string - Rackspace API key from the Rackspace Cloud Control Panel.
   //   reset_authentication - boolean - Reset authenticated account
   //   azure_blob_storage_access_key - string - Azure Blob Storage secret key.
+  //   azure_files_storage_access_key - string - Azure File Storage access key.
   //   hostname - string - Hostname or IP address
   //   name - string - Internal name for your reference
   //   max_connections - int64 - Max number of parallel connections.  Ignored for S3 connections (we will parallelize these as much as possible).
@@ -526,6 +563,9 @@ class RemoteServer {
   //   azure_blob_storage_account - string - Azure Blob Storage Account name
   //   azure_blob_storage_container - string - Azure Blob Storage Container name
   //   azure_blob_storage_sas_token - string - Shared Access Signature (SAS) token
+  //   azure_files_storage_account - string - Azure File Storage Account name
+  //   azure_files_share_name - string - Azure File Storage Share name
+  //   azure_files_sas_token - string - Shared Access Signature (SAS) token
   //   s3_compatible_bucket - string - S3-compatible Bucket name
   //   s3_compatible_endpoint - string - S3-compatible endpoint
   //   s3_compatible_region - string - S3-compatible endpoint
@@ -595,6 +635,10 @@ class RemoteServer {
 
     if (@$params['azure_blob_storage_access_key'] && !is_string(@$params['azure_blob_storage_access_key'])) {
       throw new \Files\InvalidParameterException('$azure_blob_storage_access_key must be of type string; received ' . gettype($azure_blob_storage_access_key));
+    }
+
+    if (@$params['azure_files_storage_access_key'] && !is_string(@$params['azure_files_storage_access_key'])) {
+      throw new \Files\InvalidParameterException('$azure_files_storage_access_key must be of type string; received ' . gettype($azure_files_storage_access_key));
     }
 
     if (@$params['hostname'] && !is_string(@$params['hostname'])) {
@@ -691,6 +735,18 @@ class RemoteServer {
 
     if (@$params['azure_blob_storage_sas_token'] && !is_string(@$params['azure_blob_storage_sas_token'])) {
       throw new \Files\InvalidParameterException('$azure_blob_storage_sas_token must be of type string; received ' . gettype($azure_blob_storage_sas_token));
+    }
+
+    if (@$params['azure_files_storage_account'] && !is_string(@$params['azure_files_storage_account'])) {
+      throw new \Files\InvalidParameterException('$azure_files_storage_account must be of type string; received ' . gettype($azure_files_storage_account));
+    }
+
+    if (@$params['azure_files_share_name'] && !is_string(@$params['azure_files_share_name'])) {
+      throw new \Files\InvalidParameterException('$azure_files_share_name must be of type string; received ' . gettype($azure_files_share_name));
+    }
+
+    if (@$params['azure_files_sas_token'] && !is_string(@$params['azure_files_sas_token'])) {
+      throw new \Files\InvalidParameterException('$azure_files_sas_token must be of type string; received ' . gettype($azure_files_sas_token));
     }
 
     if (@$params['s3_compatible_bucket'] && !is_string(@$params['s3_compatible_bucket'])) {
@@ -819,6 +875,7 @@ class RemoteServer {
   //   rackspace_api_key - string - Rackspace API key from the Rackspace Cloud Control Panel.
   //   reset_authentication - boolean - Reset authenticated account
   //   azure_blob_storage_access_key - string - Azure Blob Storage secret key.
+  //   azure_files_storage_access_key - string - Azure File Storage access key.
   //   hostname - string - Hostname or IP address
   //   name - string - Internal name for your reference
   //   max_connections - int64 - Max number of parallel connections.  Ignored for S3 connections (we will parallelize these as much as possible).
@@ -843,6 +900,9 @@ class RemoteServer {
   //   azure_blob_storage_account - string - Azure Blob Storage Account name
   //   azure_blob_storage_container - string - Azure Blob Storage Container name
   //   azure_blob_storage_sas_token - string - Shared Access Signature (SAS) token
+  //   azure_files_storage_account - string - Azure File Storage Account name
+  //   azure_files_share_name - string - Azure File Storage Share name
+  //   azure_files_sas_token - string - Shared Access Signature (SAS) token
   //   s3_compatible_bucket - string - S3-compatible Bucket name
   //   s3_compatible_endpoint - string - S3-compatible endpoint
   //   s3_compatible_region - string - S3-compatible endpoint
@@ -896,6 +956,10 @@ class RemoteServer {
 
     if (@$params['azure_blob_storage_access_key'] && !is_string(@$params['azure_blob_storage_access_key'])) {
       throw new \Files\InvalidParameterException('$azure_blob_storage_access_key must be of type string; received ' . gettype($azure_blob_storage_access_key));
+    }
+
+    if (@$params['azure_files_storage_access_key'] && !is_string(@$params['azure_files_storage_access_key'])) {
+      throw new \Files\InvalidParameterException('$azure_files_storage_access_key must be of type string; received ' . gettype($azure_files_storage_access_key));
     }
 
     if (@$params['hostname'] && !is_string(@$params['hostname'])) {
@@ -992,6 +1056,18 @@ class RemoteServer {
 
     if (@$params['azure_blob_storage_sas_token'] && !is_string(@$params['azure_blob_storage_sas_token'])) {
       throw new \Files\InvalidParameterException('$azure_blob_storage_sas_token must be of type string; received ' . gettype($azure_blob_storage_sas_token));
+    }
+
+    if (@$params['azure_files_storage_account'] && !is_string(@$params['azure_files_storage_account'])) {
+      throw new \Files\InvalidParameterException('$azure_files_storage_account must be of type string; received ' . gettype($azure_files_storage_account));
+    }
+
+    if (@$params['azure_files_share_name'] && !is_string(@$params['azure_files_share_name'])) {
+      throw new \Files\InvalidParameterException('$azure_files_share_name must be of type string; received ' . gettype($azure_files_share_name));
+    }
+
+    if (@$params['azure_files_sas_token'] && !is_string(@$params['azure_files_sas_token'])) {
+      throw new \Files\InvalidParameterException('$azure_files_sas_token must be of type string; received ' . gettype($azure_files_sas_token));
     }
 
     if (@$params['s3_compatible_bucket'] && !is_string(@$params['s3_compatible_bucket'])) {

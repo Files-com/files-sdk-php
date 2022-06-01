@@ -37,6 +37,9 @@
   "azure_blob_storage_account": "storage-account-name",
   "azure_blob_storage_sas_token": "storage-sas-token",
   "azure_blob_storage_container": "container-name",
+  "azure_files_storage_account": "storage-account-name",
+  "azure_files_sas_token": "storage-sas-token",
+  "azure_files_share_name": "share-name",
   "s3_compatible_bucket": "my-bucket",
   "s3_compatible_endpoint": "mys3platform.com",
   "s3_compatible_region": "us-east-1",
@@ -78,6 +81,9 @@
 * `azure_blob_storage_account` (string): Azure Blob Storage Account name
 * `azure_blob_storage_sas_token` (string): Shared Access Signature (SAS) token
 * `azure_blob_storage_container` (string): Azure Blob Storage Container name
+* `azure_files_storage_account` (string): Azure File Storage Account name
+* `azure_files_sas_token` (string): Shared Access Signature (SAS) token
+* `azure_files_share_name` (string): Azure File Storage Share name
 * `s3_compatible_bucket` (string): S3-compatible Bucket name
 * `s3_compatible_endpoint` (string): S3-compatible endpoint
 * `s3_compatible_region` (string): S3-compatible endpoint
@@ -94,6 +100,7 @@
 * `rackspace_api_key` (string): Rackspace API key from the Rackspace Cloud Control Panel.
 * `reset_authentication` (boolean): Reset authenticated account
 * `azure_blob_storage_access_key` (string): Azure Blob Storage secret key.
+* `azure_files_storage_access_key` (string): Azure File Storage access key.
 * `s3_compatible_secret_key` (string): S3-compatible secret key
 
 ---
@@ -159,6 +166,9 @@ $remote_server->create(, [
   'azure_blob_storage_account' => "storage-account-name",
   'azure_blob_storage_container' => "container-name",
   'azure_blob_storage_sas_token' => "storage-sas-token",
+  'azure_files_storage_account' => "storage-account-name",
+  'azure_files_share_name' => "share-name",
+  'azure_files_sas_token' => "storage-sas-token",
   's3_compatible_bucket' => "my-bucket",
   's3_compatible_endpoint' => "mys3platform.com",
   's3_compatible_region' => "us-east-1",
@@ -182,6 +192,7 @@ $remote_server->create(, [
 * `rackspace_api_key` (string): Rackspace API key from the Rackspace Cloud Control Panel.
 * `reset_authentication` (boolean): Reset authenticated account
 * `azure_blob_storage_access_key` (string): Azure Blob Storage secret key.
+* `azure_files_storage_access_key` (string): Azure File Storage access key.
 * `hostname` (string): Hostname or IP address
 * `name` (string): Internal name for your reference
 * `max_connections` (int64): Max number of parallel connections.  Ignored for S3 connections (we will parallelize these as much as possible).
@@ -206,6 +217,9 @@ $remote_server->create(, [
 * `azure_blob_storage_account` (string): Azure Blob Storage Account name
 * `azure_blob_storage_container` (string): Azure Blob Storage Container name
 * `azure_blob_storage_sas_token` (string): Shared Access Signature (SAS) token
+* `azure_files_storage_account` (string): Azure File Storage Account name
+* `azure_files_share_name` (string): Azure File Storage Share name
+* `azure_files_sas_token` (string): Shared Access Signature (SAS) token
 * `s3_compatible_bucket` (string): S3-compatible Bucket name
 * `s3_compatible_endpoint` (string): S3-compatible endpoint
 * `s3_compatible_region` (string): S3-compatible endpoint
@@ -246,6 +260,9 @@ $remote_server->update([
   'azure_blob_storage_account' => "storage-account-name",
   'azure_blob_storage_container' => "container-name",
   'azure_blob_storage_sas_token' => "storage-sas-token",
+  'azure_files_storage_account' => "storage-account-name",
+  'azure_files_share_name' => "share-name",
+  'azure_files_sas_token' => "storage-sas-token",
   's3_compatible_bucket' => "my-bucket",
   's3_compatible_endpoint' => "mys3platform.com",
   's3_compatible_region' => "us-east-1",
@@ -269,6 +286,7 @@ $remote_server->update([
 * `rackspace_api_key` (string): Rackspace API key from the Rackspace Cloud Control Panel.
 * `reset_authentication` (boolean): Reset authenticated account
 * `azure_blob_storage_access_key` (string): Azure Blob Storage secret key.
+* `azure_files_storage_access_key` (string): Azure File Storage access key.
 * `hostname` (string): Hostname or IP address
 * `name` (string): Internal name for your reference
 * `max_connections` (int64): Max number of parallel connections.  Ignored for S3 connections (we will parallelize these as much as possible).
@@ -293,6 +311,9 @@ $remote_server->update([
 * `azure_blob_storage_account` (string): Azure Blob Storage Account name
 * `azure_blob_storage_container` (string): Azure Blob Storage Container name
 * `azure_blob_storage_sas_token` (string): Shared Access Signature (SAS) token
+* `azure_files_storage_account` (string): Azure File Storage Account name
+* `azure_files_share_name` (string): Azure File Storage Share name
+* `azure_files_sas_token` (string): Shared Access Signature (SAS) token
 * `s3_compatible_bucket` (string): S3-compatible Bucket name
 * `s3_compatible_endpoint` (string): S3-compatible endpoint
 * `s3_compatible_region` (string): S3-compatible endpoint
@@ -337,6 +358,9 @@ $remote_server->update([
   "azure_blob_storage_account": "storage-account-name",
   "azure_blob_storage_sas_token": "storage-sas-token",
   "azure_blob_storage_container": "container-name",
+  "azure_files_storage_account": "storage-account-name",
+  "azure_files_sas_token": "storage-sas-token",
+  "azure_files_share_name": "share-name",
   "s3_compatible_bucket": "my-bucket",
   "s3_compatible_endpoint": "mys3platform.com",
   "s3_compatible_region": "us-east-1",

@@ -148,6 +148,7 @@ class RequestParamPathCannotHaveTrailingWhitespaceException extends \Files\BadRe
 class RequestParamsContainInvalidCharacterException extends \Files\BadRequestException {}
 class RequestParamsInvalidException extends \Files\BadRequestException {}
 class RequestParamsRequiredException extends \Files\BadRequestException {}
+class SearchAllOnChildPathException extends \Files\BadRequestException {}
 class UnsupportedCurrencyException extends \Files\BadRequestException {}
 class UnsupportedHttpResponseFormatException extends \Files\BadRequestException {}
 class UnsupportedMediaTypeException extends \Files\BadRequestException {}

@@ -271,6 +271,7 @@ class UpdatesNotAllowedForRemotesException extends \Files\ProcessingFailureExcep
 namespace Files\RateLimited {
 
 class ReauthenticationRateLimitedException extends \Files\RateLimitedException {}
+class TooManyConcurrentRequestsException extends \Files\RateLimitedException {}
 class TooManyLoginAttemptsException extends \Files\RateLimitedException {}
 class TooManyRequestsException extends \Files\RateLimitedException {}
 

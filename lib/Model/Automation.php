@@ -236,15 +236,6 @@ class Automation {
     return $this->attributes['destination'] = $value;
   }
 
-  // int64 # Set to the ID of automation used a clone template. For
-  public function getClonedFrom() {
-    return @$this->attributes['cloned_from'];
-  }
-
-  public function setClonedFrom($value) {
-    return $this->attributes['cloned_from'] = $value;
-  }
-
   // Parameters:
   //   source - string - Source Path
   //   destination - string - DEPRECATED: Destination Path. Use `destinations` instead.
@@ -459,7 +450,6 @@ class Automation {
   //   trigger_actions - array(string) - If trigger is `action`, this is the list of action types on which to trigger the automation. Valid actions are create, read, update, destroy, move, copy
   //   value - object - A Hash of attributes specific to the automation type.
   //   automation (required) - string - Automation type
-  //   cloned_from - int64 - Set to the ID of automation used a clone template. For
   public static function create($params = [], $options = []) {
     if (!@$params['automation']) {
       throw new \Files\MissingParameterException('Parameter missing: automation');
@@ -519,10 +509,6 @@ class Automation {
 
     if (@$params['automation'] && !is_string(@$params['automation'])) {
       throw new \Files\InvalidParameterException('$automation must be of type string; received ' . gettype($automation));
-    }
-
-    if (@$params['cloned_from'] && !is_int(@$params['cloned_from'])) {
-      throw new \Files\InvalidParameterException('$cloned_from must be of type int; received ' . gettype($cloned_from));
     }
 
     $response = Api::sendRequest('/automations', 'POST', $params, $options);

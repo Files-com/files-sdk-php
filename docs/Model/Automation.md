@@ -69,7 +69,6 @@
 * `trigger_actions` (string): If trigger is `action`, this is the list of action types on which to trigger the automation. Valid actions are create, read, update, destroy, move, copy
 * `value` (object): A Hash of attributes specific to the automation type.
 * `destination` (string): DEPRECATED: Destination Path. Use `destinations` instead.
-* `cloned_from` (int64): Set to the ID of automation used a clone template. For
 
 ---
 
@@ -131,7 +130,6 @@ $automation->create(, [
   'trigger_actions' => "[ \"create\" ]",
   'value' => "{\"limit\": \"1\"}",
   'automation' => "create_folder",
-  'cloned_from' => 1,
 ]);
 ```
 
@@ -155,7 +153,6 @@ $automation->create(, [
 * `trigger_actions` (array(string)): If trigger is `action`, this is the list of action types on which to trigger the automation. Valid actions are create, read, update, destroy, move, copy
 * `value` (object): A Hash of attributes specific to the automation type.
 * `automation` (string): Required - Automation type
-* `cloned_from` (int64): Set to the ID of automation used a clone template. For
 
 ---
 

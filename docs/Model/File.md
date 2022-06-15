@@ -23,8 +23,8 @@
     "id": 1,
     "status": "complete",
     "download_uri": "https://mysite.files.com/...",
-    "type": "complete",
-    "size": 1024
+    "type": "image",
+    "size": "large"
   }
 }
 ```
@@ -156,8 +156,8 @@ $file->download([
     "id": 1,
     "status": "complete",
     "download_uri": "https://mysite.files.com/...",
-    "type": "complete",
-    "size": 1024
+    "type": "image",
+    "size": "large"
   }
 }
 ```
@@ -205,8 +205,8 @@ $file->update([
     "id": 1,
     "status": "complete",
     "download_uri": "https://mysite.files.com/...",
-    "type": "complete",
-    "size": 1024
+    "type": "image",
+    "size": "large"
   }
 }
 ```

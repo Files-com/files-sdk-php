@@ -434,6 +434,15 @@ class RemoteServer {
     return $this->attributes['private_key'] = $value;
   }
 
+  // string # Passphrase for private key if needed.
+  public function getPrivateKeyPassphrase() {
+    return @$this->attributes['private_key_passphrase'];
+  }
+
+  public function setPrivateKeyPassphrase($value) {
+    return $this->attributes['private_key_passphrase'] = $value;
+  }
+
   // string # SSL client certificate.
   public function getSslCertificate() {
     return @$this->attributes['ssl_certificate'];
@@ -529,6 +538,7 @@ class RemoteServer {
   //   aws_secret_key - string - AWS secret key.
   //   password - string - Password if needed.
   //   private_key - string - Private key if needed.
+  //   private_key_passphrase - string - Passphrase for private key if needed.
   //   ssl_certificate - string - SSL client certificate.
   //   google_cloud_storage_credentials_json - string - A JSON file that contains the private key. To generate see https://cloud.google.com/storage/docs/json_api/v1/how-tos/authorizing#APIKey
   //   wasabi_access_key - string - Wasabi access key.
@@ -603,6 +613,10 @@ class RemoteServer {
 
     if (@$params['private_key'] && !is_string(@$params['private_key'])) {
       throw new \Files\InvalidParameterException('$private_key must be of type string; received ' . gettype($private_key));
+    }
+
+    if (@$params['private_key_passphrase'] && !is_string(@$params['private_key_passphrase'])) {
+      throw new \Files\InvalidParameterException('$private_key_passphrase must be of type string; received ' . gettype($private_key_passphrase));
     }
 
     if (@$params['ssl_certificate'] && !is_string(@$params['ssl_certificate'])) {
@@ -866,6 +880,7 @@ class RemoteServer {
   //   aws_secret_key - string - AWS secret key.
   //   password - string - Password if needed.
   //   private_key - string - Private key if needed.
+  //   private_key_passphrase - string - Passphrase for private key if needed.
   //   ssl_certificate - string - SSL client certificate.
   //   google_cloud_storage_credentials_json - string - A JSON file that contains the private key. To generate see https://cloud.google.com/storage/docs/json_api/v1/how-tos/authorizing#APIKey
   //   wasabi_access_key - string - Wasabi access key.
@@ -924,6 +939,10 @@ class RemoteServer {
 
     if (@$params['private_key'] && !is_string(@$params['private_key'])) {
       throw new \Files\InvalidParameterException('$private_key must be of type string; received ' . gettype($private_key));
+    }
+
+    if (@$params['private_key_passphrase'] && !is_string(@$params['private_key_passphrase'])) {
+      throw new \Files\InvalidParameterException('$private_key_passphrase must be of type string; received ' . gettype($private_key_passphrase));
     }
 
     if (@$params['ssl_certificate'] && !is_string(@$params['ssl_certificate'])) {

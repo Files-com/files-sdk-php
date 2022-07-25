@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Files\Model;
 
 use Files\Api;
+use Files\Files;
 use Files\Logger;
 
 require_once __DIR__ . '/../Files.php';

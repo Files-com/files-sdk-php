@@ -220,7 +220,7 @@ function testAutoPaginate() {
   Files::$autoPaginate = false;
   $response = Api::sendRequest('/users', 'GET', $params);
 
-  assert(!$response->autoPaginateRequests);
+  assert(!isset($response->autoPaginateRequests));
 
   Files::$autoPaginate = $savedAutoPaginate;
 

@@ -179,6 +179,15 @@ class User {
     return $this->attributes['email'] = $value;
   }
 
+  // date-time # User's first login time
+  public function getFirstLoginAt() {
+    return @$this->attributes['first_login_at'];
+  }
+
+  public function setFirstLoginAt($value) {
+    return $this->attributes['first_login_at'] = $value;
+  }
+
   // boolean # Can the user access with FTP/FTPS?
   public function getFtpPermission() {
     return @$this->attributes['ftp_permission'];
@@ -456,6 +465,11 @@ class User {
 
   public function setTypeOf2fa($value) {
     return $this->attributes['type_of_2fa'] = $value;
+  }
+
+  // date-time # User record last updated at.  Note this may be incremented because of internal or external updates.
+  public function getUpdatedAt() {
+    return @$this->attributes['updated_at'];
   }
 
   // string # Root folder for FTP (and optionally SFTP if the appropriate site-wide setting is set.)  Note that this is not used for API, Desktop, or Web interface.

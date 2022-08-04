@@ -75,6 +75,11 @@ class Folder {
     return $this->attributes['size'] = $value;
   }
 
+  // date-time # File created date/time
+  public function getCreatedAt() {
+    return @$this->attributes['created_at'];
+  }
+
   // date-time # File last modified date/time, according to the server.  This is the timestamp of the last Files.com operation of the file, regardless of what modified timestamp was sent.
   public function getMtime() {
     return @$this->attributes['mtime'];

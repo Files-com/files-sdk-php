@@ -129,7 +129,7 @@ class Automation {
     return $this->attributes['source'] = $value;
   }
 
-  // string # Destination Path
+  // array # Destination Path
   public function getDestinations() {
     return @$this->attributes['destinations'];
   }
@@ -210,7 +210,7 @@ class Automation {
     return $this->attributes['webhook_url'] = $value;
   }
 
-  // string # If trigger is `action`, this is the list of action types on which to trigger the automation. Valid actions are create, read, update, destroy, move, copy
+  // array # If trigger is `action`, this is the list of action types on which to trigger the automation. Valid actions are create, read, update, destroy, move, copy
   public function getTriggerActions() {
     return @$this->attributes['trigger_actions'];
   }

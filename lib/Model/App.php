@@ -69,7 +69,7 @@ class App {
     return @$this->attributes['logo_url'];
   }
 
-  // string # Screenshots of the App
+  // array # Screenshots of the App
   public function getScreenshotListUrls() {
     return @$this->attributes['screenshot_list_urls'];
   }

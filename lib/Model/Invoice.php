@@ -69,7 +69,7 @@ class Invoice {
     return @$this->attributes['download_uri'];
   }
 
-  // InvoiceLineItem # Associated invoice line items
+  // array # Associated invoice line items
   public function getInvoiceLineItems() {
     return @$this->attributes['invoice_line_items'];
   }
@@ -79,7 +79,7 @@ class Invoice {
     return @$this->attributes['method'];
   }
 
-  // PaymentLineItem # Associated payment line items
+  // array # Associated payment line items
   public function getPaymentLineItems() {
     return @$this->attributes['payment_line_items'];
   }

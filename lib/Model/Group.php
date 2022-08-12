@@ -57,7 +57,7 @@ class Group {
     return $this->attributes['name'] = $value;
   }
 
-  // string # List of user IDs who are group administrators (separated by commas)
+  // string # Comma-delimited list of user IDs who are group administrators (separated by commas)
   public function getAdminIds() {
     return @$this->attributes['admin_ids'];
   }
@@ -75,7 +75,7 @@ class Group {
     return $this->attributes['notes'] = $value;
   }
 
-  // array # List of user IDs who belong to this group (separated by commas)
+  // string # Comma-delimited list of user IDs who belong to this group (separated by commas)
   public function getUserIds() {
     return @$this->attributes['user_ids'];
   }
@@ -84,7 +84,7 @@ class Group {
     return $this->attributes['user_ids'] = $value;
   }
 
-  // array # List of usernames who belong to this group (separated by commas)
+  // string # Comma-delimited list of usernames who belong to this group (separated by commas)
   public function getUsernames() {
     return @$this->attributes['usernames'];
   }

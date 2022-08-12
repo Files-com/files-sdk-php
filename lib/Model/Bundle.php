@@ -75,6 +75,15 @@ class Bundle {
     return $this->attributes['password_protected'] = $value;
   }
 
+  // string # Permissions that apply to Folders in this Share Link.
+  public function getPermissions() {
+    return @$this->attributes['permissions'];
+  }
+
+  public function setPermissions($value) {
+    return $this->attributes['permissions'] = $value;
+  }
+
   // boolean # Restrict users to previewing files only?
   public function getPreviewOnly() {
     return @$this->attributes['preview_only'];
@@ -346,6 +355,7 @@ class Bundle {
   //   inbox_id - int64 - ID of the associated inbox, if available.
   //   max_uses - int64 - Maximum number of times bundle can be accessed
   //   note - string - Bundle internal note
+  //   permissions - string - Permissions that apply to Folders in this Share Link.
   //   preview_only - boolean - Restrict users to previewing files only?
   //   require_registration - boolean - Show a registration page that captures the downloader's name and email address?
   //   require_share_recipient - boolean - Only allow access to recipients who have explicitly received the share via an email sent through the Files.com UI?
@@ -409,6 +419,10 @@ class Bundle {
 
     if (@$params['note'] && !is_string(@$params['note'])) {
       throw new \Files\InvalidParameterException('$note must be of type string; received ' . gettype($note));
+    }
+
+    if (@$params['permissions'] && !is_string(@$params['permissions'])) {
+      throw new \Files\InvalidParameterException('$permissions must be of type string; received ' . gettype($permissions));
     }
 
     $response = Api::sendRequest('/bundles/' . @$params['id'] . '', 'PATCH', $params, $this->options);
@@ -525,6 +539,7 @@ class Bundle {
   //   description - string - Public description
   //   note - string - Bundle internal note
   //   code - string - Bundle code.  This code forms the end part of the Public URL.
+  //   permissions - string - Permissions that apply to Folders in this Share Link.
   //   preview_only - boolean - Restrict users to previewing files only?
   //   require_registration - boolean - Show a registration page that captures the downloader's name and email address?
   //   clickwrap_id - int64 - ID of the clickwrap to use with this bundle.
@@ -573,6 +588,10 @@ class Bundle {
 
     if (@$params['code'] && !is_string(@$params['code'])) {
       throw new \Files\InvalidParameterException('$code must be of type string; received ' . gettype($code));
+    }
+
+    if (@$params['permissions'] && !is_string(@$params['permissions'])) {
+      throw new \Files\InvalidParameterException('$permissions must be of type string; received ' . gettype($permissions));
     }
 
     if (@$params['clickwrap_id'] && !is_int(@$params['clickwrap_id'])) {

@@ -75,7 +75,7 @@ class Notification {
     return $this->attributes['group_name'] = $value;
   }
 
-  // int64 # Only notify on actions made by a member of one of the specified groups
+  // array # Only notify on actions made by a member of one of the specified groups
   public function getTriggeringGroupIds() {
     return @$this->attributes['triggering_group_ids'];
   }
@@ -84,7 +84,7 @@ class Notification {
     return $this->attributes['triggering_group_ids'] = $value;
   }
 
-  // int64 # Only notify on actions made one of the specified users
+  // array # Only notify on actions made one of the specified users
   public function getTriggeringUserIds() {
     return @$this->attributes['triggering_user_ids'];
   }

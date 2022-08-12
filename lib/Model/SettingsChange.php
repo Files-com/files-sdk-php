@@ -39,7 +39,7 @@ class SettingsChange {
     return !!@$this->attributes['id'];
   }
 
-  // string # Markdown-formatted change messages.
+  // array # Markdown-formatted change messages.
   public function getChanges() {
     return @$this->attributes['changes'];
   }

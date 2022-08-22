@@ -89,7 +89,7 @@ class UsageDailySnapshot {
     return @$this->attributes['root_storage'];
   }
 
-  // array # Usage broken down by each top-level folder
+  // object # Usage broken down by each top-level folder
   public function getUsageByTopLevelDir() {
     return @$this->attributes['usage_by_top_level_dir'];
   }

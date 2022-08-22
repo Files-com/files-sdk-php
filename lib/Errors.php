@@ -275,6 +275,7 @@ class ReauthenticationRateLimitedException extends \Files\RateLimitedException {
 class TooManyConcurrentRequestsException extends \Files\RateLimitedException {}
 class TooManyLoginAttemptsException extends \Files\RateLimitedException {}
 class TooManyRequestsException extends \Files\RateLimitedException {}
+class TooManySharesException extends \Files\RateLimitedException {}
 
 } // namespace Files\RateLimited
 

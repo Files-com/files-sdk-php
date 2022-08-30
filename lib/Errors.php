@@ -217,6 +217,7 @@ namespace Files\NotFound {
 
 class ApiKeyNotFoundException extends \Files\NotFoundException {}
 class BundlePathNotFoundException extends \Files\NotFoundException {}
+class BundleRegistrationNotFoundException extends \Files\NotFoundException {}
 class CodeNotFoundException extends \Files\NotFoundException {}
 class FileNotFoundException extends \Files\NotFoundException {}
 class FileUploadNotFoundException extends \Files\NotFoundException {}

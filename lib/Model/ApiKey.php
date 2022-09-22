@@ -57,6 +57,15 @@ class ApiKey {
     return $this->attributes['descriptive_label'] = $value;
   }
 
+  // string # User-supplied description of API key.
+  public function getDescription() {
+    return @$this->attributes['description'];
+  }
+
+  public function setDescription($value) {
+    return $this->attributes['description'] = $value;
+  }
+
   // date-time # Time which API Key was created
   public function getCreatedAt() {
     return @$this->attributes['created_at'];
@@ -136,6 +145,7 @@ class ApiKey {
 
   // Parameters:
   //   name - string - Internal name for the API Key.  For your use.
+  //   description - string - User-supplied description of API key.
   //   expires_at - string - API Key expiration date
   //   permission_set - string - Permissions for this API Key.  Keys with the `desktop_app` permission set only have the ability to do the functions provided in our Desktop App (File and Share Link operations).  Additional permission sets may become available in the future, such as for a Site Admin to give a key with no administrator privileges.  If you have ideas for permission sets, please let us know.
   public function update($params = []) {
@@ -157,6 +167,10 @@ class ApiKey {
 
     if (@$params['name'] && !is_string(@$params['name'])) {
       throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype($name));
+    }
+
+    if (@$params['description'] && !is_string(@$params['description'])) {
+      throw new \Files\InvalidParameterException('$description must be of type string; received ' . gettype($description));
     }
 
     if (@$params['expires_at'] && !is_string(@$params['expires_at'])) {
@@ -280,6 +294,7 @@ class ApiKey {
   // Parameters:
   //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
   //   name - string - Internal name for the API Key.  For your use.
+  //   description - string - User-supplied description of API key.
   //   expires_at - string - API Key expiration date
   //   permission_set - string - Permissions for this API Key.  Keys with the `desktop_app` permission set only have the ability to do the functions provided in our Desktop App (File and Share Link operations).  Additional permission sets may become available in the future, such as for a Site Admin to give a key with no administrator privileges.  If you have ideas for permission sets, please let us know.
   //   path - string - Folder path restriction for this api key.
@@ -290,6 +305,10 @@ class ApiKey {
 
     if (@$params['name'] && !is_string(@$params['name'])) {
       throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype($name));
+    }
+
+    if (@$params['description'] && !is_string(@$params['description'])) {
+      throw new \Files\InvalidParameterException('$description must be of type string; received ' . gettype($description));
     }
 
     if (@$params['expires_at'] && !is_string(@$params['expires_at'])) {

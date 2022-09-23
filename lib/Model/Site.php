@@ -409,6 +409,21 @@ class Site {
     return @$this->attributes['max_prior_passwords'];
   }
 
+  // string # A message to show users when they connect via FTP or SFTP.
+  public function getMotdText() {
+    return @$this->attributes['motd_text'];
+  }
+
+  // boolean # Show message to users connecting via FTP
+  public function getMotdUseForFtp() {
+    return @$this->attributes['motd_use_for_ftp'];
+  }
+
+  // boolean # Show message to users connecting via SFTP
+  public function getMotdUseForSftp() {
+    return @$this->attributes['motd_use_for_sftp'];
+  }
+
   // double # Next billing amount
   public function getNextBillingAmount() {
     return @$this->attributes['next_billing_amount'];
@@ -741,6 +756,9 @@ class Site {
   //   welcome_screen - string - Does the welcome screen appear?
   //   office_integration_available - boolean - Allow users to use Office for the web?
   //   pin_all_remote_servers_to_site_region - boolean - If true, we will ensure that all internal communications with any remote server are made through the primary region of the site. This setting overrides individual remote server settings.
+  //   motd_text - string - A message to show users when they connect via FTP or SFTP.
+  //   motd_use_for_ftp - boolean - Show message to users connecting via FTP
+  //   motd_use_for_sftp - boolean - Show message to users connecting via SFTP
   //   session_expiry - double - Session expiry in hours
   //   ssl_required - boolean - Is SSL required?  Disabling this is insecure.
   //   tls_disabled - boolean - Are Insecure TLS and SFTP Ciphers allowed?  Enabling this is insecure.
@@ -894,6 +912,10 @@ class Site {
 
     if (@$params['welcome_screen'] && !is_string(@$params['welcome_screen'])) {
       throw new \Files\InvalidParameterException('$welcome_screen must be of type string; received ' . gettype($welcome_screen));
+    }
+
+    if (@$params['motd_text'] && !is_string(@$params['motd_text'])) {
+      throw new \Files\InvalidParameterException('$motd_text must be of type string; received ' . gettype($motd_text));
     }
 
     if (@$params['user_lockout_tries'] && !is_int(@$params['user_lockout_tries'])) {

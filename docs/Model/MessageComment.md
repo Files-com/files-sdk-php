@@ -7,10 +7,7 @@
   "id": 1,
   "body": "What a great idea, thank you!",
   "reactions": [
-    {
-      "id": 1,
-      "emoji": "👍"
-    }
+    null
   ]
 }
 ```
@@ -97,10 +94,7 @@ $message_comment->update([
   "id": 1,
   "body": "What a great idea, thank you!",
   "reactions": [
-    {
-      "id": 1,
-      "emoji": "👍"
-    }
+    null
   ]
 }
 ```

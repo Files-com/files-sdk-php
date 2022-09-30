@@ -14,21 +14,21 @@
   "api_keys_count": 1,
   "authenticate_until": "2000-01-01T01:00:00Z",
   "authentication_method": "password",
-  "avatar_url": "",
+  "avatar_url": "example",
   "billing_permission": true,
   "bypass_site_allowed_ips": true,
   "bypass_inactive_disable": true,
   "created_at": "2000-01-01T01:00:00Z",
   "dav_permission": true,
   "disabled": true,
-  "email": "john.doe@files.com",
+  "email": "example",
   "first_login_at": "2000-01-01T01:00:00Z",
   "ftp_permission": true,
-  "group_ids": "",
+  "group_ids": "example",
   "header_text": "User-specific message.",
   "language": "en",
   "last_login_at": "2000-01-01T01:00:00Z",
-  "last_protocol_cipher": "",
+  "last_protocol_cipher": "example",
   "lockout_expires": "2000-01-01T01:00:00Z",
   "name": "John Doe",
   "company": "ACME Corp.",
@@ -55,7 +55,7 @@
   "time_zone": "Pacific Time (US & Canada)",
   "type_of_2fa": "yubi",
   "updated_at": "2000-01-01T01:00:00Z",
-  "user_root": ""
+  "user_root": "example"
 }
 ```
 
@@ -175,8 +175,9 @@ $user->find($id);
 $user = new \Files\Model\User();
 $user->create(, [
   'avatar_delete' => true,
-  'email' => "john.doe@files.com",
+  'email' => "example",
   'group_id' => 1,
+  'group_ids' => "example",
   'announcements_read' => true,
   'allowed_ips' => "127.0.0.1",
   'attachments_permission' => true,
@@ -208,6 +209,7 @@ $user->create(, [
   'subscribe_to_newsletter' => true,
   'require_2fa' => "always_require",
   'time_zone' => "Pacific Time (US & Canada)",
+  'user_root' => "example",
   'username' => "user",
 ]);
 ```
@@ -314,8 +316,9 @@ $user = current(\Files\Model\User::list());
 
 $user->update([
   'avatar_delete' => true,
-  'email' => "john.doe@files.com",
+  'email' => "example",
   'group_id' => 1,
+  'group_ids' => "example",
   'announcements_read' => true,
   'allowed_ips' => "127.0.0.1",
   'attachments_permission' => true,
@@ -347,6 +350,7 @@ $user->update([
   'subscribe_to_newsletter' => true,
   'require_2fa' => "always_require",
   'time_zone' => "Pacific Time (US & Canada)",
+  'user_root' => "example",
   'username' => "user",
 ]);
 ```
@@ -413,21 +417,21 @@ $user->update([
   "api_keys_count": 1,
   "authenticate_until": "2000-01-01T01:00:00Z",
   "authentication_method": "password",
-  "avatar_url": "",
+  "avatar_url": "example",
   "billing_permission": true,
   "bypass_site_allowed_ips": true,
   "bypass_inactive_disable": true,
   "created_at": "2000-01-01T01:00:00Z",
   "dav_permission": true,
   "disabled": true,
-  "email": "john.doe@files.com",
+  "email": "example",
   "first_login_at": "2000-01-01T01:00:00Z",
   "ftp_permission": true,
-  "group_ids": "",
+  "group_ids": "example",
   "header_text": "User-specific message.",
   "language": "en",
   "last_login_at": "2000-01-01T01:00:00Z",
-  "last_protocol_cipher": "",
+  "last_protocol_cipher": "example",
   "lockout_expires": "2000-01-01T01:00:00Z",
   "name": "John Doe",
   "company": "ACME Corp.",
@@ -454,7 +458,7 @@ $user->update([
   "time_zone": "Pacific Time (US & Canada)",
   "type_of_2fa": "yubi",
   "updated_at": "2000-01-01T01:00:00Z",
-  "user_root": ""
+  "user_root": "example"
 }
 ```
 

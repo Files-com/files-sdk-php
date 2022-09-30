@@ -5,11 +5,11 @@
 ```
 {
   "id": 1,
-  "path": "",
+  "path": "example",
   "user_id": 1,
   "username": "Sser",
   "group_id": 1,
-  "group_name": "",
+  "group_name": "example",
   "permission": "full",
   "recursive": true
 }
@@ -32,6 +32,7 @@
 $permission = new \Files\Model\Permission();
 $permission->list(, [
   'per_page' => 1,
+  'path' => "example",
   'group_id' => 1,
   'user_id' => 1,
   'include_groups' => true,
@@ -63,6 +64,7 @@ $permission->list(, [
 $permission = new \Files\Model\Permission();
 $permission->create(, [
   'group_id' => 1,
+  'path' => "example",
   'permission' => "full",
   'recursive' => true,
   'user_id' => 1,

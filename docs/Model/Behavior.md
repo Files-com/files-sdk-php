@@ -5,13 +5,13 @@
 ```
 {
   "id": 1,
-  "path": "",
-  "attachment_url": "",
+  "path": "example",
+  "attachment_url": "example",
   "behavior": "webhook",
-  "name": "",
-  "description": "",
+  "name": "example",
+  "description": "example",
   "value": {
-    "method": "GET"
+    "key": "example value"
   }
 }
 ```
@@ -102,6 +102,8 @@ $behavior->listFor($path, [
 $behavior = new \Files\Model\Behavior();
 $behavior->create(, [
   'value' => "{\"method\": \"GET\"}",
+  'name' => "example",
+  'description' => "example",
   'path' => "path",
   'behavior' => "webhook",
 ]);
@@ -127,8 +129,8 @@ $behavior->webhookTest(, [
   'url' => "https://www.site.com/...",
   'method' => "GET",
   'encoding' => "RAW",
-  'headers' => "x-test-header => testvalue",
-  'body' => "test-param => testvalue",
+  'headers' => {"x-test-header":"testvalue"},
+  'body' => {"test-param":"testvalue"},
   'action' => "test",
 ]);
 ```
@@ -152,7 +154,10 @@ $behavior = current(\Files\Model\Behavior::list());
 
 $behavior->update([
   'value' => "{\"method\": \"GET\"}",
+  'name' => "example",
+  'description' => "example",
   'behavior' => "webhook",
+  'path' => "example",
   'attachment_delete' => true,
 ]);
 ```
@@ -173,13 +178,13 @@ $behavior->update([
 ```json
 {
   "id": 1,
-  "path": "",
-  "attachment_url": "",
+  "path": "example",
+  "attachment_url": "example",
   "behavior": "webhook",
-  "name": "",
-  "description": "",
+  "name": "example",
+  "description": "example",
   "value": {
-    "method": "GET"
+    "key": "example value"
   }
 }
 ```

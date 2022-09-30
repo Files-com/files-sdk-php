@@ -16,7 +16,7 @@
   "pinned_region": "us-east-1",
   "s3_bucket": "my-bucket",
   "s3_region": "us-east-1",
-  "aws_access_key": "",
+  "aws_access_key": "example",
   "server_certificate": "require_match",
   "server_host_key": "[public key]",
   "server_type": "s3",
@@ -28,7 +28,7 @@
   "backblaze_b2_bucket": "my-bucket",
   "wasabi_bucket": "my-bucket",
   "wasabi_region": "us-west-1",
-  "wasabi_access_key": "",
+  "wasabi_access_key": "example",
   "rackspace_username": "rackspaceuser",
   "rackspace_region": "dfw",
   "rackspace_container": "my-container",
@@ -45,7 +45,7 @@
   "s3_compatible_bucket": "my-bucket",
   "s3_compatible_endpoint": "mys3platform.com",
   "s3_compatible_region": "us-east-1",
-  "s3_compatible_access_key": "",
+  "s3_compatible_access_key": "example",
   "enable_dedicated_ips": true
 }
 ```
@@ -146,6 +146,8 @@ $remote_server->find($id);
 ```
 $remote_server = new \Files\Model\RemoteServer();
 $remote_server->create(, [
+  'aws_access_key' => "example",
+  'wasabi_access_key' => "example",
   'reset_authentication' => true,
   'hostname' => "remote-server.com",
   'name' => "My Remote server",
@@ -179,6 +181,7 @@ $remote_server->create(, [
   's3_compatible_endpoint' => "mys3platform.com",
   's3_compatible_region' => "us-east-1",
   'enable_dedicated_ips' => true,
+  's3_compatible_access_key' => "example",
 ]);
 ```
 
@@ -243,6 +246,8 @@ $remote_server->create(, [
 $remote_server = current(\Files\Model\RemoteServer::list());
 
 $remote_server->update([
+  'aws_access_key' => "example",
+  'wasabi_access_key' => "example",
   'reset_authentication' => true,
   'hostname' => "remote-server.com",
   'name' => "My Remote server",
@@ -276,6 +281,7 @@ $remote_server->update([
   's3_compatible_endpoint' => "mys3platform.com",
   's3_compatible_region' => "us-east-1",
   'enable_dedicated_ips' => true,
+  's3_compatible_access_key' => "example",
 ]);
 ```
 
@@ -348,7 +354,7 @@ $remote_server->update([
   "pinned_region": "us-east-1",
   "s3_bucket": "my-bucket",
   "s3_region": "us-east-1",
-  "aws_access_key": "",
+  "aws_access_key": "example",
   "server_certificate": "require_match",
   "server_host_key": "[public key]",
   "server_type": "s3",
@@ -360,7 +366,7 @@ $remote_server->update([
   "backblaze_b2_bucket": "my-bucket",
   "wasabi_bucket": "my-bucket",
   "wasabi_region": "us-west-1",
-  "wasabi_access_key": "",
+  "wasabi_access_key": "example",
   "rackspace_username": "rackspaceuser",
   "rackspace_region": "dfw",
   "rackspace_container": "my-container",
@@ -377,7 +383,7 @@ $remote_server->update([
   "s3_compatible_bucket": "my-bucket",
   "s3_compatible_endpoint": "mys3platform.com",
   "s3_compatible_region": "us-east-1",
-  "s3_compatible_access_key": "",
+  "s3_compatible_access_key": "example",
   "enable_dedicated_ips": true
 }
 ```

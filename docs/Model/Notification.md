@@ -7,7 +7,7 @@
   "id": 1,
   "path": "",
   "group_id": 1,
-  "group_name": "",
+  "group_name": "example",
   "triggering_group_ids": [
     1
   ],
@@ -29,7 +29,7 @@
     "notify_file.txt"
   ],
   "unsubscribed": true,
-  "unsubscribed_reason": "",
+  "unsubscribed_reason": "example",
   "user_id": 1,
   "username": "User",
   "suppressed_email": true
@@ -199,7 +199,7 @@ $notification->update([
   "id": 1,
   "path": "",
   "group_id": 1,
-  "group_name": "",
+  "group_name": "example",
   "triggering_group_ids": [
     1
   ],
@@ -221,7 +221,7 @@ $notification->update([
     "notify_file.txt"
   ],
   "unsubscribed": true,
-  "unsubscribed_reason": "",
+  "unsubscribed_reason": "example",
   "user_id": 1,
   "username": "User",
   "suppressed_email": true

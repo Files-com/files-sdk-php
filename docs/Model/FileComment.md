@@ -7,10 +7,7 @@
   "id": 1,
   "body": "What a great file!",
   "reactions": [
-    {
-      "id": 1,
-      "emoji": "👍"
-    }
+    null
   ]
 }
 ```
@@ -80,10 +77,7 @@ $file_comment->update([
   "id": 1,
   "body": "What a great file!",
   "reactions": [
-    {
-      "id": 1,
-      "emoji": "👍"
-    }
+    null
   ]
 }
 ```

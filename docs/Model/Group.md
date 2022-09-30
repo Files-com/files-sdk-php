@@ -7,9 +7,9 @@
   "id": 1,
   "name": "owners",
   "admin_ids": "1",
-  "notes": "",
+  "notes": "example",
   "user_ids": "1",
-  "usernames": "user"
+  "usernames": "example"
 }
 ```
 
@@ -67,6 +67,7 @@ $group->find($id);
 $group = new \Files\Model\Group();
 $group->create(, [
   'name' => "owners",
+  'notes' => "example",
   'user_ids' => "1",
   'admin_ids' => "1",
 ]);
@@ -89,6 +90,7 @@ $group = current(\Files\Model\Group::list());
 
 $group->update([
   'name' => "owners",
+  'notes' => "example",
   'user_ids' => "1",
   'admin_ids' => "1",
 ]);
@@ -109,9 +111,9 @@ $group->update([
   "id": 1,
   "name": "owners",
   "admin_ids": "1",
-  "notes": "",
+  "notes": "example",
   "user_ids": "1",
-  "usernames": "user"
+  "usernames": "example"
 }
 ```
 

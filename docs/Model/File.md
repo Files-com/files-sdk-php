@@ -20,13 +20,7 @@
   "download_uri": "https://mysite.files.com/...",
   "priority_color": "red",
   "preview_id": 1,
-  "preview": {
-    "id": 1,
-    "status": "complete",
-    "download_uri": "https://mysite.files.com/...",
-    "type": "image",
-    "size": "large"
-  }
+  "preview": ""
 }
 ```
 
@@ -155,13 +149,7 @@ $file->download([
   "download_uri": "https://mysite.files.com/...",
   "priority_color": "red",
   "preview_id": 1,
-  "preview": {
-    "id": 1,
-    "status": "complete",
-    "download_uri": "https://mysite.files.com/...",
-    "type": "image",
-    "size": "large"
-  }
+  "preview": ""
 }
 ```
 
@@ -205,13 +193,7 @@ $file->update([
   "download_uri": "https://mysite.files.com/...",
   "priority_color": "red",
   "preview_id": 1,
-  "preview": {
-    "id": 1,
-    "status": "complete",
-    "download_uri": "https://mysite.files.com/...",
-    "type": "image",
-    "size": "large"
-  }
+  "preview": ""
 }
 ```
 
@@ -259,7 +241,7 @@ $file->copy([
 ```json
 {
   "status": "pending",
-  "file_migration_id": "123"
+  "file_migration_id": 1
 }
 ```
 
@@ -286,7 +268,7 @@ $file->move([
 ```json
 {
   "status": "pending",
-  "file_migration_id": "123"
+  "file_migration_id": 1
 }
 ```
 
@@ -325,21 +307,27 @@ $file->begin_upload([
 ```json
 [
   {
-    "send": "",
+    "send": {
+      "key": "example value"
+    },
     "action": "multipart",
     "ask_about_overwrites": true,
     "available_parts": 1,
-    "expires": "",
-    "headers": "",
+    "expires": "example",
+    "headers": {
+      "key": "example value"
+    },
     "http_method": "PUT",
     "next_partsize": 1,
     "parallel_parts": true,
-    "parameters": "{}",
+    "parameters": {
+      "key": "example value"
+    },
     "part_number": 1,
     "partsize": 1,
     "path": "",
     "ref": "upload-1",
-    "upload_uri": ""
+    "upload_uri": "example"
   }
 ]
 ```

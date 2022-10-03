@@ -224,7 +224,7 @@ class User {
     return $this->attributes['language'] = $value;
   }
 
-  // date-time # User's last login time
+  // date-time # User's most recent login time via any protocol
   public function getLastLoginAt() {
     return @$this->attributes['last_login_at'];
   }
@@ -233,7 +233,79 @@ class User {
     return $this->attributes['last_login_at'] = $value;
   }
 
-  // string # The last protocol and cipher used
+  // date-time # User's most recent login time via web
+  public function getLastWebLoginAt() {
+    return @$this->attributes['last_web_login_at'];
+  }
+
+  public function setLastWebLoginAt($value) {
+    return $this->attributes['last_web_login_at'] = $value;
+  }
+
+  // date-time # User's most recent login time via FTP
+  public function getLastFtpLoginAt() {
+    return @$this->attributes['last_ftp_login_at'];
+  }
+
+  public function setLastFtpLoginAt($value) {
+    return $this->attributes['last_ftp_login_at'] = $value;
+  }
+
+  // date-time # User's most recent login time via SFTP
+  public function getLastSftpLoginAt() {
+    return @$this->attributes['last_sftp_login_at'];
+  }
+
+  public function setLastSftpLoginAt($value) {
+    return $this->attributes['last_sftp_login_at'] = $value;
+  }
+
+  // date-time # User's most recent login time via WebDAV
+  public function getLastDavLoginAt() {
+    return @$this->attributes['last_dav_login_at'];
+  }
+
+  public function setLastDavLoginAt($value) {
+    return $this->attributes['last_dav_login_at'] = $value;
+  }
+
+  // date-time # User's most recent login time via Desktop app
+  public function getLastDesktopLoginAt() {
+    return @$this->attributes['last_desktop_login_at'];
+  }
+
+  public function setLastDesktopLoginAt($value) {
+    return $this->attributes['last_desktop_login_at'] = $value;
+  }
+
+  // date-time # User's most recent login time via Rest API
+  public function getLastRestapiLoginAt() {
+    return @$this->attributes['last_restapi_login_at'];
+  }
+
+  public function setLastRestapiLoginAt($value) {
+    return $this->attributes['last_restapi_login_at'] = $value;
+  }
+
+  // date-time # User's most recent API use time
+  public function getLastApiUseAt() {
+    return @$this->attributes['last_api_use_at'];
+  }
+
+  public function setLastApiUseAt($value) {
+    return $this->attributes['last_api_use_at'] = $value;
+  }
+
+  // date-time # User's most recent activity time, which is the latest of most recent login, most recent API use, enablement, or creation
+  public function getLastActiveAt() {
+    return @$this->attributes['last_active_at'];
+  }
+
+  public function setLastActiveAt($value) {
+    return $this->attributes['last_active_at'] = $value;
+  }
+
+  // string # The most recent protocol and cipher used
   public function getLastProtocolCipher() {
     return @$this->attributes['last_protocol_cipher'];
   }
@@ -467,7 +539,7 @@ class User {
     return $this->attributes['type_of_2fa'] = $value;
   }
 
-  // date-time # User record last updated at.  Note this may be incremented because of internal or external updates.
+  // date-time # User record most recently updated at.  Note this may be incremented because of internal or external updates.
   public function getUpdatedAt() {
     return @$this->attributes['updated_at'];
   }

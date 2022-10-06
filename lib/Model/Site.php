@@ -544,6 +544,16 @@ class Site {
     return @$this->attributes['sftp_enabled'];
   }
 
+  // string # Sftp Host Key Type
+  public function getSftpHostKeyType() {
+    return @$this->attributes['sftp_host_key_type'];
+  }
+
+  // int64 # Id of the currently selected custom SFTP Host Key
+  public function getActiveSftpHostKeyId() {
+    return @$this->attributes['active_sftp_host_key_id'];
+  }
+
   // boolean # Are Insecure Ciphers allowed for SFTP?  Note:  Settting TLS Disabled -> True will always allow insecure ciphers for SFTP as well.  Enabling this is insecure.
   public function getSftpInsecureCiphers() {
     return @$this->attributes['sftp_insecure_ciphers'];
@@ -799,6 +809,8 @@ class Site {
   //   user_requests_notify_admins - boolean - Send email to site admins when a user request is received?
   //   ftp_enabled - boolean - Is FTP enabled?
   //   sftp_enabled - boolean - Is SFTP enabled?
+  //   sftp_host_key_type - string - Sftp Host Key Type
+  //   active_sftp_host_key_id - int64 - Id of the currently selected custom SFTP Host Key
   //   bundle_watermark_value - object - Preview watermark settings applied to all bundle items. Uses the same keys as Behavior.value
   //   allowed_2fa_method_sms - boolean - Is SMS two factor authentication allowed?
   //   allowed_2fa_method_u2f - boolean - Is U2F two factor authentication allowed?
@@ -960,6 +972,14 @@ class Site {
 
     if (@$params['disable_users_from_inactivity_period_days'] && !is_int(@$params['disable_users_from_inactivity_period_days'])) {
       throw new \Files\InvalidParameterException('$disable_users_from_inactivity_period_days must be of type int; received ' . gettype($disable_users_from_inactivity_period_days));
+    }
+
+    if (@$params['sftp_host_key_type'] && !is_string(@$params['sftp_host_key_type'])) {
+      throw new \Files\InvalidParameterException('$sftp_host_key_type must be of type string; received ' . gettype($sftp_host_key_type));
+    }
+
+    if (@$params['active_sftp_host_key_id'] && !is_int(@$params['active_sftp_host_key_id'])) {
+      throw new \Files\InvalidParameterException('$active_sftp_host_key_id must be of type int; received ' . gettype($active_sftp_host_key_id));
     }
 
     if (@$params['require_2fa_user_type'] && !is_string(@$params['require_2fa_user_type'])) {

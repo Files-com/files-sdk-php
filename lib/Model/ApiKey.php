@@ -134,6 +134,15 @@ class ApiKey {
     return $this->attributes['platform'] = $value;
   }
 
+  // string # URL for API host.
+  public function getUrl() {
+    return @$this->attributes['url'];
+  }
+
+  public function setUrl($value) {
+    return $this->attributes['url'] = $value;
+  }
+
   // int64 # User ID for the owner of this API Key.  May be blank for Site-wide API Keys.
   public function getUserId() {
     return @$this->attributes['user_id'];

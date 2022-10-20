@@ -259,7 +259,6 @@ class InvalidFileTypeException extends \Files\ProcessingFailureException {}
 class InvalidFilenameException extends \Files\ProcessingFailureException {}
 class InvalidRangeException extends \Files\ProcessingFailureException {}
 class ModelSaveErrorException extends \Files\ProcessingFailureException {}
-class MultipartUploadsRequiredForRemotesException extends \Files\ProcessingFailureException {}
 class MultipleProcessingErrorsException extends \Files\ProcessingFailureException {}
 class PathTooLongException extends \Files\ProcessingFailureException {}
 class RecipientAlreadySharedException extends \Files\ProcessingFailureException {}

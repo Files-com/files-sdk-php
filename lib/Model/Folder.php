@@ -152,6 +152,15 @@ class Folder {
     return $this->attributes['subfolders_locked'] = $value;
   }
 
+  // boolean # Is this folder locked and unable to be modified?
+  public function getIsLocked() {
+    return @$this->attributes['is_locked'];
+  }
+
+  public function setIsLocked($value) {
+    return $this->attributes['is_locked'] = $value;
+  }
+
   // string # Link to download file. Provided only in response to a download request.
   public function getDownloadUri() {
     return @$this->attributes['download_uri'];

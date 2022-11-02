@@ -89,6 +89,29 @@ class IpAddress {
   // Parameters:
   //   cursor - string - Used for pagination.  Send a cursor value to resume an existing list from the point at which you left off.  Get a cursor from an existing list via either the X-Files-Cursor-Next header or the X-Files-Cursor-Prev header.
   //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
+  public static function getExavaultReserved($params = [], $options = []) {
+    if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
+    }
+
+    if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
+    }
+
+    $response = Api::sendRequest('/ip_addresses/exavault-reserved', 'GET', $params, $options);
+
+    $return_array = [];
+
+    foreach ($response->data as $obj) {
+      $return_array[] = new PublicIpAddress((array)$obj, $options);
+    }
+
+    return $return_array;
+  }
+
+  // Parameters:
+  //   cursor - string - Used for pagination.  Send a cursor value to resume an existing list from the point at which you left off.  Get a cursor from an existing list via either the X-Files-Cursor-Next header or the X-Files-Cursor-Prev header.
+  //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
   public static function getReserved($params = [], $options = []) {
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
       throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));

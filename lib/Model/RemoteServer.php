@@ -426,6 +426,33 @@ class RemoteServer {
     return $this->attributes['enable_dedicated_ips'] = $value;
   }
 
+  // string # Local permissions for files agent. read_only, write_only, or read_write
+  public function getFilesAgentPermissionSet() {
+    return @$this->attributes['files_agent_permission_set'];
+  }
+
+  public function setFilesAgentPermissionSet($value) {
+    return $this->attributes['files_agent_permission_set'] = $value;
+  }
+
+  // string # Agent local root path
+  public function getFilesAgentRoot() {
+    return @$this->attributes['files_agent_root'];
+  }
+
+  public function setFilesAgentRoot($value) {
+    return $this->attributes['files_agent_root'] = $value;
+  }
+
+  // string # Files Agent API Token
+  public function getFilesAgentApiToken() {
+    return @$this->attributes['files_agent_api_token'];
+  }
+
+  public function setFilesAgentApiToken($value) {
+    return $this->attributes['files_agent_api_token'] = $value;
+  }
+
   // string # AWS secret key.
   public function getAwsSecretKey() {
     return @$this->attributes['aws_secret_key'];
@@ -552,6 +579,75 @@ class RemoteServer {
     return $this->attributes['s3_compatible_secret_key'] = $value;
   }
 
+  // Post local changes, check in, and download configuration file (used by some Remote Server integrations, such as the Files.com Agent)
+  //
+  // Parameters:
+  //   api_token - string - Files Agent API Token
+  //   permission_set - string -
+  //   root - string - Agent local root path
+  //   hostname - string
+  //   port - int64 - Incoming port for files agent connections
+  //   status - string - either running or shutdown
+  //   config_version - string - agent config version
+  //   private_key - string - private key
+  //   public_key - string - public key
+  public function configurationFile($params = []) {
+    if (!is_array($params)) {
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+    }
+
+    if (!@$params['id']) {
+      if (@$this->id) {
+        $params['id'] = $this->id;
+      } else {
+        throw new \Files\MissingParameterException('Parameter missing: id');
+      }
+    }
+
+    if (@$params['id'] && !is_int(@$params['id'])) {
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
+    }
+
+    if (@$params['api_token'] && !is_string(@$params['api_token'])) {
+      throw new \Files\InvalidParameterException('$api_token must be of type string; received ' . gettype($api_token));
+    }
+
+    if (@$params['permission_set'] && !is_string(@$params['permission_set'])) {
+      throw new \Files\InvalidParameterException('$permission_set must be of type string; received ' . gettype($permission_set));
+    }
+
+    if (@$params['root'] && !is_string(@$params['root'])) {
+      throw new \Files\InvalidParameterException('$root must be of type string; received ' . gettype($root));
+    }
+
+    if (@$params['hostname'] && !is_string(@$params['hostname'])) {
+      throw new \Files\InvalidParameterException('$hostname must be of type string; received ' . gettype($hostname));
+    }
+
+    if (@$params['port'] && !is_int(@$params['port'])) {
+      throw new \Files\InvalidParameterException('$port must be of type int; received ' . gettype($port));
+    }
+
+    if (@$params['status'] && !is_string(@$params['status'])) {
+      throw new \Files\InvalidParameterException('$status must be of type string; received ' . gettype($status));
+    }
+
+    if (@$params['config_version'] && !is_string(@$params['config_version'])) {
+      throw new \Files\InvalidParameterException('$config_version must be of type string; received ' . gettype($config_version));
+    }
+
+    if (@$params['private_key'] && !is_string(@$params['private_key'])) {
+      throw new \Files\InvalidParameterException('$private_key must be of type string; received ' . gettype($private_key));
+    }
+
+    if (@$params['public_key'] && !is_string(@$params['public_key'])) {
+      throw new \Files\InvalidParameterException('$public_key must be of type string; received ' . gettype($public_key));
+    }
+
+    $response = Api::sendRequest('/remote_servers/' . @$params['id'] . '/configuration_file', 'POST', $params, $this->options);
+    return $response->data;
+  }
+
   // Parameters:
   //   aws_access_key - string - AWS Access Key.
   //   aws_secret_key - string - AWS secret key.
@@ -602,6 +698,8 @@ class RemoteServer {
   //   enable_dedicated_ips - boolean - `true` if remote server only accepts connections from dedicated IPs
   //   s3_compatible_access_key - string - S3-compatible Access Key.
   //   s3_compatible_secret_key - string - S3-compatible secret key
+  //   files_agent_root - string - Agent local root path
+  //   files_agent_permission_set - string - Local permissions for files agent. read_only, write_only, or read_write
   public function update($params = []) {
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
@@ -803,6 +901,14 @@ class RemoteServer {
       throw new \Files\InvalidParameterException('$s3_compatible_secret_key must be of type string; received ' . gettype($s3_compatible_secret_key));
     }
 
+    if (@$params['files_agent_root'] && !is_string(@$params['files_agent_root'])) {
+      throw new \Files\InvalidParameterException('$files_agent_root must be of type string; received ' . gettype($files_agent_root));
+    }
+
+    if (@$params['files_agent_permission_set'] && !is_string(@$params['files_agent_permission_set'])) {
+      throw new \Files\InvalidParameterException('$files_agent_permission_set must be of type string; received ' . gettype($files_agent_permission_set));
+    }
+
     $response = Api::sendRequest('/remote_servers/' . @$params['id'] . '', 'PATCH', $params, $this->options);
     return $response->data;
   }
@@ -896,6 +1002,28 @@ class RemoteServer {
   }
 
   // Parameters:
+  //   id (required) - int64 - Remote Server ID.
+  public static function findConfigurationFile($id, $params = [], $options = []) {
+    if (!is_array($params)) {
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+    }
+
+    $params['id'] = $id;
+
+    if (!@$params['id']) {
+      throw new \Files\MissingParameterException('Parameter missing: id');
+    }
+
+    if (@$params['id'] && !is_int(@$params['id'])) {
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
+    }
+
+    $response = Api::sendRequest('/remote_servers/' . @$params['id'] . '/configuration_file', 'GET', $params, $options);
+
+    return new RemoteServerConfigurationFile((array)(@$response->data ?: []), $options);
+  }
+
+  // Parameters:
   //   aws_access_key - string - AWS Access Key.
   //   aws_secret_key - string - AWS secret key.
   //   password - string - Password if needed.
@@ -945,6 +1073,8 @@ class RemoteServer {
   //   enable_dedicated_ips - boolean - `true` if remote server only accepts connections from dedicated IPs
   //   s3_compatible_access_key - string - S3-compatible Access Key.
   //   s3_compatible_secret_key - string - S3-compatible secret key
+  //   files_agent_root - string - Agent local root path
+  //   files_agent_permission_set - string - Local permissions for files agent. read_only, write_only, or read_write
   public static function create($params = [], $options = []) {
     if (@$params['aws_access_key'] && !is_string(@$params['aws_access_key'])) {
       throw new \Files\InvalidParameterException('$aws_access_key must be of type string; received ' . gettype($aws_access_key));
@@ -1128,6 +1258,14 @@ class RemoteServer {
 
     if (@$params['s3_compatible_secret_key'] && !is_string(@$params['s3_compatible_secret_key'])) {
       throw new \Files\InvalidParameterException('$s3_compatible_secret_key must be of type string; received ' . gettype($s3_compatible_secret_key));
+    }
+
+    if (@$params['files_agent_root'] && !is_string(@$params['files_agent_root'])) {
+      throw new \Files\InvalidParameterException('$files_agent_root must be of type string; received ' . gettype($files_agent_root));
+    }
+
+    if (@$params['files_agent_permission_set'] && !is_string(@$params['files_agent_permission_set'])) {
+      throw new \Files\InvalidParameterException('$files_agent_permission_set must be of type string; received ' . gettype($files_agent_permission_set));
     }
 
     $response = Api::sendRequest('/remote_servers', 'POST', $params, $options);

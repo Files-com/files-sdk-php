@@ -59,7 +59,7 @@ class FileMigration {
     return @$this->attributes['files_moved'];
   }
 
-  // int64 # Total number of files to process
+  // int64 # Deprecated: used to return a count of the applicable files.  Currently returns 0 always.  On remote servers, it is not possible to reliably determine the number of affected files for every migration operation.
   public function getFilesTotal() {
     return @$this->attributes['files_total'];
   }

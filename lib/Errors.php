@@ -121,6 +121,7 @@ class SiteConfigurationException extends FilesException {}
 
 namespace Files\BadRequest {
 
+class AgentUpgradeRequiredException extends \Files\BadRequestException {}
 class AttachmentTooLargeException extends \Files\BadRequestException {}
 class CannotDownloadDirectoryException extends \Files\BadRequestException {}
 class CantMoveWithMultipleLocationsException extends \Files\BadRequestException {}
@@ -163,6 +164,7 @@ namespace Files\NotAuthenticated {
 
 class AuthenticationRequiredException extends \Files\NotAuthenticatedException {}
 class BundleRegistrationCodeFailedException extends \Files\NotAuthenticatedException {}
+class FilesAgentTokenFailedException extends \Files\NotAuthenticatedException {}
 class InboxRegistrationCodeFailedException extends \Files\NotAuthenticatedException {}
 class InvalidCredentialsException extends \Files\NotAuthenticatedException {}
 class InvalidOauthException extends \Files\NotAuthenticatedException {}

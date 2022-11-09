@@ -49,12 +49,12 @@ class PublicIpAddress {
     return @$this->attributes['server_name'];
   }
 
-  // string
+  // boolean
   public function getFtpEnabled() {
     return @$this->attributes['ftp_enabled'];
   }
 
-  // string
+  // boolean
   public function getSftpEnabled() {
     return @$this->attributes['sftp_enabled'];
   }

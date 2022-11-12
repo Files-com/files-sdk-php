@@ -88,4 +88,9 @@ class RemoteServerConfigurationFile {
   public function getConfigVersion() {
     return @$this->attributes['config_version'];
   }
+
+  // string
+  public function getServerHostKey() {
+    return @$this->attributes['server_host_key'];
+  }
 }

@@ -591,6 +591,7 @@ class RemoteServer {
   //   config_version - string - agent config version
   //   private_key - string - private key
   //   public_key - string - public key
+  //   server_host_key - string
   public function configurationFile($params = []) {
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
@@ -642,6 +643,10 @@ class RemoteServer {
 
     if (@$params['public_key'] && !is_string(@$params['public_key'])) {
       throw new \Files\InvalidParameterException('$public_key must be of type string; received ' . gettype($public_key));
+    }
+
+    if (@$params['server_host_key'] && !is_string(@$params['server_host_key'])) {
+      throw new \Files\InvalidParameterException('$server_host_key must be of type string; received ' . gettype($server_host_key));
     }
 
     $response = Api::sendRequest('/remote_servers/' . @$params['id'] . '/configuration_file', 'POST', $params, $this->options);

@@ -553,6 +553,24 @@ class User {
     return $this->attributes['user_root'] = $value;
   }
 
+  // date-time # Number of days remaining until password expires
+  public function getDaysRemainingUntilPasswordExpire() {
+    return @$this->attributes['days_remaining_until_password_expire'];
+  }
+
+  public function setDaysRemainingUntilPasswordExpire($value) {
+    return $this->attributes['days_remaining_until_password_expire'] = $value;
+  }
+
+  // date-time # Password expiration datetime
+  public function getPasswordExpireAt() {
+    return @$this->attributes['password_expire_at'];
+  }
+
+  public function setPasswordExpireAt($value) {
+    return $this->attributes['password_expire_at'] = $value;
+  }
+
   // file # An image file for your user avatar.
   public function getAvatarFile() {
     return @$this->attributes['avatar_file'];

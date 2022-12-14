@@ -99,6 +99,11 @@ class Site {
     return @$this->attributes['ask_about_overwrites'];
   }
 
+  // string # Do Bundle owners receive activity notifications?
+  public function getBundleActivityNotifications() {
+    return @$this->attributes['bundle_activity_notifications'];
+  }
+
   // int64 # Site-wide Bundle expiration in days
   public function getBundleExpiration() {
     return @$this->attributes['bundle_expiration'];
@@ -117,6 +122,11 @@ class Site {
   // boolean # Do Bundles require recipients for sharing?
   public function getBundleRequireShareRecipient() {
     return @$this->attributes['bundle_require_share_recipient'];
+  }
+
+  // string # Do Bundle uploaders receive upload confirmation notifications?
+  public function getBundleUploadReceiptNotifications() {
+    return @$this->attributes['bundle_upload_receipt_notifications'];
   }
 
   // Image # Preview watermark image applied to all bundle items.
@@ -803,6 +813,8 @@ class Site {
   //   bundle_password_required - boolean - Do Bundles require password protection?
   //   bundle_require_share_recipient - boolean - Do Bundles require recipients for sharing?
   //   bundle_registration_notifications - string - Do Bundle owners receive registration notification?
+  //   bundle_activity_notifications - string - Do Bundle owners receive activity notifications?
+  //   bundle_upload_receipt_notifications - string - Do Bundle uploaders receive upload confirmation notifications?
   //   password_requirements_apply_to_bundles - boolean - Require bundles' passwords, and passwords for other items (inboxes, public shares, etc.) to conform to the same requirements as users' passwords?
   //   opt_out_global - boolean - Use servers in the USA only?
   //   use_provided_modified_at - boolean - Allow uploaders to set `provided_modified_at` for uploaded files?
@@ -978,6 +990,14 @@ class Site {
 
     if (@$params['bundle_registration_notifications'] && !is_string(@$params['bundle_registration_notifications'])) {
       throw new \Files\InvalidParameterException('$bundle_registration_notifications must be of type string; received ' . gettype($bundle_registration_notifications));
+    }
+
+    if (@$params['bundle_activity_notifications'] && !is_string(@$params['bundle_activity_notifications'])) {
+      throw new \Files\InvalidParameterException('$bundle_activity_notifications must be of type string; received ' . gettype($bundle_activity_notifications));
+    }
+
+    if (@$params['bundle_upload_receipt_notifications'] && !is_string(@$params['bundle_upload_receipt_notifications'])) {
+      throw new \Files\InvalidParameterException('$bundle_upload_receipt_notifications must be of type string; received ' . gettype($bundle_upload_receipt_notifications));
     }
 
     if (@$params['disable_users_from_inactivity_period_days'] && !is_int(@$params['disable_users_from_inactivity_period_days'])) {

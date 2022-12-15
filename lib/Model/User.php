@@ -553,7 +553,7 @@ class User {
     return $this->attributes['user_root'] = $value;
   }
 
-  // date-time # Number of days remaining until password expires
+  // int64 # Number of days remaining until password expires
   public function getDaysRemainingUntilPasswordExpire() {
     return @$this->attributes['days_remaining_until_password_expire'];
   }

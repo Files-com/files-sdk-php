@@ -58,9 +58,4 @@ class PaymentLineItem {
   public function getPaymentId() {
     return @$this->attributes['payment_id'];
   }
-
-  // date-time # Payment line item updated at date/time
-  public function getUpdatedAt() {
-    return @$this->attributes['updated_at'];
-  }
 }

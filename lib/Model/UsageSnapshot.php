@@ -54,11 +54,6 @@ class UsageSnapshot {
     return @$this->attributes['end_at'];
   }
 
-  // date-time # DEPRECATED: Usage snapshot created at date/time
-  public function getCreatedAt() {
-    return @$this->attributes['created_at'];
-  }
-
   // double # Highest user count number in time period
   public function getHighWaterUserCount() {
     return @$this->attributes['high_water_user_count'];
@@ -72,21 +67,6 @@ class UsageSnapshot {
   // double # Highest Storage Usage GB recorded in time period (used for billing)
   public function getHighWaterStorage() {
     return @$this->attributes['high_water_storage'];
-  }
-
-  // int64 # DEPRECATED: Number of downloads in report time period
-  public function getTotalDownloads() {
-    return @$this->attributes['total_downloads'];
-  }
-
-  // int64 # DEPRECATED: Number of uploads in time period
-  public function getTotalUploads() {
-    return @$this->attributes['total_uploads'];
-  }
-
-  // date-time # DEPRECATED: The last time this site usage report was updated
-  public function getUpdatedAt() {
-    return @$this->attributes['updated_at'];
   }
 
   // object # Storage Usage - map of root folders to their usage as of end date (not necessarily high water mark, which is used for billing)

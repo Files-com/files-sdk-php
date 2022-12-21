@@ -89,6 +89,11 @@ class InboxRegistration {
     return @$this->attributes['inbox_title'];
   }
 
+  // date-time # Registration creation date/time
+  public function getCreatedAt() {
+    return @$this->attributes['created_at'];
+  }
+
   // Parameters:
   //   cursor - string - Used for pagination.  Send a cursor value to resume an existing list from the point at which you left off.  Get a cursor from an existing list via either the X-Files-Cursor-Next header or the X-Files-Cursor-Prev header.
   //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).

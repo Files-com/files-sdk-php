@@ -215,6 +215,15 @@ class Bundle {
     return $this->attributes['path_template'] = $value;
   }
 
+  // boolean # Send delivery receipt to the uploader. Note: For writable share only
+  public function getSendEmailReceiptToUploader() {
+    return @$this->attributes['send_email_receipt_to_uploader'];
+  }
+
+  public function setSendEmailReceiptToUploader($value) {
+    return $this->attributes['send_email_receipt_to_uploader'] = $value;
+  }
+
   // int64 # Bundle creator user ID
   public function getUserId() {
     return @$this->attributes['user_id'];
@@ -379,9 +388,10 @@ class Bundle {
   //   preview_only - boolean - Restrict users to previewing files only?
   //   require_registration - boolean - Show a registration page that captures the downloader's name and email address?
   //   require_share_recipient - boolean - Only allow access to recipients who have explicitly received the share via an email sent through the Files.com UI?
+  //   send_email_receipt_to_uploader - boolean - Send delivery receipt to the uploader. Note: For writable share only
+  //   skip_company - boolean - BundleRegistrations can be saved without providing company?
   //   skip_email - boolean - BundleRegistrations can be saved without providing email?
   //   skip_name - boolean - BundleRegistrations can be saved without providing name?
-  //   skip_company - boolean - BundleRegistrations can be saved without providing company?
   //   watermark_attachment_delete - boolean - If true, will delete the file stored in watermark_attachment
   //   watermark_attachment_file - file - Preview watermark image applied to all bundle items.
   public function update($params = []) {
@@ -571,6 +581,7 @@ class Bundle {
   //   clickwrap_id - int64 - ID of the clickwrap to use with this bundle.
   //   inbox_id - int64 - ID of the associated inbox, if available.
   //   require_share_recipient - boolean - Only allow access to recipients who have explicitly received the share via an email sent through the Files.com UI?
+  //   send_email_receipt_to_uploader - boolean - Send delivery receipt to the uploader. Note: For writable share only
   //   skip_email - boolean - BundleRegistrations can be saved without providing email?
   //   skip_name - boolean - BundleRegistrations can be saved without providing name?
   //   skip_company - boolean - BundleRegistrations can be saved without providing company?

@@ -629,6 +629,11 @@ class Site {
     return @$this->attributes['session_expiry'];
   }
 
+  // int64 # Session expiry in minutes
+  public function getSessionExpiryMinutes() {
+    return @$this->attributes['session_expiry_minutes'];
+  }
+
   // boolean # Is SSL required?  Disabling this is insecure.
   public function getSslRequired() {
     return @$this->attributes['ssl_required'];

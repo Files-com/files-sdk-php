@@ -66,6 +66,15 @@ class BundleNotification {
     return $this->attributes['notify_on_registration'] = $value;
   }
 
+  // boolean # Triggers bundle notification when a upload action occurs for it.
+  public function getNotifyOnUpload() {
+    return @$this->attributes['notify_on_upload'];
+  }
+
+  public function setNotifyOnUpload($value) {
+    return $this->attributes['notify_on_upload'] = $value;
+  }
+
   // int64 # The id of the user to notify.
   public function getUserId() {
     return @$this->attributes['user_id'];
@@ -73,6 +82,30 @@ class BundleNotification {
 
   public function setUserId($value) {
     return $this->attributes['user_id'] = $value;
+  }
+
+  // Parameters:
+  //   notify_on_registration - boolean - Triggers bundle notification when a registration action occurs for it.
+  //   notify_on_upload - boolean - Triggers bundle notification when a upload action occurs for it.
+  public function update($params = []) {
+    if (!is_array($params)) {
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+    }
+
+    if (!@$params['id']) {
+      if (@$this->id) {
+        $params['id'] = $this->id;
+      } else {
+        throw new \Files\MissingParameterException('Parameter missing: id');
+      }
+    }
+
+    if (@$params['id'] && !is_int(@$params['id'])) {
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
+    }
+
+    $response = Api::sendRequest('/bundle_notifications/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+    return $response->data;
   }
 
   public function delete($params = []) {
@@ -102,7 +135,7 @@ class BundleNotification {
 
   public function save() {
       if (@$this->attributes['id']) {
-        throw new \Files\NotImplementedException('The BundleNotification object doesn\'t support updates.');
+        return $this->update($this->attributes);
       } else {
         $new_obj = self::create($this->attributes, $this->options);
         $this->attributes = $new_obj->attributes;
@@ -176,6 +209,7 @@ class BundleNotification {
   // Parameters:
   //   user_id (required) - int64 - The id of the user to notify.
   //   notify_on_registration - boolean - Triggers bundle notification when a registration action occurs for it.
+  //   notify_on_upload - boolean - Triggers bundle notification when a upload action occurs for it.
   //   bundle_id (required) - int64 - Bundle ID to notify on
   public static function create($params = [], $options = []) {
     if (!@$params['user_id']) {

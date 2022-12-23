@@ -137,6 +137,7 @@ class InvalidFilterFieldException extends \Files\BadRequestException {}
 class InvalidInputEncodingException extends \Files\BadRequestException {}
 class InvalidInterfaceException extends \Files\BadRequestException {}
 class InvalidOauthProviderException extends \Files\BadRequestException {}
+class InvalidPathException extends \Files\BadRequestException {}
 class InvalidReturnToUrlException extends \Files\BadRequestException {}
 class InvalidUploadOffsetException extends \Files\BadRequestException {}
 class InvalidUploadPartGapException extends \Files\BadRequestException {}

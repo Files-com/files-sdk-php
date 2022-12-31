@@ -238,6 +238,7 @@ class UserNotFoundException extends \Files\NotFoundException {}
 namespace Files\ProcessingFailure {
 
 class BundleOnlyAllowsPreviewsException extends \Files\ProcessingFailureException {}
+class BundleOperationRequiresSubfolderException extends \Files\ProcessingFailureException {}
 class CouldNotCreateParentException extends \Files\ProcessingFailureException {}
 class DestinationExistsException extends \Files\ProcessingFailureException {}
 class DestinationFolderLimitedException extends \Files\ProcessingFailureException {}

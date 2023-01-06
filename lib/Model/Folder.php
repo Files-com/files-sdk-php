@@ -271,6 +271,7 @@ class Folder {
   // Parameters:
   //   path (required) - string - Path to operate on.
   //   mkdir_parents - boolean - Create parent directories if they do not exist?
+  //   provided_mtime - string - User provided modification time.
   public static function create($path, $params = [], $options = []) {
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
@@ -284,6 +285,10 @@ class Folder {
 
     if (@$params['path'] && !is_string(@$params['path'])) {
       throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
+    }
+
+    if (@$params['provided_mtime'] && !is_string(@$params['provided_mtime'])) {
+      throw new \Files\InvalidParameterException('$provided_mtime must be of type string; received ' . gettype($provided_mtime));
     }
 
     $response = Api::sendRequest('/folders/' . @$params['path'] . '', 'POST', $params, $options);

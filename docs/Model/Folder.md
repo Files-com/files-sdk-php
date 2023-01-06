@@ -80,6 +80,7 @@ $folder->listFor($path, [
 $folder = new \Files\Model\Folder();
 $folder->create($path, [
   'mkdir_parents' => true,
+  'provided_mtime' => "2000-01-01T01:00:00Z",
 ]);
 ```
 
@@ -88,3 +89,4 @@ $folder->create($path, [
 
 * `path` (string): Required - Path to operate on.
 * `mkdir_parents` (boolean): Create parent directories if they do not exist?
+* `provided_mtime` (string): User provided modification time.

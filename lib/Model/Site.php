@@ -888,6 +888,7 @@ class Site {
   //   ldap_password_change - string - New LDAP password.
   //   ldap_password_change_confirmation - string - Confirm new LDAP password.
   //   smtp_password - string - Password for SMTP server.
+  //   session_expiry_minutes - int64 - Session expiry in minutes
   public static function update($params = [], $options = []) {
     if (@$params['name'] && !is_string(@$params['name'])) {
       throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype($name));
@@ -1139,6 +1140,10 @@ class Site {
 
     if (@$params['smtp_password'] && !is_string(@$params['smtp_password'])) {
       throw new \Files\InvalidParameterException('$smtp_password must be of type string; received ' . gettype($smtp_password));
+    }
+
+    if (@$params['session_expiry_minutes'] && !is_int(@$params['session_expiry_minutes'])) {
+      throw new \Files\InvalidParameterException('$session_expiry_minutes must be of type int; received ' . gettype($session_expiry_minutes));
     }
 
     $response = Api::sendRequest('/site', 'PATCH', $params, $options);

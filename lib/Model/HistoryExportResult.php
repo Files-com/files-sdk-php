@@ -49,6 +49,11 @@ class HistoryExportResult {
     return @$this->attributes['created_at'];
   }
 
+  // int64 # When the action happened, in ISO8601 format.
+  public function getCreatedAtIso8601() {
+    return @$this->attributes['created_at_iso8601'];
+  }
+
   // int64 # User ID
   public function getUserId() {
     return @$this->attributes['user_id'];

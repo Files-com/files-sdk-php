@@ -454,6 +454,11 @@ class Site {
     return @$this->attributes['office_integration_available'];
   }
 
+  // string # Office integration application used to edit and view the MS Office documents
+  public function getOfficeIntegrationType() {
+    return @$this->attributes['office_integration_type'];
+  }
+
   // string # Link to scheduling a meeting with our Sales team
   public function getOncehubLink() {
     return @$this->attributes['oncehub_link'];
@@ -785,6 +790,7 @@ class Site {
   //   folder_permissions_groups_only - boolean - If true, permissions for this site must be bound to a group (not a user). Otherwise, permissions must be bound to a user.
   //   welcome_screen - string - Does the welcome screen appear?
   //   office_integration_available - boolean - Allow users to use Office for the web?
+  //   office_integration_type - string - Office integration application used to edit and view the MS Office documents
   //   pin_all_remote_servers_to_site_region - boolean - If true, we will ensure that all internal communications with any remote server are made through the primary region of the site. This setting overrides individual remote server settings.
   //   motd_text - string - A message to show users when they connect via FTP or SFTP.
   //   motd_use_for_ftp - boolean - Show message to users connecting via FTP
@@ -948,6 +954,10 @@ class Site {
 
     if (@$params['welcome_screen'] && !is_string(@$params['welcome_screen'])) {
       throw new \Files\InvalidParameterException('$welcome_screen must be of type string; received ' . gettype($welcome_screen));
+    }
+
+    if (@$params['office_integration_type'] && !is_string(@$params['office_integration_type'])) {
+      throw new \Files\InvalidParameterException('$office_integration_type must be of type string; received ' . gettype($office_integration_type));
     }
 
     if (@$params['motd_text'] && !is_string(@$params['motd_text'])) {

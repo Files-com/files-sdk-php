@@ -280,6 +280,7 @@ $remote_server->configuration_file([
   'private_key' => "example",
   'public_key' => "example",
   'server_host_key' => "example",
+  'subdomain' => "example",
 ]);
 ```
 
@@ -296,6 +297,7 @@ $remote_server->configuration_file([
 * `private_key` (string): private key
 * `public_key` (string): public key
 * `server_host_key` (string): 
+* `subdomain` (string): 
 
 ### Example Response
 
@@ -311,7 +313,8 @@ $remote_server->configuration_file([
   "private_key": "example",
   "status": "example",
   "config_version": "example",
-  "server_host_key": "example"
+  "server_host_key": "example",
+  "subdomain": "example"
 }
 ```
 

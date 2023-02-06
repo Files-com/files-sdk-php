@@ -592,6 +592,7 @@ class RemoteServer {
   //   private_key - string - private key
   //   public_key - string - public key
   //   server_host_key - string
+  //   subdomain - string
   public function configurationFile($params = []) {
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
@@ -647,6 +648,10 @@ class RemoteServer {
 
     if (@$params['server_host_key'] && !is_string(@$params['server_host_key'])) {
       throw new \Files\InvalidParameterException('$server_host_key must be of type string; received ' . gettype($server_host_key));
+    }
+
+    if (@$params['subdomain'] && !is_string(@$params['subdomain'])) {
+      throw new \Files\InvalidParameterException('$subdomain must be of type string; received ' . gettype($subdomain));
     }
 
     $response = Api::sendRequest('/remote_servers/' . @$params['id'] . '/configuration_file', 'POST', $params, $this->options);

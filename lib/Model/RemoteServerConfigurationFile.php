@@ -93,4 +93,9 @@ class RemoteServerConfigurationFile {
   public function getServerHostKey() {
     return @$this->attributes['server_host_key'];
   }
+
+  // string
+  public function getSubdomain() {
+    return @$this->attributes['subdomain'];
+  }
 }

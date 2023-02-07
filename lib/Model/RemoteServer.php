@@ -453,6 +453,15 @@ class RemoteServer {
     return $this->attributes['files_agent_api_token'] = $value;
   }
 
+  // string # Filebase Bucket name
+  public function getFilebaseBucket() {
+    return @$this->attributes['filebase_bucket'];
+  }
+
+  public function setFilebaseBucket($value) {
+    return $this->attributes['filebase_bucket'] = $value;
+  }
+
   // string # AWS secret key.
   public function getAwsSecretKey() {
     return @$this->attributes['aws_secret_key'];

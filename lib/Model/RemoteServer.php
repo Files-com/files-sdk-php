@@ -462,6 +462,15 @@ class RemoteServer {
     return $this->attributes['filebase_bucket'] = $value;
   }
 
+  // string # Filebase Access Key.
+  public function getFilebaseAccessKey() {
+    return @$this->attributes['filebase_access_key'];
+  }
+
+  public function setFilebaseAccessKey($value) {
+    return $this->attributes['filebase_access_key'] = $value;
+  }
+
   // string # AWS secret key.
   public function getAwsSecretKey() {
     return @$this->attributes['aws_secret_key'];
@@ -586,6 +595,15 @@ class RemoteServer {
 
   public function setS3CompatibleSecretKey($value) {
     return $this->attributes['s3_compatible_secret_key'] = $value;
+  }
+
+  // string # Filebase secret key
+  public function getFilebaseSecretKey() {
+    return @$this->attributes['filebase_secret_key'];
+  }
+
+  public function setFilebaseSecretKey($value) {
+    return $this->attributes['filebase_secret_key'] = $value;
   }
 
   // Post local changes, check in, and download configuration file (used by some Remote Server integrations, such as the Files.com Agent)
@@ -719,6 +737,9 @@ class RemoteServer {
   //   s3_compatible_secret_key - string - S3-compatible secret key
   //   files_agent_root - string - Agent local root path
   //   files_agent_permission_set - string - Local permissions for files agent. read_only, write_only, or read_write
+  //   filebase_access_key - string - Filebase Access Key.
+  //   filebase_secret_key - string - Filebase secret key
+  //   filebase_bucket - string - Filebase Bucket name
   public function update($params = []) {
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
@@ -928,6 +949,18 @@ class RemoteServer {
       throw new \Files\InvalidParameterException('$files_agent_permission_set must be of type string; received ' . gettype($files_agent_permission_set));
     }
 
+    if (@$params['filebase_access_key'] && !is_string(@$params['filebase_access_key'])) {
+      throw new \Files\InvalidParameterException('$filebase_access_key must be of type string; received ' . gettype($filebase_access_key));
+    }
+
+    if (@$params['filebase_secret_key'] && !is_string(@$params['filebase_secret_key'])) {
+      throw new \Files\InvalidParameterException('$filebase_secret_key must be of type string; received ' . gettype($filebase_secret_key));
+    }
+
+    if (@$params['filebase_bucket'] && !is_string(@$params['filebase_bucket'])) {
+      throw new \Files\InvalidParameterException('$filebase_bucket must be of type string; received ' . gettype($filebase_bucket));
+    }
+
     $response = Api::sendRequest('/remote_servers/' . @$params['id'] . '', 'PATCH', $params, $this->options);
     return $response->data;
   }
@@ -1094,6 +1127,9 @@ class RemoteServer {
   //   s3_compatible_secret_key - string - S3-compatible secret key
   //   files_agent_root - string - Agent local root path
   //   files_agent_permission_set - string - Local permissions for files agent. read_only, write_only, or read_write
+  //   filebase_access_key - string - Filebase Access Key.
+  //   filebase_secret_key - string - Filebase secret key
+  //   filebase_bucket - string - Filebase Bucket name
   public static function create($params = [], $options = []) {
     if (@$params['aws_access_key'] && !is_string(@$params['aws_access_key'])) {
       throw new \Files\InvalidParameterException('$aws_access_key must be of type string; received ' . gettype($aws_access_key));
@@ -1285,6 +1321,18 @@ class RemoteServer {
 
     if (@$params['files_agent_permission_set'] && !is_string(@$params['files_agent_permission_set'])) {
       throw new \Files\InvalidParameterException('$files_agent_permission_set must be of type string; received ' . gettype($files_agent_permission_set));
+    }
+
+    if (@$params['filebase_access_key'] && !is_string(@$params['filebase_access_key'])) {
+      throw new \Files\InvalidParameterException('$filebase_access_key must be of type string; received ' . gettype($filebase_access_key));
+    }
+
+    if (@$params['filebase_secret_key'] && !is_string(@$params['filebase_secret_key'])) {
+      throw new \Files\InvalidParameterException('$filebase_secret_key must be of type string; received ' . gettype($filebase_secret_key));
+    }
+
+    if (@$params['filebase_bucket'] && !is_string(@$params['filebase_bucket'])) {
+      throw new \Files\InvalidParameterException('$filebase_bucket must be of type string; received ' . gettype($filebase_bucket));
     }
 
     $response = Api::sendRequest('/remote_servers', 'POST', $params, $options);

@@ -183,6 +183,15 @@ class Automation {
     return $this->attributes['user_id'] = $value;
   }
 
+  // array # IDs of remote sync folder behaviors to run by this Automation
+  public function getSyncIds() {
+    return @$this->attributes['sync_ids'];
+  }
+
+  public function setSyncIds($value) {
+    return $this->attributes['sync_ids'] = $value;
+  }
+
   // array # IDs of Users for the Automation (i.e. who to Request File from)
   public function getUserIds() {
     return @$this->attributes['user_ids'];
@@ -245,6 +254,7 @@ class Automation {
   //   destination_replace_to - string - If set, this string will replace the value `destination_replace_from` in the destination filename. You can use special patterns here.
   //   interval - string - How often to run this automation? One of: `day`, `week`, `week_end`, `month`, `month_end`, `quarter`, `quarter_end`, `year`, `year_end`
   //   path - string - Path on which this Automation runs.  Supports globs.
+  //   sync_ids - string - A list of sync IDs the automation is associated with. If sent as a string, it should be comma-delimited.
   //   user_ids - string - A list of user IDs the automation is associated with. If sent as a string, it should be comma-delimited.
   //   group_ids - string - A list of group IDs the automation is associated with. If sent as a string, it should be comma-delimited.
   //   schedule - object - Custom schedule for running this automation.
@@ -298,6 +308,10 @@ class Automation {
 
     if (@$params['path'] && !is_string(@$params['path'])) {
       throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
+    }
+
+    if (@$params['sync_ids'] && !is_string(@$params['sync_ids'])) {
+      throw new \Files\InvalidParameterException('$sync_ids must be of type string; received ' . gettype($sync_ids));
     }
 
     if (@$params['user_ids'] && !is_string(@$params['user_ids'])) {
@@ -368,9 +382,9 @@ class Automation {
   }
 
   // Parameters:
-  //   cursor - string - Used for pagination.  Send a cursor value to resume an existing list from the point at which you left off.  Get a cursor from an existing list via either the X-Files-Cursor-Next header or the X-Files-Cursor-Prev header.
+  //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
   //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
-  //   sort_by - object - If set, sort records by the specified field in either 'asc' or 'desc' direction (e.g. sort_by[last_login_at]=desc). Valid fields are `automation`, `disabled` or `last_modified_at`.
+  //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction (e.g. `sort_by[automation]=desc`). Valid fields are `automation`, `disabled`, `last_modified_at` or `name`.
   //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `automation`, `last_modified_at` or `disabled`. Valid field combinations are `[ automation, disabled ]` and `[ disabled, automation ]`.
   //   filter_gt - object - If set, return records where the specified field is greater than the supplied value. Valid fields are `automation`, `last_modified_at` or `disabled`. Valid field combinations are `[ automation, disabled ]` and `[ disabled, automation ]`.
   //   filter_gteq - object - If set, return records where the specified field is greater than or equal to the supplied value. Valid fields are `automation`, `last_modified_at` or `disabled`. Valid field combinations are `[ automation, disabled ]` and `[ disabled, automation ]`.
@@ -441,6 +455,7 @@ class Automation {
   //   destination_replace_to - string - If set, this string will replace the value `destination_replace_from` in the destination filename. You can use special patterns here.
   //   interval - string - How often to run this automation? One of: `day`, `week`, `week_end`, `month`, `month_end`, `quarter`, `quarter_end`, `year`, `year_end`
   //   path - string - Path on which this Automation runs.  Supports globs.
+  //   sync_ids - string - A list of sync IDs the automation is associated with. If sent as a string, it should be comma-delimited.
   //   user_ids - string - A list of user IDs the automation is associated with. If sent as a string, it should be comma-delimited.
   //   group_ids - string - A list of group IDs the automation is associated with. If sent as a string, it should be comma-delimited.
   //   schedule - object - Custom schedule for running this automation.
@@ -482,6 +497,10 @@ class Automation {
 
     if (@$params['path'] && !is_string(@$params['path'])) {
       throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
+    }
+
+    if (@$params['sync_ids'] && !is_string(@$params['sync_ids'])) {
+      throw new \Files\InvalidParameterException('$sync_ids must be of type string; received ' . gettype($sync_ids));
     }
 
     if (@$params['user_ids'] && !is_string(@$params['user_ids'])) {

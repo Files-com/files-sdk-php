@@ -84,6 +84,15 @@ class As2Partner {
     return $this->attributes['server_certificate'] = $value;
   }
 
+  // boolean # `true` if remote server only accepts connections from dedicated IPs
+  public function getEnableDedicatedIps() {
+    return @$this->attributes['enable_dedicated_ips'];
+  }
+
+  public function setEnableDedicatedIps($value) {
+    return $this->attributes['enable_dedicated_ips'] = $value;
+  }
+
   // string # Serial of public certificate used for message security in hex format.
   public function getHexPublicCertificateSerial() {
     return @$this->attributes['hex_public_certificate_serial'];
@@ -161,6 +170,7 @@ class As2Partner {
   //   uri - string - URL base for AS2 responses
   //   server_certificate - string - Remote server certificate security setting
   //   public_certificate - string
+  //   enable_dedicated_ips - boolean
   public function update($params = []) {
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
@@ -292,6 +302,7 @@ class As2Partner {
   //   public_certificate (required) - string
   //   as2_station_id (required) - int64 - Id of As2Station for this partner
   //   server_certificate - string - Remote server certificate security setting
+  //   enable_dedicated_ips - boolean
   public static function create($params = [], $options = []) {
     if (!@$params['name']) {
       throw new \Files\MissingParameterException('Parameter missing: name');

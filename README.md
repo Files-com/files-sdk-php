@@ -22,11 +22,12 @@ Install the SDK
 ## Usage
 
 ### Import and initialize
-
+```php 
     require 'vendor/autoload.php';
 
     // set your subdomain or custom domain
     \Files\Files::setBaseUrl('https://MY-SUBDOMAIN.files.com');
+```
 
 ### Authentication
 
@@ -35,31 +36,36 @@ There are multiple ways to authenticate to the API.
 #### Global API Key
 
 You can set an API key globally like this:
-
+```php 
     \Files\Files::setApiKey('my-api-key');
+```
 
 #### Per-Request API Key
 
 Or, you can pass an API key per-request, in the options array at the end of every method like this:
-
+```php 
     $user = new \Files\Model\User($params, array('api_key' => 'my-api-key'));
+```
 
 #### User Session
 
 Or, you can open a user session by calling `\Files\Model\Session::create()`
-
+```php 
     $session = \Files\Model\Session::create(['username' => $username, 'password' => $password]);
+```
 
 Then use it globally for all subsequent API calls like this:
-
+```php 
     \Files\Files::setSessionId($session->id);
+```
 
 Or, you can pass the session ID per-request, in the options array at the end of every method like this:
-
+```php 
     $user = new \Files\Model\User($params, array('session_id' => $session->id));
+```
 
 ##### Session example
-
+```php 
     $session = \Files\Model\Session::create(['username' => $myUsername, 'password' => $myPassword]);
     \Files\Files::setSessionId($session->id);
 
@@ -69,6 +75,7 @@ Or, you can pass the session ID per-request, in the options array at the end of 
     // clean up when done
     \Files\Model\Session::destroy();
     \Files\Files::setSessionId(null);
+```
 
 ### Setting Global Options
 
@@ -92,23 +99,26 @@ You can set the following global properties directly on the `\Files\Files` class
 ### Static File Operations
 
 #### List files in root folder
-
+```php 
     $rootFiles = \Files\Model\Folder::listFor('/');
+```
 
 #### Uploading a file on disk
-
+```php 
     \Files\Model\File::uploadFile($destinationFileName, $sourceFilePath);
+```
 
 #### Uploading raw file data
-
+```php 
     \Files\Model\File::uploadData($destinationFileName, $fileData);
+```
 
 #### Download a file to stream
-
+```php 
     \Files\Model\File::downloadToStream($remoteFilePath, $outputStream);
-
+```
 #### Download a file to disk
-
+```php 
     // download entire file - with retries enabled
     \Files\Model\File::downloadToFile($remoteFilePath, $localFilePath);
 
@@ -117,31 +127,36 @@ You can set the following global properties directly on the `\Files\Files` class
 
     // resume an incomplete download
     \Files\Model\File::resumeDownloadToFile($remoteFilePath, $localFilePath);
+```
 
 #### Getting a file record by path
-
+```php 
     $foundFile = \Files\Model\File::find($remoteFilePath);
+```
 
 ### File Object Operations
 
 #### Getting a file record by path
-
+```php 
     $file = new \Files\Model\File();
     $file->get($remoteFilePath);
+```
 
 ##### Updating metadata
-
+```php 
     $file->update([
       'provided_mtime' => '2000-01-01T01:00:00Z',
       'priority_color' => 'red',
     ]);
+```
 
 ##### Retrieving metadata
-
+```php 
     $file->metadata([
       'with_previews' => true,
       'with_priority_color' => true,
     ]);
+```
 
 ### Additional Documentation
 

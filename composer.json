@@ -19,10 +19,9 @@
     "ext-curl": "*",
     "ext-json": "*",
     "ext-mbstring": "*",
-    "guzzlehttp/guzzle": "^7",
-    "psr/log": "^1.1"
+    "guzzlehttp/guzzle": "^7"
   },
   "autoload": {
-    "psr-4": { "Files\\" : "lib/" }
+    "classmap": [ "lib/" ]
   }
 }

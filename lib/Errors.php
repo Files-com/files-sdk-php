@@ -134,6 +134,7 @@ class InvalidCursorTypeForSortException extends \Files\BadRequestException {}
 class InvalidEtagsException extends \Files\BadRequestException {}
 class InvalidFilterCombinationException extends \Files\BadRequestException {}
 class InvalidFilterFieldException extends \Files\BadRequestException {}
+class InvalidFilterParamException extends \Files\BadRequestException {}
 class InvalidInputEncodingException extends \Files\BadRequestException {}
 class InvalidInterfaceException extends \Files\BadRequestException {}
 class InvalidOauthProviderException extends \Files\BadRequestException {}

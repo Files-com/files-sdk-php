@@ -68,12 +68,9 @@ class SettingsChange {
   //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
   //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
   //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction (e.g. `sort_by[api_key_id]=desc`). Valid fields are `api_key_id`, `created_at` or `user_id`.
+  //   api_key_id - string - If set, return records where the specified field is equal to the supplied value.
+  //   user_id - string - If set, return records where the specified field is equal to the supplied value.
   //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `api_key_id` and `user_id`.
-  //   filter_gt - object - If set, return records where the specified field is greater than the supplied value. Valid fields are `api_key_id` and `user_id`.
-  //   filter_gteq - object - If set, return records where the specified field is greater than or equal to the supplied value. Valid fields are `api_key_id` and `user_id`.
-  //   filter_like - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `api_key_id` and `user_id`.
-  //   filter_lt - object - If set, return records where the specified field is less than the supplied value. Valid fields are `api_key_id` and `user_id`.
-  //   filter_lteq - object - If set, return records where the specified field is less than or equal to the supplied value. Valid fields are `api_key_id` and `user_id`.
   public static function list($params = [], $options = []) {
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
       throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
@@ -81,6 +78,14 @@ class SettingsChange {
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
       throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
+    }
+
+    if (@$params['api_key_id'] && !is_string(@$params['api_key_id'])) {
+      throw new \Files\InvalidParameterException('$api_key_id must be of type string; received ' . gettype($api_key_id));
+    }
+
+    if (@$params['user_id'] && !is_string(@$params['user_id'])) {
+      throw new \Files\InvalidParameterException('$user_id must be of type string; received ' . gettype($user_id));
     }
 
     $response = Api::sendRequest('/settings_changes', 'GET', $params, $options);

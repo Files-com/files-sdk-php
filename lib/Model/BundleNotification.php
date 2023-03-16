@@ -147,7 +147,9 @@ class BundleNotification {
   //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
   //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
   //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
-  //   bundle_id - int64 - Bundle ID to notify on
+  //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction (e.g. `sort_by[bundle_id]=desc`). Valid fields are `bundle_id`.
+  //   bundle_id - string - If set, return records where the specified field is equal to the supplied value.
+  //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `bundle_id`.
   public static function list($params = [], $options = []) {
     if (@$params['user_id'] && !is_int(@$params['user_id'])) {
       throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype($user_id));
@@ -161,8 +163,8 @@ class BundleNotification {
       throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
     }
 
-    if (@$params['bundle_id'] && !is_int(@$params['bundle_id'])) {
-      throw new \Files\InvalidParameterException('$bundle_id must be of type int; received ' . gettype($bundle_id));
+    if (@$params['bundle_id'] && !is_string(@$params['bundle_id'])) {
+      throw new \Files\InvalidParameterException('$bundle_id must be of type string; received ' . gettype($bundle_id));
     }
 
     $response = Api::sendRequest('/bundle_notifications', 'GET', $params, $options);

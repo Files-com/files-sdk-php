@@ -84,15 +84,6 @@ class InboxRecipient {
     return $this->attributes['sent_at'] = $value;
   }
 
-  // int64 # User ID.  Provide a value of `0` to operate the current session's user.
-  public function getUserId() {
-    return @$this->attributes['user_id'];
-  }
-
-  public function setUserId($value) {
-    return $this->attributes['user_id'] = $value;
-  }
-
   // int64 # Inbox to share.
   public function getInboxId() {
     return @$this->attributes['inbox_id'];
@@ -122,7 +113,6 @@ class InboxRecipient {
   }
 
   // Parameters:
-  //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
   //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
   //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
   //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction (e.g. `sort_by[has_registrations]=desc`). Valid fields are `has_registrations`.
@@ -131,10 +121,6 @@ class InboxRecipient {
   public static function list($params = [], $options = []) {
     if (!@$params['inbox_id']) {
       throw new \Files\MissingParameterException('Parameter missing: inbox_id');
-    }
-
-    if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype($user_id));
     }
 
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
@@ -165,7 +151,6 @@ class InboxRecipient {
   }
 
   // Parameters:
-  //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
   //   inbox_id (required) - int64 - Inbox to share.
   //   recipient (required) - string - Email address to share this inbox with.
   //   name - string - Name of recipient.
@@ -179,10 +164,6 @@ class InboxRecipient {
 
     if (!@$params['recipient']) {
       throw new \Files\MissingParameterException('Parameter missing: recipient');
-    }
-
-    if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype($user_id));
     }
 
     if (@$params['inbox_id'] && !is_int(@$params['inbox_id'])) {

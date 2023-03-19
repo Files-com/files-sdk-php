@@ -324,6 +324,7 @@ $file->begin_upload([
     "http_method": "PUT",
     "next_partsize": 1,
     "parallel_parts": true,
+    "retry_parts": true,
     "parameters": {
       "key": "example value"
     },

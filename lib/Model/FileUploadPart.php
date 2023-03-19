@@ -84,6 +84,11 @@ class FileUploadPart {
     return @$this->attributes['parallel_parts'];
   }
 
+  // boolean # If `true`, parts may be retried. If `false`, a part cannot be retried and the upload should be restarted.
+  public function getRetryParts() {
+    return @$this->attributes['retry_parts'];
+  }
+
   // object # Additional HTTP parameters to send with the upload
   public function getParameters() {
     return @$this->attributes['parameters'];

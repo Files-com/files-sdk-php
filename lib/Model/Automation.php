@@ -165,6 +165,15 @@ class Automation {
     return $this->attributes['description'] = $value;
   }
 
+  // int64 # If trigger type is `daily`, this specifies a day number to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
+  public function getRecurringDay() {
+    return @$this->attributes['recurring_day'];
+  }
+
+  public function setRecurringDay($value) {
+    return $this->attributes['recurring_day'] = $value;
+  }
+
   // string # Path on which this Automation runs.  Supports globs. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
   public function getPath() {
     return @$this->attributes['path'];
@@ -264,6 +273,7 @@ class Automation {
   //   trigger - string - How this automation is triggered to run. One of: `realtime`, `daily`, `custom_schedule`, `webhook`, `email`, or `action`.
   //   trigger_actions - array(string) - If trigger is `action`, this is the list of action types on which to trigger the automation. Valid actions are create, read, update, destroy, move, copy
   //   value - object - A Hash of attributes specific to the automation type.
+  //   recurring_day - int64 - If trigger type is `daily`, this specifies a day number to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
   //   automation - string - Automation type
   public function update($params = []) {
     if (!is_array($params)) {
@@ -336,6 +346,10 @@ class Automation {
 
     if (@$params['trigger_actions'] && !is_array(@$params['trigger_actions'])) {
       throw new \Files\InvalidParameterException('$trigger_actions must be of type array; received ' . gettype($trigger_actions));
+    }
+
+    if (@$params['recurring_day'] && !is_int(@$params['recurring_day'])) {
+      throw new \Files\InvalidParameterException('$recurring_day must be of type int; received ' . gettype($recurring_day));
     }
 
     if (@$params['automation'] && !is_string(@$params['automation'])) {
@@ -464,6 +478,7 @@ class Automation {
   //   trigger - string - How this automation is triggered to run. One of: `realtime`, `daily`, `custom_schedule`, `webhook`, `email`, or `action`.
   //   trigger_actions - array(string) - If trigger is `action`, this is the list of action types on which to trigger the automation. Valid actions are create, read, update, destroy, move, copy
   //   value - object - A Hash of attributes specific to the automation type.
+  //   recurring_day - int64 - If trigger type is `daily`, this specifies a day number to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
   //   automation (required) - string - Automation type
   public static function create($params = [], $options = []) {
     if (!@$params['automation']) {
@@ -524,6 +539,10 @@ class Automation {
 
     if (@$params['trigger_actions'] && !is_array(@$params['trigger_actions'])) {
       throw new \Files\InvalidParameterException('$trigger_actions must be of type array; received ' . gettype($trigger_actions));
+    }
+
+    if (@$params['recurring_day'] && !is_int(@$params['recurring_day'])) {
+      throw new \Files\InvalidParameterException('$recurring_day must be of type int; received ' . gettype($recurring_day));
     }
 
     if (@$params['automation'] && !is_string(@$params['automation'])) {

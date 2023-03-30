@@ -18,6 +18,9 @@ require_once __DIR__ . '/../Files.php';
 class RemoteServer {
   private $attributes = [];
   private $options = [];
+  private static $static_mapped_functions = [
+    'list' => 'all',
+  ];
 
   function __construct($attributes = [], $options = []) {
     foreach ($attributes as $key => $value) {
@@ -33,6 +36,15 @@ class RemoteServer {
 
   public function __get($name) {
     return @$this->attributes[$name];
+  }
+
+  public static function __callStatic($name, $arguments) {
+    if(in_array($name, array_keys(self::$static_mapped_functions))){
+      $method = self::$static_mapped_functions[$name];
+      if (method_exists(__CLASS__, $method)){ 
+        return @self::$method($arguments);
+      }
+    }
   }
 
   public function isLoaded() {
@@ -634,51 +646,51 @@ class RemoteServer {
     }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
     }
 
     if (@$params['api_token'] && !is_string(@$params['api_token'])) {
-      throw new \Files\InvalidParameterException('$api_token must be of type string; received ' . gettype($api_token));
+      throw new \Files\InvalidParameterException('$api_token must be of type string; received ' . gettype(@$params['api_token']));
     }
 
     if (@$params['permission_set'] && !is_string(@$params['permission_set'])) {
-      throw new \Files\InvalidParameterException('$permission_set must be of type string; received ' . gettype($permission_set));
+      throw new \Files\InvalidParameterException('$permission_set must be of type string; received ' . gettype(@$params['permission_set']));
     }
 
     if (@$params['root'] && !is_string(@$params['root'])) {
-      throw new \Files\InvalidParameterException('$root must be of type string; received ' . gettype($root));
+      throw new \Files\InvalidParameterException('$root must be of type string; received ' . gettype(@$params['root']));
     }
 
     if (@$params['hostname'] && !is_string(@$params['hostname'])) {
-      throw new \Files\InvalidParameterException('$hostname must be of type string; received ' . gettype($hostname));
+      throw new \Files\InvalidParameterException('$hostname must be of type string; received ' . gettype(@$params['hostname']));
     }
 
     if (@$params['port'] && !is_int(@$params['port'])) {
-      throw new \Files\InvalidParameterException('$port must be of type int; received ' . gettype($port));
+      throw new \Files\InvalidParameterException('$port must be of type int; received ' . gettype(@$params['port']));
     }
 
     if (@$params['status'] && !is_string(@$params['status'])) {
-      throw new \Files\InvalidParameterException('$status must be of type string; received ' . gettype($status));
+      throw new \Files\InvalidParameterException('$status must be of type string; received ' . gettype(@$params['status']));
     }
 
     if (@$params['config_version'] && !is_string(@$params['config_version'])) {
-      throw new \Files\InvalidParameterException('$config_version must be of type string; received ' . gettype($config_version));
+      throw new \Files\InvalidParameterException('$config_version must be of type string; received ' . gettype(@$params['config_version']));
     }
 
     if (@$params['private_key'] && !is_string(@$params['private_key'])) {
-      throw new \Files\InvalidParameterException('$private_key must be of type string; received ' . gettype($private_key));
+      throw new \Files\InvalidParameterException('$private_key must be of type string; received ' . gettype(@$params['private_key']));
     }
 
     if (@$params['public_key'] && !is_string(@$params['public_key'])) {
-      throw new \Files\InvalidParameterException('$public_key must be of type string; received ' . gettype($public_key));
+      throw new \Files\InvalidParameterException('$public_key must be of type string; received ' . gettype(@$params['public_key']));
     }
 
     if (@$params['server_host_key'] && !is_string(@$params['server_host_key'])) {
-      throw new \Files\InvalidParameterException('$server_host_key must be of type string; received ' . gettype($server_host_key));
+      throw new \Files\InvalidParameterException('$server_host_key must be of type string; received ' . gettype(@$params['server_host_key']));
     }
 
     if (@$params['subdomain'] && !is_string(@$params['subdomain'])) {
-      throw new \Files\InvalidParameterException('$subdomain must be of type string; received ' . gettype($subdomain));
+      throw new \Files\InvalidParameterException('$subdomain must be of type string; received ' . gettype(@$params['subdomain']));
     }
 
     $response = Api::sendRequest('/remote_servers/' . @$params['id'] . '/configuration_file', 'POST', $params, $this->options);
@@ -754,211 +766,211 @@ class RemoteServer {
     }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
     }
 
     if (@$params['aws_access_key'] && !is_string(@$params['aws_access_key'])) {
-      throw new \Files\InvalidParameterException('$aws_access_key must be of type string; received ' . gettype($aws_access_key));
+      throw new \Files\InvalidParameterException('$aws_access_key must be of type string; received ' . gettype(@$params['aws_access_key']));
     }
 
     if (@$params['aws_secret_key'] && !is_string(@$params['aws_secret_key'])) {
-      throw new \Files\InvalidParameterException('$aws_secret_key must be of type string; received ' . gettype($aws_secret_key));
+      throw new \Files\InvalidParameterException('$aws_secret_key must be of type string; received ' . gettype(@$params['aws_secret_key']));
     }
 
     if (@$params['password'] && !is_string(@$params['password'])) {
-      throw new \Files\InvalidParameterException('$password must be of type string; received ' . gettype($password));
+      throw new \Files\InvalidParameterException('$password must be of type string; received ' . gettype(@$params['password']));
     }
 
     if (@$params['private_key'] && !is_string(@$params['private_key'])) {
-      throw new \Files\InvalidParameterException('$private_key must be of type string; received ' . gettype($private_key));
+      throw new \Files\InvalidParameterException('$private_key must be of type string; received ' . gettype(@$params['private_key']));
     }
 
     if (@$params['private_key_passphrase'] && !is_string(@$params['private_key_passphrase'])) {
-      throw new \Files\InvalidParameterException('$private_key_passphrase must be of type string; received ' . gettype($private_key_passphrase));
+      throw new \Files\InvalidParameterException('$private_key_passphrase must be of type string; received ' . gettype(@$params['private_key_passphrase']));
     }
 
     if (@$params['ssl_certificate'] && !is_string(@$params['ssl_certificate'])) {
-      throw new \Files\InvalidParameterException('$ssl_certificate must be of type string; received ' . gettype($ssl_certificate));
+      throw new \Files\InvalidParameterException('$ssl_certificate must be of type string; received ' . gettype(@$params['ssl_certificate']));
     }
 
     if (@$params['google_cloud_storage_credentials_json'] && !is_string(@$params['google_cloud_storage_credentials_json'])) {
-      throw new \Files\InvalidParameterException('$google_cloud_storage_credentials_json must be of type string; received ' . gettype($google_cloud_storage_credentials_json));
+      throw new \Files\InvalidParameterException('$google_cloud_storage_credentials_json must be of type string; received ' . gettype(@$params['google_cloud_storage_credentials_json']));
     }
 
     if (@$params['wasabi_access_key'] && !is_string(@$params['wasabi_access_key'])) {
-      throw new \Files\InvalidParameterException('$wasabi_access_key must be of type string; received ' . gettype($wasabi_access_key));
+      throw new \Files\InvalidParameterException('$wasabi_access_key must be of type string; received ' . gettype(@$params['wasabi_access_key']));
     }
 
     if (@$params['wasabi_secret_key'] && !is_string(@$params['wasabi_secret_key'])) {
-      throw new \Files\InvalidParameterException('$wasabi_secret_key must be of type string; received ' . gettype($wasabi_secret_key));
+      throw new \Files\InvalidParameterException('$wasabi_secret_key must be of type string; received ' . gettype(@$params['wasabi_secret_key']));
     }
 
     if (@$params['backblaze_b2_key_id'] && !is_string(@$params['backblaze_b2_key_id'])) {
-      throw new \Files\InvalidParameterException('$backblaze_b2_key_id must be of type string; received ' . gettype($backblaze_b2_key_id));
+      throw new \Files\InvalidParameterException('$backblaze_b2_key_id must be of type string; received ' . gettype(@$params['backblaze_b2_key_id']));
     }
 
     if (@$params['backblaze_b2_application_key'] && !is_string(@$params['backblaze_b2_application_key'])) {
-      throw new \Files\InvalidParameterException('$backblaze_b2_application_key must be of type string; received ' . gettype($backblaze_b2_application_key));
+      throw new \Files\InvalidParameterException('$backblaze_b2_application_key must be of type string; received ' . gettype(@$params['backblaze_b2_application_key']));
     }
 
     if (@$params['rackspace_api_key'] && !is_string(@$params['rackspace_api_key'])) {
-      throw new \Files\InvalidParameterException('$rackspace_api_key must be of type string; received ' . gettype($rackspace_api_key));
+      throw new \Files\InvalidParameterException('$rackspace_api_key must be of type string; received ' . gettype(@$params['rackspace_api_key']));
     }
 
     if (@$params['azure_blob_storage_access_key'] && !is_string(@$params['azure_blob_storage_access_key'])) {
-      throw new \Files\InvalidParameterException('$azure_blob_storage_access_key must be of type string; received ' . gettype($azure_blob_storage_access_key));
+      throw new \Files\InvalidParameterException('$azure_blob_storage_access_key must be of type string; received ' . gettype(@$params['azure_blob_storage_access_key']));
     }
 
     if (@$params['azure_files_storage_access_key'] && !is_string(@$params['azure_files_storage_access_key'])) {
-      throw new \Files\InvalidParameterException('$azure_files_storage_access_key must be of type string; received ' . gettype($azure_files_storage_access_key));
+      throw new \Files\InvalidParameterException('$azure_files_storage_access_key must be of type string; received ' . gettype(@$params['azure_files_storage_access_key']));
     }
 
     if (@$params['hostname'] && !is_string(@$params['hostname'])) {
-      throw new \Files\InvalidParameterException('$hostname must be of type string; received ' . gettype($hostname));
+      throw new \Files\InvalidParameterException('$hostname must be of type string; received ' . gettype(@$params['hostname']));
     }
 
     if (@$params['name'] && !is_string(@$params['name'])) {
-      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype($name));
+      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
     }
 
     if (@$params['max_connections'] && !is_int(@$params['max_connections'])) {
-      throw new \Files\InvalidParameterException('$max_connections must be of type int; received ' . gettype($max_connections));
+      throw new \Files\InvalidParameterException('$max_connections must be of type int; received ' . gettype(@$params['max_connections']));
     }
 
     if (@$params['port'] && !is_int(@$params['port'])) {
-      throw new \Files\InvalidParameterException('$port must be of type int; received ' . gettype($port));
+      throw new \Files\InvalidParameterException('$port must be of type int; received ' . gettype(@$params['port']));
     }
 
     if (@$params['s3_bucket'] && !is_string(@$params['s3_bucket'])) {
-      throw new \Files\InvalidParameterException('$s3_bucket must be of type string; received ' . gettype($s3_bucket));
+      throw new \Files\InvalidParameterException('$s3_bucket must be of type string; received ' . gettype(@$params['s3_bucket']));
     }
 
     if (@$params['s3_region'] && !is_string(@$params['s3_region'])) {
-      throw new \Files\InvalidParameterException('$s3_region must be of type string; received ' . gettype($s3_region));
+      throw new \Files\InvalidParameterException('$s3_region must be of type string; received ' . gettype(@$params['s3_region']));
     }
 
     if (@$params['server_certificate'] && !is_string(@$params['server_certificate'])) {
-      throw new \Files\InvalidParameterException('$server_certificate must be of type string; received ' . gettype($server_certificate));
+      throw new \Files\InvalidParameterException('$server_certificate must be of type string; received ' . gettype(@$params['server_certificate']));
     }
 
     if (@$params['server_host_key'] && !is_string(@$params['server_host_key'])) {
-      throw new \Files\InvalidParameterException('$server_host_key must be of type string; received ' . gettype($server_host_key));
+      throw new \Files\InvalidParameterException('$server_host_key must be of type string; received ' . gettype(@$params['server_host_key']));
     }
 
     if (@$params['server_type'] && !is_string(@$params['server_type'])) {
-      throw new \Files\InvalidParameterException('$server_type must be of type string; received ' . gettype($server_type));
+      throw new \Files\InvalidParameterException('$server_type must be of type string; received ' . gettype(@$params['server_type']));
     }
 
     if (@$params['ssl'] && !is_string(@$params['ssl'])) {
-      throw new \Files\InvalidParameterException('$ssl must be of type string; received ' . gettype($ssl));
+      throw new \Files\InvalidParameterException('$ssl must be of type string; received ' . gettype(@$params['ssl']));
     }
 
     if (@$params['username'] && !is_string(@$params['username'])) {
-      throw new \Files\InvalidParameterException('$username must be of type string; received ' . gettype($username));
+      throw new \Files\InvalidParameterException('$username must be of type string; received ' . gettype(@$params['username']));
     }
 
     if (@$params['google_cloud_storage_bucket'] && !is_string(@$params['google_cloud_storage_bucket'])) {
-      throw new \Files\InvalidParameterException('$google_cloud_storage_bucket must be of type string; received ' . gettype($google_cloud_storage_bucket));
+      throw new \Files\InvalidParameterException('$google_cloud_storage_bucket must be of type string; received ' . gettype(@$params['google_cloud_storage_bucket']));
     }
 
     if (@$params['google_cloud_storage_project_id'] && !is_string(@$params['google_cloud_storage_project_id'])) {
-      throw new \Files\InvalidParameterException('$google_cloud_storage_project_id must be of type string; received ' . gettype($google_cloud_storage_project_id));
+      throw new \Files\InvalidParameterException('$google_cloud_storage_project_id must be of type string; received ' . gettype(@$params['google_cloud_storage_project_id']));
     }
 
     if (@$params['backblaze_b2_bucket'] && !is_string(@$params['backblaze_b2_bucket'])) {
-      throw new \Files\InvalidParameterException('$backblaze_b2_bucket must be of type string; received ' . gettype($backblaze_b2_bucket));
+      throw new \Files\InvalidParameterException('$backblaze_b2_bucket must be of type string; received ' . gettype(@$params['backblaze_b2_bucket']));
     }
 
     if (@$params['backblaze_b2_s3_endpoint'] && !is_string(@$params['backblaze_b2_s3_endpoint'])) {
-      throw new \Files\InvalidParameterException('$backblaze_b2_s3_endpoint must be of type string; received ' . gettype($backblaze_b2_s3_endpoint));
+      throw new \Files\InvalidParameterException('$backblaze_b2_s3_endpoint must be of type string; received ' . gettype(@$params['backblaze_b2_s3_endpoint']));
     }
 
     if (@$params['wasabi_bucket'] && !is_string(@$params['wasabi_bucket'])) {
-      throw new \Files\InvalidParameterException('$wasabi_bucket must be of type string; received ' . gettype($wasabi_bucket));
+      throw new \Files\InvalidParameterException('$wasabi_bucket must be of type string; received ' . gettype(@$params['wasabi_bucket']));
     }
 
     if (@$params['wasabi_region'] && !is_string(@$params['wasabi_region'])) {
-      throw new \Files\InvalidParameterException('$wasabi_region must be of type string; received ' . gettype($wasabi_region));
+      throw new \Files\InvalidParameterException('$wasabi_region must be of type string; received ' . gettype(@$params['wasabi_region']));
     }
 
     if (@$params['rackspace_username'] && !is_string(@$params['rackspace_username'])) {
-      throw new \Files\InvalidParameterException('$rackspace_username must be of type string; received ' . gettype($rackspace_username));
+      throw new \Files\InvalidParameterException('$rackspace_username must be of type string; received ' . gettype(@$params['rackspace_username']));
     }
 
     if (@$params['rackspace_region'] && !is_string(@$params['rackspace_region'])) {
-      throw new \Files\InvalidParameterException('$rackspace_region must be of type string; received ' . gettype($rackspace_region));
+      throw new \Files\InvalidParameterException('$rackspace_region must be of type string; received ' . gettype(@$params['rackspace_region']));
     }
 
     if (@$params['rackspace_container'] && !is_string(@$params['rackspace_container'])) {
-      throw new \Files\InvalidParameterException('$rackspace_container must be of type string; received ' . gettype($rackspace_container));
+      throw new \Files\InvalidParameterException('$rackspace_container must be of type string; received ' . gettype(@$params['rackspace_container']));
     }
 
     if (@$params['one_drive_account_type'] && !is_string(@$params['one_drive_account_type'])) {
-      throw new \Files\InvalidParameterException('$one_drive_account_type must be of type string; received ' . gettype($one_drive_account_type));
+      throw new \Files\InvalidParameterException('$one_drive_account_type must be of type string; received ' . gettype(@$params['one_drive_account_type']));
     }
 
     if (@$params['azure_blob_storage_account'] && !is_string(@$params['azure_blob_storage_account'])) {
-      throw new \Files\InvalidParameterException('$azure_blob_storage_account must be of type string; received ' . gettype($azure_blob_storage_account));
+      throw new \Files\InvalidParameterException('$azure_blob_storage_account must be of type string; received ' . gettype(@$params['azure_blob_storage_account']));
     }
 
     if (@$params['azure_blob_storage_container'] && !is_string(@$params['azure_blob_storage_container'])) {
-      throw new \Files\InvalidParameterException('$azure_blob_storage_container must be of type string; received ' . gettype($azure_blob_storage_container));
+      throw new \Files\InvalidParameterException('$azure_blob_storage_container must be of type string; received ' . gettype(@$params['azure_blob_storage_container']));
     }
 
     if (@$params['azure_blob_storage_sas_token'] && !is_string(@$params['azure_blob_storage_sas_token'])) {
-      throw new \Files\InvalidParameterException('$azure_blob_storage_sas_token must be of type string; received ' . gettype($azure_blob_storage_sas_token));
+      throw new \Files\InvalidParameterException('$azure_blob_storage_sas_token must be of type string; received ' . gettype(@$params['azure_blob_storage_sas_token']));
     }
 
     if (@$params['azure_files_storage_account'] && !is_string(@$params['azure_files_storage_account'])) {
-      throw new \Files\InvalidParameterException('$azure_files_storage_account must be of type string; received ' . gettype($azure_files_storage_account));
+      throw new \Files\InvalidParameterException('$azure_files_storage_account must be of type string; received ' . gettype(@$params['azure_files_storage_account']));
     }
 
     if (@$params['azure_files_storage_share_name'] && !is_string(@$params['azure_files_storage_share_name'])) {
-      throw new \Files\InvalidParameterException('$azure_files_storage_share_name must be of type string; received ' . gettype($azure_files_storage_share_name));
+      throw new \Files\InvalidParameterException('$azure_files_storage_share_name must be of type string; received ' . gettype(@$params['azure_files_storage_share_name']));
     }
 
     if (@$params['azure_files_storage_sas_token'] && !is_string(@$params['azure_files_storage_sas_token'])) {
-      throw new \Files\InvalidParameterException('$azure_files_storage_sas_token must be of type string; received ' . gettype($azure_files_storage_sas_token));
+      throw new \Files\InvalidParameterException('$azure_files_storage_sas_token must be of type string; received ' . gettype(@$params['azure_files_storage_sas_token']));
     }
 
     if (@$params['s3_compatible_bucket'] && !is_string(@$params['s3_compatible_bucket'])) {
-      throw new \Files\InvalidParameterException('$s3_compatible_bucket must be of type string; received ' . gettype($s3_compatible_bucket));
+      throw new \Files\InvalidParameterException('$s3_compatible_bucket must be of type string; received ' . gettype(@$params['s3_compatible_bucket']));
     }
 
     if (@$params['s3_compatible_endpoint'] && !is_string(@$params['s3_compatible_endpoint'])) {
-      throw new \Files\InvalidParameterException('$s3_compatible_endpoint must be of type string; received ' . gettype($s3_compatible_endpoint));
+      throw new \Files\InvalidParameterException('$s3_compatible_endpoint must be of type string; received ' . gettype(@$params['s3_compatible_endpoint']));
     }
 
     if (@$params['s3_compatible_region'] && !is_string(@$params['s3_compatible_region'])) {
-      throw new \Files\InvalidParameterException('$s3_compatible_region must be of type string; received ' . gettype($s3_compatible_region));
+      throw new \Files\InvalidParameterException('$s3_compatible_region must be of type string; received ' . gettype(@$params['s3_compatible_region']));
     }
 
     if (@$params['s3_compatible_access_key'] && !is_string(@$params['s3_compatible_access_key'])) {
-      throw new \Files\InvalidParameterException('$s3_compatible_access_key must be of type string; received ' . gettype($s3_compatible_access_key));
+      throw new \Files\InvalidParameterException('$s3_compatible_access_key must be of type string; received ' . gettype(@$params['s3_compatible_access_key']));
     }
 
     if (@$params['s3_compatible_secret_key'] && !is_string(@$params['s3_compatible_secret_key'])) {
-      throw new \Files\InvalidParameterException('$s3_compatible_secret_key must be of type string; received ' . gettype($s3_compatible_secret_key));
+      throw new \Files\InvalidParameterException('$s3_compatible_secret_key must be of type string; received ' . gettype(@$params['s3_compatible_secret_key']));
     }
 
     if (@$params['files_agent_root'] && !is_string(@$params['files_agent_root'])) {
-      throw new \Files\InvalidParameterException('$files_agent_root must be of type string; received ' . gettype($files_agent_root));
+      throw new \Files\InvalidParameterException('$files_agent_root must be of type string; received ' . gettype(@$params['files_agent_root']));
     }
 
     if (@$params['files_agent_permission_set'] && !is_string(@$params['files_agent_permission_set'])) {
-      throw new \Files\InvalidParameterException('$files_agent_permission_set must be of type string; received ' . gettype($files_agent_permission_set));
+      throw new \Files\InvalidParameterException('$files_agent_permission_set must be of type string; received ' . gettype(@$params['files_agent_permission_set']));
     }
 
     if (@$params['filebase_access_key'] && !is_string(@$params['filebase_access_key'])) {
-      throw new \Files\InvalidParameterException('$filebase_access_key must be of type string; received ' . gettype($filebase_access_key));
+      throw new \Files\InvalidParameterException('$filebase_access_key must be of type string; received ' . gettype(@$params['filebase_access_key']));
     }
 
     if (@$params['filebase_secret_key'] && !is_string(@$params['filebase_secret_key'])) {
-      throw new \Files\InvalidParameterException('$filebase_secret_key must be of type string; received ' . gettype($filebase_secret_key));
+      throw new \Files\InvalidParameterException('$filebase_secret_key must be of type string; received ' . gettype(@$params['filebase_secret_key']));
     }
 
     if (@$params['filebase_bucket'] && !is_string(@$params['filebase_bucket'])) {
-      throw new \Files\InvalidParameterException('$filebase_bucket must be of type string; received ' . gettype($filebase_bucket));
+      throw new \Files\InvalidParameterException('$filebase_bucket must be of type string; received ' . gettype(@$params['filebase_bucket']));
     }
 
     $response = Api::sendRequest('/remote_servers/' . @$params['id'] . '', 'PATCH', $params, $this->options);
@@ -979,7 +991,7 @@ class RemoteServer {
     }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
     }
 
     $response = Api::sendRequest('/remote_servers/' . @$params['id'] . '', 'DELETE', $params, $this->options);
@@ -1000,16 +1012,17 @@ class RemoteServer {
       }
   }
 
+
   // Parameters:
   //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
   //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
-  public static function list($params = [], $options = []) {
+  public static function all($params = [], $options = []) {
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
+      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
     }
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
+      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
     }
 
     $response = Api::sendRequest('/remote_servers', 'GET', $params, $options);
@@ -1023,9 +1036,8 @@ class RemoteServer {
     return $return_array;
   }
 
-  public static function all($params = [], $options = []) {
-    return self::list($params, $options);
-  }
+
+  
 
   // Parameters:
   //   id (required) - int64 - Remote Server ID.
@@ -1041,7 +1053,7 @@ class RemoteServer {
     }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
     }
 
     $response = Api::sendRequest('/remote_servers/' . @$params['id'] . '', 'GET', $params, $options);
@@ -1049,9 +1061,11 @@ class RemoteServer {
     return new RemoteServer((array)(@$response->data ?: []), $options);
   }
 
+
   public static function get($id, $params = [], $options = []) {
     return self::find($id, $params, $options);
   }
+  
 
   // Parameters:
   //   id (required) - int64 - Remote Server ID.
@@ -1067,13 +1081,14 @@ class RemoteServer {
     }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
     }
 
     $response = Api::sendRequest('/remote_servers/' . @$params['id'] . '/configuration_file', 'GET', $params, $options);
 
     return new RemoteServerConfigurationFile((array)(@$response->data ?: []), $options);
   }
+
 
   // Parameters:
   //   aws_access_key - string - AWS Access Key.
@@ -1132,211 +1147,212 @@ class RemoteServer {
   //   filebase_bucket - string - Filebase Bucket name
   public static function create($params = [], $options = []) {
     if (@$params['aws_access_key'] && !is_string(@$params['aws_access_key'])) {
-      throw new \Files\InvalidParameterException('$aws_access_key must be of type string; received ' . gettype($aws_access_key));
+      throw new \Files\InvalidParameterException('$aws_access_key must be of type string; received ' . gettype(@$params['aws_access_key']));
     }
 
     if (@$params['aws_secret_key'] && !is_string(@$params['aws_secret_key'])) {
-      throw new \Files\InvalidParameterException('$aws_secret_key must be of type string; received ' . gettype($aws_secret_key));
+      throw new \Files\InvalidParameterException('$aws_secret_key must be of type string; received ' . gettype(@$params['aws_secret_key']));
     }
 
     if (@$params['password'] && !is_string(@$params['password'])) {
-      throw new \Files\InvalidParameterException('$password must be of type string; received ' . gettype($password));
+      throw new \Files\InvalidParameterException('$password must be of type string; received ' . gettype(@$params['password']));
     }
 
     if (@$params['private_key'] && !is_string(@$params['private_key'])) {
-      throw new \Files\InvalidParameterException('$private_key must be of type string; received ' . gettype($private_key));
+      throw new \Files\InvalidParameterException('$private_key must be of type string; received ' . gettype(@$params['private_key']));
     }
 
     if (@$params['private_key_passphrase'] && !is_string(@$params['private_key_passphrase'])) {
-      throw new \Files\InvalidParameterException('$private_key_passphrase must be of type string; received ' . gettype($private_key_passphrase));
+      throw new \Files\InvalidParameterException('$private_key_passphrase must be of type string; received ' . gettype(@$params['private_key_passphrase']));
     }
 
     if (@$params['ssl_certificate'] && !is_string(@$params['ssl_certificate'])) {
-      throw new \Files\InvalidParameterException('$ssl_certificate must be of type string; received ' . gettype($ssl_certificate));
+      throw new \Files\InvalidParameterException('$ssl_certificate must be of type string; received ' . gettype(@$params['ssl_certificate']));
     }
 
     if (@$params['google_cloud_storage_credentials_json'] && !is_string(@$params['google_cloud_storage_credentials_json'])) {
-      throw new \Files\InvalidParameterException('$google_cloud_storage_credentials_json must be of type string; received ' . gettype($google_cloud_storage_credentials_json));
+      throw new \Files\InvalidParameterException('$google_cloud_storage_credentials_json must be of type string; received ' . gettype(@$params['google_cloud_storage_credentials_json']));
     }
 
     if (@$params['wasabi_access_key'] && !is_string(@$params['wasabi_access_key'])) {
-      throw new \Files\InvalidParameterException('$wasabi_access_key must be of type string; received ' . gettype($wasabi_access_key));
+      throw new \Files\InvalidParameterException('$wasabi_access_key must be of type string; received ' . gettype(@$params['wasabi_access_key']));
     }
 
     if (@$params['wasabi_secret_key'] && !is_string(@$params['wasabi_secret_key'])) {
-      throw new \Files\InvalidParameterException('$wasabi_secret_key must be of type string; received ' . gettype($wasabi_secret_key));
+      throw new \Files\InvalidParameterException('$wasabi_secret_key must be of type string; received ' . gettype(@$params['wasabi_secret_key']));
     }
 
     if (@$params['backblaze_b2_key_id'] && !is_string(@$params['backblaze_b2_key_id'])) {
-      throw new \Files\InvalidParameterException('$backblaze_b2_key_id must be of type string; received ' . gettype($backblaze_b2_key_id));
+      throw new \Files\InvalidParameterException('$backblaze_b2_key_id must be of type string; received ' . gettype(@$params['backblaze_b2_key_id']));
     }
 
     if (@$params['backblaze_b2_application_key'] && !is_string(@$params['backblaze_b2_application_key'])) {
-      throw new \Files\InvalidParameterException('$backblaze_b2_application_key must be of type string; received ' . gettype($backblaze_b2_application_key));
+      throw new \Files\InvalidParameterException('$backblaze_b2_application_key must be of type string; received ' . gettype(@$params['backblaze_b2_application_key']));
     }
 
     if (@$params['rackspace_api_key'] && !is_string(@$params['rackspace_api_key'])) {
-      throw new \Files\InvalidParameterException('$rackspace_api_key must be of type string; received ' . gettype($rackspace_api_key));
+      throw new \Files\InvalidParameterException('$rackspace_api_key must be of type string; received ' . gettype(@$params['rackspace_api_key']));
     }
 
     if (@$params['azure_blob_storage_access_key'] && !is_string(@$params['azure_blob_storage_access_key'])) {
-      throw new \Files\InvalidParameterException('$azure_blob_storage_access_key must be of type string; received ' . gettype($azure_blob_storage_access_key));
+      throw new \Files\InvalidParameterException('$azure_blob_storage_access_key must be of type string; received ' . gettype(@$params['azure_blob_storage_access_key']));
     }
 
     if (@$params['azure_files_storage_access_key'] && !is_string(@$params['azure_files_storage_access_key'])) {
-      throw new \Files\InvalidParameterException('$azure_files_storage_access_key must be of type string; received ' . gettype($azure_files_storage_access_key));
+      throw new \Files\InvalidParameterException('$azure_files_storage_access_key must be of type string; received ' . gettype(@$params['azure_files_storage_access_key']));
     }
 
     if (@$params['hostname'] && !is_string(@$params['hostname'])) {
-      throw new \Files\InvalidParameterException('$hostname must be of type string; received ' . gettype($hostname));
+      throw new \Files\InvalidParameterException('$hostname must be of type string; received ' . gettype(@$params['hostname']));
     }
 
     if (@$params['name'] && !is_string(@$params['name'])) {
-      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype($name));
+      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
     }
 
     if (@$params['max_connections'] && !is_int(@$params['max_connections'])) {
-      throw new \Files\InvalidParameterException('$max_connections must be of type int; received ' . gettype($max_connections));
+      throw new \Files\InvalidParameterException('$max_connections must be of type int; received ' . gettype(@$params['max_connections']));
     }
 
     if (@$params['port'] && !is_int(@$params['port'])) {
-      throw new \Files\InvalidParameterException('$port must be of type int; received ' . gettype($port));
+      throw new \Files\InvalidParameterException('$port must be of type int; received ' . gettype(@$params['port']));
     }
 
     if (@$params['s3_bucket'] && !is_string(@$params['s3_bucket'])) {
-      throw new \Files\InvalidParameterException('$s3_bucket must be of type string; received ' . gettype($s3_bucket));
+      throw new \Files\InvalidParameterException('$s3_bucket must be of type string; received ' . gettype(@$params['s3_bucket']));
     }
 
     if (@$params['s3_region'] && !is_string(@$params['s3_region'])) {
-      throw new \Files\InvalidParameterException('$s3_region must be of type string; received ' . gettype($s3_region));
+      throw new \Files\InvalidParameterException('$s3_region must be of type string; received ' . gettype(@$params['s3_region']));
     }
 
     if (@$params['server_certificate'] && !is_string(@$params['server_certificate'])) {
-      throw new \Files\InvalidParameterException('$server_certificate must be of type string; received ' . gettype($server_certificate));
+      throw new \Files\InvalidParameterException('$server_certificate must be of type string; received ' . gettype(@$params['server_certificate']));
     }
 
     if (@$params['server_host_key'] && !is_string(@$params['server_host_key'])) {
-      throw new \Files\InvalidParameterException('$server_host_key must be of type string; received ' . gettype($server_host_key));
+      throw new \Files\InvalidParameterException('$server_host_key must be of type string; received ' . gettype(@$params['server_host_key']));
     }
 
     if (@$params['server_type'] && !is_string(@$params['server_type'])) {
-      throw new \Files\InvalidParameterException('$server_type must be of type string; received ' . gettype($server_type));
+      throw new \Files\InvalidParameterException('$server_type must be of type string; received ' . gettype(@$params['server_type']));
     }
 
     if (@$params['ssl'] && !is_string(@$params['ssl'])) {
-      throw new \Files\InvalidParameterException('$ssl must be of type string; received ' . gettype($ssl));
+      throw new \Files\InvalidParameterException('$ssl must be of type string; received ' . gettype(@$params['ssl']));
     }
 
     if (@$params['username'] && !is_string(@$params['username'])) {
-      throw new \Files\InvalidParameterException('$username must be of type string; received ' . gettype($username));
+      throw new \Files\InvalidParameterException('$username must be of type string; received ' . gettype(@$params['username']));
     }
 
     if (@$params['google_cloud_storage_bucket'] && !is_string(@$params['google_cloud_storage_bucket'])) {
-      throw new \Files\InvalidParameterException('$google_cloud_storage_bucket must be of type string; received ' . gettype($google_cloud_storage_bucket));
+      throw new \Files\InvalidParameterException('$google_cloud_storage_bucket must be of type string; received ' . gettype(@$params['google_cloud_storage_bucket']));
     }
 
     if (@$params['google_cloud_storage_project_id'] && !is_string(@$params['google_cloud_storage_project_id'])) {
-      throw new \Files\InvalidParameterException('$google_cloud_storage_project_id must be of type string; received ' . gettype($google_cloud_storage_project_id));
+      throw new \Files\InvalidParameterException('$google_cloud_storage_project_id must be of type string; received ' . gettype(@$params['google_cloud_storage_project_id']));
     }
 
     if (@$params['backblaze_b2_bucket'] && !is_string(@$params['backblaze_b2_bucket'])) {
-      throw new \Files\InvalidParameterException('$backblaze_b2_bucket must be of type string; received ' . gettype($backblaze_b2_bucket));
+      throw new \Files\InvalidParameterException('$backblaze_b2_bucket must be of type string; received ' . gettype(@$params['backblaze_b2_bucket']));
     }
 
     if (@$params['backblaze_b2_s3_endpoint'] && !is_string(@$params['backblaze_b2_s3_endpoint'])) {
-      throw new \Files\InvalidParameterException('$backblaze_b2_s3_endpoint must be of type string; received ' . gettype($backblaze_b2_s3_endpoint));
+      throw new \Files\InvalidParameterException('$backblaze_b2_s3_endpoint must be of type string; received ' . gettype(@$params['backblaze_b2_s3_endpoint']));
     }
 
     if (@$params['wasabi_bucket'] && !is_string(@$params['wasabi_bucket'])) {
-      throw new \Files\InvalidParameterException('$wasabi_bucket must be of type string; received ' . gettype($wasabi_bucket));
+      throw new \Files\InvalidParameterException('$wasabi_bucket must be of type string; received ' . gettype(@$params['wasabi_bucket']));
     }
 
     if (@$params['wasabi_region'] && !is_string(@$params['wasabi_region'])) {
-      throw new \Files\InvalidParameterException('$wasabi_region must be of type string; received ' . gettype($wasabi_region));
+      throw new \Files\InvalidParameterException('$wasabi_region must be of type string; received ' . gettype(@$params['wasabi_region']));
     }
 
     if (@$params['rackspace_username'] && !is_string(@$params['rackspace_username'])) {
-      throw new \Files\InvalidParameterException('$rackspace_username must be of type string; received ' . gettype($rackspace_username));
+      throw new \Files\InvalidParameterException('$rackspace_username must be of type string; received ' . gettype(@$params['rackspace_username']));
     }
 
     if (@$params['rackspace_region'] && !is_string(@$params['rackspace_region'])) {
-      throw new \Files\InvalidParameterException('$rackspace_region must be of type string; received ' . gettype($rackspace_region));
+      throw new \Files\InvalidParameterException('$rackspace_region must be of type string; received ' . gettype(@$params['rackspace_region']));
     }
 
     if (@$params['rackspace_container'] && !is_string(@$params['rackspace_container'])) {
-      throw new \Files\InvalidParameterException('$rackspace_container must be of type string; received ' . gettype($rackspace_container));
+      throw new \Files\InvalidParameterException('$rackspace_container must be of type string; received ' . gettype(@$params['rackspace_container']));
     }
 
     if (@$params['one_drive_account_type'] && !is_string(@$params['one_drive_account_type'])) {
-      throw new \Files\InvalidParameterException('$one_drive_account_type must be of type string; received ' . gettype($one_drive_account_type));
+      throw new \Files\InvalidParameterException('$one_drive_account_type must be of type string; received ' . gettype(@$params['one_drive_account_type']));
     }
 
     if (@$params['azure_blob_storage_account'] && !is_string(@$params['azure_blob_storage_account'])) {
-      throw new \Files\InvalidParameterException('$azure_blob_storage_account must be of type string; received ' . gettype($azure_blob_storage_account));
+      throw new \Files\InvalidParameterException('$azure_blob_storage_account must be of type string; received ' . gettype(@$params['azure_blob_storage_account']));
     }
 
     if (@$params['azure_blob_storage_container'] && !is_string(@$params['azure_blob_storage_container'])) {
-      throw new \Files\InvalidParameterException('$azure_blob_storage_container must be of type string; received ' . gettype($azure_blob_storage_container));
+      throw new \Files\InvalidParameterException('$azure_blob_storage_container must be of type string; received ' . gettype(@$params['azure_blob_storage_container']));
     }
 
     if (@$params['azure_blob_storage_sas_token'] && !is_string(@$params['azure_blob_storage_sas_token'])) {
-      throw new \Files\InvalidParameterException('$azure_blob_storage_sas_token must be of type string; received ' . gettype($azure_blob_storage_sas_token));
+      throw new \Files\InvalidParameterException('$azure_blob_storage_sas_token must be of type string; received ' . gettype(@$params['azure_blob_storage_sas_token']));
     }
 
     if (@$params['azure_files_storage_account'] && !is_string(@$params['azure_files_storage_account'])) {
-      throw new \Files\InvalidParameterException('$azure_files_storage_account must be of type string; received ' . gettype($azure_files_storage_account));
+      throw new \Files\InvalidParameterException('$azure_files_storage_account must be of type string; received ' . gettype(@$params['azure_files_storage_account']));
     }
 
     if (@$params['azure_files_storage_share_name'] && !is_string(@$params['azure_files_storage_share_name'])) {
-      throw new \Files\InvalidParameterException('$azure_files_storage_share_name must be of type string; received ' . gettype($azure_files_storage_share_name));
+      throw new \Files\InvalidParameterException('$azure_files_storage_share_name must be of type string; received ' . gettype(@$params['azure_files_storage_share_name']));
     }
 
     if (@$params['azure_files_storage_sas_token'] && !is_string(@$params['azure_files_storage_sas_token'])) {
-      throw new \Files\InvalidParameterException('$azure_files_storage_sas_token must be of type string; received ' . gettype($azure_files_storage_sas_token));
+      throw new \Files\InvalidParameterException('$azure_files_storage_sas_token must be of type string; received ' . gettype(@$params['azure_files_storage_sas_token']));
     }
 
     if (@$params['s3_compatible_bucket'] && !is_string(@$params['s3_compatible_bucket'])) {
-      throw new \Files\InvalidParameterException('$s3_compatible_bucket must be of type string; received ' . gettype($s3_compatible_bucket));
+      throw new \Files\InvalidParameterException('$s3_compatible_bucket must be of type string; received ' . gettype(@$params['s3_compatible_bucket']));
     }
 
     if (@$params['s3_compatible_endpoint'] && !is_string(@$params['s3_compatible_endpoint'])) {
-      throw new \Files\InvalidParameterException('$s3_compatible_endpoint must be of type string; received ' . gettype($s3_compatible_endpoint));
+      throw new \Files\InvalidParameterException('$s3_compatible_endpoint must be of type string; received ' . gettype(@$params['s3_compatible_endpoint']));
     }
 
     if (@$params['s3_compatible_region'] && !is_string(@$params['s3_compatible_region'])) {
-      throw new \Files\InvalidParameterException('$s3_compatible_region must be of type string; received ' . gettype($s3_compatible_region));
+      throw new \Files\InvalidParameterException('$s3_compatible_region must be of type string; received ' . gettype(@$params['s3_compatible_region']));
     }
 
     if (@$params['s3_compatible_access_key'] && !is_string(@$params['s3_compatible_access_key'])) {
-      throw new \Files\InvalidParameterException('$s3_compatible_access_key must be of type string; received ' . gettype($s3_compatible_access_key));
+      throw new \Files\InvalidParameterException('$s3_compatible_access_key must be of type string; received ' . gettype(@$params['s3_compatible_access_key']));
     }
 
     if (@$params['s3_compatible_secret_key'] && !is_string(@$params['s3_compatible_secret_key'])) {
-      throw new \Files\InvalidParameterException('$s3_compatible_secret_key must be of type string; received ' . gettype($s3_compatible_secret_key));
+      throw new \Files\InvalidParameterException('$s3_compatible_secret_key must be of type string; received ' . gettype(@$params['s3_compatible_secret_key']));
     }
 
     if (@$params['files_agent_root'] && !is_string(@$params['files_agent_root'])) {
-      throw new \Files\InvalidParameterException('$files_agent_root must be of type string; received ' . gettype($files_agent_root));
+      throw new \Files\InvalidParameterException('$files_agent_root must be of type string; received ' . gettype(@$params['files_agent_root']));
     }
 
     if (@$params['files_agent_permission_set'] && !is_string(@$params['files_agent_permission_set'])) {
-      throw new \Files\InvalidParameterException('$files_agent_permission_set must be of type string; received ' . gettype($files_agent_permission_set));
+      throw new \Files\InvalidParameterException('$files_agent_permission_set must be of type string; received ' . gettype(@$params['files_agent_permission_set']));
     }
 
     if (@$params['filebase_access_key'] && !is_string(@$params['filebase_access_key'])) {
-      throw new \Files\InvalidParameterException('$filebase_access_key must be of type string; received ' . gettype($filebase_access_key));
+      throw new \Files\InvalidParameterException('$filebase_access_key must be of type string; received ' . gettype(@$params['filebase_access_key']));
     }
 
     if (@$params['filebase_secret_key'] && !is_string(@$params['filebase_secret_key'])) {
-      throw new \Files\InvalidParameterException('$filebase_secret_key must be of type string; received ' . gettype($filebase_secret_key));
+      throw new \Files\InvalidParameterException('$filebase_secret_key must be of type string; received ' . gettype(@$params['filebase_secret_key']));
     }
 
     if (@$params['filebase_bucket'] && !is_string(@$params['filebase_bucket'])) {
-      throw new \Files\InvalidParameterException('$filebase_bucket must be of type string; received ' . gettype($filebase_bucket));
+      throw new \Files\InvalidParameterException('$filebase_bucket must be of type string; received ' . gettype(@$params['filebase_bucket']));
     }
 
     $response = Api::sendRequest('/remote_servers', 'POST', $params, $options);
 
     return new RemoteServer((array)(@$response->data ?: []), $options);
   }
+
 }

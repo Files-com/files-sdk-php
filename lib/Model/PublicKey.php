@@ -18,6 +18,9 @@ require_once __DIR__ . '/../Files.php';
 class PublicKey {
   private $attributes = [];
   private $options = [];
+  private static $static_mapped_functions = [
+    'list' => 'all',
+  ];
 
   function __construct($attributes = [], $options = []) {
     foreach ($attributes as $key => $value) {
@@ -33,6 +36,15 @@ class PublicKey {
 
   public function __get($name) {
     return @$this->attributes[$name];
+  }
+
+  public static function __callStatic($name, $arguments) {
+    if(in_array($name, array_keys(self::$static_mapped_functions))){
+      $method = self::$static_mapped_functions[$name];
+      if (method_exists(__CLASS__, $method)){ 
+        return @self::$method($arguments);
+      }
+    }
   }
 
   public function isLoaded() {
@@ -113,11 +125,11 @@ class PublicKey {
     }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
     }
 
     if (@$params['title'] && !is_string(@$params['title'])) {
-      throw new \Files\InvalidParameterException('$title must be of type string; received ' . gettype($title));
+      throw new \Files\InvalidParameterException('$title must be of type string; received ' . gettype(@$params['title']));
     }
 
     $response = Api::sendRequest('/public_keys/' . @$params['id'] . '', 'PATCH', $params, $this->options);
@@ -138,7 +150,7 @@ class PublicKey {
     }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
     }
 
     $response = Api::sendRequest('/public_keys/' . @$params['id'] . '', 'DELETE', $params, $this->options);
@@ -159,21 +171,22 @@ class PublicKey {
       }
   }
 
+
   // Parameters:
   //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
   //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
   //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
-  public static function list($params = [], $options = []) {
+  public static function all($params = [], $options = []) {
     if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype($user_id));
+      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
     }
 
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
+      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
     }
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
+      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
     }
 
     $response = Api::sendRequest('/public_keys', 'GET', $params, $options);
@@ -187,9 +200,8 @@ class PublicKey {
     return $return_array;
   }
 
-  public static function all($params = [], $options = []) {
-    return self::list($params, $options);
-  }
+
+  
 
   // Parameters:
   //   id (required) - int64 - Public Key ID.
@@ -205,7 +217,7 @@ class PublicKey {
     }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
     }
 
     $response = Api::sendRequest('/public_keys/' . @$params['id'] . '', 'GET', $params, $options);
@@ -213,9 +225,11 @@ class PublicKey {
     return new PublicKey((array)(@$response->data ?: []), $options);
   }
 
+
   public static function get($id, $params = [], $options = []) {
     return self::find($id, $params, $options);
   }
+  
 
   // Parameters:
   //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
@@ -231,19 +245,20 @@ class PublicKey {
     }
 
     if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype($user_id));
+      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
     }
 
     if (@$params['title'] && !is_string(@$params['title'])) {
-      throw new \Files\InvalidParameterException('$title must be of type string; received ' . gettype($title));
+      throw new \Files\InvalidParameterException('$title must be of type string; received ' . gettype(@$params['title']));
     }
 
     if (@$params['public_key'] && !is_string(@$params['public_key'])) {
-      throw new \Files\InvalidParameterException('$public_key must be of type string; received ' . gettype($public_key));
+      throw new \Files\InvalidParameterException('$public_key must be of type string; received ' . gettype(@$params['public_key']));
     }
 
     $response = Api::sendRequest('/public_keys', 'POST', $params, $options);
 
     return new PublicKey((array)(@$response->data ?: []), $options);
   }
+
 }

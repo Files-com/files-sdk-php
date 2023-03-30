@@ -75,7 +75,7 @@ $message_comment->create(, [
 ## Update Message Comment
 
 ```
-$message_comment = current(\Files\Model\MessageComment::list());
+$message_comment = current(\Files\Model\MessageComment::all());
 
 $message_comment->update([
   'body' => "body",
@@ -104,7 +104,7 @@ $message_comment->update([
 ## Delete Message Comment
 
 ```
-$message_comment = current(\Files\Model\MessageComment::list());
+$message_comment = current(\Files\Model\MessageComment::all());
 
 $message_comment->delete();
 ```

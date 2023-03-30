@@ -18,6 +18,9 @@ require_once __DIR__ . '/../Files.php';
 class BundleDownload {
   private $attributes = [];
   private $options = [];
+  private static $static_mapped_functions = [
+    'list' => 'all',
+  ];
 
   function __construct($attributes = [], $options = []) {
     foreach ($attributes as $key => $value) {
@@ -33,6 +36,15 @@ class BundleDownload {
 
   public function __get($name) {
     return @$this->attributes[$name];
+  }
+
+  public static function __callStatic($name, $arguments) {
+    if(in_array($name, array_keys(self::$static_mapped_functions))){
+      $method = self::$static_mapped_functions[$name];
+      if (method_exists(__CLASS__, $method)){ 
+        return @self::$method($arguments);
+      }
+    }
   }
 
   public function isLoaded() {
@@ -70,21 +82,21 @@ class BundleDownload {
   //   filter_lteq - object - If set, return records where the specified field is less than or equal the supplied value. Valid fields are `created_at`.
   //   bundle_id - int64 - Bundle ID
   //   bundle_registration_id - int64 - BundleRegistration ID
-  public static function list($params = [], $options = []) {
+  public static function all($params = [], $options = []) {
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
+      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
     }
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
+      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
     }
 
     if (@$params['bundle_id'] && !is_int(@$params['bundle_id'])) {
-      throw new \Files\InvalidParameterException('$bundle_id must be of type int; received ' . gettype($bundle_id));
+      throw new \Files\InvalidParameterException('$bundle_id must be of type int; received ' . gettype(@$params['bundle_id']));
     }
 
     if (@$params['bundle_registration_id'] && !is_int(@$params['bundle_registration_id'])) {
-      throw new \Files\InvalidParameterException('$bundle_registration_id must be of type int; received ' . gettype($bundle_registration_id));
+      throw new \Files\InvalidParameterException('$bundle_registration_id must be of type int; received ' . gettype(@$params['bundle_registration_id']));
     }
 
     $response = Api::sendRequest('/bundle_downloads', 'GET', $params, $options);
@@ -98,7 +110,6 @@ class BundleDownload {
     return $return_array;
   }
 
-  public static function all($params = [], $options = []) {
-    return self::list($params, $options);
-  }
+
+  
 }

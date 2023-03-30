@@ -18,6 +18,9 @@ require_once __DIR__ . '/../Files.php';
 class BundleNotification {
   private $attributes = [];
   private $options = [];
+  private static $static_mapped_functions = [
+    'list' => 'all',
+  ];
 
   function __construct($attributes = [], $options = []) {
     foreach ($attributes as $key => $value) {
@@ -33,6 +36,15 @@ class BundleNotification {
 
   public function __get($name) {
     return @$this->attributes[$name];
+  }
+
+  public static function __callStatic($name, $arguments) {
+    if(in_array($name, array_keys(self::$static_mapped_functions))){
+      $method = self::$static_mapped_functions[$name];
+      if (method_exists(__CLASS__, $method)){ 
+        return @self::$method($arguments);
+      }
+    }
   }
 
   public function isLoaded() {
@@ -101,7 +113,7 @@ class BundleNotification {
     }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
     }
 
     $response = Api::sendRequest('/bundle_notifications/' . @$params['id'] . '', 'PATCH', $params, $this->options);
@@ -122,7 +134,7 @@ class BundleNotification {
     }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
     }
 
     $response = Api::sendRequest('/bundle_notifications/' . @$params['id'] . '', 'DELETE', $params, $this->options);
@@ -143,6 +155,7 @@ class BundleNotification {
       }
   }
 
+
   // Parameters:
   //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
   //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
@@ -150,21 +163,21 @@ class BundleNotification {
   //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction (e.g. `sort_by[bundle_id]=desc`). Valid fields are `bundle_id`.
   //   bundle_id - string - If set, return records where the specified field is equal to the supplied value.
   //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `bundle_id`.
-  public static function list($params = [], $options = []) {
+  public static function all($params = [], $options = []) {
     if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype($user_id));
+      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
     }
 
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
+      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
     }
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
+      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
     }
 
     if (@$params['bundle_id'] && !is_string(@$params['bundle_id'])) {
-      throw new \Files\InvalidParameterException('$bundle_id must be of type string; received ' . gettype($bundle_id));
+      throw new \Files\InvalidParameterException('$bundle_id must be of type string; received ' . gettype(@$params['bundle_id']));
     }
 
     $response = Api::sendRequest('/bundle_notifications', 'GET', $params, $options);
@@ -178,9 +191,8 @@ class BundleNotification {
     return $return_array;
   }
 
-  public static function all($params = [], $options = []) {
-    return self::list($params, $options);
-  }
+
+  
 
   // Parameters:
   //   id (required) - int64 - Bundle Notification ID.
@@ -196,7 +208,7 @@ class BundleNotification {
     }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
     }
 
     $response = Api::sendRequest('/bundle_notifications/' . @$params['id'] . '', 'GET', $params, $options);
@@ -204,9 +216,11 @@ class BundleNotification {
     return new BundleNotification((array)(@$response->data ?: []), $options);
   }
 
+
   public static function get($id, $params = [], $options = []) {
     return self::find($id, $params, $options);
   }
+  
 
   // Parameters:
   //   user_id - int64 - The id of the user to notify.
@@ -219,15 +233,16 @@ class BundleNotification {
     }
 
     if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype($user_id));
+      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
     }
 
     if (@$params['bundle_id'] && !is_int(@$params['bundle_id'])) {
-      throw new \Files\InvalidParameterException('$bundle_id must be of type int; received ' . gettype($bundle_id));
+      throw new \Files\InvalidParameterException('$bundle_id must be of type int; received ' . gettype(@$params['bundle_id']));
     }
 
     $response = Api::sendRequest('/bundle_notifications', 'POST', $params, $options);
 
     return new BundleNotification((array)(@$response->data ?: []), $options);
   }
+
 }

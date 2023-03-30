@@ -71,7 +71,7 @@ $message_comment_reaction->create(, [
 ## Delete Message Comment Reaction
 
 ```
-$message_comment_reaction = current(\Files\Model\MessageCommentReaction::list());
+$message_comment_reaction = current(\Files\Model\MessageCommentReaction::all());
 
 $message_comment_reaction->delete();
 ```

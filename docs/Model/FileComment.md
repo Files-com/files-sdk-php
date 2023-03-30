@@ -58,7 +58,7 @@ $file_comment->create(, [
 ## Update File Comment
 
 ```
-$file_comment = current(\Files\Model\FileComment::list());
+$file_comment = current(\Files\Model\FileComment::all());
 
 $file_comment->update([
   'body' => "body",
@@ -87,7 +87,7 @@ $file_comment->update([
 ## Delete File Comment
 
 ```
-$file_comment = current(\Files\Model\FileComment::list());
+$file_comment = current(\Files\Model\FileComment::all());
 
 $file_comment->delete();
 ```

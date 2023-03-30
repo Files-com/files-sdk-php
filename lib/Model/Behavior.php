@@ -18,6 +18,9 @@ require_once __DIR__ . '/../Files.php';
 class Behavior {
   private $attributes = [];
   private $options = [];
+  private static $static_mapped_functions = [
+    'list' => 'all',
+  ];
 
   function __construct($attributes = [], $options = []) {
     foreach ($attributes as $key => $value) {
@@ -33,6 +36,15 @@ class Behavior {
 
   public function __get($name) {
     return @$this->attributes[$name];
+  }
+
+  public static function __callStatic($name, $arguments) {
+    if(in_array($name, array_keys(self::$static_mapped_functions))){
+      $method = self::$static_mapped_functions[$name];
+      if (method_exists(__CLASS__, $method)){ 
+        return @self::$method($arguments);
+      }
+    }
   }
 
   public function isLoaded() {
@@ -142,27 +154,27 @@ class Behavior {
     }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
     }
 
     if (@$params['value'] && !is_string(@$params['value'])) {
-      throw new \Files\InvalidParameterException('$value must be of type string; received ' . gettype($value));
+      throw new \Files\InvalidParameterException('$value must be of type string; received ' . gettype(@$params['value']));
     }
 
     if (@$params['name'] && !is_string(@$params['name'])) {
-      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype($name));
+      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
     }
 
     if (@$params['description'] && !is_string(@$params['description'])) {
-      throw new \Files\InvalidParameterException('$description must be of type string; received ' . gettype($description));
+      throw new \Files\InvalidParameterException('$description must be of type string; received ' . gettype(@$params['description']));
     }
 
     if (@$params['behavior'] && !is_string(@$params['behavior'])) {
-      throw new \Files\InvalidParameterException('$behavior must be of type string; received ' . gettype($behavior));
+      throw new \Files\InvalidParameterException('$behavior must be of type string; received ' . gettype(@$params['behavior']));
     }
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
     }
 
     $response = Api::sendRequest('/behaviors/' . @$params['id'] . '', 'PATCH', $params, $this->options);
@@ -183,7 +195,7 @@ class Behavior {
     }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
     }
 
     $response = Api::sendRequest('/behaviors/' . @$params['id'] . '', 'DELETE', $params, $this->options);
@@ -204,6 +216,7 @@ class Behavior {
       }
   }
 
+
   // Parameters:
   //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
   //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
@@ -211,17 +224,17 @@ class Behavior {
   //   behavior - string - If set, return records where the specified field is equal to the supplied value.
   //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `behavior`.
   //   filter_prefix - object - If set, return records where the specified field is prefixed by the supplied value. Valid fields are `behavior`.
-  public static function list($params = [], $options = []) {
+  public static function all($params = [], $options = []) {
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
+      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
     }
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
+      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
     }
 
     if (@$params['behavior'] && !is_string(@$params['behavior'])) {
-      throw new \Files\InvalidParameterException('$behavior must be of type string; received ' . gettype($behavior));
+      throw new \Files\InvalidParameterException('$behavior must be of type string; received ' . gettype(@$params['behavior']));
     }
 
     $response = Api::sendRequest('/behaviors', 'GET', $params, $options);
@@ -235,9 +248,8 @@ class Behavior {
     return $return_array;
   }
 
-  public static function all($params = [], $options = []) {
-    return self::list($params, $options);
-  }
+
+  
 
   // Parameters:
   //   id (required) - int64 - Behavior ID.
@@ -253,7 +265,7 @@ class Behavior {
     }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
     }
 
     $response = Api::sendRequest('/behaviors/' . @$params['id'] . '', 'GET', $params, $options);
@@ -261,9 +273,11 @@ class Behavior {
     return new Behavior((array)(@$response->data ?: []), $options);
   }
 
+
   public static function get($id, $params = [], $options = []) {
     return self::find($id, $params, $options);
   }
+  
 
   // Parameters:
   //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
@@ -286,23 +300,23 @@ class Behavior {
     }
 
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
+      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
     }
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
+      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
     }
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
     }
 
     if (@$params['recursive'] && !is_string(@$params['recursive'])) {
-      throw new \Files\InvalidParameterException('$recursive must be of type string; received ' . gettype($recursive));
+      throw new \Files\InvalidParameterException('$recursive must be of type string; received ' . gettype(@$params['recursive']));
     }
 
     if (@$params['behavior'] && !is_string(@$params['behavior'])) {
-      throw new \Files\InvalidParameterException('$behavior must be of type string; received ' . gettype($behavior));
+      throw new \Files\InvalidParameterException('$behavior must be of type string; received ' . gettype(@$params['behavior']));
     }
 
     $response = Api::sendRequest('/behaviors/folders/' . @$params['path'] . '', 'GET', $params, $options);
@@ -315,6 +329,7 @@ class Behavior {
 
     return $return_array;
   }
+
 
   // Parameters:
   //   value - string - The value of the folder behavior.  Can be a integer, array, or hash depending on the type of folder behavior. See The Behavior Types section for example values for each type of behavior.
@@ -333,29 +348,30 @@ class Behavior {
     }
 
     if (@$params['value'] && !is_string(@$params['value'])) {
-      throw new \Files\InvalidParameterException('$value must be of type string; received ' . gettype($value));
+      throw new \Files\InvalidParameterException('$value must be of type string; received ' . gettype(@$params['value']));
     }
 
     if (@$params['name'] && !is_string(@$params['name'])) {
-      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype($name));
+      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
     }
 
     if (@$params['description'] && !is_string(@$params['description'])) {
-      throw new \Files\InvalidParameterException('$description must be of type string; received ' . gettype($description));
+      throw new \Files\InvalidParameterException('$description must be of type string; received ' . gettype(@$params['description']));
     }
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
     }
 
     if (@$params['behavior'] && !is_string(@$params['behavior'])) {
-      throw new \Files\InvalidParameterException('$behavior must be of type string; received ' . gettype($behavior));
+      throw new \Files\InvalidParameterException('$behavior must be of type string; received ' . gettype(@$params['behavior']));
     }
 
     $response = Api::sendRequest('/behaviors', 'POST', $params, $options);
 
     return new Behavior((array)(@$response->data ?: []), $options);
   }
+
 
   // Parameters:
   //   url (required) - string - URL for testing the webhook.
@@ -370,23 +386,24 @@ class Behavior {
     }
 
     if (@$params['url'] && !is_string(@$params['url'])) {
-      throw new \Files\InvalidParameterException('$url must be of type string; received ' . gettype($url));
+      throw new \Files\InvalidParameterException('$url must be of type string; received ' . gettype(@$params['url']));
     }
 
     if (@$params['method'] && !is_string(@$params['method'])) {
-      throw new \Files\InvalidParameterException('$method must be of type string; received ' . gettype($method));
+      throw new \Files\InvalidParameterException('$method must be of type string; received ' . gettype(@$params['method']));
     }
 
     if (@$params['encoding'] && !is_string(@$params['encoding'])) {
-      throw new \Files\InvalidParameterException('$encoding must be of type string; received ' . gettype($encoding));
+      throw new \Files\InvalidParameterException('$encoding must be of type string; received ' . gettype(@$params['encoding']));
     }
 
     if (@$params['action'] && !is_string(@$params['action'])) {
-      throw new \Files\InvalidParameterException('$action must be of type string; received ' . gettype($action));
+      throw new \Files\InvalidParameterException('$action must be of type string; received ' . gettype(@$params['action']));
     }
 
     $response = Api::sendRequest('/behaviors/webhook/test', 'POST', $params, $options);
 
     return $response->data;
   }
+
 }

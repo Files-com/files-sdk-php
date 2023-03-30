@@ -18,6 +18,9 @@ require_once __DIR__ . '/../Files.php';
 class File {
   private $attributes = [];
   private $options = [];
+  private static $static_mapped_functions = [
+    'list' => 'all',
+  ];
 
   function __construct($attributes = [], $options = []) {
     foreach ($attributes as $key => $value) {
@@ -33,6 +36,15 @@ class File {
 
   public function __get($name) {
     return @$this->attributes[$name];
+  }
+
+  public static function __callStatic($name, $arguments) {
+    if(in_array($name, array_keys(self::$static_mapped_functions))){
+      $method = self::$static_mapped_functions[$name];
+      if (method_exists(__CLASS__, $method)){ 
+        return @self::$method($arguments);
+      }
+    }
   }
 
   public function isLoaded() {
@@ -542,15 +554,15 @@ class File {
     }
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
     }
 
     if (@$params['action'] && !is_string(@$params['action'])) {
-      throw new \Files\InvalidParameterException('$action must be of type string; received ' . gettype($action));
+      throw new \Files\InvalidParameterException('$action must be of type string; received ' . gettype(@$params['action']));
     }
 
     if (@$params['preview_size'] && !is_string(@$params['preview_size'])) {
-      throw new \Files\InvalidParameterException('$preview_size must be of type string; received ' . gettype($preview_size));
+      throw new \Files\InvalidParameterException('$preview_size must be of type string; received ' . gettype(@$params['preview_size']));
     }
 
     $response = Api::sendRequest('/files/' . @$params['path'] . '', 'GET', $params, $this->options);
@@ -574,15 +586,15 @@ class File {
     }
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
     }
 
     if (@$params['provided_mtime'] && !is_string(@$params['provided_mtime'])) {
-      throw new \Files\InvalidParameterException('$provided_mtime must be of type string; received ' . gettype($provided_mtime));
+      throw new \Files\InvalidParameterException('$provided_mtime must be of type string; received ' . gettype(@$params['provided_mtime']));
     }
 
     if (@$params['priority_color'] && !is_string(@$params['priority_color'])) {
-      throw new \Files\InvalidParameterException('$priority_color must be of type string; received ' . gettype($priority_color));
+      throw new \Files\InvalidParameterException('$priority_color must be of type string; received ' . gettype(@$params['priority_color']));
     }
 
     $response = Api::sendRequest('/files/' . @$params['path'] . '', 'PATCH', $params, $this->options);
@@ -605,7 +617,7 @@ class File {
     }
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
     }
 
     $response = Api::sendRequest('/files/' . @$params['path'] . '', 'DELETE', $params, $this->options);
@@ -643,11 +655,11 @@ class File {
     }
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
     }
 
     if (@$params['destination'] && !is_string(@$params['destination'])) {
-      throw new \Files\InvalidParameterException('$destination must be of type string; received ' . gettype($destination));
+      throw new \Files\InvalidParameterException('$destination must be of type string; received ' . gettype(@$params['destination']));
     }
 
     $response = Api::sendRequest('/file_actions/copy/' . @$params['path'] . '', 'POST', $params, $this->options);
@@ -680,11 +692,11 @@ class File {
     }
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
     }
 
     if (@$params['destination'] && !is_string(@$params['destination'])) {
-      throw new \Files\InvalidParameterException('$destination must be of type string; received ' . gettype($destination));
+      throw new \Files\InvalidParameterException('$destination must be of type string; received ' . gettype(@$params['destination']));
     }
 
     $response = Api::sendRequest('/file_actions/move/' . @$params['path'] . '', 'POST', $params, $this->options);
@@ -715,27 +727,27 @@ class File {
     }
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
     }
 
     if (@$params['part'] && !is_int(@$params['part'])) {
-      throw new \Files\InvalidParameterException('$part must be of type int; received ' . gettype($part));
+      throw new \Files\InvalidParameterException('$part must be of type int; received ' . gettype(@$params['part']));
     }
 
     if (@$params['parts'] && !is_int(@$params['parts'])) {
-      throw new \Files\InvalidParameterException('$parts must be of type int; received ' . gettype($parts));
+      throw new \Files\InvalidParameterException('$parts must be of type int; received ' . gettype(@$params['parts']));
     }
 
     if (@$params['ref'] && !is_string(@$params['ref'])) {
-      throw new \Files\InvalidParameterException('$ref must be of type string; received ' . gettype($ref));
+      throw new \Files\InvalidParameterException('$ref must be of type string; received ' . gettype(@$params['ref']));
     }
 
     if (@$params['restart'] && !is_int(@$params['restart'])) {
-      throw new \Files\InvalidParameterException('$restart must be of type int; received ' . gettype($restart));
+      throw new \Files\InvalidParameterException('$restart must be of type int; received ' . gettype(@$params['restart']));
     }
 
     if (@$params['size'] && !is_int(@$params['size'])) {
-      throw new \Files\InvalidParameterException('$size must be of type int; received ' . gettype($size));
+      throw new \Files\InvalidParameterException('$size must be of type int; received ' . gettype(@$params['size']));
     }
 
     $response = Api::sendRequest('/file_actions/begin_upload/' . @$params['path'] . '', 'POST', $params, $this->options);
@@ -747,6 +759,7 @@ class File {
       $this->attributes = $new_obj->attributes;
       return true;
   }
+
 
   // Parameters:
   //   path (required) - string - Path to operate on.
@@ -775,49 +788,50 @@ class File {
     }
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
     }
 
     if (@$params['action'] && !is_string(@$params['action'])) {
-      throw new \Files\InvalidParameterException('$action must be of type string; received ' . gettype($action));
+      throw new \Files\InvalidParameterException('$action must be of type string; received ' . gettype(@$params['action']));
     }
 
     if (@$params['length'] && !is_int(@$params['length'])) {
-      throw new \Files\InvalidParameterException('$length must be of type int; received ' . gettype($length));
+      throw new \Files\InvalidParameterException('$length must be of type int; received ' . gettype(@$params['length']));
     }
 
     if (@$params['part'] && !is_int(@$params['part'])) {
-      throw new \Files\InvalidParameterException('$part must be of type int; received ' . gettype($part));
+      throw new \Files\InvalidParameterException('$part must be of type int; received ' . gettype(@$params['part']));
     }
 
     if (@$params['parts'] && !is_int(@$params['parts'])) {
-      throw new \Files\InvalidParameterException('$parts must be of type int; received ' . gettype($parts));
+      throw new \Files\InvalidParameterException('$parts must be of type int; received ' . gettype(@$params['parts']));
     }
 
     if (@$params['provided_mtime'] && !is_string(@$params['provided_mtime'])) {
-      throw new \Files\InvalidParameterException('$provided_mtime must be of type string; received ' . gettype($provided_mtime));
+      throw new \Files\InvalidParameterException('$provided_mtime must be of type string; received ' . gettype(@$params['provided_mtime']));
     }
 
     if (@$params['ref'] && !is_string(@$params['ref'])) {
-      throw new \Files\InvalidParameterException('$ref must be of type string; received ' . gettype($ref));
+      throw new \Files\InvalidParameterException('$ref must be of type string; received ' . gettype(@$params['ref']));
     }
 
     if (@$params['restart'] && !is_int(@$params['restart'])) {
-      throw new \Files\InvalidParameterException('$restart must be of type int; received ' . gettype($restart));
+      throw new \Files\InvalidParameterException('$restart must be of type int; received ' . gettype(@$params['restart']));
     }
 
     if (@$params['size'] && !is_int(@$params['size'])) {
-      throw new \Files\InvalidParameterException('$size must be of type int; received ' . gettype($size));
+      throw new \Files\InvalidParameterException('$size must be of type int; received ' . gettype(@$params['size']));
     }
 
     if (@$params['structure'] && !is_string(@$params['structure'])) {
-      throw new \Files\InvalidParameterException('$structure must be of type string; received ' . gettype($structure));
+      throw new \Files\InvalidParameterException('$structure must be of type string; received ' . gettype(@$params['structure']));
     }
 
     $response = Api::sendRequest('/files/' . @$params['path'] . '', 'POST', $params, $options);
 
     return new File((array)(@$response->data ?: []), $options);
   }
+
 
   // Parameters:
   //   path (required) - string - Path to operate on.
@@ -836,11 +850,11 @@ class File {
     }
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
     }
 
     if (@$params['preview_size'] && !is_string(@$params['preview_size'])) {
-      throw new \Files\InvalidParameterException('$preview_size must be of type string; received ' . gettype($preview_size));
+      throw new \Files\InvalidParameterException('$preview_size must be of type string; received ' . gettype(@$params['preview_size']));
     }
 
     $response = Api::sendRequest('/file_actions/metadata/' . @$params['path'] . '', 'GET', $params, $options);
@@ -848,7 +862,9 @@ class File {
     return new File((array)(@$response->data ?: []), $options);
   }
 
+
   public static function get($path, $params = [], $options = []) {
     return self::find($path, $params, $options);
   }
+  
 }

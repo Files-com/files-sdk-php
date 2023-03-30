@@ -18,6 +18,9 @@ require_once __DIR__ . '/../Files.php';
 class Automation {
   private $attributes = [];
   private $options = [];
+  private static $static_mapped_functions = [
+    'list' => 'all',
+  ];
 
   function __construct($attributes = [], $options = []) {
     foreach ($attributes as $key => $value) {
@@ -33,6 +36,15 @@ class Automation {
 
   public function __get($name) {
     return @$this->attributes[$name];
+  }
+
+  public static function __callStatic($name, $arguments) {
+    if(in_array($name, array_keys(self::$static_mapped_functions))){
+      $method = self::$static_mapped_functions[$name];
+      if (method_exists(__CLASS__, $method)){ 
+        return @self::$method($arguments);
+      }
+    }
   }
 
   public function isLoaded() {
@@ -289,71 +301,71 @@ class Automation {
     }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
     }
 
     if (@$params['source'] && !is_string(@$params['source'])) {
-      throw new \Files\InvalidParameterException('$source must be of type string; received ' . gettype($source));
+      throw new \Files\InvalidParameterException('$source must be of type string; received ' . gettype(@$params['source']));
     }
 
     if (@$params['destination'] && !is_string(@$params['destination'])) {
-      throw new \Files\InvalidParameterException('$destination must be of type string; received ' . gettype($destination));
+      throw new \Files\InvalidParameterException('$destination must be of type string; received ' . gettype(@$params['destination']));
     }
 
     if (@$params['destinations'] && !is_array(@$params['destinations'])) {
-      throw new \Files\InvalidParameterException('$destinations must be of type array; received ' . gettype($destinations));
+      throw new \Files\InvalidParameterException('$destinations must be of type array; received ' . gettype(@$params['destinations']));
     }
 
     if (@$params['destination_replace_from'] && !is_string(@$params['destination_replace_from'])) {
-      throw new \Files\InvalidParameterException('$destination_replace_from must be of type string; received ' . gettype($destination_replace_from));
+      throw new \Files\InvalidParameterException('$destination_replace_from must be of type string; received ' . gettype(@$params['destination_replace_from']));
     }
 
     if (@$params['destination_replace_to'] && !is_string(@$params['destination_replace_to'])) {
-      throw new \Files\InvalidParameterException('$destination_replace_to must be of type string; received ' . gettype($destination_replace_to));
+      throw new \Files\InvalidParameterException('$destination_replace_to must be of type string; received ' . gettype(@$params['destination_replace_to']));
     }
 
     if (@$params['interval'] && !is_string(@$params['interval'])) {
-      throw new \Files\InvalidParameterException('$interval must be of type string; received ' . gettype($interval));
+      throw new \Files\InvalidParameterException('$interval must be of type string; received ' . gettype(@$params['interval']));
     }
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
     }
 
     if (@$params['sync_ids'] && !is_string(@$params['sync_ids'])) {
-      throw new \Files\InvalidParameterException('$sync_ids must be of type string; received ' . gettype($sync_ids));
+      throw new \Files\InvalidParameterException('$sync_ids must be of type string; received ' . gettype(@$params['sync_ids']));
     }
 
     if (@$params['user_ids'] && !is_string(@$params['user_ids'])) {
-      throw new \Files\InvalidParameterException('$user_ids must be of type string; received ' . gettype($user_ids));
+      throw new \Files\InvalidParameterException('$user_ids must be of type string; received ' . gettype(@$params['user_ids']));
     }
 
     if (@$params['group_ids'] && !is_string(@$params['group_ids'])) {
-      throw new \Files\InvalidParameterException('$group_ids must be of type string; received ' . gettype($group_ids));
+      throw new \Files\InvalidParameterException('$group_ids must be of type string; received ' . gettype(@$params['group_ids']));
     }
 
     if (@$params['description'] && !is_string(@$params['description'])) {
-      throw new \Files\InvalidParameterException('$description must be of type string; received ' . gettype($description));
+      throw new \Files\InvalidParameterException('$description must be of type string; received ' . gettype(@$params['description']));
     }
 
     if (@$params['name'] && !is_string(@$params['name'])) {
-      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype($name));
+      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
     }
 
     if (@$params['trigger'] && !is_string(@$params['trigger'])) {
-      throw new \Files\InvalidParameterException('$trigger must be of type string; received ' . gettype($trigger));
+      throw new \Files\InvalidParameterException('$trigger must be of type string; received ' . gettype(@$params['trigger']));
     }
 
     if (@$params['trigger_actions'] && !is_array(@$params['trigger_actions'])) {
-      throw new \Files\InvalidParameterException('$trigger_actions must be of type array; received ' . gettype($trigger_actions));
+      throw new \Files\InvalidParameterException('$trigger_actions must be of type array; received ' . gettype(@$params['trigger_actions']));
     }
 
     if (@$params['recurring_day'] && !is_int(@$params['recurring_day'])) {
-      throw new \Files\InvalidParameterException('$recurring_day must be of type int; received ' . gettype($recurring_day));
+      throw new \Files\InvalidParameterException('$recurring_day must be of type int; received ' . gettype(@$params['recurring_day']));
     }
 
     if (@$params['automation'] && !is_string(@$params['automation'])) {
-      throw new \Files\InvalidParameterException('$automation must be of type string; received ' . gettype($automation));
+      throw new \Files\InvalidParameterException('$automation must be of type string; received ' . gettype(@$params['automation']));
     }
 
     $response = Api::sendRequest('/automations/' . @$params['id'] . '', 'PATCH', $params, $this->options);
@@ -374,7 +386,7 @@ class Automation {
     }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
     }
 
     $response = Api::sendRequest('/automations/' . @$params['id'] . '', 'DELETE', $params, $this->options);
@@ -395,6 +407,7 @@ class Automation {
       }
   }
 
+
   // Parameters:
   //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
   //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
@@ -406,17 +419,17 @@ class Automation {
   //   filter_lt - object - If set, return records where the specified field is less than the supplied value. Valid fields are `last_modified_at`.
   //   filter_lteq - object - If set, return records where the specified field is less than or equal the supplied value. Valid fields are `last_modified_at`.
   //   with_deleted - boolean - Set to true to include deleted automations in the results.
-  public static function list($params = [], $options = []) {
+  public static function all($params = [], $options = []) {
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
+      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
     }
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
+      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
     }
 
     if (@$params['automation'] && !is_string(@$params['automation'])) {
-      throw new \Files\InvalidParameterException('$automation must be of type string; received ' . gettype($automation));
+      throw new \Files\InvalidParameterException('$automation must be of type string; received ' . gettype(@$params['automation']));
     }
 
     $response = Api::sendRequest('/automations', 'GET', $params, $options);
@@ -430,9 +443,8 @@ class Automation {
     return $return_array;
   }
 
-  public static function all($params = [], $options = []) {
-    return self::list($params, $options);
-  }
+
+  
 
   // Parameters:
   //   id (required) - int64 - Automation ID.
@@ -448,7 +460,7 @@ class Automation {
     }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
     }
 
     $response = Api::sendRequest('/automations/' . @$params['id'] . '', 'GET', $params, $options);
@@ -456,9 +468,11 @@ class Automation {
     return new Automation((array)(@$response->data ?: []), $options);
   }
 
+
   public static function get($id, $params = [], $options = []) {
     return self::find($id, $params, $options);
   }
+  
 
   // Parameters:
   //   source - string - Source Path
@@ -486,71 +500,72 @@ class Automation {
     }
 
     if (@$params['source'] && !is_string(@$params['source'])) {
-      throw new \Files\InvalidParameterException('$source must be of type string; received ' . gettype($source));
+      throw new \Files\InvalidParameterException('$source must be of type string; received ' . gettype(@$params['source']));
     }
 
     if (@$params['destination'] && !is_string(@$params['destination'])) {
-      throw new \Files\InvalidParameterException('$destination must be of type string; received ' . gettype($destination));
+      throw new \Files\InvalidParameterException('$destination must be of type string; received ' . gettype(@$params['destination']));
     }
 
     if (@$params['destinations'] && !is_array(@$params['destinations'])) {
-      throw new \Files\InvalidParameterException('$destinations must be of type array; received ' . gettype($destinations));
+      throw new \Files\InvalidParameterException('$destinations must be of type array; received ' . gettype(@$params['destinations']));
     }
 
     if (@$params['destination_replace_from'] && !is_string(@$params['destination_replace_from'])) {
-      throw new \Files\InvalidParameterException('$destination_replace_from must be of type string; received ' . gettype($destination_replace_from));
+      throw new \Files\InvalidParameterException('$destination_replace_from must be of type string; received ' . gettype(@$params['destination_replace_from']));
     }
 
     if (@$params['destination_replace_to'] && !is_string(@$params['destination_replace_to'])) {
-      throw new \Files\InvalidParameterException('$destination_replace_to must be of type string; received ' . gettype($destination_replace_to));
+      throw new \Files\InvalidParameterException('$destination_replace_to must be of type string; received ' . gettype(@$params['destination_replace_to']));
     }
 
     if (@$params['interval'] && !is_string(@$params['interval'])) {
-      throw new \Files\InvalidParameterException('$interval must be of type string; received ' . gettype($interval));
+      throw new \Files\InvalidParameterException('$interval must be of type string; received ' . gettype(@$params['interval']));
     }
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
     }
 
     if (@$params['sync_ids'] && !is_string(@$params['sync_ids'])) {
-      throw new \Files\InvalidParameterException('$sync_ids must be of type string; received ' . gettype($sync_ids));
+      throw new \Files\InvalidParameterException('$sync_ids must be of type string; received ' . gettype(@$params['sync_ids']));
     }
 
     if (@$params['user_ids'] && !is_string(@$params['user_ids'])) {
-      throw new \Files\InvalidParameterException('$user_ids must be of type string; received ' . gettype($user_ids));
+      throw new \Files\InvalidParameterException('$user_ids must be of type string; received ' . gettype(@$params['user_ids']));
     }
 
     if (@$params['group_ids'] && !is_string(@$params['group_ids'])) {
-      throw new \Files\InvalidParameterException('$group_ids must be of type string; received ' . gettype($group_ids));
+      throw new \Files\InvalidParameterException('$group_ids must be of type string; received ' . gettype(@$params['group_ids']));
     }
 
     if (@$params['description'] && !is_string(@$params['description'])) {
-      throw new \Files\InvalidParameterException('$description must be of type string; received ' . gettype($description));
+      throw new \Files\InvalidParameterException('$description must be of type string; received ' . gettype(@$params['description']));
     }
 
     if (@$params['name'] && !is_string(@$params['name'])) {
-      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype($name));
+      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
     }
 
     if (@$params['trigger'] && !is_string(@$params['trigger'])) {
-      throw new \Files\InvalidParameterException('$trigger must be of type string; received ' . gettype($trigger));
+      throw new \Files\InvalidParameterException('$trigger must be of type string; received ' . gettype(@$params['trigger']));
     }
 
     if (@$params['trigger_actions'] && !is_array(@$params['trigger_actions'])) {
-      throw new \Files\InvalidParameterException('$trigger_actions must be of type array; received ' . gettype($trigger_actions));
+      throw new \Files\InvalidParameterException('$trigger_actions must be of type array; received ' . gettype(@$params['trigger_actions']));
     }
 
     if (@$params['recurring_day'] && !is_int(@$params['recurring_day'])) {
-      throw new \Files\InvalidParameterException('$recurring_day must be of type int; received ' . gettype($recurring_day));
+      throw new \Files\InvalidParameterException('$recurring_day must be of type int; received ' . gettype(@$params['recurring_day']));
     }
 
     if (@$params['automation'] && !is_string(@$params['automation'])) {
-      throw new \Files\InvalidParameterException('$automation must be of type string; received ' . gettype($automation));
+      throw new \Files\InvalidParameterException('$automation must be of type string; received ' . gettype(@$params['automation']));
     }
 
     $response = Api::sendRequest('/automations', 'POST', $params, $options);
 
     return new Automation((array)(@$response->data ?: []), $options);
   }
+
 }

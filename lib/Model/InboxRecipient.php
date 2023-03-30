@@ -18,6 +18,9 @@ require_once __DIR__ . '/../Files.php';
 class InboxRecipient {
   private $attributes = [];
   private $options = [];
+  private static $static_mapped_functions = [
+    'list' => 'all',
+  ];
 
   function __construct($attributes = [], $options = []) {
     foreach ($attributes as $key => $value) {
@@ -33,6 +36,15 @@ class InboxRecipient {
 
   public function __get($name) {
     return @$this->attributes[$name];
+  }
+
+  public static function __callStatic($name, $arguments) {
+    if(in_array($name, array_keys(self::$static_mapped_functions))){
+      $method = self::$static_mapped_functions[$name];
+      if (method_exists(__CLASS__, $method)){ 
+        return @self::$method($arguments);
+      }
+    }
   }
 
   public function isLoaded() {
@@ -112,27 +124,28 @@ class InboxRecipient {
       }
   }
 
+
   // Parameters:
   //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
   //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
   //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction (e.g. `sort_by[has_registrations]=desc`). Valid fields are `has_registrations`.
   //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `has_registrations`.
   //   inbox_id (required) - int64 - List recipients for the inbox with this ID.
-  public static function list($params = [], $options = []) {
+  public static function all($params = [], $options = []) {
     if (!@$params['inbox_id']) {
       throw new \Files\MissingParameterException('Parameter missing: inbox_id');
     }
 
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
+      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
     }
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
+      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
     }
 
     if (@$params['inbox_id'] && !is_int(@$params['inbox_id'])) {
-      throw new \Files\InvalidParameterException('$inbox_id must be of type int; received ' . gettype($inbox_id));
+      throw new \Files\InvalidParameterException('$inbox_id must be of type int; received ' . gettype(@$params['inbox_id']));
     }
 
     $response = Api::sendRequest('/inbox_recipients', 'GET', $params, $options);
@@ -146,9 +159,8 @@ class InboxRecipient {
     return $return_array;
   }
 
-  public static function all($params = [], $options = []) {
-    return self::list($params, $options);
-  }
+
+  
 
   // Parameters:
   //   inbox_id (required) - int64 - Inbox to share.
@@ -167,27 +179,28 @@ class InboxRecipient {
     }
 
     if (@$params['inbox_id'] && !is_int(@$params['inbox_id'])) {
-      throw new \Files\InvalidParameterException('$inbox_id must be of type int; received ' . gettype($inbox_id));
+      throw new \Files\InvalidParameterException('$inbox_id must be of type int; received ' . gettype(@$params['inbox_id']));
     }
 
     if (@$params['recipient'] && !is_string(@$params['recipient'])) {
-      throw new \Files\InvalidParameterException('$recipient must be of type string; received ' . gettype($recipient));
+      throw new \Files\InvalidParameterException('$recipient must be of type string; received ' . gettype(@$params['recipient']));
     }
 
     if (@$params['name'] && !is_string(@$params['name'])) {
-      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype($name));
+      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
     }
 
     if (@$params['company'] && !is_string(@$params['company'])) {
-      throw new \Files\InvalidParameterException('$company must be of type string; received ' . gettype($company));
+      throw new \Files\InvalidParameterException('$company must be of type string; received ' . gettype(@$params['company']));
     }
 
     if (@$params['note'] && !is_string(@$params['note'])) {
-      throw new \Files\InvalidParameterException('$note must be of type string; received ' . gettype($note));
+      throw new \Files\InvalidParameterException('$note must be of type string; received ' . gettype(@$params['note']));
     }
 
     $response = Api::sendRequest('/inbox_recipients', 'POST', $params, $options);
 
     return new InboxRecipient((array)(@$response->data ?: []), $options);
   }
+
 }

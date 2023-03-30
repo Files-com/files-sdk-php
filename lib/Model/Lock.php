@@ -18,6 +18,9 @@ require_once __DIR__ . '/../Files.php';
 class Lock {
   private $attributes = [];
   private $options = [];
+  private static $static_mapped_functions = [
+    'list' => 'all',
+  ];
 
   function __construct($attributes = [], $options = []) {
     foreach ($attributes as $key => $value) {
@@ -33,6 +36,15 @@ class Lock {
 
   public function __get($name) {
     return @$this->attributes[$name];
+  }
+
+  public static function __callStatic($name, $arguments) {
+    if(in_array($name, array_keys(self::$static_mapped_functions))){
+      $method = self::$static_mapped_functions[$name];
+      if (method_exists(__CLASS__, $method)){ 
+        return @self::$method($arguments);
+      }
+    }
   }
 
   public function isLoaded() {
@@ -171,11 +183,11 @@ class Lock {
     }
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
     }
 
     if (@$params['token'] && !is_string(@$params['token'])) {
-      throw new \Files\InvalidParameterException('$token must be of type string; received ' . gettype($token));
+      throw new \Files\InvalidParameterException('$token must be of type string; received ' . gettype(@$params['token']));
     }
 
     $response = Api::sendRequest('/locks/' . @$params['path'] . '', 'DELETE', $params, $this->options);
@@ -191,6 +203,7 @@ class Lock {
       $this->attributes = $new_obj->attributes;
       return true;
   }
+
 
   // Parameters:
   //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
@@ -209,15 +222,15 @@ class Lock {
     }
 
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
+      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
     }
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
+      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
     }
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
     }
 
     $response = Api::sendRequest('/locks/' . @$params['path'] . '', 'GET', $params, $options);
@@ -230,6 +243,7 @@ class Lock {
 
     return $return_array;
   }
+
 
   // Parameters:
   //   path (required) - string - Path
@@ -249,19 +263,20 @@ class Lock {
     }
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
     }
 
     if (@$params['recursive'] && !is_string(@$params['recursive'])) {
-      throw new \Files\InvalidParameterException('$recursive must be of type string; received ' . gettype($recursive));
+      throw new \Files\InvalidParameterException('$recursive must be of type string; received ' . gettype(@$params['recursive']));
     }
 
     if (@$params['timeout'] && !is_int(@$params['timeout'])) {
-      throw new \Files\InvalidParameterException('$timeout must be of type int; received ' . gettype($timeout));
+      throw new \Files\InvalidParameterException('$timeout must be of type int; received ' . gettype(@$params['timeout']));
     }
 
     $response = Api::sendRequest('/locks/' . @$params['path'] . '', 'POST', $params, $options);
 
     return new Lock((array)(@$response->data ?: []), $options);
   }
+
 }

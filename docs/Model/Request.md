@@ -90,7 +90,7 @@ $request->create(, [
 ## Delete Request
 
 ```
-$request = current(\Files\Model\Request::list());
+$request = current(\Files\Model\Request::all());
 
 $request->delete();
 ```

@@ -175,7 +175,7 @@ $bundle->create(, [
 ## Send email(s) with a link to bundle
 
 ```
-$bundle = current(\Files\Model\Bundle::list());
+$bundle = current(\Files\Model\Bundle::all());
 
 $bundle->share([
   'to' => ["johndoe@gmail.com"],
@@ -197,7 +197,7 @@ $bundle->share([
 ## Update Bundle
 
 ```
-$bundle = current(\Files\Model\Bundle::list());
+$bundle = current(\Files\Model\Bundle::all());
 
 $bundle->update([
   'paths' => ["file.txt"],
@@ -295,7 +295,7 @@ $bundle->update([
 ## Delete Bundle
 
 ```
-$bundle = current(\Files\Model\Bundle::list());
+$bundle = current(\Files\Model\Bundle::all());
 
 $bundle->delete();
 ```

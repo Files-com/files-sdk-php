@@ -285,7 +285,7 @@ $user->create(, [
 ## Unlock user who has been locked out due to failed logins
 
 ```
-$user = current(\Files\Model\User::list());
+$user = current(\Files\Model\User::all());
 
 $user->unlock();
 ```
@@ -300,7 +300,7 @@ $user->unlock();
 ## Resend user welcome email
 
 ```
-$user = current(\Files\Model\User::list());
+$user = current(\Files\Model\User::all());
 
 $user->resend_welcome_email();
 ```
@@ -315,7 +315,7 @@ $user->resend_welcome_email();
 ## Trigger 2FA Reset process for user who has lost access to their existing 2FA methods
 
 ```
-$user = current(\Files\Model\User::list());
+$user = current(\Files\Model\User::all());
 
 $user->user_2fa_reset();
 ```
@@ -330,7 +330,7 @@ $user->user_2fa_reset();
 ## Update User
 
 ```
-$user = current(\Files\Model\User::list());
+$user = current(\Files\Model\User::all());
 
 $user->update([
   'avatar_delete' => true,
@@ -494,7 +494,7 @@ $user->update([
 ## Delete User
 
 ```
-$user = current(\Files\Model\User::list());
+$user = current(\Files\Model\User::all());
 
 $user->delete();
 ```

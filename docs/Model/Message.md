@@ -82,7 +82,7 @@ $message->create(, [
 ## Update Message
 
 ```
-$message = current(\Files\Model\Message::list());
+$message = current(\Files\Model\Message::all());
 
 $message->update([
   'project_id' => 1,
@@ -116,7 +116,7 @@ $message->update([
 ## Delete Message
 
 ```
-$message = current(\Files\Model\Message::list());
+$message = current(\Files\Model\Message::all());
 
 $message->delete();
 ```

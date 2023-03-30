@@ -70,7 +70,7 @@ Or, you can pass the session ID per-request, in the options array at the end of 
     \Files\Files::setSessionId($session->id);
 
     // do something
-    \Files\Model\ApiKey::list(['user_id' => 0]);
+    \Files\Model\ApiKey::all(['user_id' => 0]);
 
     // clean up when done
     \Files\Model\Session::destroy();
@@ -156,6 +156,14 @@ You can set the following global properties directly on the `\Files\Files` class
       'with_previews' => true,
       'with_priority_color' => true,
     ]);
+```
+
+#### Comparing Case insensitive files and paths
+For related documentation see [Case Sensitivity Documentation](https://www.files.com/docs/topics/file-system-semantics#case-sensitivity).
+```php
+    if(\Files\Util\PathUtil::same("Fïłèńämê.Txt", "filename.txt")) {
+        echo "Paths are the same\n";
+    }
 ```
 
 ### Additional Documentation

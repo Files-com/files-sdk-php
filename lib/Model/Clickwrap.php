@@ -18,6 +18,9 @@ require_once __DIR__ . '/../Files.php';
 class Clickwrap {
   private $attributes = [];
   private $options = [];
+  private static $static_mapped_functions = [
+    'list' => 'all',
+  ];
 
   function __construct($attributes = [], $options = []) {
     foreach ($attributes as $key => $value) {
@@ -33,6 +36,15 @@ class Clickwrap {
 
   public function __get($name) {
     return @$this->attributes[$name];
+  }
+
+  public static function __callStatic($name, $arguments) {
+    if(in_array($name, array_keys(self::$static_mapped_functions))){
+      $method = self::$static_mapped_functions[$name];
+      if (method_exists(__CLASS__, $method)){ 
+        return @self::$method($arguments);
+      }
+    }
   }
 
   public function isLoaded() {
@@ -113,27 +125,27 @@ class Clickwrap {
     }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
     }
 
     if (@$params['name'] && !is_string(@$params['name'])) {
-      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype($name));
+      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
     }
 
     if (@$params['body'] && !is_string(@$params['body'])) {
-      throw new \Files\InvalidParameterException('$body must be of type string; received ' . gettype($body));
+      throw new \Files\InvalidParameterException('$body must be of type string; received ' . gettype(@$params['body']));
     }
 
     if (@$params['use_with_bundles'] && !is_string(@$params['use_with_bundles'])) {
-      throw new \Files\InvalidParameterException('$use_with_bundles must be of type string; received ' . gettype($use_with_bundles));
+      throw new \Files\InvalidParameterException('$use_with_bundles must be of type string; received ' . gettype(@$params['use_with_bundles']));
     }
 
     if (@$params['use_with_inboxes'] && !is_string(@$params['use_with_inboxes'])) {
-      throw new \Files\InvalidParameterException('$use_with_inboxes must be of type string; received ' . gettype($use_with_inboxes));
+      throw new \Files\InvalidParameterException('$use_with_inboxes must be of type string; received ' . gettype(@$params['use_with_inboxes']));
     }
 
     if (@$params['use_with_users'] && !is_string(@$params['use_with_users'])) {
-      throw new \Files\InvalidParameterException('$use_with_users must be of type string; received ' . gettype($use_with_users));
+      throw new \Files\InvalidParameterException('$use_with_users must be of type string; received ' . gettype(@$params['use_with_users']));
     }
 
     $response = Api::sendRequest('/clickwraps/' . @$params['id'] . '', 'PATCH', $params, $this->options);
@@ -154,7 +166,7 @@ class Clickwrap {
     }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
     }
 
     $response = Api::sendRequest('/clickwraps/' . @$params['id'] . '', 'DELETE', $params, $this->options);
@@ -175,16 +187,17 @@ class Clickwrap {
       }
   }
 
+
   // Parameters:
   //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
   //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
-  public static function list($params = [], $options = []) {
+  public static function all($params = [], $options = []) {
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
+      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
     }
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
+      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
     }
 
     $response = Api::sendRequest('/clickwraps', 'GET', $params, $options);
@@ -198,9 +211,8 @@ class Clickwrap {
     return $return_array;
   }
 
-  public static function all($params = [], $options = []) {
-    return self::list($params, $options);
-  }
+
+  
 
   // Parameters:
   //   id (required) - int64 - Clickwrap ID.
@@ -216,7 +228,7 @@ class Clickwrap {
     }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
     }
 
     $response = Api::sendRequest('/clickwraps/' . @$params['id'] . '', 'GET', $params, $options);
@@ -224,9 +236,11 @@ class Clickwrap {
     return new Clickwrap((array)(@$response->data ?: []), $options);
   }
 
+
   public static function get($id, $params = [], $options = []) {
     return self::find($id, $params, $options);
   }
+  
 
   // Parameters:
   //   name - string - Name of the Clickwrap agreement (used when selecting from multiple Clickwrap agreements.)
@@ -236,27 +250,28 @@ class Clickwrap {
   //   use_with_users - string - Use this Clickwrap for User Registrations?  Note: This only applies to User Registrations where the User is invited to your Files.com site using an E-Mail invitation process where they then set their own password.
   public static function create($params = [], $options = []) {
     if (@$params['name'] && !is_string(@$params['name'])) {
-      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype($name));
+      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
     }
 
     if (@$params['body'] && !is_string(@$params['body'])) {
-      throw new \Files\InvalidParameterException('$body must be of type string; received ' . gettype($body));
+      throw new \Files\InvalidParameterException('$body must be of type string; received ' . gettype(@$params['body']));
     }
 
     if (@$params['use_with_bundles'] && !is_string(@$params['use_with_bundles'])) {
-      throw new \Files\InvalidParameterException('$use_with_bundles must be of type string; received ' . gettype($use_with_bundles));
+      throw new \Files\InvalidParameterException('$use_with_bundles must be of type string; received ' . gettype(@$params['use_with_bundles']));
     }
 
     if (@$params['use_with_inboxes'] && !is_string(@$params['use_with_inboxes'])) {
-      throw new \Files\InvalidParameterException('$use_with_inboxes must be of type string; received ' . gettype($use_with_inboxes));
+      throw new \Files\InvalidParameterException('$use_with_inboxes must be of type string; received ' . gettype(@$params['use_with_inboxes']));
     }
 
     if (@$params['use_with_users'] && !is_string(@$params['use_with_users'])) {
-      throw new \Files\InvalidParameterException('$use_with_users must be of type string; received ' . gettype($use_with_users));
+      throw new \Files\InvalidParameterException('$use_with_users must be of type string; received ' . gettype(@$params['use_with_users']));
     }
 
     $response = Api::sendRequest('/clickwraps', 'POST', $params, $options);
 
     return new Clickwrap((array)(@$response->data ?: []), $options);
   }
+
 }

@@ -82,7 +82,7 @@ $group->create(, [
 ## Update Group
 
 ```
-$group = current(\Files\Model\Group::list());
+$group = current(\Files\Model\Group::all());
 
 $group->update([
   'name' => "owners",
@@ -118,7 +118,7 @@ $group->update([
 ## Delete Group
 
 ```
-$group = current(\Files\Model\Group::list());
+$group = current(\Files\Model\Group::all());
 
 $group->delete();
 ```

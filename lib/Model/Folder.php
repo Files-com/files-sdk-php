@@ -18,6 +18,9 @@ require_once __DIR__ . '/../Files.php';
 class Folder {
   private $attributes = [];
   private $options = [];
+  private static $static_mapped_functions = [
+    'list' => 'all',
+  ];
 
   function __construct($attributes = [], $options = []) {
     foreach ($attributes as $key => $value) {
@@ -33,6 +36,15 @@ class Folder {
 
   public function __get($name) {
     return @$this->attributes[$name];
+  }
+
+  public static function __callStatic($name, $arguments) {
+    if(in_array($name, array_keys(self::$static_mapped_functions))){
+      $method = self::$static_mapped_functions[$name];
+      if (method_exists(__CLASS__, $method)){ 
+        return @self::$method($arguments);
+      }
+    }
   }
 
   public function isLoaded() {
@@ -212,6 +224,7 @@ class Folder {
       return true;
   }
 
+
   // Parameters:
   //   cursor - string - Send cursor to resume an existing list from the point at which you left off.  Get a cursor from an existing list via the X-Files-Cursor-Next header or the X-Files-Cursor-Prev header.
   //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
@@ -234,27 +247,27 @@ class Folder {
     }
 
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
+      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
     }
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
+      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
     }
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
     }
 
     if (@$params['filter'] && !is_string(@$params['filter'])) {
-      throw new \Files\InvalidParameterException('$filter must be of type string; received ' . gettype($filter));
+      throw new \Files\InvalidParameterException('$filter must be of type string; received ' . gettype(@$params['filter']));
     }
 
     if (@$params['preview_size'] && !is_string(@$params['preview_size'])) {
-      throw new \Files\InvalidParameterException('$preview_size must be of type string; received ' . gettype($preview_size));
+      throw new \Files\InvalidParameterException('$preview_size must be of type string; received ' . gettype(@$params['preview_size']));
     }
 
     if (@$params['search'] && !is_string(@$params['search'])) {
-      throw new \Files\InvalidParameterException('$search must be of type string; received ' . gettype($search));
+      throw new \Files\InvalidParameterException('$search must be of type string; received ' . gettype(@$params['search']));
     }
 
     $response = Api::sendRequest('/folders/' . @$params['path'] . '', 'GET', $params, $options);
@@ -267,6 +280,7 @@ class Folder {
 
     return $return_array;
   }
+
 
   // Parameters:
   //   path (required) - string - Path to operate on.
@@ -284,15 +298,16 @@ class Folder {
     }
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
     }
 
     if (@$params['provided_mtime'] && !is_string(@$params['provided_mtime'])) {
-      throw new \Files\InvalidParameterException('$provided_mtime must be of type string; received ' . gettype($provided_mtime));
+      throw new \Files\InvalidParameterException('$provided_mtime must be of type string; received ' . gettype(@$params['provided_mtime']));
     }
 
     $response = Api::sendRequest('/folders/' . @$params['path'] . '', 'POST', $params, $options);
 
     return new File((array)(@$response->data ?: []), $options);
   }
+
 }

@@ -80,7 +80,7 @@ $lock->create($path, [
 ## Delete Lock
 
 ```
-$lock = current(\Files\Model\Lock::list());
+$lock = current(\Files\Model\Lock::all());
 
 $lock->delete([
   'token' => "token",

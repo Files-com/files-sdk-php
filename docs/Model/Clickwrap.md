@@ -80,7 +80,7 @@ $clickwrap->create(, [
 ## Update Clickwrap
 
 ```
-$clickwrap = current(\Files\Model\Clickwrap::list());
+$clickwrap = current(\Files\Model\Clickwrap::all());
 
 $clickwrap->update([
   'name' => "Example Site NDA for Files.com Use",
@@ -118,7 +118,7 @@ $clickwrap->update([
 ## Delete Clickwrap
 
 ```
-$clickwrap = current(\Files\Model\Clickwrap::list());
+$clickwrap = current(\Files\Model\Clickwrap::all());
 
 $clickwrap->delete();
 ```

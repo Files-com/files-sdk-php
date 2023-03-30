@@ -18,6 +18,9 @@ require_once __DIR__ . '/../Files.php';
 class Style {
   private $attributes = [];
   private $options = [];
+  private static $static_mapped_functions = [
+    'list' => 'all',
+  ];
 
   function __construct($attributes = [], $options = []) {
     foreach ($attributes as $key => $value) {
@@ -33,6 +36,15 @@ class Style {
 
   public function __get($name) {
     return @$this->attributes[$name];
+  }
+
+  public static function __callStatic($name, $arguments) {
+    if(in_array($name, array_keys(self::$static_mapped_functions))){
+      $method = self::$static_mapped_functions[$name];
+      if (method_exists(__CLASS__, $method)){ 
+        return @self::$method($arguments);
+      }
+    }
   }
 
   public function isLoaded() {
@@ -108,7 +120,7 @@ class Style {
     }
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
     }
 
     $response = Api::sendRequest('/styles/' . @$params['path'] . '', 'PATCH', $params, $this->options);
@@ -129,7 +141,7 @@ class Style {
     }
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
     }
 
     $response = Api::sendRequest('/styles/' . @$params['path'] . '', 'DELETE', $params, $this->options);
@@ -158,7 +170,7 @@ class Style {
     }
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
     }
 
     $response = Api::sendRequest('/styles/' . @$params['path'] . '', 'GET', $params, $options);
@@ -166,7 +178,9 @@ class Style {
     return new Style((array)(@$response->data ?: []), $options);
   }
 
+
   public static function get($path, $params = [], $options = []) {
     return self::find($path, $params, $options);
   }
+  
 }

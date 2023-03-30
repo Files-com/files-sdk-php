@@ -18,6 +18,9 @@ require_once __DIR__ . '/../Files.php';
 class Notification {
   private $attributes = [];
   private $options = [];
+  private static $static_mapped_functions = [
+    'list' => 'all',
+  ];
 
   function __construct($attributes = [], $options = []) {
     foreach ($attributes as $key => $value) {
@@ -33,6 +36,15 @@ class Notification {
 
   public function __get($name) {
     return @$this->attributes[$name];
+  }
+
+  public static function __callStatic($name, $arguments) {
+    if(in_array($name, array_keys(self::$static_mapped_functions))){
+      $method = self::$static_mapped_functions[$name];
+      if (method_exists(__CLASS__, $method)){ 
+        return @self::$method($arguments);
+      }
+    }
   }
 
   public function isLoaded() {
@@ -265,27 +277,27 @@ class Notification {
     }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
     }
 
     if (@$params['send_interval'] && !is_string(@$params['send_interval'])) {
-      throw new \Files\InvalidParameterException('$send_interval must be of type string; received ' . gettype($send_interval));
+      throw new \Files\InvalidParameterException('$send_interval must be of type string; received ' . gettype(@$params['send_interval']));
     }
 
     if (@$params['message'] && !is_string(@$params['message'])) {
-      throw new \Files\InvalidParameterException('$message must be of type string; received ' . gettype($message));
+      throw new \Files\InvalidParameterException('$message must be of type string; received ' . gettype(@$params['message']));
     }
 
     if (@$params['triggering_filenames'] && !is_array(@$params['triggering_filenames'])) {
-      throw new \Files\InvalidParameterException('$triggering_filenames must be of type array; received ' . gettype($triggering_filenames));
+      throw new \Files\InvalidParameterException('$triggering_filenames must be of type array; received ' . gettype(@$params['triggering_filenames']));
     }
 
     if (@$params['triggering_group_ids'] && !is_array(@$params['triggering_group_ids'])) {
-      throw new \Files\InvalidParameterException('$triggering_group_ids must be of type array; received ' . gettype($triggering_group_ids));
+      throw new \Files\InvalidParameterException('$triggering_group_ids must be of type array; received ' . gettype(@$params['triggering_group_ids']));
     }
 
     if (@$params['triggering_user_ids'] && !is_array(@$params['triggering_user_ids'])) {
-      throw new \Files\InvalidParameterException('$triggering_user_ids must be of type array; received ' . gettype($triggering_user_ids));
+      throw new \Files\InvalidParameterException('$triggering_user_ids must be of type array; received ' . gettype(@$params['triggering_user_ids']));
     }
 
     $response = Api::sendRequest('/notifications/' . @$params['id'] . '', 'PATCH', $params, $this->options);
@@ -306,7 +318,7 @@ class Notification {
     }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
     }
 
     $response = Api::sendRequest('/notifications/' . @$params['id'] . '', 'DELETE', $params, $this->options);
@@ -327,6 +339,7 @@ class Notification {
       }
   }
 
+
   // Parameters:
   //   user_id - int64 - DEPRECATED: Show notifications for this User ID. Use `filter[user_id]` instead.
   //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
@@ -337,25 +350,25 @@ class Notification {
   //   filter_prefix - object - If set, return records where the specified field is prefixed by the supplied value. Valid fields are `path`.
   //   path - string - Show notifications for this Path.
   //   include_ancestors - boolean - If `include_ancestors` is `true` and `path` is specified, include notifications for any parent paths. Ignored if `path` is not specified.
-  public static function list($params = [], $options = []) {
+  public static function all($params = [], $options = []) {
     if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype($user_id));
+      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
     }
 
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
+      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
     }
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
+      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
     }
 
     if (@$params['group_id'] && !is_string(@$params['group_id'])) {
-      throw new \Files\InvalidParameterException('$group_id must be of type string; received ' . gettype($group_id));
+      throw new \Files\InvalidParameterException('$group_id must be of type string; received ' . gettype(@$params['group_id']));
     }
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
     }
 
     $response = Api::sendRequest('/notifications', 'GET', $params, $options);
@@ -369,9 +382,8 @@ class Notification {
     return $return_array;
   }
 
-  public static function all($params = [], $options = []) {
-    return self::list($params, $options);
-  }
+
+  
 
   // Parameters:
   //   id (required) - int64 - Notification ID.
@@ -387,7 +399,7 @@ class Notification {
     }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
     }
 
     $response = Api::sendRequest('/notifications/' . @$params['id'] . '', 'GET', $params, $options);
@@ -395,9 +407,11 @@ class Notification {
     return new Notification((array)(@$response->data ?: []), $options);
   }
 
+
   public static function get($id, $params = [], $options = []) {
     return self::find($id, $params, $options);
   }
+  
 
   // Parameters:
   //   user_id - int64 - The id of the user to notify. Provide `user_id`, `username` or `group_id`.
@@ -419,43 +433,44 @@ class Notification {
   //   username - string - The username of the user to notify.  Provide `user_id`, `username` or `group_id`.
   public static function create($params = [], $options = []) {
     if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype($user_id));
+      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
     }
 
     if (@$params['send_interval'] && !is_string(@$params['send_interval'])) {
-      throw new \Files\InvalidParameterException('$send_interval must be of type string; received ' . gettype($send_interval));
+      throw new \Files\InvalidParameterException('$send_interval must be of type string; received ' . gettype(@$params['send_interval']));
     }
 
     if (@$params['message'] && !is_string(@$params['message'])) {
-      throw new \Files\InvalidParameterException('$message must be of type string; received ' . gettype($message));
+      throw new \Files\InvalidParameterException('$message must be of type string; received ' . gettype(@$params['message']));
     }
 
     if (@$params['triggering_filenames'] && !is_array(@$params['triggering_filenames'])) {
-      throw new \Files\InvalidParameterException('$triggering_filenames must be of type array; received ' . gettype($triggering_filenames));
+      throw new \Files\InvalidParameterException('$triggering_filenames must be of type array; received ' . gettype(@$params['triggering_filenames']));
     }
 
     if (@$params['triggering_group_ids'] && !is_array(@$params['triggering_group_ids'])) {
-      throw new \Files\InvalidParameterException('$triggering_group_ids must be of type array; received ' . gettype($triggering_group_ids));
+      throw new \Files\InvalidParameterException('$triggering_group_ids must be of type array; received ' . gettype(@$params['triggering_group_ids']));
     }
 
     if (@$params['triggering_user_ids'] && !is_array(@$params['triggering_user_ids'])) {
-      throw new \Files\InvalidParameterException('$triggering_user_ids must be of type array; received ' . gettype($triggering_user_ids));
+      throw new \Files\InvalidParameterException('$triggering_user_ids must be of type array; received ' . gettype(@$params['triggering_user_ids']));
     }
 
     if (@$params['group_id'] && !is_int(@$params['group_id'])) {
-      throw new \Files\InvalidParameterException('$group_id must be of type int; received ' . gettype($group_id));
+      throw new \Files\InvalidParameterException('$group_id must be of type int; received ' . gettype(@$params['group_id']));
     }
 
     if (@$params['path'] && !is_string(@$params['path'])) {
-      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype($path));
+      throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
     }
 
     if (@$params['username'] && !is_string(@$params['username'])) {
-      throw new \Files\InvalidParameterException('$username must be of type string; received ' . gettype($username));
+      throw new \Files\InvalidParameterException('$username must be of type string; received ' . gettype(@$params['username']));
     }
 
     $response = Api::sendRequest('/notifications', 'POST', $params, $options);
 
     return new Notification((array)(@$response->data ?: []), $options);
   }
+
 }

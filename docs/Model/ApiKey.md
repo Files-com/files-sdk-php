@@ -144,7 +144,7 @@ $api_key->deleteCurrent
 ## Update Api Key
 
 ```
-$api_key = current(\Files\Model\ApiKey::list());
+$api_key = current(\Files\Model\ApiKey::all());
 
 $api_key->update([
   'name' => "My Main API Key",
@@ -187,7 +187,7 @@ $api_key->update([
 ## Delete Api Key
 
 ```
-$api_key = current(\Files\Model\ApiKey::list());
+$api_key = current(\Files\Model\ApiKey::all());
 
 $api_key->delete();
 ```

@@ -18,6 +18,9 @@ require_once __DIR__ . '/../Files.php';
 class As2Partner {
   private $attributes = [];
   private $options = [];
+  private static $static_mapped_functions = [
+    'list' => 'all',
+  ];
 
   function __construct($attributes = [], $options = []) {
     foreach ($attributes as $key => $value) {
@@ -33,6 +36,15 @@ class As2Partner {
 
   public function __get($name) {
     return @$this->attributes[$name];
+  }
+
+  public static function __callStatic($name, $arguments) {
+    if(in_array($name, array_keys(self::$static_mapped_functions))){
+      $method = self::$static_mapped_functions[$name];
+      if (method_exists(__CLASS__, $method)){ 
+        return @self::$method($arguments);
+      }
+    }
   }
 
   public function isLoaded() {
@@ -185,23 +197,23 @@ class As2Partner {
     }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
     }
 
     if (@$params['name'] && !is_string(@$params['name'])) {
-      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype($name));
+      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
     }
 
     if (@$params['uri'] && !is_string(@$params['uri'])) {
-      throw new \Files\InvalidParameterException('$uri must be of type string; received ' . gettype($uri));
+      throw new \Files\InvalidParameterException('$uri must be of type string; received ' . gettype(@$params['uri']));
     }
 
     if (@$params['server_certificate'] && !is_string(@$params['server_certificate'])) {
-      throw new \Files\InvalidParameterException('$server_certificate must be of type string; received ' . gettype($server_certificate));
+      throw new \Files\InvalidParameterException('$server_certificate must be of type string; received ' . gettype(@$params['server_certificate']));
     }
 
     if (@$params['public_certificate'] && !is_string(@$params['public_certificate'])) {
-      throw new \Files\InvalidParameterException('$public_certificate must be of type string; received ' . gettype($public_certificate));
+      throw new \Files\InvalidParameterException('$public_certificate must be of type string; received ' . gettype(@$params['public_certificate']));
     }
 
     $response = Api::sendRequest('/as2_partners/' . @$params['id'] . '', 'PATCH', $params, $this->options);
@@ -222,7 +234,7 @@ class As2Partner {
     }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
     }
 
     $response = Api::sendRequest('/as2_partners/' . @$params['id'] . '', 'DELETE', $params, $this->options);
@@ -243,16 +255,17 @@ class As2Partner {
       }
   }
 
+
   // Parameters:
   //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
   //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
-  public static function list($params = [], $options = []) {
+  public static function all($params = [], $options = []) {
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
+      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
     }
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
+      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
     }
 
     $response = Api::sendRequest('/as2_partners', 'GET', $params, $options);
@@ -266,9 +279,8 @@ class As2Partner {
     return $return_array;
   }
 
-  public static function all($params = [], $options = []) {
-    return self::list($params, $options);
-  }
+
+  
 
   // Parameters:
   //   id (required) - int64 - As2 Partner ID.
@@ -284,7 +296,7 @@ class As2Partner {
     }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
     }
 
     $response = Api::sendRequest('/as2_partners/' . @$params['id'] . '', 'GET', $params, $options);
@@ -292,9 +304,11 @@ class As2Partner {
     return new As2Partner((array)(@$response->data ?: []), $options);
   }
 
+
   public static function get($id, $params = [], $options = []) {
     return self::find($id, $params, $options);
   }
+  
 
   // Parameters:
   //   name (required) - string - AS2 Name
@@ -321,27 +335,28 @@ class As2Partner {
     }
 
     if (@$params['name'] && !is_string(@$params['name'])) {
-      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype($name));
+      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
     }
 
     if (@$params['uri'] && !is_string(@$params['uri'])) {
-      throw new \Files\InvalidParameterException('$uri must be of type string; received ' . gettype($uri));
+      throw new \Files\InvalidParameterException('$uri must be of type string; received ' . gettype(@$params['uri']));
     }
 
     if (@$params['public_certificate'] && !is_string(@$params['public_certificate'])) {
-      throw new \Files\InvalidParameterException('$public_certificate must be of type string; received ' . gettype($public_certificate));
+      throw new \Files\InvalidParameterException('$public_certificate must be of type string; received ' . gettype(@$params['public_certificate']));
     }
 
     if (@$params['as2_station_id'] && !is_int(@$params['as2_station_id'])) {
-      throw new \Files\InvalidParameterException('$as2_station_id must be of type int; received ' . gettype($as2_station_id));
+      throw new \Files\InvalidParameterException('$as2_station_id must be of type int; received ' . gettype(@$params['as2_station_id']));
     }
 
     if (@$params['server_certificate'] && !is_string(@$params['server_certificate'])) {
-      throw new \Files\InvalidParameterException('$server_certificate must be of type string; received ' . gettype($server_certificate));
+      throw new \Files\InvalidParameterException('$server_certificate must be of type string; received ' . gettype(@$params['server_certificate']));
     }
 
     $response = Api::sendRequest('/as2_partners', 'POST', $params, $options);
 
     return new As2Partner((array)(@$response->data ?: []), $options);
   }
+
 }

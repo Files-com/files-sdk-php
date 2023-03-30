@@ -18,6 +18,9 @@ require_once __DIR__ . '/../Files.php';
 class MessageCommentReaction {
   private $attributes = [];
   private $options = [];
+  private static $static_mapped_functions = [
+    'list' => 'all',
+  ];
 
   function __construct($attributes = [], $options = []) {
     foreach ($attributes as $key => $value) {
@@ -33,6 +36,15 @@ class MessageCommentReaction {
 
   public function __get($name) {
     return @$this->attributes[$name];
+  }
+
+  public static function __callStatic($name, $arguments) {
+    if(in_array($name, array_keys(self::$static_mapped_functions))){
+      $method = self::$static_mapped_functions[$name];
+      if (method_exists(__CLASS__, $method)){ 
+        return @self::$method($arguments);
+      }
+    }
   }
 
   public function isLoaded() {
@@ -80,7 +92,7 @@ class MessageCommentReaction {
     }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
     }
 
     $response = Api::sendRequest('/message_comment_reactions/' . @$params['id'] . '', 'DELETE', $params, $this->options);
@@ -101,30 +113,31 @@ class MessageCommentReaction {
       }
   }
 
+
   // Parameters:
   //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
   //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
   //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
   //   message_comment_id (required) - int64 - Message comment to return reactions for.
-  public static function list($params = [], $options = []) {
+  public static function all($params = [], $options = []) {
     if (!@$params['message_comment_id']) {
       throw new \Files\MissingParameterException('Parameter missing: message_comment_id');
     }
 
     if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype($user_id));
+      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
     }
 
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
+      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
     }
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
+      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
     }
 
     if (@$params['message_comment_id'] && !is_int(@$params['message_comment_id'])) {
-      throw new \Files\InvalidParameterException('$message_comment_id must be of type int; received ' . gettype($message_comment_id));
+      throw new \Files\InvalidParameterException('$message_comment_id must be of type int; received ' . gettype(@$params['message_comment_id']));
     }
 
     $response = Api::sendRequest('/message_comment_reactions', 'GET', $params, $options);
@@ -138,9 +151,8 @@ class MessageCommentReaction {
     return $return_array;
   }
 
-  public static function all($params = [], $options = []) {
-    return self::list($params, $options);
-  }
+
+  
 
   // Parameters:
   //   id (required) - int64 - Message Comment Reaction ID.
@@ -156,7 +168,7 @@ class MessageCommentReaction {
     }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
     }
 
     $response = Api::sendRequest('/message_comment_reactions/' . @$params['id'] . '', 'GET', $params, $options);
@@ -164,9 +176,11 @@ class MessageCommentReaction {
     return new MessageCommentReaction((array)(@$response->data ?: []), $options);
   }
 
+
   public static function get($id, $params = [], $options = []) {
     return self::find($id, $params, $options);
   }
+  
 
   // Parameters:
   //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
@@ -177,15 +191,16 @@ class MessageCommentReaction {
     }
 
     if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype($user_id));
+      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
     }
 
     if (@$params['emoji'] && !is_string(@$params['emoji'])) {
-      throw new \Files\InvalidParameterException('$emoji must be of type string; received ' . gettype($emoji));
+      throw new \Files\InvalidParameterException('$emoji must be of type string; received ' . gettype(@$params['emoji']));
     }
 
     $response = Api::sendRequest('/message_comment_reactions', 'POST', $params, $options);
 
     return new MessageCommentReaction((array)(@$response->data ?: []), $options);
   }
+
 }

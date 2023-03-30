@@ -18,6 +18,9 @@ require_once __DIR__ . '/../Files.php';
 class Session {
   private $attributes = [];
   private $options = [];
+  private static $static_mapped_functions = [
+    'list' => 'all',
+  ];
 
   function __construct($attributes = [], $options = []) {
     foreach ($attributes as $key => $value) {
@@ -33,6 +36,15 @@ class Session {
 
   public function __get($name) {
     return @$this->attributes[$name];
+  }
+
+  public static function __callStatic($name, $arguments) {
+    if(in_array($name, array_keys(self::$static_mapped_functions))){
+      $method = self::$static_mapped_functions[$name];
+      if (method_exists(__CLASS__, $method)){ 
+        return @self::$method($arguments);
+      }
+    }
   }
 
   public function isLoaded() {
@@ -121,6 +133,7 @@ class Session {
       }
   }
 
+
   // Parameters:
   //   username - string - Username to sign in as
   //   password - string - Password for sign in
@@ -128,19 +141,19 @@ class Session {
   //   partial_session_id - string - Identifier for a partially-completed login
   public static function create($params = [], $options = []) {
     if (@$params['username'] && !is_string(@$params['username'])) {
-      throw new \Files\InvalidParameterException('$username must be of type string; received ' . gettype($username));
+      throw new \Files\InvalidParameterException('$username must be of type string; received ' . gettype(@$params['username']));
     }
 
     if (@$params['password'] && !is_string(@$params['password'])) {
-      throw new \Files\InvalidParameterException('$password must be of type string; received ' . gettype($password));
+      throw new \Files\InvalidParameterException('$password must be of type string; received ' . gettype(@$params['password']));
     }
 
     if (@$params['otp'] && !is_string(@$params['otp'])) {
-      throw new \Files\InvalidParameterException('$otp must be of type string; received ' . gettype($otp));
+      throw new \Files\InvalidParameterException('$otp must be of type string; received ' . gettype(@$params['otp']));
     }
 
     if (@$params['partial_session_id'] && !is_string(@$params['partial_session_id'])) {
-      throw new \Files\InvalidParameterException('$partial_session_id must be of type string; received ' . gettype($partial_session_id));
+      throw new \Files\InvalidParameterException('$partial_session_id must be of type string; received ' . gettype(@$params['partial_session_id']));
     }
 
     $response = Api::sendRequest('/sessions', 'POST', $params, $options);
@@ -148,13 +161,16 @@ class Session {
     return new Session((array)(@$response->data ?: []), $options);
   }
 
+
   public static function delete($params = [], $options = []) {
     $response = Api::sendRequest('/sessions', 'DELETE', $options);
 
     return $response->data;
   }
 
+
   public static function destroy($params = [], $options = []) {
     return self::delete($params, $options);
   }
+  
 }

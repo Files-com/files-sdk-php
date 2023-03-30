@@ -97,7 +97,7 @@ $as2_partner->create(, [
 ## Update As2 Partner
 
 ```
-$as2_partner = current(\Files\Model\As2Partner::list());
+$as2_partner = current(\Files\Model\As2Partner::all());
 
 $as2_partner->update([
   'name' => "AS2 Partner Name",
@@ -141,7 +141,7 @@ $as2_partner->update([
 ## Delete As2 Partner
 
 ```
-$as2_partner = current(\Files\Model\As2Partner::list());
+$as2_partner = current(\Files\Model\As2Partner::all());
 
 $as2_partner->delete();
 ```

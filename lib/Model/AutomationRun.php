@@ -18,6 +18,9 @@ require_once __DIR__ . '/../Files.php';
 class AutomationRun {
   private $attributes = [];
   private $options = [];
+  private static $static_mapped_functions = [
+    'list' => 'all',
+  ];
 
   function __construct($attributes = [], $options = []) {
     foreach ($attributes as $key => $value) {
@@ -33,6 +36,15 @@ class AutomationRun {
 
   public function __get($name) {
     return @$this->attributes[$name];
+  }
+
+  public static function __callStatic($name, $arguments) {
+    if(in_array($name, array_keys(self::$static_mapped_functions))){
+      $method = self::$static_mapped_functions[$name];
+      if (method_exists(__CLASS__, $method)){ 
+        return @self::$method($arguments);
+      }
+    }
   }
 
   public function isLoaded() {
@@ -76,25 +88,25 @@ class AutomationRun {
   //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction (e.g. `sort_by[created_at]=desc`). Valid fields are `created_at` and `status`.
   //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `status`.
   //   automation_id (required) - int64 - ID of the associated Automation.
-  public static function list($params = [], $options = []) {
+  public static function all($params = [], $options = []) {
     if (!@$params['automation_id']) {
       throw new \Files\MissingParameterException('Parameter missing: automation_id');
     }
 
     if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype($user_id));
+      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
     }
 
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
+      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
     }
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
+      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
     }
 
     if (@$params['automation_id'] && !is_int(@$params['automation_id'])) {
-      throw new \Files\InvalidParameterException('$automation_id must be of type int; received ' . gettype($automation_id));
+      throw new \Files\InvalidParameterException('$automation_id must be of type int; received ' . gettype(@$params['automation_id']));
     }
 
     $response = Api::sendRequest('/automation_runs', 'GET', $params, $options);
@@ -108,9 +120,8 @@ class AutomationRun {
     return $return_array;
   }
 
-  public static function all($params = [], $options = []) {
-    return self::list($params, $options);
-  }
+
+  
 
   // Parameters:
   //   id (required) - int64 - Automation Run ID.
@@ -126,7 +137,7 @@ class AutomationRun {
     }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
     }
 
     $response = Api::sendRequest('/automation_runs/' . @$params['id'] . '', 'GET', $params, $options);
@@ -134,7 +145,9 @@ class AutomationRun {
     return new AutomationRun((array)(@$response->data ?: []), $options);
   }
 
+
   public static function get($id, $params = [], $options = []) {
     return self::find($id, $params, $options);
   }
+  
 }

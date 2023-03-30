@@ -18,6 +18,9 @@ require_once __DIR__ . '/../Files.php';
 class FileCommentReaction {
   private $attributes = [];
   private $options = [];
+  private static $static_mapped_functions = [
+    'list' => 'all',
+  ];
 
   function __construct($attributes = [], $options = []) {
     foreach ($attributes as $key => $value) {
@@ -33,6 +36,15 @@ class FileCommentReaction {
 
   public function __get($name) {
     return @$this->attributes[$name];
+  }
+
+  public static function __callStatic($name, $arguments) {
+    if(in_array($name, array_keys(self::$static_mapped_functions))){
+      $method = self::$static_mapped_functions[$name];
+      if (method_exists(__CLASS__, $method)){ 
+        return @self::$method($arguments);
+      }
+    }
   }
 
   public function isLoaded() {
@@ -89,7 +101,7 @@ class FileCommentReaction {
     }
 
     if (@$params['id'] && !is_int(@$params['id'])) {
-      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype($id));
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
     }
 
     $response = Api::sendRequest('/file_comment_reactions/' . @$params['id'] . '', 'DELETE', $params, $this->options);
@@ -110,6 +122,7 @@ class FileCommentReaction {
       }
   }
 
+
   // Parameters:
   //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
   //   file_comment_id (required) - int64 - ID of file comment to attach reaction to.
@@ -124,19 +137,20 @@ class FileCommentReaction {
     }
 
     if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype($user_id));
+      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
     }
 
     if (@$params['file_comment_id'] && !is_int(@$params['file_comment_id'])) {
-      throw new \Files\InvalidParameterException('$file_comment_id must be of type int; received ' . gettype($file_comment_id));
+      throw new \Files\InvalidParameterException('$file_comment_id must be of type int; received ' . gettype(@$params['file_comment_id']));
     }
 
     if (@$params['emoji'] && !is_string(@$params['emoji'])) {
-      throw new \Files\InvalidParameterException('$emoji must be of type string; received ' . gettype($emoji));
+      throw new \Files\InvalidParameterException('$emoji must be of type string; received ' . gettype(@$params['emoji']));
     }
 
     $response = Api::sendRequest('/file_comment_reactions', 'POST', $params, $options);
 
     return new FileCommentReaction((array)(@$response->data ?: []), $options);
   }
+
 }

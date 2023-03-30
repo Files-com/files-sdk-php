@@ -67,7 +67,7 @@ $group_user->create(, [
 ## Update Group User
 
 ```
-$group_user = current(\Files\Model\GroupUser::list());
+$group_user = current(\Files\Model\GroupUser::all());
 
 $group_user->update([
   'group_id' => 1,
@@ -102,7 +102,7 @@ $group_user->update([
 ## Delete Group User
 
 ```
-$group_user = current(\Files\Model\GroupUser::list());
+$group_user = current(\Files\Model\GroupUser::all());
 
 $group_user->delete([
   'group_id' => 1,

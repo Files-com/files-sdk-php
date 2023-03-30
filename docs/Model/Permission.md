@@ -83,7 +83,7 @@ $permission->create(, [
 ## Delete Permission
 
 ```
-$permission = current(\Files\Model\Permission::list());
+$permission = current(\Files\Model\Permission::all());
 
 $permission->delete();
 ```

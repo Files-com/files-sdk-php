@@ -1,8 +1,8 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Files;
+
+error_reporting(E_ERROR);
 
 use Files\Model\ApiKey;
 use Files\Model\File;
@@ -10,13 +10,13 @@ use Files\Model\Folder;
 use Files\Model\Session;
 use Files\Model\User;
 
-require dirname(__FILE__) . '/../lib/Files.php';
+require_once dirname(__FILE__) . '/../vendor/autoload.php';
 
 // name of an existing folder in your root to create/delete test files and folders
 define('SDK_TEST_ROOT_FOLDER', 'sdk-test');
 
 // any user count that will require multiple page requests to fetch all users
-define('USER_COUNT_TO_TRIGGER_PAGINATION', 40);
+define('USER_COUNT_TO_TRIGGER_PAGINATION', 1);
 
 $api_key = getenv('FILES_API_KEY');
 $api_domain = getenv('FILES_API_DOMAIN');
@@ -423,7 +423,9 @@ function testSession() {
 
   assert(!!$session->id);
 
-  ApiKey::list(['user_id' => 0]);
+  // Tests list method alias on PHP7+, and standard list on PHP5
+  $list_method = (version_compare(PHP_VERSION, '7.0.0') >= 0) ? 'list' : 'all';
+  ApiKey::$list_method(['user_id' => 0]);
 
   Session::destroy();
   Files::setSessionId(null);

@@ -167,7 +167,7 @@ $automation->create(, [
 ## Update Automation
 
 ```
-$automation = current(\Files\Model\Automation::list());
+$automation = current(\Files\Model\Automation::all());
 
 $automation->update([
   'source' => "source",
@@ -264,7 +264,7 @@ $automation->update([
 ## Delete Automation
 
 ```
-$automation = current(\Files\Model\Automation::list());
+$automation = current(\Files\Model\Automation::all());
 
 $automation->delete();
 ```

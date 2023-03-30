@@ -18,6 +18,9 @@ require_once __DIR__ . '/../Files.php';
 class BundleRecipient {
   private $attributes = [];
   private $options = [];
+  private static $static_mapped_functions = [
+    'list' => 'all',
+  ];
 
   function __construct($attributes = [], $options = []) {
     foreach ($attributes as $key => $value) {
@@ -33,6 +36,15 @@ class BundleRecipient {
 
   public function __get($name) {
     return @$this->attributes[$name];
+  }
+
+  public static function __callStatic($name, $arguments) {
+    if(in_array($name, array_keys(self::$static_mapped_functions))){
+      $method = self::$static_mapped_functions[$name];
+      if (method_exists(__CLASS__, $method)){ 
+        return @self::$method($arguments);
+      }
+    }
   }
 
   public function isLoaded() {
@@ -121,6 +133,7 @@ class BundleRecipient {
       }
   }
 
+
   // Parameters:
   //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
   //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
@@ -128,25 +141,25 @@ class BundleRecipient {
   //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction (e.g. `sort_by[has_registrations]=desc`). Valid fields are `has_registrations`.
   //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `has_registrations`.
   //   bundle_id (required) - int64 - List recipients for the bundle with this ID.
-  public static function list($params = [], $options = []) {
+  public static function all($params = [], $options = []) {
     if (!@$params['bundle_id']) {
       throw new \Files\MissingParameterException('Parameter missing: bundle_id');
     }
 
     if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype($user_id));
+      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
     }
 
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype($cursor));
+      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
     }
 
     if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype($per_page));
+      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
     }
 
     if (@$params['bundle_id'] && !is_int(@$params['bundle_id'])) {
-      throw new \Files\InvalidParameterException('$bundle_id must be of type int; received ' . gettype($bundle_id));
+      throw new \Files\InvalidParameterException('$bundle_id must be of type int; received ' . gettype(@$params['bundle_id']));
     }
 
     $response = Api::sendRequest('/bundle_recipients', 'GET', $params, $options);
@@ -160,9 +173,8 @@ class BundleRecipient {
     return $return_array;
   }
 
-  public static function all($params = [], $options = []) {
-    return self::list($params, $options);
-  }
+
+  
 
   // Parameters:
   //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
@@ -182,31 +194,32 @@ class BundleRecipient {
     }
 
     if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype($user_id));
+      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
     }
 
     if (@$params['bundle_id'] && !is_int(@$params['bundle_id'])) {
-      throw new \Files\InvalidParameterException('$bundle_id must be of type int; received ' . gettype($bundle_id));
+      throw new \Files\InvalidParameterException('$bundle_id must be of type int; received ' . gettype(@$params['bundle_id']));
     }
 
     if (@$params['recipient'] && !is_string(@$params['recipient'])) {
-      throw new \Files\InvalidParameterException('$recipient must be of type string; received ' . gettype($recipient));
+      throw new \Files\InvalidParameterException('$recipient must be of type string; received ' . gettype(@$params['recipient']));
     }
 
     if (@$params['name'] && !is_string(@$params['name'])) {
-      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype($name));
+      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
     }
 
     if (@$params['company'] && !is_string(@$params['company'])) {
-      throw new \Files\InvalidParameterException('$company must be of type string; received ' . gettype($company));
+      throw new \Files\InvalidParameterException('$company must be of type string; received ' . gettype(@$params['company']));
     }
 
     if (@$params['note'] && !is_string(@$params['note'])) {
-      throw new \Files\InvalidParameterException('$note must be of type string; received ' . gettype($note));
+      throw new \Files\InvalidParameterException('$note must be of type string; received ' . gettype(@$params['note']));
     }
 
     $response = Api::sendRequest('/bundle_recipients', 'POST', $params, $options);
 
     return new BundleRecipient((array)(@$response->data ?: []), $options);
   }
+
 }

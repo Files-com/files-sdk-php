@@ -82,7 +82,7 @@ $bundle_notification->create(, [
 ## Update Bundle Notification
 
 ```
-$bundle_notification = current(\Files\Model\BundleNotification::list());
+$bundle_notification = current(\Files\Model\BundleNotification::all());
 
 $bundle_notification->update([
   'notify_on_registration' => true,
@@ -113,7 +113,7 @@ $bundle_notification->update([
 ## Delete Bundle Notification
 
 ```
-$bundle_notification = current(\Files\Model\BundleNotification::list());
+$bundle_notification = current(\Files\Model\BundleNotification::all());
 
 $bundle_notification->delete();
 ```

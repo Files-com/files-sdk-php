@@ -72,7 +72,7 @@ $user_request->create(, [
 ## Delete User Request
 
 ```
-$user_request = current(\Files\Model\UserRequest::list());
+$user_request = current(\Files\Model\UserRequest::all());
 
 $user_request->delete();
 ```

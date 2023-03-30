@@ -19,7 +19,7 @@
     "ext-curl": "*",
     "ext-json": "*",
     "ext-mbstring": "*",
-    "guzzlehttp/guzzle": "^7"
+    "guzzlehttp/guzzle": "^6 || ^7"
   },
   "autoload": {
     "classmap": [ "lib/" ]

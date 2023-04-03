@@ -19,6 +19,7 @@
     "ext-curl": "*",
     "ext-json": "*",
     "ext-mbstring": "*",
+    "ext-intl": "*",
     "guzzlehttp/guzzle": "^6 || ^7"
   },
   "autoload": {

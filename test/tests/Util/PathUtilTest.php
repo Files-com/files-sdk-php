@@ -11,6 +11,9 @@ class PathUtilTest extends TestCase
     $this->assertEquals(true, Util\PathUtil::same("", ""));
   }
 
+  /**
+   * @doesNotPerformAssertions
+   */
   public function testSameProvider()
   {
     // parse your data file however you want

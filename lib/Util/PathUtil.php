@@ -206,7 +206,7 @@ class PathUtil
    */
   public static function normalizeForComparison(...$args)
   {
-    return rtrim(self::unicodeNormalizeAndTransliterate(self::normalize($args)));
+    return rtrim(mb_strtolower(self::unicodeNormalizeAndTransliterate(self::normalize($args)),"UTF-8"));
   }
 
   /**
@@ -257,7 +257,7 @@ class PathUtil
   private static function u8($str)
   {
     try {
-      return mb_strtolower(mb_convert_encoding($str, 'UTF-8'), 'UTF-8');
+      return mb_convert_encoding($str, 'UTF-8');
     } catch (Error $e) {
       // NOOP
     }

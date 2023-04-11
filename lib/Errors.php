@@ -132,6 +132,7 @@ class InvalidBodyException extends \Files\BadRequestException {}
 class InvalidCursorException extends \Files\BadRequestException {}
 class InvalidCursorTypeForSortException extends \Files\BadRequestException {}
 class InvalidEtagsException extends \Files\BadRequestException {}
+class InvalidFilterAliasCombinationException extends \Files\BadRequestException {}
 class InvalidFilterCombinationException extends \Files\BadRequestException {}
 class InvalidFilterFieldException extends \Files\BadRequestException {}
 class InvalidFilterParamException extends \Files\BadRequestException {}

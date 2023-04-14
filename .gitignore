@@ -3,4 +3,5 @@ composer.lock
 composer.phar
 test/vendor
 test/composer.lock
+test/.phpunit.result.cache
 coverage/

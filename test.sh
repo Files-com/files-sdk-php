@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-#!/usr/bin/env bash
 DEFAULT_PHP_VERSION="$(php --version)"
 re='[0-9]+\.[0-9]+'; 
 PHP_DETECTED_VERS="5.6";
@@ -15,9 +14,10 @@ run_php_vers()
 {
   echo "======= RUNNING UNIT TESTS FOR: $1 ======="
   cd "${DIR}/test" || exit 1 # Force the path
-  rm composer.lock
+  rm composer.lock # Remove the lock so we can update deps for different PHP versions
   "$1" "${DIR}/composer.phar" install 
   "$1" ./vendor/bin/phpunit --testsuite default || exit 1
+  rm .phpunit.result.cache # We don't want to save the result cache between runs
 }
 # Detect existing version
 if [[ $DEFAULT_PHP_VERSION =~ $re ]]; then
@@ -71,6 +71,5 @@ else
   echo "PHP Tests ran for versions:"
   ( IFS=$'\n'; echo "${ran_php_tests[*]}" )
 fi
-
 
 exit $?

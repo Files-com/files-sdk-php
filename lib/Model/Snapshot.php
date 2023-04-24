@@ -51,6 +51,51 @@ class Snapshot {
     return !!@$this->attributes['id'];
   }
 
+  // date-time # When the snapshot expires.
+  public function getExpiresAt() {
+    return @$this->attributes['expires_at'];
+  }
+
+  public function setExpiresAt($value) {
+    return $this->attributes['expires_at'] = $value;
+  }
+
+  // date-time # When the snapshot was finalized.
+  public function getFinalizedAt() {
+    return @$this->attributes['finalized_at'];
+  }
+
+  public function setFinalizedAt($value) {
+    return $this->attributes['finalized_at'] = $value;
+  }
+
+  // string # A name for the snapshot.
+  public function getName() {
+    return @$this->attributes['name'];
+  }
+
+  public function setName($value) {
+    return $this->attributes['name'] = $value;
+  }
+
+  // int64 # The user that created this snapshot, if applicable.
+  public function getUserId() {
+    return @$this->attributes['user_id'];
+  }
+
+  public function setUserId($value) {
+    return $this->attributes['user_id'] = $value;
+  }
+
+  // int64 # The bundle using this snapshot, if applicable.
+  public function getBundleId() {
+    return @$this->attributes['bundle_id'];
+  }
+
+  public function setBundleId($value) {
+    return $this->attributes['bundle_id'] = $value;
+  }
+
   // int64 # Snapshot ID.
   public function getId() {
     return @$this->attributes['id'];
@@ -131,7 +176,13 @@ class Snapshot {
 
     $response = Api::sendRequest('/snapshots', 'GET', $params, $options);
 
-    return $response->data;
+    $return_array = [];
+
+    foreach ($response->data as $obj) {
+      $return_array[] = new Snapshot((array)$obj, $options);
+    }
+
+    return $return_array;
   }
 
 
@@ -156,7 +207,7 @@ class Snapshot {
 
     $response = Api::sendRequest('/snapshots/' . @$params['id'] . '', 'GET', $params, $options);
 
-    return $response->data;
+    return new Snapshot((array)(@$response->data ?: []), $options);
   }
 
 
@@ -168,7 +219,7 @@ class Snapshot {
   public static function create($params = [], $options = []) {
     $response = Api::sendRequest('/snapshots', 'POST', $options);
 
-    return $response->data;
+    return new Snapshot((array)(@$response->data ?: []), $options);
   }
 
 }

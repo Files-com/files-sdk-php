@@ -60,7 +60,7 @@ class Behavior {
     return $this->attributes['id'] = $value;
   }
 
-  // string # Folder path This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
+  // string # Folder path.  Note that Behavior paths cannot be updated once initially set.  You will need to remove and re-create the behavior on the new path. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
   public function getPath() {
     return @$this->attributes['path'];
   }

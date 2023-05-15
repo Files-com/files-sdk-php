@@ -629,6 +629,7 @@ class Bundle {
   //   skip_email - boolean - BundleRegistrations can be saved without providing email?
   //   skip_name - boolean - BundleRegistrations can be saved without providing name?
   //   skip_company - boolean - BundleRegistrations can be saved without providing company?
+  //   snapshot_id - int64 - ID of the snapshot containing this bundle's contents.
   //   watermark_attachment_file - file - Preview watermark image applied to all bundle items.
   public static function create($params = [], $options = []) {
     if (!@$params['paths']) {
@@ -685,6 +686,10 @@ class Bundle {
 
     if (@$params['inbox_id'] && !is_int(@$params['inbox_id'])) {
       throw new \Files\InvalidParameterException('$inbox_id must be of type int; received ' . gettype(@$params['inbox_id']));
+    }
+
+    if (@$params['snapshot_id'] && !is_int(@$params['snapshot_id'])) {
+      throw new \Files\InvalidParameterException('$snapshot_id must be of type int; received ' . gettype(@$params['snapshot_id']));
     }
 
     $response = Api::sendRequest('/bundles', 'POST', $params, $options);

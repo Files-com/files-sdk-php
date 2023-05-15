@@ -96,6 +96,15 @@ class Snapshot {
     return $this->attributes['bundle_id'] = $value;
   }
 
+  // array(string) # An array of paths to add to the snapshot.
+  public function getPaths() {
+    return @$this->attributes['paths'];
+  }
+
+  public function setPaths($value) {
+    return $this->attributes['paths'] = $value;
+  }
+
   // int64 # Snapshot ID.
   public function getId() {
     return @$this->attributes['id'];
@@ -105,6 +114,10 @@ class Snapshot {
     return $this->attributes['id'] = $value;
   }
 
+  // Parameters:
+  //   expires_at - string - When the snapshot expires.
+  //   name - string - A name for the snapshot.
+  //   paths - array(string) - An array of paths to add to the snapshot.
   public function update($params = []) {
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
@@ -120,6 +133,18 @@ class Snapshot {
 
     if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
+    }
+
+    if (@$params['expires_at'] && !is_string(@$params['expires_at'])) {
+      throw new \Files\InvalidParameterException('$expires_at must be of type string; received ' . gettype(@$params['expires_at']));
+    }
+
+    if (@$params['name'] && !is_string(@$params['name'])) {
+      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
+    }
+
+    if (@$params['paths'] && !is_array(@$params['paths'])) {
+      throw new \Files\InvalidParameterException('$paths must be of type array; received ' . gettype(@$params['paths']));
     }
 
     $response = Api::sendRequest('/snapshots/' . @$params['id'] . '', 'PATCH', $params, $this->options);
@@ -216,8 +241,24 @@ class Snapshot {
   }
   
 
+  // Parameters:
+  //   expires_at - string - When the snapshot expires.
+  //   name - string - A name for the snapshot.
+  //   paths - array(string) - An array of paths to add to the snapshot.
   public static function create($params = [], $options = []) {
-    $response = Api::sendRequest('/snapshots', 'POST', $options);
+    if (@$params['expires_at'] && !is_string(@$params['expires_at'])) {
+      throw new \Files\InvalidParameterException('$expires_at must be of type string; received ' . gettype(@$params['expires_at']));
+    }
+
+    if (@$params['name'] && !is_string(@$params['name'])) {
+      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
+    }
+
+    if (@$params['paths'] && !is_array(@$params['paths'])) {
+      throw new \Files\InvalidParameterException('$paths must be of type array; received ' . gettype(@$params['paths']));
+    }
+
+    $response = Api::sendRequest('/snapshots', 'POST', $params, $options);
 
     return new Snapshot((array)(@$response->data ?: []), $options);
   }

@@ -17,6 +17,7 @@
 * `name` (string): A name for the snapshot.
 * `user_id` (int64): The user that created this snapshot, if applicable.
 * `bundle_id` (int64): The bundle using this snapshot, if applicable.
+* `paths` (array(string)): An array of paths to add to the snapshot.
 * `id` (int64): Snapshot ID.
 
 ---
@@ -56,9 +57,18 @@ $snapshot->find($id);
 
 ```
 $snapshot = new \Files\Model\Snapshot();
-$snapshot->create
+$snapshot->create(, [
+  'expires_at' => "2000-01-01T01:00:00Z",
+  'name' => "My Snapshot",
+]);
 ```
 
+
+### Parameters
+
+* `expires_at` (string): When the snapshot expires.
+* `name` (string): A name for the snapshot.
+* `paths` (array(string)): An array of paths to add to the snapshot.
 
 ---
 
@@ -67,12 +77,18 @@ $snapshot->create
 ```
 $snapshot = current(\Files\Model\Snapshot::all());
 
-$snapshot->update();
+$snapshot->update([
+  'expires_at' => "2000-01-01T01:00:00Z",
+  'name' => "My Snapshot",
+]);
 ```
 
 ### Parameters
 
 * `id` (int64): Required - Snapshot ID.
+* `expires_at` (string): When the snapshot expires.
+* `name` (string): A name for the snapshot.
+* `paths` (array(string)): An array of paths to add to the snapshot.
 
 ### Example Response
 

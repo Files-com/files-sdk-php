@@ -541,6 +541,11 @@ class Site {
     return @$this->attributes['pin_all_remote_servers_to_site_region'];
   }
 
+  // boolean # If true, we will prevent non-administrators from receiving any permissions directly on the root folder.  This is commonly used to prevent the accidental application of permissions.
+  public function getPreventRootPermissionsForNonSiteAdmins() {
+    return @$this->attributes['prevent_root_permissions_for_non_site_admins'];
+  }
+
   // boolean # Require two-factor authentication for all users?
   public function getRequire2fa() {
     return @$this->attributes['require_2fa'];
@@ -840,6 +845,7 @@ class Site {
   //   bundle_activity_notifications - string - Do Bundle owners receive activity notifications?
   //   bundle_upload_receipt_notifications - string - Do Bundle uploaders receive upload confirmation notifications?
   //   password_requirements_apply_to_bundles - boolean - Require bundles' passwords, and passwords for other items (inboxes, public shares, etc.) to conform to the same requirements as users' passwords?
+  //   prevent_root_permissions_for_non_site_admins - boolean - If true, we will prevent non-administrators from receiving any permissions directly on the root folder.  This is commonly used to prevent the accidental application of permissions.
   //   opt_out_global - boolean - Use servers in the USA only?
   //   use_provided_modified_at - boolean - Allow uploaders to set `provided_modified_at` for uploaded files?
   //   custom_namespace - boolean - Is this site using a custom namespace for users?

@@ -214,6 +214,7 @@ class SiteAdminRequiredException extends \Files\NotAuthorizedException {}
 class SiteFilesAreImmutableException extends \Files\NotAuthorizedException {}
 class TwoFactorAuthenticationRequiredException extends \Files\NotAuthorizedException {}
 class UserIdWithoutSiteAdminException extends \Files\NotAuthorizedException {}
+class WriteAndBundlePermissionRequiredException extends \Files\NotAuthorizedException {}
 class WritePermissionRequiredException extends \Files\NotAuthorizedException {}
 class ZipDownloadIpMismatchException extends \Files\NotAuthorizedException {}
 

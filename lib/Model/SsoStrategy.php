@@ -186,6 +186,11 @@ class SsoStrategy {
     return @$this->attributes['provision_site_admin_groups'];
   }
 
+  // string # Comma-separated list of group names whose members will be provisioned as Group Admins.
+  public function getProvisionGroupAdminGroups() {
+    return @$this->attributes['provision_group_admin_groups'];
+  }
+
   // boolean # DEPRECATED: Auto-provisioned users get Sharing permission. Use a Group with the Bundle permission instead.
   public function getProvisionAttachmentsPermission() {
     return @$this->attributes['provision_attachments_permission'];

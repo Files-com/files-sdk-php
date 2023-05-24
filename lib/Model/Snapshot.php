@@ -51,6 +51,15 @@ class Snapshot {
     return !!@$this->attributes['id'];
   }
 
+  // int64 # The snapshot's unique ID.
+  public function getId() {
+    return @$this->attributes['id'];
+  }
+
+  public function setId($value) {
+    return $this->attributes['id'] = $value;
+  }
+
   // date-time # When the snapshot expires.
   public function getExpiresAt() {
     return @$this->attributes['expires_at'];
@@ -103,15 +112,6 @@ class Snapshot {
 
   public function setPaths($value) {
     return $this->attributes['paths'] = $value;
-  }
-
-  // int64 # Snapshot ID.
-  public function getId() {
-    return @$this->attributes['id'];
-  }
-
-  public function setId($value) {
-    return $this->attributes['id'] = $value;
   }
 
   // Parameters:

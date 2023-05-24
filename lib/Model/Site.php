@@ -561,6 +561,11 @@ class Site {
     return @$this->attributes['require_2fa_user_type'];
   }
 
+  // boolean # If true, we will hide the 'Remember Me' box on Inbox and Bundle registration pages, requiring that the user logout and log back in every time they visit the page.
+  public function getRequireLogoutFromBundlesAndInboxes() {
+    return @$this->attributes['require_logout_from_bundles_and_inboxes'];
+  }
+
   // Session # Current session
   public function getSession() {
     return @$this->attributes['session'];
@@ -835,6 +840,7 @@ class Site {
   //   password_require_special - boolean - Require special characters in password?
   //   password_require_number - boolean - Require a number in passwords?
   //   password_require_unbreached - boolean - Require passwords that have not been previously breached? (see https://haveibeenpwned.com/)
+  //   require_logout_from_bundles_and_inboxes - boolean - If true, we will hide the 'Remember Me' box on Inbox and Bundle registration pages, requiring that the user logout and log back in every time they visit the page.
   //   sftp_user_root_enabled - boolean - Use user FTP roots also for SFTP?
   //   disable_password_reset - boolean - Is password reset disabled?
   //   immutable_files - boolean - Are files protected from modification?

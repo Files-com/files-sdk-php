@@ -51,7 +51,8 @@
   "files_agent_root": "example",
   "files_agent_api_token": "example",
   "filebase_bucket": "my-bucket",
-  "filebase_access_key": "example"
+  "filebase_access_key": "example",
+  "dropbox_teams": true
 }
 ```
 
@@ -103,6 +104,7 @@
 * `files_agent_api_token` (string): Files Agent API Token
 * `filebase_bucket` (string): Filebase Bucket name
 * `filebase_access_key` (string): Filebase Access Key.
+* `dropbox_teams` (boolean): List Team folders in root
 * `aws_secret_key` (string): AWS secret key.
 * `password` (string): Password if needed.
 * `private_key` (string): Private key if needed.
@@ -211,6 +213,7 @@ $remote_server->create(, [
   'files_agent_permission_set' => "read_write",
   'filebase_access_key' => "example",
   'filebase_bucket' => "my-bucket",
+  'dropbox_teams' => true,
 ]);
 ```
 
@@ -271,6 +274,7 @@ $remote_server->create(, [
 * `filebase_access_key` (string): Filebase Access Key.
 * `filebase_secret_key` (string): Filebase secret key
 * `filebase_bucket` (string): Filebase Bucket name
+* `dropbox_teams` (boolean): List Team folders in root
 
 ---
 
@@ -376,6 +380,7 @@ $remote_server->update([
   'files_agent_permission_set' => "read_write",
   'filebase_access_key' => "example",
   'filebase_bucket' => "my-bucket",
+  'dropbox_teams' => true,
 ]);
 ```
 
@@ -436,6 +441,7 @@ $remote_server->update([
 * `filebase_access_key` (string): Filebase Access Key.
 * `filebase_secret_key` (string): Filebase secret key
 * `filebase_bucket` (string): Filebase Bucket name
+* `dropbox_teams` (boolean): List Team folders in root
 
 ### Example Response
 
@@ -488,7 +494,8 @@ $remote_server->update([
   "files_agent_root": "example",
   "files_agent_api_token": "example",
   "filebase_bucket": "my-bucket",
-  "filebase_access_key": "example"
+  "filebase_access_key": "example",
+  "dropbox_teams": true
 }
 ```
 

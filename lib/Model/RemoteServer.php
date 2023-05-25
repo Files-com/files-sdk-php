@@ -483,6 +483,15 @@ class RemoteServer {
     return $this->attributes['filebase_access_key'] = $value;
   }
 
+  // boolean # List Team folders in root
+  public function getDropboxTeams() {
+    return @$this->attributes['dropbox_teams'];
+  }
+
+  public function setDropboxTeams($value) {
+    return $this->attributes['dropbox_teams'] = $value;
+  }
+
   // string # AWS secret key.
   public function getAwsSecretKey() {
     return @$this->attributes['aws_secret_key'];
@@ -752,6 +761,7 @@ class RemoteServer {
   //   filebase_access_key - string - Filebase Access Key.
   //   filebase_secret_key - string - Filebase secret key
   //   filebase_bucket - string - Filebase Bucket name
+  //   dropbox_teams - boolean - List Team folders in root
   public function update($params = []) {
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
@@ -1145,6 +1155,7 @@ class RemoteServer {
   //   filebase_access_key - string - Filebase Access Key.
   //   filebase_secret_key - string - Filebase secret key
   //   filebase_bucket - string - Filebase Bucket name
+  //   dropbox_teams - boolean - List Team folders in root
   public static function create($params = [], $options = []) {
     if (@$params['aws_access_key'] && !is_string(@$params['aws_access_key'])) {
       throw new \Files\InvalidParameterException('$aws_access_key must be of type string; received ' . gettype(@$params['aws_access_key']));

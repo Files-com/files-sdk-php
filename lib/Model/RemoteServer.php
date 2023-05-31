@@ -483,6 +483,33 @@ class RemoteServer {
     return $this->attributes['filebase_access_key'] = $value;
   }
 
+  // string # Cloudflare Bucket name
+  public function getCloudflareBucket() {
+    return @$this->attributes['cloudflare_bucket'];
+  }
+
+  public function setCloudflareBucket($value) {
+    return $this->attributes['cloudflare_bucket'] = $value;
+  }
+
+  // string # Cloudflare Access Key.
+  public function getCloudflareAccessKey() {
+    return @$this->attributes['cloudflare_access_key'];
+  }
+
+  public function setCloudflareAccessKey($value) {
+    return $this->attributes['cloudflare_access_key'] = $value;
+  }
+
+  // string # Cloudflare endpoint
+  public function getCloudflareEndpoint() {
+    return @$this->attributes['cloudflare_endpoint'];
+  }
+
+  public function setCloudflareEndpoint($value) {
+    return $this->attributes['cloudflare_endpoint'] = $value;
+  }
+
   // boolean # List Team folders in root
   public function getDropboxTeams() {
     return @$this->attributes['dropbox_teams'];
@@ -627,6 +654,15 @@ class RemoteServer {
     return $this->attributes['filebase_secret_key'] = $value;
   }
 
+  // string # Cloudflare secret key
+  public function getCloudflareSecretKey() {
+    return @$this->attributes['cloudflare_secret_key'];
+  }
+
+  public function setCloudflareSecretKey($value) {
+    return $this->attributes['cloudflare_secret_key'] = $value;
+  }
+
   // Post local changes, check in, and download configuration file (used by some Remote Server integrations, such as the Files.com Agent)
   //
   // Parameters:
@@ -761,6 +797,10 @@ class RemoteServer {
   //   filebase_access_key - string - Filebase Access Key.
   //   filebase_secret_key - string - Filebase secret key
   //   filebase_bucket - string - Filebase Bucket name
+  //   cloudflare_access_key - string - Cloudflare Access Key.
+  //   cloudflare_secret_key - string - Cloudflare secret key
+  //   cloudflare_bucket - string - Cloudflare Bucket name
+  //   cloudflare_endpoint - string - Cloudflare endpoint
   //   dropbox_teams - boolean - List Team folders in root
   public function update($params = []) {
     if (!is_array($params)) {
@@ -983,6 +1023,22 @@ class RemoteServer {
       throw new \Files\InvalidParameterException('$filebase_bucket must be of type string; received ' . gettype(@$params['filebase_bucket']));
     }
 
+    if (@$params['cloudflare_access_key'] && !is_string(@$params['cloudflare_access_key'])) {
+      throw new \Files\InvalidParameterException('$cloudflare_access_key must be of type string; received ' . gettype(@$params['cloudflare_access_key']));
+    }
+
+    if (@$params['cloudflare_secret_key'] && !is_string(@$params['cloudflare_secret_key'])) {
+      throw new \Files\InvalidParameterException('$cloudflare_secret_key must be of type string; received ' . gettype(@$params['cloudflare_secret_key']));
+    }
+
+    if (@$params['cloudflare_bucket'] && !is_string(@$params['cloudflare_bucket'])) {
+      throw new \Files\InvalidParameterException('$cloudflare_bucket must be of type string; received ' . gettype(@$params['cloudflare_bucket']));
+    }
+
+    if (@$params['cloudflare_endpoint'] && !is_string(@$params['cloudflare_endpoint'])) {
+      throw new \Files\InvalidParameterException('$cloudflare_endpoint must be of type string; received ' . gettype(@$params['cloudflare_endpoint']));
+    }
+
     $response = Api::sendRequest('/remote_servers/' . @$params['id'] . '', 'PATCH', $params, $this->options);
     return $response->data;
   }
@@ -1155,6 +1211,10 @@ class RemoteServer {
   //   filebase_access_key - string - Filebase Access Key.
   //   filebase_secret_key - string - Filebase secret key
   //   filebase_bucket - string - Filebase Bucket name
+  //   cloudflare_access_key - string - Cloudflare Access Key.
+  //   cloudflare_secret_key - string - Cloudflare secret key
+  //   cloudflare_bucket - string - Cloudflare Bucket name
+  //   cloudflare_endpoint - string - Cloudflare endpoint
   //   dropbox_teams - boolean - List Team folders in root
   public static function create($params = [], $options = []) {
     if (@$params['aws_access_key'] && !is_string(@$params['aws_access_key'])) {
@@ -1359,6 +1419,22 @@ class RemoteServer {
 
     if (@$params['filebase_bucket'] && !is_string(@$params['filebase_bucket'])) {
       throw new \Files\InvalidParameterException('$filebase_bucket must be of type string; received ' . gettype(@$params['filebase_bucket']));
+    }
+
+    if (@$params['cloudflare_access_key'] && !is_string(@$params['cloudflare_access_key'])) {
+      throw new \Files\InvalidParameterException('$cloudflare_access_key must be of type string; received ' . gettype(@$params['cloudflare_access_key']));
+    }
+
+    if (@$params['cloudflare_secret_key'] && !is_string(@$params['cloudflare_secret_key'])) {
+      throw new \Files\InvalidParameterException('$cloudflare_secret_key must be of type string; received ' . gettype(@$params['cloudflare_secret_key']));
+    }
+
+    if (@$params['cloudflare_bucket'] && !is_string(@$params['cloudflare_bucket'])) {
+      throw new \Files\InvalidParameterException('$cloudflare_bucket must be of type string; received ' . gettype(@$params['cloudflare_bucket']));
+    }
+
+    if (@$params['cloudflare_endpoint'] && !is_string(@$params['cloudflare_endpoint'])) {
+      throw new \Files\InvalidParameterException('$cloudflare_endpoint must be of type string; received ' . gettype(@$params['cloudflare_endpoint']));
     }
 
     $response = Api::sendRequest('/remote_servers', 'POST', $params, $options);

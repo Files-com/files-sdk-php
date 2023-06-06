@@ -235,7 +235,7 @@ class File {
     
     while (true) {
       try {
-        if (!$retries) {
+        if (!$retries || !file_exists($destinationPath)) {
           $response = self::downloadToStream($remoteFilePath, $destinationPath);
         } else {
           $response = self::resumeDownloadToFile($remoteFilePath, $destinationPath);
@@ -247,7 +247,7 @@ class File {
 
         if (!$enableRetry || $retries > \Files\Files::$maxNetworkRetries) {
           Logger::info('Retries exhausted - giving up on this file download');
-          handleErrorResponse($error);
+          throw $error;
         } else {
           Logger::info('Retrying file download (retry #' . $retries . ')');
         }

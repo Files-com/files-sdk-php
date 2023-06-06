@@ -78,6 +78,15 @@ class Bundle {
     return $this->attributes['description'] = $value;
   }
 
+  // date-time # Bundle expiration date/time
+  public function getExpiresAt() {
+    return @$this->attributes['expires_at'];
+  }
+
+  public function setExpiresAt($value) {
+    return $this->attributes['expires_at'] = $value;
+  }
+
   // boolean # Is this bundle password protected?
   public function getPasswordProtected() {
     return @$this->attributes['password_protected'];
@@ -189,15 +198,6 @@ class Bundle {
 
   public function setDontSeparateSubmissionsByFolder($value) {
     return $this->attributes['dont_separate_submissions_by_folder'] = $value;
-  }
-
-  // date-time # Bundle expiration date/time
-  public function getExpiresAt() {
-    return @$this->attributes['expires_at'];
-  }
-
-  public function setExpiresAt($value) {
-    return $this->attributes['expires_at'] = $value;
   }
 
   // int64 # Maximum number of times bundle can be accessed

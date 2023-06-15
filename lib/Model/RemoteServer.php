@@ -519,6 +519,33 @@ class RemoteServer {
     return $this->attributes['dropbox_teams'] = $value;
   }
 
+  // string # Linode Bucket name
+  public function getLinodeBucket() {
+    return @$this->attributes['linode_bucket'];
+  }
+
+  public function setLinodeBucket($value) {
+    return $this->attributes['linode_bucket'] = $value;
+  }
+
+  // string # Linode Access Key.
+  public function getLinodeAccessKey() {
+    return @$this->attributes['linode_access_key'];
+  }
+
+  public function setLinodeAccessKey($value) {
+    return $this->attributes['linode_access_key'] = $value;
+  }
+
+  // string # Linode region
+  public function getLinodeRegion() {
+    return @$this->attributes['linode_region'];
+  }
+
+  public function setLinodeRegion($value) {
+    return $this->attributes['linode_region'] = $value;
+  }
+
   // string # AWS secret key.
   public function getAwsSecretKey() {
     return @$this->attributes['aws_secret_key'];
@@ -663,6 +690,15 @@ class RemoteServer {
     return $this->attributes['cloudflare_secret_key'] = $value;
   }
 
+  // string # Linode secret key
+  public function getLinodeSecretKey() {
+    return @$this->attributes['linode_secret_key'];
+  }
+
+  public function setLinodeSecretKey($value) {
+    return $this->attributes['linode_secret_key'] = $value;
+  }
+
   // Post local changes, check in, and download configuration file (used by some Remote Server integrations, such as the Files.com Agent)
   //
   // Parameters:
@@ -802,6 +838,10 @@ class RemoteServer {
   //   cloudflare_bucket - string - Cloudflare Bucket name
   //   cloudflare_endpoint - string - Cloudflare endpoint
   //   dropbox_teams - boolean - List Team folders in root
+  //   linode_access_key - string - Linode Access Key.
+  //   linode_secret_key - string - Linode secret key
+  //   linode_bucket - string - Linode Bucket name
+  //   linode_region - string - Linode region
   public function update($params = []) {
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
@@ -1039,6 +1079,22 @@ class RemoteServer {
       throw new \Files\InvalidParameterException('$cloudflare_endpoint must be of type string; received ' . gettype(@$params['cloudflare_endpoint']));
     }
 
+    if (@$params['linode_access_key'] && !is_string(@$params['linode_access_key'])) {
+      throw new \Files\InvalidParameterException('$linode_access_key must be of type string; received ' . gettype(@$params['linode_access_key']));
+    }
+
+    if (@$params['linode_secret_key'] && !is_string(@$params['linode_secret_key'])) {
+      throw new \Files\InvalidParameterException('$linode_secret_key must be of type string; received ' . gettype(@$params['linode_secret_key']));
+    }
+
+    if (@$params['linode_bucket'] && !is_string(@$params['linode_bucket'])) {
+      throw new \Files\InvalidParameterException('$linode_bucket must be of type string; received ' . gettype(@$params['linode_bucket']));
+    }
+
+    if (@$params['linode_region'] && !is_string(@$params['linode_region'])) {
+      throw new \Files\InvalidParameterException('$linode_region must be of type string; received ' . gettype(@$params['linode_region']));
+    }
+
     $response = Api::sendRequest('/remote_servers/' . @$params['id'] . '', 'PATCH', $params, $this->options);
     return $response->data;
   }
@@ -1216,6 +1272,10 @@ class RemoteServer {
   //   cloudflare_bucket - string - Cloudflare Bucket name
   //   cloudflare_endpoint - string - Cloudflare endpoint
   //   dropbox_teams - boolean - List Team folders in root
+  //   linode_access_key - string - Linode Access Key.
+  //   linode_secret_key - string - Linode secret key
+  //   linode_bucket - string - Linode Bucket name
+  //   linode_region - string - Linode region
   public static function create($params = [], $options = []) {
     if (@$params['aws_access_key'] && !is_string(@$params['aws_access_key'])) {
       throw new \Files\InvalidParameterException('$aws_access_key must be of type string; received ' . gettype(@$params['aws_access_key']));
@@ -1435,6 +1495,22 @@ class RemoteServer {
 
     if (@$params['cloudflare_endpoint'] && !is_string(@$params['cloudflare_endpoint'])) {
       throw new \Files\InvalidParameterException('$cloudflare_endpoint must be of type string; received ' . gettype(@$params['cloudflare_endpoint']));
+    }
+
+    if (@$params['linode_access_key'] && !is_string(@$params['linode_access_key'])) {
+      throw new \Files\InvalidParameterException('$linode_access_key must be of type string; received ' . gettype(@$params['linode_access_key']));
+    }
+
+    if (@$params['linode_secret_key'] && !is_string(@$params['linode_secret_key'])) {
+      throw new \Files\InvalidParameterException('$linode_secret_key must be of type string; received ' . gettype(@$params['linode_secret_key']));
+    }
+
+    if (@$params['linode_bucket'] && !is_string(@$params['linode_bucket'])) {
+      throw new \Files\InvalidParameterException('$linode_bucket must be of type string; received ' . gettype(@$params['linode_bucket']));
+    }
+
+    if (@$params['linode_region'] && !is_string(@$params['linode_region'])) {
+      throw new \Files\InvalidParameterException('$linode_region must be of type string; received ' . gettype(@$params['linode_region']));
     }
 
     $response = Api::sendRequest('/remote_servers', 'POST', $params, $options);

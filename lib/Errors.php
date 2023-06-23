@@ -240,6 +240,7 @@ class UserNotFoundException extends \Files\NotFoundException {}
 
 namespace Files\ProcessingFailure {
 
+class AutomationCannotBeRunManuallyException extends \Files\ProcessingFailureException {}
 class BundleOnlyAllowsPreviewsException extends \Files\ProcessingFailureException {}
 class BundleOperationRequiresSubfolderException extends \Files\ProcessingFailureException {}
 class CouldNotCreateParentException extends \Files\ProcessingFailureException {}

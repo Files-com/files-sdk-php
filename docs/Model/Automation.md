@@ -162,6 +162,21 @@ $automation->create(, [
 
 ---
 
+## Manually run automation
+
+```
+$automation = current(\Files\Model\Automation::all());
+
+$automation->manual_run();
+```
+
+### Parameters
+
+* `id` (int64): Required - Automation ID.
+
+
+---
+
 ## Update Automation
 
 ```

@@ -267,6 +267,28 @@ class Automation {
     return $this->attributes['destination'] = $value;
   }
 
+  // Manually run automation
+  public function manualRun($params = []) {
+    if (!is_array($params)) {
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+    }
+
+    if (!@$params['id']) {
+      if (@$this->id) {
+        $params['id'] = $this->id;
+      } else {
+        throw new \Files\MissingParameterException('Parameter missing: id');
+      }
+    }
+
+    if (@$params['id'] && !is_int(@$params['id'])) {
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
+    }
+
+    $response = Api::sendRequest('/automations/' . @$params['id'] . '/manual_run', 'POST', $params, $this->options);
+    return $response->data;
+  }
+
   // Parameters:
   //   source - string - Source Path
   //   destination - string - DEPRECATED: Destination Path. Use `destinations` instead.

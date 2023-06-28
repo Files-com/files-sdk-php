@@ -280,6 +280,7 @@ class UpdatesNotAllowedForRemotesException extends \Files\ProcessingFailureExcep
 
 namespace Files\RateLimited {
 
+class DuplicateShareRecipientException extends \Files\RateLimitedException {}
 class ReauthenticationRateLimitedException extends \Files\RateLimitedException {}
 class TooManyConcurrentRequestsException extends \Files\RateLimitedException {}
 class TooManyLoginAttemptsException extends \Files\RateLimitedException {}

@@ -60,6 +60,51 @@ class Bundle {
     return $this->attributes['code'] = $value;
   }
 
+  // string # Page link and button color
+  public function getColorLeft() {
+    return @$this->attributes['color_left'];
+  }
+
+  public function setColorLeft($value) {
+    return $this->attributes['color_left'] = $value;
+  }
+
+  // string # Top bar link color
+  public function getColorLink() {
+    return @$this->attributes['color_link'];
+  }
+
+  public function setColorLink($value) {
+    return $this->attributes['color_link'] = $value;
+  }
+
+  // string # Page link and button color
+  public function getColorText() {
+    return @$this->attributes['color_text'];
+  }
+
+  public function setColorText($value) {
+    return $this->attributes['color_text'] = $value;
+  }
+
+  // string # Top bar background color
+  public function getColorTop() {
+    return @$this->attributes['color_top'];
+  }
+
+  public function setColorTop($value) {
+    return $this->attributes['color_top'] = $value;
+  }
+
+  // string # Top bar text color
+  public function getColorTopText() {
+    return @$this->attributes['color_top_text'];
+  }
+
+  public function setColorTopText($value) {
+    return $this->attributes['color_top_text'] = $value;
+  }
+
   // string # Public URL of Share Link
   public function getUrl() {
     return @$this->attributes['url'];

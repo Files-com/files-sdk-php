@@ -291,6 +291,7 @@ class TooManySharesException extends \Files\RateLimitedException {}
 
 namespace Files\ServiceUnavailable {
 
+class AutomationsUnavailableException extends \Files\ServiceUnavailableException {}
 class UploadsUnavailableException extends \Files\ServiceUnavailableException {}
 
 } // namespace Files\ServiceUnavailable

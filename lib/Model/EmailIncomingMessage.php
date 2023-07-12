@@ -66,9 +66,19 @@ class EmailIncomingMessage {
     return @$this->attributes['sender'];
   }
 
+  // string # Sender name
+  public function getSenderName() {
+    return @$this->attributes['sender_name'];
+  }
+
   // string # Status of the message
   public function getStatus() {
     return @$this->attributes['status'];
+  }
+
+  // string # Body of the email
+  public function getBody() {
+    return @$this->attributes['body'];
   }
 
   // string # Message describing the failure

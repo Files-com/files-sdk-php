@@ -146,9 +146,14 @@ class HistoryExportResult {
     return @$this->attributes['target_recursive'];
   }
 
-  // int64 # If searching for Histories about API keys, this is when the API key will expire
+  // int64 # If searching for Histories about API keys, this is when the API key will expire. Represented as a Unix timestamp.
   public function getTargetExpiresAt() {
     return @$this->attributes['target_expires_at'];
+  }
+
+  // string # If searching for Histories about API keys, this is when the API key will expire. Represented in ISO8601 format.
+  public function getTargetExpiresAtIso8601() {
+    return @$this->attributes['target_expires_at_iso8601'];
   }
 
   // string # If searching for Histories about API keys, this represents the permission set of the associated  API key

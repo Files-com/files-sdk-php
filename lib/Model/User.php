@@ -425,6 +425,15 @@ class User {
     return $this->attributes['require_2fa'] = $value;
   }
 
+  // date-time # Require user to login by specified date otherwise it will be disabled.
+  public function getRequireLoginBy() {
+    return @$this->attributes['require_login_by'];
+  }
+
+  public function setRequireLoginBy($value) {
+    return $this->attributes['require_login_by'] = $value;
+  }
+
   // boolean # Is 2fa active for the user?
   public function getActive2fa() {
     return @$this->attributes['active_2fa'];

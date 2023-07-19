@@ -83,7 +83,16 @@ class PublicKey {
     return $this->attributes['fingerprint'] = $value;
   }
 
-  // int64 # User ID.  Provide a value of `0` to operate the current session's user.
+  // string # Username of the user this public key is associated with
+  public function getUsername() {
+    return @$this->attributes['username'];
+  }
+
+  public function setUsername($value) {
+    return $this->attributes['username'] = $value;
+  }
+
+  // int64 # User ID this public key is associated with
   public function getUserId() {
     return @$this->attributes['user_id'];
   }

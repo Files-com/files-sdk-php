@@ -775,6 +775,7 @@ class User {
   //   office_integration_enabled - boolean - Enable integration with Office for the web?
   //   password_validity_days - int64 - Number of days to allow user to use the same password
   //   receive_admin_alerts - boolean - Should the user receive admin alerts such a certificate expiration notifications and overages?
+  //   require_login_by - string - Require user to login by specified date otherwise it will be disabled.
   //   require_password_change - boolean - Is a password change required upon next user login?
   //   restapi_permission - boolean - Can this user access the REST API?
   //   self_managed - boolean - Does this user manage it's own credentials or is it a shared/bot user?
@@ -879,6 +880,10 @@ class User {
 
     if (@$params['password_validity_days'] && !is_int(@$params['password_validity_days'])) {
       throw new \Files\InvalidParameterException('$password_validity_days must be of type int; received ' . gettype(@$params['password_validity_days']));
+    }
+
+    if (@$params['require_login_by'] && !is_string(@$params['require_login_by'])) {
+      throw new \Files\InvalidParameterException('$require_login_by must be of type string; received ' . gettype(@$params['require_login_by']));
     }
 
     if (@$params['ssl_required'] && !is_string(@$params['ssl_required'])) {
@@ -1055,6 +1060,7 @@ class User {
   //   office_integration_enabled - boolean - Enable integration with Office for the web?
   //   password_validity_days - int64 - Number of days to allow user to use the same password
   //   receive_admin_alerts - boolean - Should the user receive admin alerts such a certificate expiration notifications and overages?
+  //   require_login_by - string - Require user to login by specified date otherwise it will be disabled.
   //   require_password_change - boolean - Is a password change required upon next user login?
   //   restapi_permission - boolean - Can this user access the REST API?
   //   self_managed - boolean - Does this user manage it's own credentials or is it a shared/bot user?
@@ -1143,6 +1149,10 @@ class User {
 
     if (@$params['password_validity_days'] && !is_int(@$params['password_validity_days'])) {
       throw new \Files\InvalidParameterException('$password_validity_days must be of type int; received ' . gettype(@$params['password_validity_days']));
+    }
+
+    if (@$params['require_login_by'] && !is_string(@$params['require_login_by'])) {
+      throw new \Files\InvalidParameterException('$require_login_by must be of type string; received ' . gettype(@$params['require_login_by']));
     }
 
     if (@$params['ssl_required'] && !is_string(@$params['ssl_required'])) {

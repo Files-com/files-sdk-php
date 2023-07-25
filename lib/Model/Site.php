@@ -131,6 +131,11 @@ class Site {
     return @$this->attributes['bundle_registration_notifications'];
   }
 
+  // boolean # Do Bundles require registration?
+  public function getBundleRequireRegistration() {
+    return @$this->attributes['bundle_require_registration'];
+  }
+
   // boolean # Do Bundles require recipients for sharing?
   public function getBundleRequireShareRecipient() {
     return @$this->attributes['bundle_require_share_recipient'];
@@ -846,6 +851,7 @@ class Site {
   //   immutable_files - boolean - Are files protected from modification?
   //   session_pinned_by_ip - boolean - Are sessions locked to the same IP? (i.e. do users need to log in again if they change IPs?)
   //   bundle_password_required - boolean - Do Bundles require password protection?
+  //   bundle_require_registration - boolean - Do Bundles require registration?
   //   bundle_require_share_recipient - boolean - Do Bundles require recipients for sharing?
   //   bundle_registration_notifications - string - Do Bundle owners receive registration notification?
   //   bundle_activity_notifications - string - Do Bundle owners receive activity notifications?

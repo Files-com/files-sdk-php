@@ -222,6 +222,15 @@ class Bundle {
     return $this->attributes['skip_email'] = $value;
   }
 
+  // date-time # Date when share will start to be accessible. If `nil` access granted right after create.
+  public function getStartAccessOnDate() {
+    return @$this->attributes['start_access_on_date'];
+  }
+
+  public function setStartAccessOnDate($value) {
+    return $this->attributes['start_access_on_date'] = $value;
+  }
+
   // boolean # BundleRegistrations can be saved without providing company?
   public function getSkipCompany() {
     return @$this->attributes['skip_company'];
@@ -683,6 +692,7 @@ class Bundle {
   //   skip_email - boolean - BundleRegistrations can be saved without providing email?
   //   skip_name - boolean - BundleRegistrations can be saved without providing name?
   //   skip_company - boolean - BundleRegistrations can be saved without providing company?
+  //   start_access_on_date - string - Date when share will start to be accessible. If `nil` access granted right after create.
   //   snapshot_id - int64 - ID of the snapshot containing this bundle's contents.
   //   watermark_attachment_file - file - Preview watermark image applied to all bundle items.
   public static function create($params = [], $options = []) {
@@ -740,6 +750,10 @@ class Bundle {
 
     if (@$params['inbox_id'] && !is_int(@$params['inbox_id'])) {
       throw new \Files\InvalidParameterException('$inbox_id must be of type int; received ' . gettype(@$params['inbox_id']));
+    }
+
+    if (@$params['start_access_on_date'] && !is_string(@$params['start_access_on_date'])) {
+      throw new \Files\InvalidParameterException('$start_access_on_date must be of type string; received ' . gettype(@$params['start_access_on_date']));
     }
 
     if (@$params['snapshot_id'] && !is_int(@$params['snapshot_id'])) {

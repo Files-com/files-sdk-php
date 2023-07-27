@@ -494,6 +494,7 @@ class Bundle {
   //   require_share_recipient - boolean - Only allow access to recipients who have explicitly received the share via an email sent through the Files.com UI?
   //   send_email_receipt_to_uploader - boolean - Send delivery receipt to the uploader. Note: For writable share only
   //   skip_company - boolean - BundleRegistrations can be saved without providing company?
+  //   start_access_on_date - string - Date when share will start to be accessible. If `nil` access granted right after create.
   //   skip_email - boolean - BundleRegistrations can be saved without providing email?
   //   skip_name - boolean - BundleRegistrations can be saved without providing name?
   //   watermark_attachment_delete - boolean - If true, will delete the file stored in watermark_attachment
@@ -561,6 +562,10 @@ class Bundle {
 
     if (@$params['permissions'] && !is_string(@$params['permissions'])) {
       throw new \Files\InvalidParameterException('$permissions must be of type string; received ' . gettype(@$params['permissions']));
+    }
+
+    if (@$params['start_access_on_date'] && !is_string(@$params['start_access_on_date'])) {
+      throw new \Files\InvalidParameterException('$start_access_on_date must be of type string; received ' . gettype(@$params['start_access_on_date']));
     }
 
     $response = Api::sendRequest('/bundles/' . @$params['id'] . '', 'PATCH', $params, $this->options);

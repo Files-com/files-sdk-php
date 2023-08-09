@@ -19,6 +19,7 @@ function middlewareRemoveHeader($header) {
 }
 
 class Api {
+  private const VERSION = "1.0";
   private static function pushRetryHandler($handlerStack) {
     $shouldRetry = function($retries, $request, $response, $exception) {
       if ($retries >= Files::$maxNetworkRetries) {
@@ -157,7 +158,7 @@ class Api {
   public static function sendRequest($path, $verb, $params = null, $options = [], $metadata = []) {
     $options = $options ?: [];
     $headers = array_merge(@$options['headers'] ?: [], [
-      'User-Agent' => 'Files.com PHP SDK v1.0',
+      'User-Agent' => "Files.com PHP SDK v" . self::VERSION,
     ]);
 
     $isExternal = preg_match('@^[a-zA-Z]+://@', $path);

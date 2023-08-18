@@ -26,6 +26,7 @@
 * `file_as_body` (boolean): Send the file data as the request body?
 * `file_form_field` (string): Send the file data as a named parameter in the request POST body
 * `action` (string): action for test body
+* `use_dedicated_ips` (boolean): Use dedicated IPs for sending the webhook?
 
 ---
 
@@ -43,6 +44,7 @@ $webhook_test->create(, [
   'file_as_body' => true,
   'file_form_field' => "upload_file_data",
   'action' => "test",
+  'use_dedicated_ips' => true,
 ]);
 ```
 
@@ -58,3 +60,4 @@ $webhook_test->create(, [
 * `file_as_body` (boolean): Send the file data as the request body?
 * `file_form_field` (string): Send the file data as a named parameter in the request POST body
 * `action` (string): action for test body
+* `use_dedicated_ips` (boolean): Use dedicated IPs for sending the webhook?

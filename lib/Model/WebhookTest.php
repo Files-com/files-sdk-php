@@ -177,6 +177,15 @@ class WebhookTest {
     return $this->attributes['action'] = $value;
   }
 
+  // boolean # Use dedicated IPs for sending the webhook?
+  public function getUseDedicatedIps() {
+    return @$this->attributes['use_dedicated_ips'];
+  }
+
+  public function setUseDedicatedIps($value) {
+    return $this->attributes['use_dedicated_ips'] = $value;
+  }
+
   public function save() {
       if (@$this->attributes['id']) {
         throw new \Files\NotImplementedException('The WebhookTest object doesn\'t support updates.');
@@ -198,6 +207,7 @@ class WebhookTest {
   //   file_as_body - boolean - Send the file data as the request body?
   //   file_form_field - string - Send the file data as a named parameter in the request POST body
   //   action - string - action for test body
+  //   use_dedicated_ips - boolean - Use dedicated IPs for sending the webhook?
   public static function create($params = [], $options = []) {
     if (!@$params['url']) {
       throw new \Files\MissingParameterException('Parameter missing: url');

@@ -115,10 +115,10 @@ class GpgKey {
   }
 
   // Parameters:
-  //   name (required) - string - Your GPG key name.
   //   public_key - string - Your GPG public key
   //   private_key - string - Your GPG private key.
   //   private_key_password - string - Your GPG private key password. Only required for password protected keys.
+  //   name - string - Your GPG key name.
   public function update($params = []) {
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
@@ -132,20 +132,8 @@ class GpgKey {
       }
     }
 
-    if (!@$params['name']) {
-      if (@$this->name) {
-        $params['name'] = $this->name;
-      } else {
-        throw new \Files\MissingParameterException('Parameter missing: name');
-      }
-    }
-
     if (@$params['id'] && !is_int(@$params['id'])) {
       throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
-    }
-
-    if (@$params['name'] && !is_string(@$params['name'])) {
-      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
     }
 
     if (@$params['public_key'] && !is_string(@$params['public_key'])) {
@@ -158,6 +146,10 @@ class GpgKey {
 
     if (@$params['private_key_password'] && !is_string(@$params['private_key_password'])) {
       throw new \Files\InvalidParameterException('$private_key_password must be of type string; received ' . gettype(@$params['private_key_password']));
+    }
+
+    if (@$params['name'] && !is_string(@$params['name'])) {
+      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
     }
 
     $response = Api::sendRequest('/gpg_keys/' . @$params['id'] . '', 'PATCH', $params, $this->options);
@@ -261,10 +253,10 @@ class GpgKey {
 
   // Parameters:
   //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
-  //   name (required) - string - Your GPG key name.
   //   public_key - string - Your GPG public key
   //   private_key - string - Your GPG private key.
   //   private_key_password - string - Your GPG private key password. Only required for password protected keys.
+  //   name (required) - string - Your GPG key name.
   public static function create($params = [], $options = []) {
     if (!@$params['name']) {
       throw new \Files\MissingParameterException('Parameter missing: name');
@@ -272,10 +264,6 @@ class GpgKey {
 
     if (@$params['user_id'] && !is_int(@$params['user_id'])) {
       throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
-    }
-
-    if (@$params['name'] && !is_string(@$params['name'])) {
-      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
     }
 
     if (@$params['public_key'] && !is_string(@$params['public_key'])) {
@@ -288,6 +276,10 @@ class GpgKey {
 
     if (@$params['private_key_password'] && !is_string(@$params['private_key_password'])) {
       throw new \Files\InvalidParameterException('$private_key_password must be of type string; received ' . gettype(@$params['private_key_password']));
+    }
+
+    if (@$params['name'] && !is_string(@$params['name'])) {
+      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
     }
 
     $response = Api::sendRequest('/gpg_keys', 'POST', $params, $options);

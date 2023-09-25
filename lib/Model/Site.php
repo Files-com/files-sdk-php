@@ -121,6 +121,11 @@ class Site {
     return @$this->attributes['bundle_expiration'];
   }
 
+  // string # Custom error message to show when bundle is not found.
+  public function getBundleNotFoundMessage() {
+    return @$this->attributes['bundle_not_found_message'];
+  }
+
   // boolean # Do Bundles require password protection?
   public function getBundlePasswordRequired() {
     return @$this->attributes['bundle_password_required'];
@@ -855,6 +860,7 @@ class Site {
   //   disable_password_reset - boolean - Is password reset disabled?
   //   immutable_files - boolean - Are files protected from modification?
   //   session_pinned_by_ip - boolean - Are sessions locked to the same IP? (i.e. do users need to log in again if they change IPs?)
+  //   bundle_not_found_message - string - Custom error message to show when bundle is not found.
   //   bundle_password_required - boolean - Do Bundles require password protection?
   //   bundle_require_registration - boolean - Do Bundles require registration?
   //   bundle_require_share_recipient - boolean - Do Bundles require recipients for sharing?
@@ -1042,6 +1048,10 @@ class Site {
 
     if (@$params['password_min_length'] && !is_int(@$params['password_min_length'])) {
       throw new \Files\InvalidParameterException('$password_min_length must be of type int; received ' . gettype(@$params['password_min_length']));
+    }
+
+    if (@$params['bundle_not_found_message'] && !is_string(@$params['bundle_not_found_message'])) {
+      throw new \Files\InvalidParameterException('$bundle_not_found_message must be of type string; received ' . gettype(@$params['bundle_not_found_message']));
     }
 
     if (@$params['bundle_registration_notifications'] && !is_string(@$params['bundle_registration_notifications'])) {

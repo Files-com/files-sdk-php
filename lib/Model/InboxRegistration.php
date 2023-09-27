@@ -71,6 +71,11 @@ class InboxRegistration {
     return @$this->attributes['email'];
   }
 
+  // string # Registrant IP Address
+  public function getIp() {
+    return @$this->attributes['ip'];
+  }
+
   // string # Clickwrap text that was shown to the registrant
   public function getClickwrapBody() {
     return @$this->attributes['clickwrap_body'];

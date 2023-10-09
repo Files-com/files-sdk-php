@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit colors="true"
-        processIsolation="false"
-        stopOnError="false"
-        stopOnFailure="false"
-        stopOnIncomplete="false"
-        stopOnSkipped="false"
-        backupGlobals="false"
-        bootstrap="./vendor/autoload.php">
+    processIsolation="false"
+    stopOnError="false"
+    stopOnFailure="false"
+    stopOnIncomplete="false"
+    stopOnSkipped="false"
+    backupGlobals="false"
+    bootstrap="./vendor/autoload.php">
     <testsuite name="default">
         <directory suffix='.php'>./tests</directory>
     </testsuite>
-
 </phpunit>

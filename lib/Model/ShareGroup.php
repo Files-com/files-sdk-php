@@ -88,15 +88,6 @@ class ShareGroup {
   }
 
   // array # A list of share group members
-  public function getShareGroupMembers() {
-    return @$this->attributes['share_group_members'];
-  }
-
-  public function setShareGroupMembers($value) {
-    return $this->attributes['share_group_members'] = $value;
-  }
-
-  // array(object) # A list of share group members.
   public function getMembers() {
     return @$this->attributes['members'];
   }

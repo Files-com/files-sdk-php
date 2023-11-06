@@ -62,20 +62,20 @@ $group->find($id);
 ```
 $group = new \Files\Model\Group();
 $group->create(, [
-  'name' => "owners",
   'notes' => "example",
   'user_ids' => "1",
   'admin_ids' => "1",
+  'name' => "name",
 ]);
 ```
 
 
 ### Parameters
 
-* `name` (string): Group name.
 * `notes` (string): Group notes.
 * `user_ids` (string): A list of user ids. If sent as a string, should be comma-delimited.
 * `admin_ids` (string): A list of group admin user ids. If sent as a string, should be comma-delimited.
+* `name` (string): Required - Group name.
 
 ---
 
@@ -85,20 +85,20 @@ $group->create(, [
 $group = current(\Files\Model\Group::all());
 
 $group->update([
-  'name' => "owners",
   'notes' => "example",
   'user_ids' => "1",
   'admin_ids' => "1",
+  'name' => "owners",
 ]);
 ```
 
 ### Parameters
 
 * `id` (int64): Required - Group ID.
-* `name` (string): Group name.
 * `notes` (string): Group notes.
 * `user_ids` (string): A list of user ids. If sent as a string, should be comma-delimited.
 * `admin_ids` (string): A list of group admin user ids. If sent as a string, should be comma-delimited.
+* `name` (string): Group name.
 
 ### Example Response
 

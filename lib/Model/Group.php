@@ -106,10 +106,10 @@ class Group {
   }
 
   // Parameters:
-  //   name - string - Group name.
   //   notes - string - Group notes.
   //   user_ids - string - A list of user ids. If sent as a string, should be comma-delimited.
   //   admin_ids - string - A list of group admin user ids. If sent as a string, should be comma-delimited.
+  //   name - string - Group name.
   public function update($params = []) {
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
@@ -127,10 +127,6 @@ class Group {
       throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
     }
 
-    if (@$params['name'] && !is_string(@$params['name'])) {
-      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
-    }
-
     if (@$params['notes'] && !is_string(@$params['notes'])) {
       throw new \Files\InvalidParameterException('$notes must be of type string; received ' . gettype(@$params['notes']));
     }
@@ -141,6 +137,10 @@ class Group {
 
     if (@$params['admin_ids'] && !is_string(@$params['admin_ids'])) {
       throw new \Files\InvalidParameterException('$admin_ids must be of type string; received ' . gettype(@$params['admin_ids']));
+    }
+
+    if (@$params['name'] && !is_string(@$params['name'])) {
+      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
     }
 
     $response = Api::sendRequest('/groups/' . @$params['id'] . '', 'PATCH', $params, $this->options);
@@ -246,13 +246,13 @@ class Group {
   
 
   // Parameters:
-  //   name - string - Group name.
   //   notes - string - Group notes.
   //   user_ids - string - A list of user ids. If sent as a string, should be comma-delimited.
   //   admin_ids - string - A list of group admin user ids. If sent as a string, should be comma-delimited.
+  //   name (required) - string - Group name.
   public static function create($params = [], $options = []) {
-    if (@$params['name'] && !is_string(@$params['name'])) {
-      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
+    if (!@$params['name']) {
+      throw new \Files\MissingParameterException('Parameter missing: name');
     }
 
     if (@$params['notes'] && !is_string(@$params['notes'])) {
@@ -265,6 +265,10 @@ class Group {
 
     if (@$params['admin_ids'] && !is_string(@$params['admin_ids'])) {
       throw new \Files\InvalidParameterException('$admin_ids must be of type string; received ' . gettype(@$params['admin_ids']));
+    }
+
+    if (@$params['name'] && !is_string(@$params['name'])) {
+      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
     }
 
     $response = Api::sendRequest('/groups', 'POST', $params, $options);

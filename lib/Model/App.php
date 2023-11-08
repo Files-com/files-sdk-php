@@ -51,19 +51,9 @@ class App {
     return !!@$this->attributes['id'];
   }
 
-  // string # Name of the App
-  public function getName() {
-    return @$this->attributes['name'];
-  }
-
-  // string # Long form description of the App
-  public function getExtendedDescription() {
-    return @$this->attributes['extended_description'];
-  }
-
-  // string # Short description of the App
-  public function getShortDescription() {
-    return @$this->attributes['short_description'];
+  // string # The type of the App
+  public function getAppType() {
+    return @$this->attributes['app_type'];
   }
 
   // object # Collection of named links to documentation
@@ -71,39 +61,14 @@ class App {
     return @$this->attributes['documentation_links'];
   }
 
-  // string # App icon
-  public function getIconUrl() {
-    return @$this->attributes['icon_url'];
+  // string # Long description for the in-App landing page
+  public function getExtendedDescription() {
+    return @$this->attributes['extended_description'];
   }
 
-  // string # Full size logo for the App
-  public function getLogoUrl() {
-    return @$this->attributes['logo_url'];
-  }
-
-  // array # Screenshots of the App
-  public function getScreenshotListUrls() {
-    return @$this->attributes['screenshot_list_urls'];
-  }
-
-  // string # Logo thumbnail for the App
-  public function getLogoThumbnailUrl() {
-    return @$this->attributes['logo_thumbnail_url'];
-  }
-
-  // string # Associated SSO Strategy type, if any
-  public function getSsoStrategyType() {
-    return @$this->attributes['sso_strategy_type'];
-  }
-
-  // string # Associated Remote Server type, if any
-  public function getRemoteServerType() {
-    return @$this->attributes['remote_server_type'];
-  }
-
-  // string # Associated Folder Behavior type, if any
-  public function getFolderBehaviorType() {
-    return @$this->attributes['folder_behavior_type'];
+  // string # Long form description of the App
+  public function getExtendedDescriptionForMarketingSite() {
+    return @$this->attributes['extended_description_for_marketing_site'];
   }
 
   // string # Link to external homepage
@@ -111,24 +76,79 @@ class App {
     return @$this->attributes['external_homepage_url'];
   }
 
+  // boolean # Is featured on the App listing?
+  public function getFeatured() {
+    return @$this->attributes['featured'];
+  }
+
+  // string # Associated Folder Behavior type, if any
+  public function getFolderBehaviorType() {
+    return @$this->attributes['folder_behavior_type'];
+  }
+
+  // string # App icon
+  public function getIconUrl() {
+    return @$this->attributes['icon_url'];
+  }
+
+  // string # Logo thumbnail for the App
+  public function getLogoThumbnailUrl() {
+    return @$this->attributes['logo_thumbnail_url'];
+  }
+
+  // string # Full size logo for the App
+  public function getLogoUrl() {
+    return @$this->attributes['logo_url'];
+  }
+
+  // string # Marketing introdution of the App
+  public function getMarketingIntro() {
+    return @$this->attributes['marketing_intro'];
+  }
+
   // string # Marketing video page
   public function getMarketingYoutubeUrl() {
     return @$this->attributes['marketing_youtube_url'];
   }
 
+  // string # Name of the App
+  public function getName() {
+    return @$this->attributes['name'];
+  }
+
+  // string # Package manager install command
+  public function getPackageManagerInstallCommand() {
+    return @$this->attributes['package_manager_install_command'];
+  }
+
+  // string # Associated Remote Server type, if any
+  public function getRemoteServerType() {
+    return @$this->attributes['remote_server_type'];
+  }
+
+  // array # Screenshots of the App
+  public function getScreenshotListUrls() {
+    return @$this->attributes['screenshot_list_urls'];
+  }
+
+  // string # Link to SDK installation instructions
+  public function getSdkInstallationInstructionsLink() {
+    return @$this->attributes['sdk_installation_instructions_link'];
+  }
+
+  // string # Short description of the App
+  public function getShortDescription() {
+    return @$this->attributes['short_description'];
+  }
+
+  // string # Associated SSO Strategy type, if any
+  public function getSsoStrategyType() {
+    return @$this->attributes['sso_strategy_type'];
+  }
+
   // string # Tutorial video page
   public function getTutorialYoutubeUrl() {
     return @$this->attributes['tutorial_youtube_url'];
-  }
-
-  // string # The type of the App
-  public function getAppType() {
-    return @$this->attributes['app_type'];
-  }
-
-  // boolean # Is featured on the App listing?
-  public function getFeatured() {
-    return @$this->attributes['featured'];
   }
 
   // Parameters:

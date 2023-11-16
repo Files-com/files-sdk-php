@@ -274,6 +274,8 @@ class RemoteServerErrorException extends \Files\ProcessingFailureException {}
 class ResourceLockedException extends \Files\ProcessingFailureException {}
 class SubfolderLockedException extends \Files\ProcessingFailureException {}
 class TwoFactorAuthenticationCodeAlreadySentException extends \Files\ProcessingFailureException {}
+class TwoFactorAuthenticationCountryBlacklistedException extends \Files\ProcessingFailureException {}
+class TwoFactorAuthenticationGeneralErrorException extends \Files\ProcessingFailureException {}
 class UpdatesNotAllowedForRemotesException extends \Files\ProcessingFailureException {}
 
 } // namespace Files\ProcessingFailure

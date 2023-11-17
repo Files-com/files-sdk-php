@@ -41,7 +41,7 @@ class Group {
   public static function __callStatic($name, $arguments) {
     if(in_array($name, array_keys(self::$static_mapped_functions))){
       $method = self::$static_mapped_functions[$name];
-      if (method_exists(__CLASS__, $method)){ 
+      if (method_exists(__CLASS__, $method)){
         return @self::$method($arguments);
       }
     }
@@ -165,16 +165,19 @@ class Group {
     }
 
     $response = Api::sendRequest('/groups/' . @$params['id'] . '', 'DELETE', $params, $this->options);
-    return $response->data;
+    return;
   }
 
   public function destroy($params = []) {
-    return $this->delete($params);
+    $this->delete($params);
+    return;
   }
 
   public function save() {
       if (@$this->attributes['id']) {
-        return $this->update($this->attributes);
+        $new_obj = $this->update($this->attributes);
+        $this->attributes = $new_obj->attributes;
+        return true;
       } else {
         $new_obj = self::create($this->attributes, $this->options);
         $this->attributes = $new_obj->attributes;
@@ -215,7 +218,7 @@ class Group {
   }
 
 
-  
+
 
   // Parameters:
   //   id (required) - int64 - Group ID.
@@ -243,7 +246,7 @@ class Group {
   public static function get($id, $params = [], $options = []) {
     return self::find($id, $params, $options);
   }
-  
+
 
   // Parameters:
   //   notes - string - Group notes.

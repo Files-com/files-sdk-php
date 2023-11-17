@@ -41,7 +41,7 @@ class Permission {
   public static function __callStatic($name, $arguments) {
     if(in_array($name, array_keys(self::$static_mapped_functions))){
       $method = self::$static_mapped_functions[$name];
-      if (method_exists(__CLASS__, $method)){ 
+      if (method_exists(__CLASS__, $method)){
         return @self::$method($arguments);
       }
     }
@@ -141,11 +141,12 @@ class Permission {
     }
 
     $response = Api::sendRequest('/permissions/' . @$params['id'] . '', 'DELETE', $params, $this->options);
-    return $response->data;
+    return;
   }
 
   public function destroy($params = []) {
-    return $this->delete($params);
+    $this->delete($params);
+    return;
   }
 
   public function save() {
@@ -202,7 +203,7 @@ class Permission {
   }
 
 
-  
+
 
   // Parameters:
   //   group_id - int64 - Group ID

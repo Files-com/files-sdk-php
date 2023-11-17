@@ -41,7 +41,7 @@ class MessageCommentReaction {
   public static function __callStatic($name, $arguments) {
     if(in_array($name, array_keys(self::$static_mapped_functions))){
       $method = self::$static_mapped_functions[$name];
-      if (method_exists(__CLASS__, $method)){ 
+      if (method_exists(__CLASS__, $method)){
         return @self::$method($arguments);
       }
     }
@@ -96,11 +96,12 @@ class MessageCommentReaction {
     }
 
     $response = Api::sendRequest('/message_comment_reactions/' . @$params['id'] . '', 'DELETE', $params, $this->options);
-    return $response->data;
+    return;
   }
 
   public function destroy($params = []) {
-    return $this->delete($params);
+    $this->delete($params);
+    return;
   }
 
   public function save() {
@@ -152,7 +153,7 @@ class MessageCommentReaction {
   }
 
 
-  
+
 
   // Parameters:
   //   id (required) - int64 - Message Comment Reaction ID.
@@ -180,7 +181,7 @@ class MessageCommentReaction {
   public static function get($id, $params = [], $options = []) {
     return self::find($id, $params, $options);
   }
-  
+
 
   // Parameters:
   //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.

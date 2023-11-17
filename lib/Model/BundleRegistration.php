@@ -41,7 +41,7 @@ class BundleRegistration {
   public static function __callStatic($name, $arguments) {
     if(in_array($name, array_keys(self::$static_mapped_functions))){
       $method = self::$static_mapped_functions[$name];
-      if (method_exists(__CLASS__, $method)){ 
+      if (method_exists(__CLASS__, $method)){
         return @self::$method($arguments);
       }
     }
@@ -117,15 +117,10 @@ class BundleRegistration {
   }
 
   // Parameters:
-  //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
   //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
   //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
   //   bundle_id - int64 - ID of the associated Bundle
   public static function all($params = [], $options = []) {
-    if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
-    }
-
     if (@$params['cursor'] && !is_string(@$params['cursor'])) {
       throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
     }
@@ -150,5 +145,5 @@ class BundleRegistration {
   }
 
 
-  
+
 }

@@ -41,7 +41,7 @@ class HistoryExport {
   public static function __callStatic($name, $arguments) {
     if(in_array($name, array_keys(self::$static_mapped_functions))){
       $method = self::$static_mapped_functions[$name];
-      if (method_exists(__CLASS__, $method)){ 
+      if (method_exists(__CLASS__, $method)){
         return @self::$method($arguments);
       }
     }
@@ -322,7 +322,7 @@ class HistoryExport {
   public static function get($id, $params = [], $options = []) {
     return self::find($id, $params, $options);
   }
-  
+
 
   // Parameters:
   //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.

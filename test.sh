@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 DEFAULT_PHP_VERSION="$(php --version)"
-re='[0-9]+\.[0-9]+'; 
+re='[0-9]+\.[0-9]+';
 PHP_DETECTED_VERS="5.6";
 ran_php_tests=()
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
@@ -15,13 +15,13 @@ run_php_vers()
   echo "======= RUNNING UNIT TESTS FOR: $1 ======="
   cd "${DIR}/test" || exit 1 # Force the path
   rm composer.lock # Remove the lock so we can update deps for different PHP versions
-  "$1" "${DIR}/composer.phar" install 
-  "$1" ./vendor/bin/phpunit --testsuite default || exit 1
+  "$1" "${DIR}/composer.phar" install
+  FILES_SESSION_ENV="development" "$1" ./vendor/bin/phpunit --testsuite default || exit 1
   rm .phpunit.result.cache # We don't want to save the result cache between runs
 }
 # Detect existing version
 if [[ $DEFAULT_PHP_VERSION =~ $re ]]; then
-  PHP_DETECTED_VERS="${BASH_REMATCH[0]}"; 
+  PHP_DETECTED_VERS="${BASH_REMATCH[0]}";
 fi
 if [[ -z ${CI_COMMIT_REF_NAME} ]]; then
   CI_COMMIT_REF_NAME=""

@@ -41,7 +41,7 @@ class Session {
   public static function __callStatic($name, $arguments) {
     if(in_array($name, array_keys(self::$static_mapped_functions))){
       $method = self::$static_mapped_functions[$name];
-      if (method_exists(__CLASS__, $method)){ 
+      if (method_exists(__CLASS__, $method)){
         return @self::$method($arguments);
       }
     }
@@ -165,12 +165,12 @@ class Session {
   public static function delete($params = [], $options = []) {
     $response = Api::sendRequest('/sessions', 'DELETE', $options);
 
-    return $response->data;
+    return;
   }
 
 
   public static function destroy($params = [], $options = []) {
     return self::delete($params, $options);
   }
-  
+
 }

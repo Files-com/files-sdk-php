@@ -41,7 +41,7 @@ class UserRequest {
   public static function __callStatic($name, $arguments) {
     if(in_array($name, array_keys(self::$static_mapped_functions))){
       $method = self::$static_mapped_functions[$name];
-      if (method_exists(__CLASS__, $method)){ 
+      if (method_exists(__CLASS__, $method)){
         return @self::$method($arguments);
       }
     }
@@ -105,11 +105,12 @@ class UserRequest {
     }
 
     $response = Api::sendRequest('/user_requests/' . @$params['id'] . '', 'DELETE', $params, $this->options);
-    return $response->data;
+    return;
   }
 
   public function destroy($params = []) {
-    return $this->delete($params);
+    $this->delete($params);
+    return;
   }
 
   public function save() {
@@ -147,7 +148,7 @@ class UserRequest {
   }
 
 
-  
+
 
   // Parameters:
   //   id (required) - int64 - User Request ID.
@@ -175,7 +176,7 @@ class UserRequest {
   public static function get($id, $params = [], $options = []) {
     return self::find($id, $params, $options);
   }
-  
+
 
   // Parameters:
   //   name (required) - string - Name of user requested

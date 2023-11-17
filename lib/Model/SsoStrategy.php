@@ -41,7 +41,7 @@ class SsoStrategy {
   public static function __callStatic($name, $arguments) {
     if(in_array($name, array_keys(self::$static_mapped_functions))){
       $method = self::$static_mapped_functions[$name];
-      if (method_exists(__CLASS__, $method)){ 
+      if (method_exists(__CLASS__, $method)){
         return @self::$method($arguments);
       }
     }
@@ -290,7 +290,7 @@ class SsoStrategy {
     }
 
     $response = Api::sendRequest('/sso_strategies/' . @$params['id'] . '/sync', 'POST', $params, $this->options);
-    return $response->data;
+    return;
   }
 
   // Parameters:
@@ -317,7 +317,7 @@ class SsoStrategy {
   }
 
 
-  
+
 
   // Parameters:
   //   id (required) - int64 - Sso Strategy ID.
@@ -345,5 +345,5 @@ class SsoStrategy {
   public static function get($id, $params = [], $options = []) {
     return self::find($id, $params, $options);
   }
-  
+
 }

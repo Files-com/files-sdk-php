@@ -41,7 +41,7 @@ class GroupUser {
   public static function __callStatic($name, $arguments) {
     if(in_array($name, array_keys(self::$static_mapped_functions))){
       $method = self::$static_mapped_functions[$name];
-      if (method_exists(__CLASS__, $method)){ 
+      if (method_exists(__CLASS__, $method)){
         return @self::$method($arguments);
       }
     }
@@ -199,16 +199,19 @@ class GroupUser {
     }
 
     $response = Api::sendRequest('/group_users/' . @$params['id'] . '', 'DELETE', $params, $this->options);
-    return $response->data;
+    return;
   }
 
   public function destroy($params = []) {
-    return $this->delete($params);
+    $this->delete($params);
+    return;
   }
 
   public function save() {
       if (@$this->attributes['id']) {
-        return $this->update($this->attributes);
+        $new_obj = $this->update($this->attributes);
+        $this->attributes = $new_obj->attributes;
+        return true;
       } else {
         $new_obj = self::create($this->attributes, $this->options);
         $this->attributes = $new_obj->attributes;
@@ -251,7 +254,7 @@ class GroupUser {
   }
 
 
-  
+
 
   // Parameters:
   //   group_id (required) - int64 - Group ID to add user to.

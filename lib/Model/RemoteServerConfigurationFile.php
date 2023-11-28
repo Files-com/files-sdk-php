@@ -61,14 +61,24 @@ class RemoteServerConfigurationFile {
     return @$this->attributes['permission_set'];
   }
 
-  // string # Files Agent API Token
-  public function getApiToken() {
-    return @$this->attributes['api_token'];
+  // string # private key
+  public function getPrivateKey() {
+    return @$this->attributes['private_key'];
+  }
+
+  // string
+  public function getSubdomain() {
+    return @$this->attributes['subdomain'];
   }
 
   // string # Agent local root path
   public function getRoot() {
     return @$this->attributes['root'];
+  }
+
+  // string # Files Agent API Token
+  public function getApiToken() {
+    return @$this->attributes['api_token'];
   }
 
   // int64 # Incoming port for files agent connections
@@ -86,19 +96,9 @@ class RemoteServerConfigurationFile {
     return @$this->attributes['public_key'];
   }
 
-  // string # private key
-  public function getPrivateKey() {
-    return @$this->attributes['private_key'];
-  }
-
   // string # either running or shutdown
   public function getStatus() {
     return @$this->attributes['status'];
-  }
-
-  // string # agent config version
-  public function getConfigVersion() {
-    return @$this->attributes['config_version'];
   }
 
   // string
@@ -106,8 +106,8 @@ class RemoteServerConfigurationFile {
     return @$this->attributes['server_host_key'];
   }
 
-  // string
-  public function getSubdomain() {
-    return @$this->attributes['subdomain'];
+  // string # agent config version
+  public function getConfigVersion() {
+    return @$this->attributes['config_version'];
   }
 }

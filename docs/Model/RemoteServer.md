@@ -51,6 +51,7 @@
   "files_agent_permission_set": "read_write",
   "files_agent_root": "example",
   "files_agent_api_token": "example",
+  "files_agent_version": "example",
   "filebase_bucket": "my-bucket",
   "filebase_access_key": "example",
   "cloudflare_bucket": "my-bucket",
@@ -110,6 +111,7 @@
 * `files_agent_permission_set` (string): Local permissions for files agent. read_only, write_only, or read_write
 * `files_agent_root` (string): Agent local root path
 * `files_agent_api_token` (string): Files Agent API Token
+* `files_agent_version` (string): Files Agent version
 * `filebase_bucket` (string): Filebase Bucket name
 * `filebase_access_key` (string): Filebase Access Key.
 * `cloudflare_bucket` (string): Cloudflare Bucket name
@@ -228,6 +230,7 @@ $remote_server->create(, [
   's3_compatible_access_key' => "example",
   'files_agent_root' => "example",
   'files_agent_permission_set' => "read_write",
+  'files_agent_version' => "example",
   'filebase_access_key' => "example",
   'filebase_bucket' => "my-bucket",
   'cloudflare_access_key' => "example",
@@ -295,6 +298,7 @@ $remote_server->create(, [
 * `s3_compatible_secret_key` (string): S3-compatible secret key
 * `files_agent_root` (string): Agent local root path
 * `files_agent_permission_set` (string): Local permissions for files agent. read_only, write_only, or read_write
+* `files_agent_version` (string): Files Agent version
 * `filebase_access_key` (string): Filebase Access Key.
 * `filebase_secret_key` (string): Filebase secret key
 * `filebase_bucket` (string): Filebase Bucket name
@@ -351,16 +355,16 @@ $remote_server->configuration_file([
 {
   "id": 1,
   "permission_set": "full",
-  "api_token": "example",
+  "private_key": "example",
+  "subdomain": "example",
   "root": "example",
+  "api_token": "example",
   "port": 1,
   "hostname": "example",
   "public_key": "example",
-  "private_key": "example",
   "status": "example",
-  "config_version": "example",
   "server_host_key": "example",
-  "subdomain": "example"
+  "config_version": "example"
 }
 ```
 
@@ -411,6 +415,7 @@ $remote_server->update([
   's3_compatible_access_key' => "example",
   'files_agent_root' => "example",
   'files_agent_permission_set' => "read_write",
+  'files_agent_version' => "example",
   'filebase_access_key' => "example",
   'filebase_bucket' => "my-bucket",
   'cloudflare_access_key' => "example",
@@ -478,6 +483,7 @@ $remote_server->update([
 * `s3_compatible_secret_key` (string): S3-compatible secret key
 * `files_agent_root` (string): Agent local root path
 * `files_agent_permission_set` (string): Local permissions for files agent. read_only, write_only, or read_write
+* `files_agent_version` (string): Files Agent version
 * `filebase_access_key` (string): Filebase Access Key.
 * `filebase_secret_key` (string): Filebase secret key
 * `filebase_bucket` (string): Filebase Bucket name
@@ -542,6 +548,7 @@ $remote_server->update([
   "files_agent_permission_set": "read_write",
   "files_agent_root": "example",
   "files_agent_api_token": "example",
+  "files_agent_version": "example",
   "filebase_bucket": "my-bucket",
   "filebase_access_key": "example",
   "cloudflare_bucket": "my-bucket",

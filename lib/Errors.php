@@ -193,6 +193,7 @@ class BundleMaximumUsesReachedException extends \Files\NotAuthorizedException {}
 class CannotLoginWhileUsingKeyException extends \Files\NotAuthorizedException {}
 class CantActForOtherUserException extends \Files\NotAuthorizedException {}
 class ContactAdminForPasswordChangeHelpException extends \Files\NotAuthorizedException {}
+class FilesAgentFailedAuthorizationException extends \Files\NotAuthorizedException {}
 class FolderAdminOrBillingPermissionRequiredException extends \Files\NotAuthorizedException {}
 class FolderAdminPermissionRequiredException extends \Files\NotAuthorizedException {}
 class FullPermissionRequiredException extends \Files\NotAuthorizedException {}
@@ -293,6 +294,7 @@ class TooManySharesException extends \Files\RateLimitedException {}
 
 namespace Files\ServiceUnavailable {
 
+class AgentUnavailableException extends \Files\ServiceUnavailableException {}
 class AutomationsUnavailableException extends \Files\ServiceUnavailableException {}
 class UploadsUnavailableException extends \Files\ServiceUnavailableException {}
 

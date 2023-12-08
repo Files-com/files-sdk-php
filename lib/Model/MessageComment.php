@@ -119,7 +119,7 @@ class MessageComment {
     }
 
     $response = Api::sendRequest('/message_comments/' . @$params['id'] . '', 'PATCH', $params, $this->options);
-    return $response->data;
+    return new MessageComment((array)(@$response->data ?: []), $options);
   }
 
   public function delete($params = []) {

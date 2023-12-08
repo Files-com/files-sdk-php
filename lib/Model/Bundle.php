@@ -569,7 +569,7 @@ class Bundle {
     }
 
     $response = Api::sendRequest('/bundles/' . @$params['id'] . '', 'PATCH', $params, $this->options);
-    return $response->data;
+    return new Bundle((array)(@$response->data ?: []), $options);
   }
 
   public function delete($params = []) {

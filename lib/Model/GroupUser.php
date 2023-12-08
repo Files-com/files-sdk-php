@@ -151,7 +151,7 @@ class GroupUser {
     }
 
     $response = Api::sendRequest('/group_users/' . @$params['id'] . '', 'PATCH', $params, $this->options);
-    return $response->data;
+    return new GroupUser((array)(@$response->data ?: []), $options);
   }
 
   // Parameters:

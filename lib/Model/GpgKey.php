@@ -153,7 +153,7 @@ class GpgKey {
     }
 
     $response = Api::sendRequest('/gpg_keys/' . @$params['id'] . '', 'PATCH', $params, $this->options);
-    return $response->data;
+    return new GpgKey((array)(@$response->data ?: []), $options);
   }
 
   public function delete($params = []) {

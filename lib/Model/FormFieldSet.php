@@ -155,7 +155,7 @@ class FormFieldSet {
     }
 
     $response = Api::sendRequest('/form_field_sets/' . @$params['id'] . '', 'PATCH', $params, $this->options);
-    return $response->data;
+    return new FormFieldSet((array)(@$response->data ?: []), $options);
   }
 
   public function delete($params = []) {

@@ -793,7 +793,7 @@ class RemoteServer {
     }
 
     $response = Api::sendRequest('/remote_servers/' . @$params['id'] . '/configuration_file', 'POST', $params, $this->options);
-    return $response->data;
+    return new RemoteServerConfigurationFile((array)(@$response->data ?: []), $options);
   }
 
   // Parameters:
@@ -1120,7 +1120,7 @@ class RemoteServer {
     }
 
     $response = Api::sendRequest('/remote_servers/' . @$params['id'] . '', 'PATCH', $params, $this->options);
-    return $response->data;
+    return new RemoteServer((array)(@$response->data ?: []), $options);
   }
 
   public function delete($params = []) {

@@ -125,7 +125,7 @@ class SftpHostKey {
     }
 
     $response = Api::sendRequest('/sftp_host_keys/' . @$params['id'] . '', 'PATCH', $params, $this->options);
-    return $response->data;
+    return new SftpHostKey((array)(@$response->data ?: []), $options);
   }
 
   public function delete($params = []) {

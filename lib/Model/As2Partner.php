@@ -217,7 +217,7 @@ class As2Partner {
     }
 
     $response = Api::sendRequest('/as2_partners/' . @$params['id'] . '', 'PATCH', $params, $this->options);
-    return $response->data;
+    return new As2Partner((array)(@$response->data ?: []), $options);
   }
 
   public function delete($params = []) {

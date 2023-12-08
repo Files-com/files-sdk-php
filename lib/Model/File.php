@@ -566,7 +566,7 @@ class File {
     }
 
     $response = Api::sendRequest('/files/' . @$params['path'] . '', 'GET', $params, $this->options);
-    return $response->data;
+    return new File((array)(@$response->data ?: []), $options);
   }
 
   // Parameters:
@@ -598,7 +598,7 @@ class File {
     }
 
     $response = Api::sendRequest('/files/' . @$params['path'] . '', 'PATCH', $params, $this->options);
-    return $response->data;
+    return new File((array)(@$response->data ?: []), $options);
   }
 
   // Parameters:
@@ -664,7 +664,7 @@ class File {
     }
 
     $response = Api::sendRequest('/file_actions/copy/' . @$params['path'] . '', 'POST', $params, $this->options);
-    return $response->data;
+    return new FileAction((array)(@$response->data ?: []), $options);
   }
 
   // Move file/folder
@@ -701,7 +701,7 @@ class File {
     }
 
     $response = Api::sendRequest('/file_actions/move/' . @$params['path'] . '', 'POST', $params, $this->options);
-    return $response->data;
+    return new FileAction((array)(@$response->data ?: []), $options);
   }
 
   // Begin file upload
@@ -752,7 +752,7 @@ class File {
     }
 
     $response = Api::sendRequest('/file_actions/begin_upload/' . @$params['path'] . '', 'POST', $params, $this->options);
-    return $response->data;
+    return new FileUploadPart((array)(@$response->data ?: []), $options);
   }
 
   public function save() {

@@ -234,7 +234,7 @@ class As2Station {
     }
 
     $response = Api::sendRequest('/as2_stations/' . @$params['id'] . '', 'PATCH', $params, $this->options);
-    return $response->data;
+    return new As2Station((array)(@$response->data ?: []), $options);
   }
 
   public function delete($params = []) {

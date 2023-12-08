@@ -117,7 +117,7 @@ class BundleNotification {
     }
 
     $response = Api::sendRequest('/bundle_notifications/' . @$params['id'] . '', 'PATCH', $params, $this->options);
-    return $response->data;
+    return new BundleNotification((array)(@$response->data ?: []), $options);
   }
 
   public function delete($params = []) {

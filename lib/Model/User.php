@@ -911,7 +911,7 @@ class User {
     }
 
     $response = Api::sendRequest('/users/' . @$params['id'] . '', 'PATCH', $params, $this->options);
-    return $response->data;
+    return new User((array)(@$response->data ?: []), $options);
   }
 
   public function delete($params = []) {

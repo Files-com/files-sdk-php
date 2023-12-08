@@ -142,7 +142,7 @@ class PublicKey {
     }
 
     $response = Api::sendRequest('/public_keys/' . @$params['id'] . '', 'PATCH', $params, $this->options);
-    return $response->data;
+    return new PublicKey((array)(@$response->data ?: []), $options);
   }
 
   public function delete($params = []) {

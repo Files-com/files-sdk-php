@@ -91,6 +91,11 @@ class Site {
     return @$this->attributes['admin_user_id'];
   }
 
+  // boolean # Allow admins to bypass the locked subfolders setting.
+  public function getAdminsBypassLockedSubfolders() {
+    return @$this->attributes['admins_bypass_locked_subfolders'];
+  }
+
   // boolean # Are manual Bundle names allowed?
   public function getAllowBundleNames() {
     return @$this->attributes['allow_bundle_names'];
@@ -896,6 +901,7 @@ class Site {
   //   group_admins_can_set_user_password - boolean - Allow group admins set password authentication method
   //   bundle_recipient_blacklist_free_email_domains - boolean - Disallow free email domains for Bundle/Inbox recipients?
   //   bundle_recipient_blacklist_domains - array(string) - List of email domains to disallow when entering a Bundle/Inbox recipients
+  //   admins_bypass_locked_subfolders - boolean - Allow admins to bypass the locked subfolders setting.
   //   allowed_2fa_method_sms - boolean - Is SMS two factor authentication allowed?
   //   allowed_2fa_method_u2f - boolean - Is U2F two factor authentication allowed?
   //   allowed_2fa_method_totp - boolean - Is TOTP two factor authentication allowed?

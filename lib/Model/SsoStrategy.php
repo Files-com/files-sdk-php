@@ -76,6 +76,11 @@ class SsoStrategy {
     return @$this->attributes['id'];
   }
 
+  // int64 # Count of users with this SSO Strategy
+  public function getUserCount() {
+    return @$this->attributes['user_count'];
+  }
+
   // string # Identity provider sha256 cert fingerprint if saml_provider_metadata_url is not available.
   public function getSamlProviderCertFingerprint() {
     return @$this->attributes['saml_provider_cert_fingerprint'];

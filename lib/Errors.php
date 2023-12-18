@@ -6,68 +6,69 @@ namespace Files {
 
 function handleErrorResponse($error) {
   $className = null;
+  $errorData = null;
 
-  $response = @$error->getResponse();
-  $body = @$response->getBody()->getContents();
-  $errorData = json_decode($body);
+  switch (get_class($error)) {
+    case 'GuzzleHttp\\Exception\\TransferException':
+      $className = 'ApiTransferException';
+      break;
 
-  if ($errorData === null) {
-    throw new ApiException($error->getMessage(), $error->getCode());
-  }
+    case 'GuzzleHttp\\Exception\\ConnectException':
+      $className = 'ApiConnectException';
+      break;
 
-  if (is_array($errorData)) {
-    $errorData = $errorData[0];
-  }
+    case 'GuzzleHttp\\Exception\\RequestException':
+      $className = 'ApiRequestException';
+      break;
 
-  if ($errorData) {
-    if (!@$errorData->type) {
-      throw new ApiException($error->getMessage(), $error->getCode());
-    }
+    case 'GuzzleHttp\\Exception\\BadResponseException':
+      $className = 'ApiBadResponseException';
+      break;
 
-    $toPascalCase = function($errorPart) {
-      return implode('', array_map('\\ucfirst', explode('-', $errorPart)));
-    };
+    case 'GuzzleHttp\\Exception\\ServerException':
+      $className = 'ApiServerException';
+      break;
 
-    $parts = explode('/', $errorData->type);
-
-    if (count($parts) > 1) {
-      list($errorFamily, $errorType) = array_map($toPascalCase, $parts);
-      $className = $errorFamily . '\\' . $errorType . 'Exception';
-    } else {
-      $errorType = $toPascalCase($parts[0]);
-      $className = $errorType . 'Exception';
-    }
+    case 'GuzzleHttp\\Exception\\TooManyRedirectsException':
+      $className = 'ApiTooManyRedirectsException';
+      break;
   }
 
   if (!$className) {
-    switch (get_class($error)) {
-      case 'GuzzleHttp\\Exception\\TransferException':
-        $className = 'ApiTransferException';
-        break;
-
-      case 'GuzzleHttp\\Exception\\ConnectException':
-        $className = 'ApiConnectException';
-        break;
-
-      case 'GuzzleHttp\\Exception\\RequestException':
-        $className = 'ApiRequestException';
-        break;
-
-      case 'GuzzleHttp\\Exception\\BadResponseException':
-        $className = 'ApiBadResponseException';
-        break;
-
-      case 'GuzzleHttp\\Exception\\ServerException':
-        $className = 'ApiServerException';
-        break;
-
-      case 'GuzzleHttp\\Exception\\ClientException':
-        $className = 'ApiClientException';
-        break;
-
-      case 'GuzzleHttp\\Exception\\TooManyRedirectsException':
-        $className = 'ApiTooManyRedirectsException';
-        break;
+    $response = @$error->getResponse();
+    if ($response === null) {
+      throw new FilesException($error->getMessage(), $error->getCode());
+    }
+  
+    $body = @$response->getBody()->getContents();
+    $errorData = json_decode($body);
+  
+    if ($errorData === null) {
+      throw new FilesException($error->getMessage(), $error->getCode());
+    }
+  
+    if (is_array($errorData)) {
+      $errorData = $errorData[0];
+    }
+  
+    if ($errorData) {
+      if (!@$errorData->type) {
+        throw new FilesException($error->getMessage(), $error->getCode());
+      }
+  
+      $toPascalCase = function($errorPart) {
+        return implode('', array_map('\\ucfirst', explode('-', $errorPart)));
+      };
+  
+      $parts = explode('/', $errorData->type);
+  
+      if (count($parts) > 1) {
+        list($errorFamily, $errorType) = array_map($toPascalCase, $parts);
+        $className = $errorFamily . '\\' . $errorType . 'Exception';
+      } else {
+        $errorType = $toPascalCase($parts[0]);
+        $className = $errorType . 'Exception';
+      }
     }
   }
 
@@ -77,14 +78,53 @@ function handleErrorResponse($error) {
     $ExceptionClass = '\\Files\\ApiException';
   }
 
-  throw new $ExceptionClass($error->getMessage(), $error->getCode());
+  throw new $ExceptionClass($error->getMessage(), $error->getCode(), $errorData);
 }
 
-class ApiException extends \Exception {
-  public function __construct($message, $code) {
-    Logger::error(get_called_class() . ' > ' . $message . ' (code: ' . $code . ')');
+class ApiException extends FilesException {
+  private $errorData = null;
+
+  public function __construct($message, $code, $errorData) {
+    Logger::debug(get_called_class() . ' > ' . $message . ' (code: ' . $code . ')');
 
     parent::__construct($message, $code);
+    $this->errorData = $errorData;
+  }
+
+  public function getDetail() {
+    return $this->errorData->detail;
+  }
+
+  public function getError() {
+    return $this->errorData->error;
+  }
+
+  public function getErrors() {
+    return $this->errorData->errors;
+  }
+
+  public function getHttpCode() {
+    return $this->errorData->{'http-code'};
+  }
+
+  public function instance() {
+    return $this->errorData->instance;
+  }
+
+  public function modelErrors() {
+    return $this->errorData->{'model_errors'};
+  }
+
+  public function getTitle() {
+    return $this->errorData->title;
+  }
+
+  public function getType() {
+    return $this->errorData->type;
+  }
+
+  public function getData() {
+    return $this->errorData->data;
   }
 }
 
@@ -97,23 +137,23 @@ class MissingParameterException extends FilesException {}
 class NotImplementedException extends FilesException {}
 
 // guzzle errors
-class ApiTransferException extends ApiException {}
-class ApiConnectException extends ApiException {}
-class ApiRequestException extends ApiException {}
-class ApiBadResponseException extends ApiException {}
-class ApiServerException extends ApiException {}
-class ApiClientException extends ApiException {}
-class ApiTooManyRedirectsException extends ApiException {}
+class ApiTransferException extends FilesException {}
+class ApiConnectException extends FilesException {}
+class ApiRequestException extends FilesException {}
+class ApiBadResponseException extends FilesException {}
+class ApiServerException extends FilesException {}
+class ApiClientException extends FilesException {}
+class ApiTooManyRedirectsException extends FilesException {}
 
 // api error groups
-class BadRequestException extends FilesException {}
-class NotAuthenticatedException extends FilesException {}
-class NotAuthorizedException extends FilesException {}
-class NotFoundException extends FilesException {}
-class ProcessingFailureException extends FilesException {}
-class RateLimitedException extends FilesException {}
-class ServiceUnavailableException extends FilesException {}
-class SiteConfigurationException extends FilesException {}
+class BadRequestException extends ApiException {}
+class NotAuthenticatedException extends ApiException {}
+class NotAuthorizedException extends ApiException {}
+class NotFoundException extends ApiException {}
+class ProcessingFailureException extends ApiException {}
+class RateLimitedException extends ApiException {}
+class ServiceUnavailableException extends ApiException {}
+class SiteConfigurationException extends ApiException {}
 
 } // namespace Files
 

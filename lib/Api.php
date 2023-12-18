@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Files;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Handler\CurlHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 
@@ -19,7 +18,7 @@ function middlewareRemoveHeader($header) {
 }
 
 class Api {
-  const VERSION = "1.1.6";
+  const VERSION = "1.2.0";
   private static function pushRetryHandler($handlerStack) {
     $shouldRetry = function($retries, $request, $response, $exception) {
       if ($retries >= Files::$maxNetworkRetries) {
@@ -59,7 +58,7 @@ class Api {
 
     Logger::debug("Sending request: " . $verb . " $url");
 
-    $handlerStack = HandlerStack::create(new CurlHandler());
+    $handlerStack = HandlerStack::create(Files::getHandler());
     self::pushRetryHandler($handlerStack);
 
     // for security, Content-Length is disallowed on GET requests

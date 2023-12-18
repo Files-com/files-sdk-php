@@ -13,9 +13,14 @@ exists()
 run_php_vers()
 {
   echo "======= RUNNING UNIT TESTS FOR: $1 ======="
+  cd "${DIR}/" || exit 1
+  rm -rf vendor
+  rm composer.lock # Remove the lock in the base folder so we can update deps for different PHP versions
+  $1 "${DIR}/composer.phar" install || exit 1
   cd "${DIR}/test" || exit 1 # Force the path
+  rm -rf vendor
   rm composer.lock # Remove the lock so we can update deps for different PHP versions
-  "$1" "${DIR}/composer.phar" install
+  $1 "${DIR}/composer.phar" install
   FILES_SESSION_ENV="development" "$1" ./vendor/bin/phpunit --testsuite default || exit 1
   rm .phpunit.result.cache # We don't want to save the result cache between runs
 }
@@ -31,8 +36,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 ## Check composer install main project
 cd "${DIR}/" || exit 1
-wget wget -nc https://getcomposer.org/download/2.2.21/composer.phar
-php composer.phar install  || exit 1
+wget -nc https://getcomposer.org/download/2.2.21/composer.phar
 
 
 ## Configure tests

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Files;
 
+use GuzzleHttp\Handler\CurlHandler;
+
 if (!version_compare(PHP_VERSION, '5.5.0') < 0) {
   trigger_error('Minimum PHP version required is 5.5.0', E_USER_ERROR);
   exit;
@@ -27,8 +29,9 @@ class Files {
   private static $baseUrl = 'https://app.files.com';
   private static $endpointPrefix = '/api/rest/v1';
   private static $sessionId = null;
+  private static $handler = null;
 
-  public static $logLevel = LogLevel::INFO;
+  public static $logLevel = LogLevel::WARN;
   public static $debugRequest = false;
   public static $debugResponseHeaders = false;
 
@@ -55,6 +58,10 @@ class Files {
     return self::$sessionId;
   }
 
+  public static function getHandler() {
+    return self::$handler === null ? new CurlHandler() : self::$handler;
+  }
+
   public static function setApiKey($apiKey) {
     self::$apiKey = $apiKey;
   }
@@ -69,5 +76,9 @@ class Files {
 
   public static function setSessionId($apiKey) {
     self::$sessionId = $apiKey;
+  }
+
+  public static function setHandler($handler) {
+    self::$handler = $handler;
   }
 }

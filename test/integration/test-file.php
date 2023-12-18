@@ -37,6 +37,7 @@ if (!$api_domain) {
 
 Files::setApiKey($api_key);
 Files::setBaseUrl('https://' . $api_domain);
+Files::$logLevel = LogLevel::INFO;
 
 // Files::$logLevel = LogLevel::DEBUG;
 // Files::$debugRequest = true;
@@ -61,6 +62,10 @@ function assertUserCreatedAndDelete($user, $name) {
   try {
     User::find($user->id);
   } catch (NotFoundException $error) {
+    assert($error->getTitle() === "Not Found");
+    assert($error->getError() === "Not Found");
+    assert($error->getType() === "not-found");
+    assert($error->getHttpCode() === 404);
     $userNoLongerExists = true;
   }
 
@@ -185,6 +190,10 @@ function testErrors() {
   try {
     $nonExistentFile->delete();
   } catch (NotFoundException $error) {
+    assert($error->getTitle() === "Not Found");
+    assert($error->getError() === "Not Found");
+    assert($error->getType() === "not-found");
+    assert($error->getHttpCode() === 404);
     $caughtExpectedException = true;
   }
 
@@ -199,6 +208,10 @@ function testErrors() {
   try {
     $folder = Folder::create('.');
   } catch (ProcessingFailure\DestinationExistsException $error) {
+    assert($error->getTitle() === "Destination Exists");
+    assert($error->getError() === "The destination exists.");
+    assert($error->getType() === "processing-failure/destination-exists");
+    assert($error->getHttpCode() === 422);
     $caughtExpectedException = true;
   }
 
@@ -312,6 +325,10 @@ function testFileUploadFindCopyAndDelete() {
   try {
     File::find(RemoteTestEnv::$workingFolderPath . $tempName);
   } catch (NotFoundException $error) {
+    assert($error->getTitle() === "Not Found");
+    assert($error->getError() === "Not Found");
+    assert($error->getType() === "not-found");
+    assert($error->getHttpCode() === 404);
     $fileNoLongerExists = true;
   }
 

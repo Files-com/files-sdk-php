@@ -119,15 +119,6 @@ class ApiKey {
     return $this->attributes['name'] = $value;
   }
 
-  // string # Folder path restriction for this api key. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
-  public function getPath() {
-    return @$this->attributes['path'];
-  }
-
-  public function setPath($value) {
-    return $this->attributes['path'] = $value;
-  }
-
   // string # Permissions for this API Key.  Keys with the `desktop_app` permission set only have the ability to do the functions provided in our Desktop App (File and Share Link operations).  Additional permission sets may become available in the future, such as for a Site Admin to give a key with no administrator privileges.  If you have ideas for permission sets, please let us know.
   public function getPermissionSet() {
     return @$this->attributes['permission_set'];
@@ -162,6 +153,15 @@ class ApiKey {
 
   public function setUserId($value) {
     return $this->attributes['user_id'] = $value;
+  }
+
+  // string # Folder path restriction for this api key.
+  public function getPath() {
+    return @$this->attributes['path'];
+  }
+
+  public function setPath($value) {
+    return $this->attributes['path'] = $value;
   }
 
   // Parameters:

@@ -105,10 +105,50 @@ class Group {
     return $this->attributes['usernames'] = $value;
   }
 
+  // boolean # If true, users in this group can use FTP to login.  This will override a false value of `ftp_permission` on the user level.
+  public function getFtpPermission() {
+    return @$this->attributes['ftp_permission'];
+  }
+
+  public function setFtpPermission($value) {
+    return $this->attributes['ftp_permission'] = $value;
+  }
+
+  // boolean # If true, users in this group can use SFTP to login.  This will override a false value of `sftp_permission` on the user level.
+  public function getSftpPermission() {
+    return @$this->attributes['sftp_permission'];
+  }
+
+  public function setSftpPermission($value) {
+    return $this->attributes['sftp_permission'] = $value;
+  }
+
+  // boolean # If true, users in this group can use WebDAV to login.  This will override a false value of `dav_permission` on the user level.
+  public function getDavPermission() {
+    return @$this->attributes['dav_permission'];
+  }
+
+  public function setDavPermission($value) {
+    return $this->attributes['dav_permission'] = $value;
+  }
+
+  // boolean # If true, users in this group can use the REST API to login.  This will override a false value of `restapi_permission` on the user level.
+  public function getRestapiPermission() {
+    return @$this->attributes['restapi_permission'];
+  }
+
+  public function setRestapiPermission($value) {
+    return $this->attributes['restapi_permission'] = $value;
+  }
+
   // Parameters:
   //   notes - string - Group notes.
   //   user_ids - string - A list of user ids. If sent as a string, should be comma-delimited.
   //   admin_ids - string - A list of group admin user ids. If sent as a string, should be comma-delimited.
+  //   ftp_permission - boolean - If true, users in this group can use FTP to login.  This will override a false value of `ftp_permission` on the user level.
+  //   sftp_permission - boolean - If true, users in this group can use SFTP to login.  This will override a false value of `sftp_permission` on the user level.
+  //   dav_permission - boolean - If true, users in this group can use WebDAV to login.  This will override a false value of `dav_permission` on the user level.
+  //   restapi_permission - boolean - If true, users in this group can use the REST API to login.  This will override a false value of `restapi_permission` on the user level.
   //   name - string - Group name.
   public function update($params = []) {
     if (!is_array($params)) {
@@ -252,6 +292,10 @@ class Group {
   //   notes - string - Group notes.
   //   user_ids - string - A list of user ids. If sent as a string, should be comma-delimited.
   //   admin_ids - string - A list of group admin user ids. If sent as a string, should be comma-delimited.
+  //   ftp_permission - boolean - If true, users in this group can use FTP to login.  This will override a false value of `ftp_permission` on the user level.
+  //   sftp_permission - boolean - If true, users in this group can use SFTP to login.  This will override a false value of `sftp_permission` on the user level.
+  //   dav_permission - boolean - If true, users in this group can use WebDAV to login.  This will override a false value of `dav_permission` on the user level.
+  //   restapi_permission - boolean - If true, users in this group can use the REST API to login.  This will override a false value of `restapi_permission` on the user level.
   //   name (required) - string - Group name.
   public static function create($params = [], $options = []) {
     if (!@$params['name']) {

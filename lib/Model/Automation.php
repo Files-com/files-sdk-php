@@ -60,6 +60,15 @@ class Automation {
     return $this->attributes['id'] = $value;
   }
 
+  // boolean # Ordinarily, files with identical size in the source and destination will be skipped from copy operations to prevent wasted transfer.  If this flag is `true` we will overwrite the destination file always.  Note that this may cause large amounts of wasted transfer usage.
+  public function getAlwaysOverwriteSizeMatchingFiles() {
+    return @$this->attributes['always_overwrite_size_matching_files'];
+  }
+
+  public function setAlwaysOverwriteSizeMatchingFiles($value) {
+    return $this->attributes['always_overwrite_size_matching_files'] = $value;
+  }
+
   // string # Automation type
   public function getAutomation() {
     return @$this->attributes['automation'];
@@ -78,6 +87,42 @@ class Automation {
     return $this->attributes['deleted'] = $value;
   }
 
+  // string # Description for the this Automation.
+  public function getDescription() {
+    return @$this->attributes['description'];
+  }
+
+  public function setDescription($value) {
+    return $this->attributes['description'] = $value;
+  }
+
+  // string # If set, this string in the destination path will be replaced with the value in `destination_replace_to`.
+  public function getDestinationReplaceFrom() {
+    return @$this->attributes['destination_replace_from'];
+  }
+
+  public function setDestinationReplaceFrom($value) {
+    return $this->attributes['destination_replace_from'] = $value;
+  }
+
+  // string # If set, this string will replace the value `destination_replace_from` in the destination filename. You can use special patterns here.
+  public function getDestinationReplaceTo() {
+    return @$this->attributes['destination_replace_to'];
+  }
+
+  public function setDestinationReplaceTo($value) {
+    return $this->attributes['destination_replace_to'] = $value;
+  }
+
+  // array # Destination Paths
+  public function getDestinations() {
+    return @$this->attributes['destinations'];
+  }
+
+  public function setDestinations($value) {
+    return $this->attributes['destinations'] = $value;
+  }
+
   // boolean # If true, this automation will not run.
   public function getDisabled() {
     return @$this->attributes['disabled'];
@@ -87,13 +132,13 @@ class Automation {
     return $this->attributes['disabled'] = $value;
   }
 
-  // string # How this automation is triggered to run.
-  public function getTrigger() {
-    return @$this->attributes['trigger'];
+  // array # IDs of Groups for the Automation (i.e. who to Request File from)
+  public function getGroupIds() {
+    return @$this->attributes['group_ids'];
   }
 
-  public function setTrigger($value) {
-    return $this->attributes['trigger'] = $value;
+  public function setGroupIds($value) {
+    return $this->attributes['group_ids'] = $value;
   }
 
   // string # If trigger is `daily`, this specifies how often to run this automation.  One of: `day`, `week`, `week_end`, `month`, `month_end`, `quarter`, `quarter_end`, `year`, `year_end`
@@ -123,6 +168,24 @@ class Automation {
     return $this->attributes['name'] = $value;
   }
 
+  // string # Path on which this Automation runs.  Supports globs, except on remote mounts. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
+  public function getPath() {
+    return @$this->attributes['path'];
+  }
+
+  public function setPath($value) {
+    return $this->attributes['path'] = $value;
+  }
+
+  // int64 # If trigger type is `daily`, this specifies a day number to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
+  public function getRecurringDay() {
+    return @$this->attributes['recurring_day'];
+  }
+
+  public function setRecurringDay($value) {
+    return $this->attributes['recurring_day'] = $value;
+  }
+
   // object # If trigger is `custom_schedule`, Custom schedule description for when the automation should be run.
   public function getSchedule() {
     return @$this->attributes['schedule'];
@@ -141,69 +204,6 @@ class Automation {
     return $this->attributes['source'] = $value;
   }
 
-  // array # Destination Paths
-  public function getDestinations() {
-    return @$this->attributes['destinations'];
-  }
-
-  public function setDestinations($value) {
-    return $this->attributes['destinations'] = $value;
-  }
-
-  // string # If set, this string in the destination path will be replaced with the value in `destination_replace_to`.
-  public function getDestinationReplaceFrom() {
-    return @$this->attributes['destination_replace_from'];
-  }
-
-  public function setDestinationReplaceFrom($value) {
-    return $this->attributes['destination_replace_from'] = $value;
-  }
-
-  // string # If set, this string will replace the value `destination_replace_from` in the destination filename. You can use special patterns here.
-  public function getDestinationReplaceTo() {
-    return @$this->attributes['destination_replace_to'];
-  }
-
-  public function setDestinationReplaceTo($value) {
-    return $this->attributes['destination_replace_to'] = $value;
-  }
-
-  // string # Description for the this Automation.
-  public function getDescription() {
-    return @$this->attributes['description'];
-  }
-
-  public function setDescription($value) {
-    return $this->attributes['description'] = $value;
-  }
-
-  // int64 # If trigger type is `daily`, this specifies a day number to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
-  public function getRecurringDay() {
-    return @$this->attributes['recurring_day'];
-  }
-
-  public function setRecurringDay($value) {
-    return $this->attributes['recurring_day'] = $value;
-  }
-
-  // string # Path on which this Automation runs.  Supports globs, except on remote mounts. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
-  public function getPath() {
-    return @$this->attributes['path'];
-  }
-
-  public function setPath($value) {
-    return $this->attributes['path'] = $value;
-  }
-
-  // int64 # User ID of the Automation's creator.
-  public function getUserId() {
-    return @$this->attributes['user_id'];
-  }
-
-  public function setUserId($value) {
-    return $this->attributes['user_id'] = $value;
-  }
-
   // array # IDs of remote sync folder behaviors to run by this Automation
   public function getSyncIds() {
     return @$this->attributes['sync_ids'];
@@ -211,33 +211,6 @@ class Automation {
 
   public function setSyncIds($value) {
     return $this->attributes['sync_ids'] = $value;
-  }
-
-  // array # IDs of Users for the Automation (i.e. who to Request File from)
-  public function getUserIds() {
-    return @$this->attributes['user_ids'];
-  }
-
-  public function setUserIds($value) {
-    return $this->attributes['user_ids'] = $value;
-  }
-
-  // array # IDs of Groups for the Automation (i.e. who to Request File from)
-  public function getGroupIds() {
-    return @$this->attributes['group_ids'];
-  }
-
-  public function setGroupIds($value) {
-    return $this->attributes['group_ids'] = $value;
-  }
-
-  // string # If trigger is `webhook`, this is the URL of the webhook to trigger the Automation.
-  public function getWebhookUrl() {
-    return @$this->attributes['webhook_url'];
-  }
-
-  public function setWebhookUrl($value) {
-    return $this->attributes['webhook_url'] = $value;
   }
 
   // array # If trigger is `action`, this is the list of action types on which to trigger the automation. Valid actions are create, read, update, destroy, move, copy
@@ -249,6 +222,33 @@ class Automation {
     return $this->attributes['trigger_actions'] = $value;
   }
 
+  // string # How this automation is triggered to run.
+  public function getTrigger() {
+    return @$this->attributes['trigger'];
+  }
+
+  public function setTrigger($value) {
+    return $this->attributes['trigger'] = $value;
+  }
+
+  // int64 # User ID of the Automation's creator.
+  public function getUserId() {
+    return @$this->attributes['user_id'];
+  }
+
+  public function setUserId($value) {
+    return $this->attributes['user_id'] = $value;
+  }
+
+  // array # IDs of Users for the Automation (i.e. who to Request File from)
+  public function getUserIds() {
+    return @$this->attributes['user_ids'];
+  }
+
+  public function setUserIds($value) {
+    return $this->attributes['user_ids'] = $value;
+  }
+
   // object # A Hash of attributes specific to the automation type.
   public function getValue() {
     return @$this->attributes['value'];
@@ -256,6 +256,15 @@ class Automation {
 
   public function setValue($value) {
     return $this->attributes['value'] = $value;
+  }
+
+  // string # If trigger is `webhook`, this is the URL of the webhook to trigger the Automation.
+  public function getWebhookUrl() {
+    return @$this->attributes['webhook_url'];
+  }
+
+  public function setWebhookUrl($value) {
+    return $this->attributes['webhook_url'] = $value;
   }
 
   // string # DEPRECATED: Destination Path. Use `destinations` instead.
@@ -301,6 +310,7 @@ class Automation {
   //   user_ids - string - A list of user IDs the automation is associated with. If sent as a string, it should be comma-delimited.
   //   group_ids - string - A list of group IDs the automation is associated with. If sent as a string, it should be comma-delimited.
   //   schedule - object - Custom schedule for running this automation.
+  //   always_overwrite_size_matching_files - boolean - Ordinarily, files with identical size in the source and destination will be skipped from copy operations to prevent wasted transfer.  If this flag is `true` we will overwrite the destination file always.  Note that this may cause large amounts of wasted transfer usage.
   //   description - string - Description for the this Automation.
   //   disabled - boolean - If true, this automation will not run.
   //   name - string - Name for this automation.
@@ -506,6 +516,7 @@ class Automation {
   //   user_ids - string - A list of user IDs the automation is associated with. If sent as a string, it should be comma-delimited.
   //   group_ids - string - A list of group IDs the automation is associated with. If sent as a string, it should be comma-delimited.
   //   schedule - object - Custom schedule for running this automation.
+  //   always_overwrite_size_matching_files - boolean - Ordinarily, files with identical size in the source and destination will be skipped from copy operations to prevent wasted transfer.  If this flag is `true` we will overwrite the destination file always.  Note that this may cause large amounts of wasted transfer usage.
   //   description - string - Description for the this Automation.
   //   disabled - boolean - If true, this automation will not run.
   //   name - string - Name for this automation.

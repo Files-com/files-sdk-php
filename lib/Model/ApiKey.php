@@ -156,10 +156,10 @@ class ApiKey {
   }
 
   // Parameters:
-  //   name - string - Internal name for the API Key.  For your use.
   //   description - string - User-supplied description of API key.
   //   expires_at - string - API Key expiration date
   //   permission_set - string - Permissions for this API Key. It must be full for site-wide API Keys.  Keys with the `desktop_app` permission set only have the ability to do the functions provided in our Desktop App (File and Share Link operations).  Additional permission sets may become available in the future, such as for a Site Admin to give a key with no administrator privileges.  If you have ideas for permission sets, please let us know.
+  //   name - string - Internal name for the API Key.  For your use.
   public function update($params = []) {
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
@@ -177,10 +177,6 @@ class ApiKey {
       throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
     }
 
-    if (@$params['name'] && !is_string(@$params['name'])) {
-      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
-    }
-
     if (@$params['description'] && !is_string(@$params['description'])) {
       throw new \Files\InvalidParameterException('$description must be of type string; received ' . gettype(@$params['description']));
     }
@@ -191,6 +187,10 @@ class ApiKey {
 
     if (@$params['permission_set'] && !is_string(@$params['permission_set'])) {
       throw new \Files\InvalidParameterException('$permission_set must be of type string; received ' . gettype(@$params['permission_set']));
+    }
+
+    if (@$params['name'] && !is_string(@$params['name'])) {
+      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
     }
 
     $response = Api::sendRequest('/api_keys/' . @$params['id'] . '', 'PATCH', $params, $this->options);
@@ -310,17 +310,17 @@ class ApiKey {
 
   // Parameters:
   //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
-  //   name - string - Internal name for the API Key.  For your use.
   //   description - string - User-supplied description of API key.
   //   expires_at - string - API Key expiration date
   //   permission_set - string - Permissions for this API Key. It must be full for site-wide API Keys.  Keys with the `desktop_app` permission set only have the ability to do the functions provided in our Desktop App (File and Share Link operations).  Additional permission sets may become available in the future, such as for a Site Admin to give a key with no administrator privileges.  If you have ideas for permission sets, please let us know.
+  //   name (required) - string - Internal name for the API Key.  For your use.
   public static function create($params = [], $options = []) {
-    if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
+    if (!@$params['name']) {
+      throw new \Files\MissingParameterException('Parameter missing: name');
     }
 
-    if (@$params['name'] && !is_string(@$params['name'])) {
-      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
+    if (@$params['user_id'] && !is_int(@$params['user_id'])) {
+      throw new \Files\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
     }
 
     if (@$params['description'] && !is_string(@$params['description'])) {
@@ -333,6 +333,10 @@ class ApiKey {
 
     if (@$params['permission_set'] && !is_string(@$params['permission_set'])) {
       throw new \Files\InvalidParameterException('$permission_set must be of type string; received ' . gettype(@$params['permission_set']));
+    }
+
+    if (@$params['name'] && !is_string(@$params['name'])) {
+      throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
     }
 
     $response = Api::sendRequest('/api_keys', 'POST', $params, $options);

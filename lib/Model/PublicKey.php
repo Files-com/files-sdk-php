@@ -74,13 +74,22 @@ class PublicKey {
     return @$this->attributes['created_at'];
   }
 
-  // string # Public key fingerprint
+  // string # Public key fingerprint (MD5)
   public function getFingerprint() {
     return @$this->attributes['fingerprint'];
   }
 
   public function setFingerprint($value) {
     return $this->attributes['fingerprint'] = $value;
+  }
+
+  // string # Public key fingerprint (SHA256)
+  public function getFingerprintSha256() {
+    return @$this->attributes['fingerprint_sha256'];
+  }
+
+  public function setFingerprintSha256($value) {
+    return $this->attributes['fingerprint_sha256'] = $value;
   }
 
   // string # Username of the user this public key is associated with

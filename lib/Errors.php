@@ -318,6 +318,7 @@ class SubfolderLockedException extends \Files\ProcessingFailureException {}
 class TwoFactorAuthenticationCodeAlreadySentException extends \Files\ProcessingFailureException {}
 class TwoFactorAuthenticationCountryBlacklistedException extends \Files\ProcessingFailureException {}
 class TwoFactorAuthenticationGeneralErrorException extends \Files\ProcessingFailureException {}
+class TwoFactorAuthenticationUnsubscribedRecipientException extends \Files\ProcessingFailureException {}
 class UpdatesNotAllowedForRemotesException extends \Files\ProcessingFailureException {}
 
 } // namespace Files\ProcessingFailure

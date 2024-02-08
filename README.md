@@ -6,7 +6,7 @@ The Files.com PHP SDK provides convenient Files.com API access to applications w
 
 Install Composer. See https://packagist.org for more info.
 
-If `composer.phar` is already available, skip this step. 
+If `composer.phar` is already available, skip this step.
 
     curl -sS https://getcomposer.org/installer | php
 
@@ -22,7 +22,7 @@ Install the SDK
 ## Usage
 
 ### Import and initialize
-```php 
+```php
     require 'vendor/autoload.php';
 
     // set your subdomain or custom domain
@@ -36,36 +36,36 @@ There are multiple ways to authenticate to the API.
 #### Global API Key
 
 You can set an API key globally like this:
-```php 
+```php
     \Files\Files::setApiKey('my-api-key');
 ```
 
 #### Per-Request API Key
 
 Or, you can pass an API key per-request, in the options array at the end of every method like this:
-```php 
+```php
     $user = new \Files\Model\User($params, array('api_key' => 'my-api-key'));
 ```
 
 #### User Session
 
 Or, you can open a user session by calling `\Files\Model\Session::create()`
-```php 
+```php
     $session = \Files\Model\Session::create(['username' => $username, 'password' => $password]);
 ```
 
 Then use it globally for all subsequent API calls like this:
-```php 
+```php
     \Files\Files::setSessionId($session->id);
 ```
 
 Or, you can pass the session ID per-request, in the options array at the end of every method like this:
-```php 
+```php
     $user = new \Files\Model\User($params, array('session_id' => $session->id));
 ```
 
 ##### Session example
-```php 
+```php
     $session = \Files\Model\Session::create(['username' => $myUsername, 'password' => $myPassword]);
     \Files\Files::setSessionId($session->id);
 
@@ -99,26 +99,26 @@ You can set the following global properties directly on the `\Files\Files` class
 ### Static File Operations
 
 #### List files in root folder
-```php 
+```php
     $rootFiles = \Files\Model\Folder::listFor('/');
 ```
 
 #### Uploading a file on disk
-```php 
+```php
     \Files\Model\File::uploadFile($destinationFileName, $sourceFilePath);
 ```
 
 #### Uploading raw file data
-```php 
+```php
     \Files\Model\File::uploadData($destinationFileName, $fileData);
 ```
 
 #### Download a file to stream
-```php 
+```php
     \Files\Model\File::downloadToStream($remoteFilePath, $outputStream);
 ```
 #### Download a file to disk
-```php 
+```php
     // download entire file - with retries enabled
     \Files\Model\File::downloadToFile($remoteFilePath, $localFilePath);
 
@@ -130,20 +130,20 @@ You can set the following global properties directly on the `\Files\Files` class
 ```
 
 #### Getting a file record by path
-```php 
+```php
     $foundFile = \Files\Model\File::find($remoteFilePath);
 ```
 
 ### File Object Operations
 
 #### Getting a file record by path
-```php 
+```php
     $file = new \Files\Model\File();
     $file->get($remoteFilePath);
 ```
 
 ##### Updating metadata
-```php 
+```php
     $file->update([
       'provided_mtime' => '2000-01-01T01:00:00Z',
       'priority_color' => 'red',
@@ -151,7 +151,7 @@ You can set the following global properties directly on the `\Files\Files` class
 ```
 
 ##### Retrieving metadata
-```php 
+```php
     $file->metadata([
       'with_previews' => true,
       'with_priority_color' => true,
@@ -159,7 +159,7 @@ You can set the following global properties directly on the `\Files\Files` class
 ```
 
 #### Comparing Case insensitive files and paths
-For related documentation see [Case Sensitivity Documentation](https://www.files.com/docs/topics/file-system-semantics#case-sensitivity).
+For related documentation see [Case Sensitivity Documentation](https://www.files.com/docs/files-and-folders/file-system-semantics/case-sensitivity).
 ```php
     if(\Files\Util\PathUtil::same("Fïłèńämê.Txt", "filename.txt")) {
         echo "Paths are the same\n";

@@ -81,11 +81,6 @@ class InvoiceLineItem {
     return @$this->attributes['service_start_at'];
   }
 
-  // date-time # Invoice line item updated date/time
-  public function getUpdatedAt() {
-    return @$this->attributes['updated_at'];
-  }
-
   // string # Plan name
   public function getPlan() {
     return @$this->attributes['plan'];

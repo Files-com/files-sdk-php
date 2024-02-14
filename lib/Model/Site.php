@@ -731,11 +731,6 @@ class Site {
     return @$this->attributes['trial_until'];
   }
 
-  // date-time # Last time this Site was updated
-  public function getUpdatedAt() {
-    return @$this->attributes['updated_at'];
-  }
-
   // boolean # Allow uploaders to set `provided_modified_at` for uploaded files?
   public function getUseProvidedModifiedAt() {
     return @$this->attributes['use_provided_modified_at'];

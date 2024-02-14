@@ -18,7 +18,7 @@ function middlewareRemoveHeader($header) {
 }
 
 class Api {
-  const VERSION = "1.2.19";
+  const VERSION = "1.2.20";
   private static function pushRetryHandler($handlerStack) {
     $shouldRetry = function($retries, $request, $response, $exception) {
       if ($retries >= Files::$maxNetworkRetries) {

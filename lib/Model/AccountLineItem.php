@@ -115,9 +115,4 @@ class AccountLineItem {
   public function getType() {
     return @$this->attributes['type'];
   }
-
-  // date-time # Line item updated at
-  public function getUpdatedAt() {
-    return @$this->attributes['updated_at'];
-  }
 }

@@ -186,13 +186,31 @@ class Automation {
     return $this->attributes['recurring_day'] = $value;
   }
 
-  // object # If trigger is `custom_schedule`, Custom schedule description for when the automation should be run.
-  public function getSchedule() {
-    return @$this->attributes['schedule'];
+  // array # If trigger is `custom_schedule`, Custom schedule description for when the automation should be run.
+  public function getScheduleDaysOfWeek() {
+    return @$this->attributes['schedule_days_of_week'];
   }
 
-  public function setSchedule($value) {
-    return $this->attributes['schedule'] = $value;
+  public function setScheduleDaysOfWeek($value) {
+    return $this->attributes['schedule_days_of_week'] = $value;
+  }
+
+  // array # If trigger is `custom_schedule`, Custom schedule description for when the automation should be run.
+  public function getScheduleTimesOfDay() {
+    return @$this->attributes['schedule_times_of_day'];
+  }
+
+  public function setScheduleTimesOfDay($value) {
+    return $this->attributes['schedule_times_of_day'] = $value;
+  }
+
+  // string # If trigger is `custom_schedule`, Custom schedule description for when the automation should be run.
+  public function getScheduleTimeZone() {
+    return @$this->attributes['schedule_time_zone'];
+  }
+
+  public function setScheduleTimeZone($value) {
+    return $this->attributes['schedule_time_zone'] = $value;
   }
 
   // string # Source Path
@@ -309,7 +327,9 @@ class Automation {
   //   sync_ids - string - A list of sync IDs the automation is associated with. If sent as a string, it should be comma-delimited.
   //   user_ids - string - A list of user IDs the automation is associated with. If sent as a string, it should be comma-delimited.
   //   group_ids - string - A list of group IDs the automation is associated with. If sent as a string, it should be comma-delimited.
-  //   schedule - object - Custom schedule for running this automation.
+  //   schedule_days_of_week - array(int64) - If trigger is `custom_schedule`. A list of days of the week to run this automation. 0 is Sunday, 1 is Monday, etc.
+  //   schedule_times_of_day - array(string) - If trigger is `custom_schedule`. A list of times of day to run this automation. 24-hour time format.
+  //   schedule_time_zone - string - If trigger is `custom_schedule`. Time zone for the schedule.
   //   always_overwrite_size_matching_files - boolean - Ordinarily, files with identical size in the source and destination will be skipped from copy operations to prevent wasted transfer.  If this flag is `true` we will overwrite the destination file always.  Note that this may cause large amounts of wasted transfer usage.
   //   description - string - Description for the this Automation.
   //   disabled - boolean - If true, this automation will not run.
@@ -374,6 +394,18 @@ class Automation {
 
     if (@$params['group_ids'] && !is_string(@$params['group_ids'])) {
       throw new \Files\InvalidParameterException('$group_ids must be of type string; received ' . gettype(@$params['group_ids']));
+    }
+
+    if (@$params['schedule_days_of_week'] && !is_array(@$params['schedule_days_of_week'])) {
+      throw new \Files\InvalidParameterException('$schedule_days_of_week must be of type array; received ' . gettype(@$params['schedule_days_of_week']));
+    }
+
+    if (@$params['schedule_times_of_day'] && !is_array(@$params['schedule_times_of_day'])) {
+      throw new \Files\InvalidParameterException('$schedule_times_of_day must be of type array; received ' . gettype(@$params['schedule_times_of_day']));
+    }
+
+    if (@$params['schedule_time_zone'] && !is_string(@$params['schedule_time_zone'])) {
+      throw new \Files\InvalidParameterException('$schedule_time_zone must be of type string; received ' . gettype(@$params['schedule_time_zone']));
     }
 
     if (@$params['description'] && !is_string(@$params['description'])) {
@@ -515,7 +547,9 @@ class Automation {
   //   sync_ids - string - A list of sync IDs the automation is associated with. If sent as a string, it should be comma-delimited.
   //   user_ids - string - A list of user IDs the automation is associated with. If sent as a string, it should be comma-delimited.
   //   group_ids - string - A list of group IDs the automation is associated with. If sent as a string, it should be comma-delimited.
-  //   schedule - object - Custom schedule for running this automation.
+  //   schedule_days_of_week - array(int64) - If trigger is `custom_schedule`. A list of days of the week to run this automation. 0 is Sunday, 1 is Monday, etc.
+  //   schedule_times_of_day - array(string) - If trigger is `custom_schedule`. A list of times of day to run this automation. 24-hour time format.
+  //   schedule_time_zone - string - If trigger is `custom_schedule`. Time zone for the schedule.
   //   always_overwrite_size_matching_files - boolean - Ordinarily, files with identical size in the source and destination will be skipped from copy operations to prevent wasted transfer.  If this flag is `true` we will overwrite the destination file always.  Note that this may cause large amounts of wasted transfer usage.
   //   description - string - Description for the this Automation.
   //   disabled - boolean - If true, this automation will not run.
@@ -568,6 +602,18 @@ class Automation {
 
     if (@$params['group_ids'] && !is_string(@$params['group_ids'])) {
       throw new \Files\InvalidParameterException('$group_ids must be of type string; received ' . gettype(@$params['group_ids']));
+    }
+
+    if (@$params['schedule_days_of_week'] && !is_array(@$params['schedule_days_of_week'])) {
+      throw new \Files\InvalidParameterException('$schedule_days_of_week must be of type array; received ' . gettype(@$params['schedule_days_of_week']));
+    }
+
+    if (@$params['schedule_times_of_day'] && !is_array(@$params['schedule_times_of_day'])) {
+      throw new \Files\InvalidParameterException('$schedule_times_of_day must be of type array; received ' . gettype(@$params['schedule_times_of_day']));
+    }
+
+    if (@$params['schedule_time_zone'] && !is_string(@$params['schedule_time_zone'])) {
+      throw new \Files\InvalidParameterException('$schedule_time_zone must be of type string; received ' . gettype(@$params['schedule_time_zone']));
     }
 
     if (@$params['description'] && !is_string(@$params['description'])) {

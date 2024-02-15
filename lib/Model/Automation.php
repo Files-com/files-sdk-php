@@ -186,7 +186,25 @@ class Automation {
     return $this->attributes['recurring_day'] = $value;
   }
 
-  // array # If trigger is `custom_schedule`, Custom schedule description for when the automation should be run.
+  // object # If trigger is `custom_schedule`, Custom schedule description for when the automation should be run in json format.
+  public function getSchedule() {
+    return @$this->attributes['schedule'];
+  }
+
+  public function setSchedule($value) {
+    return $this->attributes['schedule'] = $value;
+  }
+
+  // string # If trigger is `custom_schedule`, Human readable Custom schedule description for when the automation should be run.
+  public function getHumanReadableSchedule() {
+    return @$this->attributes['human_readable_schedule'];
+  }
+
+  public function setHumanReadableSchedule($value) {
+    return $this->attributes['human_readable_schedule'] = $value;
+  }
+
+  // array # If trigger is `custom_schedule`, Custom schedule description for when the automation should be run. 0-based days of the week. 0 is Sunday, 1 is Monday, etc.
   public function getScheduleDaysOfWeek() {
     return @$this->attributes['schedule_days_of_week'];
   }
@@ -195,7 +213,7 @@ class Automation {
     return $this->attributes['schedule_days_of_week'] = $value;
   }
 
-  // array # If trigger is `custom_schedule`, Custom schedule description for when the automation should be run.
+  // array # If trigger is `custom_schedule`, Custom schedule description for when the automation should be run. Times of day in HH:MM format.
   public function getScheduleTimesOfDay() {
     return @$this->attributes['schedule_times_of_day'];
   }
@@ -204,7 +222,7 @@ class Automation {
     return $this->attributes['schedule_times_of_day'] = $value;
   }
 
-  // string # If trigger is `custom_schedule`, Custom schedule description for when the automation should be run.
+  // string # If trigger is `custom_schedule`, Custom schedule Time Zone for when the automation should be run.
   public function getScheduleTimeZone() {
     return @$this->attributes['schedule_time_zone'];
   }

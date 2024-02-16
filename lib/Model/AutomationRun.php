@@ -71,9 +71,29 @@ class AutomationRun {
     return @$this->attributes['created_at'];
   }
 
+  // date-time # Automation run runtime.
+  public function getRuntime() {
+    return @$this->attributes['runtime'];
+  }
+
   // string # The success status of the AutomationRun. One of `running`, `success`, `partial_failure`, or `failure`.
   public function getStatus() {
     return @$this->attributes['status'];
+  }
+
+  // string # The stage currently being executed in the execution environment.  One of `queued_for_planning`, `planning`, `queued_for_execution`, `executing`, or `finished`.
+  public function getRunStage() {
+    return @$this->attributes['run_stage'];
+  }
+
+  // int64 # Count of successful operations.
+  public function getSuccessfulOperations() {
+    return @$this->attributes['successful_operations'];
+  }
+
+  // int64 # Count of failed operations.
+  public function getFailedOperations() {
+    return @$this->attributes['failed_operations'];
   }
 
   // string # Link to status messages log file.

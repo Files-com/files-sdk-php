@@ -137,6 +137,24 @@ class ExternalEvent {
     return $this->attributes['bytes_synced'] = $value;
   }
 
+  // int64 # For sync events, the number of files considered for the sync.
+  public function getComparedFiles() {
+    return @$this->attributes['compared_files'];
+  }
+
+  public function setComparedFiles($value) {
+    return $this->attributes['compared_files'] = $value;
+  }
+
+  // int64 # For sync events, the number of folders listed and considered for the sync.
+  public function getComparedFolders() {
+    return @$this->attributes['compared_folders'];
+  }
+
+  public function setComparedFolders($value) {
+    return $this->attributes['compared_folders'] = $value;
+  }
+
   // string # Associated Remote Server type, if any
   public function getRemoteServerType() {
     return @$this->attributes['remote_server_type'];

@@ -566,7 +566,7 @@ class File {
     }
 
     $response = Api::sendRequest('/files/' . @$params['path'] . '', 'GET', $params, $this->options);
-    return new File((array)(@$response->data ?: []), $options);
+    return new File((array)(@$response->data ?: []), $this->options);
   }
 
   // Parameters:

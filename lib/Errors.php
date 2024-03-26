@@ -251,6 +251,7 @@ class ReadPermissionRequiredException extends \Files\NotAuthorizedException {}
 class ReauthenticationFailedException extends \Files\NotAuthorizedException {}
 class ReauthenticationFailedFinalException extends \Files\NotAuthorizedException {}
 class ReauthenticationNeededActionException extends \Files\NotAuthorizedException {}
+class RecaptchaFailedException extends \Files\NotAuthorizedException {}
 class SelfManagedRequiredException extends \Files\NotAuthorizedException {}
 class SiteAdminRequiredException extends \Files\NotAuthorizedException {}
 class SiteFilesAreImmutableException extends \Files\NotAuthorizedException {}

@@ -69,6 +69,15 @@ class Group {
     return $this->attributes['name'] = $value;
   }
 
+  // string # A list of allowed IPs if applicable.  Newline delimited
+  public function getAllowedIps() {
+    return @$this->attributes['allowed_ips'];
+  }
+
+  public function setAllowedIps($value) {
+    return $this->attributes['allowed_ips'] = $value;
+  }
+
   // string # Comma-delimited list of user IDs who are group administrators (separated by commas)
   public function getAdminIds() {
     return @$this->attributes['admin_ids'];
@@ -149,6 +158,7 @@ class Group {
   //   sftp_permission - boolean - If true, users in this group can use SFTP to login.  This will override a false value of `sftp_permission` on the user level.
   //   dav_permission - boolean - If true, users in this group can use WebDAV to login.  This will override a false value of `dav_permission` on the user level.
   //   restapi_permission - boolean - If true, users in this group can use the REST API to login.  This will override a false value of `restapi_permission` on the user level.
+  //   allowed_ips - string - A list of allowed IPs if applicable.  Newline delimited
   //   name - string - Group name.
   public function update($params = []) {
     if (!is_array($params)) {
@@ -177,6 +187,10 @@ class Group {
 
     if (@$params['admin_ids'] && !is_string(@$params['admin_ids'])) {
       throw new \Files\InvalidParameterException('$admin_ids must be of type string; received ' . gettype(@$params['admin_ids']));
+    }
+
+    if (@$params['allowed_ips'] && !is_string(@$params['allowed_ips'])) {
+      throw new \Files\InvalidParameterException('$allowed_ips must be of type string; received ' . gettype(@$params['allowed_ips']));
     }
 
     if (@$params['name'] && !is_string(@$params['name'])) {
@@ -296,6 +310,7 @@ class Group {
   //   sftp_permission - boolean - If true, users in this group can use SFTP to login.  This will override a false value of `sftp_permission` on the user level.
   //   dav_permission - boolean - If true, users in this group can use WebDAV to login.  This will override a false value of `dav_permission` on the user level.
   //   restapi_permission - boolean - If true, users in this group can use the REST API to login.  This will override a false value of `restapi_permission` on the user level.
+  //   allowed_ips - string - A list of allowed IPs if applicable.  Newline delimited
   //   name (required) - string - Group name.
   public static function create($params = [], $options = []) {
     if (!@$params['name']) {
@@ -312,6 +327,10 @@ class Group {
 
     if (@$params['admin_ids'] && !is_string(@$params['admin_ids'])) {
       throw new \Files\InvalidParameterException('$admin_ids must be of type string; received ' . gettype(@$params['admin_ids']));
+    }
+
+    if (@$params['allowed_ips'] && !is_string(@$params['allowed_ips'])) {
+      throw new \Files\InvalidParameterException('$allowed_ips must be of type string; received ' . gettype(@$params['allowed_ips']));
     }
 
     if (@$params['name'] && !is_string(@$params['name'])) {

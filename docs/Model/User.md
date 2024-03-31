@@ -9,7 +9,7 @@
   "admin_group_ids": [
     1
   ],
-  "allowed_ips": "10.0.0.0/8\n127.0.0.1",
+  "allowed_ips": "127.0.0.1",
   "attachments_permission": true,
   "api_keys_count": 1,
   "authenticate_until": "2000-01-01T01:00:00Z",
@@ -192,7 +192,7 @@ $user->create(, [
   'group_id' => 1,
   'group_ids' => "example",
   'announcements_read' => true,
-  'allowed_ips' => "10.0.0.0/8\n127.0.0.1",
+  'allowed_ips' => "127.0.0.1",
   'attachments_permission' => true,
   'authenticate_until' => "2000-01-01T01:00:00Z",
   'authentication_method' => "password",
@@ -335,7 +335,7 @@ $user->update([
   'group_id' => 1,
   'group_ids' => "example",
   'announcements_read' => true,
-  'allowed_ips' => "10.0.0.0/8\n127.0.0.1",
+  'allowed_ips' => "127.0.0.1",
   'attachments_permission' => true,
   'authenticate_until' => "2000-01-01T01:00:00Z",
   'authentication_method' => "password",
@@ -429,7 +429,7 @@ $user->update([
   "admin_group_ids": [
     1
   ],
-  "allowed_ips": "10.0.0.0/8\n127.0.0.1",
+  "allowed_ips": "127.0.0.1",
   "attachments_permission": true,
   "api_keys_count": 1,
   "authenticate_until": "2000-01-01T01:00:00Z",

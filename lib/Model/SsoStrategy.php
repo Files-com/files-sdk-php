@@ -226,6 +226,11 @@ class SsoStrategy {
     return @$this->attributes['provision_company'];
   }
 
+  // string # 2FA required setting for auto provisioned users.
+  public function getProvisionRequire2fa() {
+    return @$this->attributes['provision_require_2fa'];
+  }
+
   // string # Base DN for looking up users in LDAP server
   public function getLdapBaseDn() {
     return @$this->attributes['ldap_base_dn'];

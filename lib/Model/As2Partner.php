@@ -96,6 +96,15 @@ class As2Partner {
     return $this->attributes['server_certificate'] = $value;
   }
 
+  // string # MDN Validation Level
+  public function getMdnValidationLevel() {
+    return @$this->attributes['mdn_validation_level'];
+  }
+
+  public function setMdnValidationLevel($value) {
+    return $this->attributes['mdn_validation_level'] = $value;
+  }
+
   // boolean # `true` if remote server only accepts connections from dedicated IPs
   public function getEnableDedicatedIps() {
     return @$this->attributes['enable_dedicated_ips'];
@@ -181,6 +190,7 @@ class As2Partner {
   //   name - string - AS2 Name
   //   uri - string - URL base for AS2 responses
   //   server_certificate - string - Remote server certificate security setting
+  //   mdn_validation_level - string - MDN Validation Level
   //   public_certificate - string
   //   enable_dedicated_ips - boolean
   public function update($params = []) {
@@ -210,6 +220,10 @@ class As2Partner {
 
     if (@$params['server_certificate'] && !is_string(@$params['server_certificate'])) {
       throw new \Files\InvalidParameterException('$server_certificate must be of type string; received ' . gettype(@$params['server_certificate']));
+    }
+
+    if (@$params['mdn_validation_level'] && !is_string(@$params['mdn_validation_level'])) {
+      throw new \Files\InvalidParameterException('$mdn_validation_level must be of type string; received ' . gettype(@$params['mdn_validation_level']));
     }
 
     if (@$params['public_certificate'] && !is_string(@$params['public_certificate'])) {
@@ -319,6 +333,7 @@ class As2Partner {
   //   public_certificate (required) - string
   //   as2_station_id (required) - int64 - Id of As2Station for this partner
   //   server_certificate - string - Remote server certificate security setting
+  //   mdn_validation_level - string - MDN Validation Level
   //   enable_dedicated_ips - boolean
   public static function create($params = [], $options = []) {
     if (!@$params['name']) {
@@ -355,6 +370,10 @@ class As2Partner {
 
     if (@$params['server_certificate'] && !is_string(@$params['server_certificate'])) {
       throw new \Files\InvalidParameterException('$server_certificate must be of type string; received ' . gettype(@$params['server_certificate']));
+    }
+
+    if (@$params['mdn_validation_level'] && !is_string(@$params['mdn_validation_level'])) {
+      throw new \Files\InvalidParameterException('$mdn_validation_level must be of type string; received ' . gettype(@$params['mdn_validation_level']));
     }
 
     $response = Api::sendRequest('/as2_partners', 'POST', $params, $options);

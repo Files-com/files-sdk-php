@@ -720,17 +720,10 @@ class RemoteServer {
   // Post local changes, check in, and download configuration file (used by some Remote Server integrations, such as the Files.com Agent)
   //
   // Parameters:
-  //   api_token - string - Files Agent API Token
-  //   permission_set - string -
-  //   root - string - Agent local root path
-  //   hostname - string
-  //   port - int64 - Incoming port for files agent connections
-  //   status - string - either running or shutdown
-  //   config_version - string - agent config version
-  //   private_key - string - private key
-  //   public_key - string - public key
-  //   server_host_key - string
-  //   subdomain - string
+  //   permission_set - string - The permission set for the agent ['read_write', 'read_only', 'write_only']
+  //   root - string - The root directory for the agent
+  //   private_key - string - The private key for the agent
+  //   subdomain - string - Files.com subdomain site name
   public function configurationFile($params = []) {
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
@@ -748,10 +741,6 @@ class RemoteServer {
       throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
     }
 
-    if (@$params['api_token'] && !is_string(@$params['api_token'])) {
-      throw new \Files\InvalidParameterException('$api_token must be of type string; received ' . gettype(@$params['api_token']));
-    }
-
     if (@$params['permission_set'] && !is_string(@$params['permission_set'])) {
       throw new \Files\InvalidParameterException('$permission_set must be of type string; received ' . gettype(@$params['permission_set']));
     }
@@ -760,32 +749,8 @@ class RemoteServer {
       throw new \Files\InvalidParameterException('$root must be of type string; received ' . gettype(@$params['root']));
     }
 
-    if (@$params['hostname'] && !is_string(@$params['hostname'])) {
-      throw new \Files\InvalidParameterException('$hostname must be of type string; received ' . gettype(@$params['hostname']));
-    }
-
-    if (@$params['port'] && !is_int(@$params['port'])) {
-      throw new \Files\InvalidParameterException('$port must be of type int; received ' . gettype(@$params['port']));
-    }
-
-    if (@$params['status'] && !is_string(@$params['status'])) {
-      throw new \Files\InvalidParameterException('$status must be of type string; received ' . gettype(@$params['status']));
-    }
-
-    if (@$params['config_version'] && !is_string(@$params['config_version'])) {
-      throw new \Files\InvalidParameterException('$config_version must be of type string; received ' . gettype(@$params['config_version']));
-    }
-
     if (@$params['private_key'] && !is_string(@$params['private_key'])) {
       throw new \Files\InvalidParameterException('$private_key must be of type string; received ' . gettype(@$params['private_key']));
-    }
-
-    if (@$params['public_key'] && !is_string(@$params['public_key'])) {
-      throw new \Files\InvalidParameterException('$public_key must be of type string; received ' . gettype(@$params['public_key']));
-    }
-
-    if (@$params['server_host_key'] && !is_string(@$params['server_host_key'])) {
-      throw new \Files\InvalidParameterException('$server_host_key must be of type string; received ' . gettype(@$params['server_host_key']));
     }
 
     if (@$params['subdomain'] && !is_string(@$params['subdomain'])) {

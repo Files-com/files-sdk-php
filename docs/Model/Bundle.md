@@ -59,6 +59,7 @@
   "max_uses": 1,
   "note": "The internal note on the bundle.",
   "path_template": "{{name}}_{{ip}}",
+  "path_template_time_zone": "Eastern Time (US & Canada)",
   "send_email_receipt_to_uploader": true,
   "snapshot_id": 1,
   "user_id": 1,
@@ -105,7 +106,8 @@
 * `dont_separate_submissions_by_folder` (boolean): Do not create subfolders for files uploaded to this share. Note: there are subtle security pitfalls with allowing anonymous uploads from multiple users to live in the same folder. We strongly discourage use of this option unless absolutely required.
 * `max_uses` (int64): Maximum number of times bundle can be accessed
 * `note` (string): Bundle internal note
-* `path_template` (string): Template for creating submission subfolders. Can use the uploader's name, email address, ip, company, and any custom form data.
+* `path_template` (string): Template for creating submission subfolders. Can use the uploader's name, email address, ip, company, `strftime` directives, and any custom form data.
+* `path_template_time_zone` (string): Timezone to use when rendering timestamps in path templates.
 * `send_email_receipt_to_uploader` (boolean): Send delivery receipt to the uploader. Note: For writable share only
 * `snapshot_id` (int64): ID of the snapshot containing this bundle's contents.
 * `user_id` (int64): Bundle creator user ID
@@ -182,6 +184,7 @@ $bundle->create(, [
   'note' => "The internal note on the bundle.",
   'code' => "abc123",
   'path_template' => "{{name}}_{{ip}}",
+  'path_template_time_zone' => "Eastern Time (US & Canada)",
   'permissions' => "read",
   'preview_only' => true,
   'require_registration' => true,
@@ -212,7 +215,8 @@ $bundle->create(, [
 * `description` (string): Public description
 * `note` (string): Bundle internal note
 * `code` (string): Bundle code.  This code forms the end part of the Public URL.
-* `path_template` (string): Template for creating submission subfolders. Can use the uploader's name, email address, ip, company, and any custom form data.
+* `path_template` (string): Template for creating submission subfolders. Can use the uploader's name, email address, ip, company, `strftime` directives, and any custom form data.
+* `path_template_time_zone` (string): Timezone to use when rendering timestamps in path templates.
 * `permissions` (string): Permissions that apply to Folders in this Share Link.
 * `preview_only` (boolean): DEPRECATED: Restrict users to previewing files only. Use `permissions` instead.
 * `require_registration` (boolean): Show a registration page that captures the downloader's name and email address?
@@ -271,6 +275,7 @@ $bundle->update([
   'max_uses' => 1,
   'note' => "The internal note on the bundle.",
   'path_template' => "{{name}}_{{ip}}",
+  'path_template_time_zone' => "Eastern Time (US & Canada)",
   'permissions' => "read",
   'preview_only' => true,
   'require_registration' => true,
@@ -300,7 +305,8 @@ $bundle->update([
 * `inbox_id` (int64): ID of the associated inbox, if available.
 * `max_uses` (int64): Maximum number of times bundle can be accessed
 * `note` (string): Bundle internal note
-* `path_template` (string): Template for creating submission subfolders. Can use the uploader's name, email address, ip, company, and any custom form data.
+* `path_template` (string): Template for creating submission subfolders. Can use the uploader's name, email address, ip, company, `strftime` directives, and any custom form data.
+* `path_template_time_zone` (string): Timezone to use when rendering timestamps in path templates.
 * `permissions` (string): Permissions that apply to Folders in this Share Link.
 * `preview_only` (boolean): DEPRECATED: Restrict users to previewing files only. Use `permissions` instead.
 * `require_registration` (boolean): Show a registration page that captures the downloader's name and email address?
@@ -372,6 +378,7 @@ $bundle->update([
   "max_uses": 1,
   "note": "The internal note on the bundle.",
   "path_template": "{{name}}_{{ip}}",
+  "path_template_time_zone": "Eastern Time (US & Canada)",
   "send_email_receipt_to_uploader": true,
   "snapshot_id": 1,
   "user_id": 1,

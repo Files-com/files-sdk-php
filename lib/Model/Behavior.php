@@ -114,6 +114,15 @@ class Behavior {
     return $this->attributes['value'] = $value;
   }
 
+  // boolean # If true, the parent folder's behavior will be disabled for this folder.
+  public function getDisableParentFolderBehavior() {
+    return @$this->attributes['disable_parent_folder_behavior'];
+  }
+
+  public function setDisableParentFolderBehavior($value) {
+    return $this->attributes['disable_parent_folder_behavior'] = $value;
+  }
+
   // file # Certain behaviors may require a file, for instance, the "watermark" behavior requires a watermark image
   public function getAttachmentFile() {
     return @$this->attributes['attachment_file'];

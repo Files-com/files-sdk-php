@@ -94,6 +94,7 @@ $behavior->listFor($path, [
 $behavior = new \Files\Model\Behavior();
 $behavior->create(, [
   'value' => "{\"method\": \"GET\"}",
+  'disable_parent_folder_behavior' => true,
   'name' => "example",
   'description' => "example",
   'path' => "path",
@@ -106,6 +107,7 @@ $behavior->create(, [
 
 * `value` (string): The value of the folder behavior.  Can be an integer, array, or hash depending on the type of folder behavior. See The Behavior Types section for example values for each type of behavior.
 * `attachment_file` (file): Certain behaviors may require a file, for instance, the "watermark" behavior requires a watermark image
+* `disable_parent_folder_behavior` (boolean): If true, the parent folder's behavior will be disabled for this folder.
 * `name` (string): Name for this behavior.
 * `description` (string): Description for this behavior.
 * `path` (string): Required - Folder behaviors path.
@@ -146,6 +148,7 @@ $behavior = current(\Files\Model\Behavior::all());
 
 $behavior->update([
   'value' => "{\"method\": \"GET\"}",
+  'disable_parent_folder_behavior' => true,
   'name' => "example",
   'description' => "example",
   'behavior' => "webhook",
@@ -159,6 +162,7 @@ $behavior->update([
 * `id` (int64): Required - Behavior ID.
 * `value` (string): The value of the folder behavior.  Can be an integer, array, or hash depending on the type of folder behavior. See The Behavior Types section for example values for each type of behavior.
 * `attachment_file` (file): Certain behaviors may require a file, for instance, the "watermark" behavior requires a watermark image
+* `disable_parent_folder_behavior` (boolean): If true, the parent folder's behavior will be disabled for this folder.
 * `name` (string): Name for this behavior.
 * `description` (string): Description for this behavior.
 * `behavior` (string): Behavior type.

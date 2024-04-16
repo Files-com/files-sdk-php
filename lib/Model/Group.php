@@ -198,7 +198,7 @@ class Group {
     }
 
     $response = Api::sendRequest('/groups/' . @$params['id'] . '', 'PATCH', $params, $this->options);
-    return new Group((array)(@$response->data ?: []), $options);
+    return new Group((array)(@$response->data ?: []), $this->options);
   }
 
   public function delete($params = []) {

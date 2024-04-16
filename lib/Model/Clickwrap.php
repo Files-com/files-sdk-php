@@ -149,7 +149,7 @@ class Clickwrap {
     }
 
     $response = Api::sendRequest('/clickwraps/' . @$params['id'] . '', 'PATCH', $params, $this->options);
-    return new Clickwrap((array)(@$response->data ?: []), $options);
+    return new Clickwrap((array)(@$response->data ?: []), $this->options);
   }
 
   public function delete($params = []) {

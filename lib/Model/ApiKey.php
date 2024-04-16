@@ -194,7 +194,7 @@ class ApiKey {
     }
 
     $response = Api::sendRequest('/api_keys/' . @$params['id'] . '', 'PATCH', $params, $this->options);
-    return new ApiKey((array)(@$response->data ?: []), $options);
+    return new ApiKey((array)(@$response->data ?: []), $this->options);
   }
 
   public function delete($params = []) {

@@ -301,7 +301,7 @@ class Notification {
     }
 
     $response = Api::sendRequest('/notifications/' . @$params['id'] . '', 'PATCH', $params, $this->options);
-    return new Notification((array)(@$response->data ?: []), $options);
+    return new Notification((array)(@$response->data ?: []), $this->options);
   }
 
   public function delete($params = []) {

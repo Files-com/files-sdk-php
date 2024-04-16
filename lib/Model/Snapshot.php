@@ -148,7 +148,7 @@ class Snapshot {
     }
 
     $response = Api::sendRequest('/snapshots/' . @$params['id'] . '', 'PATCH', $params, $this->options);
-    return new Snapshot((array)(@$response->data ?: []), $options);
+    return new Snapshot((array)(@$response->data ?: []), $this->options);
   }
 
   public function delete($params = []) {

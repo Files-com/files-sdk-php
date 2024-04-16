@@ -471,7 +471,7 @@ class Automation {
     }
 
     $response = Api::sendRequest('/automations/' . @$params['id'] . '', 'PATCH', $params, $this->options);
-    return new Automation((array)(@$response->data ?: []), $options);
+    return new Automation((array)(@$response->data ?: []), $this->options);
   }
 
   public function delete($params = []) {

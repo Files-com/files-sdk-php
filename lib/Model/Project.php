@@ -101,7 +101,7 @@ class Project {
     }
 
     $response = Api::sendRequest('/projects/' . @$params['id'] . '', 'PATCH', $params, $this->options);
-    return new Project((array)(@$response->data ?: []), $options);
+    return new Project((array)(@$response->data ?: []), $this->options);
   }
 
   public function delete($params = []) {

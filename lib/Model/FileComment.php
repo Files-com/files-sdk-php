@@ -119,7 +119,7 @@ class FileComment {
     }
 
     $response = Api::sendRequest('/file_comments/' . @$params['id'] . '', 'PATCH', $params, $this->options);
-    return new FileComment((array)(@$response->data ?: []), $options);
+    return new FileComment((array)(@$response->data ?: []), $this->options);
   }
 
   public function delete($params = []) {

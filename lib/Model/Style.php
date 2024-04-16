@@ -124,7 +124,7 @@ class Style {
     }
 
     $response = Api::sendRequest('/styles/' . @$params['path'] . '', 'PATCH', $params, $this->options);
-    return new Style((array)(@$response->data ?: []), $options);
+    return new Style((array)(@$response->data ?: []), $this->options);
   }
 
   public function delete($params = []) {

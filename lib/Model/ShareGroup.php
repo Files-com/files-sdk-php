@@ -130,7 +130,7 @@ class ShareGroup {
     }
 
     $response = Api::sendRequest('/share_groups/' . @$params['id'] . '', 'PATCH', $params, $this->options);
-    return new ShareGroup((array)(@$response->data ?: []), $options);
+    return new ShareGroup((array)(@$response->data ?: []), $this->options);
   }
 
   public function delete($params = []) {

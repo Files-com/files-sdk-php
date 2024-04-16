@@ -188,7 +188,7 @@ class Behavior {
     }
 
     $response = Api::sendRequest('/behaviors/' . @$params['id'] . '', 'PATCH', $params, $this->options);
-    return new Behavior((array)(@$response->data ?: []), $options);
+    return new Behavior((array)(@$response->data ?: []), $this->options);
   }
 
   public function delete($params = []) {

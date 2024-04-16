@@ -163,7 +163,7 @@ class Message {
     }
 
     $response = Api::sendRequest('/messages/' . @$params['id'] . '', 'PATCH', $params, $this->options);
-    return new Message((array)(@$response->data ?: []), $options);
+    return new Message((array)(@$response->data ?: []), $this->options);
   }
 
   public function delete($params = []) {

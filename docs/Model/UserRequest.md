@@ -7,7 +7,8 @@
   "id": 1,
   "name": "John Doe",
   "email": "example",
-  "details": "Changed Departments"
+  "details": "Changed Departments",
+  "company": "Acme Inc."
 }
 ```
 
@@ -15,6 +16,7 @@
 * `name` (string): User's full name
 * `email` (email): User email address
 * `details` (string): Details of the user's request
+* `company` (string): User's company name
 
 ---
 
@@ -57,6 +59,7 @@ $user_request->create(, [
   'name' => "name",
   'email' => "email",
   'details' => "details",
+  'company' => "Acme Inc.",
 ]);
 ```
 
@@ -66,6 +69,7 @@ $user_request->create(, [
 * `name` (string): Required - Name of user requested
 * `email` (string): Required - Email of user requested
 * `details` (string): Required - Details of the user request
+* `company` (string): Company of the user requested
 
 ---
 

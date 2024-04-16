@@ -87,6 +87,15 @@ class UserRequest {
     return $this->attributes['details'] = $value;
   }
 
+  // string # User's company name
+  public function getCompany() {
+    return @$this->attributes['company'];
+  }
+
+  public function setCompany($value) {
+    return $this->attributes['company'] = $value;
+  }
+
   public function delete($params = []) {
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
@@ -182,6 +191,7 @@ class UserRequest {
   //   name (required) - string - Name of user requested
   //   email (required) - string - Email of user requested
   //   details (required) - string - Details of the user request
+  //   company - string - Company of the user requested
   public static function create($params = [], $options = []) {
     if (!@$params['name']) {
       throw new \Files\MissingParameterException('Parameter missing: name');
@@ -205,6 +215,10 @@ class UserRequest {
 
     if (@$params['details'] && !is_string(@$params['details'])) {
       throw new \Files\InvalidParameterException('$details must be of type string; received ' . gettype(@$params['details']));
+    }
+
+    if (@$params['company'] && !is_string(@$params['company'])) {
+      throw new \Files\InvalidParameterException('$company must be of type string; received ' . gettype(@$params['company']));
     }
 
     $response = Api::sendRequest('/user_requests', 'POST', $params, $options);

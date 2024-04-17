@@ -145,4 +145,39 @@ class RemoteServerConfigurationFile {
   public function getTransferRateLimit() {
     return @$this->attributes['transfer_rate_limit'];
   }
+
+  // string # Files Agent API Token
+  public function getApiToken() {
+    return @$this->attributes['api_token'];
+  }
+
+  // int64 # Incoming port for files agent connections
+  public function getPort() {
+    return @$this->attributes['port'];
+  }
+
+  // string
+  public function getHostname() {
+    return @$this->attributes['hostname'];
+  }
+
+  // string # public key
+  public function getPublicKey() {
+    return @$this->attributes['public_key'];
+  }
+
+  // string # either running or shutdown
+  public function getStatus() {
+    return @$this->attributes['status'];
+  }
+
+  // string
+  public function getServerHostKey() {
+    return @$this->attributes['server_host_key'];
+  }
+
+  // string # agent config version
+  public function getConfigVersion() {
+    return @$this->attributes['config_version'];
+  }
 }

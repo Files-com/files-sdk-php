@@ -776,6 +776,16 @@ class Site {
     return @$this->attributes['user_requests_notify_admins'];
   }
 
+  // boolean # Allow users to create their own API keys?
+  public function getUsersCanCreateApiKeys() {
+    return @$this->attributes['users_can_create_api_keys'];
+  }
+
+  // boolean # Allow users to create their own SSH keys?
+  public function getUsersCanCreateSshKeys() {
+    return @$this->attributes['users_can_create_ssh_keys'];
+  }
+
   // string # Custom text send in user welcome email
   public function getWelcomeCustomText() {
     return @$this->attributes['welcome_custom_text'];
@@ -913,6 +923,8 @@ class Site {
   //   dav_enabled - boolean - Is WebDAV enabled?
   //   ftp_enabled - boolean - Is FTP enabled?
   //   sftp_enabled - boolean - Is SFTP enabled?
+  //   users_can_create_api_keys - boolean - Allow users to create their own API keys?
+  //   users_can_create_ssh_keys - boolean - Allow users to create their own SSH keys?
   //   sftp_host_key_type - string - Sftp Host Key Type
   //   active_sftp_host_key_id - int64 - Id of the currently selected custom SFTP Host Key
   //   protocol_access_groups_only - boolean - If true, protocol access permissions on users will be ignored, and only protocol access permissions set on Groups will be honored.  Make sure that your current user is a member of a group with API permission when changing this value to avoid locking yourself out of your site.

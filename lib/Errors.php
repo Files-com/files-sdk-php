@@ -302,6 +302,7 @@ class FilePendingProcessingException extends \Files\ProcessingFailureException {
 class FileTooBigToDecryptException extends \Files\ProcessingFailureException {}
 class FileTooBigToEncryptException extends \Files\ProcessingFailureException {}
 class FileUploadedToWrongRegionException extends \Files\ProcessingFailureException {}
+class FilenameTooLongException extends \Files\ProcessingFailureException {}
 class FolderLockedException extends \Files\ProcessingFailureException {}
 class FolderNotEmptyException extends \Files\ProcessingFailureException {}
 class HistoryUnavailableException extends \Files\ProcessingFailureException {}

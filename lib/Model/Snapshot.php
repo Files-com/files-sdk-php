@@ -114,6 +114,28 @@ class Snapshot {
     return $this->attributes['paths'] = $value;
   }
 
+  // Finalize Snapshot
+  public function finalize($params = []) {
+    if (!is_array($params)) {
+      throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+    }
+
+    if (!@$params['id']) {
+      if (@$this->id) {
+        $params['id'] = $this->id;
+      } else {
+        throw new \Files\MissingParameterException('Parameter missing: id');
+      }
+    }
+
+    if (@$params['id'] && !is_int(@$params['id'])) {
+      throw new \Files\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
+    }
+
+    $response = Api::sendRequest('/snapshots/' . @$params['id'] . '/finalize', 'POST', $params, $this->options);
+    return;
+  }
+
   // Parameters:
   //   expires_at - string - When the snapshot expires.
   //   name - string - A name for the snapshot.

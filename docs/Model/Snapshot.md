@@ -73,6 +73,21 @@ $snapshot->create(, [
 
 ---
 
+## Finalize Snapshot
+
+```
+$snapshot = current(\Files\Model\Snapshot::all());
+
+$snapshot->finalize();
+```
+
+### Parameters
+
+* `id` (int64): Required - Snapshot ID.
+
+
+---
+
 ## Update Snapshot
 
 ```

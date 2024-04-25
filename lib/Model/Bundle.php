@@ -389,7 +389,7 @@ class Bundle {
     return $this->attributes['paths'] = $value;
   }
 
-  // BundlePath # A list of bundlepaths in this bundle.  For performance reasons, this is not provided when listing bundles.
+  // array # A list of bundlepaths in this bundle.  For performance reasons, this is not provided when listing bundles.
   public function getBundlepaths() {
     return @$this->attributes['bundlepaths'];
   }

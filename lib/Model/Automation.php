@@ -195,6 +195,15 @@ class Automation {
     return $this->attributes['path'] = $value;
   }
 
+  // string # Timezone to use when rendering timestamps in paths.
+  public function getPathTimeZone() {
+    return @$this->attributes['path_time_zone'];
+  }
+
+  public function setPathTimeZone($value) {
+    return $this->attributes['path_time_zone'] = $value;
+  }
+
   // int64 # If trigger type is `daily`, this specifies a day number to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
   public function getRecurringDay() {
     return @$this->attributes['recurring_day'];
@@ -372,6 +381,7 @@ class Automation {
   //   ignore_locked_folders - boolean - If true, the Lock Folders behavior will be disregarded for automated actions.
   //   name - string - Name for this automation.
   //   overwrite_files - boolean - If true, existing files will be overwritten with new files on Move/Copy automations.  Note: by default files will not be overwritten if they appear to be the same file size as the newly incoming file.  Use the `:always_overwrite_size_matching_files` option to override this.
+  //   path_time_zone - string - Timezone to use when rendering timestamps in paths.
   //   trigger - string - How this automation is triggered to run.
   //   trigger_actions - array(string) - If trigger is `action`, this is the list of action types on which to trigger the automation. Valid actions are create, read, update, destroy, move, copy
   //   value - object - A Hash of attributes specific to the automation type.
@@ -452,6 +462,10 @@ class Automation {
 
     if (@$params['name'] && !is_string(@$params['name'])) {
       throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
+    }
+
+    if (@$params['path_time_zone'] && !is_string(@$params['path_time_zone'])) {
+      throw new \Files\InvalidParameterException('$path_time_zone must be of type string; received ' . gettype(@$params['path_time_zone']));
     }
 
     if (@$params['trigger'] && !is_string(@$params['trigger'])) {
@@ -594,6 +608,7 @@ class Automation {
   //   ignore_locked_folders - boolean - If true, the Lock Folders behavior will be disregarded for automated actions.
   //   name - string - Name for this automation.
   //   overwrite_files - boolean - If true, existing files will be overwritten with new files on Move/Copy automations.  Note: by default files will not be overwritten if they appear to be the same file size as the newly incoming file.  Use the `:always_overwrite_size_matching_files` option to override this.
+  //   path_time_zone - string - Timezone to use when rendering timestamps in paths.
   //   trigger - string - How this automation is triggered to run.
   //   trigger_actions - array(string) - If trigger is `action`, this is the list of action types on which to trigger the automation. Valid actions are create, read, update, destroy, move, copy
   //   value - object - A Hash of attributes specific to the automation type.
@@ -662,6 +677,10 @@ class Automation {
 
     if (@$params['name'] && !is_string(@$params['name'])) {
       throw new \Files\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
+    }
+
+    if (@$params['path_time_zone'] && !is_string(@$params['path_time_zone'])) {
+      throw new \Files\InvalidParameterException('$path_time_zone must be of type string; received ' . gettype(@$params['path_time_zone']));
     }
 
     if (@$params['trigger'] && !is_string(@$params['trigger'])) {

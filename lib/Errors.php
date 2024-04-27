@@ -206,6 +206,7 @@ class UserRequiredException extends \Files\BadRequestException {}
 
 namespace Files\NotAuthenticated {
 
+class AdditionalAuthenticationRequiredException extends \Files\NotAuthenticatedException {}
 class AuthenticationRequiredException extends \Files\NotAuthenticatedException {}
 class BundleRegistrationCodeFailedException extends \Files\NotAuthenticatedException {}
 class FilesAgentTokenFailedException extends \Files\NotAuthenticatedException {}

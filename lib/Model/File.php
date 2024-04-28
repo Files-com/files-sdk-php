@@ -634,6 +634,7 @@ class File {
   // Parameters:
   //   destination (required) - string - Copy destination path.
   //   structure - boolean - Copy structure only?
+  //   overwrite - boolean - Overwrite existing file(s) in the destination?
   public function copy($params = []) {
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));
@@ -671,6 +672,7 @@ class File {
   //
   // Parameters:
   //   destination (required) - string - Move destination path.
+  //   overwrite - boolean - Overwrite existing file(s) in the destination?
   public function move($params = []) {
     if (!is_array($params)) {
       throw new \Files\InvalidParameterException('$params must be of type array; received ' . gettype($params));

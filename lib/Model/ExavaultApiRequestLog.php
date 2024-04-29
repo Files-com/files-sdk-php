@@ -96,6 +96,11 @@ class ExavaultApiRequestLog {
     return @$this->attributes['response_code'];
   }
 
+  // boolean # `false` if HTTP Response Code is 4xx or 5xx
+  public function getSuccess() {
+    return @$this->attributes['success'];
+  }
+
   // int64 # Duration (in milliseconds)
   public function getDurationMs() {
     return @$this->attributes['duration_ms'];

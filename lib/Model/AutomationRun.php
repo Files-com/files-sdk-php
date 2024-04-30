@@ -71,7 +71,7 @@ class AutomationRun {
     return @$this->attributes['created_at'];
   }
 
-  // date-time # Automation run runtime.
+  // double # Automation run runtime.
   public function getRuntime() {
     return @$this->attributes['runtime'];
   }

@@ -123,6 +123,15 @@ class Behavior {
     return $this->attributes['disable_parent_folder_behavior'] = $value;
   }
 
+  // boolean # Is behavior recursive?
+  public function getRecursive() {
+    return @$this->attributes['recursive'];
+  }
+
+  public function setRecursive($value) {
+    return $this->attributes['recursive'] = $value;
+  }
+
   // file # Certain behaviors may require a file, for instance, the "watermark" behavior requires a watermark image
   public function getAttachmentFile() {
     return @$this->attributes['attachment_file'];
@@ -145,6 +154,7 @@ class Behavior {
   //   value - string - The value of the folder behavior.  Can be an integer, array, or hash depending on the type of folder behavior. See The Behavior Types section for example values for each type of behavior.
   //   attachment_file - file - Certain behaviors may require a file, for instance, the "watermark" behavior requires a watermark image
   //   disable_parent_folder_behavior - boolean - If true, the parent folder's behavior will be disabled for this folder.
+  //   recursive - boolean - Is behavior recursive?
   //   name - string - Name for this behavior.
   //   description - string - Description for this behavior.
   //   behavior - string - Behavior type.
@@ -294,7 +304,7 @@ class Behavior {
   //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `behavior`.
   //   filter_prefix - object - If set, return records where the specified field is prefixed by the supplied value. Valid fields are `behavior`.
   //   path (required) - string - Path to operate on.
-  //   recursive - string - Show behaviors above this path?
+  //   ancestor_behaviors - string - Show behaviors above this path?
   //   behavior - string - DEPRECATED: If set only shows folder behaviors matching this behavior type. Use `filter[behavior]` instead.
   public static function listFor($path, $params = [], $options = []) {
     if (!is_array($params)) {
@@ -319,8 +329,8 @@ class Behavior {
       throw new \Files\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
     }
 
-    if (@$params['recursive'] && !is_string(@$params['recursive'])) {
-      throw new \Files\InvalidParameterException('$recursive must be of type string; received ' . gettype(@$params['recursive']));
+    if (@$params['ancestor_behaviors'] && !is_string(@$params['ancestor_behaviors'])) {
+      throw new \Files\InvalidParameterException('$ancestor_behaviors must be of type string; received ' . gettype(@$params['ancestor_behaviors']));
     }
 
     if (@$params['behavior'] && !is_string(@$params['behavior'])) {
@@ -343,6 +353,7 @@ class Behavior {
   //   value - string - The value of the folder behavior.  Can be an integer, array, or hash depending on the type of folder behavior. See The Behavior Types section for example values for each type of behavior.
   //   attachment_file - file - Certain behaviors may require a file, for instance, the "watermark" behavior requires a watermark image
   //   disable_parent_folder_behavior - boolean - If true, the parent folder's behavior will be disabled for this folder.
+  //   recursive - boolean - Is behavior recursive?
   //   name - string - Name for this behavior.
   //   description - string - Description for this behavior.
   //   path (required) - string - Folder behaviors path.

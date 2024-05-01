@@ -61,6 +61,11 @@ class SftpActionLog {
     return @$this->attributes['remote_ip'];
   }
 
+  // string # IP Address of SFTP Server
+  public function getServerIp() {
+    return @$this->attributes['server_ip'];
+  }
+
   // string # Username
   public function getUsername() {
     return @$this->attributes['username'];

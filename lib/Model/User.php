@@ -173,13 +173,22 @@ class User {
     return $this->attributes['dav_permission'] = $value;
   }
 
-  // boolean # Is user disabled? Disabled users cannot log in, and do not count for billing purposes.  Users can be automatically disabled after an inactivity period via a Site setting.
+  // boolean # Is user disabled? Disabled users cannot log in, and do not count for billing purposes. Users can be automatically disabled after an inactivity period via a Site setting or schedule to be deactivated after specific date.
   public function getDisabled() {
     return @$this->attributes['disabled'];
   }
 
   public function setDisabled($value) {
     return $this->attributes['disabled'] = $value;
+  }
+
+  // boolean # Computed property that returns true if user disabled or expired or inactive.
+  public function getDisabledExpiredOrInactive() {
+    return @$this->attributes['disabled_expired_or_inactive'];
+  }
+
+  public function setDisabledExpiredOrInactive($value) {
+    return $this->attributes['disabled_expired_or_inactive'] = $value;
   }
 
   // email # User email address
@@ -773,7 +782,7 @@ class User {
   //   bypass_inactive_disable - boolean - Exempt this user from being disabled based on inactivity?
   //   bypass_site_allowed_ips - boolean - Allow this user to skip site-wide IP blacklists?
   //   dav_permission - boolean - Can the user connect with WebDAV?
-  //   disabled - boolean - Is user disabled? Disabled users cannot log in, and do not count for billing purposes.  Users can be automatically disabled after an inactivity period via a Site setting.
+  //   disabled - boolean - Is user disabled? Disabled users cannot log in, and do not count for billing purposes. Users can be automatically disabled after an inactivity period via a Site setting or schedule to be deactivated after specific date.
   //   ftp_permission - boolean - Can the user access with FTP/FTPS?
   //   header_text - string - Text to display to the user in the header of the UI
   //   language - string - Preferred language
@@ -1054,7 +1063,7 @@ class User {
   //   bypass_inactive_disable - boolean - Exempt this user from being disabled based on inactivity?
   //   bypass_site_allowed_ips - boolean - Allow this user to skip site-wide IP blacklists?
   //   dav_permission - boolean - Can the user connect with WebDAV?
-  //   disabled - boolean - Is user disabled? Disabled users cannot log in, and do not count for billing purposes.  Users can be automatically disabled after an inactivity period via a Site setting.
+  //   disabled - boolean - Is user disabled? Disabled users cannot log in, and do not count for billing purposes. Users can be automatically disabled after an inactivity period via a Site setting or schedule to be deactivated after specific date.
   //   ftp_permission - boolean - Can the user access with FTP/FTPS?
   //   header_text - string - Text to display to the user in the header of the UI
   //   language - string - Preferred language

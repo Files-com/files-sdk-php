@@ -189,8 +189,8 @@ class MethodNotAllowedException extends \Files\BadRequestException {}
 class NoValidInputParamsException extends \Files\BadRequestException {}
 class OperationOnNonScimResourceException extends \Files\BadRequestException {}
 class PartNumberTooLargeException extends \Files\BadRequestException {}
+class PathCannotHaveTrailingWhitespaceException extends \Files\BadRequestException {}
 class ReauthenticationNeededFieldsException extends \Files\BadRequestException {}
-class RequestParamPathCannotHaveTrailingWhitespaceException extends \Files\BadRequestException {}
 class RequestParamsContainInvalidCharacterException extends \Files\BadRequestException {}
 class RequestParamsInvalidException extends \Files\BadRequestException {}
 class RequestParamsRequiredException extends \Files\BadRequestException {}
@@ -301,6 +301,7 @@ class FailedToChangePasswordException extends \Files\ProcessingFailureException 
 class FileLockedException extends \Files\ProcessingFailureException {}
 class FileNotUploadedException extends \Files\ProcessingFailureException {}
 class FilePendingProcessingException extends \Files\ProcessingFailureException {}
+class FileProcessingErrorException extends \Files\ProcessingFailureException {}
 class FileTooBigToDecryptException extends \Files\ProcessingFailureException {}
 class FileTooBigToEncryptException extends \Files\ProcessingFailureException {}
 class FileUploadedToWrongRegionException extends \Files\ProcessingFailureException {}

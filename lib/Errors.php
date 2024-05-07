@@ -312,6 +312,7 @@ class HistoryUnavailableException extends \Files\ProcessingFailureException {}
 class InvalidBundleCodeException extends \Files\ProcessingFailureException {}
 class InvalidFileTypeException extends \Files\ProcessingFailureException {}
 class InvalidFilenameException extends \Files\ProcessingFailureException {}
+class InvalidPriorityColorException extends \Files\ProcessingFailureException {}
 class InvalidRangeException extends \Files\ProcessingFailureException {}
 class ModelSaveErrorException extends \Files\ProcessingFailureException {}
 class MultipleProcessingErrorsException extends \Files\ProcessingFailureException {}

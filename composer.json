@@ -23,6 +23,8 @@
     "guzzlehttp/guzzle": "^6 || ^7"
   },
   "autoload": {
-    "classmap": [ "lib/" ]
+    "psr-4": {
+      "Files\\": "lib/"
+    }
   }
 }

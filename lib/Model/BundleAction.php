@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Files\Model;
 
 use Files\Api;
-use Files\Files;
 use Files\Logger;
 
 require_once __DIR__ . '/../Files.php';
@@ -15,106 +14,110 @@ require_once __DIR__ . '/../Files.php';
  *
  * @package Files
  */
-class BundleAction {
-  private $attributes = [];
-  private $options = [];
-  private static $static_mapped_functions = [
-    'list' => 'all',
-  ];
+class BundleAction
+{
+    private $attributes = [];
+    private $options = [];
+    private static $static_mapped_functions = [
+        'list' => 'all',
+    ];
 
-  function __construct($attributes = [], $options = []) {
-    foreach ($attributes as $key => $value) {
-      $this->attributes[str_replace('?', '', $key)] = $value;
+    public function __construct($attributes = [], $options = [])
+    {
+        foreach ($attributes as $key => $value) {
+            $this->attributes[str_replace('?', '', $key)] = $value;
+        }
+
+        $this->options = $options;
     }
 
-    $this->options = $options;
-  }
-
-  public function __set($name, $value) {
-    $this->attributes[$name] = $value;
-  }
-
-  public function __get($name) {
-    return @$this->attributes[$name];
-  }
-
-  public static function __callStatic($name, $arguments) {
-    if(in_array($name, array_keys(self::$static_mapped_functions))){
-      $method = self::$static_mapped_functions[$name];
-      if (method_exists(__CLASS__, $method)){
-        return @self::$method($arguments);
-      }
-    }
-  }
-
-  public function isLoaded() {
-    return !!@$this->attributes['id'];
-  }
-
-  // string # Type of action
-  public function getAction() {
-    return @$this->attributes['action'];
-  }
-
-  // BundleRegistration # Object that contains bundle registration information
-  public function getBundleRegistration() {
-    return @$this->attributes['bundle_registration'];
-  }
-
-  // date-time # Action occurrence date/time
-  public function getWhen() {
-    return @$this->attributes['when'];
-  }
-
-  // string # The destination path for this bundle action, if applicable
-  public function getDestination() {
-    return @$this->attributes['destination'];
-  }
-
-  // string # Path This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
-  public function getPath() {
-    return @$this->attributes['path'];
-  }
-
-  // string # The source path for this bundle action, if applicable
-  public function getSource() {
-    return @$this->attributes['source'];
-  }
-
-  // Parameters:
-  //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-  //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
-  //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction (e.g. `sort_by[bundle_registration_id]=desc`). Valid fields are `bundle_registration_id` and `created_at`.
-  //   bundle_id - int64 - Bundle ID
-  //   bundle_registration_id - int64 - BundleRegistration ID
-  public static function all($params = [], $options = []) {
-    if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-      throw new \Files\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+    public function __set($name, $value)
+    {
+        $this->attributes[$name] = $value;
     }
 
-    if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-      throw new \Files\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+    public function __get($name)
+    {
+        return @$this->attributes[$name];
     }
 
-    if (@$params['bundle_id'] && !is_int(@$params['bundle_id'])) {
-      throw new \Files\InvalidParameterException('$bundle_id must be of type int; received ' . gettype(@$params['bundle_id']));
+    public static function __callStatic($name, $arguments)
+    {
+        if (in_array($name, array_keys(self::$static_mapped_functions))) {
+            $method = self::$static_mapped_functions[$name];
+            if (method_exists(__CLASS__, $method)) {
+                return @self::$method($arguments);
+            }
+        }
     }
 
-    if (@$params['bundle_registration_id'] && !is_int(@$params['bundle_registration_id'])) {
-      throw new \Files\InvalidParameterException('$bundle_registration_id must be of type int; received ' . gettype(@$params['bundle_registration_id']));
+    public function isLoaded()
+    {
+        return !!@$this->attributes['id'];
+    }
+    // string # Type of action
+    public function getAction()
+    {
+        return @$this->attributes['action'];
+    }
+    // BundleRegistration # Object that contains bundle registration information
+    public function getBundleRegistration()
+    {
+        return @$this->attributes['bundle_registration'];
+    }
+    // date-time # Action occurrence date/time
+    public function getWhen()
+    {
+        return @$this->attributes['when'];
+    }
+    // string # The destination path for this bundle action, if applicable
+    public function getDestination()
+    {
+        return @$this->attributes['destination'];
+    }
+    // string # Path This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
+    public function getPath()
+    {
+        return @$this->attributes['path'];
+    }
+    // string # The source path for this bundle action, if applicable
+    public function getSource()
+    {
+        return @$this->attributes['source'];
     }
 
-    $response = Api::sendRequest('/bundle_actions', 'GET', $params, $options);
+    // Parameters:
+    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+    //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
+    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction (e.g. `sort_by[bundle_registration_id]=desc`). Valid fields are `bundle_registration_id` and `created_at`.
+    //   bundle_id - int64 - Bundle ID
+    //   bundle_registration_id - int64 - BundleRegistration ID
+    public static function all($params = [], $options = [])
+    {
+        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
 
-    $return_array = [];
+        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
 
-    foreach ($response->data as $obj) {
-      $return_array[] = new BundleAction((array)$obj, $options);
+        if (@$params['bundle_id'] && !is_int(@$params['bundle_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$bundle_id must be of type int; received ' . gettype(@$params['bundle_id']));
+        }
+
+        if (@$params['bundle_registration_id'] && !is_int(@$params['bundle_registration_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$bundle_registration_id must be of type int; received ' . gettype(@$params['bundle_registration_id']));
+        }
+
+        $response = Api::sendRequest('/bundle_actions', 'GET', $params, $options);
+
+        $return_array = [];
+
+        foreach ($response->data as $obj) {
+            $return_array[] = new BundleAction((array) $obj, $options);
+        }
+
+        return $return_array;
     }
-
-    return $return_array;
-  }
-
-
-
 }

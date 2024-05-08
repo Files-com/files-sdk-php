@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Files;
 
@@ -22,13 +24,13 @@ $api_key = getenv('FILES_API_KEY');
 $api_domain = getenv('FILES_API_DOMAIN');
 
 if (!$api_key) {
-  trigger_error('ENV variable "FILES_API_KEY" was not found', E_USER_ERROR);
-  exit;
+    trigger_error('ENV variable "FILES_API_KEY" was not found', E_USER_ERROR);
+    exit;
 }
 
 if (!$api_domain) {
-  trigger_error('ENV variable "FILES_API_DOMAIN" was not found', E_USER_ERROR);
-  exit;
+    trigger_error('ENV variable "FILES_API_DOMAIN" was not found', E_USER_ERROR);
+    exit;
 }
 
 //
@@ -47,407 +49,426 @@ Files::$logLevel = LogLevel::INFO;
 // utilities
 //
 
-function assertUserCreatedAndDelete($user, $name) {
-  assert($user->isLoaded() === true);
+function assertUserCreatedAndDelete($user, $name)
+{
+    assert($user->isLoaded() === true);
 
-  $saved_user = User::find($user->id);
+    $saved_user = User::find($user->id);
 
-  assert($saved_user->isLoaded() === true);
-  assert($saved_user->name === $name);
+    assert($saved_user->isLoaded() === true);
+    assert($saved_user->name === $name);
 
-  $saved_user->delete();
+    $saved_user->delete();
 
-  $userNoLongerExists = false;
+    $userNoLongerExists = false;
 
-  try {
-    User::find($user->id);
-  } catch (NotFoundException $error) {
-    assert($error->getTitle() === "Not Found");
-    assert($error->getError() === "Not Found");
-    assert($error->getType() === "not-found");
-    assert($error->getHttpCode() === 404);
-    $userNoLongerExists = true;
-  }
+    try {
+        User::find($user->id);
+    } catch (Exception\NotFoundException $error) {
+        assert($error->getTitle() === "Not Found");
+        assert($error->getError() === "Not Found");
+        assert($error->getType() === "not-found");
+        assert($error->getHttpCode() === 404);
+        $userNoLongerExists = true;
+    }
 
-  assert($userNoLongerExists === true);
+    assert($userNoLongerExists === true);
 }
 
-function findFile($targetFile, $fileList) {
-  $matches = array_filter($fileList, function($element) use ($targetFile) { return $element->path === $targetFile->path; });
-  return $matches ? current($matches) : new File();
+function findFile($targetFile, $fileList)
+{
+    $matches = array_filter($fileList, function ($element) use ($targetFile) {
+        return $element->path === $targetFile->path;
+    });
+    return $matches ? current($matches) : new File();
 }
 
-function createTestFolder() {
-  $rootDir = constant('SDK_TEST_ROOT_FOLDER');
-  $dirName = '/created-folder_' . date('Ymd-His');
-  $path = $rootDir . $dirName;
+function createTestFolder()
+{
+    $rootDir = constant('SDK_TEST_ROOT_FOLDER');
+    $dirName = '/created-folder_' . date('Ymd-His');
+    $path = $rootDir . $dirName;
 
-  $folder = Folder::create($path);
-  $folder->path = $path;
+    $folder = Folder::create($path);
+    $folder->path = $path;
 
-  return [
-    $rootDir,
-    $dirName,
-    $folder,
-  ];
+    return [
+        $rootDir,
+        $dirName,
+        $folder,
+    ];
 }
 
-function createTestFile() {
-  $rootDir = constant('SDK_TEST_ROOT_FOLDER');
-  $dirName = '/created-file_' . date('Ymd-His');
+function createTestFile()
+{
+    $rootDir = constant('SDK_TEST_ROOT_FOLDER');
+    $dirName = '/created-file_' . date('Ymd-His');
 
-  $folder = Folder::create($rootDir . $dirName);
+    $folder = Folder::create($rootDir . $dirName);
 
-  return [
-    $rootDir,
-    $dirName,
-    $folder,
-  ];
+    return [
+        $rootDir,
+        $dirName,
+        $folder,
+    ];
 }
 
 //
 // define tests
 //
 
-class RemoteTestEnv {
-  public static $remoteFilePath;
-  public static $testFolder;
-  public static $workingFolderPath;
+class RemoteTestEnv
+{
+    public static $remoteFilePath;
+    public static $testFolder;
+    public static $workingFolderPath;
 
-  public static function init() {
-    list($rootDir, $dirName, static::$testFolder) = createTestFolder();
+    public static function init()
+    {
+        list($rootDir, $dirName, static::$testFolder) = createTestFolder();
 
-    self::$workingFolderPath = $rootDir . $dirName . '/';
+        self::$workingFolderPath = $rootDir . $dirName . '/';
 
-    $tempName = 'RemoteTestEnv-' . date('Ymd_His') . '.txt';
+        $tempName = 'RemoteTestEnv-' . date('Ymd_His') . '.txt';
+        $tempPath = tempnam(sys_get_temp_dir(), $tempName);
+
+        file_put_contents($tempPath, date('Y-m-d H:i:s'));
+
+        self::$remoteFilePath = self::$workingFolderPath . $tempName;
+
+        File::uploadData(self::$remoteFilePath, rand() . "\n" . date('Y-m-d H:i:s'));
+
+        unlink($tempPath);
+    }
+
+    public static function deinit()
+    {
+        File::deletePath(self::$remoteFilePath);
+
+        static::$testFolder->delete(['recursive' => true]);
+    }
+}
+
+
+function testErrors()
+{
+    global $api_key;
+    global $api_domain;
+
+    //
+    // invalid configuration
+    //
+
+    Files::setApiKey(null);
+    Files::setBaseUrl(null);
+
+    $caughtExpectedException = false;
+
+    try {
+        User::all();
+    } catch (Exception\ConfigurationException $error) {
+        $caughtExpectedException = true;
+    }
+
+    assert($caughtExpectedException === true);
+
+    Files::setApiKey($api_key);
+    Files::setBaseUrl('https://' . $api_domain);
+
+    //
+    // deleting a folder with no path specified
+    //
+
+    $nonExistentFile = new File();
+
+    $caughtExpectedException = false;
+
+    try {
+        $nonExistentFile->delete();
+    } catch (Exception\MissingParameterException $error) {
+        $caughtExpectedException = true;
+    }
+
+    assert($caughtExpectedException === true);
+
+    //
+    // deleting a non-existent path
+    //
+
+    $nonExistentFile->path = '_fake_path_so_this_should_404_';
+
+    $caughtExpectedException = false;
+
+    try {
+        $nonExistentFile->delete();
+    } catch (Exception\NotFoundException $error) {
+        assert($error->getTitle() === "Not Found");
+        assert($error->getError() === "Not Found");
+        assert($error->getType() === "not-found");
+        assert($error->getHttpCode() === 404);
+        $caughtExpectedException = true;
+    }
+
+    assert($caughtExpectedException === true);
+
+    //
+    // create the root folder path
+    //
+
+    $caughtExpectedException = false;
+
+    try {
+        $folder = Folder::create('.');
+    } catch (Exception\ProcessingFailure\DestinationExistsException $error) {
+        assert($error->getTitle() === "Destination Exists");
+        assert($error->getError() === "The destination exists.");
+        assert($error->getType() === "processing-failure/destination-exists");
+        assert($error->getHttpCode() === 422);
+        $caughtExpectedException = true;
+    }
+
+    assert($caughtExpectedException === true);
+
+    Logger::info('***** testErrors() succeeded! *****');
+}
+
+function testAutoPaginate()
+{
+    $params = ['per_page' => constant('USER_COUNT_TO_TRIGGER_PAGINATION')];
+
+    $savedAutoPaginate = Files::$autoPaginate;
+
+    Files::$autoPaginate = true;
+    $response = Api::sendRequest('/users', 'GET', $params);
+
+    assert($response->autoPaginateRequests > 1);
+
+    Files::$autoPaginate = false;
+    $response = Api::sendRequest('/users', 'GET', $params);
+
+    assert(!isset($response->autoPaginateRequests));
+
+    Files::$autoPaginate = $savedAutoPaginate;
+
+    Logger::info('***** testAutoPaginate() succeeded! *****');
+}
+
+function testUserListAndUpdate()
+{
+    $all_users = User::all();
+    $first_user = $all_users[0];
+
+    $old_name = $first_user->name;
+    $new_name = 'edited name - ' . date('Y-m-d H:i:s');
+
+    $first_user->setName($new_name);
+    $first_user->save();
+
+    $updated_user = User::find($first_user->id);
+
+    assert($updated_user->isLoaded());
+    assert($old_name !== $new_name);
+    assert($updated_user->name === $new_name);
+
+    Logger::info('***** testUserListAndUpdate() succeeded! *****');
+}
+
+function testUserCreateAndDelete()
+{
+    $name = 'created-user_' . date('Ymd-His');
+
+    $user = new User([
+        'name' => $name,
+        'username' => $name,
+    ]);
+
+    $user->save();
+
+    assertUserCreatedAndDelete($user, $name);
+
+    Logger::info('***** testUserCreateAndDelete() succeeded! *****');
+}
+
+function testUserStaticCreateAndDelete()
+{
+    $name = 'created-user_' . date('Ymd-His');
+
+    $user = User::create([
+        'name' => $name,
+        'username' => $name,
+    ]);
+
+    assertUserCreatedAndDelete($user, $name);
+
+    Logger::info('***** testUserStaticCreateAndDelete() succeeded! *****');
+}
+
+function testFolderCreateListAndDelete()
+{
+    list($rootDir, $dirName, $testFolder) = createTestFolder();
+
+    $dirFiles = Folder::listFor($rootDir);
+
+    $foundFolder = findFile($testFolder, $dirFiles);
+    assert($foundFolder->isLoaded() === true);
+
+    $foundFolder->delete(); // if this fails an unhandled exception will be thrown
+
+    Logger::info('***** testFolderCreateListAndDelete() succeeded! *****');
+}
+
+function testFileUploadFindCopyAndDelete()
+{
+    $tempName = 'testFileUploadFindCopyAndDelete-' . date('Ymd_His') . '.txt';
     $tempPath = tempnam(sys_get_temp_dir(), $tempName);
 
     file_put_contents($tempPath, date('Y-m-d H:i:s'));
 
-    self::$remoteFilePath = self::$workingFolderPath . $tempName;
+    Logger::debug('Uploading file at ' . $tempPath . ' which has contents:' . "\n" . substr(file_get_contents($tempPath), 0, 200));
 
-    File::uploadData(self::$remoteFilePath, rand() . "\n" . date('Y-m-d H:i:s'));
+    File::uploadFile(RemoteTestEnv::$workingFolderPath . $tempName, $tempPath);
+    File::uploadData(RemoteTestEnv::$workingFolderPath . 'testFileUploadFindCopyAndDelete-data.txt', rand() . "\n" . date('Y-m-d H:i:s'));
+
+    $foundFile = File::find(RemoteTestEnv::$workingFolderPath . $tempName);
+    assert($foundFile->isLoaded());
+
+    $copyResponse = $foundFile->copyTo(RemoteTestEnv::$workingFolderPath . 'copied-file.txt');
+
+    assert(!!$copyResponse->status && !!$copyResponse->file_migration_id);
+
+    $foundFile->delete(); // if this fails an unhandled exception will be thrown
+
+    $fileNoLongerExists = false;
+
+    try {
+        File::find(RemoteTestEnv::$workingFolderPath . $tempName);
+    } catch (Exception\NotFoundException $error) {
+        assert($error->getTitle() === "Not Found");
+        assert($error->getError() === "Not Found");
+        assert($error->getType() === "not-found");
+        assert($error->getHttpCode() === 404);
+        $fileNoLongerExists = true;
+    }
+
+    assert($fileNoLongerExists === true);
+
+    $foundFile = File::find(RemoteTestEnv::$workingFolderPath . 'testFileUploadFindCopyAndDelete-data.txt');
+    assert($foundFile->isLoaded());
 
     unlink($tempPath);
-  }
 
-  public static function deinit() {
-    File::deletePath(self::$remoteFilePath);
-
-    static::$testFolder->delete(['recursive' => true]);
-  }
+    Logger::info('***** testFileUploadFindCopyAndDelete() succeeded! *****');
 }
 
+function testUploadDownloadFileAndDelete()
+{
+    Logger::debug('Uploading file data...');
 
-function testErrors() {
-  global $api_key;
-  global $api_domain;
+    $fileData = rand() . "\n" . date('Y-m-d H:i:s');
 
-  //
-  // invalid configuration
-  //
+    $remoteFilePath = RemoteTestEnv::$workingFolderPath . 'testUploadDownloadFileAndDelete-data.txt';
+    File::uploadData($remoteFilePath, $fileData);
 
-  Files::setApiKey(null);
-  Files::setBaseUrl(null);
+    $tempName = 'testUploadDownloadFileAndDelete-' . date('Ymd_His') . '.txt';
+    $tempPath = tempnam(sys_get_temp_dir(), $tempName);
 
-  $caughtExpectedException = false;
+    // fetch only the first 10 bytes
+    $result = File::partialDownloadToFile($remoteFilePath, $tempPath, 0, 9);
 
-  try {
-    User::all();
-  } catch (ConfigurationException $error) {
-    $caughtExpectedException = true;
-  }
+    assert(file_get_contents($tempPath) === substr($fileData, 0, 10));
+    assert($result->received === 10);
+    assert($result->total === strlen($fileData));
 
-  assert($caughtExpectedException === true);
+    // then download the rest
+    $result = File::resumeDownloadToFile($remoteFilePath, $tempPath);
 
-  Files::setApiKey($api_key);
-  Files::setBaseUrl('https://' . $api_domain);
+    assert(file_get_contents($tempPath) === $fileData);
+    assert($result->received === ($result->total - 10));
+    assert($result->total === strlen($fileData));
 
-  //
-  // deleting a folder with no path specified
-  //
+    unlink($tempPath);
 
-  $nonExistentFile = new File();
+    $file = new File();
+    $file->path = $remoteFilePath;
 
-  $caughtExpectedException = false;
+    Logger::debug('Getting download URL for file at ' . $remoteFilePath);
 
-  try {
-    $nonExistentFile->delete();
-  } catch (MissingParameterException $error) {
-    $caughtExpectedException = true;
-  }
+    $response = $file->download([
+        'with_previews' => true,
+        'with_priority_color' => true
+    ]);
 
-  assert($caughtExpectedException === true);
+    assert($response->path === $remoteFilePath);
+    assert(!!$response->download_uri);
 
-  //
-  // deleting a non-existent path
-  //
+    Logger::debug('Updating file mtime and color at ' . $remoteFilePath);
 
-  $nonExistentFile->path = '_fake_path_so_this_should_404_';
+    $response = $file->update([
+        'provided_mtime' => '2000-01-01T01:00:00Z',
+        'priority_color' => 'red',
+    ]);
 
-  $caughtExpectedException = false;
+    assert($response->provided_mtime === '2000-01-01T01:00:00Z');
+    assert($response->priority_color === 'red');
 
-  try {
-    $nonExistentFile->delete();
-  } catch (NotFoundException $error) {
-    assert($error->getTitle() === "Not Found");
-    assert($error->getError() === "Not Found");
-    assert($error->getType() === "not-found");
-    assert($error->getHttpCode() === 404);
-    $caughtExpectedException = true;
-  }
+    Logger::debug('Deleting file at ' . $remoteFilePath);
 
-  assert($caughtExpectedException === true);
+    $file->delete(); // if this fails an unhandled exception will be thrown
 
-  //
-  // create the root folder path
-  //
-
-  $caughtExpectedException = false;
-
-  try {
-    $folder = Folder::create('.');
-  } catch (ProcessingFailure\DestinationExistsException $error) {
-    assert($error->getTitle() === "Destination Exists");
-    assert($error->getError() === "The destination exists.");
-    assert($error->getType() === "processing-failure/destination-exists");
-    assert($error->getHttpCode() === 422);
-    $caughtExpectedException = true;
-  }
-
-  assert($caughtExpectedException === true);
-
-  Logger::info('***** testErrors() succeeded! *****');
+    Logger::info('***** testUploadDownloadFileAndDelete() succeeded! *****');
 }
 
-function testAutoPaginate() {
-  $params = ['per_page' => constant('USER_COUNT_TO_TRIGGER_PAGINATION')];
+function testFileObjectMethods()
+{
+    Logger::debug('Loading a remote file path into a File object');
 
-  $savedAutoPaginate = Files::$autoPaginate;
+    $file = File::get(RemoteTestEnv::$remoteFilePath);
 
-  Files::$autoPaginate = true;
-  $response = Api::sendRequest('/users', 'GET', $params);
+    assert($file->path === RemoteTestEnv::$remoteFilePath);
 
-  assert($response->autoPaginateRequests > 1);
+    Logger::debug('Setting priority_color metadata for File object');
 
-  Files::$autoPaginate = false;
-  $response = Api::sendRequest('/users', 'GET', $params);
+    $response = $file->update([
+        'priority_color' => 'yellow',
+    ]);
 
-  assert(!isset($response->autoPaginateRequests));
+    Logger::debug('Fetching metadata for File object');
 
-  Files::$autoPaginate = $savedAutoPaginate;
+    $metadata = File::find($file->path, [
+        'with_previews' => true,
+        'with_priority_color' => true,
+    ]);
 
-  Logger::info('***** testAutoPaginate() succeeded! *****');
+    assert(!!$metadata->preview_id);
+    assert(!!$metadata->preview);
+    assert($metadata->priority_color === 'yellow');
+
+    Logger::info('***** testFileObjectMethods() succeeded! *****');
 }
 
-function testUserListAndUpdate() {
-  $all_users = User::all();
-  $first_user = $all_users[0];
+function testSession()
+{
+    $username = getenv('FILES_SESSION_USERNAME');
+    $password = getenv('FILES_SESSION_PASSWORD');
 
-  $old_name = $first_user->name;
-  $new_name = 'edited name - ' . date('Y-m-d H:i:s');
+    if (!$username || !$password) {
+        Logger::info('Bypassing testSession() - ENV variables "FILES_SESSION_USERNAME" and "FILES_SESSION_PASSWORD" are both required');
+        return;
+    }
 
-  $first_user->setName($new_name);
-  $first_user->save();
+    $session = Session::create(['username' => $username, 'password' => $password]);
+    Files::setSessionId($session->id);
 
-  $updated_user = User::find($first_user->id);
+    assert(!!$session->id);
 
-  assert($updated_user->isLoaded());
-  assert($old_name !== $new_name);
-  assert($updated_user->name === $new_name);
+    // Tests list method alias on PHP7+, and standard list on PHP5
+    $list_method = (version_compare(PHP_VERSION, '7.0.0') >= 0) ? 'list' : 'all';
+    ApiKey::$list_method(['user_id' => 0]);
 
-  Logger::info('***** testUserListAndUpdate() succeeded! *****');
-}
+    Session::destroy();
+    Files::setSessionId(null);
 
-function testUserCreateAndDelete() {
-  $name = 'created-user_' . date('Ymd-His');
-
-  $user = new User([
-    'name' => $name,
-    'username' => $name,
-  ]);
-
-  $user->save();
-
-  assertUserCreatedAndDelete($user, $name);
-
-  Logger::info('***** testUserCreateAndDelete() succeeded! *****');
-}
-
-function testUserStaticCreateAndDelete() {
-  $name = 'created-user_' . date('Ymd-His');
-
-  $user = User::create([
-    'name' => $name,
-    'username' => $name,
-  ]);
-
-  assertUserCreatedAndDelete($user, $name);
-
-  Logger::info('***** testUserStaticCreateAndDelete() succeeded! *****');
-}
-
-function testFolderCreateListAndDelete() {
-  list($rootDir, $dirName, $testFolder) = createTestFolder();
-
-  $dirFiles = Folder::listFor($rootDir);
-
-  $foundFolder = findFile($testFolder, $dirFiles);
-  assert($foundFolder->isLoaded() === true);
-
-  $foundFolder->delete(); // if this fails an unhandled exception will be thrown
-
-  Logger::info('***** testFolderCreateListAndDelete() succeeded! *****');
-}
-
-function testFileUploadFindCopyAndDelete() {
-  $tempName = 'testFileUploadFindCopyAndDelete-' . date('Ymd_His') . '.txt';
-  $tempPath = tempnam(sys_get_temp_dir(), $tempName);
-
-  file_put_contents($tempPath, date('Y-m-d H:i:s'));
-
-  Logger::debug('Uploading file at ' . $tempPath . ' which has contents:' . "\n" . substr(file_get_contents($tempPath), 0, 200));
-
-  File::uploadFile(RemoteTestEnv::$workingFolderPath . $tempName, $tempPath);
-  File::uploadData(RemoteTestEnv::$workingFolderPath . 'testFileUploadFindCopyAndDelete-data.txt', rand() . "\n" . date('Y-m-d H:i:s'));
-
-  $foundFile = File::find(RemoteTestEnv::$workingFolderPath . $tempName);
-  assert($foundFile->isLoaded());
-
-  $copyResponse = $foundFile->copyTo(RemoteTestEnv::$workingFolderPath . 'copied-file.txt');
-
-  assert(!!$copyResponse->status && !!$copyResponse->file_migration_id);
-
-  $foundFile->delete(); // if this fails an unhandled exception will be thrown
-
-  $fileNoLongerExists = false;
-
-  try {
-    File::find(RemoteTestEnv::$workingFolderPath . $tempName);
-  } catch (NotFoundException $error) {
-    assert($error->getTitle() === "Not Found");
-    assert($error->getError() === "Not Found");
-    assert($error->getType() === "not-found");
-    assert($error->getHttpCode() === 404);
-    $fileNoLongerExists = true;
-  }
-
-  assert($fileNoLongerExists === true);
-
-  $foundFile = File::find(RemoteTestEnv::$workingFolderPath . 'testFileUploadFindCopyAndDelete-data.txt');
-  assert($foundFile->isLoaded());
-
-  unlink($tempPath);
-
-  Logger::info('***** testFileUploadFindCopyAndDelete() succeeded! *****');
-}
-
-function testUploadDownloadFileAndDelete() {
-  Logger::debug('Uploading file data...');
-
-  $fileData = rand() . "\n" . date('Y-m-d H:i:s');
-
-  $remoteFilePath = RemoteTestEnv::$workingFolderPath . 'testUploadDownloadFileAndDelete-data.txt';
-  File::uploadData($remoteFilePath, $fileData);
-
-  $tempName = 'testUploadDownloadFileAndDelete-' . date('Ymd_His') . '.txt';
-  $tempPath = tempnam(sys_get_temp_dir(), $tempName);
-
-  // fetch only the first 10 bytes
-  $result = File::partialDownloadToFile($remoteFilePath, $tempPath, 0, 9);
-
-  assert(file_get_contents($tempPath) === substr($fileData, 0, 10));
-  assert($result->received === 10);
-  assert($result->total === strlen($fileData));
-
-  // then download the rest
-  $result = File::resumeDownloadToFile($remoteFilePath, $tempPath);
-
-  assert(file_get_contents($tempPath) === $fileData);
-  assert($result->received === ($result->total - 10));
-  assert($result->total === strlen($fileData));
-
-  unlink($tempPath);
-
-  $file = new File();
-  $file->path = $remoteFilePath;
-
-  Logger::debug('Getting download URL for file at ' . $remoteFilePath);
-
-  $response = $file->download([
-    'with_previews' => true,
-    'with_priority_color' => true
-  ]);
-
-  assert($response->path === $remoteFilePath);
-  assert(!!$response->download_uri);
-
-  Logger::debug('Updating file mtime and color at ' . $remoteFilePath);
-
-  $response = $file->update([
-    'provided_mtime' => '2000-01-01T01:00:00Z',
-    'priority_color' => 'red',
-  ]);
-
-  assert($response->provided_mtime === '2000-01-01T01:00:00Z');
-  assert($response->priority_color === 'red');
-
-  Logger::debug('Deleting file at ' . $remoteFilePath);
-
-  $file->delete(); // if this fails an unhandled exception will be thrown
-
-  Logger::info('***** testUploadDownloadFileAndDelete() succeeded! *****');
-}
-
-function testFileObjectMethods() {
-  Logger::debug('Loading a remote file path into a File object');
-
-  $file = File::get(RemoteTestEnv::$remoteFilePath);
-
-  assert($file->path === RemoteTestEnv::$remoteFilePath);
-
-  Logger::debug('Setting priority_color metadata for File object');
-
-  $response = $file->update([
-    'priority_color' => 'yellow',
-  ]);
-
-  Logger::debug('Fetching metadata for File object');
-
-  $metadata = File::find($file->path, [
-    'with_previews' => true,
-    'with_priority_color' => true,
-  ]);
-
-  assert(!!$metadata->preview_id);
-  assert(!!$metadata->preview);
-  assert($metadata->priority_color === 'yellow');
-
-  Logger::info('***** testFileObjectMethods() succeeded! *****');
-}
-
-function testSession() {
-  $username = getenv('FILES_SESSION_USERNAME');
-  $password = getenv('FILES_SESSION_PASSWORD');
-
-  if (!$username || !$password) {
-    Logger::info('Bypassing testSession() - ENV variables "FILES_SESSION_USERNAME" and "FILES_SESSION_PASSWORD" are both required');
-    return;
-  }
-
-  $session = Session::create(['username' => $username, 'password' => $password]);
-  Files::setSessionId($session->id);
-
-  assert(!!$session->id);
-
-  // Tests list method alias on PHP7+, and standard list on PHP5
-  $list_method = (version_compare(PHP_VERSION, '7.0.0') >= 0) ? 'list' : 'all';
-  ApiKey::$list_method(['user_id' => 0]);
-
-  Session::destroy();
-  Files::setSessionId(null);
-
-  Logger::info('***** testSession() succeeded! *****');
+    Logger::info('***** testSession() succeeded! *****');
 }
 
 //

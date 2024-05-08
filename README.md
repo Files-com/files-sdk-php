@@ -204,6 +204,99 @@ For related documentation see [Case Sensitivity Documentation](https://www.files
 
 Additional docs are available at https://developers.files.com
 
+## Migrating to Version 2.0 from previous versions
+
+In Version 2.0, the Files.com PHP SDK was updated to comply with both the [PSR-12](https://www.php-fig.org/psr/psr-12/) coding standard and the [PSR-4](https://www.php-fig.org/psr/psr-4/) autoloading standard.  No new classes were added or any exising classes removed, but some where moved to comply with the PSR-4 standard.  If a client of the sdk references the moved classes, the client code will need to be updated to reference the new location of these classes.
+
+### Exception Classes
+The affected classes where primarly Exception classes.  Exceptions where moved into their own namespace (and source files).
+
+The following table shows the classes that where changed for compliance
+
+##### Base Exceptions
+
+The Base exception were moved from the `\Files` namespace to the `\Files\Exception` namespace.
+
+Examples of Base Exceptions Classes moved.
+
+| SDK < 2.0 Class Location   | SDK >= 2.0 Class Location |
+|------------------------------|------------------|
+| `\Files\ApiException` | `Files\Exception\ApiException`  |
+| `\Files\FilesException` | `Files\Exception\FilesException`  |
+| `\Files\ConfigurationException` | `Files\Exception\ConfigurationException`  |
+
+#### BadRequest Exceptions
+The BadRequest group of exceptions were moved from the `\Files\BadRequest` namespace to the `\Files\Exception\BadRequest` namespace.
+
+Example of BadRequest Classes moved.
+
+| SDK < 2.0 Class Location   | SDK >= 2.0 Class Location |
+|------------------------------|------------------|
+| `\Files\BadRequest\AgentUpgradeRequiredException` | `Files\Exception\BadRequest\AgentUpgradeRequiredException`  |
+
+#### NotAuthenticated Exceptions
+The NotAuthenticated group of exceptions were moved from the `\Files\NotAuthenticated` namespace to the `\Files\Exception\NotAuthenticated` namespace.
+
+Example of NotAuthenticated Classes moved.
+
+| SDK < 2.0 Class Location   | SDK >= 2.0 Class Location |
+|------------------------------|------------------|
+| `\Files\NotAuthenticated\AdditionalAuthenticationRequiredException` | `Files\Exception\NotAuthenticated\AdditionalAuthenticationRequiredException`  |
+
+#### NotAuthorized Exceptions
+The NotAuthorized group of exceptions were moved from the `\Files\NotAuthorized` namespace to the `\Files\Exception\NotAuthorized` namespace.
+
+Example of NotAuthorized Classes moved.
+
+| SDK < 2.0 Class Location   | SDK >= 2.0 Class Location |
+|------------------------------|------------------|
+| `\Files\NotAuthorized\ApiKeyIsDisabledException` | `Files\Exception\NotAuthorized\ApiKeyIsDisabledException`  |
+
+#### NotFound Exceptions
+The NotFound group of exceptions were moved from the `\Files\NotFound` namespace to the `\Files\Exception\NotFound` namespace.
+
+Example of NotFound Classes moved.
+
+| SDK < 2.0 Class Location   | SDK >= 2.0 Class Location |
+|------------------------------|------------------|
+| `\Files\NotFound\ApiKeyNotFoundException` | `Files\Exception\NotFound\ApiKeyNotFoundException`  |
+
+#### ProcessingFailure Exceptions
+The ProcessingFailure group of exceptions were moved from the `\Files\ProcessingFailure` namespace to the `\Files\Exception\ProcessingFailure` namespace.
+
+Example of ProcessingFailure Classes moved.
+
+| SDK < 2.0 Class Location   | SDK >= 2.0 Class Location |
+|------------------------------|------------------|
+| `\Files\ProcessingFailure\AlreadyCompletedException` | `Files\Exception\ProcessingFailure\AlreadyCompletedException`  |
+
+#### RateLimited Exceptions
+The ProcessingFailure group of exceptions were moved from the `\Files\RateLimited` namespace to the `\Files\Exception\RateLimited` namespace.
+
+Example of RateLimited Classes moved.
+
+| SDK < 2.0 Class Location   | SDK >= 2.0 Class Location |
+|------------------------------|------------------|
+| `\Files\RateLimited\DuplicateShareRecipientException` | `Files\Exception\RateLimited\DuplicateShareRecipientException`  |
+
+#### ServiceUnavailable Exceptions
+The ServiceUnavailable group of exceptions were moved from the `\Files\ServiceUnavailable` namespace to the `\Files\Exception\ServiceUnavailable` namespace.
+
+Example of ServiceUnavailable Classes moved.
+
+| SDK < 2.0 Class Location   | SDK >= 2.0 Class Location |
+|------------------------------|------------------|
+| `\Files\ServiceUnavailable\AgentUnavailableException` | `Files\Exception\ServiceUnavailable\AgentUnavailableException`  |
+
+#### SiteConfiguration Exceptions
+The SiteConfiguration group of exceptions were moved from the `\Files\SiteConfiguration` namespace to the `\Files\Exception\SiteConfiguration` namespace.
+
+Example of SiteConfiguration Classes moved.
+
+| SDK < 2.0 Class Location   | SDK >= 2.0 Class Location |
+|------------------------------|------------------|
+| `\Files\SiteConfiguration\AccountAlreadyExistsException` | `Files\Exception\SiteConfiguration\AccountAlreadyExistsException`  |
+
 
 ## Getting Support
 

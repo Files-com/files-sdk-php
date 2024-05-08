@@ -5,3 +5,7 @@ test/vendor
 test/composer.lock
 test/.phpunit.result.cache
 coverage/
+.php-cs-fixer.cache
+php-cs-fixer.phar
+php-cs-fixer-v2.phar
+php-cs-fixer-v3.phar

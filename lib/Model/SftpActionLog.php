@@ -72,8 +72,8 @@ class SftpActionLog {
   }
 
   // string # Unique ID of the Session
-  public function getSessionUid() {
-    return @$this->attributes['session_uid'];
+  public function getSessionUuid() {
+    return @$this->attributes['session_uuid'];
   }
 
   // int64 # SFTP Sequence ID

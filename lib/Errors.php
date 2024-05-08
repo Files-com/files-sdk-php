@@ -286,6 +286,7 @@ namespace Files\ProcessingFailure {
 
 class AlreadyCompletedException extends \Files\ProcessingFailureException {}
 class AutomationCannotBeRunManuallyException extends \Files\ProcessingFailureException {}
+class BehaviorNotAllowedOnRemoteServerException extends \Files\ProcessingFailureException {}
 class BundleOnlyAllowsPreviewsException extends \Files\ProcessingFailureException {}
 class BundleOperationRequiresSubfolderException extends \Files\ProcessingFailureException {}
 class CouldNotCreateParentException extends \Files\ProcessingFailureException {}

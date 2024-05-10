@@ -65,7 +65,7 @@ class FtpActionLog
     {
         return @$this->attributes['remote_ip'];
     }
-    // string # IP Address of SFTP Server
+    // string # IP Address of FTP Server
     public function getServerIp()
     {
         return @$this->attributes['server_ip'];

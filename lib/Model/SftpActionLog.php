@@ -100,7 +100,7 @@ class SftpActionLog
     {
         return @$this->attributes['action_type'];
     }
-    // string # Path as sent by the Client (may not match Files.com path due to user root folders for SFTP) This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
+    // string # Path as sent by the Client (may not match Files.com path due to user root folders for SFTP). This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
     public function getPath()
     {
         return @$this->attributes['path'];
@@ -115,55 +115,25 @@ class SftpActionLog
     {
         return @$this->attributes['name'];
     }
-    // string # Log Message
-    public function getMessage()
+    // string # SFTP Response Code Returned to the Client.
+    public function getSftpResponseCode()
     {
-        return @$this->attributes['message'];
+        return @$this->attributes['sftp_response_code'];
     }
-    // string # Failure Reason Type
-    public function getFailureReasonType()
+    // string # SFTP Response Message Returned to the Client.
+    public function getSftpResponseMessage()
     {
-        return @$this->attributes['failure_reason_type'];
-    }
-    // string # Failure Reason Message
-    public function getFailureReasonMessage()
-    {
-        return @$this->attributes['failure_reason_message'];
+        return @$this->attributes['sftp_response_message'];
     }
     // string # MD5 Hash of the file. Not always available.
     public function getMd5()
     {
         return @$this->attributes['md5'];
     }
-    // string # SFTP Command Flags. Present for actions which involve flags.
-    public function getFlags()
-    {
-        return @$this->attributes['flags'];
-    }
-    // string # SFTP Command Handle. Present for actions which involve handles.
-    public function getHandle()
-    {
-        return @$this->attributes['handle'];
-    }
-    // string # SFTP Command Attrs. Present for action which involve attrs.
-    public function getAttrs()
-    {
-        return @$this->attributes['attrs'];
-    }
-    // string # Size. Present for action which involve size.
+    // string # Size of File That was Uploaded or Downloaded.
     public function getSize()
     {
         return @$this->attributes['size'];
-    }
-    // string # Offset. Present for actions which involve offset.
-    public function getOffset()
-    {
-        return @$this->attributes['offset'];
-    }
-    // string # Length. Present for actions which involve length.
-    public function getLength()
-    {
-        return @$this->attributes['length'];
     }
     // string # Data Length in Bytes. Present for actions that transfer data.
     public function getDataLength()

@@ -155,7 +155,7 @@ class HistoryExport
     {
         return $this->attributes['query_parent_id'] = $value;
     }
-    // string # Return results that are file actions related to this path.
+    // string # Return results that are file actions related to paths matching this pattern.
     public function getQueryPath()
     {
         return @$this->attributes['query_path'];
@@ -165,7 +165,7 @@ class HistoryExport
     {
         return $this->attributes['query_path'] = $value;
     }
-    // string # Return results that are file actions related to files or folders inside this folder path.
+    // string # Return results that are file actions related to files or folders inside folder paths matching this pattern.
     public function getQueryFolder()
     {
         return @$this->attributes['query_folder'];
@@ -175,7 +175,7 @@ class HistoryExport
     {
         return $this->attributes['query_folder'] = $value;
     }
-    // string # Return results that are file moves originating from this path.
+    // string # Return results that are file moves originating from paths matching this pattern.
     public function getQuerySrc()
     {
         return @$this->attributes['query_src'];
@@ -185,7 +185,7 @@ class HistoryExport
     {
         return $this->attributes['query_src'] = $value;
     }
-    // string # Return results that are file moves with this path as destination.
+    // string # Return results that are file moves with paths matching this pattern as destination.
     public function getQueryDestination()
     {
         return @$this->attributes['query_destination'];
@@ -364,10 +364,10 @@ class HistoryExport
     //   query_user_id - string - Return results that are actions performed by the user indiciated by this User ID
     //   query_file_id - string - Return results that are file actions related to the file indicated by this File ID
     //   query_parent_id - string - Return results that are file actions inside the parent folder specified by this folder ID
-    //   query_path - string - Return results that are file actions related to this path.
-    //   query_folder - string - Return results that are file actions related to files or folders inside this folder path.
-    //   query_src - string - Return results that are file moves originating from this path.
-    //   query_destination - string - Return results that are file moves with this path as destination.
+    //   query_path - string - Return results that are file actions related to paths matching this pattern.
+    //   query_folder - string - Return results that are file actions related to files or folders inside folder paths matching this pattern.
+    //   query_src - string - Return results that are file moves originating from paths matching this pattern.
+    //   query_destination - string - Return results that are file moves with paths matching this pattern as destination.
     //   query_ip - string - Filter results by this IP address.
     //   query_username - string - Filter results by this username.
     //   query_failure_type - string - If searching for Histories about login failures, this parameter restricts results to failures of this specific type.  Valid values: `expired_trial`, `account_overdue`, `locked_out`, `ip_mismatch`, `password_mismatch`, `site_mismatch`, `username_not_found`, `none`, `no_ftp_permission`, `no_web_permission`, `no_directory`, `errno_enoent`, `no_sftp_permission`, `no_dav_permission`, `no_restapi_permission`, `key_mismatch`, `region_mismatch`, `expired_access`, `desktop_ip_mismatch`, `desktop_api_key_not_used_quickly_enough`, `disabled`, `country_mismatch`, `insecure_ftp`, `insecure_cipher`, `rate_limited`

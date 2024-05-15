@@ -85,11 +85,6 @@ class AutomationRun
     {
         return @$this->attributes['status'];
     }
-    // string # The stage currently being executed in the execution environment.  One of `queued_for_planning`, `planning`, `queued_for_execution`, `executing`, or `finished`.
-    public function getRunStage()
-    {
-        return @$this->attributes['run_stage'];
-    }
     // int64 # Count of successful operations.
     public function getSuccessfulOperations()
     {

@@ -321,6 +321,96 @@ class File
     {
         return $this->attributes['path'] = $value;
     }
+    // int64 # User ID of the User who created the file/folder
+    public function getCreatedById()
+    {
+        return @$this->attributes['created_by_id'];
+    }
+
+    public function setCreatedById($value)
+    {
+        return $this->attributes['created_by_id'] = $value;
+    }
+    // int64 # ID of the API key that created the file/folder
+    public function getCreatedByApiKeyId()
+    {
+        return @$this->attributes['created_by_api_key_id'];
+    }
+
+    public function setCreatedByApiKeyId($value)
+    {
+        return $this->attributes['created_by_api_key_id'] = $value;
+    }
+    // int64 # ID of the AS2 Incoming Message that created the file/folder
+    public function getCreatedByAs2IncomingMessageId()
+    {
+        return @$this->attributes['created_by_as2_incoming_message_id'];
+    }
+
+    public function setCreatedByAs2IncomingMessageId($value)
+    {
+        return $this->attributes['created_by_as2_incoming_message_id'] = $value;
+    }
+    // int64 # ID of the Automation that created the file/folder
+    public function getCreatedByAutomationId()
+    {
+        return @$this->attributes['created_by_automation_id'];
+    }
+
+    public function setCreatedByAutomationId($value)
+    {
+        return $this->attributes['created_by_automation_id'] = $value;
+    }
+    // int64 # ID of the Bundle Registration that created the file/folder
+    public function getCreatedByBundleRegistrationId()
+    {
+        return @$this->attributes['created_by_bundle_registration_id'];
+    }
+
+    public function setCreatedByBundleRegistrationId($value)
+    {
+        return $this->attributes['created_by_bundle_registration_id'] = $value;
+    }
+    // int64 # ID of the Inbox that created the file/folder
+    public function getCreatedByInboxId()
+    {
+        return @$this->attributes['created_by_inbox_id'];
+    }
+
+    public function setCreatedByInboxId($value)
+    {
+        return $this->attributes['created_by_inbox_id'] = $value;
+    }
+    // int64 # ID of the Remote Server that created the file/folder
+    public function getCreatedByRemoteServerId()
+    {
+        return @$this->attributes['created_by_remote_server_id'];
+    }
+
+    public function setCreatedByRemoteServerId($value)
+    {
+        return $this->attributes['created_by_remote_server_id'] = $value;
+    }
+    // int64 # ID of the Remote Server Sync that created the file/folder
+    public function getCreatedByRemoteServerSyncId()
+    {
+        return @$this->attributes['created_by_remote_server_sync_id'];
+    }
+
+    public function setCreatedByRemoteServerSyncId($value)
+    {
+        return $this->attributes['created_by_remote_server_sync_id'] = $value;
+    }
+    // object # Custom metadata map of keys and values. Limited to 32 keys, 256 characters per key and 1024 characters per value.
+    public function getCustomMetadata()
+    {
+        return @$this->attributes['custom_metadata'];
+    }
+
+    public function setCustomMetadata($value)
+    {
+        return $this->attributes['custom_metadata'] = $value;
+    }
     // string # File/Folder display name
     public function getDisplayName()
     {
@@ -355,6 +445,66 @@ class File
     public function getCreatedAt()
     {
         return @$this->attributes['created_at'];
+    }
+    // int64 # User ID of the User who last modified the file/folder
+    public function getLastModifiedById()
+    {
+        return @$this->attributes['last_modified_by_id'];
+    }
+
+    public function setLastModifiedById($value)
+    {
+        return $this->attributes['last_modified_by_id'] = $value;
+    }
+    // int64 # ID of the API key that last modified the file/folder
+    public function getLastModifiedByApiKeyId()
+    {
+        return @$this->attributes['last_modified_by_api_key_id'];
+    }
+
+    public function setLastModifiedByApiKeyId($value)
+    {
+        return $this->attributes['last_modified_by_api_key_id'] = $value;
+    }
+    // int64 # ID of the Automation that last modified the file/folder
+    public function getLastModifiedByAutomationId()
+    {
+        return @$this->attributes['last_modified_by_automation_id'];
+    }
+
+    public function setLastModifiedByAutomationId($value)
+    {
+        return $this->attributes['last_modified_by_automation_id'] = $value;
+    }
+    // int64 # ID of the Bundle Registration that last modified the file/folder
+    public function getLastModifiedByBundleRegistrationId()
+    {
+        return @$this->attributes['last_modified_by_bundle_registration_id'];
+    }
+
+    public function setLastModifiedByBundleRegistrationId($value)
+    {
+        return $this->attributes['last_modified_by_bundle_registration_id'] = $value;
+    }
+    // int64 # ID of the Remote Server that last modified the file/folder
+    public function getLastModifiedByRemoteServerId()
+    {
+        return @$this->attributes['last_modified_by_remote_server_id'];
+    }
+
+    public function setLastModifiedByRemoteServerId($value)
+    {
+        return $this->attributes['last_modified_by_remote_server_id'] = $value;
+    }
+    // int64 # ID of the Remote Server Sync that last modified the file/folder
+    public function getLastModifiedByRemoteServerSyncId()
+    {
+        return @$this->attributes['last_modified_by_remote_server_sync_id'];
+    }
+
+    public function setLastModifiedByRemoteServerSyncId($value)
+    {
+        return $this->attributes['last_modified_by_remote_server_sync_id'] = $value;
     }
     // date-time # File last modified date/time, according to the server.  This is the timestamp of the last Files.com operation of the file, regardless of what modified timestamp was sent.
     public function getMtime()
@@ -615,6 +765,7 @@ class File
     }
 
     // Parameters:
+    //   custom_metadata - object - Custom metadata map of keys and values. Limited to 32 keys, 256 characters per key and 1024 characters per value.
     //   provided_mtime - string - Modified time of file.
     //   priority_color - string - Priority/Bookmark color of file.
     public function update($params = [])

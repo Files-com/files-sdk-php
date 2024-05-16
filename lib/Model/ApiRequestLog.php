@@ -125,6 +125,11 @@ class ApiRequestLog
     {
         return @$this->attributes['error_type'];
     }
+    // string # Error message, if applicable
+    public function getErrorMessage()
+    {
+        return @$this->attributes['error_message'];
+    }
     // int64 # HTTP Response Code
     public function getResponseCode()
     {

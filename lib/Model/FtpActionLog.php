@@ -85,6 +85,11 @@ class FtpActionLog
     {
         return @$this->attributes['seq_id'];
     }
+    // string # Authentication Ciphers
+    public function getAuthCiphers()
+    {
+        return @$this->attributes['auth_ciphers'];
+    }
     // string # Action Type
     public function getActionType()
     {

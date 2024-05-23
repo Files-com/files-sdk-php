@@ -80,7 +80,7 @@ class FormField
     {
         return @$this->attributes['field_type'];
     }
-    // array # Options to display for radio and dropdown
+    // array(string) # Options to display for radio and dropdown
     public function getOptionsForSelect()
     {
         return @$this->attributes['options_for_select'];

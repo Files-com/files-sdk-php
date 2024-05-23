@@ -95,7 +95,7 @@ class Notification
     {
         return $this->attributes['group_name'] = $value;
     }
-    // array # If set, will only notify on actions made by a member of one of the specified groups
+    // array(int64) # If set, will only notify on actions made by a member of one of the specified groups
     public function getTriggeringGroupIds()
     {
         return @$this->attributes['triggering_group_ids'];
@@ -105,7 +105,7 @@ class Notification
     {
         return $this->attributes['triggering_group_ids'] = $value;
     }
-    // array # If set, will onlynotify on actions made one of the specified users
+    // array(int64) # If set, will onlynotify on actions made one of the specified users
     public function getTriggeringUserIds()
     {
         return @$this->attributes['triggering_user_ids'];
@@ -215,7 +215,7 @@ class Notification
     {
         return $this->attributes['message'] = $value;
     }
-    // array # Array of filenames (possibly with wildcards) to scope trigger
+    // array(string) # Array of filenames (possibly with wildcards) to scope trigger
     public function getTriggeringFilenames()
     {
         return @$this->attributes['triggering_filenames'];

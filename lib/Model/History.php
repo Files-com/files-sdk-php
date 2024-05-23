@@ -90,7 +90,7 @@ class History
     {
         return @$this->attributes['source'];
     }
-    // array # Targets
+    // array(object) # Targets
     public function getTargets()
     {
         return @$this->attributes['targets'];

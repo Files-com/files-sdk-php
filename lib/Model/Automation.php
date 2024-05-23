@@ -125,7 +125,7 @@ class Automation
     {
         return $this->attributes['destination_replace_to'] = $value;
     }
-    // array # Destination Paths
+    // array(string) # Destination Paths
     public function getDestinations()
     {
         return @$this->attributes['destinations'];
@@ -155,7 +155,7 @@ class Automation
     {
         return $this->attributes['flatten_destination_structure'] = $value;
     }
-    // array # IDs of Groups for the Automation (i.e. who to Request File from)
+    // array(int64) # IDs of Groups for the Automation (i.e. who to Request File from)
     public function getGroupIds()
     {
         return @$this->attributes['group_ids'];
@@ -265,7 +265,7 @@ class Automation
     {
         return $this->attributes['human_readable_schedule'] = $value;
     }
-    // array # If trigger is `custom_schedule`, Custom schedule description for when the automation should be run. 0-based days of the week. 0 is Sunday, 1 is Monday, etc.
+    // array(int64) # If trigger is `custom_schedule`, Custom schedule description for when the automation should be run. 0-based days of the week. 0 is Sunday, 1 is Monday, etc.
     public function getScheduleDaysOfWeek()
     {
         return @$this->attributes['schedule_days_of_week'];
@@ -275,7 +275,7 @@ class Automation
     {
         return $this->attributes['schedule_days_of_week'] = $value;
     }
-    // array # If trigger is `custom_schedule`, Custom schedule description for when the automation should be run. Times of day in HH:MM format.
+    // array(string) # If trigger is `custom_schedule`, Custom schedule description for when the automation should be run. Times of day in HH:MM format.
     public function getScheduleTimesOfDay()
     {
         return @$this->attributes['schedule_times_of_day'];
@@ -305,7 +305,7 @@ class Automation
     {
         return $this->attributes['source'] = $value;
     }
-    // array # IDs of remote sync folder behaviors to run by this Automation
+    // array(int64) # IDs of remote sync folder behaviors to run by this Automation
     public function getSyncIds()
     {
         return @$this->attributes['sync_ids'];
@@ -315,7 +315,7 @@ class Automation
     {
         return $this->attributes['sync_ids'] = $value;
     }
-    // array # If trigger is `action`, this is the list of action types on which to trigger the automation. Valid actions are create, read, update, destroy, move, copy
+    // array(string) # If trigger is `action`, this is the list of action types on which to trigger the automation. Valid actions are create, read, update, destroy, move, copy
     public function getTriggerActions()
     {
         return @$this->attributes['trigger_actions'];
@@ -345,7 +345,7 @@ class Automation
     {
         return $this->attributes['user_id'] = $value;
     }
-    // array # IDs of Users for the Automation (i.e. who to Request File from)
+    // array(int64) # IDs of Users for the Automation (i.e. who to Request File from)
     public function getUserIds()
     {
         return @$this->attributes['user_ids'];

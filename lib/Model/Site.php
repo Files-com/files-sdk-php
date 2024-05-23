@@ -60,7 +60,7 @@ class Site
     {
         return @$this->attributes['name'];
     }
-    // array # Additional extensions that are considered text files
+    // array(string) # Additional extensions that are considered text files
     public function getAdditionalTextFileTypes()
     {
         return @$this->attributes['additional_text_file_types'];
@@ -160,7 +160,7 @@ class Site
     {
         return @$this->attributes['bundle_password_required'];
     }
-    // array # List of email domains to disallow when entering a Bundle/Inbox recipients
+    // array(string) # List of email domains to disallow when entering a Bundle/Inbox recipients
     public function getBundleRecipientBlacklistDomains()
     {
         return @$this->attributes['bundle_recipient_blacklist_domains'];

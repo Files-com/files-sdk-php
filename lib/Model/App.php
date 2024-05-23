@@ -130,7 +130,7 @@ class App
     {
         return @$this->attributes['remote_server_type'];
     }
-    // array # Screenshots of the App
+    // array(string) # Screenshots of the App
     public function getScreenshotListUrls()
     {
         return @$this->attributes['screenshot_list_urls'];

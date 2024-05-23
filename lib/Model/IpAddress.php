@@ -70,7 +70,7 @@ class IpAddress
     {
         return @$this->attributes['group_id'];
     }
-    // array # A list of IP addresses.
+    // array(string) # A list of IP addresses.
     public function getIpAddresses()
     {
         return @$this->attributes['ip_addresses'];

@@ -95,7 +95,7 @@ class ShareGroup
     {
         return $this->attributes['user_id'] = $value;
     }
-    // array # A list of share group members
+    // array(object) # A list of share group members
     public function getMembers()
     {
         return @$this->attributes['members'];

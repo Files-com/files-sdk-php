@@ -75,7 +75,7 @@ class User
     {
         return $this->attributes['username'] = $value;
     }
-    // array # List of group IDs of which this user is an administrator
+    // array(int64) # List of group IDs of which this user is an administrator
     public function getAdminGroupIds()
     {
         return @$this->attributes['admin_group_ids'];

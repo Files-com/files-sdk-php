@@ -420,7 +420,7 @@ class Bundle
     {
         return $this->attributes['has_inbox'] = $value;
     }
-    // array # A list of paths in this bundle.  For performance reasons, this is not provided when listing bundles.
+    // array(string) # A list of paths in this bundle.  For performance reasons, this is not provided when listing bundles.
     public function getPaths()
     {
         return @$this->attributes['paths'];
@@ -430,7 +430,7 @@ class Bundle
     {
         return $this->attributes['paths'] = $value;
     }
-    // array # A list of bundlepaths in this bundle.  For performance reasons, this is not provided when listing bundles.
+    // array(object) # A list of bundlepaths in this bundle.  For performance reasons, this is not provided when listing bundles.
     public function getBundlepaths()
     {
         return @$this->attributes['bundlepaths'];

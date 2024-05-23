@@ -64,7 +64,7 @@ $project->create(, [
 ## Update Project
 
 ```
-$project = current(\Files\Model\Project::all());
+$project = \Files\Model\Project::find($id);
 
 $project->update([
   'global_access' => "global_access",
@@ -90,7 +90,7 @@ $project->update([
 ## Delete Project
 
 ```
-$project = current(\Files\Model\Project::all());
+$project = \Files\Model\Project::find($id);
 
 $project->delete();
 ```

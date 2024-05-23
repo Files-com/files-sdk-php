@@ -71,7 +71,7 @@ $message_reaction->create(, [
 ## Delete Message Reaction
 
 ```
-$message_reaction = current(\Files\Model\MessageReaction::all());
+$message_reaction = \Files\Model\MessageReaction::find($id);
 
 $message_reaction->delete();
 ```

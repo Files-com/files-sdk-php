@@ -94,7 +94,7 @@ $as2_station->create(, [
 ## Update As2 Station
 
 ```
-$as2_station = current(\Files\Model\As2Station::all());
+$as2_station = \Files\Model\As2Station::find($id);
 
 $as2_station->update([
   'name' => "AS2 Station Name",
@@ -134,7 +134,7 @@ $as2_station->update([
 ## Delete As2 Station
 
 ```
-$as2_station = current(\Files\Model\As2Station::all());
+$as2_station = \Files\Model\As2Station::find($id);
 
 $as2_station->delete();
 ```

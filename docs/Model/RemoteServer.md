@@ -311,7 +311,7 @@ $remote_server->create(, [
 ## Post local changes, check in, and download configuration file (used by some Remote Server integrations, such as the Files.com Agent)
 
 ```
-$remote_server = current(\Files\Model\RemoteServer::all());
+$remote_server = \Files\Model\RemoteServer::find($id);
 
 $remote_server->configuration_file([
   'api_token' => "example",
@@ -379,7 +379,7 @@ $remote_server->configuration_file([
 ## Update Remote Server
 
 ```
-$remote_server = current(\Files\Model\RemoteServer::all());
+$remote_server = \Files\Model\RemoteServer::find($id);
 
 $remote_server->update([
   'aws_access_key' => "example",
@@ -567,7 +567,7 @@ $remote_server->update([
 ## Delete Remote Server
 
 ```
-$remote_server = current(\Files\Model\RemoteServer::all());
+$remote_server = \Files\Model\RemoteServer::find($id);
 
 $remote_server->delete();
 ```

@@ -204,7 +204,7 @@ $automation->create(, [
 ## Manually run automation
 
 ```
-$automation = current(\Files\Model\Automation::all());
+$automation = \Files\Model\Automation::find($id);
 
 $automation->manual_run();
 ```
@@ -219,7 +219,7 @@ $automation->manual_run();
 ## Update Automation
 
 ```
-$automation = current(\Files\Model\Automation::all());
+$automation = \Files\Model\Automation::find($id);
 
 $automation->update([
   'source' => "source",
@@ -346,7 +346,7 @@ $automation->update([
 ## Delete Automation
 
 ```
-$automation = current(\Files\Model\Automation::all());
+$automation = \Files\Model\Automation::find($id);
 
 $automation->delete();
 ```

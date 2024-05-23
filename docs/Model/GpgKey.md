@@ -85,7 +85,7 @@ $gpg_key->create(, [
 ## Update Gpg Key
 
 ```
-$gpg_key = current(\Files\Model\GpgKey::all());
+$gpg_key = \Files\Model\GpgKey::find($id);
 
 $gpg_key->update([
   'public_key' => "7f8bc1210b09b9ddf469e6b6b8920e76",
@@ -122,7 +122,7 @@ $gpg_key->update([
 ## Delete Gpg Key
 
 ```
-$gpg_key = current(\Files\Model\GpgKey::all());
+$gpg_key = \Files\Model\GpgKey::find($id);
 
 $gpg_key->delete();
 ```

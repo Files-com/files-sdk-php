@@ -136,7 +136,7 @@ $sso_strategy->find($id);
 ## Synchronize provisioning data with the SSO remote server
 
 ```
-$sso_strategy = current(\Files\Model\SsoStrategy::all());
+$sso_strategy = \Files\Model\SsoStrategy::find($id);
 
 $sso_strategy->sync();
 ```

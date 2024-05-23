@@ -107,7 +107,7 @@ $form_field_set->create(, [
 ## Update Form Field Set
 
 ```
-$form_field_set = current(\Files\Model\FormFieldSet::all());
+$form_field_set = \Files\Model\FormFieldSet::find($id);
 
 $form_field_set->update([
   'title' => "Sample Form Title",
@@ -166,7 +166,7 @@ $form_field_set->update([
 ## Delete Form Field Set
 
 ```
-$form_field_set = current(\Files\Model\FormFieldSet::all());
+$form_field_set = \Files\Model\FormFieldSet::find($id);
 
 $form_field_set->delete();
 ```

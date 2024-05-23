@@ -76,7 +76,7 @@ $snapshot->create(, [
 ## Finalize Snapshot
 
 ```
-$snapshot = current(\Files\Model\Snapshot::all());
+$snapshot = \Files\Model\Snapshot::find($id);
 
 $snapshot->finalize();
 ```
@@ -91,7 +91,7 @@ $snapshot->finalize();
 ## Update Snapshot
 
 ```
-$snapshot = current(\Files\Model\Snapshot::all());
+$snapshot = \Files\Model\Snapshot::find($id);
 
 $snapshot->update([
   'expires_at' => "2000-01-01T01:00:00Z",
@@ -124,7 +124,7 @@ $snapshot->update([
 ## Delete Snapshot
 
 ```
-$snapshot = current(\Files\Model\Snapshot::all());
+$snapshot = \Files\Model\Snapshot::find($id);
 
 $snapshot->delete();
 ```

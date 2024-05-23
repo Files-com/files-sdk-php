@@ -36,8 +36,7 @@ $style->find($path);
 ## Update Style
 
 ```
-$style = new \Files\Model\Style();
-$style->path = $myFilePath;
+$style = \Files\Model\Style::find($path);
 
 $style->update([
   'file' => "file",
@@ -65,8 +64,7 @@ $style->update([
 ## Delete Style
 
 ```
-$style = new \Files\Model\Style();
-$style->path = $myFilePath;
+$style = \Files\Model\Style::find($path);
 
 $style->delete();
 ```

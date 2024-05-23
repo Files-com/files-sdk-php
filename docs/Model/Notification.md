@@ -152,7 +152,7 @@ $notification->create(, [
 ## Update Notification
 
 ```
-$notification = current(\Files\Model\Notification::all());
+$notification = \Files\Model\Notification::find($id);
 
 $notification->update([
   'notify_on_copy' => true,
@@ -229,7 +229,7 @@ $notification->update([
 ## Delete Notification
 
 ```
-$notification = current(\Files\Model\Notification::all());
+$notification = \Files\Model\Notification::find($id);
 
 $notification->delete();
 ```

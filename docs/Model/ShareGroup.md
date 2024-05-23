@@ -84,7 +84,7 @@ $share_group->create(, [
 ## Update Share Group
 
 ```
-$share_group = current(\Files\Model\ShareGroup::all());
+$share_group = \Files\Model\ShareGroup::find($id);
 
 $share_group->update([
   'notes' => "This group is defined for testing purposes",
@@ -123,7 +123,7 @@ $share_group->update([
 ## Delete Share Group
 
 ```
-$share_group = current(\Files\Model\ShareGroup::all());
+$share_group = \Files\Model\ShareGroup::find($id);
 
 $share_group->delete();
 ```

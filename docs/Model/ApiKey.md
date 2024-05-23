@@ -140,7 +140,7 @@ $api_key->deleteCurrent
 ## Update Api Key
 
 ```
-$api_key = current(\Files\Model\ApiKey::all());
+$api_key = \Files\Model\ApiKey::find($id);
 
 $api_key->update([
   'description' => "example",
@@ -182,7 +182,7 @@ $api_key->update([
 ## Delete Api Key
 
 ```
-$api_key = current(\Files\Model\ApiKey::all());
+$api_key = \Files\Model\ApiKey::find($id);
 
 $api_key->delete();
 ```

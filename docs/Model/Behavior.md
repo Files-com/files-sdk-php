@@ -148,7 +148,7 @@ $behavior->webhookTest(, [
 ## Update Behavior
 
 ```
-$behavior = current(\Files\Model\Behavior::all());
+$behavior = \Files\Model\Behavior::find($id);
 
 $behavior->update([
   'value' => "{\"method\": \"GET\"}",
@@ -198,7 +198,7 @@ $behavior->update([
 ## Delete Behavior
 
 ```
-$behavior = current(\Files\Model\Behavior::all());
+$behavior = \Files\Model\Behavior::find($id);
 
 $behavior->delete();
 ```

@@ -102,7 +102,7 @@ $group->create(, [
 ## Update Group
 
 ```
-$group = current(\Files\Model\Group::all());
+$group = \Files\Model\Group::find($id);
 
 $group->update([
   'notes' => "example",
@@ -153,7 +153,7 @@ $group->update([
 ## Delete Group
 
 ```
-$group = current(\Files\Model\Group::all());
+$group = \Files\Model\Group::find($id);
 
 $group->delete();
 ```

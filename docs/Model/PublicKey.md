@@ -81,7 +81,7 @@ $public_key->create(, [
 ## Update Public Key
 
 ```
-$public_key = current(\Files\Model\PublicKey::all());
+$public_key = \Files\Model\PublicKey::find($id);
 
 $public_key->update([
   'title' => "My Main Key",
@@ -112,7 +112,7 @@ $public_key->update([
 ## Delete Public Key
 
 ```
-$public_key = current(\Files\Model\PublicKey::all());
+$public_key = \Files\Model\PublicKey::find($id);
 
 $public_key->delete();
 ```

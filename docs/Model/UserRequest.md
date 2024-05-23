@@ -76,7 +76,7 @@ $user_request->create(, [
 ## Delete User Request
 
 ```
-$user_request = current(\Files\Model\UserRequest::all());
+$user_request = \Files\Model\UserRequest::find($id);
 
 $user_request->delete();
 ```

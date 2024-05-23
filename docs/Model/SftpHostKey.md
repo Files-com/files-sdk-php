@@ -70,7 +70,7 @@ $sftp_host_key->create(, [
 ## Update Sftp Host Key
 
 ```
-$sftp_host_key = current(\Files\Model\SftpHostKey::all());
+$sftp_host_key = \Files\Model\SftpHostKey::find($id);
 
 $sftp_host_key->update([
   'name' => "example",
@@ -99,7 +99,7 @@ $sftp_host_key->update([
 ## Delete Sftp Host Key
 
 ```
-$sftp_host_key = current(\Files\Model\SftpHostKey::all());
+$sftp_host_key = \Files\Model\SftpHostKey::find($id);
 
 $sftp_host_key->delete();
 ```

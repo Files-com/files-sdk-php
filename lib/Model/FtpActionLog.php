@@ -120,7 +120,7 @@ class FtpActionLog
     {
         return @$this->attributes['param'];
     }
-    // string # FTP Response Code
+    // int64 # FTP Response Code
     public function getResponseCode()
     {
         return @$this->attributes['responseCode'];

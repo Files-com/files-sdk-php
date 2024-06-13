@@ -173,8 +173,6 @@ class Behavior
     //   recursive - boolean - Is behavior recursive?
     //   name - string - Name for this behavior.
     //   description - string - Description for this behavior.
-    //   behavior - string - Behavior type.
-    //   path - string - Folder behaviors path.
     //   attachment_delete - boolean - If true, will delete the file stored in attachment
     public function update($params = [])
     {
@@ -204,14 +202,6 @@ class Behavior
 
         if (@$params['description'] && !is_string(@$params['description'])) {
             throw new \Files\Exception\InvalidParameterException('$description must be of type string; received ' . gettype(@$params['description']));
-        }
-
-        if (@$params['behavior'] && !is_string(@$params['behavior'])) {
-            throw new \Files\Exception\InvalidParameterException('$behavior must be of type string; received ' . gettype(@$params['behavior']));
-        }
-
-        if (@$params['path'] && !is_string(@$params['path'])) {
-            throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
         $response = Api::sendRequest('/behaviors/' . @$params['id'] . '', 'PATCH', $params, $this->options);

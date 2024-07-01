@@ -55,7 +55,7 @@ class As2Partner
     {
         return !!@$this->attributes['id'];
     }
-    // int64 # Id of the AS2 Partner.
+    // int64 # ID of the AS2 Partner.
     public function getId()
     {
         return @$this->attributes['id'];
@@ -65,7 +65,7 @@ class As2Partner
     {
         return $this->attributes['id'] = $value;
     }
-    // int64 # Id of the AS2 Station associated with this partner.
+    // int64 # ID of the AS2 Station associated with this partner.
     public function getAs2StationId()
     {
         return @$this->attributes['as2_station_id'];
@@ -85,7 +85,7 @@ class As2Partner
     {
         return $this->attributes['name'] = $value;
     }
-    // string # Public URI for sending AS2 message to.
+    // string # Public URI where we will send the AS2 messages (via HTTP/HTTPS).
     public function getUri()
     {
         return @$this->attributes['uri'];
@@ -95,7 +95,7 @@ class As2Partner
     {
         return $this->attributes['uri'] = $value;
     }
-    // string # Remote server certificate security setting
+    // string # Should we require that the remote HTTP server have a valid SSL Certificate for HTTPS?
     public function getServerCertificate()
     {
         return @$this->attributes['server_certificate'];
@@ -105,7 +105,17 @@ class As2Partner
     {
         return $this->attributes['server_certificate'] = $value;
     }
-    // string # MDN Validation Level controls how to evaluate message transfer success based on a partner's MDN response. NOTE: This setting does not affect MDN storage; all MDNs received from a partner are always stored. `none`: MDN is stored for informational purposes only, a successful HTTPS transfer is a successful AS2 transfer. `weak`: Inspect the MDN for MIC and Disposition only. `normal`: `weak` plus validate MDN signature matches body, `strict`: `normal` but do not allow signatures from self-signed or incorrectly purposed certificates.
+    // string # Username to send to server for HTTP Authentication.
+    public function getHttpAuthUsername()
+    {
+        return @$this->attributes['http_auth_username'];
+    }
+
+    public function setHttpAuthUsername($value)
+    {
+        return $this->attributes['http_auth_username'] = $value;
+    }
+    // string # How should Files.com evaluate message transfer success based on a partner's MDN response?  This setting does not affect MDN storage; all MDNs received from a partner are always stored. `none`: MDN is stored for informational purposes only, a successful HTTPS transfer is a successful AS2 transfer. `weak`: Inspect the MDN for MIC and Disposition only. `normal`: `weak` plus validate MDN signature matches body, `strict`: `normal` but do not allow signatures from self-signed or incorrectly purposed certificates.
     public function getMdnValidationLevel()
     {
         return @$this->attributes['mdn_validation_level'];
@@ -115,7 +125,7 @@ class As2Partner
     {
         return $this->attributes['mdn_validation_level'] = $value;
     }
-    // boolean # `true` if remote server only accepts connections from dedicated IPs
+    // boolean # If `true`, we will use your site's dedicated IPs for all outbound connections to this AS2 PArtner.
     public function getEnableDedicatedIps()
     {
         return @$this->attributes['enable_dedicated_ips'];
@@ -195,7 +205,17 @@ class As2Partner
     {
         return $this->attributes['public_certificate_not_after'] = $value;
     }
-    // string
+    // string # Password to send to server for HTTP Authentication.
+    public function getHttpAuthPassword()
+    {
+        return @$this->attributes['http_auth_password'];
+    }
+
+    public function setHttpAuthPassword($value)
+    {
+        return $this->attributes['http_auth_password'] = $value;
+    }
+    // string # Public certificate for AS2 Partner.  Note: This is the certificate for AS2 message security, not a certificate used for HTTPS authentication.
     public function getPublicCertificate()
     {
         return @$this->attributes['public_certificate'];
@@ -207,12 +227,14 @@ class As2Partner
     }
 
     // Parameters:
-    //   name - string - AS2 Name
-    //   uri - string - URL base for AS2 responses
-    //   server_certificate - string - Remote server certificate security setting
-    //   mdn_validation_level - string - MDN Validation Level
-    //   public_certificate - string
-    //   enable_dedicated_ips - boolean
+    //   enable_dedicated_ips - boolean - If `true`, we will use your site's dedicated IPs for all outbound connections to this AS2 PArtner.
+    //   http_auth_username - string - Username to send to server for HTTP Authentication.
+    //   http_auth_password - string - Password to send to server for HTTP Authentication.
+    //   mdn_validation_level - string - How should Files.com evaluate message transfer success based on a partner's MDN response?  This setting does not affect MDN storage; all MDNs received from a partner are always stored. `none`: MDN is stored for informational purposes only, a successful HTTPS transfer is a successful AS2 transfer. `weak`: Inspect the MDN for MIC and Disposition only. `normal`: `weak` plus validate MDN signature matches body, `strict`: `normal` but do not allow signatures from self-signed or incorrectly purposed certificates.
+    //   server_certificate - string - Should we require that the remote HTTP server have a valid SSL Certificate for HTTPS?
+    //   name - string - The partner's formal AS2 name.
+    //   uri - string - Public URI where we will send the AS2 messages (via HTTP/HTTPS).
+    //   public_certificate - string - Public certificate for AS2 Partner.  Note: This is the certificate for AS2 message security, not a certificate used for HTTPS authentication.
     public function update($params = [])
     {
         if (!is_array($params)) {
@@ -231,20 +253,28 @@ class As2Partner
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
-            throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
+        if (@$params['http_auth_username'] && !is_string(@$params['http_auth_username'])) {
+            throw new \Files\Exception\InvalidParameterException('$http_auth_username must be of type string; received ' . gettype(@$params['http_auth_username']));
         }
 
-        if (@$params['uri'] && !is_string(@$params['uri'])) {
-            throw new \Files\Exception\InvalidParameterException('$uri must be of type string; received ' . gettype(@$params['uri']));
+        if (@$params['http_auth_password'] && !is_string(@$params['http_auth_password'])) {
+            throw new \Files\Exception\InvalidParameterException('$http_auth_password must be of type string; received ' . gettype(@$params['http_auth_password']));
+        }
+
+        if (@$params['mdn_validation_level'] && !is_string(@$params['mdn_validation_level'])) {
+            throw new \Files\Exception\InvalidParameterException('$mdn_validation_level must be of type string; received ' . gettype(@$params['mdn_validation_level']));
         }
 
         if (@$params['server_certificate'] && !is_string(@$params['server_certificate'])) {
             throw new \Files\Exception\InvalidParameterException('$server_certificate must be of type string; received ' . gettype(@$params['server_certificate']));
         }
 
-        if (@$params['mdn_validation_level'] && !is_string(@$params['mdn_validation_level'])) {
-            throw new \Files\Exception\InvalidParameterException('$mdn_validation_level must be of type string; received ' . gettype(@$params['mdn_validation_level']));
+        if (@$params['name'] && !is_string(@$params['name'])) {
+            throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
+        }
+
+        if (@$params['uri'] && !is_string(@$params['uri'])) {
+            throw new \Files\Exception\InvalidParameterException('$uri must be of type string; received ' . gettype(@$params['uri']));
         }
 
         if (@$params['public_certificate'] && !is_string(@$params['public_certificate'])) {
@@ -300,6 +330,8 @@ class As2Partner
     // Parameters:
     //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
     //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
+    //   action - string
+    //   page - int64
     public static function all($params = [], $options = [])
     {
         if (@$params['cursor'] && !is_string(@$params['cursor'])) {
@@ -308,6 +340,14 @@ class As2Partner
 
         if (@$params['per_page'] && !is_int(@$params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        if (@$params['action'] && !is_string(@$params['action'])) {
+            throw new \Files\Exception\InvalidParameterException('$action must be of type string; received ' . gettype(@$params['action']));
+        }
+
+        if (@$params['page'] && !is_int(@$params['page'])) {
+            throw new \Files\Exception\InvalidParameterException('$page must be of type int; received ' . gettype(@$params['page']));
         }
 
         $response = Api::sendRequest('/as2_partners', 'GET', $params, $options);
@@ -349,15 +389,21 @@ class As2Partner
     }
 
     // Parameters:
-    //   name (required) - string - AS2 Name
-    //   uri (required) - string - URL base for AS2 responses
-    //   public_certificate (required) - string
-    //   as2_station_id (required) - int64 - Id of As2Station for this partner
-    //   server_certificate - string - Remote server certificate security setting
-    //   mdn_validation_level - string - MDN Validation Level
-    //   enable_dedicated_ips - boolean
+    //   enable_dedicated_ips - boolean - If `true`, we will use your site's dedicated IPs for all outbound connections to this AS2 PArtner.
+    //   http_auth_username - string - Username to send to server for HTTP Authentication.
+    //   http_auth_password - string - Password to send to server for HTTP Authentication.
+    //   mdn_validation_level - string - How should Files.com evaluate message transfer success based on a partner's MDN response?  This setting does not affect MDN storage; all MDNs received from a partner are always stored. `none`: MDN is stored for informational purposes only, a successful HTTPS transfer is a successful AS2 transfer. `weak`: Inspect the MDN for MIC and Disposition only. `normal`: `weak` plus validate MDN signature matches body, `strict`: `normal` but do not allow signatures from self-signed or incorrectly purposed certificates.
+    //   server_certificate - string - Should we require that the remote HTTP server have a valid SSL Certificate for HTTPS?
+    //   as2_station_id (required) - int64 - ID of the AS2 Station associated with this partner.
+    //   name (required) - string - The partner's formal AS2 name.
+    //   uri (required) - string - Public URI where we will send the AS2 messages (via HTTP/HTTPS).
+    //   public_certificate (required) - string - Public certificate for AS2 Partner.  Note: This is the certificate for AS2 message security, not a certificate used for HTTPS authentication.
     public static function create($params = [], $options = [])
     {
+        if (!@$params['as2_station_id']) {
+            throw new \Files\Exception\MissingParameterException('Parameter missing: as2_station_id');
+        }
+
         if (!@$params['name']) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: name');
         }
@@ -370,8 +416,24 @@ class As2Partner
             throw new \Files\Exception\MissingParameterException('Parameter missing: public_certificate');
         }
 
-        if (!@$params['as2_station_id']) {
-            throw new \Files\Exception\MissingParameterException('Parameter missing: as2_station_id');
+        if (@$params['http_auth_username'] && !is_string(@$params['http_auth_username'])) {
+            throw new \Files\Exception\InvalidParameterException('$http_auth_username must be of type string; received ' . gettype(@$params['http_auth_username']));
+        }
+
+        if (@$params['http_auth_password'] && !is_string(@$params['http_auth_password'])) {
+            throw new \Files\Exception\InvalidParameterException('$http_auth_password must be of type string; received ' . gettype(@$params['http_auth_password']));
+        }
+
+        if (@$params['mdn_validation_level'] && !is_string(@$params['mdn_validation_level'])) {
+            throw new \Files\Exception\InvalidParameterException('$mdn_validation_level must be of type string; received ' . gettype(@$params['mdn_validation_level']));
+        }
+
+        if (@$params['server_certificate'] && !is_string(@$params['server_certificate'])) {
+            throw new \Files\Exception\InvalidParameterException('$server_certificate must be of type string; received ' . gettype(@$params['server_certificate']));
+        }
+
+        if (@$params['as2_station_id'] && !is_int(@$params['as2_station_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$as2_station_id must be of type int; received ' . gettype(@$params['as2_station_id']));
         }
 
         if (@$params['name'] && !is_string(@$params['name'])) {
@@ -384,18 +446,6 @@ class As2Partner
 
         if (@$params['public_certificate'] && !is_string(@$params['public_certificate'])) {
             throw new \Files\Exception\InvalidParameterException('$public_certificate must be of type string; received ' . gettype(@$params['public_certificate']));
-        }
-
-        if (@$params['as2_station_id'] && !is_int(@$params['as2_station_id'])) {
-            throw new \Files\Exception\InvalidParameterException('$as2_station_id must be of type int; received ' . gettype(@$params['as2_station_id']));
-        }
-
-        if (@$params['server_certificate'] && !is_string(@$params['server_certificate'])) {
-            throw new \Files\Exception\InvalidParameterException('$server_certificate must be of type string; received ' . gettype(@$params['server_certificate']));
-        }
-
-        if (@$params['mdn_validation_level'] && !is_string(@$params['mdn_validation_level'])) {
-            throw new \Files\Exception\InvalidParameterException('$mdn_validation_level must be of type string; received ' . gettype(@$params['mdn_validation_level']));
         }
 
         $response = Api::sendRequest('/as2_partners', 'POST', $params, $options);

@@ -145,7 +145,7 @@ class Behavior
     {
         return $this->attributes['recursive'] = $value;
     }
-    // file # Certain behaviors may require a file, for instance, the "watermark" behavior requires a watermark image
+    // file # Certain behaviors may require a file, for instance, the `watermark` behavior requires a watermark image. Attach that file here.
     public function getAttachmentFile()
     {
         return @$this->attributes['attachment_file'];
@@ -155,7 +155,7 @@ class Behavior
     {
         return $this->attributes['attachment_file'] = $value;
     }
-    // boolean # If true, will delete the file stored in attachment
+    // boolean # If `true`, delete the file stored in `attachment`.
     public function getAttachmentDelete()
     {
         return @$this->attributes['attachment_delete'];
@@ -167,13 +167,13 @@ class Behavior
     }
 
     // Parameters:
-    //   value - string - The value of the folder behavior.  Can be an integer, array, or hash depending on the type of folder behavior. See The Behavior Types section for example values for each type of behavior.
-    //   attachment_file - file - Certain behaviors may require a file, for instance, the "watermark" behavior requires a watermark image
-    //   disable_parent_folder_behavior - boolean - If true, the parent folder's behavior will be disabled for this folder and its children.
-    //   recursive - boolean - Is behavior recursive?
+    //   value - string - This field stores a hash of data specific to the type of behavior. See The Behavior Types section for example values for each type of behavior.
+    //   attachment_file - file - Certain behaviors may require a file, for instance, the `watermark` behavior requires a watermark image. Attach that file here.
+    //   disable_parent_folder_behavior - boolean - If `true`, the parent folder's behavior will be disabled for this folder and its children. This is the main mechanism for canceling out a `recursive` behavior higher in the folder tree.
+    //   recursive - boolean - If `true`, behavior is treated as recursive, meaning that it impacts child folders as well.
     //   name - string - Name for this behavior.
     //   description - string - Description for this behavior.
-    //   attachment_delete - boolean - If true, will delete the file stored in attachment
+    //   attachment_delete - boolean - If `true`, delete the file stored in `attachment`.
     public function update($params = [])
     {
         if (!is_array($params)) {
@@ -253,6 +253,8 @@ class Behavior
     // Parameters:
     //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
     //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
+    //   action - string
+    //   page - int64
     //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction (e.g. `sort_by[behavior]=desc`). Valid fields are `behavior` and `impacts_ui`.
     //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `impacts_ui` and `behavior`.
     //   filter_prefix - object - If set, return records where the specified field is prefixed by the supplied value. Valid fields are `behavior`.
@@ -264,6 +266,14 @@ class Behavior
 
         if (@$params['per_page'] && !is_int(@$params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        if (@$params['action'] && !is_string(@$params['action'])) {
+            throw new \Files\Exception\InvalidParameterException('$action must be of type string; received ' . gettype(@$params['action']));
+        }
+
+        if (@$params['page'] && !is_int(@$params['page'])) {
+            throw new \Files\Exception\InvalidParameterException('$page must be of type int; received ' . gettype(@$params['page']));
         }
 
         $response = Api::sendRequest('/behaviors', 'GET', $params, $options);
@@ -307,12 +317,14 @@ class Behavior
     // Parameters:
     //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
     //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
+    //   action - string
+    //   page - int64
     //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction (e.g. `sort_by[behavior]=desc`). Valid fields are `behavior` and `impacts_ui`.
     //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `impacts_ui` and `behavior`.
     //   filter_prefix - object - If set, return records where the specified field is prefixed by the supplied value. Valid fields are `behavior`.
     //   path (required) - string - Path to operate on.
-    //   ancestor_behaviors - string - Show behaviors above this path?
-    //   behavior - string - DEPRECATED: If set only shows folder behaviors matching this behavior type. Use `filter[behavior]` instead.
+    //   ancestor_behaviors - boolean - If `true`, behaviors above this path are shown.
+    //   behavior - string
     public static function listFor($path, $params = [], $options = [])
     {
         if (!is_array($params)) {
@@ -333,12 +345,16 @@ class Behavior
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
-        if (@$params['path'] && !is_string(@$params['path'])) {
-            throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
+        if (@$params['action'] && !is_string(@$params['action'])) {
+            throw new \Files\Exception\InvalidParameterException('$action must be of type string; received ' . gettype(@$params['action']));
         }
 
-        if (@$params['ancestor_behaviors'] && !is_string(@$params['ancestor_behaviors'])) {
-            throw new \Files\Exception\InvalidParameterException('$ancestor_behaviors must be of type string; received ' . gettype(@$params['ancestor_behaviors']));
+        if (@$params['page'] && !is_int(@$params['page'])) {
+            throw new \Files\Exception\InvalidParameterException('$page must be of type int; received ' . gettype(@$params['page']));
+        }
+
+        if (@$params['path'] && !is_string(@$params['path'])) {
+            throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
         if (@$params['behavior'] && !is_string(@$params['behavior'])) {
@@ -357,13 +373,13 @@ class Behavior
     }
 
     // Parameters:
-    //   value - string - The value of the folder behavior.  Can be an integer, array, or hash depending on the type of folder behavior. See The Behavior Types section for example values for each type of behavior.
-    //   attachment_file - file - Certain behaviors may require a file, for instance, the "watermark" behavior requires a watermark image
-    //   disable_parent_folder_behavior - boolean - If true, the parent folder's behavior will be disabled for this folder and its children.
-    //   recursive - boolean - Is behavior recursive?
+    //   value - string - This field stores a hash of data specific to the type of behavior. See The Behavior Types section for example values for each type of behavior.
+    //   attachment_file - file - Certain behaviors may require a file, for instance, the `watermark` behavior requires a watermark image. Attach that file here.
+    //   disable_parent_folder_behavior - boolean - If `true`, the parent folder's behavior will be disabled for this folder and its children. This is the main mechanism for canceling out a `recursive` behavior higher in the folder tree.
+    //   recursive - boolean - If `true`, behavior is treated as recursive, meaning that it impacts child folders as well.
     //   name - string - Name for this behavior.
     //   description - string - Description for this behavior.
-    //   path (required) - string - Folder behaviors path.
+    //   path (required) - string - Path where this behavior should apply.
     //   behavior (required) - string - Behavior type.
     public static function create($params = [], $options = [])
     {
@@ -402,11 +418,11 @@ class Behavior
 
     // Parameters:
     //   url (required) - string - URL for testing the webhook.
-    //   method - string - HTTP method(GET or POST).
-    //   encoding - string - HTTP encoding method.  Can be JSON, XML, or RAW (form data).
-    //   headers - object - Additional request headers.
-    //   body - object - Additional body parameters.
-    //   action - string - action for test body
+    //   method - string - HTTP request method (GET or POST).
+    //   encoding - string - Encoding type for the webhook payload. Can be JSON, XML, or RAW (form data).
+    //   headers - object - Additional request headers to send via HTTP.
+    //   body - object - Additional body parameters to include in the webhook payload.
+    //   action - string - Action for test body.
     public static function webhookTest($params = [], $options = [])
     {
         if (!@$params['url']) {

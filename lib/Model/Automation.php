@@ -195,6 +195,16 @@ class Automation
     {
         return $this->attributes['last_modified_at'] = $value;
     }
+    // boolean # If `true`, use the legacy behavior for this automation, where it can operate on folders in addition to just files.  This behavior no longer works and should not be used.
+    public function getLegacyFolderMatching()
+    {
+        return @$this->attributes['legacy_folder_matching'];
+    }
+
+    public function setLegacyFolderMatching($value)
+    {
+        return $this->attributes['legacy_folder_matching'] = $value;
+    }
     // string # Name for this automation.
     public function getName()
     {
@@ -375,7 +385,7 @@ class Automation
     {
         return $this->attributes['webhook_url'] = $value;
     }
-    // string # DEPRECATED: Destination Path. Use `destinations` instead.
+    // string
     public function getDestination()
     {
         return @$this->attributes['destination'];
@@ -411,7 +421,7 @@ class Automation
 
     // Parameters:
     //   source - string - Source Path
-    //   destination - string - DEPRECATED: Destination Path. Use `destinations` instead.
+    //   destination - string
     //   destinations - array(string) - A list of String destination paths or Hash of folder_path and optional file_path.
     //   destination_replace_from - string - If set, this string in the destination path will be replaced with the value in `destination_replace_to`.
     //   destination_replace_to - string - If set, this string will replace the value `destination_replace_from` in the destination filename. You can use special patterns here.
@@ -420,6 +430,7 @@ class Automation
     //   sync_ids - string - A list of sync IDs the automation is associated with. If sent as a string, it should be comma-delimited.
     //   user_ids - string - A list of user IDs the automation is associated with. If sent as a string, it should be comma-delimited.
     //   group_ids - string - A list of group IDs the automation is associated with. If sent as a string, it should be comma-delimited.
+    //   schedule - object
     //   schedule_days_of_week - array(int64) - If trigger is `custom_schedule`. A list of days of the week to run this automation. 0 is Sunday, 1 is Monday, etc.
     //   schedule_times_of_day - array(string) - If trigger is `custom_schedule`. A list of times of day to run this automation. 24-hour time format.
     //   schedule_time_zone - string - If trigger is `custom_schedule`. Time zone for the schedule.
@@ -428,6 +439,7 @@ class Automation
     //   disabled - boolean - If true, this automation will not run.
     //   flatten_destination_structure - boolean - Normally copy and move automations that use globs will implicitly preserve the source folder structure in the destination.  If this flag is `true`, the source folder structure will be flattened in the destination.  This is useful for copying or moving files from multiple folders into a single destination folder.
     //   ignore_locked_folders - boolean - If true, the Lock Folders behavior will be disregarded for automated actions.
+    //   legacy_folder_matching - boolean - DEPRECATED: If `true`, use the legacy behavior for this automation, where it can operate on folders in addition to just files.  This behavior no longer works and should not be used.
     //   name - string - Name for this automation.
     //   overwrite_files - boolean - If true, existing files will be overwritten with new files on Move/Copy automations.  Note: by default files will not be overwritten if they appear to be the same file size as the newly incoming file.  Use the `:always_overwrite_size_matching_files` option to override this.
     //   path_time_zone - string - Timezone to use when rendering timestamps in paths.
@@ -583,6 +595,8 @@ class Automation
     // Parameters:
     //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
     //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
+    //   action - string
+    //   page - int64
     //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction (e.g. `sort_by[automation]=desc`). Valid fields are `automation`, `disabled`, `last_modified_at` or `name`.
     //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `disabled`, `last_modified_at` or `automation`. Valid field combinations are `[ automation, disabled ]` and `[ disabled, automation ]`.
     //   filter_gt - object - If set, return records where the specified field is greater than the supplied value. Valid fields are `last_modified_at`.
@@ -598,6 +612,14 @@ class Automation
 
         if (@$params['per_page'] && !is_int(@$params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        if (@$params['action'] && !is_string(@$params['action'])) {
+            throw new \Files\Exception\InvalidParameterException('$action must be of type string; received ' . gettype(@$params['action']));
+        }
+
+        if (@$params['page'] && !is_int(@$params['page'])) {
+            throw new \Files\Exception\InvalidParameterException('$page must be of type int; received ' . gettype(@$params['page']));
         }
 
         $response = Api::sendRequest('/automations', 'GET', $params, $options);
@@ -640,7 +662,7 @@ class Automation
 
     // Parameters:
     //   source - string - Source Path
-    //   destination - string - DEPRECATED: Destination Path. Use `destinations` instead.
+    //   destination - string
     //   destinations - array(string) - A list of String destination paths or Hash of folder_path and optional file_path.
     //   destination_replace_from - string - If set, this string in the destination path will be replaced with the value in `destination_replace_to`.
     //   destination_replace_to - string - If set, this string will replace the value `destination_replace_from` in the destination filename. You can use special patterns here.
@@ -649,6 +671,7 @@ class Automation
     //   sync_ids - string - A list of sync IDs the automation is associated with. If sent as a string, it should be comma-delimited.
     //   user_ids - string - A list of user IDs the automation is associated with. If sent as a string, it should be comma-delimited.
     //   group_ids - string - A list of group IDs the automation is associated with. If sent as a string, it should be comma-delimited.
+    //   schedule - object
     //   schedule_days_of_week - array(int64) - If trigger is `custom_schedule`. A list of days of the week to run this automation. 0 is Sunday, 1 is Monday, etc.
     //   schedule_times_of_day - array(string) - If trigger is `custom_schedule`. A list of times of day to run this automation. 24-hour time format.
     //   schedule_time_zone - string - If trigger is `custom_schedule`. Time zone for the schedule.
@@ -657,6 +680,7 @@ class Automation
     //   disabled - boolean - If true, this automation will not run.
     //   flatten_destination_structure - boolean - Normally copy and move automations that use globs will implicitly preserve the source folder structure in the destination.  If this flag is `true`, the source folder structure will be flattened in the destination.  This is useful for copying or moving files from multiple folders into a single destination folder.
     //   ignore_locked_folders - boolean - If true, the Lock Folders behavior will be disregarded for automated actions.
+    //   legacy_folder_matching - boolean - DEPRECATED: If `true`, use the legacy behavior for this automation, where it can operate on folders in addition to just files.  This behavior no longer works and should not be used.
     //   name - string - Name for this automation.
     //   overwrite_files - boolean - If true, existing files will be overwritten with new files on Move/Copy automations.  Note: by default files will not be overwritten if they appear to be the same file size as the newly incoming file.  Use the `:always_overwrite_size_matching_files` option to override this.
     //   path_time_zone - string - Timezone to use when rendering timestamps in paths.

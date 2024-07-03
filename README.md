@@ -29,7 +29,7 @@ Install the SDK
 ```php
     require 'vendor/autoload.php';
 
-    // set your subdomain or custom domain
+    // set client to use a mock Files.com server for testing
     \Files\Files::setBaseUrl('https://MY-SUBDOMAIN.files.com');
 ```
 

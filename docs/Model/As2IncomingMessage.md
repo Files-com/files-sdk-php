@@ -84,7 +84,7 @@
 
 ---
 
-## List As2 Incoming Messages
+## List AS2 Incoming Messages
 
 ```
 $as2_incoming_message = new \Files\Model\As2IncomingMessage();

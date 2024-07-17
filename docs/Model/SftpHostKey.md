@@ -19,7 +19,7 @@
 
 ---
 
-## List Sftp Host Keys
+## List SFTP Host Keys
 
 ```
 $sftp_host_key = new \Files\Model\SftpHostKey();
@@ -39,7 +39,7 @@ $sftp_host_key->list(, [
 
 ---
 
-## Show Sftp Host Key
+## Show SFTP Host Key
 
 ```
 $sftp_host_key = new \Files\Model\SftpHostKey();
@@ -53,7 +53,7 @@ $sftp_host_key->find($id);
 
 ---
 
-## Create Sftp Host Key
+## Create SFTP Host Key
 
 ```
 $sftp_host_key = new \Files\Model\SftpHostKey();
@@ -70,7 +70,7 @@ $sftp_host_key->create(, [
 
 ---
 
-## Update Sftp Host Key
+## Update SFTP Host Key
 
 ```
 $sftp_host_key = \Files\Model\SftpHostKey::find($id);
@@ -99,7 +99,7 @@ $sftp_host_key->update([
 
 ---
 
-## Delete Sftp Host Key
+## Delete SFTP Host Key
 
 ```
 $sftp_host_key = \Files\Model\SftpHostKey::find($id);

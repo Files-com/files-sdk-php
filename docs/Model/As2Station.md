@@ -39,7 +39,7 @@
 
 ---
 
-## List As2 Stations
+## List AS2 Stations
 
 ```
 $as2_station = new \Files\Model\As2Station();
@@ -59,7 +59,7 @@ $as2_station->list(, [
 
 ---
 
-## Show As2 Station
+## Show AS2 Station
 
 ```
 $as2_station = new \Files\Model\As2Station();
@@ -73,7 +73,7 @@ $as2_station->find($id);
 
 ---
 
-## Create As2 Station
+## Create AS2 Station
 
 ```
 $as2_station = new \Files\Model\As2Station();
@@ -94,7 +94,7 @@ $as2_station->create(, [
 
 ---
 
-## Update As2 Station
+## Update AS2 Station
 
 ```
 $as2_station = \Files\Model\As2Station::find($id);
@@ -134,7 +134,7 @@ $as2_station->update([
 
 ---
 
-## Delete As2 Station
+## Delete AS2 Station
 
 ```
 $as2_station = \Files\Model\As2Station::find($id);

@@ -46,7 +46,7 @@
 
 ---
 
-## List Ftp Action Logs
+## List FTP Action Logs
 
 ```
 $ftp_action_log = new \Files\Model\FtpActionLog();

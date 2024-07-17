@@ -105,7 +105,7 @@ class User
     {
         return $this->attributes['attachments_permission'] = $value;
     }
-    // int64 # Number of api keys associated with this user
+    // int64 # Number of API keys associated with this user
     public function getApiKeysCount()
     {
         return @$this->attributes['api_keys_count'];

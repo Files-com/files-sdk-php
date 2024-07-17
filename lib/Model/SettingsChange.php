@@ -70,7 +70,7 @@ class SettingsChange
     {
         return @$this->attributes['user_id'];
     }
-    // int64 # The api key id responsible for this change
+    // int64 # The API key id responsible for this change
     public function getApiKeyId()
     {
         return @$this->attributes['api_key_id'];

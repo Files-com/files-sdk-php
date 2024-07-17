@@ -46,7 +46,7 @@
 
 ---
 
-## List Api Request Logs
+## List API Request Logs
 
 ```
 $api_request_log = new \Files\Model\ApiRequestLog();

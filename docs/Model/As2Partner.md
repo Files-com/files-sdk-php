@@ -42,7 +42,7 @@
 
 ---
 
-## List As2 Partners
+## List AS2 Partners
 
 ```
 $as2_partner = new \Files\Model\As2Partner();
@@ -62,7 +62,7 @@ $as2_partner->list(, [
 
 ---
 
-## Show As2 Partner
+## Show AS2 Partner
 
 ```
 $as2_partner = new \Files\Model\As2Partner();
@@ -76,7 +76,7 @@ $as2_partner->find($id);
 
 ---
 
-## Create As2 Partner
+## Create AS2 Partner
 
 ```
 $as2_partner = new \Files\Model\As2Partner();
@@ -107,7 +107,7 @@ $as2_partner->create(, [
 
 ---
 
-## Update As2 Partner
+## Update AS2 Partner
 
 ```
 $as2_partner = \Files\Model\As2Partner::find($id);
@@ -158,7 +158,7 @@ $as2_partner->update([
 
 ---
 
-## Delete As2 Partner
+## Delete AS2 Partner
 
 ```
 $as2_partner = \Files\Model\As2Partner::find($id);

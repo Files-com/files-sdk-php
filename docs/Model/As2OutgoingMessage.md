@@ -76,7 +76,7 @@
 
 ---
 
-## List As2 Outgoing Messages
+## List AS2 Outgoing Messages
 
 ```
 $as2_outgoing_message = new \Files\Model\As2OutgoingMessage();

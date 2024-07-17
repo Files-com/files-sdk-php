@@ -102,7 +102,7 @@
 
 ---
 
-## List Sso Strategies
+## List SSO Strategies
 
 ```
 $sso_strategy = new \Files\Model\SsoStrategy();
@@ -122,7 +122,7 @@ $sso_strategy->list(, [
 
 ---
 
-## Show Sso Strategy
+## Show SSO Strategy
 
 ```
 $sso_strategy = new \Files\Model\SsoStrategy();

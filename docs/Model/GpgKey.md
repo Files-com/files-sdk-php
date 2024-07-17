@@ -24,7 +24,7 @@
 
 ---
 
-## List Gpg Keys
+## List GPG Keys
 
 ```
 $gpg_key = new \Files\Model\GpgKey();
@@ -47,7 +47,7 @@ $gpg_key->list(, [
 
 ---
 
-## Show Gpg Key
+## Show GPG Key
 
 ```
 $gpg_key = new \Files\Model\GpgKey();
@@ -61,7 +61,7 @@ $gpg_key->find($id);
 
 ---
 
-## Create Gpg Key
+## Create GPG Key
 
 ```
 $gpg_key = new \Files\Model\GpgKey();
@@ -85,7 +85,7 @@ $gpg_key->create(, [
 
 ---
 
-## Update Gpg Key
+## Update GPG Key
 
 ```
 $gpg_key = \Files\Model\GpgKey::find($id);
@@ -122,7 +122,7 @@ $gpg_key->update([
 
 ---
 
-## Delete Gpg Key
+## Delete GPG Key
 
 ```
 $gpg_key = \Files\Model\GpgKey::find($id);

@@ -50,7 +50,7 @@
 
 ---
 
-## List Sftp Action Logs
+## List SFTP Action Logs
 
 ```
 $sftp_action_log = new \Files\Model\SftpActionLog();

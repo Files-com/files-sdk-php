@@ -31,11 +31,11 @@
 * `platform` (string): If this API key represents a Desktop app, what platform was it created on?
 * `url` (string): URL for API host.
 * `user_id` (int64): User ID for the owner of this API Key.  May be blank for Site-wide API Keys.
-* `path` (string): Folder path restriction for this api key.
+* `path` (string): Folder path restriction for this API key.
 
 ---
 
-## List Api Keys
+## List API Keys
 
 ```
 $api_key = new \Files\Model\ApiKey();
@@ -73,7 +73,7 @@ $api_key->findCurrent
 
 ---
 
-## Show Api Key
+## Show API Key
 
 ```
 $api_key = new \Files\Model\ApiKey();
@@ -87,7 +87,7 @@ $api_key->find($id);
 
 ---
 
-## Create Api Key
+## Create API Key
 
 ```
 $api_key = new \Files\Model\ApiKey();
@@ -109,7 +109,7 @@ $api_key->create(, [
 * `expires_at` (string): API Key expiration date
 * `permission_set` (string): Permissions for this API Key. It must be full for site-wide API Keys.  Keys with the `desktop_app` permission set only have the ability to do the functions provided in our Desktop App (File and Share Link operations).  Additional permission sets may become available in the future, such as for a Site Admin to give a key with no administrator privileges.  If you have ideas for permission sets, please let us know.
 * `name` (string): Required - Internal name for the API Key.  For your use.
-* `path` (string): Folder path restriction for this api key.
+* `path` (string): Folder path restriction for this API key.
 
 ---
 
@@ -143,7 +143,7 @@ $api_key->deleteCurrent
 
 ---
 
-## Update Api Key
+## Update API Key
 
 ```
 $api_key = \Files\Model\ApiKey::find($id);
@@ -185,7 +185,7 @@ $api_key->update([
 
 ---
 
-## Delete Api Key
+## Delete API Key
 
 ```
 $api_key = \Files\Model\ApiKey::find($id);

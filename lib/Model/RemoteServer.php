@@ -605,6 +605,16 @@ class RemoteServer
     {
         return $this->attributes['linode_region'] = $value;
     }
+    // boolean # If true, this remote server supports file versioning. This value is determined automatically by Files.com.
+    public function getSupportsVersioning()
+    {
+        return @$this->attributes['supports_versioning'];
+    }
+
+    public function setSupportsVersioning($value)
+    {
+        return $this->attributes['supports_versioning'] = $value;
+    }
     // string # AWS secret key.
     public function getAwsSecretKey()
     {

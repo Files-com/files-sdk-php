@@ -65,7 +65,7 @@ class BundleDownload
     {
         return @$this->attributes['download_method'];
     }
-    // string # Download path This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
+    // string # Download path. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
     public function getPath()
     {
         return @$this->attributes['path'];

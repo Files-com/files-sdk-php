@@ -90,7 +90,7 @@ class AutomationLog
     {
         return @$this->attributes['operation'];
     }
-    // string # File path This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
+    // string # File path. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
     public function getPath()
     {
         return @$this->attributes['path'];

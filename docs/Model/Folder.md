@@ -90,8 +90,6 @@
 ```
 $folder = new \Files\Model\Folder();
 $folder->listFor($path, [
-  'per_page' => 1,
-  'page' => 1,
   'search_all' => true,
   'with_previews' => true,
   'with_priority_color' => true,

@@ -46,10 +46,7 @@
 
 ```
 $as2_partner = new \Files\Model\As2Partner();
-$as2_partner->list(, [
-  'per_page' => 1,
-  'page' => 1,
-]);
+$as2_partner->list
 ```
 
 

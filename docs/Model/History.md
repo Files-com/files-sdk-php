@@ -44,9 +44,6 @@
 $history = new \Files\Model\History();
 $history->listForFile($path, [
   'display' => "Actual text of the action here.",
-  'per_page' => 1,
-  'action' => "create",
-  'page' => 1,
 ]);
 ```
 
@@ -71,9 +68,6 @@ $history->listForFile($path, [
 $history = new \Files\Model\History();
 $history->listForFolder($path, [
   'display' => "Actual text of the action here.",
-  'per_page' => 1,
-  'action' => "create",
-  'page' => 1,
 ]);
 ```
 
@@ -98,9 +92,6 @@ $history->listForFolder($path, [
 $history = new \Files\Model\History();
 $history->listForUser($user_id, [
   'display' => "Actual text of the action here.",
-  'per_page' => 1,
-  'action' => "create",
-  'page' => 1,
 ]);
 ```
 
@@ -125,9 +116,6 @@ $history->listForUser($user_id, [
 $history = new \Files\Model\History();
 $history->listLogins(, [
   'display' => "Actual text of the action here.",
-  'per_page' => 1,
-  'action' => "create",
-  'page' => 1,
 ]);
 ```
 
@@ -151,9 +139,6 @@ $history->listLogins(, [
 $history = new \Files\Model\History();
 $history->list(, [
   'display' => "Actual text of the action here.",
-  'per_page' => 1,
-  'action' => "create",
-  'page' => 1,
 ]);
 ```
 

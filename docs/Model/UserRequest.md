@@ -24,10 +24,7 @@
 
 ```
 $user_request = new \Files\Model\UserRequest();
-$user_request->list(, [
-  'per_page' => 1,
-  'page' => 1,
-]);
+$user_request->list
 ```
 
 

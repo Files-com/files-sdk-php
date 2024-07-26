@@ -43,7 +43,6 @@ $webhook_test->create(, [
   'raw_body' => "test body",
   'file_as_body' => true,
   'file_form_field' => "upload_file_data",
-  'action' => "test",
   'use_dedicated_ips' => true,
 ]);
 ```

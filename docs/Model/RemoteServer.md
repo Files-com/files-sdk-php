@@ -145,10 +145,7 @@
 
 ```
 $remote_server = new \Files\Model\RemoteServer();
-$remote_server->list(, [
-  'per_page' => 1,
-  'page' => 1,
-]);
+$remote_server->list
 ```
 
 

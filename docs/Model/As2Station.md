@@ -43,10 +43,7 @@
 
 ```
 $as2_station = new \Files\Model\As2Station();
-$as2_station->list(, [
-  'per_page' => 1,
-  'page' => 1,
-]);
+$as2_station->list
 ```
 
 

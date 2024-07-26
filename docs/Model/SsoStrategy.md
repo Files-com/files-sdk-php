@@ -106,10 +106,7 @@
 
 ```
 $sso_strategy = new \Files\Model\SsoStrategy();
-$sso_strategy->list(, [
-  'per_page' => 1,
-  'page' => 1,
-]);
+$sso_strategy->list
 ```
 
 

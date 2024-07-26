@@ -22,10 +22,7 @@
 
 ```
 $dns_record = new \Files\Model\DnsRecord();
-$dns_record->list(, [
-  'per_page' => 1,
-  'page' => 1,
-]);
+$dns_record->list
 ```
 
 

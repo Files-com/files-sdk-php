@@ -41,8 +41,6 @@
 $api_key = new \Files\Model\ApiKey();
 $api_key->list(, [
   'user_id' => 1,
-  'per_page' => 1,
-  'page' => 1,
 ]);
 ```
 

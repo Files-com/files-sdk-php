@@ -104,8 +104,6 @@
 ```
 $automation = new \Files\Model\Automation();
 $automation->list(, [
-  'per_page' => 1,
-  'page' => 1,
   'with_deleted' => true,
 ]);
 ```

@@ -26,10 +26,7 @@
 
 ```
 $clickwrap = new \Files\Model\Clickwrap();
-$clickwrap->list(, [
-  'per_page' => 1,
-  'page' => 1,
-]);
+$clickwrap->list
 ```
 
 

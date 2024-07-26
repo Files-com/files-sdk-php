@@ -33,8 +33,8 @@
 ```
 $email_log = new \Files\Model\EmailLog();
 $email_log->list(, [
-  'per_page' => 1,
-  'page' => 1,
+  'filter' => "",
+  'filter_prefix' => "",
 ]);
 ```
 

@@ -67,8 +67,6 @@
 $notification = new \Files\Model\Notification();
 $notification->list(, [
   'user_id' => 1,
-  'per_page' => 1,
-  'page' => 1,
   'include_ancestors' => true,
   'group_id' => 1,
 ]);

@@ -39,8 +39,6 @@
 ```
 $lock = new \Files\Model\Lock();
 $lock->listFor($path, [
-  'per_page' => 1,
-  'page' => 1,
   'include_children' => true,
 ]);
 ```

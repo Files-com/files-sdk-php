@@ -27,10 +27,7 @@
 
 ```
 $snapshot = new \Files\Model\Snapshot();
-$snapshot->list(, [
-  'per_page' => 1,
-  'page' => 1,
-]);
+$snapshot->list
 ```
 
 

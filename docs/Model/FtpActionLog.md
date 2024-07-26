@@ -51,8 +51,8 @@
 ```
 $ftp_action_log = new \Files\Model\FtpActionLog();
 $ftp_action_log->list(, [
-  'per_page' => 1,
-  'page' => 1,
+  'filter' => "",
+  'filter_prefix' => "",
 ]);
 ```
 

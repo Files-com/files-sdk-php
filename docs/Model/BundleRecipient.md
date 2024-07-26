@@ -27,8 +27,6 @@
 ```
 $bundle_recipient = new \Files\Model\BundleRecipient();
 $bundle_recipient->list(, [
-  'per_page' => 1,
-  'page' => 1,
   'bundle_id' => 1,
 ]);
 ```

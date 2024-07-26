@@ -27,8 +27,6 @@
 ```
 $inbox_recipient = new \Files\Model\InboxRecipient();
 $inbox_recipient->list(, [
-  'per_page' => 1,
-  'page' => 1,
   'inbox_id' => 1,
 ]);
 ```

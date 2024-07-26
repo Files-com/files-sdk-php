@@ -33,8 +33,8 @@
 ```
 $automation_log = new \Files\Model\AutomationLog();
 $automation_log->list(, [
-  'per_page' => 1,
-  'page' => 1,
+  'filter' => "",
+  'filter_prefix' => "",
 ]);
 ```
 

@@ -31,8 +31,8 @@
 ```
 $public_hosting_request_log = new \Files\Model\PublicHostingRequestLog();
 $public_hosting_request_log->list(, [
-  'per_page' => 1,
-  'page' => 1,
+  'filter' => "",
+  'filter_prefix' => "",
 ]);
 ```
 

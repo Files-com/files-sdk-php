@@ -29,8 +29,8 @@
 ```
 $settings_change = new \Files\Model\SettingsChange();
 $settings_change->list(, [
-  'per_page' => 1,
-  'page' => 1,
+  'sort_by' => "",
+  'filter' => "",
 ]);
 ```
 

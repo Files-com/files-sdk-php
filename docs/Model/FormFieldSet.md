@@ -51,8 +51,6 @@
 $form_field_set = new \Files\Model\FormFieldSet();
 $form_field_set->list(, [
   'user_id' => 1,
-  'per_page' => 1,
-  'page' => 1,
 ]);
 ```
 

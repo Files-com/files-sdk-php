@@ -26,10 +26,7 @@
 
 ```
 $file_comment = new \Files\Model\FileComment();
-$file_comment->listFor($path, [
-  'per_page' => 1,
-  'page' => 1,
-]);
+$file_comment->listFor($path);
 ```
 
 

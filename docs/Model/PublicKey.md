@@ -31,8 +31,6 @@
 $public_key = new \Files\Model\PublicKey();
 $public_key->list(, [
   'user_id' => 1,
-  'per_page' => 1,
-  'page' => 1,
 ]);
 ```
 

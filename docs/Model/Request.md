@@ -29,8 +29,6 @@
 ```
 $request = new \Files\Model\Request();
 $request->list(, [
-  'per_page' => 1,
-  'page' => 1,
   'mine' => true,
   'path' => "example",
 ]);
@@ -54,8 +52,6 @@ $request->list(, [
 ```
 $request = new \Files\Model\Request();
 $request->getFolder($path, [
-  'per_page' => 1,
-  'page' => 1,
   'mine' => true,
 ]);
 ```

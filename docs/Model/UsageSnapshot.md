@@ -46,10 +46,7 @@
 
 ```
 $usage_snapshot = new \Files\Model\UsageSnapshot();
-$usage_snapshot->list(, [
-  'per_page' => 1,
-  'page' => 1,
-]);
+$usage_snapshot->list
 ```
 
 

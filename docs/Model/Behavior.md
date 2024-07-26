@@ -37,8 +37,9 @@
 ```
 $behavior = new \Files\Model\Behavior();
 $behavior->list(, [
-  'per_page' => 1,
-  'page' => 1,
+  'sort_by' => "",
+  'filter' => "",
+  'filter_prefix' => "",
 ]);
 ```
 
@@ -74,8 +75,6 @@ $behavior->find($id);
 ```
 $behavior = new \Files\Model\Behavior();
 $behavior->listFor($path, [
-  'per_page' => 1,
-  'page' => 1,
   'ancestor_behaviors' => true,
   'behavior' => "webhook",
 ]);
@@ -136,7 +135,6 @@ $behavior->webhookTest(, [
   'encoding' => "RAW",
   'headers' => {"x-test-header":"testvalue"},
   'body' => {"test-param":"testvalue"},
-  'action' => "test",
 ]);
 ```
 

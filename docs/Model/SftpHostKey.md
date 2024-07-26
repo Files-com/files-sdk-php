@@ -23,10 +23,7 @@
 
 ```
 $sftp_host_key = new \Files\Model\SftpHostKey();
-$sftp_host_key->list(, [
-  'per_page' => 1,
-  'page' => 1,
-]);
+$sftp_host_key->list
 ```
 
 

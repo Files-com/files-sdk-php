@@ -89,8 +89,6 @@
 ```
 $as2_incoming_message = new \Files\Model\As2IncomingMessage();
 $as2_incoming_message->list(, [
-  'per_page' => 1,
-  'page' => 1,
   'as2_partner_id' => 1,
 ]);
 ```

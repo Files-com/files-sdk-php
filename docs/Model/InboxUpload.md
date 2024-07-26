@@ -21,8 +21,6 @@
 ```
 $inbox_upload = new \Files\Model\InboxUpload();
 $inbox_upload->list(, [
-  'per_page' => 1,
-  'page' => 1,
   'inbox_registration_id' => 1,
   'inbox_id' => 1,
 ]);

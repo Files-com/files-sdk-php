@@ -41,8 +41,6 @@
 ```
 $inbox_registration = new \Files\Model\InboxRegistration();
 $inbox_registration->list(, [
-  'per_page' => 1,
-  'page' => 1,
   'folder_behavior_id' => 1,
 ]);
 ```

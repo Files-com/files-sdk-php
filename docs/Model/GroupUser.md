@@ -29,8 +29,6 @@
 $group_user = new \Files\Model\GroupUser();
 $group_user->list(, [
   'user_id' => 1,
-  'per_page' => 1,
-  'page' => 1,
   'group_id' => 1,
 ]);
 ```

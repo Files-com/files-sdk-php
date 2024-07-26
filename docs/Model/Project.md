@@ -18,10 +18,7 @@
 
 ```
 $project = new \Files\Model\Project();
-$project->list(, [
-  'per_page' => 1,
-  'page' => 1,
-]);
+$project->list
 ```
 
 

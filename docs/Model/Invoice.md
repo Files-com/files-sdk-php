@@ -58,10 +58,7 @@
 
 ```
 $invoice = new \Files\Model\Invoice();
-$invoice->list(, [
-  'per_page' => 1,
-  'page' => 1,
-]);
+$invoice->list
 ```
 
 

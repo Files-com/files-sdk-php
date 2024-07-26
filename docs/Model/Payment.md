@@ -58,10 +58,7 @@
 
 ```
 $payment = new \Files\Model\Payment();
-$payment->list(, [
-  'per_page' => 1,
-  'page' => 1,
-]);
+$payment->list
 ```
 
 

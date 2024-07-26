@@ -37,8 +37,6 @@
 $message = new \Files\Model\Message();
 $message->list(, [
   'user_id' => 1,
-  'per_page' => 1,
-  'page' => 1,
   'project_id' => 1,
 ]);
 ```

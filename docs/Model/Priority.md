@@ -18,10 +18,7 @@
 
 ```
 $priority = new \Files\Model\Priority();
-$priority->list($path, [
-  'per_page' => 1,
-  'page' => 1,
-]);
+$priority->list($path);
 ```
 
 

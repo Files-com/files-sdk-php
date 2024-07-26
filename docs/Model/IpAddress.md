@@ -24,10 +24,7 @@
 
 ```
 $ip_address = new \Files\Model\IpAddress();
-$ip_address->list(, [
-  'per_page' => 1,
-  'page' => 1,
-]);
+$ip_address->list
 ```
 
 
@@ -44,10 +41,7 @@ $ip_address->list(, [
 
 ```
 $ip_address = new \Files\Model\IpAddress();
-$ip_address->getSmartfileReserved(, [
-  'per_page' => 1,
-  'page' => 1,
-]);
+$ip_address->getSmartfileReserved
 ```
 
 
@@ -64,10 +58,7 @@ $ip_address->getSmartfileReserved(, [
 
 ```
 $ip_address = new \Files\Model\IpAddress();
-$ip_address->getExavaultReserved(, [
-  'per_page' => 1,
-  'page' => 1,
-]);
+$ip_address->getExavaultReserved
 ```
 
 
@@ -84,10 +75,7 @@ $ip_address->getExavaultReserved(, [
 
 ```
 $ip_address = new \Files\Model\IpAddress();
-$ip_address->getReserved(, [
-  'per_page' => 1,
-  'page' => 1,
-]);
+$ip_address->getReserved
 ```
 
 

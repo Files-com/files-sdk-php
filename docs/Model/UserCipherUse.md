@@ -28,8 +28,6 @@
 $user_cipher_use = new \Files\Model\UserCipherUse();
 $user_cipher_use->list(, [
   'user_id' => 1,
-  'per_page' => 1,
-  'page' => 1,
 ]);
 ```
 

@@ -36,10 +36,7 @@
 
 ```
 $exavault_api_request_log = new \Files\Model\ExavaultApiRequestLog();
-$exavault_api_request_log->list(, [
-  'filter' => "",
-  'filter_prefix' => "",
-]);
+$exavault_api_request_log->list
 ```
 
 

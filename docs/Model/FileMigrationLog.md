@@ -30,10 +30,7 @@
 
 ```
 $file_migration_log = new \Files\Model\FileMigrationLog();
-$file_migration_log->list(, [
-  'filter' => "",
-  'filter_prefix' => "",
-]);
+$file_migration_log->list
 ```
 
 

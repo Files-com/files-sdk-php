@@ -32,10 +32,7 @@
 
 ```
 $automation_log = new \Files\Model\AutomationLog();
-$automation_log->list(, [
-  'filter' => "",
-  'filter_prefix' => "",
-]);
+$automation_log->list
 ```
 
 

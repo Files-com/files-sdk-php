@@ -54,10 +54,7 @@
 
 ```
 $sftp_action_log = new \Files\Model\SftpActionLog();
-$sftp_action_log->list(, [
-  'filter' => "",
-  'filter_prefix' => "",
-]);
+$sftp_action_log->list
 ```
 
 

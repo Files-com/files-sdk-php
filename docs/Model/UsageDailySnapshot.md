@@ -38,14 +38,7 @@
 
 ```
 $usage_daily_snapshot = new \Files\Model\UsageDailySnapshot();
-$usage_daily_snapshot->list(, [
-  'sort_by' => "",
-  'filter' => "",
-  'filter_gt' => "",
-  'filter_gteq' => "",
-  'filter_lt' => "",
-  'filter_lteq' => "",
-]);
+$usage_daily_snapshot->list
 ```
 
 

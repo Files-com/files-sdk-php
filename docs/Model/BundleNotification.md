@@ -24,10 +24,7 @@
 
 ```
 $bundle_notification = new \Files\Model\BundleNotification();
-$bundle_notification->list(, [
-  'sort_by' => "",
-  'filter' => "",
-]);
+$bundle_notification->list
 ```
 
 

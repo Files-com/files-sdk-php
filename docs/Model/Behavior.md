@@ -36,11 +36,7 @@
 
 ```
 $behavior = new \Files\Model\Behavior();
-$behavior->list(, [
-  'sort_by' => "",
-  'filter' => "",
-  'filter_prefix' => "",
-]);
+$behavior->list
 ```
 
 

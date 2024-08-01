@@ -28,10 +28,7 @@
 
 ```
 $settings_change = new \Files\Model\SettingsChange();
-$settings_change->list(, [
-  'sort_by' => "",
-  'filter' => "",
-]);
+$settings_change->list
 ```
 
 

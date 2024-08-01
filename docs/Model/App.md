@@ -58,11 +58,7 @@
 
 ```
 $app = new \Files\Model\App();
-$app->list(, [
-  'sort_by' => "",
-  'filter' => "",
-  'filter_prefix' => "",
-]);
+$app->list
 ```
 
 

@@ -50,10 +50,7 @@
 
 ```
 $api_request_log = new \Files\Model\ApiRequestLog();
-$api_request_log->list(, [
-  'filter' => "",
-  'filter_prefix' => "",
-]);
+$api_request_log->list
 ```
 
 

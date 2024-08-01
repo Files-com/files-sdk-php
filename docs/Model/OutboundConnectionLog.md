@@ -42,10 +42,7 @@
 
 ```
 $outbound_connection_log = new \Files\Model\OutboundConnectionLog();
-$outbound_connection_log->list(, [
-  'filter' => "",
-  'filter_prefix' => "",
-]);
+$outbound_connection_log->list
 ```
 
 

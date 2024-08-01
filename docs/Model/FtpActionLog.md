@@ -50,10 +50,7 @@
 
 ```
 $ftp_action_log = new \Files\Model\FtpActionLog();
-$ftp_action_log->list(, [
-  'filter' => "",
-  'filter_prefix' => "",
-]);
+$ftp_action_log->list
 ```
 
 

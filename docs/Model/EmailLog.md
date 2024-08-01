@@ -32,10 +32,7 @@
 
 ```
 $email_log = new \Files\Model\EmailLog();
-$email_log->list(, [
-  'filter' => "",
-  'filter_prefix' => "",
-]);
+$email_log->list
 ```
 
 

@@ -32,14 +32,7 @@
 
 ```
 $bandwidth_snapshot = new \Files\Model\BandwidthSnapshot();
-$bandwidth_snapshot->list(, [
-  'sort_by' => "",
-  'filter' => "",
-  'filter_gt' => "",
-  'filter_gteq' => "",
-  'filter_lt' => "",
-  'filter_lteq' => "",
-]);
+$bandwidth_snapshot->list
 ```
 
 

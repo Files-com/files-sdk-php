@@ -36,12 +36,7 @@
 
 ```
 $group = new \Files\Model\Group();
-$group->list(, [
-  'sort_by' => "",
-  'filter' => "",
-  'filter_prefix' => "",
-  'ids' => "",
-]);
+$group->list
 ```
 
 

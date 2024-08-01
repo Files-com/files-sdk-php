@@ -34,10 +34,7 @@
 
 ```
 $sync_log = new \Files\Model\SyncLog();
-$sync_log->list(, [
-  'filter' => "",
-  'filter_prefix' => "",
-]);
+$sync_log->list
 ```
 
 

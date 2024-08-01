@@ -46,10 +46,7 @@
 
 ```
 $web_dav_action_log = new \Files\Model\WebDavActionLog();
-$web_dav_action_log->list(, [
-  'filter' => "",
-  'filter_prefix' => "",
-]);
+$web_dav_action_log->list
 ```
 
 

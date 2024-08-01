@@ -30,10 +30,7 @@
 
 ```
 $public_hosting_request_log = new \Files\Model\PublicHostingRequestLog();
-$public_hosting_request_log->list(, [
-  'filter' => "",
-  'filter_prefix' => "",
-]);
+$public_hosting_request_log->list
 ```
 
 

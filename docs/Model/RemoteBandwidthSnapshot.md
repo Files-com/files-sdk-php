@@ -24,14 +24,7 @@
 
 ```
 $remote_bandwidth_snapshot = new \Files\Model\RemoteBandwidthSnapshot();
-$remote_bandwidth_snapshot->list(, [
-  'sort_by' => "",
-  'filter' => "",
-  'filter_gt' => "",
-  'filter_gteq' => "",
-  'filter_lt' => "",
-  'filter_lteq' => "",
-]);
+$remote_bandwidth_snapshot->list
 ```
 
 

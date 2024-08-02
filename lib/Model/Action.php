@@ -105,6 +105,11 @@ class Action
     {
         return @$this->attributes['username'];
     }
+    // boolean # true if this change was performed by a user on a parent site.
+    public function getUserIsFromParentSite()
+    {
+        return @$this->attributes['user_is_from_parent_site'];
+    }
     // string # Type of action
     public function getAction()
     {

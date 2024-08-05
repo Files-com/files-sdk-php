@@ -190,8 +190,6 @@ class ShareGroup
     //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
     //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
     //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
-    //   action - string
-    //   page - int64
     public static function all($params = [], $options = [])
     {
         if (@$params['user_id'] && !is_int(@$params['user_id'])) {
@@ -204,14 +202,6 @@ class ShareGroup
 
         if (@$params['per_page'] && !is_int(@$params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
-        }
-
-        if (@$params['action'] && !is_string(@$params['action'])) {
-            throw new \Files\Exception\InvalidParameterException('$action must be of type string; received ' . gettype(@$params['action']));
-        }
-
-        if (@$params['page'] && !is_int(@$params['page'])) {
-            throw new \Files\Exception\InvalidParameterException('$page must be of type int; received ' . gettype(@$params['page']));
         }
 
         $response = Api::sendRequest('/share_groups', 'GET', $params, $options);

@@ -375,12 +375,9 @@ class Notification
 
 
     // Parameters:
-    //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
     //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
     //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
-    //   action - string
-    //   page - int64
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction (e.g. `sort_by[path]=desc`). Valid fields are `path`, `user_id` or `group_id`.
+    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `path`, `user_id` or `group_id`.
     //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `path`, `user_id` or `group_id`.
     //   filter_prefix - object - If set, return records where the specified field is prefixed by the supplied value. Valid fields are `path`.
     //   path - string - Show notifications for this Path.
@@ -388,24 +385,12 @@ class Notification
     //   group_id - string
     public static function all($params = [], $options = [])
     {
-        if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-            throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
-        }
-
         if (@$params['cursor'] && !is_string(@$params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
         if (@$params['per_page'] && !is_int(@$params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
-        }
-
-        if (@$params['action'] && !is_string(@$params['action'])) {
-            throw new \Files\Exception\InvalidParameterException('$action must be of type string; received ' . gettype(@$params['action']));
-        }
-
-        if (@$params['page'] && !is_int(@$params['page'])) {
-            throw new \Files\Exception\InvalidParameterException('$page must be of type int; received ' . gettype(@$params['page']));
         }
 
         if (@$params['path'] && !is_string(@$params['path'])) {

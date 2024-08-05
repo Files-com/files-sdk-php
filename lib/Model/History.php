@@ -127,9 +127,7 @@ class History
     //   display - string - Display format. Leave blank or set to `full` or `parent`.
     //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
     //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
-    //   action - string
-    //   page - int64
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction (e.g. `sort_by[user_id]=desc`). Valid fields are `user_id` and `created_at`.
+    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `user_id` and `created_at`.
     //   path (required) - string - Path to operate on.
     public static function listForFile($path, $params = [], $options = [])
     {
@@ -163,14 +161,6 @@ class History
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
-        if (@$params['action'] && !is_string(@$params['action'])) {
-            throw new \Files\Exception\InvalidParameterException('$action must be of type string; received ' . gettype(@$params['action']));
-        }
-
-        if (@$params['page'] && !is_int(@$params['page'])) {
-            throw new \Files\Exception\InvalidParameterException('$page must be of type int; received ' . gettype(@$params['page']));
-        }
-
         if (@$params['path'] && !is_string(@$params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
@@ -192,9 +182,7 @@ class History
     //   display - string - Display format. Leave blank or set to `full` or `parent`.
     //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
     //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
-    //   action - string
-    //   page - int64
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction (e.g. `sort_by[user_id]=desc`). Valid fields are `user_id` and `created_at`.
+    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `user_id` and `created_at`.
     //   path (required) - string - Path to operate on.
     public static function listForFolder($path, $params = [], $options = [])
     {
@@ -228,14 +216,6 @@ class History
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
-        if (@$params['action'] && !is_string(@$params['action'])) {
-            throw new \Files\Exception\InvalidParameterException('$action must be of type string; received ' . gettype(@$params['action']));
-        }
-
-        if (@$params['page'] && !is_int(@$params['page'])) {
-            throw new \Files\Exception\InvalidParameterException('$page must be of type int; received ' . gettype(@$params['page']));
-        }
-
         if (@$params['path'] && !is_string(@$params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
@@ -257,9 +237,7 @@ class History
     //   display - string - Display format. Leave blank or set to `full` or `parent`.
     //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
     //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
-    //   action - string
-    //   page - int64
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction (e.g. `sort_by[user_id]=desc`). Valid fields are `user_id` and `created_at`.
+    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `user_id` and `created_at`.
     //   user_id (required) - int64 - User ID.
     public static function listForUser($user_id, $params = [], $options = [])
     {
@@ -293,14 +271,6 @@ class History
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
-        if (@$params['action'] && !is_string(@$params['action'])) {
-            throw new \Files\Exception\InvalidParameterException('$action must be of type string; received ' . gettype(@$params['action']));
-        }
-
-        if (@$params['page'] && !is_int(@$params['page'])) {
-            throw new \Files\Exception\InvalidParameterException('$page must be of type int; received ' . gettype(@$params['page']));
-        }
-
         if (@$params['user_id'] && !is_int(@$params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
@@ -322,9 +292,7 @@ class History
     //   display - string - Display format. Leave blank or set to `full` or `parent`.
     //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
     //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
-    //   action - string
-    //   page - int64
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction (e.g. `sort_by[user_id]=desc`). Valid fields are `user_id` and `created_at`.
+    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `user_id` and `created_at`.
     public static function listLogins($params = [], $options = [])
     {
         if (@$params['start_at'] && !is_string(@$params['start_at'])) {
@@ -347,14 +315,6 @@ class History
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
-        if (@$params['action'] && !is_string(@$params['action'])) {
-            throw new \Files\Exception\InvalidParameterException('$action must be of type string; received ' . gettype(@$params['action']));
-        }
-
-        if (@$params['page'] && !is_int(@$params['page'])) {
-            throw new \Files\Exception\InvalidParameterException('$page must be of type int; received ' . gettype(@$params['page']));
-        }
-
         $response = Api::sendRequest('/history/login', 'GET', $params, $options);
 
         $return_array = [];
@@ -372,9 +332,7 @@ class History
     //   display - string - Display format. Leave blank or set to `full` or `parent`.
     //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
     //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
-    //   action - string
-    //   page - int64
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction (e.g. `sort_by[path]=desc`). Valid fields are `path`, `folder`, `user_id` or `created_at`.
+    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `path`, `folder`, `user_id` or `created_at`.
     //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `user_id`, `folder` or `path`.
     //   filter_prefix - object - If set, return records where the specified field is prefixed by the supplied value. Valid fields are `path`.
     public static function all($params = [], $options = [])
@@ -397,14 +355,6 @@ class History
 
         if (@$params['per_page'] && !is_int(@$params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
-        }
-
-        if (@$params['action'] && !is_string(@$params['action'])) {
-            throw new \Files\Exception\InvalidParameterException('$action must be of type string; received ' . gettype(@$params['action']));
-        }
-
-        if (@$params['page'] && !is_int(@$params['page'])) {
-            throw new \Files\Exception\InvalidParameterException('$page must be of type int; received ' . gettype(@$params['page']));
         }
 
         $response = Api::sendRequest('/history', 'GET', $params, $options);

@@ -253,9 +253,7 @@ class Behavior
     // Parameters:
     //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
     //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
-    //   action - string
-    //   page - int64
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction (e.g. `sort_by[behavior]=desc`). Valid fields are `behavior` and `impacts_ui`.
+    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `behavior` and `impacts_ui`.
     //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `impacts_ui` and `behavior`.
     //   filter_prefix - object - If set, return records where the specified field is prefixed by the supplied value. Valid fields are `behavior`.
     public static function all($params = [], $options = [])
@@ -266,14 +264,6 @@ class Behavior
 
         if (@$params['per_page'] && !is_int(@$params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
-        }
-
-        if (@$params['action'] && !is_string(@$params['action'])) {
-            throw new \Files\Exception\InvalidParameterException('$action must be of type string; received ' . gettype(@$params['action']));
-        }
-
-        if (@$params['page'] && !is_int(@$params['page'])) {
-            throw new \Files\Exception\InvalidParameterException('$page must be of type int; received ' . gettype(@$params['page']));
         }
 
         $response = Api::sendRequest('/behaviors', 'GET', $params, $options);
@@ -317,14 +307,11 @@ class Behavior
     // Parameters:
     //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
     //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
-    //   action - string
-    //   page - int64
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction (e.g. `sort_by[behavior]=desc`). Valid fields are `behavior` and `impacts_ui`.
+    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `behavior` and `impacts_ui`.
     //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `impacts_ui` and `behavior`.
     //   filter_prefix - object - If set, return records where the specified field is prefixed by the supplied value. Valid fields are `behavior`.
     //   path (required) - string - Path to operate on.
     //   ancestor_behaviors - boolean - If `true`, behaviors above this path are shown.
-    //   behavior - string
     public static function listFor($path, $params = [], $options = [])
     {
         if (!is_array($params)) {
@@ -345,20 +332,8 @@ class Behavior
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
-        if (@$params['action'] && !is_string(@$params['action'])) {
-            throw new \Files\Exception\InvalidParameterException('$action must be of type string; received ' . gettype(@$params['action']));
-        }
-
-        if (@$params['page'] && !is_int(@$params['page'])) {
-            throw new \Files\Exception\InvalidParameterException('$page must be of type int; received ' . gettype(@$params['page']));
-        }
-
         if (@$params['path'] && !is_string(@$params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
-        }
-
-        if (@$params['behavior'] && !is_string(@$params['behavior'])) {
-            throw new \Files\Exception\InvalidParameterException('$behavior must be of type string; received ' . gettype(@$params['behavior']));
         }
 
         $response = Api::sendRequest('/behaviors/folders/' . @$params['path'] . '', 'GET', $params, $options);

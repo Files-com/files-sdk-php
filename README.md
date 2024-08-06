@@ -2,111 +2,495 @@
 
 The Files.com PHP SDK provides convenient Files.com API access to applications written in PHP.
 
+The content included here should be enough to get started, but please visit our
+[Developer Documentation Website](https://developers.files.com/php/) for the complete documentation.
 
-## Installation
+## Introduction
+
+The Files.com PHP SDK provides convenient Files.com API access to applications written in PHP.
+
+### Installation
 
 Install Composer. See https://packagist.org for more info.
 
 If `composer.phar` is already available, skip this step.
 
-    curl -sS https://getcomposer.org/installer | php
+```shell
+curl -sS https://getcomposer.org/installer | php
+```
 
 Install the SDK
 
-    php composer.phar require files.com/files-php-sdk
+```shell
+php composer.phar require files.com/files-php-sdk
+```
 
-
-### Requirements
+#### Requirements
 
 * PHP 5.5+
 * php-curl extension
 
+### Usage
 
-## Usage
-
-
-### Import and initialize
+#### Import and initialize
 ```php
-    require 'vendor/autoload.php';
+require 'vendor/autoload.php';
 
-    // set client to use a mock Files.com server for testing
-    \Files\Files::setBaseUrl('https://MY-SUBDOMAIN.files.com');
+// set client to use a mock Files.com server for testing
+\Files\Files::setBaseUrl('https://MY-SUBDOMAIN.files.com');
 ```
 
+<Note title="Repository">
+Explore the [files-sdk-php](https://github.com/Files-com/files-sdk-php) code on GitHub.
+</Note>
 
-### Authentication
+### Getting Support
 
-There are multiple ways to authenticate to the API.
+The Files.com team is happy to help with any SDK Integration challenges you
+may face.
 
+Just email support@files.com and we'll get the process started.
 
-#### Global API Key
+## Authentication
 
-You can set an API key globally like this:
-```php
-    \Files\Files::setApiKey('my-api-key');
+### Authenticate with an API Key
+
+Authenticating with an API key is the recommended authentication method for most scenarios, and is
+the method used in the examples on this site.
+
+To use the API or SDKs with an API Key, first generate an API key from the [web
+interface](https://www.files.com/docs/sdk-and-apis/api-keys) or [via the API or an
+SDK](/php/resources/developers/api-keys).
+
+Note that when using a user-specific API key, if the user is an administrator, you will have full
+access to the entire API. If the user is not an administrator, you will only be able to access files
+that user can access, and no access will be granted to site administration functions in the API.
+
+```php title="Example Request"
+\Files\Files::setApiKey('YOUR_API_KEY');
+
+## Alternatively, you can specify the API key on a per-object basis in the second parameter to a model constructor.
+$user = new \Files\Model\User($params, array('api_key' => 'YOUR_API_KEY'));
+
+## You may also specify the API key on a per-request basis in the final parameter to static methods.
+\Files\Model\User::find($id, $params, array('api_key' => 'YOUR_API_KEY'));
 ```
 
+<Note>
+Don't forget to replace the placeholder, `YOUR_API_KEY`, with your actual API key.
+</Note>
 
-#### Per-Request API Key
+### Authenticate with a Session
 
-Or, you can pass an API key per-request, in the options array at the end of every method like this:
-```php
-    $user = new \Files\Model\User($params, array('api_key' => 'my-api-key'));
+You can also authenticate to the REST API or SDKs by creating a user session using the username and
+password of an active user. If the user is an administrator, the session will have full access to
+the entire API. Sessions created from regular user accounts will only be able to access files that
+user can access, and no access will be granted to site administration functions.
+
+API sessions use the exact same session timeout settings as web interface sessions. When an API
+session times out, simply create a new session and resume where you left off. This process is not
+automatically handled by SDKs because we do not want to store password information in memory without
+your explicit consent.
+
+#### Logging in
+
+To create a session, the `create` method is called on the `\Files\Model\Session` object with the user's username and
+password.
+
+This returns a session object that can be used to authenticate SDK method calls.
+
+```php title="Example Request"
+$session = \Files\Model\Session::create(['username' => 'motor', 'password' => 'vroom']);
 ```
 
+#### Using a session
 
-#### User Session
+Once a session has been created, you can store the session globally, use the session per object, or use the session per request to authenticate SDK operations.
 
-Or, you can open a user session by calling `\Files\Model\Session::create()`
-```php
-    $session = \Files\Model\Session::create(['username' => $username, 'password' => $password]);
+```php title="Example Request"
+## You may set the returned session ID to be used by default for subsequent requests.
+\Files\Files::setSessionId($session->id);
+
+## Alternatively, you can specify the session ID on a per-object basis in the second parameter to a model constructor.
+$user = new \Files\Model\User($params, array('session_id' => $session->id));
+
+## You may also specify the session ID on a per-request basis in the final parameter to static methods.
+\Files\Model\User::find($id, $params, array('session_id' => $session->id));
 ```
 
-Then use it globally for all subsequent API calls like this:
-```php
-    \Files\Files::setSessionId($session->id);
+#### Logging out
+
+User sessions can be ended by calling the `Session::destroy` method.
+
+```php title="Example Request"
+\Files\Model\Session::destroy();
 ```
 
-Or, you can pass the session ID per-request, in the options array at the end of every method like this:
-```php
-    $user = new \Files\Model\User($params, array('session_id' => $session->id));
+## Configuration
+
+Global configuration can be done by setting properties directly on the `\Files\Files` class.
+
+### Configuration options
+
+#### Auto paginate
+
+Auto-fetch all pages when results span multiple pages. The default value is `true`.
+```php title="Example setting"
+\Files\Files::$autoPaginate = false
 ```
 
+#### Base URL
 
-##### Session example
+Setting the base URL for the API is required if your site is configured to disable global acceleration.
+This can also be set to use a mock server in development or CI.
 
-```php
-    $session = \Files\Model\Session::create(['username' => $myUsername, 'password' => $myPassword]);
-    \Files\Files::setSessionId($session->id);
-
-    // do something
-    \Files\Model\ApiKey::all(['user_id' => 0]);
-
-    // clean up when done
-    \Files\Model\Session::destroy();
-    \Files\Files::setSessionId(null);
+```php title="Example setting"
+\Files\Files::setBaseUrl('https://MY-SUBDOMAIN.files.com');
 ```
 
+#### Log level
 
-### Setting Global Options
+Supported values:
 
-You can set the following global properties directly on the `\Files\Files` class:
+* `\Files\LogLevel::NONE`
+* `\Files\LogLevel::ERROR`
+* `\Files\LogLevel::WARN`
+* `\Files\LogLevel::INFO` (default)
+* `\Files\LogLevel::DEBUG`
 
-* `\Files\Files::$logLevel` - set to one of the following:
-  * `\Files\LogLevel::NONE`
-  * `\Files\LogLevel::ERROR`
-  * `\Files\LogLevel::WARN`
-  * `\Files\LogLevel::INFO` (default)
-  * `\Files\LogLevel::DEBUG`
-* `\Files\Files::$debugRequest` - enable debug logging of API requests (default: `false`)
-* `\Files\Files::$debugResponseHeaders` - enable debug logging of API response headers (default: `false`)
-* `\Files\Files::$connectTimeout` - network connect timeout in seconds (default: `30.0`)
-* `\Files\Files::$readTimeout` - network read timeout in seconds (default: `90.0`)
-* `\Files\Files::$maxNetworkRetries` - max retries (default: `3`)
-* `\Files\Files::$minNetworkRetryDelay` - minimum delay in seconds before retrying (default: `0.5`)
-* `\Files\Files::$maxNetworkRetryDelay` - max delay in seconds before retrying (default: `1.5`)
-* `\Files\Files::$autoPaginate` - auto-fetch all pages when results span multiple pages (default: `true`)
+```php title="Example setting"
+\Files\Files::$logLevel = \Files\LogLevel::DEBUG
+```
 
+#### Debug requests
+
+Enable debug logging of API requests. The default value is `false`.
+
+```php title="Example setting"
+\Files\Files::$debugRequest = true
+```
+
+#### Debug response headers
+
+Enable debug logging of API response headers. The default value is `false`.
+
+```php title="Example setting"
+\Files\Files::$debugResponseHeaders = true
+```
+
+#### Connect timeout
+
+Network connect timeout in seconds. The default value is 30.0.
+```php title="Example setting"
+\Files\Files::$connectTimeout = 20.0
+```
+
+#### Read timeout
+
+Network read timeout in seconds. The default value is 90.
+
+```php title="Example setting"
+\Files\Files::$readTimeout = 60
+```
+
+#### Minimum retry delay
+
+Minimum network delay in seconds before retrying. The default value is 0.5.
+
+```php title="Example setting"
+\Files\Files::$minNetworkRetryDelay = 1.0
+```
+
+#### Maximum retry delay
+
+Maximum network delay in seconds before retrying. The default value is 1.5.
+
+```php title="Example setting"
+\Files\Files::$maxNetworkRetryDelay = 3.0
+```
+
+#### Maximum network retries
+
+Maximum number of retries. The default value is 3.
+
+```php title="Example setting"
+\Files\Files::$maxNetworkRetries = 5
+```
+
+### Logging
+
+The Files.com SDK is compatible with the standard log4j logging scheme.
+
+Add `com.files` logger to your `Loggers` root in the `log4j2.xml` file.
+
+```xml title="log4j2.xml"
+<Loggers>
+    <!-- set preferred level -->
+    <Logger name="com.files" level="TRACE" />
+    <!-- to enable network request -->
+    <Logger name="okhttp3.logging.wire" level="INFO"/>
+</Loggers>
+```
+
+Create a `resources/log4j2.xml` file.
+
+```xml title="resources/log4j2.xml"
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <!-- set preferred level -->
+        <Logger name="com.files" level="TRACE"/>
+        <!-- to enable network request -->
+        <Logger name="okhttp3.logging.wire" level="INFO"/>
+    </Loggers>
+</Configuration>
+```
+
+You can read more about [log4j2 configuration](https://logging.apache.org/log4j/2.x/manual/configuration.html).
+
+## Errors
+
+The Files.com PHP SDK will return errors by raising exceptions. There are many exception classes defined in the Files SDK that correspond
+to specific errors.
+
+The raised exceptions come from two categories:
+
+1.  SDK Exceptions - errors that originate within the SDK
+2.  API Exceptions - errors that occur due to the response from the Files.com API.  These errors are grouped into common error types.
+
+There are several types of exceptions within each category.  Exception classes indicate different types of errors and are named in a
+fashion that describe the general premise of the originating error.  More details can be found in the exception object message using the
+`php getMessage()` method call.
+
+Use standard PHP exception handling to detect and deal with errors.  It is generally recommended to catch specific errors first, then
+catch the general `Files\FilesException` exception as a catch-all.
+
+```php title="Example Error Handling"
+try {
+  $session = Files\Model\Session::create(['username' => 'USERNAME', 'password' => 'BADPASSWORD']);
+} catch (Files\NotAuthenticated\InvalidUsernameOrPasswordException $e) {
+  echo 'Authentication Error Occured (' . get_class($e) . '): ',  $e->getMessage(), "\n";
+} catch (Files\FilesException $e) {
+  echo 'Unknown Error Occured (' . get_class($e) . '): ',  $e->getMessage(), "\n";
+}
+```
+
+### Error Types
+
+#### SDK Errors
+
+SDK errors are general errors that occur within the SDK code.  These errors generate exceptions.  Each of these
+exception classes inherit from a standard `Exception` base class.
+
+```shell title="Example SDK Exception Class Inheritance Structure"
+Files\Exception\ApiConnectException ->
+Files\Exception\FilesException ->
+Exception
+```
+##### SDK Exception Classes
+
+| Exception Class Name| Description |
+| --------------- | ------------ |
+| `ApiBadResponseException`| A bad formed response came back from the API |
+| `ApiConnectException`| The Files.com API cannot be reached |
+| `ApiRequestException`| There was an issue with the API request itself |
+| `ApiServerException`| The API service responded with a bad response (ie, 5xx) |
+| `ApiTooManyRedirectsException`| The API service redirected too many times |
+| `ConfigurationException`| Invalid SDK configuration parameters |
+| `EmptyPropertyException`| An required property was empty |
+| `InvalidParameterException`| A passed in parameter is invalid |
+| `MissingParameterException`| A method parameter is missing |
+| `NotImplementedException`| The called method has not be implemented by the SDK |
+
+#### API Errors
+
+API errors are errors returned by the Files.com API.  Each exception class inherits from an error group base class.
+The error group base class indicates a particular type of error.
+
+```shell title="Example API Exception Class Inheritance Structure"
+Files\Exception\NotAuthorizedException\FolderAdminPermissionRequiredException ->
+Files\Exception\NotAuthorizedException ->
+Files\Exception\ApiException ->
+Files\Exception\FilesException ->
+Exception
+```
+##### API Exception Classes
+
+| Exception Class Name | Error Group |
+| --------- | --------- |
+|`AgentUpgradeRequiredException`|  `BadRequestException` |
+|`AttachmentTooLargeException`|  `BadRequestException` |
+|`CannotDownloadDirectoryException`|  `BadRequestException` |
+|`CantMoveWithMultipleLocationsException`|  `BadRequestException` |
+|`DatetimeParseException`|  `BadRequestException` |
+|`DestinationSameException`|  `BadRequestException` |
+|`FolderMustNotBeAFileException`|  `BadRequestException` |
+|`InvalidBodyException`|  `BadRequestException` |
+|`InvalidCursorException`|  `BadRequestException` |
+|`InvalidCursorTypeForSortException`|  `BadRequestException` |
+|`InvalidEtagsException`|  `BadRequestException` |
+|`InvalidFilterAliasCombinationException`|  `BadRequestException` |
+|`InvalidFilterCombinationException`|  `BadRequestException` |
+|`InvalidFilterFieldException`|  `BadRequestException` |
+|`InvalidFilterParamException`|  `BadRequestException` |
+|`InvalidFilterParamValueException`|  `BadRequestException` |
+|`InvalidInputEncodingException`|  `BadRequestException` |
+|`InvalidInterfaceException`|  `BadRequestException` |
+|`InvalidOauthProviderException`|  `BadRequestException` |
+|`InvalidPathException`|  `BadRequestException` |
+|`InvalidReturnToUrlException`|  `BadRequestException` |
+|`InvalidUploadOffsetException`|  `BadRequestException` |
+|`InvalidUploadPartGapException`|  `BadRequestException` |
+|`InvalidUploadPartSizeException`|  `BadRequestException` |
+|`MethodNotAllowedException`|  `BadRequestException` |
+|`NoValidInputParamsException`|  `BadRequestException` |
+|`PartNumberTooLargeException`|  `BadRequestException` |
+|`PathCannotHaveTrailingWhitespaceException`|  `BadRequestException` |
+|`ReauthenticationNeededFieldsException`|  `BadRequestException` |
+|`RequestParamsContainInvalidCharacterException`|  `BadRequestException` |
+|`RequestParamsInvalidException`|  `BadRequestException` |
+|`RequestParamsRequiredException`|  `BadRequestException` |
+|`SearchAllOnChildPathException`|  `BadRequestException` |
+|`UnsupportedCurrencyException`|  `BadRequestException` |
+|`UnsupportedHttpResponseFormatException`|  `BadRequestException` |
+|`UnsupportedMediaTypeException`|  `BadRequestException` |
+|`UserIdInvalidException`|  `BadRequestException` |
+|`UserIdOnUserEndpointException`|  `BadRequestException` |
+|`UserRequiredException`|  `BadRequestException` |
+|`AdditionalAuthenticationRequiredException`|  `NotAuthenticatedException` |
+|`AuthenticationRequiredException`|  `NotAuthenticatedException` |
+|`BundleRegistrationCodeFailedException`|  `NotAuthenticatedException` |
+|`FilesAgentTokenFailedException`|  `NotAuthenticatedException` |
+|`InboxRegistrationCodeFailedException`|  `NotAuthenticatedException` |
+|`InvalidCredentialsException`|  `NotAuthenticatedException` |
+|`InvalidOauthException`|  `NotAuthenticatedException` |
+|`InvalidOrExpiredCodeException`|  `NotAuthenticatedException` |
+|`InvalidSessionException`|  `NotAuthenticatedException` |
+|`InvalidUsernameOrPasswordException`|  `NotAuthenticatedException` |
+|`LockedOutException`|  `NotAuthenticatedException` |
+|`LockoutRegionMismatchException`|  `NotAuthenticatedException` |
+|`OneTimePasswordIncorrectException`|  `NotAuthenticatedException` |
+|`TwoFactorAuthenticationErrorException`|  `NotAuthenticatedException` |
+|`TwoFactorAuthenticationSetupExpiredException`|  `NotAuthenticatedException` |
+|`ApiKeyIsDisabledException`|  `NotAuthorizedException` |
+|`ApiKeyIsPathRestrictedException`|  `NotAuthorizedException` |
+|`ApiKeyOnlyForDesktopAppException`|  `NotAuthorizedException` |
+|`ApiKeyOnlyForMobileAppException`|  `NotAuthorizedException` |
+|`ApiKeyOnlyForOfficeIntegrationException`|  `NotAuthorizedException` |
+|`BillingPermissionRequiredException`|  `NotAuthorizedException` |
+|`BundleMaximumUsesReachedException`|  `NotAuthorizedException` |
+|`CannotLoginWhileUsingKeyException`|  `NotAuthorizedException` |
+|`CantActForOtherUserException`|  `NotAuthorizedException` |
+|`ContactAdminForPasswordChangeHelpException`|  `NotAuthorizedException` |
+|`FilesAgentFailedAuthorizationException`|  `NotAuthorizedException` |
+|`FolderAdminOrBillingPermissionRequiredException`|  `NotAuthorizedException` |
+|`FolderAdminPermissionRequiredException`|  `NotAuthorizedException` |
+|`FullPermissionRequiredException`|  `NotAuthorizedException` |
+|`HistoryPermissionRequiredException`|  `NotAuthorizedException` |
+|`InsufficientPermissionForParamsException`|  `NotAuthorizedException` |
+|`InsufficientPermissionForSiteException`|  `NotAuthorizedException` |
+|`MustAuthenticateWithApiKeyException`|  `NotAuthorizedException` |
+|`NeedAdminPermissionForInboxException`|  `NotAuthorizedException` |
+|`NonAdminsMustQueryByFolderOrPathException`|  `NotAuthorizedException` |
+|`NotAllowedToCreateBundleException`|  `NotAuthorizedException` |
+|`PasswordChangeNotRequiredException`|  `NotAuthorizedException` |
+|`PasswordChangeRequiredException`|  `NotAuthorizedException` |
+|`ReadOnlySessionException`|  `NotAuthorizedException` |
+|`ReadPermissionRequiredException`|  `NotAuthorizedException` |
+|`ReauthenticationFailedException`|  `NotAuthorizedException` |
+|`ReauthenticationFailedFinalException`|  `NotAuthorizedException` |
+|`ReauthenticationNeededActionException`|  `NotAuthorizedException` |
+|`RecaptchaFailedException`|  `NotAuthorizedException` |
+|`SelfManagedRequiredException`|  `NotAuthorizedException` |
+|`SiteAdminRequiredException`|  `NotAuthorizedException` |
+|`SiteFilesAreImmutableException`|  `NotAuthorizedException` |
+|`TwoFactorAuthenticationRequiredException`|  `NotAuthorizedException` |
+|`UserIdWithoutSiteAdminException`|  `NotAuthorizedException` |
+|`WriteAndBundlePermissionRequiredException`|  `NotAuthorizedException` |
+|`WritePermissionRequiredException`|  `NotAuthorizedException` |
+|`ZipDownloadIpMismatchException`|  `NotAuthorizedException` |
+|`ApiKeyNotFoundException`|  `NotFoundException` |
+|`BundlePathNotFoundException`|  `NotFoundException` |
+|`BundleRegistrationNotFoundException`|  `NotFoundException` |
+|`CodeNotFoundException`|  `NotFoundException` |
+|`FileNotFoundException`|  `NotFoundException` |
+|`FileUploadNotFoundException`|  `NotFoundException` |
+|`FolderNotFoundException`|  `NotFoundException` |
+|`GroupNotFoundException`|  `NotFoundException` |
+|`InboxNotFoundException`|  `NotFoundException` |
+|`NestedNotFoundException`|  `NotFoundException` |
+|`PlanNotFoundException`|  `NotFoundException` |
+|`SiteNotFoundException`|  `NotFoundException` |
+|`UserNotFoundException`|  `NotFoundException` |
+|`AlreadyCompletedException`|  `ProcessingFailureException` |
+|`AutomationCannotBeRunManuallyException`|  `ProcessingFailureException` |
+|`BehaviorNotAllowedOnRemoteServerException`|  `ProcessingFailureException` |
+|`BundleOnlyAllowsPreviewsException`|  `ProcessingFailureException` |
+|`BundleOperationRequiresSubfolderException`|  `ProcessingFailureException` |
+|`CouldNotCreateParentException`|  `ProcessingFailureException` |
+|`DestinationExistsException`|  `ProcessingFailureException` |
+|`DestinationFolderLimitedException`|  `ProcessingFailureException` |
+|`DestinationParentConflictException`|  `ProcessingFailureException` |
+|`DestinationParentDoesNotExistException`|  `ProcessingFailureException` |
+|`ExpiredPrivateKeyException`|  `ProcessingFailureException` |
+|`ExpiredPublicKeyException`|  `ProcessingFailureException` |
+|`ExportFailureException`|  `ProcessingFailureException` |
+|`ExportNotReadyException`|  `ProcessingFailureException` |
+|`FailedToChangePasswordException`|  `ProcessingFailureException` |
+|`FileLockedException`|  `ProcessingFailureException` |
+|`FileNotUploadedException`|  `ProcessingFailureException` |
+|`FilePendingProcessingException`|  `ProcessingFailureException` |
+|`FileProcessingErrorException`|  `ProcessingFailureException` |
+|`FileTooBigToDecryptException`|  `ProcessingFailureException` |
+|`FileTooBigToEncryptException`|  `ProcessingFailureException` |
+|`FileUploadedToWrongRegionException`|  `ProcessingFailureException` |
+|`FilenameTooLongException`|  `ProcessingFailureException` |
+|`FolderLockedException`|  `ProcessingFailureException` |
+|`FolderNotEmptyException`|  `ProcessingFailureException` |
+|`HistoryUnavailableException`|  `ProcessingFailureException` |
+|`InvalidBundleCodeException`|  `ProcessingFailureException` |
+|`InvalidFileTypeException`|  `ProcessingFailureException` |
+|`InvalidFilenameException`|  `ProcessingFailureException` |
+|`InvalidPriorityColorException`|  `ProcessingFailureException` |
+|`InvalidRangeException`|  `ProcessingFailureException` |
+|`ModelSaveErrorException`|  `ProcessingFailureException` |
+|`MultipleProcessingErrorsException`|  `ProcessingFailureException` |
+|`PathTooLongException`|  `ProcessingFailureException` |
+|`RecipientAlreadySharedException`|  `ProcessingFailureException` |
+|`RemoteServerErrorException`|  `ProcessingFailureException` |
+|`ResourceLockedException`|  `ProcessingFailureException` |
+|`SubfolderLockedException`|  `ProcessingFailureException` |
+|`TwoFactorAuthenticationCodeAlreadySentException`|  `ProcessingFailureException` |
+|`TwoFactorAuthenticationCountryBlacklistedException`|  `ProcessingFailureException` |
+|`TwoFactorAuthenticationGeneralErrorException`|  `ProcessingFailureException` |
+|`TwoFactorAuthenticationUnsubscribedRecipientException`|  `ProcessingFailureException` |
+|`UpdatesNotAllowedForRemotesException`|  `ProcessingFailureException` |
+|`DuplicateShareRecipientException`|  `RateLimitedException` |
+|`ReauthenticationRateLimitedException`|  `RateLimitedException` |
+|`TooManyConcurrentLoginsException`|  `RateLimitedException` |
+|`TooManyConcurrentRequestsException`|  `RateLimitedException` |
+|`TooManyLoginAttemptsException`|  `RateLimitedException` |
+|`TooManyRequestsException`|  `RateLimitedException` |
+|`TooManySharesException`|  `RateLimitedException` |
+|`AgentUnavailableException`|  `ServiceUnavailableException` |
+|`AutomationsUnavailableException`|  `ServiceUnavailableException` |
+|`MigrationInProgressException`|  `ServiceUnavailableException` |
+|`SiteDisabledException`|  `ServiceUnavailableException` |
+|`UploadsUnavailableException`|  `ServiceUnavailableException` |
+|`AccountAlreadyExistsException`|  `SiteConfigurationException` |
+|`AccountOverdueException`|  `SiteConfigurationException` |
+|`NoAccountForSiteException`|  `SiteConfigurationException` |
+|`SiteWasRemovedException`|  `SiteConfigurationException` |
+|`TrialExpiredException`|  `SiteConfigurationException` |
+|`TrialLockedException`|  `SiteConfigurationException` |
+|`UserRequestsEnabledRequiredException`|  `SiteConfigurationException` |
+
+## Examples
 
 ### Static File Operations
 
@@ -116,13 +500,11 @@ You can set the following global properties directly on the `\Files\Files` class
     $rootFiles = \Files\Model\Folder::listFor('/');
 ```
 
-
 #### Uploading a file on disk
 
 ```php
     \Files\Model\File::uploadFile($destinationFileName, $sourceFilePath);
 ```
-
 
 #### Uploading raw file data
 
@@ -130,13 +512,11 @@ You can set the following global properties directly on the `\Files\Files` class
     \Files\Model\File::uploadData($destinationFileName, $fileData);
 ```
 
-
 #### Download a file to stream
 
 ```php
     \Files\Model\File::downloadToStream($remoteFilePath, $outputStream);
 ```
-
 
 #### Download a file to disk
 
@@ -151,13 +531,11 @@ You can set the following global properties directly on the `\Files\Files` class
     \Files\Model\File::resumeDownloadToFile($remoteFilePath, $localFilePath);
 ```
 
-
 #### Getting a file record by path
 
 ```php
     $foundFile = \Files\Model\File::find($remoteFilePath);
 ```
-
 
 ### File Object Operations
 
@@ -168,7 +546,6 @@ You can set the following global properties directly on the `\Files\Files` class
     $file->get($remoteFilePath);
 ```
 
-
 ##### Updating metadata
 
 ```php
@@ -178,7 +555,6 @@ You can set the following global properties directly on the `\Files\Files` class
     ]);
 ```
 
-
 ##### Retrieving metadata
 
 ```php
@@ -187,7 +563,6 @@ You can set the following global properties directly on the `\Files\Files` class
       'with_priority_color' => true,
     ]);
 ```
-
 
 #### Comparing Case insensitive files and paths
 
@@ -199,21 +574,44 @@ For related documentation see [Case Sensitivity Documentation](https://www.files
     }
 ```
 
+## Mock Server
 
-### Additional Documentation
+Files.com publishes a Files.com API server, which is useful for testing your use of the Files.com
+SDKs and other direct integrations against the Files.com API in an integration test environment.
 
-Additional docs are available at https://developers.files.com
+It is a Ruby app that operates as a minimal server for the purpose of testing basic network
+operations and JSON encoding for your SDK or API client. It does not maintain state and it does not
+deeply inspect your submissions for correctness.
 
-## Migrating to Version 2.0 from previous versions
+Eventually we will add more features intended for integration testing, such as the ability to
+intentionally provoke errors.
 
-In Version 2.0, the Files.com PHP SDK was updated to comply with both the [PSR-12](https://www.php-fig.org/psr/psr-12/) coding standard and the [PSR-4](https://www.php-fig.org/psr/psr-4/) autoloading standard.  No new classes were added or any exising classes removed, but some where moved to comply with the PSR-4 standard.  If a client of the sdk references the moved classes, the client code will need to be updated to reference the new location of these classes.
+Download the server as a Docker image via [Docker Hub](https://hub.docker.com/r/filescom/files-mock-server).
 
-### Exception Classes
-The affected classes where primarly Exception classes.  Exceptions where moved into their own namespace (and source files).
+The Source Code is also available on [GitHub](https://github.com/Files-com/files-mock-server).
 
-The following table shows the classes that where changed for compliance
+A README is available on the GitHub link.
 
-##### Base Exceptions
+## Upgrading
+
+### Upgrading to Version 2.0 from previous versions
+
+In Version 2.0, the Files.com PHP SDK was updated to comply with both the
+[PSR-12](https://www.php-fig.org/psr/psr-12/) coding standard and the
+[PSR-4](https://www.php-fig.org/psr/psr-4/) autoloading standard. No new
+classes were added or any exising classes removed, but some were moved to
+comply with the PSR-4 standard. If a client of the sdk references the moved
+classes, the client code will need to be updated to reference the new location
+of these classes.
+
+#### Exception Classes
+
+The affected classes were primarly Exception classes. Exceptions were moved
+into their own namespace (and source files).
+
+The following table shows the classes that were changed for compliance
+
+###### Base Exceptions
 
 The Base exception were moved from the `\Files` namespace to the `\Files\Exception` namespace.
 
@@ -225,8 +623,10 @@ Examples of Base Exceptions Classes moved.
 | `\Files\FilesException` | `Files\Exception\FilesException`  |
 | `\Files\ConfigurationException` | `Files\Exception\ConfigurationException`  |
 
-#### BadRequest Exceptions
-The BadRequest group of exceptions were moved from the `\Files\BadRequest` namespace to the `\Files\Exception\BadRequest` namespace.
+##### BadRequest Exceptions
+
+The BadRequest group of exceptions were moved from the `\Files\BadRequest`
+namespace to the `\Files\Exception\BadRequest` namespace.
 
 Example of BadRequest Classes moved.
 
@@ -234,8 +634,11 @@ Example of BadRequest Classes moved.
 |------------------------------|------------------|
 | `\Files\BadRequest\AgentUpgradeRequiredException` | `Files\Exception\BadRequest\AgentUpgradeRequiredException`  |
 
-#### NotAuthenticated Exceptions
-The NotAuthenticated group of exceptions were moved from the `\Files\NotAuthenticated` namespace to the `\Files\Exception\NotAuthenticated` namespace.
+##### NotAuthenticated Exceptions
+
+The NotAuthenticated group of exceptions were moved from the
+`\Files\NotAuthenticated` namespace to the `\Files\Exception\NotAuthenticated`
+namespace.
 
 Example of NotAuthenticated Classes moved.
 
@@ -243,8 +646,10 @@ Example of NotAuthenticated Classes moved.
 |------------------------------|------------------|
 | `\Files\NotAuthenticated\AdditionalAuthenticationRequiredException` | `Files\Exception\NotAuthenticated\AdditionalAuthenticationRequiredException`  |
 
-#### NotAuthorized Exceptions
-The NotAuthorized group of exceptions were moved from the `\Files\NotAuthorized` namespace to the `\Files\Exception\NotAuthorized` namespace.
+##### NotAuthorized Exceptions
+
+The NotAuthorized group of exceptions were moved from the `\Files\NotAuthorized`
+namespace to the `\Files\Exception\NotAuthorized` namespace.
 
 Example of NotAuthorized Classes moved.
 
@@ -252,7 +657,8 @@ Example of NotAuthorized Classes moved.
 |------------------------------|------------------|
 | `\Files\NotAuthorized\ApiKeyIsDisabledException` | `Files\Exception\NotAuthorized\ApiKeyIsDisabledException`  |
 
-#### NotFound Exceptions
+##### NotFound Exceptions
+
 The NotFound group of exceptions were moved from the `\Files\NotFound` namespace to the `\Files\Exception\NotFound` namespace.
 
 Example of NotFound Classes moved.
@@ -261,8 +667,11 @@ Example of NotFound Classes moved.
 |------------------------------|------------------|
 | `\Files\NotFound\ApiKeyNotFoundException` | `Files\Exception\NotFound\ApiKeyNotFoundException`  |
 
-#### ProcessingFailure Exceptions
-The ProcessingFailure group of exceptions were moved from the `\Files\ProcessingFailure` namespace to the `\Files\Exception\ProcessingFailure` namespace.
+##### ProcessingFailure Exceptions
+
+The ProcessingFailure group of exceptions were moved from the
+`\Files\ProcessingFailure` namespace to the `\Files\Exception\ProcessingFailure`
+namespace.
 
 Example of ProcessingFailure Classes moved.
 
@@ -270,8 +679,10 @@ Example of ProcessingFailure Classes moved.
 |------------------------------|------------------|
 | `\Files\ProcessingFailure\AlreadyCompletedException` | `Files\Exception\ProcessingFailure\AlreadyCompletedException`  |
 
-#### RateLimited Exceptions
-The ProcessingFailure group of exceptions were moved from the `\Files\RateLimited` namespace to the `\Files\Exception\RateLimited` namespace.
+##### RateLimited Exceptions
+
+The ProcessingFailure group of exceptions were moved from the
+`\Files\RateLimited` namespace to the `\Files\Exception\RateLimited` namespace.
 
 Example of RateLimited Classes moved.
 
@@ -279,8 +690,11 @@ Example of RateLimited Classes moved.
 |------------------------------|------------------|
 | `\Files\RateLimited\DuplicateShareRecipientException` | `Files\Exception\RateLimited\DuplicateShareRecipientException`  |
 
-#### ServiceUnavailable Exceptions
-The ServiceUnavailable group of exceptions were moved from the `\Files\ServiceUnavailable` namespace to the `\Files\Exception\ServiceUnavailable` namespace.
+##### ServiceUnavailable Exceptions
+
+The ServiceUnavailable group of exceptions were moved from the
+`\Files\ServiceUnavailable` namespace to the
+`\Files\Exception\ServiceUnavailable` namespace.
 
 Example of ServiceUnavailable Classes moved.
 
@@ -288,18 +702,14 @@ Example of ServiceUnavailable Classes moved.
 |------------------------------|------------------|
 | `\Files\ServiceUnavailable\AgentUnavailableException` | `Files\Exception\ServiceUnavailable\AgentUnavailableException`  |
 
-#### SiteConfiguration Exceptions
-The SiteConfiguration group of exceptions were moved from the `\Files\SiteConfiguration` namespace to the `\Files\Exception\SiteConfiguration` namespace.
+##### SiteConfiguration Exceptions
+
+The SiteConfiguration group of exceptions were moved from the
+`\Files\SiteConfiguration` namespace to the `\Files\Exception\SiteConfiguration`
+namespace.
 
 Example of SiteConfiguration Classes moved.
 
 | SDK < 2.0 Class Location   | SDK >= 2.0 Class Location |
 |------------------------------|------------------|
 | `\Files\SiteConfiguration\AccountAlreadyExistsException` | `Files\Exception\SiteConfiguration\AccountAlreadyExistsException`  |
-
-
-## Getting Support
-
-The Files.com team is happy to help with any SDK Integration challenges you may face.
-
-Just email support@files.com and we'll get the process started.

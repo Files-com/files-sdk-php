@@ -55,7 +55,7 @@ class SftpHostKey
     {
         return !!@$this->attributes['id'];
     }
-    // int64 # Sftp Host Key ID
+    // int64 # SFTP Host Key ID
     public function getId()
     {
         return @$this->attributes['id'];

@@ -364,7 +364,7 @@ $file->move([
 
 ---
 
-## Begin file upload
+## Begin File Upload
 
 ```
 $file = \Files\Model\File::find($path);

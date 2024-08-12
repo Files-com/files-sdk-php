@@ -912,7 +912,7 @@ class File
         return new FileAction((array) (@$response->data ?: []), $this->options);
     }
 
-    // Begin file upload
+    // Begin File Upload
     //
     // Parameters:
     //   mkdir_parents - boolean - Create parent directories if they do not exist?

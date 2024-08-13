@@ -382,6 +382,7 @@ Exception
 |`ApiKeyOnlyForDesktopAppException`|  `NotAuthorizedException` |
 |`ApiKeyOnlyForMobileAppException`|  `NotAuthorizedException` |
 |`ApiKeyOnlyForOfficeIntegrationException`|  `NotAuthorizedException` |
+|`BillingOrSiteAdminPermissionRequiredException`|  `NotAuthorizedException` |
 |`BillingPermissionRequiredException`|  `NotAuthorizedException` |
 |`BundleMaximumUsesReachedException`|  `NotAuthorizedException` |
 |`CannotLoginWhileUsingKeyException`|  `NotAuthorizedException` |

@@ -13,7 +13,7 @@
               "dev-local": "0.0.1"
           }
       },
-      "symlink": false 
+      "symlink": false
     }
   ],
   "require": {

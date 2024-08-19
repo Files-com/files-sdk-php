@@ -274,9 +274,9 @@ catch the general `Files\FilesException` exception as a catch-all.
 try {
   $session = Files\Model\Session::create(['username' => 'USERNAME', 'password' => 'BADPASSWORD']);
 } catch (Files\NotAuthenticated\InvalidUsernameOrPasswordException $e) {
-  echo 'Authentication Error Occured (' . get_class($e) . '): ',  $e->getMessage(), "\n";
+  echo 'Authentication Error Occurred (' . get_class($e) . '): ',  $e->getMessage(), "\n";
 } catch (Files\FilesException $e) {
-  echo 'Unknown Error Occured (' . get_class($e) . '): ',  $e->getMessage(), "\n";
+  echo 'Unknown Error Occurred (' . get_class($e) . '): ',  $e->getMessage(), "\n";
 }
 ```
 
@@ -498,44 +498,44 @@ Exception
 #### List files in root folder
 
 ```php
-    $rootFiles = \Files\Model\Folder::listFor('/');
+$rootFiles = \Files\Model\Folder::listFor('/');
 ```
 
 #### Uploading a file on disk
 
 ```php
-    \Files\Model\File::uploadFile($destinationFileName, $sourceFilePath);
+\Files\Model\File::uploadFile($destinationFileName, $sourceFilePath);
 ```
 
 #### Uploading raw file data
 
 ```php
-    \Files\Model\File::uploadData($destinationFileName, $fileData);
+\Files\Model\File::uploadData($destinationFileName, $fileData);
 ```
 
 #### Download a file to stream
 
 ```php
-    \Files\Model\File::downloadToStream($remoteFilePath, $outputStream);
+\Files\Model\File::downloadToStream($remoteFilePath, $outputStream);
 ```
 
 #### Download a file to disk
 
 ```php
-    // download entire file - with retries enabled
-    \Files\Model\File::downloadToFile($remoteFilePath, $localFilePath);
+// download entire file - with retries enabled
+\Files\Model\File::downloadToFile($remoteFilePath, $localFilePath);
 
-    // partially download - just the first KB
-    \Files\Model\File::partialDownloadToFile($remoteFilePath, $localFilePath, 0, 1023);
+// partially download - just the first KB
+\Files\Model\File::partialDownloadToFile($remoteFilePath, $localFilePath, 0, 1023);
 
-    // resume an incomplete download
-    \Files\Model\File::resumeDownloadToFile($remoteFilePath, $localFilePath);
+// resume an incomplete download
+\Files\Model\File::resumeDownloadToFile($remoteFilePath, $localFilePath);
 ```
 
 #### Getting a file record by path
 
 ```php
-    $foundFile = \Files\Model\File::find($remoteFilePath);
+$foundFile = \Files\Model\File::find($remoteFilePath);
 ```
 
 ### File Object Operations
@@ -543,26 +543,26 @@ Exception
 #### Getting a file record by path
 
 ```php
-    $file = new \Files\Model\File();
-    $file->get($remoteFilePath);
+$file = new \Files\Model\File();
+$file->get($remoteFilePath);
 ```
 
 ##### Updating metadata
 
 ```php
-    $file->update([
-      'provided_mtime' => '2000-01-01T01:00:00Z',
-      'priority_color' => 'red',
-    ]);
+$file->update([
+    'provided_mtime' => '2000-01-01T01:00:00Z',
+    'priority_color' => 'red',
+]);
 ```
 
 ##### Retrieving metadata
 
 ```php
-    $file->metadata([
-      'with_previews' => true,
-      'with_priority_color' => true,
-    ]);
+$file->metadata([
+    'with_previews' => true,
+    'with_priority_color' => true,
+]);
 ```
 
 #### Comparing Case insensitive files and paths
@@ -570,9 +570,9 @@ Exception
 For related documentation see [Case Sensitivity Documentation](https://www.files.com/docs/files-and-folders/file-system-semantics/case-sensitivity).
 
 ```php
-    if(\Files\Util\PathUtil::same("Fïłèńämê.Txt", "filename.txt")) {
-        echo "Paths are the same\n";
-    }
+if(\Files\Util\PathUtil::same("Fïłèńämê.Txt", "filename.txt")) {
+    echo "Paths are the same\n";
+}
 ```
 
 ## Mock Server
@@ -600,14 +600,14 @@ A README is available on the GitHub link.
 In Version 2.0, the Files.com PHP SDK was updated to comply with both the
 [PSR-12](https://www.php-fig.org/psr/psr-12/) coding standard and the
 [PSR-4](https://www.php-fig.org/psr/psr-4/) autoloading standard. No new
-classes were added or any exising classes removed, but some were moved to
+classes were added or any existing classes removed, but some were moved to
 comply with the PSR-4 standard. If a client of the sdk references the moved
 classes, the client code will need to be updated to reference the new location
 of these classes.
 
 #### Exception Classes
 
-The affected classes were primarly Exception classes. Exceptions were moved
+The affected classes were primarily Exception classes. Exceptions were moved
 into their own namespace (and source files).
 
 The following table shows the classes that were changed for compliance

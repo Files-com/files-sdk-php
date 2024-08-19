@@ -40,9 +40,7 @@ require 'vendor/autoload.php';
 \Files\Files::setBaseUrl('https://MY-SUBDOMAIN.files.com');
 ```
 
-<Note title="Repository">
 Explore the [files-sdk-php](https://github.com/Files-com/files-sdk-php) code on GitHub.
-</Note>
 
 ### Getting Support
 
@@ -76,9 +74,7 @@ $user = new \Files\Model\User($params, array('api_key' => 'YOUR_API_KEY'));
 \Files\Model\User::find($id, $params, array('api_key' => 'YOUR_API_KEY'));
 ```
 
-<Note>
 Don't forget to replace the placeholder, `YOUR_API_KEY`, with your actual API key.
-</Note>
 
 ### Authenticate with a Session
 

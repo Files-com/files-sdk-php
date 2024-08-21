@@ -150,6 +150,11 @@ class App
     {
         return @$this->attributes['sso_strategy_type'];
     }
+    // string # Associated SIEM type, if any
+    public function getSiemType()
+    {
+        return @$this->attributes['siem_type'];
+    }
     // string # Tutorial video page
     public function getTutorialYoutubeUrl()
     {

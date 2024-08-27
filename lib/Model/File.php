@@ -734,6 +734,7 @@ class File
     //   preview_size - string - Request a preview size.  Can be `small` (default), `large`, `xlarge`, or `pdf`.
     //   with_previews - boolean - Include file preview information?
     //   with_priority_color - boolean - Include file priority color information?
+    //   point_in_time - string - Point in time to view the folder. Available only on remote server mounts for S3 with versioned buckets.
     public function download($params = [])
     {
         if (!is_array($params)) {
@@ -758,6 +759,10 @@ class File
 
         if (@$params['preview_size'] && !is_string(@$params['preview_size'])) {
             throw new \Files\Exception\InvalidParameterException('$preview_size must be of type string; received ' . gettype(@$params['preview_size']));
+        }
+
+        if (@$params['point_in_time'] && !is_string(@$params['point_in_time'])) {
+            throw new \Files\Exception\InvalidParameterException('$point_in_time must be of type string; received ' . gettype(@$params['point_in_time']));
         }
 
         $response = Api::sendRequest('/files/' . @$params['path'] . '', 'GET', $params, $this->options);

@@ -7,19 +7,21 @@ The content included here should be enough to get started, but please visit our
 
 ## Introduction
 
-The Files.com PHP SDK provides convenient Files.com API access to applications written in PHP.
+The Files.com PHP SDK provides convenient access to all of Files.com from applications written in PHP.
+
+You can use it to directly work with files and folders as well as perform management tasks such as adding/removing users, onboarding counterparties, retrieving information about automations and more.
 
 ### Installation
 
-Install Composer. See https://packagist.org for more info.
+The Files.com PHP SDK is installed using Composer. See https://packagist.org for more info.
 
-If `composer.phar` is already available, skip this step.
+First, install Composer if necessary:
 
 ```shell
 curl -sS https://getcomposer.org/installer | php
 ```
 
-Install the SDK
+Then use Composer to install the Files.com SDK:
 
 ```shell
 php composer.phar require files.com/files-php-sdk
@@ -30,24 +32,13 @@ php composer.phar require files.com/files-php-sdk
 * PHP 5.5+
 * php-curl extension
 
-### Usage
-
-#### Import and initialize
-```php
-require 'vendor/autoload.php';
-
-// set client to use a mock Files.com server for testing
-\Files\Files::setBaseUrl('https://MY-SUBDOMAIN.files.com');
-```
-
 Explore the [files-sdk-php](https://github.com/Files-com/files-sdk-php) code on GitHub.
 
 ### Getting Support
 
-The Files.com team is happy to help with any SDK Integration challenges you
-may face.
+The Files.com Support team provides official support for all of our official Files.com integration tools.
 
-Just email support@files.com and we'll get the process started.
+To initiate a support conversation, you can send an [Authenticated Support Request](https://www.files.com/docs/overview/requesting-support) or simply send an E-Mail to support@files.com.
 
 ## Authentication
 

@@ -79,7 +79,7 @@ session times out, simply create a new session and resume where you left off. Th
 automatically handled by SDKs because we do not want to store password information in memory without
 your explicit consent.
 
-#### Logging in
+#### Logging In
 
 To create a session, the `create` method is called on the `\Files\Model\Session` object with the user's username and
 password.
@@ -90,7 +90,7 @@ This returns a session object that can be used to authenticate SDK method calls.
 $session = \Files\Model\Session::create(['username' => 'motor', 'password' => 'vroom']);
 ```
 
-#### Using a session
+#### Using a Session
 
 Once a session has been created, you can store the session globally, use the session per object, or use the session per request to authenticate SDK operations.
 
@@ -105,7 +105,7 @@ $user = new \Files\Model\User($params, array('session_id' => $session->id));
 \Files\Model\User::find($id, $params, array('session_id' => $session->id));
 ```
 
-#### Logging out
+#### Logging Out
 
 User sessions can be ended by calling the `Session::destroy` method.
 
@@ -117,9 +117,9 @@ User sessions can be ended by calling the `Session::destroy` method.
 
 Global configuration can be done by setting properties directly on the `\Files\Files` class.
 
-### Configuration options
+### Configuration Options
 
-#### Auto paginate
+#### Auto Paginate
 
 Auto-fetch all pages when results span multiple pages. The default value is `true`.
 ```php title="Example setting"
@@ -135,7 +135,7 @@ This can also be set to use a mock server in development or CI.
 \Files\Files::setBaseUrl('https://MY-SUBDOMAIN.files.com');
 ```
 
-#### Log level
+#### Log Level
 
 Supported values:
 
@@ -149,7 +149,7 @@ Supported values:
 \Files\Files::$logLevel = \Files\LogLevel::DEBUG
 ```
 
-#### Debug requests
+#### Debug Requests
 
 Enable debug logging of API requests. The default value is `false`.
 
@@ -157,7 +157,7 @@ Enable debug logging of API requests. The default value is `false`.
 \Files\Files::$debugRequest = true
 ```
 
-#### Debug response headers
+#### Debug Response Headers
 
 Enable debug logging of API response headers. The default value is `false`.
 
@@ -165,14 +165,14 @@ Enable debug logging of API response headers. The default value is `false`.
 \Files\Files::$debugResponseHeaders = true
 ```
 
-#### Connect timeout
+#### Connect Timeout
 
 Network connect timeout in seconds. The default value is 30.0.
 ```php title="Example setting"
 \Files\Files::$connectTimeout = 20.0
 ```
 
-#### Read timeout
+#### Read Timeout
 
 Network read timeout in seconds. The default value is 90.
 
@@ -180,7 +180,7 @@ Network read timeout in seconds. The default value is 90.
 \Files\Files::$readTimeout = 60
 ```
 
-#### Minimum retry delay
+#### Minimum Retry Delay
 
 Minimum network delay in seconds before retrying. The default value is 0.5.
 
@@ -188,7 +188,7 @@ Minimum network delay in seconds before retrying. The default value is 0.5.
 \Files\Files::$minNetworkRetryDelay = 1.0
 ```
 
-#### Maximum retry delay
+#### Maximum Retry Delay
 
 Maximum network delay in seconds before retrying. The default value is 1.5.
 
@@ -196,7 +196,7 @@ Maximum network delay in seconds before retrying. The default value is 1.5.
 \Files\Files::$maxNetworkRetryDelay = 3.0
 ```
 
-#### Maximum network retries
+#### Maximum Network Retries
 
 Maximum number of retries. The default value is 3.
 
@@ -446,31 +446,31 @@ Exception
 
 ### Static File Operations
 
-#### List files in root folder
+#### List Files in Root Folder
 
 ```php
 $rootFiles = \Files\Model\Folder::listFor('/');
 ```
 
-#### Uploading a file on disk
+#### Uploading a File on Disk
 
 ```php
 \Files\Model\File::uploadFile($destinationFileName, $sourceFilePath);
 ```
 
-#### Uploading raw file data
+#### Uploading Raw File Data
 
 ```php
 \Files\Model\File::uploadData($destinationFileName, $fileData);
 ```
 
-#### Download a file to stream
+#### Download a File to Stream
 
 ```php
 \Files\Model\File::downloadToStream($remoteFilePath, $outputStream);
 ```
 
-#### Download a file to disk
+#### Download a File to Disk
 
 ```php
 // download entire file - with retries enabled
@@ -483,7 +483,7 @@ $rootFiles = \Files\Model\Folder::listFor('/');
 \Files\Model\File::resumeDownloadToFile($remoteFilePath, $localFilePath);
 ```
 
-#### Getting a file record by path
+#### Getting a File Record by Path
 
 ```php
 $foundFile = \Files\Model\File::find($remoteFilePath);
@@ -491,14 +491,14 @@ $foundFile = \Files\Model\File::find($remoteFilePath);
 
 ### File Object Operations
 
-#### Getting a file record by path
+#### Getting a File Record by Path
 
 ```php
 $file = new \Files\Model\File();
 $file->get($remoteFilePath);
 ```
 
-##### Updating metadata
+##### Updating Metadata
 
 ```php
 $file->update([
@@ -507,7 +507,7 @@ $file->update([
 ]);
 ```
 
-##### Retrieving metadata
+##### Retrieving Metadata
 
 ```php
 $file->metadata([
@@ -516,7 +516,7 @@ $file->metadata([
 ]);
 ```
 
-#### Comparing Case insensitive files and paths
+#### Comparing Case-Insensitive Files and Paths
 
 For related documentation see [Case Sensitivity Documentation](https://www.files.com/docs/files-and-folders/file-system-semantics/case-sensitivity).
 

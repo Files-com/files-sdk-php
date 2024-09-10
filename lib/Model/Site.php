@@ -55,6 +55,11 @@ class Site
     {
         return !!@$this->attributes['id'];
     }
+    // int64 # Site Id
+    public function getId()
+    {
+        return @$this->attributes['id'];
+    }
     // string # Site name
     public function getName()
     {

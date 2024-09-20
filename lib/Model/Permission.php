@@ -65,7 +65,7 @@ class Permission
     {
         return $this->attributes['id'] = $value;
     }
-    // string # Folder path. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
+    // string # Path. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
     public function getPath()
     {
         return @$this->attributes['path'];
@@ -85,7 +85,7 @@ class Permission
     {
         return $this->attributes['user_id'] = $value;
     }
-    // string # User's username
+    // string # Username (if applicable)
     public function getUsername()
     {
         return @$this->attributes['username'];
@@ -105,7 +105,7 @@ class Permission
     {
         return $this->attributes['group_id'] = $value;
     }
-    // string # Group name if applicable
+    // string # Group name (if applicable)
     public function getGroupName()
     {
         return @$this->attributes['group_name'];
@@ -115,7 +115,7 @@ class Permission
     {
         return $this->attributes['group_name'] = $value;
     }
-    // string # Permission type
+    // string # Permission type.  See the table referenced in the documentation for an explanation of each permission.
     public function getPermission()
     {
         return @$this->attributes['permission'];
@@ -125,7 +125,7 @@ class Permission
     {
         return $this->attributes['permission'] = $value;
     }
-    // boolean # Does this permission apply to subfolders?
+    // boolean # Recursive: does this permission apply to subfolders?
     public function getRecursive()
     {
         return @$this->attributes['recursive'];

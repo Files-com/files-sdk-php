@@ -125,7 +125,7 @@ class RemoteServerConfigurationFile
     {
         return @$this->attributes['log_rotate_size'];
     }
-    // int64 # Maximum number of concurrent jobs (default 1024)
+    // int64 # Maximum number of concurrent jobs (default 500)
     public function getOverrideMaxConcurrentJobs()
     {
         return @$this->attributes['override_max_concurrent_jobs'];

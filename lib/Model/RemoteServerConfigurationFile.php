@@ -85,12 +85,12 @@ class RemoteServerConfigurationFile
     {
         return @$this->attributes['follow_links'];
     }
-    // string # Preferred network protocol ['udp', 'tcp']
+    // string # Preferred network protocol ['udp', 'tcp'] (default udp)
     public function getPreferProtocol()
     {
         return @$this->attributes['prefer_protocol'];
     }
-    // string # DNS lookup method ['auto','doh','system']
+    // string # DNS lookup method ['auto','doh','system'] (default auto)
     public function getDns()
     {
         return @$this->attributes['dns'];
@@ -110,7 +110,7 @@ class RemoteServerConfigurationFile
     {
         return @$this->attributes['log_file'];
     }
-    // string # Log level for the agent logs ['debug', 'info', 'warn', 'error', 'fatal']
+    // string # Log level for the agent logs ['debug', 'info', 'warn', 'error', 'fatal'] (default info)
     public function getLogLevel()
     {
         return @$this->attributes['log_level'];
@@ -120,17 +120,17 @@ class RemoteServerConfigurationFile
     {
         return @$this->attributes['log_rotate_num'];
     }
-    // int64 # Log route size in MB for agent logs. (default 20MB)
+    // int64 # Log route size in MB for agent logs. (default 20)
     public function getLogRotateSize()
     {
         return @$this->attributes['log_rotate_size'];
     }
-    // int64 # Maximum number of concurrent jobs (default CPU Count * 4)
-    public function getMaxConcurrentJobs()
+    // int64 # Maximum number of concurrent jobs (default 1024)
+    public function getOverrideMaxConcurrentJobs()
     {
-        return @$this->attributes['max_concurrent_jobs'];
+        return @$this->attributes['override_max_concurrent_jobs'];
     }
-    // int64 # Graceful shutdown timeout in seconds
+    // int64 # Graceful shutdown timeout in seconds (default 15)
     public function getGracefulShutdownTimeout()
     {
         return @$this->attributes['graceful_shutdown_timeout'];

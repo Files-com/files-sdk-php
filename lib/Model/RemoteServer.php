@@ -145,7 +145,7 @@ class RemoteServer
     {
         return $this->attributes['pin_to_site_region'] = $value;
     }
-    // string # If set, all communciations with this remote server are made through the provided region.
+    // string # If set, all communications with this remote server are made through the provided region.
     public function getPinnedRegion()
     {
         return @$this->attributes['pinned_region'];

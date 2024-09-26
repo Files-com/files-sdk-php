@@ -145,6 +145,16 @@ class Automation
     {
         return $this->attributes['disabled'] = $value;
     }
+    // string # If set, this glob pattern will exclude files from the automation. Supports globs, except on remote mounts.
+    public function getExcludePattern()
+    {
+        return @$this->attributes['exclude_pattern'];
+    }
+
+    public function setExcludePattern($value)
+    {
+        return $this->attributes['exclude_pattern'] = $value;
+    }
     // boolean # Normally copy and move automations that use globs will implicitly preserve the source folder structure in the destination.  If this flag is `true`, the source folder structure will be flattened in the destination.  This is useful for copying or moving files from multiple folders into a single destination folder.
     public function getFlattenDestinationStructure()
     {
@@ -305,7 +315,7 @@ class Automation
     {
         return $this->attributes['schedule_time_zone'] = $value;
     }
-    // string # Source Path
+    // string # Source path. Supports globs, except on remote mounts.
     public function getSource()
     {
         return @$this->attributes['source'];

@@ -650,7 +650,7 @@ class User
     {
         return $this->attributes['type_of_2fa_for_display'] = $value;
     }
-    // string # Root folder for FTP (and optionally SFTP if the appropriate site-wide setting is set.)  Note that this is not used for API, Desktop, or Web interface.
+    // string # Root folder for FTP (and optionally SFTP if the appropriate site-wide setting is set).  Note that this is not used for API, Desktop, or Web interface.
     public function getUserRoot()
     {
         return @$this->attributes['user_root'];
@@ -659,6 +659,16 @@ class User
     public function setUserRoot($value)
     {
         return $this->attributes['user_root'] = $value;
+    }
+    // string # Home folder for FTP/SFTP.  Note that this is not used for API, Desktop, or Web interface.
+    public function getUserHome()
+    {
+        return @$this->attributes['user_home'];
+    }
+
+    public function setUserHome($value)
+    {
+        return $this->attributes['user_home'] = $value;
     }
     // int64 # Number of days remaining until password expires
     public function getDaysRemainingUntilPasswordExpire()
@@ -895,7 +905,8 @@ class User
     //   subscribe_to_newsletter - boolean - Is the user subscribed to the newsletter?
     //   require_2fa - string - 2FA required setting
     //   time_zone - string - User time zone
-    //   user_root - string - Root folder for FTP (and optionally SFTP if the appropriate site-wide setting is set.)  Note that this is not used for API, Desktop, or Web interface.
+    //   user_root - string - Root folder for FTP (and optionally SFTP if the appropriate site-wide setting is set).  Note that this is not used for API, Desktop, or Web interface.
+    //   user_home - string - Home folder for FTP/SFTP.  Note that this is not used for API, Desktop, or Web interface.
     //   username - string - User's username
     public function update($params = [])
     {
@@ -1013,6 +1024,10 @@ class User
 
         if (@$params['user_root'] && !is_string(@$params['user_root'])) {
             throw new \Files\Exception\InvalidParameterException('$user_root must be of type string; received ' . gettype(@$params['user_root']));
+        }
+
+        if (@$params['user_home'] && !is_string(@$params['user_home'])) {
+            throw new \Files\Exception\InvalidParameterException('$user_home must be of type string; received ' . gettype(@$params['user_home']));
         }
 
         if (@$params['username'] && !is_string(@$params['username'])) {
@@ -1178,7 +1193,8 @@ class User
     //   subscribe_to_newsletter - boolean - Is the user subscribed to the newsletter?
     //   require_2fa - string - 2FA required setting
     //   time_zone - string - User time zone
-    //   user_root - string - Root folder for FTP (and optionally SFTP if the appropriate site-wide setting is set.)  Note that this is not used for API, Desktop, or Web interface.
+    //   user_root - string - Root folder for FTP (and optionally SFTP if the appropriate site-wide setting is set).  Note that this is not used for API, Desktop, or Web interface.
+    //   user_home - string - Home folder for FTP/SFTP.  Note that this is not used for API, Desktop, or Web interface.
     //   username (required) - string - User's username
     public static function create($params = [], $options = [])
     {
@@ -1284,6 +1300,10 @@ class User
 
         if (@$params['user_root'] && !is_string(@$params['user_root'])) {
             throw new \Files\Exception\InvalidParameterException('$user_root must be of type string; received ' . gettype(@$params['user_root']));
+        }
+
+        if (@$params['user_home'] && !is_string(@$params['user_home'])) {
+            throw new \Files\Exception\InvalidParameterException('$user_home must be of type string; received ' . gettype(@$params['user_home']));
         }
 
         if (@$params['username'] && !is_string(@$params['username'])) {

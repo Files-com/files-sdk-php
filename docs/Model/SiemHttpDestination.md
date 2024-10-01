@@ -112,7 +112,7 @@
 
 ---
 
-## List Siem Http Destinations
+## List SIEM HTTP Destinations
 
 ```
 $siem_http_destination = new \Files\Model\SiemHttpDestination();
@@ -127,7 +127,7 @@ $siem_http_destination->list
 
 ---
 
-## Show Siem Http Destination
+## Show SIEM HTTP Destination
 
 ```
 $siem_http_destination = new \Files\Model\SiemHttpDestination();
@@ -141,7 +141,7 @@ $siem_http_destination->find($id);
 
 ---
 
-## Create Siem Http Destination
+## Create SIEM HTTP Destination
 
 ```
 $siem_http_destination = new \Files\Model\SiemHttpDestination();
@@ -203,7 +203,7 @@ $siem_http_destination->create(, [
 
 ---
 
-## send_test_entry Siem Http Destination
+## send_test_entry SIEM HTTP Destination
 
 ```
 $siem_http_destination = new \Files\Model\SiemHttpDestination();
@@ -267,7 +267,7 @@ $siem_http_destination->sendTestEntry(, [
 
 ---
 
-## Update Siem Http Destination
+## Update SIEM HTTP Destination
 
 ```
 $siem_http_destination = \Files\Model\SiemHttpDestination::find($id);
@@ -386,7 +386,7 @@ $siem_http_destination->update([
 
 ---
 
-## Delete Siem Http Destination
+## Delete SIEM HTTP Destination
 
 ```
 $siem_http_destination = \Files\Model\SiemHttpDestination::find($id);

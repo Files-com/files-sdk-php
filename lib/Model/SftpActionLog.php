@@ -75,6 +75,11 @@ class SftpActionLog
     {
         return @$this->attributes['username'];
     }
+    // string # Name of the SFTP Client provided at initial connection
+    public function getSshClientIdentification()
+    {
+        return @$this->attributes['ssh_client_identification'];
+    }
     // string # Unique ID of the Session
     public function getSessionUuid()
     {

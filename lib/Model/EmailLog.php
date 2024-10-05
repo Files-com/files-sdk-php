@@ -85,7 +85,7 @@ class EmailLog
     {
         return @$this->attributes['cc'];
     }
-    // string # How was email deliered?  `customer_smtp` or `files.com`
+    // string # How was the email delivered?  `customer_smtp` or `files.com`
     public function getDeliveryMethod()
     {
         return @$this->attributes['delivery_method'];

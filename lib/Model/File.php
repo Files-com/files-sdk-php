@@ -799,7 +799,7 @@ class File
     }
 
     // Parameters:
-    //   recursive - boolean - If true, will recursively delete folers.  Otherwise, will error on non-empty folders.
+    //   recursive - boolean - If true, will recursively delete folders.  Otherwise, will error on non-empty folders.
     public function delete($params = [])
     {
         if (!is_array($params)) {

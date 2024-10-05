@@ -75,7 +75,7 @@ class SftpHostKey
     {
         return $this->attributes['name'] = $value;
     }
-    // string # MD5 Fingerpint of the public key
+    // string # MD5 Fingerprint of the public key
     public function getFingerprintMd5()
     {
         return @$this->attributes['fingerprint_md5'];
@@ -85,7 +85,7 @@ class SftpHostKey
     {
         return $this->attributes['fingerprint_md5'] = $value;
     }
-    // string # SHA256 Fingerpint of the public key
+    // string # SHA256 Fingerprint of the public key
     public function getFingerprintSha256()
     {
         return @$this->attributes['fingerprint_sha256'];

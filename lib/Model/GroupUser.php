@@ -95,7 +95,7 @@ class GroupUser
     {
         return $this->attributes['admin'] = $value;
     }
-    // array(string) # A list of usernames for users in this group
+    // string # Comma-delimited list of usernames who belong to this group (separated by commas).
     public function getUsernames()
     {
         return @$this->attributes['usernames'];

@@ -435,6 +435,7 @@ class Automation
     //   always_overwrite_size_matching_files - boolean - Ordinarily, files with identical size in the source and destination will be skipped from copy operations to prevent wasted transfer.  If this flag is `true` we will overwrite the destination file always.  Note that this may cause large amounts of wasted transfer usage.
     //   description - string - Description for the this Automation.
     //   disabled - boolean - If true, this automation will not run.
+    //   exclude_pattern - string - If set, this glob pattern will exclude files from the automation. Supports globs, except on remote mounts.
     //   flatten_destination_structure - boolean - Normally copy and move automations that use globs will implicitly preserve the source folder structure in the destination.  If this flag is `true`, the source folder structure will be flattened in the destination.  This is useful for copying or moving files from multiple folders into a single destination folder.
     //   ignore_locked_folders - boolean - If true, the Lock Folders behavior will be disregarded for automated actions.
     //   legacy_folder_matching - boolean - DEPRECATED: If `true`, use the legacy behavior for this automation, where it can operate on folders in addition to just files.  This behavior no longer works and should not be used.
@@ -514,6 +515,10 @@ class Automation
 
         if (@$params['description'] && !is_string(@$params['description'])) {
             throw new \Files\Exception\InvalidParameterException('$description must be of type string; received ' . gettype(@$params['description']));
+        }
+
+        if (@$params['exclude_pattern'] && !is_string(@$params['exclude_pattern'])) {
+            throw new \Files\Exception\InvalidParameterException('$exclude_pattern must be of type string; received ' . gettype(@$params['exclude_pattern']));
         }
 
         if (@$params['name'] && !is_string(@$params['name'])) {
@@ -660,6 +665,7 @@ class Automation
     //   always_overwrite_size_matching_files - boolean - Ordinarily, files with identical size in the source and destination will be skipped from copy operations to prevent wasted transfer.  If this flag is `true` we will overwrite the destination file always.  Note that this may cause large amounts of wasted transfer usage.
     //   description - string - Description for the this Automation.
     //   disabled - boolean - If true, this automation will not run.
+    //   exclude_pattern - string - If set, this glob pattern will exclude files from the automation. Supports globs, except on remote mounts.
     //   flatten_destination_structure - boolean - Normally copy and move automations that use globs will implicitly preserve the source folder structure in the destination.  If this flag is `true`, the source folder structure will be flattened in the destination.  This is useful for copying or moving files from multiple folders into a single destination folder.
     //   ignore_locked_folders - boolean - If true, the Lock Folders behavior will be disregarded for automated actions.
     //   legacy_folder_matching - boolean - DEPRECATED: If `true`, use the legacy behavior for this automation, where it can operate on folders in addition to just files.  This behavior no longer works and should not be used.
@@ -727,6 +733,10 @@ class Automation
 
         if (@$params['description'] && !is_string(@$params['description'])) {
             throw new \Files\Exception\InvalidParameterException('$description must be of type string; received ' . gettype(@$params['description']));
+        }
+
+        if (@$params['exclude_pattern'] && !is_string(@$params['exclude_pattern'])) {
+            throw new \Files\Exception\InvalidParameterException('$exclude_pattern must be of type string; received ' . gettype(@$params['exclude_pattern']));
         }
 
         if (@$params['name'] && !is_string(@$params['name'])) {

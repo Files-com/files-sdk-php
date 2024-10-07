@@ -225,6 +225,7 @@ a value of either ```"asc"``` or ```"desc"``` to specify the sort order.
 $users = \Files\Model\User::list(array(
   'sort_by' => array("username" => "asc")
 ));
+```
 
 ### Filtering
 

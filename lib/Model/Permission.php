@@ -220,20 +220,24 @@ class Permission
     }
 
     // Parameters:
+    //   path (required) - string - Folder path
     //   group_id - int64 - Group ID
-    //   path - string - Folder path
-    //   permission - string -  Permission type.  Can be `admin`, `full`, `readonly`, `writeonly`, `list`, or `history`
+    //   permission - string - Permission type.  Can be `admin`, `full`, `readonly`, `writeonly`, `list`, or `history`
     //   recursive - boolean - Apply to subfolders recursively?
     //   user_id - int64 - User ID.  Provide `username` or `user_id`
     //   username - string - User username.  Provide `username` or `user_id`
     public static function create($params = [], $options = [])
     {
-        if (@$params['group_id'] && !is_int(@$params['group_id'])) {
-            throw new \Files\Exception\InvalidParameterException('$group_id must be of type int; received ' . gettype(@$params['group_id']));
+        if (!@$params['path']) {
+            throw new \Files\Exception\MissingParameterException('Parameter missing: path');
         }
 
         if (@$params['path'] && !is_string(@$params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
+        }
+
+        if (@$params['group_id'] && !is_int(@$params['group_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$group_id must be of type int; received ' . gettype(@$params['group_id']));
         }
 
         if (@$params['permission'] && !is_string(@$params['permission'])) {

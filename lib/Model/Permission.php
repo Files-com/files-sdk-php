@@ -221,11 +221,12 @@ class Permission
 
     // Parameters:
     //   path (required) - string - Folder path
-    //   group_id - int64 - Group ID
+    //   group_id - int64 - Group ID. Provide `group_name` or `group_id`
     //   permission - string - Permission type.  Can be `admin`, `full`, `readonly`, `writeonly`, `list`, or `history`
     //   recursive - boolean - Apply to subfolders recursively?
     //   user_id - int64 - User ID.  Provide `username` or `user_id`
     //   username - string - User username.  Provide `username` or `user_id`
+    //   group_name - string - Group name.  Provide `group_name` or `group_id`
     public static function create($params = [], $options = [])
     {
         if (!@$params['path']) {
@@ -250,6 +251,10 @@ class Permission
 
         if (@$params['username'] && !is_string(@$params['username'])) {
             throw new \Files\Exception\InvalidParameterException('$username must be of type string; received ' . gettype(@$params['username']));
+        }
+
+        if (@$params['group_name'] && !is_string(@$params['group_name'])) {
+            throw new \Files\Exception\InvalidParameterException('$group_name must be of type string; received ' . gettype(@$params['group_name']));
         }
 
         $response = Api::sendRequest('/permissions', 'POST', $params, $options);

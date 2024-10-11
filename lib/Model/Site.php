@@ -690,6 +690,11 @@ class Site
     {
         return @$this->attributes['sharing_enabled'];
     }
+    // boolean # Show log in link in user notifications?
+    public function getShowUserNotificationsLogInLink()
+    {
+        return @$this->attributes['show_user_notifications_log_in_link'];
+    }
     // boolean # Show request access link for users without access?  Currently unused.
     public function getShowRequestAccessLink()
     {
@@ -970,6 +975,7 @@ class Site
     //   sftp_enabled - boolean - Is SFTP enabled?
     //   users_can_create_api_keys - boolean - Allow users to create their own API keys?
     //   users_can_create_ssh_keys - boolean - Allow users to create their own SSH keys?
+    //   show_user_notifications_log_in_link - boolean - Show log in link in user notifications?
     //   sftp_host_key_type - string - Sftp Host Key Type
     //   active_sftp_host_key_id - int64 - Id of the currently selected custom SFTP Host Key
     //   protocol_access_groups_only - boolean - If true, protocol access permissions on users will be ignored, and only protocol access permissions set on Groups will be honored.  Make sure that your current user is a member of a group with API permission when changing this value to avoid locking yourself out of your site.

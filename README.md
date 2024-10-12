@@ -547,29 +547,47 @@ Exception
 
 ```php
 $rootFiles = \Files\Model\Folder::listFor('/');
+foreach ($rootFiles as $file) {
+    echo $file->getPath() . "\n";
+}
 ```
 
 #### Uploading a File on Disk
 
 ```php
+$sourceFilePath = 'local.txt';
+$destinationFileName = 'uploads/remote.txt';
 \Files\Model\File::uploadFile($destinationFileName, $sourceFilePath);
 ```
 
-#### Uploading Raw File Data
+If the parent directories do not already exist, they can be automatically created by passing `mkdir_parents` in the `params`.
 
 ```php
+\Files\Model\File::uploadFile($destinationFileName, $sourceFilePath, ['mkdir_parents' => true]);
+```
+
+#### Writing a File
+
+```php
+$fileData = 'contents';
+$destinationFileName = 'uploads/remote.txt';
 \Files\Model\File::uploadData($destinationFileName, $fileData);
 ```
 
-#### Download a File to Stream
+#### Reading a File to Stream
 
 ```php
+$outputStream = fopen('php://output', 'w');
+$remoteFilePath = 'uploads/remote.txt';
 \Files\Model\File::downloadToStream($remoteFilePath, $outputStream);
 ```
 
 #### Download a File to Disk
 
 ```php
+$localFilePath = 'local.txt';
+$remoteFilePath = 'uploads/remote.txt';
+
 // download entire file - with retries enabled
 \Files\Model\File::downloadToFile($remoteFilePath, $localFilePath);
 
@@ -583,6 +601,7 @@ $rootFiles = \Files\Model\Folder::listFor('/');
 #### Getting a File Record by Path
 
 ```php
+$remoteFilePath = 'uploads/remote.txt';
 $foundFile = \Files\Model\File::find($remoteFilePath);
 ```
 
@@ -591,6 +610,7 @@ $foundFile = \Files\Model\File::find($remoteFilePath);
 #### Getting a File Record by Path
 
 ```php
+$remoteFilePath = 'uploads/remote.txt';
 $file = new \Files\Model\File();
 $file->get($remoteFilePath);
 ```

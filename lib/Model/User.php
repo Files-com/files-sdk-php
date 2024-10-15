@@ -145,6 +145,16 @@ class User
     {
         return $this->attributes['avatar_url'] = $value;
     }
+    // boolean # Is this a billable user record?
+    public function getBillable()
+    {
+        return @$this->attributes['billable'];
+    }
+
+    public function setBillable($value)
+    {
+        return $this->attributes['billable'] = $value;
+    }
     // boolean # Allow this user to perform operations on the account, payments, and invoices?
     public function getBillingPermission()
     {

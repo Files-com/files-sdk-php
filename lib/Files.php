@@ -40,7 +40,7 @@ class Files
     public static $minNetworkRetryDelay = 0.5;
     public static $maxNetworkRetryDelay = 1.5;
     public static $connectTimeout = 30.0;
-    public static $readTimeout = 90.0;
+    public static $readTimeout = 60.0;
     public static $autoPaginate = true;
 
     public static function getApiKey()

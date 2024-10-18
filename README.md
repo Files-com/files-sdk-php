@@ -377,6 +377,7 @@ Exception
 |`DatetimeParseException`|  `BadRequestException` |
 |`DestinationSameException`|  `BadRequestException` |
 |`FolderMustNotBeAFileException`|  `BadRequestException` |
+|`FoldersNotAllowedException`|  `BadRequestException` |
 |`InvalidBodyException`|  `BadRequestException` |
 |`InvalidCursorException`|  `BadRequestException` |
 |`InvalidCursorTypeForSortException`|  `BadRequestException` |

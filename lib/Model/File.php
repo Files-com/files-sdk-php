@@ -546,6 +546,26 @@ class File
     {
         return $this->attributes['md5'] = $value;
     }
+    // string # File SHA1 checksum. This is sometimes delayed, so if you get a blank response, wait and try again.
+    public function getSha1()
+    {
+        return @$this->attributes['sha1'];
+    }
+
+    public function setSha1($value)
+    {
+        return $this->attributes['sha1'] = $value;
+    }
+    // string # File SHA256 checksum. This is sometimes delayed, so if you get a blank response, wait and try again.
+    public function getSha256()
+    {
+        return @$this->attributes['sha256'];
+    }
+
+    public function setSha256($value)
+    {
+        return $this->attributes['sha256'] = $value;
+    }
     // string # MIME Type.  This is determined by the filename extension and is not stored separately internally.
     public function getMimeType()
     {

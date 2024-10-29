@@ -210,6 +210,26 @@ class Site
     {
         return @$this->attributes['bundle_watermark_value'];
     }
+    // boolean # Calculate CRC32 checksums for files?
+    public function getCalculateFileChecksumsCrc32()
+    {
+        return @$this->attributes['calculate_file_checksums_crc32'];
+    }
+    // boolean # Calculate MD5 checksums for files?
+    public function getCalculateFileChecksumsMd5()
+    {
+        return @$this->attributes['calculate_file_checksums_md5'];
+    }
+    // boolean # Calculate SHA1 checksums for files?
+    public function getCalculateFileChecksumsSha1()
+    {
+        return @$this->attributes['calculate_file_checksums_sha1'];
+    }
+    // boolean # Calculate SHA256 checksums for files?
+    public function getCalculateFileChecksumsSha256()
+    {
+        return @$this->attributes['calculate_file_checksums_sha256'];
+    }
     // boolean # Do incoming emails in the Inboxes require checking for SPF/DKIM/DMARC?
     public function getUploadsViaEmailAuthentication()
     {
@@ -299,6 +319,11 @@ class Site
     public function getDesktopAppSessionLifetime()
     {
         return @$this->attributes['desktop_app_session_lifetime'];
+    }
+    // boolean # Use legacy checksums mode?
+    public function getLegacyChecksumsMode()
+    {
+        return @$this->attributes['legacy_checksums_mode'];
     }
     // boolean # Is the mobile app enabled?
     public function getMobileApp()
@@ -928,6 +953,11 @@ class Site
     //   additional_text_file_types - array(string) - Additional extensions that are considered text files
     //   bundle_require_note - boolean - Do Bundles require internal notes?
     //   bundle_send_shared_receipts - boolean - Do Bundle creators receive receipts of invitations?
+    //   calculate_file_checksums_crc32 - boolean - Calculate CRC32 checksums for files?
+    //   calculate_file_checksums_md5 - boolean - Calculate MD5 checksums for files?
+    //   calculate_file_checksums_sha1 - boolean - Calculate SHA1 checksums for files?
+    //   calculate_file_checksums_sha256 - boolean - Calculate SHA256 checksums for files?
+    //   legacy_checksums_mode - boolean - Use legacy checksums mode?
     //   session_expiry - double - Session expiry in hours
     //   ssl_required - boolean - Is SSL required?  Disabling this is insecure.
     //   tls_disabled - boolean - DO NOT ENABLE. This setting allows TLSv1.0 and TLSv1.1 to be used on your site.  We intend to remove this capability entirely in early 2024.  If set, the `sftp_insecure_ciphers` flag will be automatically set to true.

@@ -66,6 +66,11 @@ class BundleAction
         return @$this->attributes['bundle_registration'];
     }
     // date-time # Action occurrence date/time
+    public function getCreatedAt()
+    {
+        return @$this->attributes['created_at'];
+    }
+    // date-time # Action occurrence date/time
     public function getWhen()
     {
         return @$this->attributes['when'];

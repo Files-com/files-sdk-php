@@ -115,6 +115,26 @@ class As2Partner
     {
         return $this->attributes['http_auth_username'] = $value;
     }
+    // object # Additional HTTP Headers for outgoing message sent to this partner.
+    public function getAdditionalHttpHeaders()
+    {
+        return @$this->attributes['additional_http_headers'];
+    }
+
+    public function setAdditionalHttpHeaders($value)
+    {
+        return $this->attributes['additional_http_headers'] = $value;
+    }
+    // string # Default mime type of the file attached to the encrypted message
+    public function getDefaultMimeType()
+    {
+        return @$this->attributes['default_mime_type'];
+    }
+
+    public function setDefaultMimeType($value)
+    {
+        return $this->attributes['default_mime_type'] = $value;
+    }
     // string # How should Files.com evaluate message transfer success based on a partner's MDN response?  This setting does not affect MDN storage; all MDNs received from a partner are always stored. `none`: MDN is stored for informational purposes only, a successful HTTPS transfer is a successful AS2 transfer. `weak`: Inspect the MDN for MIC and Disposition only. `normal`: `weak` plus validate MDN signature matches body, `strict`: `normal` but do not allow signatures from self-signed or incorrectly purposed certificates.
     public function getMdnValidationLevel()
     {
@@ -125,7 +145,7 @@ class As2Partner
     {
         return $this->attributes['mdn_validation_level'] = $value;
     }
-    // boolean # If `true`, we will use your site's dedicated IPs for all outbound connections to this AS2 PArtner.
+    // boolean # If `true`, we will use your site's dedicated IPs for all outbound connections to this AS2 Partner.
     public function getEnableDedicatedIps()
     {
         return @$this->attributes['enable_dedicated_ips'];
@@ -227,11 +247,13 @@ class As2Partner
     }
 
     // Parameters:
-    //   enable_dedicated_ips - boolean - If `true`, we will use your site's dedicated IPs for all outbound connections to this AS2 PArtner.
+    //   enable_dedicated_ips - boolean - If `true`, we will use your site's dedicated IPs for all outbound connections to this AS2 Partner.
     //   http_auth_username - string - Username to send to server for HTTP Authentication.
     //   http_auth_password - string - Password to send to server for HTTP Authentication.
     //   mdn_validation_level - string - How should Files.com evaluate message transfer success based on a partner's MDN response?  This setting does not affect MDN storage; all MDNs received from a partner are always stored. `none`: MDN is stored for informational purposes only, a successful HTTPS transfer is a successful AS2 transfer. `weak`: Inspect the MDN for MIC and Disposition only. `normal`: `weak` plus validate MDN signature matches body, `strict`: `normal` but do not allow signatures from self-signed or incorrectly purposed certificates.
     //   server_certificate - string - Should we require that the remote HTTP server have a valid SSL Certificate for HTTPS?
+    //   default_mime_type - string - Default mime type of the file attached to the encrypted message
+    //   additional_http_headers - object - Additional HTTP Headers for outgoing message sent to this partner.
     //   name - string - The partner's formal AS2 name.
     //   uri - string - Public URI where we will send the AS2 messages (via HTTP/HTTPS).
     //   public_certificate - string - Public certificate for AS2 Partner.  Note: This is the certificate for AS2 message security, not a certificate used for HTTPS authentication.
@@ -267,6 +289,10 @@ class As2Partner
 
         if (@$params['server_certificate'] && !is_string(@$params['server_certificate'])) {
             throw new \Files\Exception\InvalidParameterException('$server_certificate must be of type string; received ' . gettype(@$params['server_certificate']));
+        }
+
+        if (@$params['default_mime_type'] && !is_string(@$params['default_mime_type'])) {
+            throw new \Files\Exception\InvalidParameterException('$default_mime_type must be of type string; received ' . gettype(@$params['default_mime_type']));
         }
 
         if (@$params['name'] && !is_string(@$params['name'])) {
@@ -379,11 +405,13 @@ class As2Partner
     }
 
     // Parameters:
-    //   enable_dedicated_ips - boolean - If `true`, we will use your site's dedicated IPs for all outbound connections to this AS2 PArtner.
+    //   enable_dedicated_ips - boolean - If `true`, we will use your site's dedicated IPs for all outbound connections to this AS2 Partner.
     //   http_auth_username - string - Username to send to server for HTTP Authentication.
     //   http_auth_password - string - Password to send to server for HTTP Authentication.
     //   mdn_validation_level - string - How should Files.com evaluate message transfer success based on a partner's MDN response?  This setting does not affect MDN storage; all MDNs received from a partner are always stored. `none`: MDN is stored for informational purposes only, a successful HTTPS transfer is a successful AS2 transfer. `weak`: Inspect the MDN for MIC and Disposition only. `normal`: `weak` plus validate MDN signature matches body, `strict`: `normal` but do not allow signatures from self-signed or incorrectly purposed certificates.
     //   server_certificate - string - Should we require that the remote HTTP server have a valid SSL Certificate for HTTPS?
+    //   default_mime_type - string - Default mime type of the file attached to the encrypted message
+    //   additional_http_headers - object - Additional HTTP Headers for outgoing message sent to this partner.
     //   as2_station_id (required) - int64 - ID of the AS2 Station associated with this partner.
     //   name (required) - string - The partner's formal AS2 name.
     //   uri (required) - string - Public URI where we will send the AS2 messages (via HTTP/HTTPS).
@@ -420,6 +448,10 @@ class As2Partner
 
         if (@$params['server_certificate'] && !is_string(@$params['server_certificate'])) {
             throw new \Files\Exception\InvalidParameterException('$server_certificate must be of type string; received ' . gettype(@$params['server_certificate']));
+        }
+
+        if (@$params['default_mime_type'] && !is_string(@$params['default_mime_type'])) {
+            throw new \Files\Exception\InvalidParameterException('$default_mime_type must be of type string; received ' . gettype(@$params['default_mime_type']));
         }
 
         if (@$params['as2_station_id'] && !is_int(@$params['as2_station_id'])) {

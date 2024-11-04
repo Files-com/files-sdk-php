@@ -70,11 +70,6 @@ class BundleAction
     {
         return @$this->attributes['created_at'];
     }
-    // date-time # Action occurrence date/time
-    public function getWhen()
-    {
-        return @$this->attributes['when'];
-    }
     // string # The destination path for this bundle action, if applicable
     public function getDestination()
     {

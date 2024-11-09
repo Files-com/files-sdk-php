@@ -70,6 +70,11 @@ class UserCipherUse
     {
         return @$this->attributes['created_at'];
     }
+    // boolean # Is this cipher considered insecure?
+    public function getInsecure()
+    {
+        return @$this->attributes['insecure'];
+    }
     // string # The interface accessed
     public function getInterface()
     {

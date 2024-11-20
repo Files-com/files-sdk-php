@@ -98,11 +98,15 @@ class File
     public static function uploadFile($destinationPath, $sourceFilePath, $params = [])
     {
         if (!$destinationPath) {
-            throw new \Files\MissingParameterException('Parameter missing: destinationPath');
+            throw new \Files\Exception\MissingParameterException('Parameter missing: destinationPath');
         }
 
         if (!$sourceFilePath) {
-            throw new \Files\MissingParameterException('Parameter missing: sourceFilePath');
+            throw new \Files\Exception\MissingParameterException('Parameter missing: sourceFilePath');
+        }
+
+        if (!file_exists($sourceFilePath)) {
+            throw new \Files\Exception\EmptyPropertyException('Empty sourceFilePath: No such file or directory');
         }
 
         $fileUploadPart = self::openUpload($destinationPath, $params);
@@ -170,11 +174,11 @@ class File
     public static function uploadData($destinationPath, $data, $params = [])
     {
         if (!$destinationPath) {
-            throw new \Files\MissingParameterException('Parameter missing: destinationPath');
+            throw new \Files\Exception\MissingParameterException('Parameter missing: destinationPath');
         }
 
         if (!$data) {
-            throw new \Files\MissingParameterException('Parameter missing: data');
+            throw new \Files\Exception\MissingParameterException('Parameter missing: data');
         }
 
         $tempPath = tempnam(sys_get_temp_dir(), basename($destinationPath));
@@ -275,7 +279,7 @@ class File
     public static function deletePath($path)
     {
         if (!$path) {
-            throw new \Files\MissingParameterException('Parameter missing: path');
+            throw new \Files\Exception\MissingParameterException('Parameter missing: path');
         }
 
         $file = new File();
@@ -285,11 +289,11 @@ class File
     public function copyTo($destinationFilePath)
     {
         if (!$this->path) {
-            throw new \Files\EmptyPropertyException('Empty object property: path');
+            throw new \Files\Exception\EmptyPropertyException('Empty object property: path');
         }
 
         if (!$destinationFilePath) {
-            throw new \Files\MissingParameterException('Parameter missing: destinationFilePath');
+            throw new \Files\Exception\MissingParameterException('Parameter missing: destinationFilePath');
         }
 
         $params = ['destination' => $destinationFilePath];
@@ -300,11 +304,11 @@ class File
     public function moveTo($destinationFilePath)
     {
         if (!$this->path) {
-            throw new \Files\EmptyPropertyException('Empty object property: path');
+            throw new \Files\Exception\EmptyPropertyException('Empty object property: path');
         }
 
         if (!$destinationFilePath) {
-            throw new \Files\MissingParameterException('Parameter missing: destinationFilePath');
+            throw new \Files\Exception\MissingParameterException('Parameter missing: destinationFilePath');
         }
 
         $params = ['destination' => $destinationFilePath];

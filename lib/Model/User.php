@@ -580,6 +580,16 @@ class User
     {
         return $this->attributes['site_admin'] = $value;
     }
+    // int64 # Site ID
+    public function getSiteId()
+    {
+        return @$this->attributes['site_id'];
+    }
+
+    public function setSiteId($value)
+    {
+        return $this->attributes['site_id'] = $value;
+    }
     // boolean # Skip Welcome page in the UI?
     public function getSkipWelcomeScreen()
     {
@@ -1093,7 +1103,7 @@ class User
     // Parameters:
     //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
     //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `authenticate_until`, `email`, `last_desktop_login_at`, `last_login_at`, `username`, `name`, `company`, `site_admin`, `password_validity_days` or `ssl_required`.
+    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `site_id`, `authenticate_until`, `email`, `last_desktop_login_at`, `last_login_at`, `username`, `name`, `company`, `site_admin`, `password_validity_days` or `ssl_required`.
     //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `username`, `name`, `email`, `company`, `site_admin`, `password_validity_days`, `ssl_required`, `last_login_at`, `authenticate_until` or `not_site_admin`. Valid field combinations are `[ username, not_site_admin ]` and `[ name, company ]`.
     //   filter_gt - object - If set, return records where the specified field is greater than the supplied value. Valid fields are `password_validity_days`, `last_login_at` or `authenticate_until`.
     //   filter_gteq - object - If set, return records where the specified field is greater than or equal the supplied value. Valid fields are `password_validity_days`, `last_login_at` or `authenticate_until`.
@@ -1101,6 +1111,7 @@ class User
     //   filter_lt - object - If set, return records where the specified field is less than the supplied value. Valid fields are `password_validity_days`, `last_login_at` or `authenticate_until`.
     //   filter_lteq - object - If set, return records where the specified field is less than or equal the supplied value. Valid fields are `password_validity_days`, `last_login_at` or `authenticate_until`.
     //   ids - string - comma-separated list of User IDs
+    //   include_parent_site_users - boolean - Include users from the parent site.
     //   search - string - Searches for partial matches of name, username, or email.
     public static function all($params = [], $options = [])
     {
@@ -1323,5 +1334,47 @@ class User
         $response = Api::sendRequest('/users', 'POST', $params, $options);
 
         return new User((array) (@$response->data ?: []), $options);
+    }
+
+    // Parameters:
+    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+    //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
+    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `site_id`, `authenticate_until`, `email`, `last_desktop_login_at`, `last_login_at`, `username`, `name`, `company`, `site_admin`, `password_validity_days` or `ssl_required`.
+    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `username`, `name`, `email`, `company`, `site_admin`, `password_validity_days`, `ssl_required`, `last_login_at`, `authenticate_until` or `not_site_admin`. Valid field combinations are `[ username, not_site_admin ]` and `[ name, company ]`.
+    //   filter_gt - object - If set, return records where the specified field is greater than the supplied value. Valid fields are `password_validity_days`, `last_login_at` or `authenticate_until`.
+    //   filter_gteq - object - If set, return records where the specified field is greater than or equal the supplied value. Valid fields are `password_validity_days`, `last_login_at` or `authenticate_until`.
+    //   filter_prefix - object - If set, return records where the specified field is prefixed by the supplied value. Valid fields are `username`, `name`, `email` or `company`. Valid field combinations are `[ name, company ]`.
+    //   filter_lt - object - If set, return records where the specified field is less than the supplied value. Valid fields are `password_validity_days`, `last_login_at` or `authenticate_until`.
+    //   filter_lteq - object - If set, return records where the specified field is less than or equal the supplied value. Valid fields are `password_validity_days`, `last_login_at` or `authenticate_until`.
+    //   ids - string - comma-separated list of User IDs
+    //   include_parent_site_users - boolean - Include users from the parent site.
+    //   search - string - Searches for partial matches of name, username, or email.
+    public static function createExport($params = [], $options = [])
+    {
+        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        if (@$params['ids'] && !is_string(@$params['ids'])) {
+            throw new \Files\Exception\InvalidParameterException('$ids must be of type string; received ' . gettype(@$params['ids']));
+        }
+
+        if (@$params['search'] && !is_string(@$params['search'])) {
+            throw new \Files\Exception\InvalidParameterException('$search must be of type string; received ' . gettype(@$params['search']));
+        }
+
+        $response = Api::sendRequest('/users/create_export', 'POST', $params, $options);
+
+        $return_array = [];
+
+        foreach ($response->data as $obj) {
+            $return_array[] = new Export((array) $obj, $options);
+        }
+
+        return $return_array;
     }
 }

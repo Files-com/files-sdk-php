@@ -145,3 +145,103 @@ $history->list(, [
 * `sort_by` (object): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `path`, `created_at` or `user_id`.
 * `filter` (object): If set, return records where the specified field is equal to the supplied value. Valid fields are `user_id`, `folder` or `path`. Valid field combinations are `[ user_id, folder ]`, `[ user_id, path ]`, `[ folder, path ]` or `[ user_id, folder, path ]`.
 * `filter_prefix` (object): If set, return records where the specified field is prefixed by the supplied value. Valid fields are `path`.
+
+---
+
+## List history for specific file
+
+```
+$history = new \Files\Model\History();
+$history->listForFile($path);
+```
+
+
+### Parameters
+
+* `start_at` (string): Leave blank or set to a date/time to filter earlier entries.
+* `end_at` (string): Leave blank or set to a date/time to filter later entries.
+* `display` (string): Display format. Leave blank or set to `full` or `parent`.
+* `cursor` (string): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+* `per_page` (int64): Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
+* `sort_by` (object): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `path` and `created_at`.
+* `path` (string): Required - Path to operate on.
+
+---
+
+## List history for specific folder
+
+```
+$history = new \Files\Model\History();
+$history->listForFolder($path);
+```
+
+
+### Parameters
+
+* `start_at` (string): Leave blank or set to a date/time to filter earlier entries.
+* `end_at` (string): Leave blank or set to a date/time to filter later entries.
+* `display` (string): Display format. Leave blank or set to `full` or `parent`.
+* `cursor` (string): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+* `per_page` (int64): Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
+* `sort_by` (object): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `created_at`.
+* `path` (string): Required - Path to operate on.
+
+---
+
+## List history for specific user
+
+```
+$history = new \Files\Model\History();
+$history->listForUser($user_id);
+```
+
+
+### Parameters
+
+* `start_at` (string): Leave blank or set to a date/time to filter earlier entries.
+* `end_at` (string): Leave blank or set to a date/time to filter later entries.
+* `display` (string): Display format. Leave blank or set to `full` or `parent`.
+* `cursor` (string): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+* `per_page` (int64): Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
+* `sort_by` (object): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `user_id` and `created_at`.
+* `user_id` (int64): Required - User ID.
+
+---
+
+## List site login history
+
+```
+$history = new \Files\Model\History();
+$history->listLogins
+```
+
+
+### Parameters
+
+* `start_at` (string): Leave blank or set to a date/time to filter earlier entries.
+* `end_at` (string): Leave blank or set to a date/time to filter later entries.
+* `display` (string): Display format. Leave blank or set to `full` or `parent`.
+* `cursor` (string): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+* `per_page` (int64): Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
+* `sort_by` (object): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `created_at`.
+
+---
+
+## List site full action history
+
+```
+$history = new \Files\Model\History();
+$history->list
+```
+
+
+### Parameters
+
+* `start_at` (string): Leave blank or set to a date/time to filter earlier entries.
+* `end_at` (string): Leave blank or set to a date/time to filter later entries.
+* `display` (string): Display format. Leave blank or set to `full` or `parent`.
+* `cursor` (string): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+* `per_page` (int64): Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
+* `sort_by` (object): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `path`, `created_at` or `user_id`.
+* `filter` (object): If set, return records where the specified field is equal to the supplied value. Valid fields are `user_id`, `folder` or `path`. Valid field combinations are `[ user_id, folder ]`, `[ user_id, path ]`, `[ folder, path ]` or `[ user_id, folder, path ]`.
+* `filter_prefix` (object): If set, return records where the specified field is prefixed by the supplied value. Valid fields are `path`.

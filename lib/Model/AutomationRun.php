@@ -162,4 +162,39 @@ class AutomationRun
     {
         return self::find($id, $params, $options);
     }
+
+    // Parameters:
+    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+    //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
+    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `automation_id`, `created_at` or `status`.
+    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `status` and `automation_id`. Valid field combinations are `[ status, automation_id ]`.
+    //   automation_id (required) - int64 - ID of the associated Automation.
+    public static function createExport($params = [], $options = [])
+    {
+        if (!@$params['automation_id']) {
+            throw new \Files\Exception\MissingParameterException('Parameter missing: automation_id');
+        }
+
+        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        if (@$params['automation_id'] && !is_int(@$params['automation_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$automation_id must be of type int; received ' . gettype(@$params['automation_id']));
+        }
+
+        $response = Api::sendRequest('/automation_runs/create_export', 'POST', $params, $options);
+
+        $return_array = [];
+
+        foreach ($response->data as $obj) {
+            $return_array[] = new Export((array) $obj, $options);
+        }
+
+        return $return_array;
+    }
 }

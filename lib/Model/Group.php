@@ -165,6 +165,16 @@ class Group
     {
         return $this->attributes['restapi_permission'] = $value;
     }
+    // int64 # Site ID
+    public function getSiteId()
+    {
+        return @$this->attributes['site_id'];
+    }
+
+    public function setSiteId($value)
+    {
+        return $this->attributes['site_id'] = $value;
+    }
 
     // Parameters:
     //   notes - string - Group notes.
@@ -263,10 +273,11 @@ class Group
     // Parameters:
     //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
     //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `name`.
+    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `site_id` and `name`.
     //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `name`.
     //   filter_prefix - object - If set, return records where the specified field is prefixed by the supplied value. Valid fields are `name`.
     //   ids - string - Comma-separated list of group ids to include in results.
+    //   include_parent_site_groups - boolean - Include groups from the parent site.
     public static function all($params = [], $options = [])
     {
         if (@$params['cursor'] && !is_string(@$params['cursor'])) {
@@ -358,5 +369,38 @@ class Group
         $response = Api::sendRequest('/groups', 'POST', $params, $options);
 
         return new Group((array) (@$response->data ?: []), $options);
+    }
+
+    // Parameters:
+    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+    //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
+    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `site_id` and `name`.
+    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `name`.
+    //   filter_prefix - object - If set, return records where the specified field is prefixed by the supplied value. Valid fields are `name`.
+    //   ids - string - Comma-separated list of group ids to include in results.
+    //   include_parent_site_groups - boolean - Include groups from the parent site.
+    public static function createExport($params = [], $options = [])
+    {
+        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        if (@$params['ids'] && !is_string(@$params['ids'])) {
+            throw new \Files\Exception\InvalidParameterException('$ids must be of type string; received ' . gettype(@$params['ids']));
+        }
+
+        $response = Api::sendRequest('/groups/create_export', 'POST', $params, $options);
+
+        $return_array = [];
+
+        foreach ($response->data as $obj) {
+            $return_array[] = new Export((array) $obj, $options);
+        }
+
+        return $return_array;
     }
 }

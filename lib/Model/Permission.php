@@ -261,4 +261,47 @@ class Permission
 
         return new Permission((array) (@$response->data ?: []), $options);
     }
+
+    // Parameters:
+    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+    //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
+    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `group_id`, `path` or `user_id`.
+    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `path`, `group_id` or `user_id`. Valid field combinations are `[ path, group_id ]`, `[ path, user_id ]` or `[ group_id, user_id ]`.
+    //   filter_prefix - object - If set, return records where the specified field is prefixed by the supplied value. Valid fields are `path`.
+    //   path - string - Permission path.  If provided, will scope all permissions(including upward) to this path.
+    //   include_groups - boolean - If searching by user or group, also include user's permissions that are inherited from its groups?
+    //   group_id - string
+    //   user_id - string
+    public static function createExport($params = [], $options = [])
+    {
+        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        if (@$params['path'] && !is_string(@$params['path'])) {
+            throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
+        }
+
+        if (@$params['group_id'] && !is_string(@$params['group_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$group_id must be of type string; received ' . gettype(@$params['group_id']));
+        }
+
+        if (@$params['user_id'] && !is_string(@$params['user_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$user_id must be of type string; received ' . gettype(@$params['user_id']));
+        }
+
+        $response = Api::sendRequest('/permissions/create_export', 'POST', $params, $options);
+
+        $return_array = [];
+
+        foreach ($response->data as $obj) {
+            $return_array[] = new Export((array) $obj, $options);
+        }
+
+        return $return_array;
+    }
 }

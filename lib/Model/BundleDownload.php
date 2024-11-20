@@ -115,4 +115,44 @@ class BundleDownload
 
         return $return_array;
     }
+
+    // Parameters:
+    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+    //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
+    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `created_at`.
+    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `created_at`.
+    //   filter_gt - object - If set, return records where the specified field is greater than the supplied value. Valid fields are `created_at`.
+    //   filter_gteq - object - If set, return records where the specified field is greater than or equal the supplied value. Valid fields are `created_at`.
+    //   filter_lt - object - If set, return records where the specified field is less than the supplied value. Valid fields are `created_at`.
+    //   filter_lteq - object - If set, return records where the specified field is less than or equal the supplied value. Valid fields are `created_at`.
+    //   bundle_id - int64 - Bundle ID
+    //   bundle_registration_id - int64 - BundleRegistration ID
+    public static function createExport($params = [], $options = [])
+    {
+        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        if (@$params['bundle_id'] && !is_int(@$params['bundle_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$bundle_id must be of type int; received ' . gettype(@$params['bundle_id']));
+        }
+
+        if (@$params['bundle_registration_id'] && !is_int(@$params['bundle_registration_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$bundle_registration_id must be of type int; received ' . gettype(@$params['bundle_registration_id']));
+        }
+
+        $response = Api::sendRequest('/bundle_downloads/create_export', 'POST', $params, $options);
+
+        $return_array = [];
+
+        foreach ($response->data as $obj) {
+            $return_array[] = new Export((array) $obj, $options);
+        }
+
+        return $return_array;
+    }
 }

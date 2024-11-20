@@ -60,21 +60,133 @@ class Export
     {
         return @$this->attributes['id'];
     }
+
+    public function setId($value)
+    {
+        return $this->attributes['id'] = $value;
+    }
     // string # Status of the Export
     public function getExportStatus()
     {
         return @$this->attributes['export_status'];
+    }
+
+    public function setExportStatus($value)
+    {
+        return $this->attributes['export_status'] = $value;
     }
     // string # Type of data being exported
     public function getExportType()
     {
         return @$this->attributes['export_type'];
     }
+
+    public function setExportType($value)
+    {
+        return $this->attributes['export_type'] = $value;
+    }
+    // int64 # Number of rows exported
+    public function getExportRows()
+    {
+        return @$this->attributes['export_rows'];
+    }
+
+    public function setExportRows($value)
+    {
+        return $this->attributes['export_rows'] = $value;
+    }
     // string # Link to download Export file.
     public function getDownloadUri()
     {
         return @$this->attributes['download_uri'];
     }
+
+    public function setDownloadUri($value)
+    {
+        return $this->attributes['download_uri'] = $value;
+    }
+    // string # Export message
+    public function getMessage()
+    {
+        return @$this->attributes['message'];
+    }
+
+    public function setMessage($value)
+    {
+        return $this->attributes['message'] = $value;
+    }
+    // int64 # User ID.  Provide a value of `0` to operate the current session's user.
+    public function getUserId()
+    {
+        return @$this->attributes['user_id'];
+    }
+
+    public function setUserId($value)
+    {
+        return $this->attributes['user_id'] = $value;
+    }
+    // string # Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+    public function getCursor()
+    {
+        return @$this->attributes['cursor'];
+    }
+
+    public function setCursor($value)
+    {
+        return $this->attributes['cursor'] = $value;
+    }
+    // int64 # Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
+    public function getPerPage()
+    {
+        return @$this->attributes['per_page'];
+    }
+
+    public function setPerPage($value)
+    {
+        return $this->attributes['per_page'] = $value;
+    }
+    // object # If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `export_status` and `export_type`.
+    public function getSortBy()
+    {
+        return @$this->attributes['sort_by'];
+    }
+
+    public function setSortBy($value)
+    {
+        return $this->attributes['sort_by'] = $value;
+    }
+    // object # If set, return records where the specified field is equal to the supplied value. Valid fields are `export_status` and `export_type`.
+    public function getFilter()
+    {
+        return @$this->attributes['filter'];
+    }
+
+    public function setFilter($value)
+    {
+        return $this->attributes['filter'] = $value;
+    }
+    // object # If set, return records where the specified field is prefixed by the supplied value. Valid fields are `export_type`.
+    public function getFilterPrefix()
+    {
+        return @$this->attributes['filter_prefix'];
+    }
+
+    public function setFilterPrefix($value)
+    {
+        return $this->attributes['filter_prefix'] = $value;
+    }
+
+    public function save()
+    {
+        if (@$this->attributes['id']) {
+            throw new \Files\Exception\NotImplementedException('The Export object doesn\'t support updates.');
+        } else {
+            $new_obj = self::create($this->attributes, $this->options);
+            $this->attributes = $new_obj->attributes;
+            return true;
+        }
+    }
+
 
     // Parameters:
     //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
@@ -133,5 +245,37 @@ class Export
     public static function get($id, $params = [], $options = [])
     {
         return self::find($id, $params, $options);
+    }
+
+    // Parameters:
+    //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
+    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+    //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
+    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `export_status` and `export_type`.
+    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `export_status` and `export_type`.
+    //   filter_prefix - object - If set, return records where the specified field is prefixed by the supplied value. Valid fields are `export_type`.
+    public static function create($params = [], $options = [])
+    {
+        if (@$params['user_id'] && !is_int(@$params['user_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
+        }
+
+        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        $response = Api::sendRequest('/exports/create_export', 'POST', $params, $options);
+
+        $return_array = [];
+
+        foreach ($response->data as $obj) {
+            $return_array[] = new Export((array) $obj, $options);
+        }
+
+        return $return_array;
     }
 }

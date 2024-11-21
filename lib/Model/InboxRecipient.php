@@ -216,8 +216,6 @@ class InboxRecipient
     }
 
     // Parameters:
-    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-    //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
     //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are .
     //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `has_registrations`.
     //   inbox_id (required) - int64 - List recipients for the inbox with this ID.
@@ -225,14 +223,6 @@ class InboxRecipient
     {
         if (!@$params['inbox_id']) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: inbox_id');
-        }
-
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
-        }
-
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
         if (@$params['inbox_id'] && !is_int(@$params['inbox_id'])) {

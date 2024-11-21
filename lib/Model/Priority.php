@@ -106,8 +106,6 @@ class Priority
     }
 
     // Parameters:
-    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-    //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
     //   path (required) - string - The path to query for priorities
     public static function createExport($path, $params = [], $options = [])
     {
@@ -119,14 +117,6 @@ class Priority
 
         if (!@$params['path']) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: path');
-        }
-
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
-        }
-
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
         if (@$params['path'] && !is_string(@$params['path'])) {

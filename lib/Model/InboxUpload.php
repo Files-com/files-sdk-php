@@ -102,8 +102,6 @@ class InboxUpload
     }
 
     // Parameters:
-    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-    //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
     //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `created_at`.
     //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `created_at`, `folder_behavior_id` or `inbox_registration_id`. Valid field combinations are `[ created_at, folder_behavior_id ]`, `[ created_at, inbox_registration_id ]`, `[ folder_behavior_id, inbox_registration_id ]` or `[ created_at, folder_behavior_id, inbox_registration_id ]`.
     //   filter_gt - object - If set, return records where the specified field is greater than the supplied value. Valid fields are `created_at`.
@@ -112,14 +110,6 @@ class InboxUpload
     //   filter_lteq - object - If set, return records where the specified field is less than or equal the supplied value. Valid fields are `created_at`.
     public static function createExport($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
-        }
-
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
-        }
-
         $response = Api::sendRequest('/inbox_uploads/create_export', 'POST', $params, $options);
 
         $return_array = [];

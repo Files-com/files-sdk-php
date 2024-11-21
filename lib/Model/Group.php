@@ -372,8 +372,6 @@ class Group
     }
 
     // Parameters:
-    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-    //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
     //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `site_id` and `name`.
     //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `name`.
     //   filter_prefix - object - If set, return records where the specified field is prefixed by the supplied value. Valid fields are `name`.
@@ -381,14 +379,6 @@ class Group
     //   include_parent_site_groups - boolean - Include groups from the parent site.
     public static function createExport($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
-        }
-
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
-        }
-
         if (@$params['ids'] && !is_string(@$params['ids'])) {
             throw new \Files\Exception\InvalidParameterException('$ids must be of type string; received ' . gettype(@$params['ids']));
         }

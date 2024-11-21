@@ -1337,8 +1337,6 @@ class User
     }
 
     // Parameters:
-    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-    //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
     //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `site_id`, `authenticate_until`, `email`, `last_desktop_login_at`, `last_login_at`, `username`, `name`, `company`, `site_admin`, `password_validity_days` or `ssl_required`.
     //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `username`, `name`, `email`, `company`, `site_admin`, `password_validity_days`, `ssl_required`, `last_login_at`, `authenticate_until` or `not_site_admin`. Valid field combinations are `[ username, not_site_admin ]` and `[ name, company ]`.
     //   filter_gt - object - If set, return records where the specified field is greater than the supplied value. Valid fields are `password_validity_days`, `last_login_at` or `authenticate_until`.
@@ -1351,14 +1349,6 @@ class User
     //   search - string - Searches for partial matches of name, username, or email.
     public static function createExport($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
-        }
-
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
-        }
-
         if (@$params['ids'] && !is_string(@$params['ids'])) {
             throw new \Files\Exception\InvalidParameterException('$ids must be of type string; received ' . gettype(@$params['ids']));
         }

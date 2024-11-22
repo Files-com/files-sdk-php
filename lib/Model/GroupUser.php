@@ -295,22 +295,4 @@ class GroupUser
 
         return new GroupUser((array) (@$response->data ?: []), $options);
     }
-
-    // Parameters:
-    //   user_id - int64 - User ID.  If provided, will return group_users of this user.
-    //   group_id - int64 - Group ID.  If provided, will return group_users of this group.
-    public static function createExport($params = [], $options = [])
-    {
-        if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-            throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
-        }
-
-        if (@$params['group_id'] && !is_int(@$params['group_id'])) {
-            throw new \Files\Exception\InvalidParameterException('$group_id must be of type int; received ' . gettype(@$params['group_id']));
-        }
-
-        $response = Api::sendRequest('/group_users/create_export', 'POST', $params, $options);
-
-        return new Export((array) (@$response->data ?: []), $options);
-    }
 }

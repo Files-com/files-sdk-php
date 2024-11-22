@@ -149,17 +149,4 @@ class BundleRegistration
 
         return $return_array;
     }
-
-    // Parameters:
-    //   bundle_id - int64 - ID of the associated Bundle
-    public static function createExport($params = [], $options = [])
-    {
-        if (@$params['bundle_id'] && !is_int(@$params['bundle_id'])) {
-            throw new \Files\Exception\InvalidParameterException('$bundle_id must be of type int; received ' . gettype(@$params['bundle_id']));
-        }
-
-        $response = Api::sendRequest('/bundle_registrations/create_export', 'POST', $params, $options);
-
-        return new Export((array) (@$response->data ?: []), $options);
-    }
 }

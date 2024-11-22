@@ -59,16 +59,6 @@ $project->create(, [
 
 ---
 
-## Create an export CSV of Project resources
-
-```
-$project = new \Files\Model\Project();
-$project->createExport
-```
-
-
----
-
 ## Update Project
 
 ```

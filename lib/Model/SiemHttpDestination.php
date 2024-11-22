@@ -892,13 +892,6 @@ class SiemHttpDestination
         return new SiemHttpDestination((array) (@$response->data ?: []), $options);
     }
 
-    public static function createExport($params = [], $options = [])
-    {
-        $response = Api::sendRequest('/siem_http_destinations/create_export', 'POST', $options);
-
-        return new Export((array) (@$response->data ?: []), $options);
-    }
-
     // Parameters:
     //   siem_http_destination_id - int64 - SIEM HTTP Destination ID
     //   destination_type - string - Destination Type

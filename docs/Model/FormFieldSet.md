@@ -103,22 +103,6 @@ $form_field_set->create(, [
 
 ---
 
-## Create an export CSV of Form Field Set resources
-
-```
-$form_field_set = new \Files\Model\FormFieldSet();
-$form_field_set->createExport(, [
-  'user_id' => 1,
-]);
-```
-
-
-### Parameters
-
-* `user_id` (int64): User ID.  Provide a value of `0` to operate the current session's user.
-
----
-
 ## Update Form Field Set
 
 ```

@@ -424,15 +424,4 @@ class Behavior
 
         return;
     }
-
-    // Parameters:
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `behavior`.
-    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `impacts_ui` and `behavior`.
-    //   filter_prefix - object - If set, return records where the specified field is prefixed by the supplied value. Valid fields are `behavior`.
-    public static function createExport($params = [], $options = [])
-    {
-        $response = Api::sendRequest('/behaviors/create_export', 'POST', $params, $options);
-
-        return new Export((array) (@$response->data ?: []), $options);
-    }
 }

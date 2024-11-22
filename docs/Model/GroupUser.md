@@ -61,24 +61,6 @@ $group_user->create(, [
 
 ---
 
-## Create an export CSV of Group User resources
-
-```
-$group_user = new \Files\Model\GroupUser();
-$group_user->createExport(, [
-  'user_id' => 1,
-  'group_id' => 1,
-]);
-```
-
-
-### Parameters
-
-* `user_id` (int64): User ID.  If provided, will return group_users of this user.
-* `group_id` (int64): Group ID.  If provided, will return group_users of this group.
-
----
-
 ## Update Group User
 
 ```

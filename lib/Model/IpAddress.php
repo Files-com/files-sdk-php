@@ -171,32 +171,4 @@ class IpAddress
 
         return $return_array;
     }
-
-    public static function smartfileReservedCreateExport($params = [], $options = [])
-    {
-        $response = Api::sendRequest('/ip_addresses/smartfile-reserved/create_export', 'POST', $options);
-
-        return new Export((array) (@$response->data ?: []), $options);
-    }
-
-    public static function exavaultReservedCreateExport($params = [], $options = [])
-    {
-        $response = Api::sendRequest('/ip_addresses/exavault-reserved/create_export', 'POST', $options);
-
-        return new Export((array) (@$response->data ?: []), $options);
-    }
-
-    public static function reservedCreateExport($params = [], $options = [])
-    {
-        $response = Api::sendRequest('/ip_addresses/reserved/create_export', 'POST', $options);
-
-        return new Export((array) (@$response->data ?: []), $options);
-    }
-
-    public static function createExport($params = [], $options = [])
-    {
-        $response = Api::sendRequest('/ip_addresses/create_export', 'POST', $options);
-
-        return new Export((array) (@$response->data ?: []), $options);
-    }
 }

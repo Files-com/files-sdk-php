@@ -81,23 +81,6 @@ $gpg_key->create(, [
 
 ---
 
-## Create an export CSV of GPG Key resources
-
-```
-$gpg_key = new \Files\Model\GpgKey();
-$gpg_key->createExport(, [
-  'user_id' => 1,
-]);
-```
-
-
-### Parameters
-
-* `user_id` (int64): User ID.  Provide a value of `0` to operate the current session's user.
-* `sort_by` (object): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `name` and `expires_at`.
-
----
-
 ## Update GPG Key
 
 ```

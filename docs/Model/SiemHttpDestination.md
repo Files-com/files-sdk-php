@@ -203,16 +203,6 @@ $siem_http_destination->create(, [
 
 ---
 
-## Create an export CSV of SIEM HTTP Destination resources
-
-```
-$siem_http_destination = new \Files\Model\SiemHttpDestination();
-$siem_http_destination->createExport
-```
-
-
----
-
 ## send_test_entry SIEM HTTP Destination
 
 ```

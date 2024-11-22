@@ -75,16 +75,6 @@ $clickwrap->create(, [
 
 ---
 
-## Create an export CSV of Clickwrap resources
-
-```
-$clickwrap = new \Files\Model\Clickwrap();
-$clickwrap->createExport
-```
-
-
----
-
 ## Update Clickwrap
 
 ```

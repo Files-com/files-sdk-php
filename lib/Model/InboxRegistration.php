@@ -144,17 +144,4 @@ class InboxRegistration
 
         return $return_array;
     }
-
-    // Parameters:
-    //   folder_behavior_id - int64 - ID of the associated Inbox.
-    public static function createExport($params = [], $options = [])
-    {
-        if (@$params['folder_behavior_id'] && !is_int(@$params['folder_behavior_id'])) {
-            throw new \Files\Exception\InvalidParameterException('$folder_behavior_id must be of type int; received ' . gettype(@$params['folder_behavior_id']));
-        }
-
-        $response = Api::sendRequest('/inbox_registrations/create_export', 'POST', $params, $options);
-
-        return new Export((array) (@$response->data ?: []), $options);
-    }
 }

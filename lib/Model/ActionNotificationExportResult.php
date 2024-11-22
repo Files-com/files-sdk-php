@@ -143,26 +143,4 @@ class ActionNotificationExportResult
 
         return $return_array;
     }
-
-    // Parameters:
-    //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
-    //   action_notification_export_id (required) - int64 - ID of the associated action notification export.
-    public static function createExport($params = [], $options = [])
-    {
-        if (!@$params['action_notification_export_id']) {
-            throw new \Files\Exception\MissingParameterException('Parameter missing: action_notification_export_id');
-        }
-
-        if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-            throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
-        }
-
-        if (@$params['action_notification_export_id'] && !is_int(@$params['action_notification_export_id'])) {
-            throw new \Files\Exception\InvalidParameterException('$action_notification_export_id must be of type int; received ' . gettype(@$params['action_notification_export_id']));
-        }
-
-        $response = Api::sendRequest('/action_notification_export_results/create_export', 'POST', $params, $options);
-
-        return new Export((array) (@$response->data ?: []), $options);
-    }
 }

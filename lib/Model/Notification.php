@@ -499,26 +499,4 @@ class Notification
 
         return new Notification((array) (@$response->data ?: []), $options);
     }
-
-    // Parameters:
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `path`, `user_id` or `group_id`.
-    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `path`, `user_id` or `group_id`.
-    //   filter_prefix - object - If set, return records where the specified field is prefixed by the supplied value. Valid fields are `path`.
-    //   path - string - Show notifications for this Path.
-    //   include_ancestors - boolean - If `include_ancestors` is `true` and `path` is specified, include notifications for any parent paths. Ignored if `path` is not specified.
-    //   group_id - string
-    public static function createExport($params = [], $options = [])
-    {
-        if (@$params['path'] && !is_string(@$params['path'])) {
-            throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
-        }
-
-        if (@$params['group_id'] && !is_string(@$params['group_id'])) {
-            throw new \Files\Exception\InvalidParameterException('$group_id must be of type string; received ' . gettype(@$params['group_id']));
-        }
-
-        $response = Api::sendRequest('/notifications/create_export', 'POST', $params, $options);
-
-        return new Export((array) (@$response->data ?: []), $options);
-    }
 }

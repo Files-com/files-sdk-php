@@ -212,26 +212,4 @@ class MessageCommentReaction
 
         return new MessageCommentReaction((array) (@$response->data ?: []), $options);
     }
-
-    // Parameters:
-    //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
-    //   message_comment_id (required) - int64 - Message comment to return reactions for.
-    public static function createExport($params = [], $options = [])
-    {
-        if (!@$params['message_comment_id']) {
-            throw new \Files\Exception\MissingParameterException('Parameter missing: message_comment_id');
-        }
-
-        if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-            throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
-        }
-
-        if (@$params['message_comment_id'] && !is_int(@$params['message_comment_id'])) {
-            throw new \Files\Exception\InvalidParameterException('$message_comment_id must be of type int; received ' . gettype(@$params['message_comment_id']));
-        }
-
-        $response = Api::sendRequest('/message_comment_reactions/create_export', 'POST', $params, $options);
-
-        return new Export((array) (@$response->data ?: []), $options);
-    }
 }

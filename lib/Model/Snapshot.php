@@ -302,11 +302,4 @@ class Snapshot
 
         return new Snapshot((array) (@$response->data ?: []), $options);
     }
-
-    public static function createExport($params = [], $options = [])
-    {
-        $response = Api::sendRequest('/snapshots/create_export', 'POST', $options);
-
-        return new Export((array) (@$response->data ?: []), $options);
-    }
 }

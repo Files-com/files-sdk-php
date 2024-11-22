@@ -214,23 +214,4 @@ class InboxRecipient
 
         return new InboxRecipient((array) (@$response->data ?: []), $options);
     }
-
-    // Parameters:
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are .
-    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `has_registrations`.
-    //   inbox_id (required) - int64 - List recipients for the inbox with this ID.
-    public static function createExport($params = [], $options = [])
-    {
-        if (!@$params['inbox_id']) {
-            throw new \Files\Exception\MissingParameterException('Parameter missing: inbox_id');
-        }
-
-        if (@$params['inbox_id'] && !is_int(@$params['inbox_id'])) {
-            throw new \Files\Exception\InvalidParameterException('$inbox_id must be of type int; received ' . gettype(@$params['inbox_id']));
-        }
-
-        $response = Api::sendRequest('/inbox_recipients/create_export', 'POST', $params, $options);
-
-        return new Export((array) (@$response->data ?: []), $options);
-    }
 }

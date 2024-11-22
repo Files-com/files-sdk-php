@@ -162,23 +162,4 @@ class AutomationRun
     {
         return self::find($id, $params, $options);
     }
-
-    // Parameters:
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `automation_id`, `created_at` or `status`.
-    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `status` and `automation_id`. Valid field combinations are `[ status, automation_id ]`.
-    //   automation_id (required) - int64 - ID of the associated Automation.
-    public static function createExport($params = [], $options = [])
-    {
-        if (!@$params['automation_id']) {
-            throw new \Files\Exception\MissingParameterException('Parameter missing: automation_id');
-        }
-
-        if (@$params['automation_id'] && !is_int(@$params['automation_id'])) {
-            throw new \Files\Exception\InvalidParameterException('$automation_id must be of type int; received ' . gettype(@$params['automation_id']));
-        }
-
-        $response = Api::sendRequest('/automation_runs/create_export', 'POST', $params, $options);
-
-        return new Export((array) (@$response->data ?: []), $options);
-    }
 }

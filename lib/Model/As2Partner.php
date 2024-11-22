@@ -474,11 +474,4 @@ class As2Partner
 
         return new As2Partner((array) (@$response->data ?: []), $options);
     }
-
-    public static function createExport($params = [], $options = [])
-    {
-        $response = Api::sendRequest('/as2_partners/create_export', 'POST', $options);
-
-        return new Export((array) (@$response->data ?: []), $options);
-    }
 }

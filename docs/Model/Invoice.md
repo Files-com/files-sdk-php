@@ -80,13 +80,3 @@ $invoice->find($id);
 ### Parameters
 
 * `id` (int64): Required - Invoice ID.
-
----
-
-## Create an export CSV of Invoice resources
-
-```
-$invoice = new \Files\Model\Invoice();
-$invoice->createExport
-```
-

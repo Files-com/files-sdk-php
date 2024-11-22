@@ -154,11 +154,4 @@ class UsageSnapshot
 
         return $return_array;
     }
-
-    public static function createExport($params = [], $options = [])
-    {
-        $response = Api::sendRequest('/usage_snapshots/create_export', 'POST', $options);
-
-        return new Export((array) (@$response->data ?: []), $options);
-    }
 }

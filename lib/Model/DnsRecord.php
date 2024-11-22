@@ -99,11 +99,4 @@ class DnsRecord
 
         return $return_array;
     }
-
-    public static function createExport($params = [], $options = [])
-    {
-        $response = Api::sendRequest('/dns_records/create_export', 'POST', $options);
-
-        return new Export((array) (@$response->data ?: []), $options);
-    }
 }

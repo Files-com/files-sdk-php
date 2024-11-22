@@ -131,16 +131,6 @@ $sso_strategy->find($id);
 
 ---
 
-## Create an export CSV of SSO Strategy resources
-
-```
-$sso_strategy = new \Files\Model\SsoStrategy();
-$sso_strategy->createExport
-```
-
-
----
-
 ## Synchronize provisioning data with the SSO remote server
 
 ```

@@ -80,13 +80,3 @@ $payment->find($id);
 ### Parameters
 
 * `id` (int64): Required - Payment ID.
-
----
-
-## Create an export CSV of Payment resources
-
-```
-$payment = new \Files\Model\Payment();
-$payment->createExport
-```
-

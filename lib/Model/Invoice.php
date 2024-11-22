@@ -171,11 +171,4 @@ class Invoice
     {
         return self::find($id, $params, $options);
     }
-
-    public static function createExport($params = [], $options = [])
-    {
-        $response = Api::sendRequest('/invoices/create_export', 'POST', $options);
-
-        return new Export((array) (@$response->data ?: []), $options);
-    }
 }

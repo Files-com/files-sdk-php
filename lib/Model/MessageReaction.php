@@ -212,26 +212,4 @@ class MessageReaction
 
         return new MessageReaction((array) (@$response->data ?: []), $options);
     }
-
-    // Parameters:
-    //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
-    //   message_id (required) - int64 - Message to return reactions for.
-    public static function createExport($params = [], $options = [])
-    {
-        if (!@$params['message_id']) {
-            throw new \Files\Exception\MissingParameterException('Parameter missing: message_id');
-        }
-
-        if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-            throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
-        }
-
-        if (@$params['message_id'] && !is_int(@$params['message_id'])) {
-            throw new \Files\Exception\InvalidParameterException('$message_id must be of type int; received ' . gettype(@$params['message_id']));
-        }
-
-        $response = Api::sendRequest('/message_reactions/create_export', 'POST', $params, $options);
-
-        return new Export((array) (@$response->data ?: []), $options);
-    }
 }

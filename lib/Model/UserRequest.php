@@ -236,11 +236,4 @@ class UserRequest
 
         return new UserRequest((array) (@$response->data ?: []), $options);
     }
-
-    public static function createExport($params = [], $options = [])
-    {
-        $response = Api::sendRequest('/user_requests/create_export', 'POST', $options);
-
-        return new Export((array) (@$response->data ?: []), $options);
-    }
 }

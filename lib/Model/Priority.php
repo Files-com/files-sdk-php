@@ -104,27 +104,4 @@ class Priority
 
         return $return_array;
     }
-
-    // Parameters:
-    //   path (required) - string - The path to query for priorities
-    public static function createExport($path, $params = [], $options = [])
-    {
-        if (!is_array($params)) {
-            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
-        }
-
-        $params['path'] = $path;
-
-        if (!@$params['path']) {
-            throw new \Files\Exception\MissingParameterException('Parameter missing: path');
-        }
-
-        if (@$params['path'] && !is_string(@$params['path'])) {
-            throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
-        }
-
-        $response = Api::sendRequest('/priorities/create_export', 'POST', $params, $options);
-
-        return new Export((array) (@$response->data ?: []), $options);
-    }
 }

@@ -249,11 +249,4 @@ class SftpHostKey
 
         return new SftpHostKey((array) (@$response->data ?: []), $options);
     }
-
-    public static function createExport($params = [], $options = [])
-    {
-        $response = Api::sendRequest('/sftp_host_keys/create_export', 'POST', $options);
-
-        return new Export((array) (@$response->data ?: []), $options);
-    }
 }

@@ -370,21 +370,4 @@ class Group
 
         return new Group((array) (@$response->data ?: []), $options);
     }
-
-    // Parameters:
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `site_id` and `name`.
-    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `name`.
-    //   filter_prefix - object - If set, return records where the specified field is prefixed by the supplied value. Valid fields are `name`.
-    //   ids - string - Comma-separated list of group ids to include in results.
-    //   include_parent_site_groups - boolean - Include groups from the parent site.
-    public static function createExport($params = [], $options = [])
-    {
-        if (@$params['ids'] && !is_string(@$params['ids'])) {
-            throw new \Files\Exception\InvalidParameterException('$ids must be of type string; received ' . gettype(@$params['ids']));
-        }
-
-        $response = Api::sendRequest('/groups/create_export', 'POST', $params, $options);
-
-        return new Export((array) (@$response->data ?: []), $options);
-    }
 }

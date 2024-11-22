@@ -116,14 +116,4 @@ class SettingsChange
 
         return $return_array;
     }
-
-    // Parameters:
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `created_at`, `api_key_id` or `user_id`.
-    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `api_key_id` and `user_id`.
-    public static function createExport($params = [], $options = [])
-    {
-        $response = Api::sendRequest('/settings_changes/create_export', 'POST', $params, $options);
-
-        return new Export((array) (@$response->data ?: []), $options);
-    }
 }

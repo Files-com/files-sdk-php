@@ -324,26 +324,4 @@ class Message
 
         return new Message((array) (@$response->data ?: []), $options);
     }
-
-    // Parameters:
-    //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
-    //   project_id (required) - int64 - Project for which to return messages.
-    public static function createExport($params = [], $options = [])
-    {
-        if (!@$params['project_id']) {
-            throw new \Files\Exception\MissingParameterException('Parameter missing: project_id');
-        }
-
-        if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-            throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
-        }
-
-        if (@$params['project_id'] && !is_int(@$params['project_id'])) {
-            throw new \Files\Exception\InvalidParameterException('$project_id must be of type int; received ' . gettype(@$params['project_id']));
-        }
-
-        $response = Api::sendRequest('/messages/create_export', 'POST', $params, $options);
-
-        return new Export((array) (@$response->data ?: []), $options);
-    }
 }

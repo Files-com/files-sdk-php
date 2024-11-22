@@ -140,18 +140,4 @@ class UsageDailySnapshot
 
         return $return_array;
     }
-
-    // Parameters:
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `date`.
-    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `date` and `usage_snapshot_id`. Valid field combinations are `[ date, usage_snapshot_id ]`.
-    //   filter_gt - object - If set, return records where the specified field is greater than the supplied value. Valid fields are `date`.
-    //   filter_gteq - object - If set, return records where the specified field is greater than or equal the supplied value. Valid fields are `date`.
-    //   filter_lt - object - If set, return records where the specified field is less than the supplied value. Valid fields are `date`.
-    //   filter_lteq - object - If set, return records where the specified field is less than or equal the supplied value. Valid fields are `date`.
-    public static function createExport($params = [], $options = [])
-    {
-        $response = Api::sendRequest('/usage_daily_snapshots/create_export', 'POST', $params, $options);
-
-        return new Export((array) (@$response->data ?: []), $options);
-    }
 }

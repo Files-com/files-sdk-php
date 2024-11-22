@@ -277,17 +277,4 @@ class ShareGroup
 
         return new ShareGroup((array) (@$response->data ?: []), $options);
     }
-
-    // Parameters:
-    //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
-    public static function createExport($params = [], $options = [])
-    {
-        if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-            throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
-        }
-
-        $response = Api::sendRequest('/share_groups/create_export', 'POST', $params, $options);
-
-        return new Export((array) (@$response->data ?: []), $options);
-    }
 }

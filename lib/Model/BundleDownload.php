@@ -115,28 +115,4 @@ class BundleDownload
 
         return $return_array;
     }
-
-    // Parameters:
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `created_at`.
-    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `created_at`.
-    //   filter_gt - object - If set, return records where the specified field is greater than the supplied value. Valid fields are `created_at`.
-    //   filter_gteq - object - If set, return records where the specified field is greater than or equal the supplied value. Valid fields are `created_at`.
-    //   filter_lt - object - If set, return records where the specified field is less than the supplied value. Valid fields are `created_at`.
-    //   filter_lteq - object - If set, return records where the specified field is less than or equal the supplied value. Valid fields are `created_at`.
-    //   bundle_id - int64 - Bundle ID
-    //   bundle_registration_id - int64 - BundleRegistration ID
-    public static function createExport($params = [], $options = [])
-    {
-        if (@$params['bundle_id'] && !is_int(@$params['bundle_id'])) {
-            throw new \Files\Exception\InvalidParameterException('$bundle_id must be of type int; received ' . gettype(@$params['bundle_id']));
-        }
-
-        if (@$params['bundle_registration_id'] && !is_int(@$params['bundle_registration_id'])) {
-            throw new \Files\Exception\InvalidParameterException('$bundle_registration_id must be of type int; received ' . gettype(@$params['bundle_registration_id']));
-        }
-
-        $response = Api::sendRequest('/bundle_downloads/create_export', 'POST', $params, $options);
-
-        return new Export((array) (@$response->data ?: []), $options);
-    }
 }

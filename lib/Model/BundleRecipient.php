@@ -214,23 +214,4 @@ class BundleRecipient
 
         return new BundleRecipient((array) (@$response->data ?: []), $options);
     }
-
-    // Parameters:
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are .
-    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `has_registrations`.
-    //   bundle_id (required) - int64 - List recipients for the bundle with this ID.
-    public static function createExport($params = [], $options = [])
-    {
-        if (!@$params['bundle_id']) {
-            throw new \Files\Exception\MissingParameterException('Parameter missing: bundle_id');
-        }
-
-        if (@$params['bundle_id'] && !is_int(@$params['bundle_id'])) {
-            throw new \Files\Exception\InvalidParameterException('$bundle_id must be of type int; received ' . gettype(@$params['bundle_id']));
-        }
-
-        $response = Api::sendRequest('/bundle_recipients/create_export', 'POST', $params, $options);
-
-        return new Export((array) (@$response->data ?: []), $options);
-    }
 }

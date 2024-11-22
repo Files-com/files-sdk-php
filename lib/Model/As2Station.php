@@ -391,11 +391,4 @@ class As2Station
 
         return new As2Station((array) (@$response->data ?: []), $options);
     }
-
-    public static function createExport($params = [], $options = [])
-    {
-        $response = Api::sendRequest('/as2_stations/create_export', 'POST', $options);
-
-        return new Export((array) (@$response->data ?: []), $options);
-    }
 }

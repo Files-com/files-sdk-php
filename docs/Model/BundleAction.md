@@ -59,7 +59,7 @@ $bundle_action->list
 
 ---
 
-## Create Export Bundle Action
+## Create an export CSV of Bundle Action resources
 
 ```
 $bundle_action = new \Files\Model\BundleAction();

@@ -43,7 +43,7 @@ $public_hosting_request_log->list
 
 ---
 
-## Create Export Public Hosting Request Log
+## Create an export CSV of Public Hosting Request Log resources
 
 ```
 $public_hosting_request_log = new \Files\Model\PublicHostingRequestLog();

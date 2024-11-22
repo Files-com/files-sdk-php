@@ -130,12 +130,6 @@ class UserCipherUse
 
         $response = Api::sendRequest('/user_cipher_uses/create_export', 'POST', $params, $options);
 
-        $return_array = [];
-
-        foreach ($response->data as $obj) {
-            $return_array[] = new Export((array) $obj, $options);
-        }
-
-        return $return_array;
+        return new Export((array) (@$response->data ?: []), $options);
     }
 }

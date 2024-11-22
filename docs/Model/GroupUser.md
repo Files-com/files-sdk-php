@@ -61,7 +61,7 @@ $group_user->create(, [
 
 ---
 
-## Create Export Group User
+## Create an export CSV of Group User resources
 
 ```
 $group_user = new \Files\Model\GroupUser();

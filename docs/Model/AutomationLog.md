@@ -45,7 +45,7 @@ $automation_log->list
 
 ---
 
-## Create Export Automation Log
+## Create an export CSV of Automation Log resources
 
 ```
 $automation_log = new \Files\Model\AutomationLog();

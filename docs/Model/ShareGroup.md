@@ -80,7 +80,7 @@ $share_group->create(, [
 
 ---
 
-## Create Export Share Group
+## Create an export CSV of Share Group resources
 
 ```
 $share_group = new \Files\Model\ShareGroup();

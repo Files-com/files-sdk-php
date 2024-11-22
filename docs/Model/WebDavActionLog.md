@@ -59,7 +59,7 @@ $web_dav_action_log->list
 
 ---
 
-## Create Export WebDAV Action Log
+## Create an export CSV of WebDAV Action Log resources
 
 ```
 $web_dav_action_log = new \Files\Model\WebDavActionLog();

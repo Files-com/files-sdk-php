@@ -68,7 +68,7 @@ $bundle_recipient->create(, [
 
 ---
 
-## Create Export Bundle Recipient
+## Create an export CSV of Bundle Recipient resources
 
 ```
 $bundle_recipient = new \Files\Model\BundleRecipient();

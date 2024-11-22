@@ -89,7 +89,7 @@ $as2_station->create(, [
 
 ---
 
-## Create Export AS2 Station
+## Create an export CSV of AS2 Station resources
 
 ```
 $as2_station = new \Files\Model\As2Station();

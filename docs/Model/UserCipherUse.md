@@ -42,7 +42,7 @@ $user_cipher_use->list(, [
 
 ---
 
-## Create Export User Cipher Use
+## Create an export CSV of User Cipher Use resources
 
 ```
 $user_cipher_use = new \Files\Model\UserCipherUse();

@@ -37,7 +37,7 @@ $inbox_upload->list
 
 ---
 
-## Create Export Inbox Upload
+## Create an export CSV of Inbox Upload resources
 
 ```
 $inbox_upload = new \Files\Model\InboxUpload();

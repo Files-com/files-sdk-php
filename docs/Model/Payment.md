@@ -83,7 +83,7 @@ $payment->find($id);
 
 ---
 
-## Create Export Payment
+## Create an export CSV of Payment resources
 
 ```
 $payment = new \Files\Model\Payment();

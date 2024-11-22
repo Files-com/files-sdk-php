@@ -81,7 +81,7 @@ $permission->create(, [
 
 ---
 
-## Create Export Permission
+## Create an export CSV of Permission resources
 
 ```
 $permission = new \Files\Model\Permission();

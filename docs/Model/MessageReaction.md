@@ -67,7 +67,7 @@ $message_reaction->create(, [
 
 ---
 
-## Create Export Message Reaction
+## Create an export CSV of Message Reaction resources
 
 ```
 $message_reaction = new \Files\Model\MessageReaction();

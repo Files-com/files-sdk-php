@@ -74,7 +74,7 @@ $app->list
 
 ---
 
-## Create Export App
+## Create an export CSV of App resources
 
 ```
 $app = new \Files\Model\App();

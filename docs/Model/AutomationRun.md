@@ -62,7 +62,7 @@ $automation_run->find($id);
 
 ---
 
-## Create Export Automation Run
+## Create an export CSV of Automation Run resources
 
 ```
 $automation_run = new \Files\Model\AutomationRun();

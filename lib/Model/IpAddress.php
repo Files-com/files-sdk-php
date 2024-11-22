@@ -176,51 +176,27 @@ class IpAddress
     {
         $response = Api::sendRequest('/ip_addresses/smartfile-reserved/create_export', 'POST', $options);
 
-        $return_array = [];
-
-        foreach ($response->data as $obj) {
-            $return_array[] = new Export((array) $obj, $options);
-        }
-
-        return $return_array;
+        return new Export((array) (@$response->data ?: []), $options);
     }
 
     public static function exavaultReservedCreateExport($params = [], $options = [])
     {
         $response = Api::sendRequest('/ip_addresses/exavault-reserved/create_export', 'POST', $options);
 
-        $return_array = [];
-
-        foreach ($response->data as $obj) {
-            $return_array[] = new Export((array) $obj, $options);
-        }
-
-        return $return_array;
+        return new Export((array) (@$response->data ?: []), $options);
     }
 
     public static function reservedCreateExport($params = [], $options = [])
     {
         $response = Api::sendRequest('/ip_addresses/reserved/create_export', 'POST', $options);
 
-        $return_array = [];
-
-        foreach ($response->data as $obj) {
-            $return_array[] = new Export((array) $obj, $options);
-        }
-
-        return $return_array;
+        return new Export((array) (@$response->data ?: []), $options);
     }
 
     public static function createExport($params = [], $options = [])
     {
         $response = Api::sendRequest('/ip_addresses/create_export', 'POST', $options);
 
-        $return_array = [];
-
-        foreach ($response->data as $obj) {
-            $return_array[] = new Export((array) $obj, $options);
-        }
-
-        return $return_array;
+        return new Export((array) (@$response->data ?: []), $options);
     }
 }

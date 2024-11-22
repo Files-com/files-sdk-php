@@ -57,7 +57,7 @@ $usage_snapshot->list
 
 ---
 
-## Create Export Usage Snapshot
+## Create an export CSV of Usage Snapshot resources
 
 ```
 $usage_snapshot = new \Files\Model\UsageSnapshot();

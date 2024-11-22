@@ -85,7 +85,7 @@ $request->create(, [
 
 ---
 
-## Create Export Request
+## Create an export CSV of Request resources
 
 ```
 $request = new \Files\Model\Request();

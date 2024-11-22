@@ -74,7 +74,7 @@ $message_comment->create(, [
 
 ---
 
-## Create Export Message Comment
+## Create an export CSV of Message Comment resources
 
 ```
 $message_comment = new \Files\Model\MessageComment();

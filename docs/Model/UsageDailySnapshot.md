@@ -55,7 +55,7 @@ $usage_daily_snapshot->list
 
 ---
 
-## Create Export Usage Daily Snapshot
+## Create an export CSV of Usage Daily Snapshot resources
 
 ```
 $usage_daily_snapshot = new \Files\Model\UsageDailySnapshot();

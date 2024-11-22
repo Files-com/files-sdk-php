@@ -100,7 +100,7 @@ $as2_outgoing_message->list(, [
 
 ---
 
-## Create Export AS2 Outgoing Message
+## Create an export CSV of AS2 Outgoing Message resources
 
 ```
 $as2_outgoing_message = new \Files\Model\As2OutgoingMessage();

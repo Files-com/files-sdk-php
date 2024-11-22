@@ -65,7 +65,7 @@ $sftp_host_key->create(, [
 
 ---
 
-## Create Export SFTP Host Key
+## Create an export CSV of SFTP Host Key resources
 
 ```
 $sftp_host_key = new \Files\Model\SftpHostKey();

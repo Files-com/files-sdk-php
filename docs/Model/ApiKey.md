@@ -109,7 +109,7 @@ $api_key->create(, [
 
 ---
 
-## Create Export API Key
+## Create an export CSV of API Key resources
 
 ```
 $api_key = new \Files\Model\ApiKey();

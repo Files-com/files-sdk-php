@@ -43,7 +43,7 @@ $settings_change->list
 
 ---
 
-## Create Export Settings Change
+## Create an export CSV of Settings Change resources
 
 ```
 $settings_change = new \Files\Model\SettingsChange();

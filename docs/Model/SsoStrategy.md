@@ -131,7 +131,7 @@ $sso_strategy->find($id);
 
 ---
 
-## Create Export SSO Strategy
+## Create an export CSV of SSO Strategy resources
 
 ```
 $sso_strategy = new \Files\Model\SsoStrategy();

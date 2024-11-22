@@ -77,7 +77,7 @@ $public_key->create(, [
 
 ---
 
-## Create Export Public Key
+## Create an export CSV of Public Key resources
 
 ```
 $public_key = new \Files\Model\PublicKey();

@@ -92,7 +92,7 @@ $external_event->create(, [
 
 ---
 
-## Create Export External Event
+## Create an export CSV of External Event resources
 
 ```
 $external_event = new \Files\Model\ExternalEvent();

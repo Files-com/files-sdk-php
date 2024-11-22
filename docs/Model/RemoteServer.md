@@ -313,7 +313,7 @@ $remote_server->create(, [
 
 ---
 
-## Create Export Remote Server
+## Create an export CSV of Remote Server resources
 
 ```
 $remote_server = new \Files\Model\RemoteServer();

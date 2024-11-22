@@ -409,13 +409,7 @@ class History
 
         $response = Api::sendRequest('/history/files/' . @$params['path'] . '/create_export', 'POST', $params, $options);
 
-        $return_array = [];
-
-        foreach ($response->data as $obj) {
-            $return_array[] = new Export((array) $obj, $options);
-        }
-
-        return $return_array;
+        return new Export((array) (@$response->data ?: []), $options);
     }
 
     // Parameters:
@@ -454,13 +448,7 @@ class History
 
         $response = Api::sendRequest('/history/folders/' . @$params['path'] . '/create_export', 'POST', $params, $options);
 
-        $return_array = [];
-
-        foreach ($response->data as $obj) {
-            $return_array[] = new Export((array) $obj, $options);
-        }
-
-        return $return_array;
+        return new Export((array) (@$response->data ?: []), $options);
     }
 
     // Parameters:
@@ -499,13 +487,7 @@ class History
 
         $response = Api::sendRequest('/history/users/' . @$params['user_id'] . '/create_export', 'POST', $params, $options);
 
-        $return_array = [];
-
-        foreach ($response->data as $obj) {
-            $return_array[] = new Export((array) $obj, $options);
-        }
-
-        return $return_array;
+        return new Export((array) (@$response->data ?: []), $options);
     }
 
     // Parameters:
@@ -529,13 +511,7 @@ class History
 
         $response = Api::sendRequest('/history/login/create_export', 'POST', $params, $options);
 
-        $return_array = [];
-
-        foreach ($response->data as $obj) {
-            $return_array[] = new Export((array) $obj, $options);
-        }
-
-        return $return_array;
+        return new Export((array) (@$response->data ?: []), $options);
     }
 
     // Parameters:
@@ -561,12 +537,6 @@ class History
 
         $response = Api::sendRequest('/history/create_export', 'POST', $params, $options);
 
-        $return_array = [];
-
-        foreach ($response->data as $obj) {
-            $return_array[] = new Export((array) $obj, $options);
-        }
-
-        return $return_array;
+        return new Export((array) (@$response->data ?: []), $options);
     }
 }

@@ -81,7 +81,7 @@ $gpg_key->create(, [
 
 ---
 
-## Create Export GPG Key
+## Create an export CSV of GPG Key resources
 
 ```
 $gpg_key = new \Files\Model\GpgKey();

@@ -63,7 +63,7 @@ $ftp_action_log->list
 
 ---
 
-## Create Export FTP Action Log
+## Create an export CSV of FTP Action Log resources
 
 ```
 $ftp_action_log = new \Files\Model\FtpActionLog();

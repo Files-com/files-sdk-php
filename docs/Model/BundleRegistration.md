@@ -56,7 +56,7 @@ $bundle_registration->list(, [
 
 ---
 
-## Create Export Bundle Registration
+## Create an export CSV of Bundle Registration resources
 
 ```
 $bundle_registration = new \Files\Model\BundleRegistration();

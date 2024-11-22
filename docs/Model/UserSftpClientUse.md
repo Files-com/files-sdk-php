@@ -38,7 +38,7 @@ $user_sftp_client_use->list(, [
 
 ---
 
-## Create Export User SFTP Client Use
+## Create an export CSV of User SFTP Client Use resources
 
 ```
 $user_sftp_client_use = new \Files\Model\UserSftpClientUse();

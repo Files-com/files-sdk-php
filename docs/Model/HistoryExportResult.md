@@ -82,7 +82,7 @@ $history_export_result->list(, [
 
 ---
 
-## Create Export History Export Result
+## Create an export CSV of History Export Result resources
 
 ```
 $history_export_result = new \Files\Model\HistoryExportResult();

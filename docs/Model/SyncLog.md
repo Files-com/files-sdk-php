@@ -47,7 +47,7 @@ $sync_log->list
 
 ---
 
-## Create Export Sync Log
+## Create an export CSV of Sync Log resources
 
 ```
 $sync_log = new \Files\Model\SyncLog();

@@ -87,7 +87,7 @@ $message->create(, [
 
 ---
 
-## Create Export Message
+## Create an export CSV of Message resources
 
 ```
 $message = new \Files\Model\Message();

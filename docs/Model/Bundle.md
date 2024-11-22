@@ -240,7 +240,7 @@ $bundle->create(, [
 
 ---
 
-## Create Export Bundle
+## Create an export CSV of Bundle resources
 
 ```
 $bundle = new \Files\Model\Bundle();

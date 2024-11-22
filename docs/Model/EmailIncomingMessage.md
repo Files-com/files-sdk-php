@@ -50,7 +50,7 @@ $email_incoming_message->list
 
 ---
 
-## Create Export Email Incoming Message
+## Create an export CSV of Email Incoming Message resources
 
 ```
 $email_incoming_message = new \Files\Model\EmailIncomingMessage();

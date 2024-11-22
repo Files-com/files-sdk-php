@@ -102,7 +102,7 @@ $group->create(, [
 
 ---
 
-## Create Export Group
+## Create an export CSV of Group resources
 
 ```
 $group = new \Files\Model\Group();

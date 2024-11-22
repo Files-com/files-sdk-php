@@ -49,7 +49,7 @@ $bandwidth_snapshot->list
 
 ---
 
-## Create Export Bandwidth Snapshot
+## Create an export CSV of Bandwidth Snapshot resources
 
 ```
 $bandwidth_snapshot = new \Files\Model\BandwidthSnapshot();

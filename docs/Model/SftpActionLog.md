@@ -69,7 +69,7 @@ $sftp_action_log->list
 
 ---
 
-## Create Export SFTP Action Log
+## Create an export CSV of SFTP Action Log resources
 
 ```
 $sftp_action_log = new \Files\Model\SftpActionLog();

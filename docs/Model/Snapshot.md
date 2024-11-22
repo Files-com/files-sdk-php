@@ -71,7 +71,7 @@ $snapshot->create(, [
 
 ---
 
-## Create Export Snapshot
+## Create an export CSV of Snapshot resources
 
 ```
 $snapshot = new \Files\Model\Snapshot();

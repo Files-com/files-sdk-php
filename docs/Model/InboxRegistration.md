@@ -54,7 +54,7 @@ $inbox_registration->list(, [
 
 ---
 
-## Create Export Inbox Registration
+## Create an export CSV of Inbox Registration resources
 
 ```
 $inbox_registration = new \Files\Model\InboxRegistration();

@@ -60,7 +60,7 @@ $bundle_download->list(, [
 
 ---
 
-## Create Export Bundle Download
+## Create an export CSV of Bundle Download resources
 
 ```
 $bundle_download = new \Files\Model\BundleDownload();

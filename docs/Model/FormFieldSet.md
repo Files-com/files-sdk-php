@@ -103,7 +103,7 @@ $form_field_set->create(, [
 
 ---
 
-## Create Export Form Field Set
+## Create an export CSV of Form Field Set resources
 
 ```
 $form_field_set = new \Files\Model\FormFieldSet();

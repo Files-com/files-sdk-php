@@ -112,7 +112,7 @@ $as2_partner->create(, [
 
 ---
 
-## Create Export AS2 Partner
+## Create an export CSV of AS2 Partner resources
 
 ```
 $as2_partner = new \Files\Model\As2Partner();

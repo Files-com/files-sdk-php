@@ -61,7 +61,7 @@ $export->find($id);
 
 ---
 
-## Create Export Export
+## Create an export CSV of Export resources
 
 ```
 $export = new \Files\Model\Export();

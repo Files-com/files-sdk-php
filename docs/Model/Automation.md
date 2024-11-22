@@ -203,7 +203,7 @@ $automation->create(, [
 
 ---
 
-## Create Export Automation
+## Create an export CSV of Automation resources
 
 ```
 $automation = new \Files\Model\Automation();

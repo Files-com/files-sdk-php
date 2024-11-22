@@ -73,7 +73,7 @@ $bundle_notification->create(, [
 
 ---
 
-## Create Export Bundle Notification
+## Create an export CSV of Bundle Notification resources
 
 ```
 $bundle_notification = new \Files\Model\BundleNotification();

@@ -108,7 +108,7 @@ $as2_incoming_message->list(, [
 
 ---
 
-## Create Export AS2 Incoming Message
+## Create an export CSV of AS2 Incoming Message resources
 
 ```
 $as2_incoming_message = new \Files\Model\As2IncomingMessage();

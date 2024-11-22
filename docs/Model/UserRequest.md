@@ -71,7 +71,7 @@ $user_request->create(, [
 
 ---
 
-## Create Export User Request
+## Create an export CSV of User Request resources
 
 ```
 $user_request = new \Files\Model\UserRequest();

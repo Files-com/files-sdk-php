@@ -139,12 +139,6 @@ class SyncLog
     {
         $response = Api::sendRequest('/sync_logs/create_export', 'POST', $params, $options);
 
-        $return_array = [];
-
-        foreach ($response->data as $obj) {
-            $return_array[] = new Export((array) $obj, $options);
-        }
-
-        return $return_array;
+        return new Export((array) (@$response->data ?: []), $options);
     }
 }

@@ -30,7 +30,7 @@ $priority->list($path);
 
 ---
 
-## Create Export Priority
+## Create an export CSV of Priority resources
 
 ```
 $priority = new \Files\Model\Priority();

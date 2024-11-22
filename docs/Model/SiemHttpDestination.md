@@ -203,7 +203,7 @@ $siem_http_destination->create(, [
 
 ---
 
-## Create Export SIEM HTTP Destination
+## Create an export CSV of SIEM HTTP Destination resources
 
 ```
 $siem_http_destination = new \Files\Model\SiemHttpDestination();

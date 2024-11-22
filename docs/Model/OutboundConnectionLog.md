@@ -55,7 +55,7 @@ $outbound_connection_log->list
 
 ---
 
-## Create Export Outbound Connection Log
+## Create an export CSV of Outbound Connection Log resources
 
 ```
 $outbound_connection_log = new \Files\Model\OutboundConnectionLog();

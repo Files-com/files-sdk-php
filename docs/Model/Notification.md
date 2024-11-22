@@ -146,7 +146,7 @@ $notification->create(, [
 
 ---
 
-## Create Export Notification
+## Create an export CSV of Notification resources
 
 ```
 $notification = new \Files\Model\Notification();

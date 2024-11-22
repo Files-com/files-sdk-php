@@ -68,7 +68,7 @@ $inbox_recipient->create(, [
 
 ---
 
-## Create Export Inbox Recipient
+## Create an export CSV of Inbox Recipient resources
 
 ```
 $inbox_recipient = new \Files\Model\InboxRecipient();

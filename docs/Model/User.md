@@ -296,7 +296,7 @@ $user->create(, [
 
 ---
 
-## Create Export User
+## Create an export CSV of User resources
 
 ```
 $user = new \Files\Model\User();

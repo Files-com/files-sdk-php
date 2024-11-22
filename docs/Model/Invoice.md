@@ -83,7 +83,7 @@ $invoice->find($id);
 
 ---
 
-## Create Export Invoice
+## Create an export CSV of Invoice resources
 
 ```
 $invoice = new \Files\Model\Invoice();

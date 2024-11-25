@@ -559,16 +559,7 @@ A README is available on the GitHub link.
 
 ## File/Folder Operations
 
-### Static File Operations
-
-#### List Files in Root Folder
-
-```php
-$rootFiles = \Files\Model\Folder::listFor('/');
-foreach ($rootFiles as $file) {
-    echo $file->getPath() . "\n";
-}
-```
+### Upload
 
 #### Uploading a File on Disk
 
@@ -591,6 +582,8 @@ $fileData = 'contents';
 $destinationFileName = 'uploads/remote.txt';
 \Files\Model\File::uploadData($destinationFileName, $fileData);
 ```
+
+### Download
 
 #### Reading a File to Stream
 
@@ -616,6 +609,17 @@ $remoteFilePath = 'uploads/remote.txt';
 \Files\Model\File::resumeDownloadToFile($remoteFilePath, $localFilePath);
 ```
 
+### List
+
+#### List Files in Root Folder
+
+```php
+$rootFiles = \Files\Model\Folder::listFor('/');
+foreach ($rootFiles as $file) {
+    echo $file->getPath() . "\n";
+}
+```
+
 #### Getting a File Record by Path
 
 ```php
@@ -623,17 +627,7 @@ $remoteFilePath = 'uploads/remote.txt';
 $foundFile = \Files\Model\File::find($remoteFilePath);
 ```
 
-### File Object Operations
-
-#### Getting a File Record by Path
-
-```php
-$remoteFilePath = 'uploads/remote.txt';
-$file = new \Files\Model\File();
-$file->get($remoteFilePath);
-```
-
-##### Updating Metadata
+#### Updating Metadata
 
 ```php
 $file->update([
@@ -642,7 +636,7 @@ $file->update([
 ]);
 ```
 
-##### Retrieving Metadata
+#### Retrieving Metadata
 
 ```php
 $file->metadata([
@@ -651,7 +645,7 @@ $file->metadata([
 ]);
 ```
 
-#### Comparing Case-Insensitive Files and Paths
+### Comparing Case-Insensitive Files and Paths
 
 For related documentation see [Case Sensitivity Documentation](https://www.files.com/docs/files-and-folders/file-system-semantics/case-sensitivity).
 

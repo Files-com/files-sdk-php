@@ -539,7 +539,25 @@ Exception
 |`TrialLockedException`|  `SiteConfigurationException` |
 |`UserRequestsEnabledRequiredException`|  `SiteConfigurationException` |
 
-## Examples
+## Mock Server
+
+Files.com publishes a Files.com API server, which is useful for testing your use of the Files.com
+SDKs and other direct integrations against the Files.com API in an integration test environment.
+
+It is a Ruby app that operates as a minimal server for the purpose of testing basic network
+operations and JSON encoding for your SDK or API client. It does not maintain state and it does not
+deeply inspect your submissions for correctness.
+
+Eventually we will add more features intended for integration testing, such as the ability to
+intentionally provoke errors.
+
+Download the server as a Docker image via [Docker Hub](https://hub.docker.com/r/filescom/files-mock-server).
+
+The Source Code is also available on [GitHub](https://github.com/Files-com/files-mock-server).
+
+A README is available on the GitHub link.
+
+## File/Folder Operations
 
 ### Static File Operations
 
@@ -642,24 +660,6 @@ if(\Files\Util\PathUtil::same("Fïłèńämê.Txt", "filename.txt")) {
     echo "Paths are the same\n";
 }
 ```
-
-## Mock Server
-
-Files.com publishes a Files.com API server, which is useful for testing your use of the Files.com
-SDKs and other direct integrations against the Files.com API in an integration test environment.
-
-It is a Ruby app that operates as a minimal server for the purpose of testing basic network
-operations and JSON encoding for your SDK or API client. It does not maintain state and it does not
-deeply inspect your submissions for correctness.
-
-Eventually we will add more features intended for integration testing, such as the ability to
-intentionally provoke errors.
-
-Download the server as a Docker image via [Docker Hub](https://hub.docker.com/r/filescom/files-mock-server).
-
-The Source Code is also available on [GitHub](https://github.com/Files-com/files-mock-server).
-
-A README is available on the GitHub link.
 
 ## Upgrading
 

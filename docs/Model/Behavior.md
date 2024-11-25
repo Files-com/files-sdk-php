@@ -115,7 +115,7 @@ $behavior->create(, [
 
 ---
 
-## Test webhook
+## Test Webhook
 
 ```
 $behavior = new \Files\Model\Behavior();

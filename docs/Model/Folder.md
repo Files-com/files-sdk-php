@@ -116,7 +116,7 @@ $folder->listFor($path, [
 
 ---
 
-## Create folder
+## Create Folder
 
 ```
 $folder = new \Files\Model\Folder();

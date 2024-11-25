@@ -97,7 +97,7 @@
 
 ---
 
-## Upload file
+## Upload File
 
 ```
 $file = new \Files\Model\File();
@@ -133,7 +133,7 @@ $file->create($path, [
 
 ---
 
-## Find file/folder by path
+## Find File/Folder by Path
 
 ```
 $file = new \Files\Model\File();
@@ -153,7 +153,7 @@ $file->find($path, [
 
 ---
 
-## Download file
+## Download File
 
 ```
 $file = \Files\Model\File::find($path);
@@ -224,7 +224,7 @@ $file->download([
 
 ---
 
-## Update file/folder metadata
+## Update File/Folder Metadata
 
 ```
 $file = \Files\Model\File::find($path);
@@ -295,7 +295,7 @@ $file->update([
 
 ---
 
-## Delete file/folder
+## Delete File/Folder
 
 ```
 $file = \Files\Model\File::find($path);
@@ -313,7 +313,7 @@ $file->delete([
 
 ---
 
-## Copy file/folder
+## Copy File/Folder
 
 ```
 $file = \Files\Model\File::find($path);
@@ -343,7 +343,7 @@ $file->copy([
 
 ---
 
-## Move file/folder
+## Move File/Folder
 
 ```
 $file = \Files\Model\File::find($path);

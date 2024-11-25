@@ -471,7 +471,7 @@
 
 ---
 
-## Show site settings
+## Show Site Settings
 
 ```
 $site = new \Files\Model\Site();
@@ -491,7 +491,7 @@ $site->getUsage
 
 ---
 
-## Update site settings
+## Update Site Settings
 
 ```
 $site = new \Files\Model\Site();

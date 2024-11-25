@@ -751,7 +751,7 @@ class File
         return $this->attributes['with_rename'] = $value;
     }
 
-    // Download file
+    // Download File
     //
     // Parameters:
     //   action - string - Can be blank, `redirect` or `stat`.  If set to `stat`, we will return file information but without a download URL, and without logging a download.  If set to `redirect` we will serve a 302 redirect directly to the file.  This is used for integrations with Zapier, and is not recommended for most integrations.
@@ -852,7 +852,7 @@ class File
         return;
     }
 
-    // Copy file/folder
+    // Copy File/Folder
     //
     // Parameters:
     //   destination (required) - string - Copy destination path.
@@ -892,7 +892,7 @@ class File
         return new FileAction((array) (@$response->data ?: []), $this->options);
     }
 
-    // Move file/folder
+    // Move File/Folder
     //
     // Parameters:
     //   destination (required) - string - Move destination path.

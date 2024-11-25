@@ -203,7 +203,7 @@ $automation->create(, [
 
 ---
 
-## Manually run automation
+## Manually Run Automation
 
 ```
 $automation = \Files\Model\Automation::find($id);

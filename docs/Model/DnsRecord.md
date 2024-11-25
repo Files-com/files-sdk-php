@@ -18,7 +18,7 @@
 
 ---
 
-## Show site DNS configuration
+## Show Site DNS Configuration
 
 ```
 $dns_record = new \Files\Model\DnsRecord();

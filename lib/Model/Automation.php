@@ -396,7 +396,7 @@ class Automation
         return $this->attributes['webhook_url'] = $value;
     }
 
-    // Manually run automation
+    // Manually Run Automation
     public function manualRun($params = [])
     {
         if (!is_array($params)) {

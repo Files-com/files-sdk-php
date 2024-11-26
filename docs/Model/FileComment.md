@@ -22,7 +22,7 @@
 
 ---
 
-## List File Comments by path
+## List File Comments by Path
 
 ```
 $file_comment = new \Files\Model\FileComment();

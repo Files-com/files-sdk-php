@@ -89,7 +89,7 @@
 
 ---
 
-## List Folders by path
+## List Folders by Path
 
 ```
 $folder = new \Files\Model\Folder();

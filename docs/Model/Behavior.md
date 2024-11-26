@@ -64,7 +64,7 @@ $behavior->find($id);
 
 ---
 
-## List Behaviors by path
+## List Behaviors by Path
 
 ```
 $behavior = new \Files\Model\Behavior();

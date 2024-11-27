@@ -78,7 +78,7 @@ class File
 
         $response = Api::sendRequest('/files/' . rawurlencode($path), 'POST', $params);
 
-        (@$response->data ?: []);
+        $partData = (array) (@$response->data ?: []);
         $partData['headers'] = $response->headers;
         $partData['parameters'] = $params;
 

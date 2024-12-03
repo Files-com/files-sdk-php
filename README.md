@@ -540,6 +540,22 @@ Exception
 |`TrialLockedException`|  `SiteConfigurationException` |
 |`UserRequestsEnabledRequiredException`|  `SiteConfigurationException` |
 
+## Case Sensitivity
+
+The Files.com API compares files and paths in a case-insensitive manner.
+ For related documentation see [Case Sensitivity Documentation](https://www.files.com/docs/files-and-folders/file-system-semantics/case-sensitivity).
+
+The `PathUtil::same` function in the Files.com SDK is designed to help you determine if two paths on
+your native file system would be considered the same on Files.com. This is particularly important
+when handling errors related to duplicate file names and when developing tools for folder
+synchronization.
+
+```php title="Compare Case-Insensitive Files and Paths"
+if(\Files\Util\PathUtil::same("Fïłèńämê.Txt", "filename.txt")) {
+    echo "Paths are the same\n";
+}
+```
+
 ## Examples
 
 ### Upload
@@ -626,16 +642,6 @@ $file->metadata([
     'with_previews' => true,
     'with_priority_color' => true,
 ]);
-```
-
-### Comparing Case-Insensitive Files and Paths
-
-For related documentation see [Case Sensitivity Documentation](https://www.files.com/docs/files-and-folders/file-system-semantics/case-sensitivity).
-
-```php
-if(\Files\Util\PathUtil::same("Fïłèńämê.Txt", "filename.txt")) {
-    echo "Paths are the same\n";
-}
 ```
 
 ## Mock Server

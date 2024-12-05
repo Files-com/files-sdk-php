@@ -155,6 +155,16 @@ class Automation
     {
         return $this->attributes['exclude_pattern'] = $value;
     }
+    // array(object) # List of URLs to be imported and names to be used.
+    public function getImportUrls()
+    {
+        return @$this->attributes['import_urls'];
+    }
+
+    public function setImportUrls($value)
+    {
+        return $this->attributes['import_urls'] = $value;
+    }
     // boolean # Normally copy and move automations that use globs will implicitly preserve the source folder structure in the destination.  If this flag is `true`, the source folder structure will be flattened in the destination.  This is useful for copying or moving files from multiple folders into a single destination folder.
     public function getFlattenDestinationStructure()
     {
@@ -436,6 +446,7 @@ class Automation
     //   description - string - Description for the this Automation.
     //   disabled - boolean - If true, this automation will not run.
     //   exclude_pattern - string - If set, this glob pattern will exclude files from the automation. Supports globs, except on remote mounts.
+    //   import_urls - array(object) - List of URLs to be imported and names to be used.
     //   flatten_destination_structure - boolean - Normally copy and move automations that use globs will implicitly preserve the source folder structure in the destination.  If this flag is `true`, the source folder structure will be flattened in the destination.  This is useful for copying or moving files from multiple folders into a single destination folder.
     //   ignore_locked_folders - boolean - If true, the Lock Folders behavior will be disregarded for automated actions.
     //   legacy_folder_matching - boolean - DEPRECATED: If `true`, use the legacy behavior for this automation, where it can operate on folders in addition to just files.  This behavior no longer works and should not be used.
@@ -519,6 +530,10 @@ class Automation
 
         if (@$params['exclude_pattern'] && !is_string(@$params['exclude_pattern'])) {
             throw new \Files\Exception\InvalidParameterException('$exclude_pattern must be of type string; received ' . gettype(@$params['exclude_pattern']));
+        }
+
+        if (@$params['import_urls'] && !is_array(@$params['import_urls'])) {
+            throw new \Files\Exception\InvalidParameterException('$import_urls must be of type array; received ' . gettype(@$params['import_urls']));
         }
 
         if (@$params['name'] && !is_string(@$params['name'])) {
@@ -665,6 +680,7 @@ class Automation
     //   description - string - Description for the this Automation.
     //   disabled - boolean - If true, this automation will not run.
     //   exclude_pattern - string - If set, this glob pattern will exclude files from the automation. Supports globs, except on remote mounts.
+    //   import_urls - array(object) - List of URLs to be imported and names to be used.
     //   flatten_destination_structure - boolean - Normally copy and move automations that use globs will implicitly preserve the source folder structure in the destination.  If this flag is `true`, the source folder structure will be flattened in the destination.  This is useful for copying or moving files from multiple folders into a single destination folder.
     //   ignore_locked_folders - boolean - If true, the Lock Folders behavior will be disregarded for automated actions.
     //   legacy_folder_matching - boolean - DEPRECATED: If `true`, use the legacy behavior for this automation, where it can operate on folders in addition to just files.  This behavior no longer works and should not be used.
@@ -736,6 +752,10 @@ class Automation
 
         if (@$params['exclude_pattern'] && !is_string(@$params['exclude_pattern'])) {
             throw new \Files\Exception\InvalidParameterException('$exclude_pattern must be of type string; received ' . gettype(@$params['exclude_pattern']));
+        }
+
+        if (@$params['import_urls'] && !is_array(@$params['import_urls'])) {
+            throw new \Files\Exception\InvalidParameterException('$import_urls must be of type array; received ' . gettype(@$params['import_urls']));
         }
 
         if (@$params['name'] && !is_string(@$params['name'])) {

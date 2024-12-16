@@ -85,14 +85,53 @@ class File
         return new FileUploadPart($partData);
     }
 
-    private static function completeUpload($fileUploadPart)
+    private static function completeUpload($fileUploadPart, $params = [])
     {
-        $params = [
-            'action' => 'end',
-            'ref' => $fileUploadPart->ref,
-        ];
-
         $response = Api::sendRequest('/files/' . rawurlencode($fileUploadPart->path), 'POST', $params);
+    }
+
+    private static function uploadChunks($io, $path, $upload = null, $etags = [], $params = [])
+    {
+        $bytesWritten = 0;
+        while (true) {
+            if (empty($upload)) {
+                $params = array_merge($params, [
+                    'part' => 1
+                ]);
+            } else {
+                $params = array_merge($params, [
+                    'ref' => $upload->ref,
+                    'part' => $upload->part_number + 1
+                ]);
+            }
+
+            $beginUpload = empty($upload) ? self::openUpload($path, $params) : self::continueUpload($path, $upload->part_number + 1, $upload);
+            $upload = is_array($beginUpload) ? array_shift($beginUpload) : $beginUpload;
+
+            $buf = fread($io, $upload->partsize);
+            $buf = $buf === false ? '' : $buf;
+            $bytesWritten += strlen($buf);
+
+            $method = strtolower($upload->http_method);
+            $headers = [
+                'Content-Length' => strlen($buf),
+                'Content-Type' => 'application/octet-stream'
+            ];
+
+
+            $response = Api::sendFile($upload->upload_uri, 'PUT', $buf, $headers);
+
+            if ($response->headers['ETag']) {
+                array_push($etags, [
+                    'etag' => $response->headers['ETag'][0],
+                    'part' => $upload->part_number
+                ]);
+            }
+
+            if (feof($io)) {
+                return [$upload, $etags, $bytesWritten];
+            }
+        }
     }
 
     public static function uploadFile($destinationPath, $sourceFilePath, $params = [])
@@ -109,66 +148,22 @@ class File
             throw new \Files\Exception\EmptyPropertyException('Empty sourceFilePath: No such file or directory');
         }
 
-        $fileUploadPart = self::openUpload($destinationPath, $params);
-
-        Logger::debug('File::uploadFile() fileUploadPart = ' . print_r($fileUploadPart, true));
-
         $sourceFileHandle = fopen($sourceFilePath, 'rb');
-
         $filesize = filesize($sourceFilePath);
-        $totalParts = ceil($filesize / $fileUploadPart->partsize);
+        list($upload, $etags, $bytesWritten) = File::uploadChunks($sourceFileHandle, $destinationPath);
+        fclose($sourceFileHandle);
 
-        if ($totalParts === 1) {
-            Api::sendFile($fileUploadPart->upload_uri, 'PUT', $sourceFileHandle);
-        } else {
-            // send part 1
-            $partFilePath = tempnam(sys_get_temp_dir(), basename($fileUploadPart->path));
-            $partFileHandle = fopen($partFilePath, 'w+b');
-            stream_copy_to_stream($sourceFileHandle, $partFileHandle, $fileUploadPart->partsize);
-            rewind($partFileHandle);
+        $params = [
+            'action' => 'end',
+            'ref' => $upload->ref,
+            'etags' => $etags,
+            'provided_mtime' => date('c', filemtime($sourceFilePath)),
+            'size' => $filesize
+        ];
 
-            Api::sendFile($fileUploadPart->upload_uri, 'PUT', $partFileHandle);
+        $response = self::completeUpload($upload, $params);
 
-            unlink($partFilePath);
-
-            $failed = false;
-
-            // send parts 2..n
-            for ($part = 2; $part <= $totalParts; ++$part) {
-                $response = null;
-                $retries = 0;
-
-                $sourceOffset = ftell($sourceFileHandle);
-
-                do {
-                    $nextFileUploadPart = self::continueUpload($destinationPath, $part, $fileUploadPart);
-
-                    $partFilePath = tempnam(sys_get_temp_dir(), basename($fileUploadPart->path) . '~part' . $part);
-                    $partFileHandle = fopen($partFilePath, 'w+b');
-
-                    if ($retries > 0) {
-                        fseek($sourceFileHandle, $sourceOffset);
-                    }
-
-                    stream_copy_to_stream($sourceFileHandle, $partFileHandle, $nextFileUploadPart->partsize);
-
-                    rewind($partFileHandle);
-
-                    $response = Api::sendFile($nextFileUploadPart->upload_uri, 'PUT', $partFileHandle);
-
-                    unlink($partFilePath);
-                } while (!$response && ++$retries <= \Files\Files::$maxNetworkRetries);
-
-                if ($retries > \Files\Files::$maxNetworkRetries) {
-                    $failed = true;
-                    break;
-                }
-            }
-        }
-
-        self::completeUpload($fileUploadPart);
-
-        return !$failed;
+        return $response;
     }
 
     public static function uploadData($destinationPath, $data, $params = [])
@@ -181,14 +176,28 @@ class File
             throw new \Files\Exception\MissingParameterException('Parameter missing: data');
         }
 
-        $tempPath = tempnam(sys_get_temp_dir(), basename($destinationPath));
-        file_put_contents($tempPath, $data);
+        if (!is_resource($data)) {
+            $stream = fopen('php://temp', 'r+');
+            fwrite($stream, $data);
+            rewind($stream);
+        } else {
+            $stream = $data;
+        }
 
-        $result = self::uploadFile($destinationPath, $tempPath, $params);
+        list($upload, $etags, $bytesWritten) = File::uploadChunks($stream, $destinationPath);
+        fclose($stream);
 
-        unlink($tempPath);
+        $params = [
+            'action' => 'end',
+            'ref' => $upload->ref,
+            'etags' => $etags,
+            'provided_mtime' => date('c', time()),
+            'size' => $bytesWritten
+        ];
 
-        return $result;
+        $response = self::completeUpload($upload, $params);
+
+        return $response;
     }
 
     public static function getDownloadUrl($remoteFilePath)

@@ -39,7 +39,7 @@
 ```
 $group = new \Files\Model\Group();
 $group->list(, [
-  'include_parent_site_groups' => true,
+  'include_parent_site_groups' => false,
 ]);
 ```
 

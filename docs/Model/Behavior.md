@@ -69,7 +69,7 @@ $behavior->find($id);
 ```
 $behavior = new \Files\Model\Behavior();
 $behavior->listFor($path, [
-  'ancestor_behaviors' => true,
+  'ancestor_behaviors' => false,
 ]);
 ```
 
@@ -92,8 +92,8 @@ $behavior->listFor($path, [
 $behavior = new \Files\Model\Behavior();
 $behavior->create(, [
   'value' => "{\"method\": \"GET\"}",
-  'disable_parent_folder_behavior' => true,
-  'recursive' => true,
+  'disable_parent_folder_behavior' => false,
+  'recursive' => false,
   'name' => "example",
   'description' => "example",
   'path' => "path",
@@ -147,11 +147,11 @@ $behavior = \Files\Model\Behavior::find($id);
 
 $behavior->update([
   'value' => "{\"method\": \"GET\"}",
-  'disable_parent_folder_behavior' => true,
-  'recursive' => true,
+  'disable_parent_folder_behavior' => false,
+  'recursive' => false,
   'name' => "example",
   'description' => "example",
-  'attachment_delete' => true,
+  'attachment_delete' => false,
 ]);
 ```
 

@@ -103,13 +103,13 @@
 $file = new \Files\Model\File();
 $file->create($path, [
   'length' => 1,
-  'mkdir_parents' => true,
+  'mkdir_parents' => false,
   'part' => 1,
   'parts' => 1,
   'provided_mtime' => "2000-01-01T01:00:00Z",
   'restart' => 1,
   'size' => 1,
-  'with_rename' => true,
+  'with_rename' => false,
 ]);
 ```
 
@@ -138,8 +138,8 @@ $file->create($path, [
 ```
 $file = new \Files\Model\File();
 $file->find($path, [
-  'with_previews' => true,
-  'with_priority_color' => true,
+  'with_previews' => false,
+  'with_priority_color' => false,
 ]);
 ```
 
@@ -159,8 +159,8 @@ $file->find($path, [
 $file = \Files\Model\File::find($path);
 
 $file->download([
-  'with_previews' => true,
-  'with_priority_color' => true,
+  'with_previews' => false,
+  'with_priority_color' => false,
 ]);
 ```
 
@@ -301,7 +301,7 @@ $file->update([
 $file = \Files\Model\File::find($path);
 
 $file->delete([
-  'recursive' => true,
+  'recursive' => false,
 ]);
 ```
 
@@ -320,8 +320,8 @@ $file = \Files\Model\File::find($path);
 
 $file->copy([
   'destination' => "destination",
-  'structure' => true,
-  'overwrite' => true,
+  'structure' => false,
+  'overwrite' => false,
 ]);
 ```
 
@@ -350,7 +350,7 @@ $file = \Files\Model\File::find($path);
 
 $file->move([
   'destination' => "destination",
-  'overwrite' => true,
+  'overwrite' => false,
 ]);
 ```
 
@@ -377,13 +377,13 @@ $file->move([
 $file = \Files\Model\File::find($path);
 
 $file->begin_upload([
-  'mkdir_parents' => true,
+  'mkdir_parents' => false,
   'part' => 1,
   'parts' => 1,
   'ref' => "upload-1",
   'restart' => 1,
   'size' => 1,
-  'with_rename' => true,
+  'with_rename' => false,
 ]);
 ```
 

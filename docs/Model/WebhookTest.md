@@ -41,9 +41,9 @@ $webhook_test->create(, [
   'headers' => {"x-test-header":"testvalue"},
   'body' => {"test-param":"testvalue"},
   'raw_body' => "test body",
-  'file_as_body' => true,
+  'file_as_body' => false,
   'file_form_field' => "upload_file_data",
-  'use_dedicated_ips' => true,
+  'use_dedicated_ips' => false,
 ]);
 ```
 

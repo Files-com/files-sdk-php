@@ -84,9 +84,9 @@ $form_field_set = new \Files\Model\FormFieldSet();
 $form_field_set->create(, [
   'user_id' => 1,
   'title' => "Sample Form Title",
-  'skip_email' => true,
-  'skip_name' => true,
-  'skip_company' => true,
+  'skip_email' => false,
+  'skip_name' => false,
+  'skip_company' => false,
   'form_fields' => [{"label":"Sample Label","required":true,"help_text":"Help Text","field_type":"text","options_for_select":["red","green","blue"],"default_option":"red","form_field_set_id":1}],
 ]);
 ```
@@ -110,9 +110,9 @@ $form_field_set = \Files\Model\FormFieldSet::find($id);
 
 $form_field_set->update([
   'title' => "Sample Form Title",
-  'skip_email' => true,
-  'skip_name' => true,
-  'skip_company' => true,
+  'skip_email' => false,
+  'skip_name' => false,
+  'skip_company' => false,
   'form_fields' => [{"id":1,"label":"Sample Label","required":true,"help_text":"Help Text","field_type":"text","options_for_select":["red","green","blue"],"default_option":"red","form_field_set_id":1}],
 ]);
 ```

@@ -29,7 +29,7 @@
 ```
 $request = new \Files\Model\Request();
 $request->list(, [
-  'mine' => true,
+  'mine' => false,
   'path' => "example",
 ]);
 ```
@@ -50,7 +50,7 @@ $request->list(, [
 ```
 $request = new \Files\Model\Request();
 $request->getFolder($path, [
-  'mine' => true,
+  'mine' => false,
 ]);
 ```
 

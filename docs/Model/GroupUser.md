@@ -48,7 +48,7 @@ $group_user = new \Files\Model\GroupUser();
 $group_user->create(, [
   'group_id' => 1,
   'user_id' => 1,
-  'admin' => true,
+  'admin' => false,
 ]);
 ```
 
@@ -69,7 +69,7 @@ $group_user = current(\Files\Model\GroupUser::all());
 $group_user->update([
   'group_id' => 1,
   'user_id' => 1,
-  'admin' => true,
+  'admin' => false,
 ]);
 ```
 

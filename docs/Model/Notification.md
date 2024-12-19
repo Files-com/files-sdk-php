@@ -66,7 +66,7 @@
 ```
 $notification = new \Files\Model\Notification();
 $notification->list(, [
-  'include_ancestors' => true,
+  'include_ancestors' => false,
   'group_id' => 1,
 ]);
 ```
@@ -105,13 +105,13 @@ $notification->find($id);
 $notification = new \Files\Model\Notification();
 $notification->create(, [
   'user_id' => 1,
-  'notify_on_copy' => true,
+  'notify_on_copy' => false,
   'notify_on_delete' => true,
   'notify_on_download' => true,
   'notify_on_move' => true,
   'notify_on_upload' => true,
-  'notify_user_actions' => true,
-  'recursive' => true,
+  'notify_user_actions' => false,
+  'recursive' => false,
   'send_interval' => "daily",
   'message' => "custom notification email message",
   'triggering_filenames' => ["*.jpg","notify_file.txt"],
@@ -152,13 +152,13 @@ $notification->create(, [
 $notification = \Files\Model\Notification::find($id);
 
 $notification->update([
-  'notify_on_copy' => true,
+  'notify_on_copy' => false,
   'notify_on_delete' => true,
   'notify_on_download' => true,
   'notify_on_move' => true,
   'notify_on_upload' => true,
-  'notify_user_actions' => true,
-  'recursive' => true,
+  'notify_user_actions' => false,
+  'recursive' => false,
   'send_interval' => "daily",
   'message' => "custom notification email message",
   'triggering_filenames' => ["*.jpg","notify_file.txt"],

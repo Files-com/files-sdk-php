@@ -95,9 +95,9 @@
 $folder = new \Files\Model\Folder();
 $folder->listFor($path, [
   'search' => "some-partial-filename",
-  'search_all' => true,
-  'with_previews' => true,
-  'with_priority_color' => true,
+  'search_all' => false,
+  'with_previews' => false,
+  'with_priority_color' => false,
 ]);
 ```
 
@@ -121,7 +121,7 @@ $folder->listFor($path, [
 ```
 $folder = new \Files\Model\Folder();
 $folder->create($path, [
-  'mkdir_parents' => true,
+  'mkdir_parents' => false,
   'provided_mtime' => "2000-01-01T01:00:00Z",
 ]);
 ```

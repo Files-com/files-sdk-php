@@ -39,7 +39,7 @@
 ```
 $lock = new \Files\Model\Lock();
 $lock->listFor($path, [
-  'include_children' => true,
+  'include_children' => false,
 ]);
 ```
 
@@ -58,8 +58,8 @@ $lock->listFor($path, [
 ```
 $lock = new \Files\Model\Lock();
 $lock->create($path, [
-  'allow_access_by_any_user' => true,
-  'exclusive' => true,
+  'allow_access_by_any_user' => false,
+  'exclusive' => false,
   'recursive' => true,
   'timeout' => 1,
 ]);

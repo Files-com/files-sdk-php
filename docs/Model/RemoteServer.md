@@ -194,7 +194,7 @@ $remote_server = new \Files\Model\RemoteServer();
 $remote_server->create(, [
   'aws_access_key' => "example",
   'wasabi_access_key' => "example",
-  'reset_authentication' => true,
+  'reset_authentication' => false,
   'hostname' => "remote-server.com",
   'name' => "My Remote server",
   'max_connections' => 1,
@@ -389,7 +389,7 @@ $remote_server = \Files\Model\RemoteServer::find($id);
 $remote_server->update([
   'aws_access_key' => "example",
   'wasabi_access_key' => "example",
-  'reset_authentication' => true,
+  'reset_authentication' => false,
   'hostname' => "remote-server.com",
   'name' => "My Remote server",
   'max_connections' => 1,

@@ -174,7 +174,7 @@ Network connect timeout in seconds. The default value is 30.0.
 
 #### Read Timeout
 
-Network read timeout in seconds. The default value is 90.
+Network read timeout in seconds. The default value is 60.0.
 
 ```php title="Example setting"
 \Files\Files::$readTimeout = 60

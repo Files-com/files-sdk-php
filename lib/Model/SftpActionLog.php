@@ -145,6 +145,11 @@ class SftpActionLog
     {
         return @$this->attributes['data_length'];
     }
+    // int64 # The number of bytes transferred for uploads and downloads.
+    public function getBytesTransferred()
+    {
+        return @$this->attributes['bytes_transferred'];
+    }
     // int64 # Number of entries returned when listing files and folders
     public function getEntriesReturned()
     {

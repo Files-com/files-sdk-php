@@ -150,7 +150,7 @@ class File
 
         $sourceFileHandle = fopen($sourceFilePath, 'rb');
         $filesize = filesize($sourceFilePath);
-        list($upload, $etags, $bytesWritten) = File::uploadChunks($sourceFileHandle, $destinationPath);
+        list($upload, $etags, $bytesWritten) = File::uploadChunks($sourceFileHandle, $destinationPath, null, [], $params);
         fclose($sourceFileHandle);
 
         $params = [
@@ -184,7 +184,7 @@ class File
             $stream = $data;
         }
 
-        list($upload, $etags, $bytesWritten) = File::uploadChunks($stream, $destinationPath);
+        list($upload, $etags, $bytesWritten) = File::uploadChunks($stream, $destinationPath, null, [], $params);
         fclose($stream);
 
         $params = [

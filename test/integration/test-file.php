@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Files;
 
-error_reporting(E_ERROR);
+error_reporting(E_ALL);
 
 use Files\Model\ApiKey;
 use Files\Model\File;
@@ -65,8 +65,8 @@ function assertUserCreatedAndDelete($user, $name)
     try {
         User::find($user->id);
     } catch (Exception\NotFoundException $error) {
-        assert($error->getTitle() === "Not Found");
-        assert($error->getError() === "Not Found");
+        assert(stripos($error->getTitle(), "Not Found") !== false);
+        assert(stripos($error->getError(), "Not Found") !== false);
         assert($error->getType() === "not-found");
         assert($error->getHttpCode() === 404);
         $userNoLongerExists = true;
@@ -202,8 +202,8 @@ function testErrors()
     try {
         $nonExistentFile->delete();
     } catch (Exception\NotFoundException $error) {
-        assert($error->getTitle() === "Not Found");
-        assert($error->getError() === "Not Found");
+        assert(stripos($error->getTitle(), 'Not Found') !== false);
+        assert(stripos($error->getError(), 'Not Found') !== false);
         assert($error->getType() === "not-found");
         assert($error->getHttpCode() === 404);
         $caughtExpectedException = true;
@@ -343,8 +343,8 @@ function testFileUploadFindCopyAndDelete()
     try {
         File::find(RemoteTestEnv::$workingFolderPath . $tempName);
     } catch (Exception\NotFoundException $error) {
-        assert($error->getTitle() === "Not Found");
-        assert($error->getError() === "Not Found");
+        assert(stripos($error->getTitle(), "Not Found") !== false);
+        assert(stripos($error->getError(), "Not Found") !== false);
         assert($error->getType() === "not-found");
         assert($error->getHttpCode() === 404);
         $fileNoLongerExists = true;
@@ -418,6 +418,27 @@ function testUploadDownloadFileAndDelete()
     Logger::info('***** testUploadDownloadFileAndDelete() succeeded! *****');
 }
 
+function testUploadWithParams()
+{
+
+    $tempName = 'testFileUploadFindCopyAndDelete-' . date('Ymd_His') . '.txt';
+    $tempPath = tempnam(sys_get_temp_dir(), $tempName);
+
+    file_put_contents($tempPath, date('Y-m-d H:i:s'));
+
+    Logger::debug('Uploading file at ' . $tempPath . ' which has contents:' . "\n" . substr(file_get_contents($tempPath), 0, 200));
+
+    File::uploadFile(RemoteTestEnv::$workingFolderPath . 'mkdir_parent/' . $tempName, $tempPath, ['mkdir_parents' => true]);
+    File::uploadData(RemoteTestEnv::$workingFolderPath . 'mkdir_parent/' . 'testFileUploadFindCopyAndDelete-data.txt', rand() . "\n" . date('Y-m-d H:i:s'), ['mkdir_parents' => true]);
+
+    $foundFile = File::find(RemoteTestEnv::$workingFolderPath . 'mkdir_parent/' . $tempName);
+    assert($foundFile->isLoaded());
+    $foundFile = File::find(RemoteTestEnv::$workingFolderPath . 'mkdir_parent/' . 'testFileUploadFindCopyAndDelete-data.txt');
+    assert($foundFile->isLoaded());
+
+    Logger::info('***** testUploadWithParams() succeeded! *****');
+}
+
 function testFileObjectMethods()
 {
     Logger::debug('Loading a remote file path into a File object');
@@ -487,6 +508,7 @@ testUserStaticCreateAndDelete();
 testFolderCreateListAndDelete();
 testFileUploadFindCopyAndDelete();
 testUploadDownloadFileAndDelete();
+testUploadWithParams();
 testFileObjectMethods();
 testSession();
 

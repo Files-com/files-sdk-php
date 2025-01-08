@@ -223,7 +223,6 @@ a value of either ```"asc"``` or ```"desc"``` to specify the sort order.
 
 ```php title="Sort Example"
 // users sorted by username
-\Files\Files::setApiKey('my-key');
 $users = \Files\Model\User::list(array(
   'sort_by' => array("username" => "asc")
 ));
@@ -254,7 +253,6 @@ filter on and a passed in value to use in the filter comparison.
 
 ```php title="Exact Filter Example"
 // non admin users
-\Files\Files::setApiKey('my-key');
 $users = \Files\Model\User::list(array(
   'filter' => array("not_site_admin" => true)
 ));
@@ -266,7 +264,6 @@ foreach ($users as $value) {
 
 ```php title="Range Filter Example"
 // users who haven't logged in since 2024-01-01
-\Files\Files::setApiKey('my-key');
 $users = \Files\Model\User::list(array(
   'filter_gteq' => array("last_login_at" => "2024-01-01")
 ));
@@ -278,7 +275,6 @@ foreach ($users as $value) {
 
 ```php title="Pattern Filter Example"
 // users whose usernames start with 'test'
-\Files\Files::setApiKey('my-key');
 $users = \Files\Model\User::list(array(
   'filter_prefix' => array("username" => "test")
 ));
@@ -290,7 +286,6 @@ foreach ($users as $value) {
 
 ```php title="Combination Filter with Sort Example"
 // users whose usernames start with 'test' and are not admins
-\Files\Files::setApiKey('my-key');
 $users = \Files\Model\User::list(array(
   'filter_prefix' => array("username" => "test"),
   'filter' => array("not_site_admin" => true),

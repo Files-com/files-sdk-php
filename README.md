@@ -60,11 +60,17 @@ that user can access, and no access will be granted to site administration funct
 ```php title="Example Request"
 \Files\Files::setApiKey('YOUR_API_KEY');
 
-## Alternatively, you can specify the API key on a per-object basis in the second parameter to a model constructor.
-$user = new \Files\Model\User($params, array('api_key' => 'YOUR_API_KEY'));
+try {
+  # Alternatively, you can specify the API key on a per-object basis in the second parameter to a model constructor.
+  $user = new \Files\Model\User($params, array('api_key' => 'YOUR_API_KEY'));
 
-## You may also specify the API key on a per-request basis in the final parameter to static methods.
-\Files\Model\User::find($id, $params, array('api_key' => 'YOUR_API_KEY'));
+  # You may also specify the API key on a per-request basis in the final parameter to static methods.
+  \Files\Model\User::find($id, $params, array('api_key' => 'YOUR_API_KEY'));
+} catch (Files\NotAuthenticated\InvalidUsernameOrPasswordException $e) {
+  echo 'Authentication Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
+} catch (Files\FilesException $e) {
+  echo 'Unknown Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
+}
 ```
 
 Don't forget to replace the placeholder, `YOUR_API_KEY`, with your actual API key.
@@ -89,7 +95,13 @@ password.
 This returns a session object that can be used to authenticate SDK method calls.
 
 ```php title="Example Request"
-$session = \Files\Model\Session::create(['username' => 'motor', 'password' => 'vroom']);
+try {
+  $session = \Files\Model\Session::create(['username' => 'motor', 'password' => 'vroom']);
+} catch (Files\NotAuthenticated\InvalidUsernameOrPasswordException $e) {
+  echo 'Authentication Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
+} catch (Files\FilesException $e) {
+  echo 'Unknown Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
+}
 ```
 
 #### Using a Session
@@ -100,11 +112,17 @@ Once a session has been created, you can store the session globally, use the ses
 ## You may set the returned session ID to be used by default for subsequent requests.
 \Files\Files::setSessionId($session->id);
 
-## Alternatively, you can specify the session ID on a per-object basis in the second parameter to a model constructor.
-$user = new \Files\Model\User($params, array('session_id' => $session->id));
+try {
+  # Alternatively, you can specify the session ID on a per-object basis in the second parameter to a model constructor.
+  $user = new \Files\Model\User($params, array('session_id' => $session->id));
 
-## You may also specify the session ID on a per-request basis in the final parameter to static methods.
-\Files\Model\User::find($id, $params, array('session_id' => $session->id));
+  # You may also specify the session ID on a per-request basis in the final parameter to static methods.
+  \Files\Model\User::find($id, $params, array('session_id' => $session->id));
+} catch (Files\NotAuthenticated\InvalidUsernameOrPasswordException $e) {
+  echo 'Authentication Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
+} catch (Files\FilesException $e) {
+  echo 'Unknown Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
+}
 ```
 
 #### Logging Out
@@ -112,7 +130,13 @@ $user = new \Files\Model\User($params, array('session_id' => $session->id));
 User sessions can be ended by calling the `Session::destroy` method.
 
 ```php title="Example Request"
-\Files\Model\Session::destroy();
+try {
+  \Files\Model\Session::destroy();
+} catch (Files\NotAuthenticated\InvalidUsernameOrPasswordException $e) {
+  echo 'Authentication Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
+} catch (Files\FilesException $e) {
+  echo 'Unknown Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
+}
 ```
 
 ## Configuration
@@ -222,10 +246,16 @@ The argument value is a Php associative array that has a key of the resource fie
 a value of either ```"asc"``` or ```"desc"``` to specify the sort order.
 
 ```php title="Sort Example"
-// users sorted by username
-$users = \Files\Model\User::list(array(
-  'sort_by' => array("username" => "asc")
-));
+try {
+  // users sorted by username
+  $users = \Files\Model\User::list(array(
+    'sort_by' => array("username" => "asc")
+  ));
+} catch (Files\NotAuthenticated\InvalidUsernameOrPasswordException $e) {
+  echo 'Authentication Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
+} catch (Files\FilesException $e) {
+  echo 'Unknown Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
+}
 ```
 
 ### Filtering
@@ -252,48 +282,72 @@ filter on and a passed in value to use in the filter comparison.
 | `filter_lteq` | Range | Find resources that have a field value that is less than or equal to the passed in value.  (i.e., FIELD_VALUE \<= PASS_IN_VALUE). |
 
 ```php title="Exact Filter Example"
-// non admin users
-$users = \Files\Model\User::list(array(
-  'filter' => array("not_site_admin" => true)
-));
+try {
+  // non admin users
+  $users = \Files\Model\User::list(array(
+    'filter' => array("not_site_admin" => true)
+  ));
 
-foreach ($users as $value) {
-  print("User username: " . $value->getUserName() . "\n");
+  foreach ($users as $value) {
+    print("User username: " . $value->getUserName() . "\n");
+  }
+} catch (Files\NotAuthenticated\InvalidUsernameOrPasswordException $e) {
+  echo 'Authentication Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
+} catch (Files\FilesException $e) {
+  echo 'Unknown Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
 }
 ```
 
 ```php title="Range Filter Example"
-// users who haven't logged in since 2024-01-01
-$users = \Files\Model\User::list(array(
-  'filter_gteq' => array("last_login_at" => "2024-01-01")
-));
+try {
+  // users who haven't logged in since 2024-01-01
+  $users = \Files\Model\User::list(array(
+    'filter_gteq' => array("last_login_at" => "2024-01-01")
+  ));
 
-foreach ($users as $value) {
-  print("User username: " . $value->getUserName() . "\n");
+  foreach ($users as $value) {
+    print("User username: " . $value->getUserName() . "\n");
+  }
+} catch (Files\NotAuthenticated\InvalidUsernameOrPasswordException $e) {
+  echo 'Authentication Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
+} catch (Files\FilesException $e) {
+  echo 'Unknown Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
 }
 ```
 
 ```php title="Pattern Filter Example"
-// users whose usernames start with 'test'
-$users = \Files\Model\User::list(array(
-  'filter_prefix' => array("username" => "test")
-));
+try {
+  // users whose usernames start with 'test'
+  $users = \Files\Model\User::list(array(
+    'filter_prefix' => array("username" => "test")
+  ));
 
-foreach ($users as $value) {
-  print("User username: " . $value->getUserName() . "\n");
+  foreach ($users as $value) {
+    print("User username: " . $value->getUserName() . "\n");
+  }
+} catch (Files\NotAuthenticated\InvalidUsernameOrPasswordException $e) {
+  echo 'Authentication Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
+} catch (Files\FilesException $e) {
+  echo 'Unknown Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
 }
 ```
 
 ```php title="Combination Filter with Sort Example"
-// users whose usernames start with 'test' and are not admins
-$users = \Files\Model\User::list(array(
-  'filter_prefix' => array("username" => "test"),
-  'filter' => array("not_site_admin" => true),
-  'sort_by' => array("last_login_at" => "asc")
-));
+try {
+  // users whose usernames start with 'test' and are not admins
+  $users = \Files\Model\User::list(array(
+    'filter_prefix' => array("username" => "test"),
+    'filter' => array("not_site_admin" => true),
+    'sort_by' => array("last_login_at" => "asc")
+  ));
 
-foreach ($users as $value) {
-  print("User username: " . $value->getUserName() . "\n");
+  foreach ($users as $value) {
+    print("User username: " . $value->getUserName() . "\n");
+  }
+} catch (Files\NotAuthenticated\InvalidUsernameOrPasswordException $e) {
+  echo 'Authentication Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
+} catch (Files\FilesException $e) {
+  echo 'Unknown Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
 }
 ```
 
@@ -318,9 +372,9 @@ catch the general `Files\FilesException` exception as a catch-all.
 try {
   $session = Files\Model\Session::create(['username' => 'USERNAME', 'password' => 'BADPASSWORD']);
 } catch (Files\NotAuthenticated\InvalidUsernameOrPasswordException $e) {
-  echo 'Authentication Error Occurred (' . get_class($e) . '): ',  $e->getMessage(), "\n";
+  echo 'Authentication Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
 } catch (Files\FilesException $e) {
-  echo 'Unknown Error Occurred (' . get_class($e) . '): ',  $e->getMessage(), "\n";
+  echo 'Unknown Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
 }
 ```
 

@@ -425,6 +425,16 @@ class RemoteServer
     {
         return $this->attributes['azure_files_storage_share_name'] = $value;
     }
+    // string # Custom DNS suffix
+    public function getAzureFilesStorageDnsSuffix()
+    {
+        return @$this->attributes['azure_files_storage_dns_suffix'];
+    }
+
+    public function setAzureFilesStorageDnsSuffix($value)
+    {
+        return $this->attributes['azure_files_storage_dns_suffix'] = $value;
+    }
     // string # S3-compatible Bucket name
     public function getS3CompatibleBucket()
     {
@@ -930,6 +940,7 @@ class RemoteServer
     //   azure_blob_storage_sas_token - string - Shared Access Signature (SAS) token
     //   azure_files_storage_account - string - Azure File Storage Account name
     //   azure_files_storage_share_name - string - Azure File Storage Share name
+    //   azure_files_storage_dns_suffix - string - Custom DNS suffix
     //   azure_files_storage_sas_token - string - Shared Access Signature (SAS) token
     //   s3_compatible_bucket - string - S3-compatible Bucket name
     //   s3_compatible_endpoint - string - S3-compatible endpoint
@@ -1128,6 +1139,10 @@ class RemoteServer
 
         if (@$params['azure_files_storage_share_name'] && !is_string(@$params['azure_files_storage_share_name'])) {
             throw new \Files\Exception\InvalidParameterException('$azure_files_storage_share_name must be of type string; received ' . gettype(@$params['azure_files_storage_share_name']));
+        }
+
+        if (@$params['azure_files_storage_dns_suffix'] && !is_string(@$params['azure_files_storage_dns_suffix'])) {
+            throw new \Files\Exception\InvalidParameterException('$azure_files_storage_dns_suffix must be of type string; received ' . gettype(@$params['azure_files_storage_dns_suffix']));
         }
 
         if (@$params['azure_files_storage_sas_token'] && !is_string(@$params['azure_files_storage_sas_token'])) {
@@ -1377,6 +1392,7 @@ class RemoteServer
     //   azure_blob_storage_sas_token - string - Shared Access Signature (SAS) token
     //   azure_files_storage_account - string - Azure File Storage Account name
     //   azure_files_storage_share_name - string - Azure File Storage Share name
+    //   azure_files_storage_dns_suffix - string - Custom DNS suffix
     //   azure_files_storage_sas_token - string - Shared Access Signature (SAS) token
     //   s3_compatible_bucket - string - S3-compatible Bucket name
     //   s3_compatible_endpoint - string - S3-compatible endpoint
@@ -1559,6 +1575,10 @@ class RemoteServer
 
         if (@$params['azure_files_storage_share_name'] && !is_string(@$params['azure_files_storage_share_name'])) {
             throw new \Files\Exception\InvalidParameterException('$azure_files_storage_share_name must be of type string; received ' . gettype(@$params['azure_files_storage_share_name']));
+        }
+
+        if (@$params['azure_files_storage_dns_suffix'] && !is_string(@$params['azure_files_storage_dns_suffix'])) {
+            throw new \Files\Exception\InvalidParameterException('$azure_files_storage_dns_suffix must be of type string; received ' . gettype(@$params['azure_files_storage_dns_suffix']));
         }
 
         if (@$params['azure_files_storage_sas_token'] && !is_string(@$params['azure_files_storage_sas_token'])) {

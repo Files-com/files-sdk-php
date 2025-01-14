@@ -75,6 +75,21 @@ class AutomationRun
     {
         return @$this->attributes['created_at'];
     }
+    // date-time # If set, this Automation run was retried due to `failure` or `partial_failure`.
+    public function getRetriedAt()
+    {
+        return @$this->attributes['retried_at'];
+    }
+    // int64 # ID of the original run that this run is retrying.
+    public function getRetryOfRunId()
+    {
+        return @$this->attributes['retry_of_run_id'];
+    }
+    // int64 # ID of the run that is or will be retrying this run.
+    public function getRetriedInRunId()
+    {
+        return @$this->attributes['retried_in_run_id'];
+    }
     // double # Automation run runtime.
     public function getRuntime()
     {

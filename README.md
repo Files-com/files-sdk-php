@@ -66,9 +66,9 @@ try {
 
   # You may also specify the API key on a per-request basis in the final parameter to static methods.
   \Files\Model\User::find($id, $params, array('api_key' => 'YOUR_API_KEY'));
-} catch (Files\NotAuthenticated\InvalidUsernameOrPasswordException $e) {
+} catch (\Files\NotAuthenticated\InvalidUsernameOrPasswordException $e) {
   echo 'Authentication Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
-} catch (Files\FilesException $e) {
+} catch (\Files\FilesException $e) {
   echo 'Unknown Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
 }
 ```
@@ -97,9 +97,9 @@ This returns a session object that can be used to authenticate SDK method calls.
 ```php title="Example Request"
 try {
   $session = \Files\Model\Session::create(['username' => 'motor', 'password' => 'vroom']);
-} catch (Files\NotAuthenticated\InvalidUsernameOrPasswordException $e) {
+} catch (\Files\NotAuthenticated\InvalidUsernameOrPasswordException $e) {
   echo 'Authentication Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
-} catch (Files\FilesException $e) {
+} catch (\Files\FilesException $e) {
   echo 'Unknown Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
 }
 ```
@@ -118,9 +118,9 @@ try {
 
   # You may also specify the session ID on a per-request basis in the final parameter to static methods.
   \Files\Model\User::find($id, $params, array('session_id' => $session->id));
-} catch (Files\NotAuthenticated\InvalidUsernameOrPasswordException $e) {
+} catch (\Files\NotAuthenticated\InvalidUsernameOrPasswordException $e) {
   echo 'Authentication Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
-} catch (Files\FilesException $e) {
+} catch (\Files\FilesException $e) {
   echo 'Unknown Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
 }
 ```
@@ -132,9 +132,9 @@ User sessions can be ended by calling the `Session::destroy` method.
 ```php title="Example Request"
 try {
   \Files\Model\Session::destroy();
-} catch (Files\NotAuthenticated\InvalidUsernameOrPasswordException $e) {
+} catch (\Files\NotAuthenticated\InvalidUsernameOrPasswordException $e) {
   echo 'Authentication Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
-} catch (Files\FilesException $e) {
+} catch (\Files\FilesException $e) {
   echo 'Unknown Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
 }
 ```
@@ -251,9 +251,9 @@ try {
   $users = \Files\Model\User::list(array(
     'sort_by' => array("username" => "asc")
   ));
-} catch (Files\NotAuthenticated\InvalidUsernameOrPasswordException $e) {
+} catch (\Files\NotAuthenticated\InvalidUsernameOrPasswordException $e) {
   echo 'Authentication Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
-} catch (Files\FilesException $e) {
+} catch (\Files\FilesException $e) {
   echo 'Unknown Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
 }
 ```
@@ -291,9 +291,9 @@ try {
   foreach ($users as $value) {
     print("User username: " . $value->getUserName() . "\n");
   }
-} catch (Files\NotAuthenticated\InvalidUsernameOrPasswordException $e) {
+} catch (\Files\NotAuthenticated\InvalidUsernameOrPasswordException $e) {
   echo 'Authentication Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
-} catch (Files\FilesException $e) {
+} catch (\Files\FilesException $e) {
   echo 'Unknown Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
 }
 ```
@@ -308,9 +308,9 @@ try {
   foreach ($users as $value) {
     print("User username: " . $value->getUserName() . "\n");
   }
-} catch (Files\NotAuthenticated\InvalidUsernameOrPasswordException $e) {
+} catch (\Files\NotAuthenticated\InvalidUsernameOrPasswordException $e) {
   echo 'Authentication Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
-} catch (Files\FilesException $e) {
+} catch (\Files\FilesException $e) {
   echo 'Unknown Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
 }
 ```
@@ -325,9 +325,9 @@ try {
   foreach ($users as $value) {
     print("User username: " . $value->getUserName() . "\n");
   }
-} catch (Files\NotAuthenticated\InvalidUsernameOrPasswordException $e) {
+} catch (\Files\NotAuthenticated\InvalidUsernameOrPasswordException $e) {
   echo 'Authentication Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
-} catch (Files\FilesException $e) {
+} catch (\Files\FilesException $e) {
   echo 'Unknown Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
 }
 ```
@@ -344,9 +344,9 @@ try {
   foreach ($users as $value) {
     print("User username: " . $value->getUserName() . "\n");
   }
-} catch (Files\NotAuthenticated\InvalidUsernameOrPasswordException $e) {
+} catch (\Files\NotAuthenticated\InvalidUsernameOrPasswordException $e) {
   echo 'Authentication Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
-} catch (Files\FilesException $e) {
+} catch (\Files\FilesException $e) {
   echo 'Unknown Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
 }
 ```
@@ -371,9 +371,9 @@ catch the general `Files\FilesException` exception as a catch-all.
 ```php title="Example Error Handling"
 try {
   $session = Files\Model\Session::create(['username' => 'USERNAME', 'password' => 'BADPASSWORD']);
-} catch (Files\NotAuthenticated\InvalidUsernameOrPasswordException $e) {
+} catch (\Files\NotAuthenticated\InvalidUsernameOrPasswordException $e) {
   echo 'Authentication Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
-} catch (Files\FilesException $e) {
+} catch (\Files\FilesException $e) {
   echo 'Unknown Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
 }
 ```

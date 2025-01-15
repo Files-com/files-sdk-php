@@ -592,6 +592,31 @@ Exception
 |`TrialLockedException`|  `SiteConfigurationException` |
 |`UserRequestsEnabledRequiredException`|  `SiteConfigurationException` |
 
+## {frontmatter.title}
+
+Certain API operations return lists of objects. When the number of objects in the list is large,
+the API will paginate the results.
+
+The Files.com PHP SDK automatically paginates through lists of objects by default.
+
+```php title="Example Request" hasDataFormatSelector
+// true by default
+Files::$autoPaginate = true;
+
+try {
+  $files = \Files\Model\Folder::listFor($path, [
+    'search' => "some-partial-filename"
+  ]);
+  foreach ($files as $file) {
+    // Operate on $file
+  }
+} catch (\Files\NotAuthenticated\InvalidUsernameOrPasswordException $e) {
+  echo 'Authentication Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
+} catch (\Files\FilesException $e) {
+  echo 'Unknown Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
+}
+```
+
 ## Case Sensitivity
 
 The Files.com API compares files and paths in a case-insensitive manner.

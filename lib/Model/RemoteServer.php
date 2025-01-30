@@ -335,16 +335,6 @@ class RemoteServer
     {
         return $this->attributes['rackspace_container'] = $value;
     }
-    // string # Returns link to login with an Oauth provider
-    public function getAuthSetupLink()
-    {
-        return @$this->attributes['auth_setup_link'];
-    }
-
-    public function setAuthSetupLink($value)
-    {
-        return $this->attributes['auth_setup_link'] = $value;
-    }
     // string # Either `in_setup` or `complete`
     public function getAuthStatus()
     {

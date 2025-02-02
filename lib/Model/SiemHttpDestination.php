@@ -246,14 +246,14 @@ class SiemHttpDestination
         return $this->attributes['sftp_action_send_enabled'] = $value;
     }
     // int64 # Number of log entries sent for the lifetime of this destination.
-    public function getSftpActionRecordsSentEntriesSent()
+    public function getSftpActionEntriesSent()
     {
-        return @$this->attributes['sftp_action_records_sent_entries_sent'];
+        return @$this->attributes['sftp_action_entries_sent'];
     }
 
-    public function setSftpActionRecordsSentEntriesSent($value)
+    public function setSftpActionEntriesSent($value)
     {
-        return $this->attributes['sftp_action_records_sent_entries_sent'] = $value;
+        return $this->attributes['sftp_action_entries_sent'] = $value;
     }
     // boolean # Whether or not sending is enabled for ftp_action logs.
     public function getFtpActionSendEnabled()
@@ -266,14 +266,14 @@ class SiemHttpDestination
         return $this->attributes['ftp_action_send_enabled'] = $value;
     }
     // int64 # Number of log entries sent for the lifetime of this destination.
-    public function getFtpActionRecordsSentEntriesSent()
+    public function getFtpActionEntriesSent()
     {
-        return @$this->attributes['ftp_action_records_sent_entries_sent'];
+        return @$this->attributes['ftp_action_entries_sent'];
     }
 
-    public function setFtpActionRecordsSentEntriesSent($value)
+    public function setFtpActionEntriesSent($value)
     {
-        return $this->attributes['ftp_action_records_sent_entries_sent'] = $value;
+        return $this->attributes['ftp_action_entries_sent'] = $value;
     }
     // boolean # Whether or not sending is enabled for web_dav_action logs.
     public function getWebDavActionSendEnabled()
@@ -286,14 +286,14 @@ class SiemHttpDestination
         return $this->attributes['web_dav_action_send_enabled'] = $value;
     }
     // int64 # Number of log entries sent for the lifetime of this destination.
-    public function getWebDavActionRecordsSentEntriesSent()
+    public function getWebDavActionEntriesSent()
     {
-        return @$this->attributes['web_dav_action_records_sent_entries_sent'];
+        return @$this->attributes['web_dav_action_entries_sent'];
     }
 
-    public function setWebDavActionRecordsSentEntriesSent($value)
+    public function setWebDavActionEntriesSent($value)
     {
-        return $this->attributes['web_dav_action_records_sent_entries_sent'] = $value;
+        return $this->attributes['web_dav_action_entries_sent'] = $value;
     }
     // boolean # Whether or not sending is enabled for sync logs.
     public function getSyncSendEnabled()
@@ -306,14 +306,14 @@ class SiemHttpDestination
         return $this->attributes['sync_send_enabled'] = $value;
     }
     // int64 # Number of log entries sent for the lifetime of this destination.
-    public function getSyncRecordsSentEntriesSent()
+    public function getSyncEntriesSent()
     {
-        return @$this->attributes['sync_records_sent_entries_sent'];
+        return @$this->attributes['sync_entries_sent'];
     }
 
-    public function setSyncRecordsSentEntriesSent($value)
+    public function setSyncEntriesSent($value)
     {
-        return $this->attributes['sync_records_sent_entries_sent'] = $value;
+        return $this->attributes['sync_entries_sent'] = $value;
     }
     // boolean # Whether or not sending is enabled for outbound_connection logs.
     public function getOutboundConnectionSendEnabled()
@@ -326,14 +326,14 @@ class SiemHttpDestination
         return $this->attributes['outbound_connection_send_enabled'] = $value;
     }
     // int64 # Number of log entries sent for the lifetime of this destination.
-    public function getOutboundConnectionRecordsSentEntriesSent()
+    public function getOutboundConnectionEntriesSent()
     {
-        return @$this->attributes['outbound_connection_records_sent_entries_sent'];
+        return @$this->attributes['outbound_connection_entries_sent'];
     }
 
-    public function setOutboundConnectionRecordsSentEntriesSent($value)
+    public function setOutboundConnectionEntriesSent($value)
     {
-        return $this->attributes['outbound_connection_records_sent_entries_sent'] = $value;
+        return $this->attributes['outbound_connection_entries_sent'] = $value;
     }
     // boolean # Whether or not sending is enabled for automation logs.
     public function getAutomationSendEnabled()
@@ -346,14 +346,14 @@ class SiemHttpDestination
         return $this->attributes['automation_send_enabled'] = $value;
     }
     // int64 # Number of log entries sent for the lifetime of this destination.
-    public function getAutomationRecordsSentEntriesSent()
+    public function getAutomationEntriesSent()
     {
-        return @$this->attributes['automation_records_sent_entries_sent'];
+        return @$this->attributes['automation_entries_sent'];
     }
 
-    public function setAutomationRecordsSentEntriesSent($value)
+    public function setAutomationEntriesSent($value)
     {
-        return $this->attributes['automation_records_sent_entries_sent'] = $value;
+        return $this->attributes['automation_entries_sent'] = $value;
     }
     // boolean # Whether or not sending is enabled for api_request logs.
     public function getApiRequestSendEnabled()
@@ -366,14 +366,14 @@ class SiemHttpDestination
         return $this->attributes['api_request_send_enabled'] = $value;
     }
     // int64 # Number of log entries sent for the lifetime of this destination.
-    public function getApiRequestRecordsSentEntriesSent()
+    public function getApiRequestEntriesSent()
     {
-        return @$this->attributes['api_request_records_sent_entries_sent'];
+        return @$this->attributes['api_request_entries_sent'];
     }
 
-    public function setApiRequestRecordsSentEntriesSent($value)
+    public function setApiRequestEntriesSent($value)
     {
-        return $this->attributes['api_request_records_sent_entries_sent'] = $value;
+        return $this->attributes['api_request_entries_sent'] = $value;
     }
     // boolean # Whether or not sending is enabled for public_hosting_request logs.
     public function getPublicHostingRequestSendEnabled()
@@ -386,14 +386,14 @@ class SiemHttpDestination
         return $this->attributes['public_hosting_request_send_enabled'] = $value;
     }
     // int64 # Number of log entries sent for the lifetime of this destination.
-    public function getPublicHostingRequestRecordsSentEntriesSent()
+    public function getPublicHostingRequestEntriesSent()
     {
-        return @$this->attributes['public_hosting_request_records_sent_entries_sent'];
+        return @$this->attributes['public_hosting_request_entries_sent'];
     }
 
-    public function setPublicHostingRequestRecordsSentEntriesSent($value)
+    public function setPublicHostingRequestEntriesSent($value)
     {
-        return $this->attributes['public_hosting_request_records_sent_entries_sent'] = $value;
+        return $this->attributes['public_hosting_request_entries_sent'] = $value;
     }
     // boolean # Whether or not sending is enabled for email logs.
     public function getEmailSendEnabled()
@@ -406,14 +406,14 @@ class SiemHttpDestination
         return $this->attributes['email_send_enabled'] = $value;
     }
     // int64 # Number of log entries sent for the lifetime of this destination.
-    public function getEmailRecordsSentEntriesSent()
+    public function getEmailEntriesSent()
     {
-        return @$this->attributes['email_records_sent_entries_sent'];
+        return @$this->attributes['email_entries_sent'];
     }
 
-    public function setEmailRecordsSentEntriesSent($value)
+    public function setEmailEntriesSent($value)
     {
-        return $this->attributes['email_records_sent_entries_sent'] = $value;
+        return $this->attributes['email_entries_sent'] = $value;
     }
     // boolean # Whether or not sending is enabled for exavault_api_request logs.
     public function getExavaultApiRequestSendEnabled()
@@ -426,14 +426,14 @@ class SiemHttpDestination
         return $this->attributes['exavault_api_request_send_enabled'] = $value;
     }
     // int64 # Number of log entries sent for the lifetime of this destination.
-    public function getExavaultApiRequestRecordsSentEntriesSent()
+    public function getExavaultApiRequestEntriesSent()
     {
-        return @$this->attributes['exavault_api_request_records_sent_entries_sent'];
+        return @$this->attributes['exavault_api_request_entries_sent'];
     }
 
-    public function setExavaultApiRequestRecordsSentEntriesSent($value)
+    public function setExavaultApiRequestEntriesSent($value)
     {
-        return $this->attributes['exavault_api_request_records_sent_entries_sent'] = $value;
+        return $this->attributes['exavault_api_request_entries_sent'] = $value;
     }
     // string # Type of URL that was last called. Can be `destination_url` or `azure_oauth_client_credentials_url`
     public function getLastHttpCallTargetType()

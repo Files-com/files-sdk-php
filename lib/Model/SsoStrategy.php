@@ -236,9 +236,9 @@ class SsoStrategy
         return @$this->attributes['provision_require_2fa'];
     }
     // string # URL-friendly, unique identifier for Azure SAML configuration
-    public function getIdentifier()
+    public function getProviderIdentifier()
     {
-        return @$this->attributes['identifier'];
+        return @$this->attributes['provider_identifier'];
     }
     // string # Base DN for looking up users in LDAP server
     public function getLdapBaseDn()

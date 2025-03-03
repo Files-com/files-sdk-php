@@ -564,11 +564,13 @@ Exception
 |`InvalidFilenameException`|  `ProcessingFailureException` |
 |`InvalidPriorityColorException`|  `ProcessingFailureException` |
 |`InvalidRangeException`|  `ProcessingFailureException` |
+|`InvalidSiteException`|  `ProcessingFailureException` |
 |`ModelSaveErrorException`|  `ProcessingFailureException` |
 |`MultipleProcessingErrorsException`|  `ProcessingFailureException` |
 |`PathTooLongException`|  `ProcessingFailureException` |
 |`RecipientAlreadySharedException`|  `ProcessingFailureException` |
 |`RemoteServerErrorException`|  `ProcessingFailureException` |
+|`ResourceBelongsToParentSiteException`|  `ProcessingFailureException` |
 |`ResourceLockedException`|  `ProcessingFailureException` |
 |`SubfolderLockedException`|  `ProcessingFailureException` |
 |`TwoFactorAuthenticationCodeAlreadySentException`|  `ProcessingFailureException` |

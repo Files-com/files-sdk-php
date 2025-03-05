@@ -626,8 +626,7 @@ try {
 
 ## Case Sensitivity
 
-The Files.com API compares files and paths in a case-insensitive manner.
- For related documentation see [Case Sensitivity Documentation](https://www.files.com/docs/files-and-folders/file-system-semantics/case-sensitivity).
+The Files.com API compares files and paths in a case-insensitive manner. For related documentation see [Case Sensitivity Documentation](https://www.files.com/docs/files-and-folders/file-system-semantics/case-sensitivity).
 
 The `PathUtil::same` function in the Files.com SDK is designed to help you determine if two paths on
 your native file system would be considered the same on Files.com. This is particularly important
@@ -660,7 +659,7 @@ A README is available on the GitHub link.
 
 ## Upgrading
 
-### Upgrading to Version 2.0 from previous versions
+### Upgrading to Files.com PHP SDK 2.0? Learn about namespace changes for exception classes to comply with PSR-4 and PSR-12 standards.
 
 In Version 2.0, the Files.com PHP SDK was updated to comply with both the
 [PSR-12](https://www.php-fig.org/psr/psr-12/) coding standard and the

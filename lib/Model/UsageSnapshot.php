@@ -70,7 +70,7 @@ class UsageSnapshot
     {
         return @$this->attributes['end_at'];
     }
-    // double # Highest user count number in time period
+    // int64 # Highest user count number in time period
     public function getHighWaterUserCount()
     {
         return @$this->attributes['high_water_user_count'];
@@ -84,11 +84,6 @@ class UsageSnapshot
     public function getHighWaterStorage()
     {
         return @$this->attributes['high_water_storage'];
-    }
-    // object # Storage Usage - map of root folders to their usage as of end date (not necessarily high water mark, which is used for billing)
-    public function getUsageByTopLevelDir()
-    {
-        return @$this->attributes['usage_by_top_level_dir'];
     }
     // double # Storage Usage for root folder as of end date (not necessarily high water mark, which is used for billing)
     public function getRootStorage()
@@ -129,6 +124,11 @@ class UsageSnapshot
     public function getSyncBytesSent()
     {
         return @$this->attributes['sync_bytes_sent'];
+    }
+    // array(object) # Storage Usage - map of root folders to their usage as of end date (not necessarily high water mark, which is used for billing)
+    public function getUsageByTopLevelDir()
+    {
+        return @$this->attributes['usage_by_top_level_dir'];
     }
 
     // Parameters:

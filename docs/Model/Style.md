@@ -7,7 +7,10 @@
   "id": 1,
   "path": "example",
   "logo": "https://mysite.files.com/...",
-  "thumbnail": "example"
+  "thumbnail": {
+    "name": "My logo",
+    "uri": "https://mysite.files.com/.../my_image.png"
+  }
 }
 ```
 
@@ -55,7 +58,10 @@ $style->update([
   "id": 1,
   "path": "example",
   "logo": "https://mysite.files.com/...",
-  "thumbnail": "example"
+  "thumbnail": {
+    "name": "My logo",
+    "uri": "https://mysite.files.com/.../my_image.png"
+  }
 }
 ```
 

@@ -95,7 +95,7 @@ class Request
     {
         return $this->attributes['destination'] = $value;
     }
-    // string # ID of automation that created request
+    // int64 # ID of automation that created request
     public function getAutomationId()
     {
         return @$this->attributes['automation_id'];

@@ -85,27 +85,27 @@ class UsageDailySnapshot
     {
         return @$this->attributes['user_count'];
     }
-    // int64 # GB of Files Native Storage used on this day.
+    // double # GB of Files Native Storage used on this day.
     public function getCurrentStorage()
     {
         return @$this->attributes['current_storage'];
     }
-    // int64 # GB of Files Native Storage used on this day for files that have been deleted and are stored as backups.
+    // double # GB of Files Native Storage used on this day for files that have been deleted and are stored as backups.
     public function getDeletedFilesStorage()
     {
         return @$this->attributes['deleted_files_storage'];
     }
-    // int64 # GB of Files Native Storage used on this day for files that have been permanently deleted but were uploaded less than 30 days ago, and are still billable.
+    // double # GB of Files Native Storage used on this day for files that have been permanently deleted but were uploaded less than 30 days ago, and are still billable.
     public function getDeletedFilesCountedInMinimum()
     {
         return @$this->attributes['deleted_files_counted_in_minimum'];
     }
-    // int64 # GB of Files Native Storage used for the root folder.  Included here because this value will not be part of `usage_by_top_level_dir`
+    // double # GB of Files Native Storage used for the root folder.  Included here because this value will not be part of `usage_by_top_level_dir`
     public function getRootStorage()
     {
         return @$this->attributes['root_storage'];
     }
-    // object # Usage broken down by each top-level folder
+    // array(object) # Usage broken down by each top-level folder
     public function getUsageByTopLevelDir()
     {
         return @$this->attributes['usage_by_top_level_dir'];

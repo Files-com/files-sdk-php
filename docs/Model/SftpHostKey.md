@@ -5,9 +5,9 @@
 ```
 {
   "id": 1,
-  "name": "example",
-  "fingerprint_md5": "example",
-  "fingerprint_sha256": "example"
+  "name": "My Key",
+  "fingerprint_md5": "12:7e:f8:61:78:a4:b2:c2:ee:12:51:92:25:a7:42:cc",
+  "fingerprint_sha256": "SHA256:5ANRkDpXWA+PgOquzZAG9RtQ1Bt8KXYAH2hecr7LQk8"
 }
 ```
 
@@ -53,7 +53,7 @@ $sftp_host_key->find($id);
 ```
 $sftp_host_key = new \Files\Model\SftpHostKey();
 $sftp_host_key->create(, [
-  'name' => "example",
+  'name' => "My Key",
 ]);
 ```
 
@@ -71,7 +71,7 @@ $sftp_host_key->create(, [
 $sftp_host_key = \Files\Model\SftpHostKey::find($id);
 
 $sftp_host_key->update([
-  'name' => "example",
+  'name' => "My Key",
 ]);
 ```
 
@@ -86,9 +86,9 @@ $sftp_host_key->update([
 ```json
 {
   "id": 1,
-  "name": "example",
-  "fingerprint_md5": "example",
-  "fingerprint_sha256": "example"
+  "name": "My Key",
+  "fingerprint_md5": "12:7e:f8:61:78:a4:b2:c2:ee:12:51:92:25:a7:42:cc",
+  "fingerprint_sha256": "SHA256:5ANRkDpXWA+PgOquzZAG9RtQ1Bt8KXYAH2hecr7LQk8"
 }
 ```
 

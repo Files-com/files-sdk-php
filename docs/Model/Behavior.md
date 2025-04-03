@@ -11,7 +11,7 @@
   "name": "example",
   "description": "example",
   "value": {
-    "key": "example value"
+    "method": "GET"
   },
   "disable_parent_folder_behavior": true,
   "recursive": true
@@ -177,7 +177,7 @@ $behavior->update([
   "name": "example",
   "description": "example",
   "value": {
-    "key": "example value"
+    "method": "GET"
   },
   "disable_parent_folder_behavior": true,
   "recursive": true

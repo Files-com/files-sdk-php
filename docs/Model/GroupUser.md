@@ -4,7 +4,7 @@
 
 ```
 {
-  "group_name": "example",
+  "group_name": "My Group",
   "group_id": 1,
   "user_id": 1,
   "admin": true,
@@ -84,7 +84,7 @@ $group_user->update([
 
 ```json
 {
-  "group_name": "example",
+  "group_name": "My Group",
   "group_id": 1,
   "user_id": 1,
   "admin": true,

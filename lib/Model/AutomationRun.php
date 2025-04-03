@@ -75,7 +75,7 @@ class AutomationRun
     {
         return @$this->attributes['created_at'];
     }
-    // string # If set, this automation will be retried at this date/time due to `failure` or `partial_failure`.
+    // date-time # If set, this automation will be retried at this date/time due to `failure` or `partial_failure`.
     public function getRetryAt()
     {
         return @$this->attributes['retry_at'];

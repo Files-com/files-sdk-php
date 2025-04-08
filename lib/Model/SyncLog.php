@@ -90,7 +90,7 @@ class SyncLog
     {
         return @$this->attributes['path'];
     }
-    // string # File size
+    // int64 # File size
     public function getSize()
     {
         return @$this->attributes['size'];

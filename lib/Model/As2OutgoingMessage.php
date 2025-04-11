@@ -80,11 +80,6 @@ class As2OutgoingMessage
     {
         return @$this->attributes['http_headers'];
     }
-    // string # JSON Structure of the activity log.
-    public function getActivityLog()
-    {
-        return @$this->attributes['activity_log'];
-    }
     // string # Result of processing.
     public function getProcessingResult()
     {

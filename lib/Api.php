@@ -20,7 +20,7 @@ function middlewareRemoveHeader($header)
 
 class Api
 {
-    const VERSION = "2.0.175";
+    const VERSION = "2.0.176";
     private static function pushRetryHandler($handlerStack)
     {
         $shouldRetry = function ($retries, $request, $response, $exception) {
@@ -163,9 +163,13 @@ class Api
     public static function sendRequest($path, $verb, $params = null, $options = [], $metadata = [])
     {
         $options = $options ?: [];
-        $headers = array_merge(@$options['headers'] ?: [], [
-            'User-Agent' => "Files.com PHP SDK v" . self::VERSION,
-        ]);
+        $headers = array_merge(
+            Files::getLanguage()
+              ? ['Accept-Language' => Files::getLanguage()]
+              : [],
+            @$options['headers'] ?: [],
+            ['User-Agent' => "Files.com PHP SDK v" . self::VERSION]
+        );
 
         $isExternal = preg_match('@^[a-zA-Z]+://@', $path);
 

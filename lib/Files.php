@@ -30,6 +30,7 @@ class Files
     private static $baseUrl = 'https://app.files.com';
     private static $endpointPrefix = '/api/rest/v1';
     private static $sessionId = null;
+    private static $language = null;
     private static $handler = null;
 
     public static $logLevel = LogLevel::WARN;
@@ -63,6 +64,11 @@ class Files
         return self::$sessionId;
     }
 
+    public static function getLanguage()
+    {
+        return self::$language;
+    }
+
     public static function getHandler()
     {
         return self::$handler === null ? new CurlHandler() : self::$handler;
@@ -86,6 +92,11 @@ class Files
     public static function setSessionId($apiKey)
     {
         self::$sessionId = $apiKey;
+    }
+
+    public static function setLanguage($language)
+    {
+        self::$language = $language;
     }
 
     public static function setHandler($handler)

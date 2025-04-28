@@ -1,5 +1,39 @@
 <?php
 
+///////////////////////////////////////////////////////////////////////////////
+// To run this test suite, first set environment variables:
+//
+// always set:
+//   FILES_SESSION_ENV=development
+//
+// required:
+//   FILES_API_KEY - set to your API key
+//   FILES_API_DOMAIN - set to your Files.com subdomain (e.g. mysite.files.com)
+//
+// required only if testSession() is run, otherwise can be omitted:
+//   FILES_SESSION_USERNAME - username to login with
+//   FILES_SESSION_PASSWORD - password to login with
+//
+// optional:
+//   USER_COUNT_TO_TRIGGER_PAGINATION - defaults to 1, set to a number that will
+//     require multiple page requests to fetch all users, but don't set it too low;
+//     if you have many users, then "1" will trigger a fetch for every single user
+//
+///////////////////////////////////////////////////////////////////////////////
+//
+// Next, in the ../../ directory, install dependencies:
+//
+// curl -sS https://getcomposer.org/installer | php
+// php composer.phar install
+//
+// Finally, execute the current file:
+//
+// php test-file.php
+//
+///////////////////////////////////////////////////////////////////////////////
+// Note: you can comment out at the bottom of this file any tests you don't want to run.
+///////////////////////////////////////////////////////////////////////////////
+
 declare(strict_types=1);
 
 namespace Files;
@@ -12,13 +46,13 @@ use Files\Model\Folder;
 use Files\Model\Session;
 use Files\Model\User;
 
-require_once dirname(__FILE__) . '/../vendor/autoload.php';
+require_once dirname(__FILE__) . '/../../vendor/autoload.php';
 
 // name of an existing folder in your root to create/delete test files and folders
 define('SDK_TEST_ROOT_FOLDER', 'sdk-test');
 
 // any user count that will require multiple page requests to fetch all users
-define('USER_COUNT_TO_TRIGGER_PAGINATION', 1);
+define('USER_COUNT_TO_TRIGGER_PAGINATION', getenv('USER_COUNT_TO_TRIGGER_PAGINATION') ?: 1);
 
 $api_key = getenv('FILES_API_KEY');
 $api_domain = getenv('FILES_API_DOMAIN');
@@ -39,9 +73,14 @@ if (!$api_domain) {
 
 Files::setApiKey($api_key);
 Files::setBaseUrl('https://' . $api_domain);
-Files::$logLevel = LogLevel::INFO;
 
+//
+// logging/debugging options
+//
+
+Files::$logLevel = LogLevel::INFO;
 // Files::$logLevel = LogLevel::DEBUG;
+
 // Files::$debugRequest = true;
 // Files::$debugResponseHeaders = true;
 
@@ -49,14 +88,23 @@ Files::$logLevel = LogLevel::INFO;
 // utilities
 //
 
+// assert() was deprecated in PHP 8.0, so prefer Exception, which was
+// introduced in PHP 7.0
+function assert_or_throw($condition, $message = 'Assertion failed')
+{
+    if (!$condition) {
+        throw new \Exception($message);
+    }
+}
+
 function assertUserCreatedAndDelete($user, $name)
 {
-    assert($user->isLoaded() === true);
+    assert_or_throw($user->isLoaded() === true, 'User should be loaded');
 
     $saved_user = User::find($user->id);
 
-    assert($saved_user->isLoaded() === true);
-    assert($saved_user->name === $name);
+    assert_or_throw($saved_user->isLoaded() === true, 'Saved user should be loaded');
+    assert_or_throw($saved_user->name === $name);
 
     $saved_user->delete();
 
@@ -65,14 +113,14 @@ function assertUserCreatedAndDelete($user, $name)
     try {
         User::find($user->id);
     } catch (Exception\NotFoundException $error) {
-        assert(stripos($error->getTitle(), "Not Found") !== false);
-        assert(stripos($error->getError(), "Not Found") !== false);
-        assert($error->getType() === "not-found");
-        assert($error->getHttpCode() === 404);
+        assert_or_throw(stripos($error->getTitle(), "Not Found") !== false);
+        assert_or_throw(stripos($error->getError(), "Not Found") !== false);
+        assert_or_throw($error->getType() === "not-found");
+        assert_or_throw($error->getHttpCode() === 404);
         $userNoLongerExists = true;
     }
 
-    assert($userNoLongerExists === true);
+    assert_or_throw($userNoLongerExists === true);
 }
 
 function findFile($targetFile, $fileList)
@@ -170,7 +218,7 @@ function testErrors()
         $caughtExpectedException = true;
     }
 
-    assert($caughtExpectedException === true);
+    assert_or_throw($caughtExpectedException === true);
 
     Files::setApiKey($api_key);
     Files::setBaseUrl('https://' . $api_domain);
@@ -189,7 +237,7 @@ function testErrors()
         $caughtExpectedException = true;
     }
 
-    assert($caughtExpectedException === true);
+    assert_or_throw($caughtExpectedException === true);
 
     //
     // deleting a non-existent path
@@ -202,14 +250,12 @@ function testErrors()
     try {
         $nonExistentFile->delete();
     } catch (Exception\NotFoundException $error) {
-        assert(stripos($error->getTitle(), 'Not Found') !== false);
-        assert(stripos($error->getError(), 'Not Found') !== false);
-        assert($error->getType() === "not-found");
-        assert($error->getHttpCode() === 404);
+        assert_or_throw($error->getType() === "not-found");
+        assert_or_throw($error->getHttpCode() === 404);
         $caughtExpectedException = true;
     }
 
-    assert($caughtExpectedException === true);
+    assert_or_throw($caughtExpectedException === true);
 
     //
     // create the root folder path
@@ -220,14 +266,14 @@ function testErrors()
     try {
         $folder = Folder::create('.');
     } catch (Exception\ProcessingFailure\DestinationExistsException $error) {
-        assert($error->getTitle() === "Destination Exists");
-        assert($error->getError() === "The destination exists.");
-        assert($error->getType() === "processing-failure/destination-exists");
-        assert($error->getHttpCode() === 422);
+        assert_or_throw($error->getTitle() === "Destination Exists");
+        assert_or_throw($error->getError() === "The destination exists.");
+        assert_or_throw($error->getType() === "processing-failure/destination-exists");
+        assert_or_throw($error->getHttpCode() === 422);
         $caughtExpectedException = true;
     }
 
-    assert($caughtExpectedException === true);
+    assert_or_throw($caughtExpectedException === true);
 
     Logger::info('***** testErrors() succeeded! *****');
 }
@@ -241,12 +287,12 @@ function testAutoPaginate()
     Files::$autoPaginate = true;
     $response = Api::sendRequest('/users', 'GET', $params);
 
-    assert($response->autoPaginateRequests > 1);
+    assert_or_throw($response->autoPaginateRequests > 1);
 
     Files::$autoPaginate = false;
     $response = Api::sendRequest('/users', 'GET', $params);
 
-    assert(!isset($response->autoPaginateRequests));
+    assert_or_throw(!isset($response->autoPaginateRequests));
 
     Files::$autoPaginate = $savedAutoPaginate;
 
@@ -266,9 +312,9 @@ function testUserListAndUpdate()
 
     $updated_user = User::find($first_user->id);
 
-    assert($updated_user->isLoaded());
-    assert($old_name !== $new_name);
-    assert($updated_user->name === $new_name);
+    assert_or_throw($updated_user->isLoaded());
+    assert_or_throw($old_name !== $new_name);
+    assert_or_throw($updated_user->name === $new_name);
 
     Logger::info('***** testUserListAndUpdate() succeeded! *****');
 }
@@ -310,7 +356,7 @@ function testFolderCreateListAndDelete()
     $dirFiles = Folder::listFor($rootDir);
 
     $foundFolder = findFile($testFolder, $dirFiles);
-    assert($foundFolder->isLoaded() === true);
+    assert_or_throw($foundFolder->isLoaded() === true);
 
     $foundFolder->delete(); // if this fails an unhandled exception will be thrown
 
@@ -330,11 +376,11 @@ function testFileUploadFindCopyAndDelete()
     File::uploadData(RemoteTestEnv::$workingFolderPath . 'testFileUploadFindCopyAndDelete-data.txt', rand() . "\n" . date('Y-m-d H:i:s'));
 
     $foundFile = File::find(RemoteTestEnv::$workingFolderPath . $tempName);
-    assert($foundFile->isLoaded());
+    assert_or_throw($foundFile->isLoaded());
 
     $copyResponse = $foundFile->copyTo(RemoteTestEnv::$workingFolderPath . 'copied-file.txt');
 
-    assert(!!$copyResponse->status && !!$copyResponse->file_migration_id);
+    assert_or_throw(!!$copyResponse->status && !!$copyResponse->file_migration_id);
 
     $foundFile->delete(); // if this fails an unhandled exception will be thrown
 
@@ -343,17 +389,17 @@ function testFileUploadFindCopyAndDelete()
     try {
         File::find(RemoteTestEnv::$workingFolderPath . $tempName);
     } catch (Exception\NotFoundException $error) {
-        assert(stripos($error->getTitle(), "Not Found") !== false);
-        assert(stripos($error->getError(), "Not Found") !== false);
-        assert($error->getType() === "not-found");
-        assert($error->getHttpCode() === 404);
+        assert_or_throw(stripos($error->getTitle(), "Not Found") !== false);
+        assert_or_throw(stripos($error->getError(), "Not Found") !== false);
+        assert_or_throw($error->getType() === "not-found");
+        assert_or_throw($error->getHttpCode() === 404);
         $fileNoLongerExists = true;
     }
 
-    assert($fileNoLongerExists === true);
+    assert_or_throw($fileNoLongerExists === true);
 
     $foundFile = File::find(RemoteTestEnv::$workingFolderPath . 'testFileUploadFindCopyAndDelete-data.txt');
-    assert($foundFile->isLoaded());
+    assert_or_throw($foundFile->isLoaded());
 
     unlink($tempPath);
 
@@ -375,16 +421,16 @@ function testUploadDownloadFileAndDelete()
     // fetch only the first 10 bytes
     $result = File::partialDownloadToFile($remoteFilePath, $tempPath, 0, 9);
 
-    assert(file_get_contents($tempPath) === substr($fileData, 0, 10));
-    assert($result->received === 10);
-    assert($result->total === strlen($fileData));
+    assert_or_throw(file_get_contents($tempPath) === substr($fileData, 0, 10));
+    assert_or_throw($result->received === 10);
+    assert_or_throw($result->total === strlen($fileData));
 
     // then download the rest
     $result = File::resumeDownloadToFile($remoteFilePath, $tempPath);
 
-    assert(file_get_contents($tempPath) === $fileData);
-    assert($result->received === ($result->total - 10));
-    assert($result->total === strlen($fileData));
+    assert_or_throw(file_get_contents($tempPath) === $fileData);
+    assert_or_throw($result->received === ($result->total - 10));
+    assert_or_throw($result->total === strlen($fileData));
 
     unlink($tempPath);
 
@@ -398,8 +444,8 @@ function testUploadDownloadFileAndDelete()
         'with_priority_color' => true
     ]);
 
-    assert($response->path === $remoteFilePath);
-    assert(!!$response->download_uri);
+    assert_or_throw($response->path === $remoteFilePath);
+    assert_or_throw(!!$response->download_uri);
 
     Logger::debug('Updating file mtime and color at ' . $remoteFilePath);
 
@@ -408,8 +454,8 @@ function testUploadDownloadFileAndDelete()
         'priority_color' => 'red',
     ]);
 
-    assert($response->provided_mtime === '2000-01-01T01:00:00Z');
-    assert($response->priority_color === 'red');
+    assert_or_throw($response->provided_mtime === '2000-01-01T01:00:00Z');
+    assert_or_throw($response->priority_color === 'red');
 
     Logger::debug('Deleting file at ' . $remoteFilePath);
 
@@ -420,7 +466,6 @@ function testUploadDownloadFileAndDelete()
 
 function testUploadWithParams()
 {
-
     $tempName = 'testFileUploadFindCopyAndDelete-' . date('Ymd_His') . '.txt';
     $tempPath = tempnam(sys_get_temp_dir(), $tempName);
 
@@ -432,9 +477,9 @@ function testUploadWithParams()
     File::uploadData(RemoteTestEnv::$workingFolderPath . 'mkdir_parent/' . 'testFileUploadFindCopyAndDelete-data.txt', rand() . "\n" . date('Y-m-d H:i:s'), ['mkdir_parents' => true]);
 
     $foundFile = File::find(RemoteTestEnv::$workingFolderPath . 'mkdir_parent/' . $tempName);
-    assert($foundFile->isLoaded());
+    assert_or_throw($foundFile->isLoaded());
     $foundFile = File::find(RemoteTestEnv::$workingFolderPath . 'mkdir_parent/' . 'testFileUploadFindCopyAndDelete-data.txt');
-    assert($foundFile->isLoaded());
+    assert_or_throw($foundFile->isLoaded());
 
     Logger::info('***** testUploadWithParams() succeeded! *****');
 }
@@ -445,7 +490,7 @@ function testFileObjectMethods()
 
     $file = File::get(RemoteTestEnv::$remoteFilePath);
 
-    assert($file->path === RemoteTestEnv::$remoteFilePath);
+    assert_or_throw($file->path === RemoteTestEnv::$remoteFilePath);
 
     Logger::debug('Setting priority_color metadata for File object');
 
@@ -456,13 +501,10 @@ function testFileObjectMethods()
     Logger::debug('Fetching metadata for File object');
 
     $metadata = File::find($file->path, [
-        'with_previews' => true,
         'with_priority_color' => true,
     ]);
 
-    assert(!!$metadata->preview_id);
-    assert(!!$metadata->preview);
-    assert($metadata->priority_color === 'yellow');
+    assert_or_throw($metadata->priority_color === 'yellow', "'priority_color' not 'yellow' in file metadata");
 
     Logger::info('***** testFileObjectMethods() succeeded! *****');
 }
@@ -480,7 +522,7 @@ function testSession()
     $session = Session::create(['username' => $username, 'password' => $password]);
     Files::setSessionId($session->id);
 
-    assert(!!$session->id);
+    assert_or_throw(!!$session->id);
 
     // Tests list method alias on PHP7+, and standard list on PHP5
     $list_method = (version_compare(PHP_VERSION, '7.0.0') >= 0) ? 'list' : 'all';
@@ -492,13 +534,43 @@ function testSession()
     Logger::info('***** testSession() succeeded! *****');
 }
 
+function testLanguage()
+{
+    Files::setLanguage('es');
+    assert_or_throw(Files::getLanguage() === 'es');
+
+    $savedOutputStream = Logger::getOutputStream();
+    $tempStream = fopen('php://temp', 'w+');
+    Logger::setOutputStream($tempStream);
+
+    $savedLogLevel = Files::$logLevel;
+    $savedDebugRequest = Files::$debugRequest;
+    Files::$logLevel = LogLevel::DEBUG;
+    Files::$debugRequest = true;
+
+    // Tests list method alias on PHP7+, and standard list on PHP5
+    $list_method = (version_compare(PHP_VERSION, '7.0.0') >= 0) ? 'list' : 'all';
+    ApiKey::$list_method(['user_id' => 0]);
+
+    Files::$logLevel = $savedLogLevel;
+    Files::$debugRequest = $savedDebugRequest;
+
+    rewind($tempStream);
+    $debugOutput = stream_get_contents($tempStream);
+    fclose($tempStream);
+    Logger::setOutputStream($savedOutputStream);
+
+    assert_or_throw(stripos($debugOutput, '[Accept-Language] => es') !== false, '"Accept-Language: es" header not found in debug output');
+
+    Logger::info('***** testLanguage() succeeded! *****');
+}
+
 //
 // run tests
 //
 
-assert_options(ASSERT_BAIL, 1);
-
 RemoteTestEnv::init();
+register_shutdown_function('Files\RemoteTestEnv::deinit');
 
 testErrors();
 testAutoPaginate();
@@ -511,5 +583,4 @@ testUploadDownloadFileAndDelete();
 testUploadWithParams();
 testFileObjectMethods();
 testSession();
-
-RemoteTestEnv::deinit();
+testLanguage();

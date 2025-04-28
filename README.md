@@ -351,6 +351,20 @@ try {
 }
 ```
 
+## Foreign Language Support
+
+The Files.com PHP SDK supports localized responses by using the `\Files\Files::setLanguage()` configuration method.
+When configured, this guides the API in selecting a preferred language for applicable response content.
+
+Language support currently applies to select human-facing fields only, such as notification messages
+and error descriptions.
+
+If the specified language is not supported or the value is omitted, the API defaults to English.
+
+```shell title="Example Request"
+\Files\Files::setLanguage('es');
+```
+
 ## Errors
 
 The Files.com PHP SDK will return errors by raising exceptions. There are many exception classes defined in the Files SDK that correspond

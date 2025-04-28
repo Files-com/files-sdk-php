@@ -775,6 +775,11 @@ class Site
     {
         return @$this->attributes['session_expiry_minutes'];
     }
+    // boolean # Allow snapshot share links creation
+    public function getSnapshotSharingEnabled()
+    {
+        return @$this->attributes['snapshot_sharing_enabled'];
+    }
     // boolean # Is SSL required?  Disabling this is insecure.
     public function getSslRequired()
     {
@@ -1004,6 +1009,7 @@ class Site
     //   non_sso_groups_allowed - boolean - If true, groups can be manually created / modified / deleted by Site Admins. Otherwise, groups can only be managed via your SSO provider.
     //   non_sso_users_allowed - boolean - If true, users can be manually created / modified / deleted by Site Admins. Otherwise, users can only be managed via your SSO provider.
     //   sharing_enabled - boolean - Allow bundle creation
+    //   snapshot_sharing_enabled - boolean - Allow snapshot share links creation
     //   user_requests_enabled - boolean - Enable User Requests feature
     //   user_requests_notify_admins - boolean - Send email to site admins when a user request is received?
     //   dav_enabled - boolean - Is WebDAV enabled?

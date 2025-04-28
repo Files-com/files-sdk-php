@@ -395,6 +395,16 @@ class RemoteServer
     {
         return $this->attributes['azure_blob_storage_hierarchical_namespace'] = $value;
     }
+    // string # Custom DNS suffix
+    public function getAzureBlobStorageDnsSuffix()
+    {
+        return @$this->attributes['azure_blob_storage_dns_suffix'];
+    }
+
+    public function setAzureBlobStorageDnsSuffix($value)
+    {
+        return $this->attributes['azure_blob_storage_dns_suffix'] = $value;
+    }
     // string # Azure File Storage Account name
     public function getAzureFilesStorageAccount()
     {
@@ -928,6 +938,7 @@ class RemoteServer
     //   azure_blob_storage_container - string - Azure Blob Storage Container name
     //   azure_blob_storage_hierarchical_namespace - boolean - Enable when storage account has hierarchical namespace feature enabled
     //   azure_blob_storage_sas_token - string - Shared Access Signature (SAS) token
+    //   azure_blob_storage_dns_suffix - string - Custom DNS suffix
     //   azure_files_storage_account - string - Azure File Storage Account name
     //   azure_files_storage_share_name - string - Azure File Storage Share name
     //   azure_files_storage_dns_suffix - string - Custom DNS suffix
@@ -1121,6 +1132,10 @@ class RemoteServer
 
         if (@$params['azure_blob_storage_sas_token'] && !is_string(@$params['azure_blob_storage_sas_token'])) {
             throw new \Files\Exception\InvalidParameterException('$azure_blob_storage_sas_token must be of type string; received ' . gettype(@$params['azure_blob_storage_sas_token']));
+        }
+
+        if (@$params['azure_blob_storage_dns_suffix'] && !is_string(@$params['azure_blob_storage_dns_suffix'])) {
+            throw new \Files\Exception\InvalidParameterException('$azure_blob_storage_dns_suffix must be of type string; received ' . gettype(@$params['azure_blob_storage_dns_suffix']));
         }
 
         if (@$params['azure_files_storage_account'] && !is_string(@$params['azure_files_storage_account'])) {
@@ -1380,6 +1395,7 @@ class RemoteServer
     //   azure_blob_storage_container - string - Azure Blob Storage Container name
     //   azure_blob_storage_hierarchical_namespace - boolean - Enable when storage account has hierarchical namespace feature enabled
     //   azure_blob_storage_sas_token - string - Shared Access Signature (SAS) token
+    //   azure_blob_storage_dns_suffix - string - Custom DNS suffix
     //   azure_files_storage_account - string - Azure File Storage Account name
     //   azure_files_storage_share_name - string - Azure File Storage Share name
     //   azure_files_storage_dns_suffix - string - Custom DNS suffix
@@ -1557,6 +1573,10 @@ class RemoteServer
 
         if (@$params['azure_blob_storage_sas_token'] && !is_string(@$params['azure_blob_storage_sas_token'])) {
             throw new \Files\Exception\InvalidParameterException('$azure_blob_storage_sas_token must be of type string; received ' . gettype(@$params['azure_blob_storage_sas_token']));
+        }
+
+        if (@$params['azure_blob_storage_dns_suffix'] && !is_string(@$params['azure_blob_storage_dns_suffix'])) {
+            throw new \Files\Exception\InvalidParameterException('$azure_blob_storage_dns_suffix must be of type string; received ' . gettype(@$params['azure_blob_storage_dns_suffix']));
         }
 
         if (@$params['azure_files_storage_account'] && !is_string(@$params['azure_files_storage_account'])) {

@@ -190,6 +190,11 @@ class SsoStrategy
     {
         return @$this->attributes['provision_email_signup_groups'];
     }
+    // string # Comma-separated list of group names whose members will be created as Read-Only Site Admins.
+    public function getProvisionReadonlySiteAdminGroups()
+    {
+        return @$this->attributes['provision_readonly_site_admin_groups'];
+    }
     // string # Comma-separated list of group names whose members will be created as Site Admins.
     public function getProvisionSiteAdminGroups()
     {

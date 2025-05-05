@@ -435,6 +435,26 @@ class SiemHttpDestination
     {
         return $this->attributes['exavault_api_request_entries_sent'] = $value;
     }
+    // boolean # Whether or not sending is enabled for settings_change logs.
+    public function getSettingsChangeSendEnabled()
+    {
+        return @$this->attributes['settings_change_send_enabled'];
+    }
+
+    public function setSettingsChangeSendEnabled($value)
+    {
+        return $this->attributes['settings_change_send_enabled'] = $value;
+    }
+    // int64 # Number of log entries sent for the lifetime of this destination.
+    public function getSettingsChangeEntriesSent()
+    {
+        return @$this->attributes['settings_change_entries_sent'];
+    }
+
+    public function setSettingsChangeEntriesSent($value)
+    {
+        return $this->attributes['settings_change_entries_sent'] = $value;
+    }
     // string # Type of URL that was last called. Can be `destination_url` or `azure_oauth_client_credentials_url`
     public function getLastHttpCallTargetType()
     {
@@ -612,6 +632,7 @@ class SiemHttpDestination
     //   public_hosting_request_send_enabled - boolean - Whether or not sending is enabled for public_hosting_request logs.
     //   email_send_enabled - boolean - Whether or not sending is enabled for email logs.
     //   exavault_api_request_send_enabled - boolean - Whether or not sending is enabled for exavault_api_request logs.
+    //   settings_change_send_enabled - boolean - Whether or not sending is enabled for settings_change logs.
     //   destination_type - string - Destination Type
     //   destination_url - string - Destination Url
     public function update($params = [])
@@ -815,6 +836,7 @@ class SiemHttpDestination
     //   public_hosting_request_send_enabled - boolean - Whether or not sending is enabled for public_hosting_request logs.
     //   email_send_enabled - boolean - Whether or not sending is enabled for email logs.
     //   exavault_api_request_send_enabled - boolean - Whether or not sending is enabled for exavault_api_request logs.
+    //   settings_change_send_enabled - boolean - Whether or not sending is enabled for settings_change logs.
     //   destination_type (required) - string - Destination Type
     //   destination_url (required) - string - Destination Url
     public static function create($params = [], $options = [])
@@ -921,6 +943,7 @@ class SiemHttpDestination
     //   public_hosting_request_send_enabled - boolean - Whether or not sending is enabled for public_hosting_request logs.
     //   email_send_enabled - boolean - Whether or not sending is enabled for email logs.
     //   exavault_api_request_send_enabled - boolean - Whether or not sending is enabled for exavault_api_request logs.
+    //   settings_change_send_enabled - boolean - Whether or not sending is enabled for settings_change logs.
     public static function sendTestEntry($params = [], $options = [])
     {
         if (@$params['siem_http_destination_id'] && !is_int(@$params['siem_http_destination_id'])) {

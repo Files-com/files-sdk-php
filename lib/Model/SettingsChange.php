@@ -55,25 +55,25 @@ class SettingsChange
     {
         return !!@$this->attributes['id'];
     }
+    // int64 # The API key id responsible for this change.
+    public function getApiKeyId()
+    {
+        return @$this->attributes['api_key_id'];
+    }
     // array(string) # Markdown-formatted change messages.
     public function getChanges()
     {
         return @$this->attributes['changes'];
     }
-    // date-time # The time this change was made
+    // date-time # The time this change was made.
     public function getCreatedAt()
     {
         return @$this->attributes['created_at'];
     }
-    // int64 # The user id responsible for this change
+    // int64 # The user id responsible for this change.
     public function getUserId()
     {
         return @$this->attributes['user_id'];
-    }
-    // int64 # The API key id responsible for this change
-    public function getApiKeyId()
-    {
-        return @$this->attributes['api_key_id'];
     }
     // boolean # true if this change was performed by Files.com support.
     public function getUserIsFilesSupport()
@@ -85,7 +85,7 @@ class SettingsChange
     {
         return @$this->attributes['user_is_from_parent_site'];
     }
-    // string # The username of the user responsible for this change
+    // string # The username of the user responsible for this change.
     public function getUsername()
     {
         return @$this->attributes['username'];

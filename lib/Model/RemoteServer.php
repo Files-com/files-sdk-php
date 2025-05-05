@@ -255,16 +255,6 @@ class RemoteServer
     {
         return $this->attributes['google_cloud_storage_project_id'] = $value;
     }
-    // string # Google Cloud Storage: Region
-    public function getGoogleCloudStorageRegion()
-    {
-        return @$this->attributes['google_cloud_storage_region'];
-    }
-
-    public function setGoogleCloudStorageRegion($value)
-    {
-        return $this->attributes['google_cloud_storage_region'] = $value;
-    }
     // string # Google Cloud Storage: S3-compatible Access Key.
     public function getGoogleCloudStorageS3CompatibleAccessKey()
     {
@@ -969,7 +959,6 @@ class RemoteServer
     //   files_agent_version - string - Files Agent version
     //   google_cloud_storage_bucket - string - Google Cloud Storage: Bucket Name
     //   google_cloud_storage_project_id - string - Google Cloud Storage: Project ID
-    //   google_cloud_storage_region - string - Google Cloud Storage: Region
     //   google_cloud_storage_s3_compatible_access_key - string - Google Cloud Storage: S3-compatible Access Key.
     //   hostname - string - Hostname or IP address
     //   linode_access_key - string - Linode: Access Key
@@ -1165,10 +1154,6 @@ class RemoteServer
 
         if (@$params['google_cloud_storage_project_id'] && !is_string(@$params['google_cloud_storage_project_id'])) {
             throw new \Files\Exception\InvalidParameterException('$google_cloud_storage_project_id must be of type string; received ' . gettype(@$params['google_cloud_storage_project_id']));
-        }
-
-        if (@$params['google_cloud_storage_region'] && !is_string(@$params['google_cloud_storage_region'])) {
-            throw new \Files\Exception\InvalidParameterException('$google_cloud_storage_region must be of type string; received ' . gettype(@$params['google_cloud_storage_region']));
         }
 
         if (@$params['google_cloud_storage_s3_compatible_access_key'] && !is_string(@$params['google_cloud_storage_s3_compatible_access_key'])) {
@@ -1441,7 +1426,6 @@ class RemoteServer
     //   files_agent_version - string - Files Agent version
     //   google_cloud_storage_bucket - string - Google Cloud Storage: Bucket Name
     //   google_cloud_storage_project_id - string - Google Cloud Storage: Project ID
-    //   google_cloud_storage_region - string - Google Cloud Storage: Region
     //   google_cloud_storage_s3_compatible_access_key - string - Google Cloud Storage: S3-compatible Access Key.
     //   hostname - string - Hostname or IP address
     //   linode_access_key - string - Linode: Access Key
@@ -1621,10 +1605,6 @@ class RemoteServer
 
         if (@$params['google_cloud_storage_project_id'] && !is_string(@$params['google_cloud_storage_project_id'])) {
             throw new \Files\Exception\InvalidParameterException('$google_cloud_storage_project_id must be of type string; received ' . gettype(@$params['google_cloud_storage_project_id']));
-        }
-
-        if (@$params['google_cloud_storage_region'] && !is_string(@$params['google_cloud_storage_region'])) {
-            throw new \Files\Exception\InvalidParameterException('$google_cloud_storage_region must be of type string; received ' . gettype(@$params['google_cloud_storage_region']));
         }
 
         if (@$params['google_cloud_storage_s3_compatible_access_key'] && !is_string(@$params['google_cloud_storage_s3_compatible_access_key'])) {

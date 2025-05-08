@@ -96,14 +96,14 @@ class BundleNotification
         return $this->attributes['notify_on_upload'] = $value;
     }
     // int64 # The id of the user to notify.
-    public function getUserId()
+    public function getNotifyUserId()
     {
-        return @$this->attributes['user_id'];
+        return @$this->attributes['notify_user_id'];
     }
 
-    public function setUserId($value)
+    public function setNotifyUserId($value)
     {
-        return $this->attributes['user_id'] = $value;
+        return $this->attributes['notify_user_id'] = $value;
     }
 
     // Parameters:
@@ -228,7 +228,7 @@ class BundleNotification
 
     // Parameters:
     //   bundle_id (required) - int64 - Bundle ID to notify on
-    //   user_id - int64 - The id of the user to notify.
+    //   notify_user_id - int64 - The id of the user to notify.
     //   notify_on_registration - boolean - Triggers bundle notification when a registration action occurs for it.
     //   notify_on_upload - boolean - Triggers bundle notification when a upload action occurs for it.
     public static function create($params = [], $options = [])
@@ -241,8 +241,8 @@ class BundleNotification
             throw new \Files\Exception\InvalidParameterException('$bundle_id must be of type int; received ' . gettype(@$params['bundle_id']));
         }
 
-        if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-            throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
+        if (@$params['notify_user_id'] && !is_int(@$params['notify_user_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$notify_user_id must be of type int; received ' . gettype(@$params['notify_user_id']));
         }
 
         $response = Api::sendRequest('/bundle_notifications', 'POST', $params, $options);

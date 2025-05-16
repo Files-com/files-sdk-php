@@ -126,6 +126,70 @@ class UserLifecycleRule
         return $this->attributes['site_id'] = $value;
     }
 
+    // Parameters:
+    //   action (required) - string - Action to take on inactive users (disable or delete)
+    //   authentication_method (required) - string - User authentication method for the rule
+    //   inactivity_days (required) - int64 - Number of days of inactivity before the rule applies
+    //   include_site_admins - boolean - Include site admins in the rule
+    //   include_folder_admins - boolean - Include folder admins in the rule
+    public function update($params = [])
+    {
+        if (!is_array($params)) {
+            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+        }
+
+        if (!@$params['id']) {
+            if (@$this->id) {
+                $params['id'] = $this->id;
+            } else {
+                throw new \Files\Exception\MissingParameterException('Parameter missing: id');
+            }
+        }
+
+        if (!@$params['action']) {
+            if (@$this->action) {
+                $params['action'] = $this->action;
+            } else {
+                throw new \Files\Exception\MissingParameterException('Parameter missing: action');
+            }
+        }
+
+        if (!@$params['authentication_method']) {
+            if (@$this->authentication_method) {
+                $params['authentication_method'] = $this->authentication_method;
+            } else {
+                throw new \Files\Exception\MissingParameterException('Parameter missing: authentication_method');
+            }
+        }
+
+        if (!@$params['inactivity_days']) {
+            if (@$this->inactivity_days) {
+                $params['inactivity_days'] = $this->inactivity_days;
+            } else {
+                throw new \Files\Exception\MissingParameterException('Parameter missing: inactivity_days');
+            }
+        }
+
+        if (@$params['id'] && !is_int(@$params['id'])) {
+            throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
+        }
+
+        if (@$params['action'] && !is_string(@$params['action'])) {
+            throw new \Files\Exception\InvalidParameterException('$action must be of type string; received ' . gettype(@$params['action']));
+        }
+
+        if (@$params['authentication_method'] && !is_string(@$params['authentication_method'])) {
+            throw new \Files\Exception\InvalidParameterException('$authentication_method must be of type string; received ' . gettype(@$params['authentication_method']));
+        }
+
+        if (@$params['inactivity_days'] && !is_int(@$params['inactivity_days'])) {
+            throw new \Files\Exception\InvalidParameterException('$inactivity_days must be of type int; received ' . gettype(@$params['inactivity_days']));
+        }
+
+        $response = Api::sendRequest('/user_lifecycle_rules/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+        return new UserLifecycleRule((array) (@$response->data ?: []), $this->options);
+    }
+
     public function delete($params = [])
     {
         if (!is_array($params)) {
@@ -157,7 +221,9 @@ class UserLifecycleRule
     public function save()
     {
         if (@$this->attributes['id']) {
-            throw new \Files\Exception\NotImplementedException('The UserLifecycleRule object doesn\'t support updates.');
+            $new_obj = $this->update($this->attributes);
+            $this->attributes = $new_obj->attributes;
+            return true;
         } else {
             $new_obj = self::create($this->attributes, $this->options);
             $this->attributes = $new_obj->attributes;

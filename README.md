@@ -245,6 +245,13 @@ time.
 The argument value is a Php associative array that has a key of the resource field name sort on and
 a value of either ```"asc"``` or ```"desc"``` to specify the sort order.
 
+#### Special note about the List Folder Endpoint
+
+For historical reasons, and to maintain compatibility
+with a variety of other cloud-based MFT and EFSS services, Folders will always be listed before Files
+when listing a Folder.  This applies regardless of the sorting parameters you provide.  These *will* be
+used, after the initial sort application of Folders before Files.
+
 ```php title="Sort Example"
 try {
   // users sorted by username

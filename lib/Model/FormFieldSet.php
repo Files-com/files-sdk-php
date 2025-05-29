@@ -125,6 +125,16 @@ class FormFieldSet
     {
         return $this->attributes['skip_company'] = $value;
     }
+    // boolean # Form Field Set is in use by an active Inbox / Bundle / Inbox Registration / Bundle Registration
+    public function getInUse()
+    {
+        return @$this->attributes['in_use'];
+    }
+
+    public function setInUse($value)
+    {
+        return $this->attributes['in_use'] = $value;
+    }
     // int64 # User ID.  Provide a value of `0` to operate the current session's user.
     public function getUserId()
     {

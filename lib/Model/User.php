@@ -1058,6 +1058,8 @@ class User
         return new User((array) (@$response->data ?: []), $this->options);
     }
 
+    // Parameters:
+    //   new_owner_id - int64 - Provide a User ID here to transfer ownership of certain resources such as Automations and Share Links (Bundles) to that new user.
     public function delete($params = [])
     {
         if (!is_array($params)) {
@@ -1074,6 +1076,10 @@ class User
 
         if (@$params['id'] && !is_int(@$params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
+        }
+
+        if (@$params['new_owner_id'] && !is_int(@$params['new_owner_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$new_owner_id must be of type int; received ' . gettype(@$params['new_owner_id']));
         }
 
         $response = Api::sendRequest('/users/' . @$params['id'] . '', 'DELETE', $params, $this->options);

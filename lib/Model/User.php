@@ -175,15 +175,15 @@ class User
     {
         return $this->attributes['bypass_site_allowed_ips'] = $value;
     }
-    // boolean # Exempt this user from being disabled based on inactivity?
-    public function getBypassInactiveDisable()
+    // boolean # Exempt this user from user lifecycle rules?
+    public function getBypassUserLifecycleRules()
     {
-        return @$this->attributes['bypass_inactive_disable'];
+        return @$this->attributes['bypass_user_lifecycle_rules'];
     }
 
-    public function setBypassInactiveDisable($value)
+    public function setBypassUserLifecycleRules($value)
     {
-        return $this->attributes['bypass_inactive_disable'] = $value;
+        return $this->attributes['bypass_user_lifecycle_rules'] = $value;
     }
     // date-time # When this user was created
     public function getCreatedAt()
@@ -898,7 +898,7 @@ class User
     //   authenticate_until - string - Scheduled Date/Time at which user will be deactivated
     //   authentication_method - string - How is this user authenticated?
     //   billing_permission - boolean - Allow this user to perform operations on the account, payments, and invoices?
-    //   bypass_inactive_disable - boolean - Exempt this user from being disabled based on inactivity?
+    //   bypass_user_lifecycle_rules - boolean - Exempt this user from user lifecycle rules?
     //   bypass_site_allowed_ips - boolean - Allow this user to skip site-wide IP blacklists?
     //   dav_permission - boolean - Can the user connect with WebDAV?
     //   disabled - boolean - Is user disabled? Disabled users cannot log in, and do not count for billing purposes. Users can be automatically disabled after an inactivity period via a Site setting or schedule to be deactivated after specific date.
@@ -1193,7 +1193,7 @@ class User
     //   authenticate_until - string - Scheduled Date/Time at which user will be deactivated
     //   authentication_method - string - How is this user authenticated?
     //   billing_permission - boolean - Allow this user to perform operations on the account, payments, and invoices?
-    //   bypass_inactive_disable - boolean - Exempt this user from being disabled based on inactivity?
+    //   bypass_user_lifecycle_rules - boolean - Exempt this user from user lifecycle rules?
     //   bypass_site_allowed_ips - boolean - Allow this user to skip site-wide IP blacklists?
     //   dav_permission - boolean - Can the user connect with WebDAV?
     //   disabled - boolean - Is user disabled? Disabled users cannot log in, and do not count for billing purposes. Users can be automatically disabled after an inactivity period via a Site setting or schedule to be deactivated after specific date.

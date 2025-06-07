@@ -100,6 +100,16 @@ class PublicKey
     {
         return $this->attributes['fingerprint_sha256'] = $value;
     }
+    // date-time # Key's most recent login time via SFTP
+    public function getLastLoginAt()
+    {
+        return @$this->attributes['last_login_at'];
+    }
+
+    public function setLastLoginAt($value)
+    {
+        return $this->attributes['last_login_at'] = $value;
+    }
     // string # Username of the user this public key is associated with
     public function getUsername()
     {

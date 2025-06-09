@@ -55,7 +55,7 @@ class EmailLog
     {
         return !!@$this->attributes['id'];
     }
-    // date-time # Start Time of Action
+    // date-time # Start Time of Action. Deprecrated: Use created_at.
     public function getTimestamp()
     {
         return @$this->attributes['timestamp'];
@@ -100,12 +100,21 @@ class EmailLog
     {
         return @$this->attributes['smtp_ip'];
     }
+    // date-time # Start Time of Action
+    public function getCreatedAt()
+    {
+        return @$this->attributes['created_at'];
+    }
 
     // Parameters:
     //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
     //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
-    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `start_date`, `end_date` or `status`. Valid field combinations are `[ start_date ]`, `[ end_date ]`, `[ status ]`, `[ start_date, end_date ]`, `[ start_date, status ]` or `[ end_date, status ]`.
-    //   filter_prefix - object - If set, return records where the specified field is prefixed by the supplied value. Valid fields are `status`. Valid field combinations are `[ start_date ]`, `[ end_date ]`, `[ status ]`, `[ start_date, end_date ]`, `[ start_date, status ]` or `[ end_date, status ]`.
+    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `start_date`, `end_date`, `status` or `created_at`. Valid field combinations are `[ start_date ]`, `[ end_date ]`, `[ status ]`, `[ created_at ]`, `[ start_date, end_date ]`, `[ start_date, status ]`, `[ start_date, created_at ]`, `[ end_date, status ]`, `[ end_date, created_at ]`, `[ status, created_at ]`, `[ start_date, end_date, status ]`, `[ start_date, end_date, created_at ]`, `[ start_date, status, created_at ]` or `[ end_date, status, created_at ]`.
+    //   filter_gt - object - If set, return records where the specified field is greater than the supplied value. Valid fields are `created_at`. Valid field combinations are `[ start_date ]`, `[ end_date ]`, `[ status ]`, `[ created_at ]`, `[ start_date, end_date ]`, `[ start_date, status ]`, `[ start_date, created_at ]`, `[ end_date, status ]`, `[ end_date, created_at ]`, `[ status, created_at ]`, `[ start_date, end_date, status ]`, `[ start_date, end_date, created_at ]`, `[ start_date, status, created_at ]` or `[ end_date, status, created_at ]`.
+    //   filter_gteq - object - If set, return records where the specified field is greater than or equal the supplied value. Valid fields are `created_at`. Valid field combinations are `[ start_date ]`, `[ end_date ]`, `[ status ]`, `[ created_at ]`, `[ start_date, end_date ]`, `[ start_date, status ]`, `[ start_date, created_at ]`, `[ end_date, status ]`, `[ end_date, created_at ]`, `[ status, created_at ]`, `[ start_date, end_date, status ]`, `[ start_date, end_date, created_at ]`, `[ start_date, status, created_at ]` or `[ end_date, status, created_at ]`.
+    //   filter_prefix - object - If set, return records where the specified field is prefixed by the supplied value. Valid fields are `status`. Valid field combinations are `[ start_date ]`, `[ end_date ]`, `[ status ]`, `[ created_at ]`, `[ start_date, end_date ]`, `[ start_date, status ]`, `[ start_date, created_at ]`, `[ end_date, status ]`, `[ end_date, created_at ]`, `[ status, created_at ]`, `[ start_date, end_date, status ]`, `[ start_date, end_date, created_at ]`, `[ start_date, status, created_at ]` or `[ end_date, status, created_at ]`.
+    //   filter_lt - object - If set, return records where the specified field is less than the supplied value. Valid fields are `created_at`. Valid field combinations are `[ start_date ]`, `[ end_date ]`, `[ status ]`, `[ created_at ]`, `[ start_date, end_date ]`, `[ start_date, status ]`, `[ start_date, created_at ]`, `[ end_date, status ]`, `[ end_date, created_at ]`, `[ status, created_at ]`, `[ start_date, end_date, status ]`, `[ start_date, end_date, created_at ]`, `[ start_date, status, created_at ]` or `[ end_date, status, created_at ]`.
+    //   filter_lteq - object - If set, return records where the specified field is less than or equal the supplied value. Valid fields are `created_at`. Valid field combinations are `[ start_date ]`, `[ end_date ]`, `[ status ]`, `[ created_at ]`, `[ start_date, end_date ]`, `[ start_date, status ]`, `[ start_date, created_at ]`, `[ end_date, status ]`, `[ end_date, created_at ]`, `[ status, created_at ]`, `[ start_date, end_date, status ]`, `[ start_date, end_date, created_at ]`, `[ start_date, status, created_at ]` or `[ end_date, status, created_at ]`.
     public static function all($params = [], $options = [])
     {
         if (@$params['cursor'] && !is_string(@$params['cursor'])) {

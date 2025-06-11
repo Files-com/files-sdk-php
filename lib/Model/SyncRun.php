@@ -115,7 +115,7 @@ class SyncRun
     {
         return @$this->attributes['successful_files'];
     }
-    // float # Total runtime in seconds
+    // double # Total runtime in seconds
     public function getRuntime()
     {
         return @$this->attributes['runtime'];

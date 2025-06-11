@@ -165,6 +165,16 @@ class As2Partner
     {
         return $this->attributes['hex_public_certificate_serial'] = $value;
     }
+    // string # Public certificate used for message security.
+    public function getPublicCertificate()
+    {
+        return @$this->attributes['public_certificate'];
+    }
+
+    public function setPublicCertificate($value)
+    {
+        return $this->attributes['public_certificate'] = $value;
+    }
     // string # MD5 hash of public certificate used for message security.
     public function getPublicCertificateMd5()
     {
@@ -234,16 +244,6 @@ class As2Partner
     public function setHttpAuthPassword($value)
     {
         return $this->attributes['http_auth_password'] = $value;
-    }
-    // string # Public certificate for AS2 Partner.  Note: This is the certificate for AS2 message security, not a certificate used for HTTPS authentication.
-    public function getPublicCertificate()
-    {
-        return @$this->attributes['public_certificate'];
-    }
-
-    public function setPublicCertificate($value)
-    {
-        return $this->attributes['public_certificate'] = $value;
     }
 
     // Parameters:

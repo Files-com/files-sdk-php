@@ -215,7 +215,7 @@ class Sync
     {
         return $this->attributes['trigger_file'] = $value;
     }
-    // array(array) # Array of glob patterns to include
+    // array(string) # Array of glob patterns to include
     public function getIncludePatterns()
     {
         return @$this->attributes['include_patterns'];
@@ -225,7 +225,7 @@ class Sync
     {
         return $this->attributes['include_patterns'] = $value;
     }
-    // array(array) # Array of glob patterns to exclude
+    // array(string) # Array of glob patterns to exclude
     public function getExcludePatterns()
     {
         return @$this->attributes['exclude_patterns'];

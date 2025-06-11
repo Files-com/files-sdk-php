@@ -115,6 +115,16 @@ class As2Station
     {
         return $this->attributes['public_certificate_md5'] = $value;
     }
+    // string # Public certificate used for message security.
+    public function getPublicCertificate()
+    {
+        return @$this->attributes['public_certificate'];
+    }
+
+    public function setPublicCertificate($value)
+    {
+        return $this->attributes['public_certificate'] = $value;
+    }
     // string # MD5 hash of private key used for message security.
     public function getPrivateKeyMd5()
     {
@@ -184,16 +194,6 @@ class As2Station
     public function setPrivateKeyPasswordMd5($value)
     {
         return $this->attributes['private_key_password_md5'] = $value;
-    }
-    // string
-    public function getPublicCertificate()
-    {
-        return @$this->attributes['public_certificate'];
-    }
-
-    public function setPublicCertificate($value)
-    {
-        return $this->attributes['public_certificate'] = $value;
     }
     // string
     public function getPrivateKey()

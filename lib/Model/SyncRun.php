@@ -85,7 +85,7 @@ class SyncRun
     {
         return @$this->attributes['body'];
     }
-    // array(array) # Array of errors encountered during the run
+    // array(string) # Array of errors encountered during the run
     public function getEventErrors()
     {
         return @$this->attributes['event_errors'];

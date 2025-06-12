@@ -60,17 +60,17 @@ class PublicHostingRequestLog
     {
         return @$this->attributes['timestamp'];
     }
-    // string # IP Address of Public Hosting Client
+    // string # IP Address of Public Hosting Client.
     public function getRemoteIp()
     {
         return @$this->attributes['remote_ip'];
     }
-    // string # IP Address of Public Hosting Server
+    // string # IP Address of Public Hosting Server.
     public function getServerIp()
     {
         return @$this->attributes['server_ip'];
     }
-    // string # HTTP Request Hostname
+    // string # HTTP Request Hostname.
     public function getHostname()
     {
         return @$this->attributes['hostname'];
@@ -80,7 +80,7 @@ class PublicHostingRequestLog
     {
         return @$this->attributes['path'];
     }
-    // int64 # HTTP Response Code
+    // int64 # HTTP Response Code.
     public function getResponseCode()
     {
         return @$this->attributes['responseCode'];
@@ -90,15 +90,25 @@ class PublicHostingRequestLog
     {
         return @$this->attributes['success'];
     }
-    // int64 # Duration (in milliseconds)
+    // int64 # Duration (in milliseconds).
     public function getDurationMs()
     {
         return @$this->attributes['duration_ms'];
     }
-    // date-time # Start Time of Action
+    // date-time # Start Time of Action.
     public function getCreatedAt()
     {
         return @$this->attributes['created_at'];
+    }
+    // int64 # The number of bytes transferred for file downloads.
+    public function getBytesTransferred()
+    {
+        return @$this->attributes['bytes_transferred'];
+    }
+    // string # Method of the HTTP call.
+    public function getHttpMethod()
+    {
+        return @$this->attributes['http_method'];
     }
 
     // Parameters:

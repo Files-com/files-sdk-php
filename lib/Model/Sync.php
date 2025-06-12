@@ -185,16 +185,6 @@ class Sync
     {
         return $this->attributes['disabled'] = $value;
     }
-    // string # If trigger is `daily`, this specifies how often to run this sync.  One of: `day`, `week`, `week_end`, `month`, `month_end`, `quarter`, `quarter_end`, `year`, `year_end`
-    public function getInterval()
-    {
-        return @$this->attributes['interval'];
-    }
-
-    public function setInterval($value)
-    {
-        return $this->attributes['interval'] = $value;
-    }
     // string # Trigger type: daily, custom_schedule, or manual
     public function getTrigger()
     {
@@ -255,6 +245,16 @@ class Sync
     {
         return $this->attributes['sync_interval_minutes'] = $value;
     }
+    // string # If trigger is `daily`, this specifies how often to run this sync.  One of: `day`, `week`, `week_end`, `month`, `month_end`, `quarter`, `quarter_end`, `year`, `year_end`
+    public function getInterval()
+    {
+        return @$this->attributes['interval'];
+    }
+
+    public function setInterval($value)
+    {
+        return $this->attributes['interval'] = $value;
+    }
     // int64 # If trigger type is `daily`, this specifies a day number to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
     public function getRecurringDay()
     {
@@ -307,7 +307,7 @@ class Sync
     //   keep_after_copy - boolean - Keep files after copying?
     //   delete_empty_folders - boolean - Delete empty folders after sync?
     //   disabled - boolean - Is this sync disabled?
-    //   interval - int64 - Interval in minutes for sync (if scheduled)
+    //   interval - string - If trigger is `daily`, this specifies how often to run this sync.  One of: `day`, `week`, `week_end`, `month`, `month_end`, `quarter`, `quarter_end`, `year`, `year_end`
     //   trigger - string - Trigger type: daily, custom_schedule, or manual
     //   trigger_file - string - Some MFT services request an empty file (known as a trigger file) to signal the sync is complete and they can begin further processing. If trigger_file is set, a zero-byte file will be sent at the end of the sync.
     //   recurring_day - int64 - If trigger type is `daily`, this specifies a day number to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
@@ -356,8 +356,8 @@ class Sync
             throw new \Files\Exception\InvalidParameterException('$dest_remote_server_id must be of type int; received ' . gettype(@$params['dest_remote_server_id']));
         }
 
-        if (@$params['interval'] && !is_int(@$params['interval'])) {
-            throw new \Files\Exception\InvalidParameterException('$interval must be of type int; received ' . gettype(@$params['interval']));
+        if (@$params['interval'] && !is_string(@$params['interval'])) {
+            throw new \Files\Exception\InvalidParameterException('$interval must be of type string; received ' . gettype(@$params['interval']));
         }
 
         if (@$params['trigger'] && !is_string(@$params['trigger'])) {
@@ -492,7 +492,7 @@ class Sync
     //   keep_after_copy - boolean - Keep files after copying?
     //   delete_empty_folders - boolean - Delete empty folders after sync?
     //   disabled - boolean - Is this sync disabled?
-    //   interval - int64 - Interval in minutes for sync (if scheduled)
+    //   interval - string - If trigger is `daily`, this specifies how often to run this sync.  One of: `day`, `week`, `week_end`, `month`, `month_end`, `quarter`, `quarter_end`, `year`, `year_end`
     //   trigger - string - Trigger type: daily, custom_schedule, or manual
     //   trigger_file - string - Some MFT services request an empty file (known as a trigger file) to signal the sync is complete and they can begin further processing. If trigger_file is set, a zero-byte file will be sent at the end of the sync.
     //   recurring_day - int64 - If trigger type is `daily`, this specifies a day number to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
@@ -525,8 +525,8 @@ class Sync
             throw new \Files\Exception\InvalidParameterException('$dest_remote_server_id must be of type int; received ' . gettype(@$params['dest_remote_server_id']));
         }
 
-        if (@$params['interval'] && !is_int(@$params['interval'])) {
-            throw new \Files\Exception\InvalidParameterException('$interval must be of type int; received ' . gettype(@$params['interval']));
+        if (@$params['interval'] && !is_string(@$params['interval'])) {
+            throw new \Files\Exception\InvalidParameterException('$interval must be of type string; received ' . gettype(@$params['interval']));
         }
 
         if (@$params['trigger'] && !is_string(@$params['trigger'])) {

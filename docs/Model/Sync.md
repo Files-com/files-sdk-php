@@ -158,6 +158,21 @@ $sync->createMigrateTo
 
 ---
 
+## Manually Run Sync
+
+```
+$sync = \Files\Model\Sync::find($id);
+
+$sync->manual_run();
+```
+
+### Parameters
+
+* `id` (int64): Required - Sync ID.
+
+
+---
+
 ## Update Sync
 
 ```

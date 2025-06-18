@@ -120,15 +120,10 @@ class SyncRun
     {
         return @$this->attributes['runtime'];
     }
-    // string # S3 path to the main log file
-    public function getS3BodyPath()
+    // string # Link to external log file.
+    public function getLogUrl()
     {
-        return @$this->attributes['s3_body_path'];
-    }
-    // string # S3 path to the internal log file
-    public function getS3InternalBodyPath()
-    {
-        return @$this->attributes['s3_internal_body_path'];
+        return @$this->attributes['log_url'];
     }
     // date-time # When this run was completed
     public function getCompletedAt()

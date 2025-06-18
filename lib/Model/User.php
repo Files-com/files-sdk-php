@@ -710,16 +710,6 @@ class User
     {
         return $this->attributes['password_expire_at'] = $value;
     }
-    // boolean # Does this user have any associations that can be reassigned on delete?
-    public function getHasReassignableAssociations()
-    {
-        return @$this->attributes['has_reassignable_associations'];
-    }
-
-    public function setHasReassignableAssociations($value)
-    {
-        return $this->attributes['has_reassignable_associations'] = $value;
-    }
     // file # An image file for your user avatar.
     public function getAvatarFile()
     {

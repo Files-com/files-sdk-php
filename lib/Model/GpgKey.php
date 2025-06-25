@@ -125,6 +125,46 @@ class GpgKey
     {
         return $this->attributes['private_key_password'] = $value;
     }
+    // string # Expiration date of the key. Used for the generation of the key. Will be ignored if `generate_keypair` is false.
+    public function getGenerateExpiresAt()
+    {
+        return @$this->attributes['generate_expires_at'];
+    }
+
+    public function setGenerateExpiresAt($value)
+    {
+        return $this->attributes['generate_expires_at'] = $value;
+    }
+    // boolean # If true, generate a new GPG key pair. Can not be used with `public_key`/`private_key`
+    public function getGenerateKeypair()
+    {
+        return @$this->attributes['generate_keypair'];
+    }
+
+    public function setGenerateKeypair($value)
+    {
+        return $this->attributes['generate_keypair'] = $value;
+    }
+    // string # Full name of the key owner. Used for the generation of the key. Will be ignored if `generate_keypair` is false.
+    public function getGenerateFullName()
+    {
+        return @$this->attributes['generate_full_name'];
+    }
+
+    public function setGenerateFullName($value)
+    {
+        return $this->attributes['generate_full_name'] = $value;
+    }
+    // string # Email address of the key owner. Used for the generation of the key. Will be ignored if `generate_keypair` is false.
+    public function getGenerateEmail()
+    {
+        return @$this->attributes['generate_email'];
+    }
+
+    public function setGenerateEmail($value)
+    {
+        return $this->attributes['generate_email'] = $value;
+    }
 
     // Parameters:
     //   public_key - string - Your GPG public key
@@ -274,6 +314,10 @@ class GpgKey
     //   private_key - string - Your GPG private key.
     //   private_key_password - string - Your GPG private key password. Only required for password protected keys.
     //   name (required) - string - Your GPG key name.
+    //   generate_expires_at - string - Expiration date of the key. Used for the generation of the key. Will be ignored if `generate_keypair` is false.
+    //   generate_keypair - boolean - If true, generate a new GPG key pair. Can not be used with `public_key`/`private_key`
+    //   generate_full_name - string - Full name of the key owner. Used for the generation of the key. Will be ignored if `generate_keypair` is false.
+    //   generate_email - string - Email address of the key owner. Used for the generation of the key. Will be ignored if `generate_keypair` is false.
     public static function create($params = [], $options = [])
     {
         if (!@$params['name']) {
@@ -298,6 +342,18 @@ class GpgKey
 
         if (@$params['name'] && !is_string(@$params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
+        }
+
+        if (@$params['generate_expires_at'] && !is_string(@$params['generate_expires_at'])) {
+            throw new \Files\Exception\InvalidParameterException('$generate_expires_at must be of type string; received ' . gettype(@$params['generate_expires_at']));
+        }
+
+        if (@$params['generate_full_name'] && !is_string(@$params['generate_full_name'])) {
+            throw new \Files\Exception\InvalidParameterException('$generate_full_name must be of type string; received ' . gettype(@$params['generate_full_name']));
+        }
+
+        if (@$params['generate_email'] && !is_string(@$params['generate_email'])) {
+            throw new \Files\Exception\InvalidParameterException('$generate_email must be of type string; received ' . gettype(@$params['generate_email']));
         }
 
         $response = Api::sendRequest('/gpg_keys', 'POST', $params, $options);

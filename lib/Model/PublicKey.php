@@ -100,6 +100,16 @@ class PublicKey
     {
         return $this->attributes['fingerprint_sha256'] = $value;
     }
+    // string # Can be invalid, not_generated, generating, complete
+    public function getStatus()
+    {
+        return @$this->attributes['status'];
+    }
+
+    public function setStatus($value)
+    {
+        return $this->attributes['status'] = $value;
+    }
     // date-time # Key's most recent login time via SFTP
     public function getLastLoginAt()
     {
@@ -109,6 +119,26 @@ class PublicKey
     public function setLastLoginAt($value)
     {
         return $this->attributes['last_login_at'] = $value;
+    }
+    // string # Private key generated for the user.
+    public function getPrivateKey()
+    {
+        return @$this->attributes['private_key'];
+    }
+
+    public function setPrivateKey($value)
+    {
+        return $this->attributes['private_key'] = $value;
+    }
+    // string # Public key generated for the user.
+    public function getPublicKey()
+    {
+        return @$this->attributes['public_key'];
+    }
+
+    public function setPublicKey($value)
+    {
+        return $this->attributes['public_key'] = $value;
     }
     // string # Username of the user this public key is associated with
     public function getUsername()
@@ -130,15 +160,45 @@ class PublicKey
     {
         return $this->attributes['user_id'] = $value;
     }
-    // string # Actual contents of SSH key.
-    public function getPublicKey()
+    // boolean # If true, generate a new SSH key pair. Can not be used with `public_key`
+    public function getGenerateKeypair()
     {
-        return @$this->attributes['public_key'];
+        return @$this->attributes['generate_keypair'];
     }
 
-    public function setPublicKey($value)
+    public function setGenerateKeypair($value)
     {
-        return $this->attributes['public_key'] = $value;
+        return $this->attributes['generate_keypair'] = $value;
+    }
+    // string # Password for the private key. Used for the generation of the key. Will be ignored if `generate_keypair` is false.
+    public function getGeneratePrivateKeyPassword()
+    {
+        return @$this->attributes['generate_private_key_password'];
+    }
+
+    public function setGeneratePrivateKeyPassword($value)
+    {
+        return $this->attributes['generate_private_key_password'] = $value;
+    }
+    // string # Type of key to generate.  One of rsa, dsa, ecdsa, ed25519. Used for the generation of the key. Will be ignored if `generate_keypair` is false.
+    public function getGenerateAlgorithm()
+    {
+        return @$this->attributes['generate_algorithm'];
+    }
+
+    public function setGenerateAlgorithm($value)
+    {
+        return $this->attributes['generate_algorithm'] = $value;
+    }
+    // int64 # Length of key to generate. If algorithm is ecdsa, this is the signature size. Used for the generation of the key. Will be ignored if `generate_keypair` is false.
+    public function getGenerateLength()
+    {
+        return @$this->attributes['generate_length'];
+    }
+
+    public function setGenerateLength($value)
+    {
+        return $this->attributes['generate_length'] = $value;
     }
 
     // Parameters:
@@ -283,15 +343,15 @@ class PublicKey
     // Parameters:
     //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
     //   title (required) - string - Internal reference for key.
-    //   public_key (required) - string - Actual contents of SSH key.
+    //   public_key - string - Actual contents of SSH key.
+    //   generate_keypair - boolean - If true, generate a new SSH key pair. Can not be used with `public_key`
+    //   generate_private_key_password - string - Password for the private key. Used for the generation of the key. Will be ignored if `generate_keypair` is false.
+    //   generate_algorithm - string - Type of key to generate.  One of rsa, dsa, ecdsa, ed25519. Used for the generation of the key. Will be ignored if `generate_keypair` is false.
+    //   generate_length - int64 - Length of key to generate. If algorithm is ecdsa, this is the signature size. Used for the generation of the key. Will be ignored if `generate_keypair` is false.
     public static function create($params = [], $options = [])
     {
         if (!@$params['title']) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: title');
-        }
-
-        if (!@$params['public_key']) {
-            throw new \Files\Exception\MissingParameterException('Parameter missing: public_key');
         }
 
         if (@$params['user_id'] && !is_int(@$params['user_id'])) {
@@ -304,6 +364,18 @@ class PublicKey
 
         if (@$params['public_key'] && !is_string(@$params['public_key'])) {
             throw new \Files\Exception\InvalidParameterException('$public_key must be of type string; received ' . gettype(@$params['public_key']));
+        }
+
+        if (@$params['generate_private_key_password'] && !is_string(@$params['generate_private_key_password'])) {
+            throw new \Files\Exception\InvalidParameterException('$generate_private_key_password must be of type string; received ' . gettype(@$params['generate_private_key_password']));
+        }
+
+        if (@$params['generate_algorithm'] && !is_string(@$params['generate_algorithm'])) {
+            throw new \Files\Exception\InvalidParameterException('$generate_algorithm must be of type string; received ' . gettype(@$params['generate_algorithm']));
+        }
+
+        if (@$params['generate_length'] && !is_int(@$params['generate_length'])) {
+            throw new \Files\Exception\InvalidParameterException('$generate_length must be of type int; received ' . gettype(@$params['generate_length']));
         }
 
         $response = Api::sendRequest('/public_keys', 'POST', $params, $options);

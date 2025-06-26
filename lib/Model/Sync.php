@@ -295,6 +295,16 @@ class Sync
     {
         return $this->attributes['schedule_time_zone'] = $value;
     }
+    // string # If trigger is `custom_schedule`, the Automation will check if there is a formal, observed holiday for the region, and if so, it will not run.
+    public function getHolidayRegion()
+    {
+        return @$this->attributes['holiday_region'];
+    }
+
+    public function setHolidayRegion($value)
+    {
+        return $this->attributes['holiday_region'] = $value;
+    }
 
     // Manually Run Sync
     public function manualRun($params = [])

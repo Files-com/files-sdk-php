@@ -435,6 +435,16 @@ class Automation
     {
         return $this->attributes['webhook_url'] = $value;
     }
+    // string # If trigger is `custom_schedule`, the Automation will check if there is a formal, observed holiday for the region, and if so, it will not run.
+    public function getHolidayRegion()
+    {
+        return @$this->attributes['holiday_region'];
+    }
+
+    public function setHolidayRegion($value)
+    {
+        return $this->attributes['holiday_region'] = $value;
+    }
 
     // Manually Run Automation
     public function manualRun($params = [])

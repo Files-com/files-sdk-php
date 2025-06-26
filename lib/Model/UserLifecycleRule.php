@@ -115,6 +115,16 @@ class UserLifecycleRule
     {
         return $this->attributes['action'] = $value;
     }
+    // string # State of the users to apply the rule to (inactive or disabled)
+    public function getUserState()
+    {
+        return @$this->attributes['user_state'];
+    }
+
+    public function setUserState($value)
+    {
+        return $this->attributes['user_state'] = $value;
+    }
     // int64 # Site ID
     public function getSiteId()
     {
@@ -132,6 +142,7 @@ class UserLifecycleRule
     //   inactivity_days (required) - int64 - Number of days of inactivity before the rule applies
     //   include_site_admins - boolean - Include site admins in the rule
     //   include_folder_admins - boolean - Include folder admins in the rule
+    //   user_state - string - State of the users to apply the rule to (inactive or disabled)
     public function update($params = [])
     {
         if (!is_array($params)) {
@@ -184,6 +195,10 @@ class UserLifecycleRule
 
         if (@$params['inactivity_days'] && !is_int(@$params['inactivity_days'])) {
             throw new \Files\Exception\InvalidParameterException('$inactivity_days must be of type int; received ' . gettype(@$params['inactivity_days']));
+        }
+
+        if (@$params['user_state'] && !is_string(@$params['user_state'])) {
+            throw new \Files\Exception\InvalidParameterException('$user_state must be of type string; received ' . gettype(@$params['user_state']));
         }
 
         $response = Api::sendRequest('/user_lifecycle_rules/' . @$params['id'] . '', 'PATCH', $params, $this->options);
@@ -289,6 +304,7 @@ class UserLifecycleRule
     //   inactivity_days (required) - int64 - Number of days of inactivity before the rule applies
     //   include_site_admins - boolean - Include site admins in the rule
     //   include_folder_admins - boolean - Include folder admins in the rule
+    //   user_state - string - State of the users to apply the rule to (inactive or disabled)
     public static function create($params = [], $options = [])
     {
         if (!@$params['action']) {
@@ -313,6 +329,10 @@ class UserLifecycleRule
 
         if (@$params['inactivity_days'] && !is_int(@$params['inactivity_days'])) {
             throw new \Files\Exception\InvalidParameterException('$inactivity_days must be of type int; received ' . gettype(@$params['inactivity_days']));
+        }
+
+        if (@$params['user_state'] && !is_string(@$params['user_state'])) {
+            throw new \Files\Exception\InvalidParameterException('$user_state must be of type string; received ' . gettype(@$params['user_state']));
         }
 
         $response = Api::sendRequest('/user_lifecycle_rules', 'POST', $params, $options);

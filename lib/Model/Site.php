@@ -290,11 +290,6 @@ class Site
     {
         return @$this->attributes['dav_user_root_enabled'];
     }
-    // int64 # Number of days to keep disabled users before deleting them. If set to 0, disabled users will not be deleted.
-    public function getDaysBeforeDeletingDisabledUsers()
-    {
-        return @$this->attributes['days_before_deleting_disabled_users'];
-    }
     // int64 # Number of days to keep deleted files
     public function getDaysToRetainBackups()
     {
@@ -983,7 +978,6 @@ class Site
     //   allowed_countries - string - Comma separated list of allowed Country codes
     //   allowed_ips - string - List of allowed IP addresses
     //   disallowed_countries - string - Comma separated list of disallowed Country codes
-    //   days_before_deleting_disabled_users - int64 - Number of days to keep disabled users before deleting them. If set to 0, disabled users will not be deleted.
     //   days_to_retain_backups - int64 - Number of days to keep deleted files
     //   max_prior_passwords - int64 - Number of prior passwords to disallow
     //   password_validity_days - int64 - Number of days password is valid
@@ -1187,10 +1181,6 @@ class Site
 
         if (@$params['disallowed_countries'] && !is_string(@$params['disallowed_countries'])) {
             throw new \Files\Exception\InvalidParameterException('$disallowed_countries must be of type string; received ' . gettype(@$params['disallowed_countries']));
-        }
-
-        if (@$params['days_before_deleting_disabled_users'] && !is_int(@$params['days_before_deleting_disabled_users'])) {
-            throw new \Files\Exception\InvalidParameterException('$days_before_deleting_disabled_users must be of type int; received ' . gettype(@$params['days_before_deleting_disabled_users']));
         }
 
         if (@$params['days_to_retain_backups'] && !is_int(@$params['days_to_retain_backups'])) {

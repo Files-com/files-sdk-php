@@ -240,9 +240,6 @@ class RemoteMountBackend
     }
 
     // Parameters:
-    //   canary_file_path (required) - string - Path to the canary file used for health checks.
-    //   remote_server_mount_id (required) - int64 - The mount ID of the Remote Server Mount that this backend is associated with.
-    //   remote_server_id (required) - int64 - The remote server that this backend is associated with.
     //   enabled - boolean - True if this backend is enabled.
     //   fall - int64 - Number of consecutive failures before considering the backend unhealthy.
     //   health_check_enabled - boolean - True if health checks are enabled for this backend.
@@ -253,6 +250,8 @@ class RemoteMountBackend
     //   priority - int64 - Priority of this backend.
     //   remote_path - string - Path on the remote server to treat as the root of this mount.
     //   rise - int64 - Number of consecutive successes before considering the backend healthy.
+    //   canary_file_path - string - Path to the canary file used for health checks.
+    //   remote_server_id - int64 - The remote server that this backend is associated with.
     public function update($params = [])
     {
         if (!is_array($params)) {
@@ -267,44 +266,8 @@ class RemoteMountBackend
             }
         }
 
-        if (!@$params['canary_file_path']) {
-            if (@$this->canary_file_path) {
-                $params['canary_file_path'] = $this->canary_file_path;
-            } else {
-                throw new \Files\Exception\MissingParameterException('Parameter missing: canary_file_path');
-            }
-        }
-
-        if (!@$params['remote_server_mount_id']) {
-            if (@$this->remote_server_mount_id) {
-                $params['remote_server_mount_id'] = $this->remote_server_mount_id;
-            } else {
-                throw new \Files\Exception\MissingParameterException('Parameter missing: remote_server_mount_id');
-            }
-        }
-
-        if (!@$params['remote_server_id']) {
-            if (@$this->remote_server_id) {
-                $params['remote_server_id'] = $this->remote_server_id;
-            } else {
-                throw new \Files\Exception\MissingParameterException('Parameter missing: remote_server_id');
-            }
-        }
-
         if (@$params['id'] && !is_int(@$params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
-        }
-
-        if (@$params['canary_file_path'] && !is_string(@$params['canary_file_path'])) {
-            throw new \Files\Exception\InvalidParameterException('$canary_file_path must be of type string; received ' . gettype(@$params['canary_file_path']));
-        }
-
-        if (@$params['remote_server_mount_id'] && !is_int(@$params['remote_server_mount_id'])) {
-            throw new \Files\Exception\InvalidParameterException('$remote_server_mount_id must be of type int; received ' . gettype(@$params['remote_server_mount_id']));
-        }
-
-        if (@$params['remote_server_id'] && !is_int(@$params['remote_server_id'])) {
-            throw new \Files\Exception\InvalidParameterException('$remote_server_id must be of type int; received ' . gettype(@$params['remote_server_id']));
         }
 
         if (@$params['fall'] && !is_int(@$params['fall'])) {
@@ -329,6 +292,14 @@ class RemoteMountBackend
 
         if (@$params['rise'] && !is_int(@$params['rise'])) {
             throw new \Files\Exception\InvalidParameterException('$rise must be of type int; received ' . gettype(@$params['rise']));
+        }
+
+        if (@$params['canary_file_path'] && !is_string(@$params['canary_file_path'])) {
+            throw new \Files\Exception\InvalidParameterException('$canary_file_path must be of type string; received ' . gettype(@$params['canary_file_path']));
+        }
+
+        if (@$params['remote_server_id'] && !is_int(@$params['remote_server_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$remote_server_id must be of type int; received ' . gettype(@$params['remote_server_id']));
         }
 
         $response = Api::sendRequest('/remote_mount_backends/' . @$params['id'] . '', 'PATCH', $params, $this->options);
@@ -430,9 +401,6 @@ class RemoteMountBackend
     }
 
     // Parameters:
-    //   canary_file_path (required) - string - Path to the canary file used for health checks.
-    //   remote_server_mount_id (required) - int64 - The mount ID of the Remote Server Mount that this backend is associated with.
-    //   remote_server_id (required) - int64 - The remote server that this backend is associated with.
     //   enabled - boolean - True if this backend is enabled.
     //   fall - int64 - Number of consecutive failures before considering the backend unhealthy.
     //   health_check_enabled - boolean - True if health checks are enabled for this backend.
@@ -443,6 +411,9 @@ class RemoteMountBackend
     //   priority - int64 - Priority of this backend.
     //   remote_path - string - Path on the remote server to treat as the root of this mount.
     //   rise - int64 - Number of consecutive successes before considering the backend healthy.
+    //   canary_file_path (required) - string - Path to the canary file used for health checks.
+    //   remote_server_mount_id (required) - int64 - The mount ID of the Remote Server Mount that this backend is associated with.
+    //   remote_server_id (required) - int64 - The remote server that this backend is associated with.
     public static function create($params = [], $options = [])
     {
         if (!@$params['canary_file_path']) {
@@ -455,18 +426,6 @@ class RemoteMountBackend
 
         if (!@$params['remote_server_id']) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: remote_server_id');
-        }
-
-        if (@$params['canary_file_path'] && !is_string(@$params['canary_file_path'])) {
-            throw new \Files\Exception\InvalidParameterException('$canary_file_path must be of type string; received ' . gettype(@$params['canary_file_path']));
-        }
-
-        if (@$params['remote_server_mount_id'] && !is_int(@$params['remote_server_mount_id'])) {
-            throw new \Files\Exception\InvalidParameterException('$remote_server_mount_id must be of type int; received ' . gettype(@$params['remote_server_mount_id']));
-        }
-
-        if (@$params['remote_server_id'] && !is_int(@$params['remote_server_id'])) {
-            throw new \Files\Exception\InvalidParameterException('$remote_server_id must be of type int; received ' . gettype(@$params['remote_server_id']));
         }
 
         if (@$params['fall'] && !is_int(@$params['fall'])) {
@@ -491,6 +450,18 @@ class RemoteMountBackend
 
         if (@$params['rise'] && !is_int(@$params['rise'])) {
             throw new \Files\Exception\InvalidParameterException('$rise must be of type int; received ' . gettype(@$params['rise']));
+        }
+
+        if (@$params['canary_file_path'] && !is_string(@$params['canary_file_path'])) {
+            throw new \Files\Exception\InvalidParameterException('$canary_file_path must be of type string; received ' . gettype(@$params['canary_file_path']));
+        }
+
+        if (@$params['remote_server_mount_id'] && !is_int(@$params['remote_server_mount_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$remote_server_mount_id must be of type int; received ' . gettype(@$params['remote_server_mount_id']));
+        }
+
+        if (@$params['remote_server_id'] && !is_int(@$params['remote_server_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$remote_server_id must be of type int; received ' . gettype(@$params['remote_server_id']));
         }
 
         $response = Api::sendRequest('/remote_mount_backends', 'POST', $params, $options);

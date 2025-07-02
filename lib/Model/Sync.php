@@ -295,7 +295,7 @@ class Sync
     {
         return $this->attributes['schedule_time_zone'] = $value;
     }
-    // string # If trigger is `custom_schedule`, the Automation will check if there is a formal, observed holiday for the region, and if so, it will not run.
+    // string # If trigger is `custom_schedule`, the sync will check if there is a formal, observed holiday for the region, and if so, it will not run.
     public function getHolidayRegion()
     {
         return @$this->attributes['holiday_region'];
@@ -343,6 +343,8 @@ class Sync
     //   interval - string - If trigger is `daily`, this specifies how often to run this sync.  One of: `day`, `week`, `week_end`, `month`, `month_end`, `quarter`, `quarter_end`, `year`, `year_end`
     //   trigger - string - Trigger type: daily, custom_schedule, or manual
     //   trigger_file - string - Some MFT services request an empty file (known as a trigger file) to signal the sync is complete and they can begin further processing. If trigger_file is set, a zero-byte file will be sent at the end of the sync.
+    //   holiday_region - string - If trigger is `custom_schedule`, the sync will check if there is a formal, observed holiday for the region, and if so, it will not run.
+    //   sync_interval_minutes - int64 - Frequency in minutes between syncs. If set, this value must be greater than or equal to the `remote_sync_interval` value for the site's plan. If left blank, the plan's `remote_sync_interval` will be used. This setting is only used if `trigger` is empty.
     //   recurring_day - int64 - If trigger type is `daily`, this specifies a day number to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
     //   schedule_time_zone - string - If trigger is `custom_schedule`, Custom schedule Time Zone for when the sync should be run.
     //   schedule_days_of_week - array(int64) - If trigger is `custom_schedule`, Custom schedule description for when the sync should be run. 0-based days of the week. 0 is Sunday, 1 is Monday, etc.
@@ -399,6 +401,14 @@ class Sync
 
         if (@$params['trigger_file'] && !is_string(@$params['trigger_file'])) {
             throw new \Files\Exception\InvalidParameterException('$trigger_file must be of type string; received ' . gettype(@$params['trigger_file']));
+        }
+
+        if (@$params['holiday_region'] && !is_string(@$params['holiday_region'])) {
+            throw new \Files\Exception\InvalidParameterException('$holiday_region must be of type string; received ' . gettype(@$params['holiday_region']));
+        }
+
+        if (@$params['sync_interval_minutes'] && !is_int(@$params['sync_interval_minutes'])) {
+            throw new \Files\Exception\InvalidParameterException('$sync_interval_minutes must be of type int; received ' . gettype(@$params['sync_interval_minutes']));
         }
 
         if (@$params['recurring_day'] && !is_int(@$params['recurring_day'])) {
@@ -528,6 +538,8 @@ class Sync
     //   interval - string - If trigger is `daily`, this specifies how often to run this sync.  One of: `day`, `week`, `week_end`, `month`, `month_end`, `quarter`, `quarter_end`, `year`, `year_end`
     //   trigger - string - Trigger type: daily, custom_schedule, or manual
     //   trigger_file - string - Some MFT services request an empty file (known as a trigger file) to signal the sync is complete and they can begin further processing. If trigger_file is set, a zero-byte file will be sent at the end of the sync.
+    //   holiday_region - string - If trigger is `custom_schedule`, the sync will check if there is a formal, observed holiday for the region, and if so, it will not run.
+    //   sync_interval_minutes - int64 - Frequency in minutes between syncs. If set, this value must be greater than or equal to the `remote_sync_interval` value for the site's plan. If left blank, the plan's `remote_sync_interval` will be used. This setting is only used if `trigger` is empty.
     //   recurring_day - int64 - If trigger type is `daily`, this specifies a day number to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
     //   schedule_time_zone - string - If trigger is `custom_schedule`, Custom schedule Time Zone for when the sync should be run.
     //   schedule_days_of_week - array(int64) - If trigger is `custom_schedule`, Custom schedule description for when the sync should be run. 0-based days of the week. 0 is Sunday, 1 is Monday, etc.
@@ -568,6 +580,14 @@ class Sync
 
         if (@$params['trigger_file'] && !is_string(@$params['trigger_file'])) {
             throw new \Files\Exception\InvalidParameterException('$trigger_file must be of type string; received ' . gettype(@$params['trigger_file']));
+        }
+
+        if (@$params['holiday_region'] && !is_string(@$params['holiday_region'])) {
+            throw new \Files\Exception\InvalidParameterException('$holiday_region must be of type string; received ' . gettype(@$params['holiday_region']));
+        }
+
+        if (@$params['sync_interval_minutes'] && !is_int(@$params['sync_interval_minutes'])) {
+            throw new \Files\Exception\InvalidParameterException('$sync_interval_minutes must be of type int; received ' . gettype(@$params['sync_interval_minutes']));
         }
 
         if (@$params['recurring_day'] && !is_int(@$params['recurring_day'])) {

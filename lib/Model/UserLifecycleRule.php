@@ -137,9 +137,9 @@ class UserLifecycleRule
     }
 
     // Parameters:
-    //   action (required) - string - Action to take on inactive users (disable or delete)
-    //   authentication_method (required) - string - User authentication method for the rule
-    //   inactivity_days (required) - int64 - Number of days of inactivity before the rule applies
+    //   action - string - Action to take on inactive users (disable or delete)
+    //   authentication_method - string - User authentication method for the rule
+    //   inactivity_days - int64 - Number of days of inactivity before the rule applies
     //   include_site_admins - boolean - Include site admins in the rule
     //   include_folder_admins - boolean - Include folder admins in the rule
     //   user_state - string - State of the users to apply the rule to (inactive or disabled)
@@ -154,30 +154,6 @@ class UserLifecycleRule
                 $params['id'] = $this->id;
             } else {
                 throw new \Files\Exception\MissingParameterException('Parameter missing: id');
-            }
-        }
-
-        if (!@$params['action']) {
-            if (@$this->action) {
-                $params['action'] = $this->action;
-            } else {
-                throw new \Files\Exception\MissingParameterException('Parameter missing: action');
-            }
-        }
-
-        if (!@$params['authentication_method']) {
-            if (@$this->authentication_method) {
-                $params['authentication_method'] = $this->authentication_method;
-            } else {
-                throw new \Files\Exception\MissingParameterException('Parameter missing: authentication_method');
-            }
-        }
-
-        if (!@$params['inactivity_days']) {
-            if (@$this->inactivity_days) {
-                $params['inactivity_days'] = $this->inactivity_days;
-            } else {
-                throw new \Files\Exception\MissingParameterException('Parameter missing: inactivity_days');
             }
         }
 
@@ -299,26 +275,14 @@ class UserLifecycleRule
     }
 
     // Parameters:
-    //   action (required) - string - Action to take on inactive users (disable or delete)
-    //   authentication_method (required) - string - User authentication method for the rule
-    //   inactivity_days (required) - int64 - Number of days of inactivity before the rule applies
+    //   action - string - Action to take on inactive users (disable or delete)
+    //   authentication_method - string - User authentication method for the rule
+    //   inactivity_days - int64 - Number of days of inactivity before the rule applies
     //   include_site_admins - boolean - Include site admins in the rule
     //   include_folder_admins - boolean - Include folder admins in the rule
     //   user_state - string - State of the users to apply the rule to (inactive or disabled)
     public static function create($params = [], $options = [])
     {
-        if (!@$params['action']) {
-            throw new \Files\Exception\MissingParameterException('Parameter missing: action');
-        }
-
-        if (!@$params['authentication_method']) {
-            throw new \Files\Exception\MissingParameterException('Parameter missing: authentication_method');
-        }
-
-        if (!@$params['inactivity_days']) {
-            throw new \Files\Exception\MissingParameterException('Parameter missing: inactivity_days');
-        }
-
         if (@$params['action'] && !is_string(@$params['action'])) {
             throw new \Files\Exception\InvalidParameterException('$action must be of type string; received ' . gettype(@$params['action']));
         }

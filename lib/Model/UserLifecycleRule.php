@@ -125,6 +125,16 @@ class UserLifecycleRule
     {
         return $this->attributes['user_state'] = $value;
     }
+    // string # User Lifecycle Rule name
+    public function getName()
+    {
+        return @$this->attributes['name'];
+    }
+
+    public function setName($value)
+    {
+        return $this->attributes['name'] = $value;
+    }
     // int64 # Site ID
     public function getSiteId()
     {
@@ -143,6 +153,7 @@ class UserLifecycleRule
     //   include_site_admins - boolean - Include site admins in the rule
     //   include_folder_admins - boolean - Include folder admins in the rule
     //   user_state - string - State of the users to apply the rule to (inactive or disabled)
+    //   name - string - User Lifecycle Rule name
     public function update($params = [])
     {
         if (!is_array($params)) {
@@ -175,6 +186,10 @@ class UserLifecycleRule
 
         if (@$params['user_state'] && !is_string(@$params['user_state'])) {
             throw new \Files\Exception\InvalidParameterException('$user_state must be of type string; received ' . gettype(@$params['user_state']));
+        }
+
+        if (@$params['name'] && !is_string(@$params['name'])) {
+            throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
         $response = Api::sendRequest('/user_lifecycle_rules/' . @$params['id'] . '', 'PATCH', $params, $this->options);
@@ -281,6 +296,7 @@ class UserLifecycleRule
     //   include_site_admins - boolean - Include site admins in the rule
     //   include_folder_admins - boolean - Include folder admins in the rule
     //   user_state - string - State of the users to apply the rule to (inactive or disabled)
+    //   name - string - User Lifecycle Rule name
     public static function create($params = [], $options = [])
     {
         if (@$params['action'] && !is_string(@$params['action'])) {
@@ -297,6 +313,10 @@ class UserLifecycleRule
 
         if (@$params['user_state'] && !is_string(@$params['user_state'])) {
             throw new \Files\Exception\InvalidParameterException('$user_state must be of type string; received ' . gettype(@$params['user_state']));
+        }
+
+        if (@$params['name'] && !is_string(@$params['name'])) {
+            throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
         $response = Api::sendRequest('/user_lifecycle_rules', 'POST', $params, $options);

@@ -85,12 +85,32 @@ class BundleAction
     {
         return @$this->attributes['source'];
     }
+    // int64 # Identifier of the associated bundle registration
+    public function getBundleRegistrationId()
+    {
+        return @$this->attributes['bundle_registration_id'];
+    }
+    // string # Name of the registrant who performed the action
+    public function getBundleRegistrationName()
+    {
+        return @$this->attributes['bundle_registration_name'];
+    }
+    // string # Email of the registrant
+    public function getBundleRegistrationEmail()
+    {
+        return @$this->attributes['bundle_registration_email'];
+    }
+    // string # IP address of the registrant
+    public function getBundleRegistrationIp()
+    {
+        return @$this->attributes['bundle_registration_ip'];
+    }
 
     // Parameters:
     //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
     //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
     //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `created_at`.
+    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `created_at` and `bundle_registration_id`.
     //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `created_at`, `bundle_id` or `bundle_registration_id`. Valid field combinations are `[ bundle_id, created_at ]`, `[ bundle_registration_id, created_at ]`, `[ bundle_id, bundle_registration_id ]` or `[ bundle_id, bundle_registration_id, created_at ]`.
     //   filter_gt - object - If set, return records where the specified field is greater than the supplied value. Valid fields are `created_at`.
     //   filter_gteq - object - If set, return records where the specified field is greater than or equal the supplied value. Valid fields are `created_at`.

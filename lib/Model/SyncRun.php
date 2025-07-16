@@ -75,10 +75,15 @@ class SyncRun
     {
         return @$this->attributes['status'];
     }
-    // string # Type of remote server used, if any
-    public function getRemoteServerType()
+    // string # Source remote server type, if any
+    public function getSrcRemoteServerType()
     {
-        return @$this->attributes['remote_server_type'];
+        return @$this->attributes['src_remote_server_type'];
+    }
+    // string # Destination remote server type, if any
+    public function getDestRemoteServerType()
+    {
+        return @$this->attributes['dest_remote_server_type'];
     }
     // string # Log or summary body for this run
     public function getBody()

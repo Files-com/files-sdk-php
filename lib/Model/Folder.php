@@ -430,6 +430,8 @@ class Folder
     //   search_all - boolean - Search entire site?  If set, we will ignore the folder path provided and search the entire site.  This is the same API used by the search bar in the web UI when running 'Search All Files'.  Search results are a best effort, not real time, and not guaranteed to match every file.  This field should only be used for ad-hoc (human) searching, and not as part of an automated process.
     //   with_previews - boolean - Include file previews?
     //   with_priority_color - boolean - Include file priority color information?
+    //   type - string - Type of objects to return.  Can be `folder` or `file`.
+    //   modified_at_datetime - string - If provided, will only return files/folders modified after this time. Can be used only in combination with `type` filter.
     public static function listFor($path, $params = [], $options = [])
     {
         if (!is_array($params)) {
@@ -464,6 +466,14 @@ class Folder
 
         if (@$params['search_custom_metadata_key'] && !is_string(@$params['search_custom_metadata_key'])) {
             throw new \Files\Exception\InvalidParameterException('$search_custom_metadata_key must be of type string; received ' . gettype(@$params['search_custom_metadata_key']));
+        }
+
+        if (@$params['type'] && !is_string(@$params['type'])) {
+            throw new \Files\Exception\InvalidParameterException('$type must be of type string; received ' . gettype(@$params['type']));
+        }
+
+        if (@$params['modified_at_datetime'] && !is_string(@$params['modified_at_datetime'])) {
+            throw new \Files\Exception\InvalidParameterException('$modified_at_datetime must be of type string; received ' . gettype(@$params['modified_at_datetime']));
         }
 
         $response = Api::sendRequest('/folders/' . @$params['path'] . '', 'GET', $params, $options);

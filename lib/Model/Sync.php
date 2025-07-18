@@ -610,11 +610,4 @@ class Sync
 
         return new Sync((array) (@$response->data ?: []), $options);
     }
-
-    public static function createMigrateTo($params = [], $options = [])
-    {
-        $response = Api::sendRequest('/syncs/migrate_to_syncs', 'POST', $options);
-
-        return;
-    }
 }

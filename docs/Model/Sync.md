@@ -154,16 +154,6 @@ $sync->create(, [
 
 ---
 
-## Migrate Legacy Syncs to Syncs
-
-```
-$sync = new \Files\Model\Sync();
-$sync->createMigrateTo
-```
-
-
----
-
 ## Manually Run Sync
 
 ```

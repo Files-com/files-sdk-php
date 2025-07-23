@@ -123,9 +123,9 @@ class ApiTest extends TestCase
         Files::setApiKey('test-key');
         $mock = new MockHandler([
             new Response(404, [], '{
-        "type": "not-found/folder-not-found",
+        "type": "not-found",
         "http-code": 404,
-        "error": "Folder missing not found."
+        "error": "Not Found.  This may be related to your permissions."
       }')
         ]);
         Files::setHandler($mock);
@@ -133,9 +133,9 @@ class ApiTest extends TestCase
         try {
             Folder::listFor('/missing', [ 'sort_by' => [ 'path' => 'desc' ] ]);
             $this->fail('Expected exception was not thrown');
-        } catch (\Files\Exception\NotFound\FolderNotFoundException $error) {
-            $this->assertEquals($error->getError(), 'Folder missing not found.');
-            $this->assertEquals($error->getType(), 'not-found/folder-not-found');
+        } catch (\Files\Exception\NotFoundException $error) {
+            $this->assertEquals($error->getError(), 'Not Found.  This may be related to your permissions.');
+            $this->assertEquals($error->getType(), 'not-found');
             $this->assertEquals($error->getHttpCode(), 404);
         }
     }

@@ -60,6 +60,16 @@ class UserCipherUse
     {
         return @$this->attributes['id'];
     }
+    // int64 # ID of the user who performed this access
+    public function getUserId()
+    {
+        return @$this->attributes['user_id'];
+    }
+    // string # Username of the user who performed this access
+    public function getUsername()
+    {
+        return @$this->attributes['username'];
+    }
     // string # The protocol and cipher employed
     public function getProtocolCipher()
     {
@@ -84,11 +94,6 @@ class UserCipherUse
     public function getUpdatedAt()
     {
         return @$this->attributes['updated_at'];
-    }
-    // int64 # ID of the user who performed this access
-    public function getUserId()
-    {
-        return @$this->attributes['user_id'];
     }
 
     // Parameters:

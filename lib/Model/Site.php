@@ -910,6 +910,11 @@ class Site
     {
         return @$this->attributes['group_admins_can_set_user_password'];
     }
+    // array(string) # List of site settings managed by the parent site
+    public function getManagedSiteSettings()
+    {
+        return @$this->attributes['managed_site_settings'];
+    }
 
     public static function get($params = [], $options = [])
     {

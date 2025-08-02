@@ -95,11 +95,6 @@ class SyncRun
     {
         return @$this->attributes['event_errors'];
     }
-    // int64 # Total bytes synced in this run
-    public function getBytesSynced()
-    {
-        return @$this->attributes['bytes_synced'];
-    }
     // int64 # Number of files compared
     public function getComparedFiles()
     {
@@ -140,6 +135,21 @@ class SyncRun
     {
         return @$this->attributes['notified'];
     }
+    // boolean # Whether this run was a dry run (no actual changes made)
+    public function getDryRun()
+    {
+        return @$this->attributes['dry_run'];
+    }
+    // int64 # Total bytes synced in this run
+    public function getBytesSynced()
+    {
+        return @$this->attributes['bytes_synced'];
+    }
+    // int64 # Estimated bytes count for this run
+    public function getEstimatedBytesCount()
+    {
+        return @$this->attributes['estimated_bytes_count'];
+    }
     // date-time # When this run was created
     public function getCreatedAt()
     {
@@ -155,15 +165,10 @@ class SyncRun
     //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
     //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
     //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `sync_id`, `created_at` or `status`.
-    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `status` and `sync_id`. Valid field combinations are `[ sync_id, status ]`.
-    //   sync_id (required) - int64 - ID of the Sync this run belongs to
+    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `site_id`, `sync_id` or `created_at`.
+    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `status`, `dry_run` or `sync_id`. Valid field combinations are `[ sync_id, status ]`.
     public static function all($params = [], $options = [])
     {
-        if (!@$params['sync_id']) {
-            throw new \Files\Exception\MissingParameterException('Parameter missing: sync_id');
-        }
-
         if (@$params['user_id'] && !is_int(@$params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
@@ -174,10 +179,6 @@ class SyncRun
 
         if (@$params['per_page'] && !is_int(@$params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
-        }
-
-        if (@$params['sync_id'] && !is_int(@$params['sync_id'])) {
-            throw new \Files\Exception\InvalidParameterException('$sync_id must be of type int; received ' . gettype(@$params['sync_id']));
         }
 
         $response = Api::sendRequest('/sync_runs', 'GET', $params, $options);

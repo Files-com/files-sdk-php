@@ -55,6 +55,11 @@ class InvoiceLineItem
     {
         return !!@$this->attributes['id'];
     }
+    // int64 # Invoice Line item Id
+    public function getId()
+    {
+        return @$this->attributes['id'];
+    }
     // double # Invoice line item amount
     public function getAmount()
     {

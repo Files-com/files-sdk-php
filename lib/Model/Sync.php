@@ -305,6 +305,39 @@ class Sync
     {
         return $this->attributes['holiday_region'] = $value;
     }
+    // SyncRun # The latest run of this sync
+    public function getLatestSyncRun()
+    {
+        return @$this->attributes['latest_sync_run'];
+    }
+
+    public function setLatestSyncRun($value)
+    {
+        return $this->attributes['latest_sync_run'] = $value;
+    }
+
+    // Dry Run Sync
+    public function dryRun($params = [])
+    {
+        if (!is_array($params)) {
+            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+        }
+
+        if (!@$params['id']) {
+            if (@$this->id) {
+                $params['id'] = $this->id;
+            } else {
+                throw new \Files\Exception\MissingParameterException('Parameter missing: id');
+            }
+        }
+
+        if (@$params['id'] && !is_int(@$params['id'])) {
+            throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
+        }
+
+        $response = Api::sendRequest('/syncs/' . @$params['id'] . '/dry_run', 'POST', $params, $this->options);
+        return;
+    }
 
     // Manually Run Sync
     public function manualRun($params = [])

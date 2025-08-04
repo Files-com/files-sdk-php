@@ -623,6 +623,7 @@ Exception
 |`PlanNotFoundException`|  `NotFoundException` |
 |`SiteNotFoundException`|  `NotFoundException` |
 |`UserNotFoundException`|  `NotFoundException` |
+|`AgentUnavailableException`|  `ProcessingFailureException` |
 |`AlreadyCompletedException`|  `ProcessingFailureException` |
 |`AutomationCannotBeRunManuallyException`|  `ProcessingFailureException` |
 |`BehaviorNotAllowedOnRemoteServerException`|  `ProcessingFailureException` |
@@ -678,7 +679,6 @@ Exception
 |`TooManyLoginAttemptsException`|  `RateLimitedException` |
 |`TooManyRequestsException`|  `RateLimitedException` |
 |`TooManySharesException`|  `RateLimitedException` |
-|`AgentUnavailableException`|  `ServiceUnavailableException` |
 |`AutomationsUnavailableException`|  `ServiceUnavailableException` |
 |`MigrationInProgressException`|  `ServiceUnavailableException` |
 |`SiteDisabledException`|  `ServiceUnavailableException` |

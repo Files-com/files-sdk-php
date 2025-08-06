@@ -121,24 +121,24 @@ class PublicKey
         return $this->attributes['last_login_at'] = $value;
     }
     // string # Only returned when generating keys. Private key generated for the user.
-    public function getPrivateKey()
+    public function getGeneratedPrivateKey()
     {
-        return @$this->attributes['private_key'];
+        return @$this->attributes['generated_private_key'];
     }
 
-    public function setPrivateKey($value)
+    public function setGeneratedPrivateKey($value)
     {
-        return $this->attributes['private_key'] = $value;
+        return $this->attributes['generated_private_key'] = $value;
     }
     // string # Only returned when generating keys. Public key generated for the user.
-    public function getPublicKey()
+    public function getGeneratedPublicKey()
     {
-        return @$this->attributes['public_key'];
+        return @$this->attributes['generated_public_key'];
     }
 
-    public function setPublicKey($value)
+    public function setGeneratedPublicKey($value)
     {
-        return $this->attributes['public_key'] = $value;
+        return $this->attributes['generated_public_key'] = $value;
     }
     // string # Username of the user this public key is associated with
     public function getUsername()
@@ -159,6 +159,16 @@ class PublicKey
     public function setUserId($value)
     {
         return $this->attributes['user_id'] = $value;
+    }
+    // string # Actual contents of SSH key.
+    public function getPublicKey()
+    {
+        return @$this->attributes['public_key'];
+    }
+
+    public function setPublicKey($value)
+    {
+        return $this->attributes['public_key'] = $value;
     }
     // boolean # If true, generate a new SSH key pair. Can not be used with `public_key`
     public function getGenerateKeypair()

@@ -116,6 +116,36 @@ class GpgKey
         return $this->attributes['private_key_md5'] = $value;
     }
     // string # Your GPG public key
+    public function getGeneratedPublicKey()
+    {
+        return @$this->attributes['generated_public_key'];
+    }
+
+    public function setGeneratedPublicKey($value)
+    {
+        return $this->attributes['generated_public_key'] = $value;
+    }
+    // string # Your GPG private key.
+    public function getGeneratedPrivateKey()
+    {
+        return @$this->attributes['generated_private_key'];
+    }
+
+    public function setGeneratedPrivateKey($value)
+    {
+        return $this->attributes['generated_private_key'] = $value;
+    }
+    // string # Your GPG private key password. Only required for password protected keys.
+    public function getPrivateKeyPasswordMd5()
+    {
+        return @$this->attributes['private_key_password_md5'];
+    }
+
+    public function setPrivateKeyPasswordMd5($value)
+    {
+        return $this->attributes['private_key_password_md5'] = $value;
+    }
+    // string # MD5 hash of your GPG public key
     public function getPublicKey()
     {
         return @$this->attributes['public_key'];
@@ -125,7 +155,7 @@ class GpgKey
     {
         return $this->attributes['public_key'] = $value;
     }
-    // string # Your GPG private key.
+    // string # MD5 hash of your GPG private key.
     public function getPrivateKey()
     {
         return @$this->attributes['private_key'];

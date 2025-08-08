@@ -100,4 +100,24 @@ class InvoiceLineItem
     {
         return @$this->attributes['site'];
     }
+    // int64 # Prepaid bytes purchased for this invoice line item
+    public function getPrepaidBytes()
+    {
+        return @$this->attributes['prepaid_bytes'];
+    }
+    // date-time # When the prepaid bytes expire
+    public function getPrepaidBytesExpireAt()
+    {
+        return @$this->attributes['prepaid_bytes_expire_at'];
+    }
+    // int64 # Total prepaid bytes used for this invoice line item
+    public function getPrepaidBytesUsed()
+    {
+        return @$this->attributes['prepaid_bytes_used'];
+    }
+    // int64 # Available prepaid bytes for this invoice line item
+    public function getPrepaidBytesAvaliable()
+    {
+        return @$this->attributes['prepaid_bytes_avaliable'];
+    }
 }

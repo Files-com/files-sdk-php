@@ -116,8 +116,8 @@ class InvoiceLineItem
         return @$this->attributes['prepaid_bytes_used'];
     }
     // int64 # Available prepaid bytes for this invoice line item
-    public function getPrepaidBytesAvaliable()
+    public function getPrepaidBytesAvailable()
     {
-        return @$this->attributes['prepaid_bytes_avaliable'];
+        return @$this->attributes['prepaid_bytes_available'];
     }
 }

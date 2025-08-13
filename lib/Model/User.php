@@ -810,6 +810,16 @@ class User
     {
         return $this->attributes['announcements_read'] = $value;
     }
+    // boolean # If true when changing authentication_method from `password` to `sso`, remove all two-factor methods. Ignored in all other cases.
+    public function getClear2fa()
+    {
+        return @$this->attributes['clear_2fa'];
+    }
+
+    public function setClear2fa($value)
+    {
+        return $this->attributes['clear_2fa'] = $value;
+    }
 
     // Unlock user who has been locked out due to failed logins
     public function unlock($params = [])
@@ -928,6 +938,7 @@ class User
     //   user_root - string - Root folder for FTP (and optionally SFTP if the appropriate site-wide setting is set).  Note that this is not used for API, Desktop, or Web interface.
     //   user_home - string - Home folder for FTP/SFTP.  Note that this is not used for API, Desktop, or Web interface.
     //   username - string - User's username
+    //   clear_2fa - boolean - If true when changing authentication_method from `password` to `sso`, remove all two-factor methods. Ignored in all other cases.
     public function update($params = [])
     {
         if (!is_array($params)) {

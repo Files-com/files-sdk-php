@@ -139,7 +139,6 @@ $sync->create(, [
   'dest_path' => "example",
   'src_remote_server_id' => 1,
   'dest_remote_server_id' => 1,
-  'two_way' => false,
   'keep_after_copy' => false,
   'delete_empty_folders' => false,
   'disabled' => false,
@@ -164,7 +163,6 @@ $sync->create(, [
 * `dest_path` (string): Absolute destination path
 * `src_remote_server_id` (int64): Remote server ID for the source
 * `dest_remote_server_id` (int64): Remote server ID for the destination
-* `two_way` (boolean): Is this a two-way sync?
 * `keep_after_copy` (boolean): Keep files after copying?
 * `delete_empty_folders` (boolean): Delete empty folders after sync?
 * `disabled` (boolean): Is this sync disabled?
@@ -222,7 +220,6 @@ $sync->update([
   'dest_path' => "example",
   'src_remote_server_id' => 1,
   'dest_remote_server_id' => 1,
-  'two_way' => false,
   'keep_after_copy' => false,
   'delete_empty_folders' => false,
   'disabled' => false,
@@ -247,7 +244,6 @@ $sync->update([
 * `dest_path` (string): Absolute destination path
 * `src_remote_server_id` (int64): Remote server ID for the source
 * `dest_remote_server_id` (int64): Remote server ID for the destination
-* `two_way` (boolean): Is this a two-way sync?
 * `keep_after_copy` (boolean): Keep files after copying?
 * `delete_empty_folders` (boolean): Delete empty folders after sync?
 * `disabled` (boolean): Is this sync disabled?

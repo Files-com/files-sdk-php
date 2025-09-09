@@ -4,6 +4,6 @@ namespace Files\Exception\ProcessingFailure;
 
 use Files\Exception\ProcessingFailureException;
 
-class MetadataNotSupportedOnRemotesErrorException extends ProcessingFailureException
+class MetadataNotSupportedOnRemotesException extends ProcessingFailureException
 {
 }

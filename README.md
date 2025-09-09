@@ -657,7 +657,7 @@ Exception
 |`InvalidPriorityColorException`|  `ProcessingFailureException` |
 |`InvalidRangeException`|  `ProcessingFailureException` |
 |`InvalidSiteException`|  `ProcessingFailureException` |
-|`MetadataNotSupportedOnRemotesErrorException`|  `ProcessingFailureException` |
+|`MetadataNotSupportedOnRemotesException`|  `ProcessingFailureException` |
 |`ModelSaveErrorException`|  `ProcessingFailureException` |
 |`MultipleProcessingErrorsException`|  `ProcessingFailureException` |
 |`PathTooLongException`|  `ProcessingFailureException` |

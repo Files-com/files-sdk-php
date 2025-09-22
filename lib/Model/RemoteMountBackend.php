@@ -95,6 +95,16 @@ class RemoteMountBackend
     {
         return $this->attributes['health_check_enabled'] = $value;
     }
+    // array(object) # Array of recent health check results.
+    public function getHealthCheckResults()
+    {
+        return @$this->attributes['health_check_results'];
+    }
+
+    public function setHealthCheckResults($value)
+    {
+        return $this->attributes['health_check_results'] = $value;
+    }
     // string # Type of health check to perform.
     public function getHealthCheckType()
     {

@@ -55,7 +55,7 @@ class ChildSiteManagementPolicy
     {
         return !!@$this->attributes['id'];
     }
-    // int64 # ChildSiteManagementPolicy ID
+    // int64 # Policy ID.
     public function getId()
     {
         return @$this->attributes['id'];
@@ -65,37 +65,57 @@ class ChildSiteManagementPolicy
     {
         return $this->attributes['id'] = $value;
     }
-    // int64 # ID of the Site managing the policy
-    public function getSiteId()
+    // string # Type of policy.  Valid values: `settings`.
+    public function getPolicyType()
     {
-        return @$this->attributes['site_id'];
+        return @$this->attributes['policy_type'];
     }
 
-    public function setSiteId($value)
+    public function setPolicyType($value)
     {
-        return $this->attributes['site_id'] = $value;
+        return $this->attributes['policy_type'] = $value;
     }
-    // string # The name of the setting that is managed by the policy
-    public function getSiteSettingName()
+    // string # Name for this policy.
+    public function getName()
     {
-        return @$this->attributes['site_setting_name'];
-    }
-
-    public function setSiteSettingName($value)
-    {
-        return $this->attributes['site_setting_name'] = $value;
-    }
-    // string # The value for the setting that will be enforced for all child sites that are not exempt
-    public function getManagedValue()
-    {
-        return @$this->attributes['managed_value'];
+        return @$this->attributes['name'];
     }
 
-    public function setManagedValue($value)
+    public function setName($value)
     {
-        return $this->attributes['managed_value'] = $value;
+        return $this->attributes['name'] = $value;
     }
-    // array(int64) # The list of child site IDs that are exempt from this policy
+    // string # Description for this policy.
+    public function getDescription()
+    {
+        return @$this->attributes['description'];
+    }
+
+    public function setDescription($value)
+    {
+        return $this->attributes['description'] = $value;
+    }
+    // object # Policy configuration data. Attributes differ by policy type. For more information, refer to the Value Hash section of the developer documentation.
+    public function getValue()
+    {
+        return @$this->attributes['value'];
+    }
+
+    public function setValue($value)
+    {
+        return $this->attributes['value'] = $value;
+    }
+    // array(int64) # IDs of child sites that this policy has been applied to. This field is read-only.
+    public function getAppliedChildSiteIds()
+    {
+        return @$this->attributes['applied_child_site_ids'];
+    }
+
+    public function setAppliedChildSiteIds($value)
+    {
+        return $this->attributes['applied_child_site_ids'] = $value;
+    }
+    // array(int64) # IDs of child sites that this policy has been exempted from. If `skip_child_site_ids` is empty, the policy will be applied to all child sites. To apply a policy to a child site that has been exempted, remove it from `skip_child_site_ids` or set it to an empty array (`[]`).
     public function getSkipChildSiteIds()
     {
         return @$this->attributes['skip_child_site_ids'];
@@ -105,11 +125,23 @@ class ChildSiteManagementPolicy
     {
         return $this->attributes['skip_child_site_ids'] = $value;
     }
+    // date-time # When this policy was created.
+    public function getCreatedAt()
+    {
+        return @$this->attributes['created_at'];
+    }
+    // date-time # When this policy was last updated.
+    public function getUpdatedAt()
+    {
+        return @$this->attributes['updated_at'];
+    }
 
     // Parameters:
-    //   site_setting_name (required) - string - The name of the setting that is managed by the policy
-    //   managed_value (required) - string - The value for the setting that will be enforced for all child sites that are not exempt
-    //   skip_child_site_ids - array(int64) - The list of child site IDs that are exempt from this policy
+    //   value - string
+    //   skip_child_site_ids - array(int64) - IDs of child sites that this policy has been exempted from. If `skip_child_site_ids` is empty, the policy will be applied to all child sites. To apply a policy to a child site that has been exempted, remove it from `skip_child_site_ids` or set it to an empty array (`[]`).
+    //   policy_type - string - Type of policy.  Valid values: `settings`.
+    //   name - string - Name for this policy.
+    //   description - string - Description for this policy.
     public function update($params = [])
     {
         if (!is_array($params)) {
@@ -124,36 +156,28 @@ class ChildSiteManagementPolicy
             }
         }
 
-        if (!@$params['site_setting_name']) {
-            if (@$this->site_setting_name) {
-                $params['site_setting_name'] = $this->site_setting_name;
-            } else {
-                throw new \Files\Exception\MissingParameterException('Parameter missing: site_setting_name');
-            }
-        }
-
-        if (!@$params['managed_value']) {
-            if (@$this->managed_value) {
-                $params['managed_value'] = $this->managed_value;
-            } else {
-                throw new \Files\Exception\MissingParameterException('Parameter missing: managed_value');
-            }
-        }
-
         if (@$params['id'] && !is_int(@$params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (@$params['site_setting_name'] && !is_string(@$params['site_setting_name'])) {
-            throw new \Files\Exception\InvalidParameterException('$site_setting_name must be of type string; received ' . gettype(@$params['site_setting_name']));
-        }
-
-        if (@$params['managed_value'] && !is_string(@$params['managed_value'])) {
-            throw new \Files\Exception\InvalidParameterException('$managed_value must be of type string; received ' . gettype(@$params['managed_value']));
+        if (@$params['value'] && !is_string(@$params['value'])) {
+            throw new \Files\Exception\InvalidParameterException('$value must be of type string; received ' . gettype(@$params['value']));
         }
 
         if (@$params['skip_child_site_ids'] && !is_array(@$params['skip_child_site_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$skip_child_site_ids must be of type array; received ' . gettype(@$params['skip_child_site_ids']));
+        }
+
+        if (@$params['policy_type'] && !is_string(@$params['policy_type'])) {
+            throw new \Files\Exception\InvalidParameterException('$policy_type must be of type string; received ' . gettype(@$params['policy_type']));
+        }
+
+        if (@$params['name'] && !is_string(@$params['name'])) {
+            throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
+        }
+
+        if (@$params['description'] && !is_string(@$params['description'])) {
+            throw new \Files\Exception\InvalidParameterException('$description must be of type string; received ' . gettype(@$params['description']));
         }
 
         $response = Api::sendRequest('/child_site_management_policies/' . @$params['id'] . '', 'PATCH', $params, $this->options);
@@ -254,29 +278,35 @@ class ChildSiteManagementPolicy
     }
 
     // Parameters:
-    //   site_setting_name (required) - string - The name of the setting that is managed by the policy
-    //   managed_value (required) - string - The value for the setting that will be enforced for all child sites that are not exempt
-    //   skip_child_site_ids - array(int64) - The list of child site IDs that are exempt from this policy
+    //   value - string
+    //   skip_child_site_ids - array(int64) - IDs of child sites that this policy has been exempted from. If `skip_child_site_ids` is empty, the policy will be applied to all child sites. To apply a policy to a child site that has been exempted, remove it from `skip_child_site_ids` or set it to an empty array (`[]`).
+    //   policy_type (required) - string - Type of policy.  Valid values: `settings`.
+    //   name - string - Name for this policy.
+    //   description - string - Description for this policy.
     public static function create($params = [], $options = [])
     {
-        if (!@$params['site_setting_name']) {
-            throw new \Files\Exception\MissingParameterException('Parameter missing: site_setting_name');
+        if (!@$params['policy_type']) {
+            throw new \Files\Exception\MissingParameterException('Parameter missing: policy_type');
         }
 
-        if (!@$params['managed_value']) {
-            throw new \Files\Exception\MissingParameterException('Parameter missing: managed_value');
-        }
-
-        if (@$params['site_setting_name'] && !is_string(@$params['site_setting_name'])) {
-            throw new \Files\Exception\InvalidParameterException('$site_setting_name must be of type string; received ' . gettype(@$params['site_setting_name']));
-        }
-
-        if (@$params['managed_value'] && !is_string(@$params['managed_value'])) {
-            throw new \Files\Exception\InvalidParameterException('$managed_value must be of type string; received ' . gettype(@$params['managed_value']));
+        if (@$params['value'] && !is_string(@$params['value'])) {
+            throw new \Files\Exception\InvalidParameterException('$value must be of type string; received ' . gettype(@$params['value']));
         }
 
         if (@$params['skip_child_site_ids'] && !is_array(@$params['skip_child_site_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$skip_child_site_ids must be of type array; received ' . gettype(@$params['skip_child_site_ids']));
+        }
+
+        if (@$params['policy_type'] && !is_string(@$params['policy_type'])) {
+            throw new \Files\Exception\InvalidParameterException('$policy_type must be of type string; received ' . gettype(@$params['policy_type']));
+        }
+
+        if (@$params['name'] && !is_string(@$params['name'])) {
+            throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
+        }
+
+        if (@$params['description'] && !is_string(@$params['description'])) {
+            throw new \Files\Exception\InvalidParameterException('$description must be of type string; received ' . gettype(@$params['description']));
         }
 
         $response = Api::sendRequest('/child_site_management_policies', 'POST', $params, $options);

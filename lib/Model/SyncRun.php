@@ -130,11 +130,6 @@ class SyncRun
     {
         return @$this->attributes['completed_at'];
     }
-    // boolean # Whether notifications were sent for this run
-    public function getNotified()
-    {
-        return @$this->attributes['notified'];
-    }
     // boolean # Whether this run was a dry run (no actual changes made)
     public function getDryRun()
     {

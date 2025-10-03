@@ -135,6 +135,11 @@ class Site
     {
         return @$this->attributes['always_mkdir_parents'];
     }
+    // int64 # Number of days to retain AS2 messages (incoming and outgoing).
+    public function getAs2MessageRetentionDays()
+    {
+        return @$this->attributes['as2_message_retention_days'];
+    }
     // boolean # If false, rename conflicting files instead of asking for overwrite confirmation.  Only applies to web interface.
     public function getAskAboutOverwrites()
     {
@@ -974,6 +979,7 @@ class Site
     //   calculate_file_checksums_sha256 - boolean - Calculate SHA256 checksums for files?
     //   legacy_checksums_mode - boolean - Use legacy checksums mode?
     //   migrate_remote_server_sync_to_sync - boolean - If true, we will migrate all remote server syncs to the new Sync model.
+    //   as2_message_retention_days - int64 - Number of days to retain AS2 messages (incoming and outgoing).
     //   session_expiry - double - Session expiry in hours
     //   ssl_required - boolean - Is SSL required?  Disabling this is insecure.
     //   sftp_insecure_ciphers - boolean - If true, we will allow weak and known insecure ciphers to be used for SFTP connections.  Enabling this setting severely weakens the security of your site and it is not recommend, except as a last resort for compatibility.
@@ -1168,6 +1174,10 @@ class Site
 
         if (@$params['additional_text_file_types'] && !is_array(@$params['additional_text_file_types'])) {
             throw new \Files\Exception\InvalidParameterException('$additional_text_file_types must be of type array; received ' . gettype(@$params['additional_text_file_types']));
+        }
+
+        if (@$params['as2_message_retention_days'] && !is_int(@$params['as2_message_retention_days'])) {
+            throw new \Files\Exception\InvalidParameterException('$as2_message_retention_days must be of type int; received ' . gettype(@$params['as2_message_retention_days']));
         }
 
         if (@$params['user_lockout_tries'] && !is_int(@$params['user_lockout_tries'])) {

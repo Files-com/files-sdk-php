@@ -759,6 +759,16 @@ class File
     {
         return $this->attributes['with_rename'] = $value;
     }
+    // boolean # If true, and the path refers to a destination not stored on Files.com (such as a remote server mount), the upload will be uploaded first to Files.com before being sent to the remote server mount. This can allow clients to upload using parallel parts to a remote server destination that does not offer parallel parts support natively.
+    public function getBufferedUpload()
+    {
+        return @$this->attributes['buffered_upload'];
+    }
+
+    public function setBufferedUpload($value)
+    {
+        return $this->attributes['buffered_upload'] = $value;
+    }
 
     // Download File
     //
@@ -1015,6 +1025,7 @@ class File
     //   size - int64 - Size of file.
     //   structure - string - If copying folder, copy just the structure?
     //   with_rename - boolean - Allow file rename instead of overwrite?
+    //   buffered_upload - boolean - If true, and the path refers to a destination not stored on Files.com (such as a remote server mount), the upload will be uploaded first to Files.com before being sent to the remote server mount. This can allow clients to upload using parallel parts to a remote server destination that does not offer parallel parts support natively.
     public static function create($path, $params = [], $options = [])
     {
         if (!is_array($params)) {

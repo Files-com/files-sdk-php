@@ -75,6 +75,16 @@ class UserLifecycleRule
     {
         return $this->attributes['authentication_method'] = $value;
     }
+    // array(int64) # Array of Group IDs to which the rule applies. If empty or not set, the rule applies to all users.
+    public function getGroupIds()
+    {
+        return @$this->attributes['group_ids'];
+    }
+
+    public function setGroupIds($value)
+    {
+        return $this->attributes['group_ids'] = $value;
+    }
     // int64 # Number of days of inactivity before the rule applies
     public function getInactivityDays()
     {
@@ -149,6 +159,7 @@ class UserLifecycleRule
     // Parameters:
     //   action - string - Action to take on inactive users (disable or delete)
     //   authentication_method - string - User authentication method for the rule
+    //   group_ids - array(int64) - Array of Group IDs to which the rule applies. If empty or not set, the rule applies to all users.
     //   inactivity_days - int64 - Number of days of inactivity before the rule applies
     //   include_site_admins - boolean - Include site admins in the rule
     //   include_folder_admins - boolean - Include folder admins in the rule
@@ -178,6 +189,10 @@ class UserLifecycleRule
 
         if (@$params['authentication_method'] && !is_string(@$params['authentication_method'])) {
             throw new \Files\Exception\InvalidParameterException('$authentication_method must be of type string; received ' . gettype(@$params['authentication_method']));
+        }
+
+        if (@$params['group_ids'] && !is_array(@$params['group_ids'])) {
+            throw new \Files\Exception\InvalidParameterException('$group_ids must be of type array; received ' . gettype(@$params['group_ids']));
         }
 
         if (@$params['inactivity_days'] && !is_int(@$params['inactivity_days'])) {
@@ -292,6 +307,7 @@ class UserLifecycleRule
     // Parameters:
     //   action - string - Action to take on inactive users (disable or delete)
     //   authentication_method - string - User authentication method for the rule
+    //   group_ids - array(int64) - Array of Group IDs to which the rule applies. If empty or not set, the rule applies to all users.
     //   inactivity_days - int64 - Number of days of inactivity before the rule applies
     //   include_site_admins - boolean - Include site admins in the rule
     //   include_folder_admins - boolean - Include folder admins in the rule
@@ -305,6 +321,10 @@ class UserLifecycleRule
 
         if (@$params['authentication_method'] && !is_string(@$params['authentication_method'])) {
             throw new \Files\Exception\InvalidParameterException('$authentication_method must be of type string; received ' . gettype(@$params['authentication_method']));
+        }
+
+        if (@$params['group_ids'] && !is_array(@$params['group_ids'])) {
+            throw new \Files\Exception\InvalidParameterException('$group_ids must be of type array; received ' . gettype(@$params['group_ids']));
         }
 
         if (@$params['inactivity_days'] && !is_int(@$params['inactivity_days'])) {

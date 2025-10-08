@@ -6,6 +6,11 @@
 {
   "id": 1,
   "authentication_method": "password",
+  "group_ids": [
+    1,
+    2,
+    3
+  ],
   "inactivity_days": 12,
   "include_folder_admins": true,
   "include_site_admins": true,
@@ -18,6 +23,7 @@
 
 * `id` (int64): User Lifecycle Rule ID
 * `authentication_method` (string): User authentication method for the rule
+* `group_ids` (array(int64)): Array of Group IDs to which the rule applies. If empty or not set, the rule applies to all users.
 * `inactivity_days` (int64): Number of days of inactivity before the rule applies
 * `include_folder_admins` (boolean): Include folder admins in the rule
 * `include_site_admins` (boolean): Include site admins in the rule
@@ -63,6 +69,7 @@ $user_lifecycle_rule->find($id);
 $user_lifecycle_rule = new \Files\Model\UserLifecycleRule();
 $user_lifecycle_rule->create(, [
   'authentication_method' => "password",
+  'group_ids' => [1,2,3],
   'inactivity_days' => 12,
   'include_site_admins' => true,
   'include_folder_admins' => true,
@@ -76,6 +83,7 @@ $user_lifecycle_rule->create(, [
 
 * `action` (string): Action to take on inactive users (disable or delete)
 * `authentication_method` (string): User authentication method for the rule
+* `group_ids` (array(int64)): Array of Group IDs to which the rule applies. If empty or not set, the rule applies to all users.
 * `inactivity_days` (int64): Number of days of inactivity before the rule applies
 * `include_site_admins` (boolean): Include site admins in the rule
 * `include_folder_admins` (boolean): Include folder admins in the rule
@@ -91,6 +99,7 @@ $user_lifecycle_rule = \Files\Model\UserLifecycleRule::find($id);
 
 $user_lifecycle_rule->update([
   'authentication_method' => "password",
+  'group_ids' => [1,2,3],
   'inactivity_days' => 12,
   'include_site_admins' => true,
   'include_folder_admins' => true,
@@ -104,6 +113,7 @@ $user_lifecycle_rule->update([
 * `id` (int64): Required - User Lifecycle Rule ID.
 * `action` (string): Action to take on inactive users (disable or delete)
 * `authentication_method` (string): User authentication method for the rule
+* `group_ids` (array(int64)): Array of Group IDs to which the rule applies. If empty or not set, the rule applies to all users.
 * `inactivity_days` (int64): Number of days of inactivity before the rule applies
 * `include_site_admins` (boolean): Include site admins in the rule
 * `include_folder_admins` (boolean): Include folder admins in the rule
@@ -116,6 +126,11 @@ $user_lifecycle_rule->update([
 {
   "id": 1,
   "authentication_method": "password",
+  "group_ids": [
+    1,
+    2,
+    3
+  ],
   "inactivity_days": 12,
   "include_folder_admins": true,
   "include_site_admins": true,

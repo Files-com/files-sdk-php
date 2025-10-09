@@ -450,6 +450,16 @@ class User
     {
         return $this->attributes['office_integration_enabled'] = $value;
     }
+    // boolean # Is this user a Partner administrator?
+    public function getPartnerAdmin()
+    {
+        return @$this->attributes['partner_admin'];
+    }
+
+    public function setPartnerAdmin($value)
+    {
+        return $this->attributes['partner_admin'] = $value;
+    }
     // int64 # Partner ID if this user belongs to a Partner
     public function getPartnerId()
     {

@@ -115,6 +115,16 @@ class Permission
     {
         return $this->attributes['group_name'] = $value;
     }
+    // int64 # Partner ID (if applicable)
+    public function getPartnerId()
+    {
+        return @$this->attributes['partner_id'];
+    }
+
+    public function setPartnerId($value)
+    {
+        return $this->attributes['partner_id'] = $value;
+    }
     // string # Permission type.  See the table referenced in the documentation for an explanation of each permission.
     public function getPermission()
     {
@@ -189,12 +199,13 @@ class Permission
     // Parameters:
     //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
     //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `site_id`, `group_id`, `path`, `user_id` or `id`.
-    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `path`, `group_id` or `user_id`. Valid field combinations are `[ group_id, path ]`, `[ user_id, path ]`, `[ user_id, group_id ]` or `[ user_id, group_id, path ]`.
+    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `site_id`, `group_id`, `path`, `user_id`, `partner_id` or `id`.
+    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `path`, `group_id`, `partner_id` or `user_id`. Valid field combinations are `[ group_id, path ]`, `[ partner_id, path ]`, `[ user_id, path ]`, `[ user_id, group_id ]`, `[ user_id, group_id, path ]`, `[ user_id, group_id, partner_id ]` or `[ user_id, group_id, partner_id, path ]`.
     //   filter_prefix - object - If set, return records where the specified field is prefixed by the supplied value. Valid fields are `path`.
     //   path - string - Permission path.  If provided, will scope all permissions(including upward) to this path.
     //   include_groups - boolean - If searching by user or group, also include user's permissions that are inherited from its groups?
     //   group_id - string
+    //   partner_id - string
     //   user_id - string
     public static function all($params = [], $options = [])
     {
@@ -212,6 +223,10 @@ class Permission
 
         if (@$params['group_id'] && !is_string(@$params['group_id'])) {
             throw new \Files\Exception\InvalidParameterException('$group_id must be of type string; received ' . gettype(@$params['group_id']));
+        }
+
+        if (@$params['partner_id'] && !is_string(@$params['partner_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$partner_id must be of type string; received ' . gettype(@$params['partner_id']));
         }
 
         if (@$params['user_id'] && !is_string(@$params['user_id'])) {
@@ -234,6 +249,7 @@ class Permission
     //   group_id - int64 - Group ID. Provide `group_name` or `group_id`
     //   permission - string - Permission type.  Can be `admin`, `full`, `readonly`, `writeonly`, `list`, or `history`
     //   recursive - boolean - Apply to subfolders recursively?
+    //   partner_id - int64 - Partner ID if this Permission belongs to a partner.
     //   user_id - int64 - User ID.  Provide `username` or `user_id`
     //   username - string - User username.  Provide `username` or `user_id`
     //   group_name - string - Group name.  Provide `group_name` or `group_id`
@@ -254,6 +270,10 @@ class Permission
 
         if (@$params['permission'] && !is_string(@$params['permission'])) {
             throw new \Files\Exception\InvalidParameterException('$permission must be of type string; received ' . gettype(@$params['permission']));
+        }
+
+        if (@$params['partner_id'] && !is_int(@$params['partner_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$partner_id must be of type int; received ' . gettype(@$params['partner_id']));
         }
 
         if (@$params['user_id'] && !is_int(@$params['user_id'])) {

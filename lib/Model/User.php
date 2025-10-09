@@ -450,6 +450,16 @@ class User
     {
         return $this->attributes['office_integration_enabled'] = $value;
     }
+    // int64 # Partner ID if this user belongs to a Partner
+    public function getPartnerId()
+    {
+        return @$this->attributes['partner_id'];
+    }
+
+    public function setPartnerId($value)
+    {
+        return $this->attributes['partner_id'] = $value;
+    }
     // date-time # Last time the user's password was set
     public function getPasswordSetAt()
     {
@@ -931,6 +941,7 @@ class User
     //   company - string - User's company
     //   notes - string - Any internal notes on the user
     //   office_integration_enabled - boolean - Enable integration with Office for the web?
+    //   partner_id - int64 - Partner ID if this user belongs to a Partner
     //   password_validity_days - int64 - Number of days to allow user to use the same password
     //   readonly_site_admin - boolean - Is the user an allowed to view all (non-billing) site configuration for this site?
     //   receive_admin_alerts - boolean - Should the user receive admin alerts such a certificate expiration notifications and overages?
@@ -1042,6 +1053,10 @@ class User
 
         if (@$params['notes'] && !is_string(@$params['notes'])) {
             throw new \Files\Exception\InvalidParameterException('$notes must be of type string; received ' . gettype(@$params['notes']));
+        }
+
+        if (@$params['partner_id'] && !is_int(@$params['partner_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$partner_id must be of type int; received ' . gettype(@$params['partner_id']));
         }
 
         if (@$params['password_validity_days'] && !is_int(@$params['password_validity_days'])) {
@@ -1232,6 +1247,7 @@ class User
     //   company - string - User's company
     //   notes - string - Any internal notes on the user
     //   office_integration_enabled - boolean - Enable integration with Office for the web?
+    //   partner_id - int64 - Partner ID if this user belongs to a Partner
     //   password_validity_days - int64 - Number of days to allow user to use the same password
     //   readonly_site_admin - boolean - Is the user an allowed to view all (non-billing) site configuration for this site?
     //   receive_admin_alerts - boolean - Should the user receive admin alerts such a certificate expiration notifications and overages?
@@ -1330,6 +1346,10 @@ class User
 
         if (@$params['notes'] && !is_string(@$params['notes'])) {
             throw new \Files\Exception\InvalidParameterException('$notes must be of type string; received ' . gettype(@$params['notes']));
+        }
+
+        if (@$params['partner_id'] && !is_int(@$params['partner_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$partner_id must be of type int; received ' . gettype(@$params['partner_id']));
         }
 
         if (@$params['password_validity_days'] && !is_int(@$params['password_validity_days'])) {

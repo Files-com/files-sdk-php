@@ -230,6 +230,16 @@ class User
     {
         return $this->attributes['email'] = $value;
     }
+    // string # File system layout
+    public function getFilesystemLayout()
+    {
+        return @$this->attributes['filesystem_layout'];
+    }
+
+    public function setFilesystemLayout($value)
+    {
+        return $this->attributes['filesystem_layout'] = $value;
+    }
     // date-time # User's first login time
     public function getFirstLoginAt()
     {
@@ -912,6 +922,7 @@ class User
     //   bypass_site_allowed_ips - boolean - Allow this user to skip site-wide IP blacklists?
     //   dav_permission - boolean - Can the user connect with WebDAV?
     //   disabled - boolean - Is user disabled? Disabled users cannot log in, and do not count for billing purposes. Users can be automatically disabled after an inactivity period via a Site setting or schedule to be deactivated after specific date.
+    //   filesystem_layout - string - File system layout
     //   ftp_permission - boolean - Can the user access with FTP/FTPS?
     //   header_text - string - Text to display to the user in the header of the UI
     //   language - string - Preferred language
@@ -1003,6 +1014,10 @@ class User
 
         if (@$params['authentication_method'] && !is_string(@$params['authentication_method'])) {
             throw new \Files\Exception\InvalidParameterException('$authentication_method must be of type string; received ' . gettype(@$params['authentication_method']));
+        }
+
+        if (@$params['filesystem_layout'] && !is_string(@$params['filesystem_layout'])) {
+            throw new \Files\Exception\InvalidParameterException('$filesystem_layout must be of type string; received ' . gettype(@$params['filesystem_layout']));
         }
 
         if (@$params['header_text'] && !is_string(@$params['header_text'])) {
@@ -1208,6 +1223,7 @@ class User
     //   bypass_site_allowed_ips - boolean - Allow this user to skip site-wide IP blacklists?
     //   dav_permission - boolean - Can the user connect with WebDAV?
     //   disabled - boolean - Is user disabled? Disabled users cannot log in, and do not count for billing purposes. Users can be automatically disabled after an inactivity period via a Site setting or schedule to be deactivated after specific date.
+    //   filesystem_layout - string - File system layout
     //   ftp_permission - boolean - Can the user access with FTP/FTPS?
     //   header_text - string - Text to display to the user in the header of the UI
     //   language - string - Preferred language
@@ -1286,6 +1302,10 @@ class User
 
         if (@$params['authentication_method'] && !is_string(@$params['authentication_method'])) {
             throw new \Files\Exception\InvalidParameterException('$authentication_method must be of type string; received ' . gettype(@$params['authentication_method']));
+        }
+
+        if (@$params['filesystem_layout'] && !is_string(@$params['filesystem_layout'])) {
+            throw new \Files\Exception\InvalidParameterException('$filesystem_layout must be of type string; received ' . gettype(@$params['filesystem_layout']));
         }
 
         if (@$params['header_text'] && !is_string(@$params['header_text'])) {

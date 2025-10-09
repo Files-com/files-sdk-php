@@ -135,7 +135,7 @@ class SsoStrategy
     {
         return @$this->attributes['scim_oauth_access_token_expires_at'];
     }
-    // string # Subdomain
+    // string # Subdomain or domain name for your auth provider.   Example: `https://[subdomain].okta.com/`
     public function getSubdomain()
     {
         return @$this->attributes['subdomain'];
@@ -239,6 +239,11 @@ class SsoStrategy
     public function getProvisionRequire2fa()
     {
         return @$this->attributes['provision_require_2fa'];
+    }
+    // string # File System layout to use for auto provisioned users.
+    public function getProvisionFilesystemLayout()
+    {
+        return @$this->attributes['provision_filesystem_layout'];
     }
     // string # URL-friendly, unique identifier for Azure SAML configuration
     public function getProviderIdentifier()

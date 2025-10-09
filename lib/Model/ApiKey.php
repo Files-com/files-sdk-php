@@ -110,6 +110,36 @@ class ApiKey
     {
         return $this->attributes['key'] = $value;
     }
+    // boolean # If `true`, this API key will be usable with AWS-compatible endpoints, such as our Inbound S3-compatible endpoint.
+    public function getAwsStyleCredentials()
+    {
+        return @$this->attributes['aws_style_credentials'];
+    }
+
+    public function setAwsStyleCredentials($value)
+    {
+        return $this->attributes['aws_style_credentials'] = $value;
+    }
+    // string # AWS Access Key ID to use with AWS-compatible endpoints, such as our Inbound S3-compatible endpoint.
+    public function getAwsAccessKeyId()
+    {
+        return @$this->attributes['aws_access_key_id'];
+    }
+
+    public function setAwsAccessKeyId($value)
+    {
+        return $this->attributes['aws_access_key_id'] = $value;
+    }
+    // string # AWS Secret Key to use with AWS-compatible endpoints, such as our Inbound S3-compatible endpoint.
+    public function getAwsSecretKey()
+    {
+        return @$this->attributes['aws_secret_key'];
+    }
+
+    public function setAwsSecretKey($value)
+    {
+        return $this->attributes['aws_secret_key'] = $value;
+    }
     // date-time # API Key last used - note this value is only updated once per 3 hour period, so the 'actual' time of last use may be up to 3 hours later than this timestamp.
     public function getLastUseAt()
     {
@@ -341,6 +371,7 @@ class ApiKey
     //   expires_at - string - API Key expiration date
     //   permission_set - string - Permissions for this API Key. It must be full for site-wide API Keys.  Keys with the `desktop_app` permission set only have the ability to do the functions provided in our Desktop App (File and Share Link operations). Keys with the `office_integration` permission set are auto generated, and automatically expire, to allow users to interact with office integration platforms. Additional permission sets may become available in the future, such as for a Site Admin to give a key with no administrator privileges.  If you have ideas for permission sets, please let us know.
     //   name (required) - string - Internal name for the API Key.  For your use.
+    //   aws_style_credentials - boolean - If `true`, this API key will be usable with AWS-compatible endpoints, such as our Inbound S3-compatible endpoint.
     //   path - string - Folder path restriction for `office_integration` permission set API keys.
     public static function create($params = [], $options = [])
     {

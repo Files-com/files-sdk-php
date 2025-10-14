@@ -60,40 +60,15 @@ class SyncRun
     {
         return @$this->attributes['id'];
     }
-    // int64 # ID of the Sync this run belongs to
-    public function getSyncId()
-    {
-        return @$this->attributes['sync_id'];
-    }
-    // int64 # Site ID
-    public function getSiteId()
-    {
-        return @$this->attributes['site_id'];
-    }
-    // string # Status of the sync run (success, failure, partial_failure, in_progress, skipped)
-    public function getStatus()
-    {
-        return @$this->attributes['status'];
-    }
-    // string # Source remote server type, if any
-    public function getSrcRemoteServerType()
-    {
-        return @$this->attributes['src_remote_server_type'];
-    }
-    // string # Destination remote server type, if any
-    public function getDestRemoteServerType()
-    {
-        return @$this->attributes['dest_remote_server_type'];
-    }
     // string # Log or summary body for this run
     public function getBody()
     {
         return @$this->attributes['body'];
     }
-    // array(string) # Array of errors encountered during the run
-    public function getEventErrors()
+    // int64 # Total bytes synced in this run
+    public function getBytesSynced()
     {
-        return @$this->attributes['event_errors'];
+        return @$this->attributes['bytes_synced'];
     }
     // int64 # Number of files compared
     public function getComparedFiles()
@@ -105,50 +80,80 @@ class SyncRun
     {
         return @$this->attributes['compared_folders'];
     }
-    // int64 # Number of files that errored
-    public function getErroredFiles()
-    {
-        return @$this->attributes['errored_files'];
-    }
-    // int64 # Number of files successfully synced
-    public function getSuccessfulFiles()
-    {
-        return @$this->attributes['successful_files'];
-    }
-    // double # Total runtime in seconds
-    public function getRuntime()
-    {
-        return @$this->attributes['runtime'];
-    }
-    // string # Link to external log file.
-    public function getLogUrl()
-    {
-        return @$this->attributes['log_url'];
-    }
     // date-time # When this run was completed
     public function getCompletedAt()
     {
         return @$this->attributes['completed_at'];
+    }
+    // date-time # When this run was created
+    public function getCreatedAt()
+    {
+        return @$this->attributes['created_at'];
+    }
+    // string # Destination remote server type, if any
+    public function getDestRemoteServerType()
+    {
+        return @$this->attributes['dest_remote_server_type'];
     }
     // boolean # Whether this run was a dry run (no actual changes made)
     public function getDryRun()
     {
         return @$this->attributes['dry_run'];
     }
-    // int64 # Total bytes synced in this run
-    public function getBytesSynced()
+    // int64 # Number of files that errored
+    public function getErroredFiles()
     {
-        return @$this->attributes['bytes_synced'];
+        return @$this->attributes['errored_files'];
     }
     // int64 # Estimated bytes count for this run
     public function getEstimatedBytesCount()
     {
         return @$this->attributes['estimated_bytes_count'];
     }
-    // date-time # When this run was created
-    public function getCreatedAt()
+    // array(string) # Array of errors encountered during the run
+    public function getEventErrors()
     {
-        return @$this->attributes['created_at'];
+        return @$this->attributes['event_errors'];
+    }
+    // string # Link to external log file.
+    public function getLogUrl()
+    {
+        return @$this->attributes['log_url'];
+    }
+    // double # Total runtime in seconds
+    public function getRuntime()
+    {
+        return @$this->attributes['runtime'];
+    }
+    // int64 # Site ID
+    public function getSiteId()
+    {
+        return @$this->attributes['site_id'];
+    }
+    // string # Source remote server type, if any
+    public function getSrcRemoteServerType()
+    {
+        return @$this->attributes['src_remote_server_type'];
+    }
+    // string # Status of the sync run (success, failure, partial_failure, in_progress, skipped)
+    public function getStatus()
+    {
+        return @$this->attributes['status'];
+    }
+    // int64 # Number of files successfully synced
+    public function getSuccessfulFiles()
+    {
+        return @$this->attributes['successful_files'];
+    }
+    // int64 # ID of the Sync this run belongs to
+    public function getSyncId()
+    {
+        return @$this->attributes['sync_id'];
+    }
+    // string # Name of the Sync this run belongs to
+    public function getSyncName()
+    {
+        return @$this->attributes['sync_name'];
     }
     // date-time # When this run was last updated
     public function getUpdatedAt()

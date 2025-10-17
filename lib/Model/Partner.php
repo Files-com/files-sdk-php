@@ -125,14 +125,25 @@ class Partner
     {
         return $this->attributes['root_folder'] = $value;
     }
+    // string # Comma-separated list of Tags for this Partner. Tags are used for other features, such as UserLifecycleRules, which can target specific tags.  Tags must only contain lowercase letters, numbers, and hyphens.
+    public function getTags()
+    {
+        return @$this->attributes['tags'];
+    }
+
+    public function setTags($value)
+    {
+        return $this->attributes['tags'] = $value;
+    }
 
     // Parameters:
+    //   name - string - The name of the Partner.
     //   allow_bypassing_2fa_policies - boolean - Allow users created under this Partner to bypass Two-Factor Authentication policies.
     //   allow_credential_changes - boolean - Allow Partner Admins to change or reset credentials for users belonging to this Partner.
     //   allow_user_creation - boolean - Allow Partner Admins to create users.
-    //   name - string - The name of the Partner.
     //   notes - string - Notes about this Partner.
     //   root_folder - string - The root folder path for this Partner.
+    //   tags - string - Comma-separated list of Tags for this Partner. Tags are used for other features, such as UserLifecycleRules, which can target specific tags.  Tags must only contain lowercase letters, numbers, and hyphens.
     public function update($params = [])
     {
         if (!is_array($params)) {
@@ -161,6 +172,10 @@ class Partner
 
         if (@$params['root_folder'] && !is_string(@$params['root_folder'])) {
             throw new \Files\Exception\InvalidParameterException('$root_folder must be of type string; received ' . gettype(@$params['root_folder']));
+        }
+
+        if (@$params['tags'] && !is_string(@$params['tags'])) {
+            throw new \Files\Exception\InvalidParameterException('$tags must be of type string; received ' . gettype(@$params['tags']));
         }
 
         $response = Api::sendRequest('/partners/' . @$params['id'] . '', 'PATCH', $params, $this->options);
@@ -262,12 +277,13 @@ class Partner
     }
 
     // Parameters:
+    //   name - string - The name of the Partner.
     //   allow_bypassing_2fa_policies - boolean - Allow users created under this Partner to bypass Two-Factor Authentication policies.
     //   allow_credential_changes - boolean - Allow Partner Admins to change or reset credentials for users belonging to this Partner.
     //   allow_user_creation - boolean - Allow Partner Admins to create users.
-    //   name - string - The name of the Partner.
     //   notes - string - Notes about this Partner.
     //   root_folder - string - The root folder path for this Partner.
+    //   tags - string - Comma-separated list of Tags for this Partner. Tags are used for other features, such as UserLifecycleRules, which can target specific tags.  Tags must only contain lowercase letters, numbers, and hyphens.
     public static function create($params = [], $options = [])
     {
         if (@$params['name'] && !is_string(@$params['name'])) {
@@ -280,6 +296,10 @@ class Partner
 
         if (@$params['root_folder'] && !is_string(@$params['root_folder'])) {
             throw new \Files\Exception\InvalidParameterException('$root_folder must be of type string; received ' . gettype(@$params['root_folder']));
+        }
+
+        if (@$params['tags'] && !is_string(@$params['tags'])) {
+            throw new \Files\Exception\InvalidParameterException('$tags must be of type string; received ' . gettype(@$params['tags']));
         }
 
         $response = Api::sendRequest('/partners', 'POST', $params, $options);

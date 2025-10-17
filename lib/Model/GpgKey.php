@@ -85,7 +85,17 @@ class GpgKey
     {
         return $this->attributes['name'] = $value;
     }
-    // int64 # GPG owner's user id
+    // int64 # Partner ID who owns this GPG Key, if applicable.
+    public function getPartnerId()
+    {
+        return @$this->attributes['partner_id'];
+    }
+
+    public function setPartnerId($value)
+    {
+        return $this->attributes['partner_id'] = $value;
+    }
+    // int64 # User ID who owns this GPG Key, if applicable.
     public function getUserId()
     {
         return @$this->attributes['user_id'];
@@ -217,6 +227,7 @@ class GpgKey
     }
 
     // Parameters:
+    //   partner_id - int64 - Partner ID who owns this GPG Key, if applicable.
     //   public_key - string - MD5 hash of your GPG public key
     //   private_key - string - MD5 hash of your GPG private key.
     //   private_key_password - string - Your GPG private key password. Only required for password protected keys.
@@ -237,6 +248,10 @@ class GpgKey
 
         if (@$params['id'] && !is_int(@$params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
+        }
+
+        if (@$params['partner_id'] && !is_int(@$params['partner_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$partner_id must be of type int; received ' . gettype(@$params['partner_id']));
         }
 
         if (@$params['public_key'] && !is_string(@$params['public_key'])) {
@@ -360,6 +375,7 @@ class GpgKey
 
     // Parameters:
     //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
+    //   partner_id - int64 - Partner ID who owns this GPG Key, if applicable.
     //   public_key - string - MD5 hash of your GPG public key
     //   private_key - string - MD5 hash of your GPG private key.
     //   private_key_password - string - Your GPG private key password. Only required for password protected keys.
@@ -376,6 +392,10 @@ class GpgKey
 
         if (@$params['user_id'] && !is_int(@$params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
+        }
+
+        if (@$params['partner_id'] && !is_int(@$params['partner_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$partner_id must be of type int; received ' . gettype(@$params['partner_id']));
         }
 
         if (@$params['public_key'] && !is_string(@$params['public_key'])) {

@@ -120,4 +120,31 @@ class ScimLog
 
         return $return_array;
     }
+
+    // Parameters:
+    //   id (required) - int64 - Scim Log ID.
+    public static function find($id, $params = [], $options = [])
+    {
+        if (!is_array($params)) {
+            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+        }
+
+        $params['id'] = $id;
+
+        if (!@$params['id']) {
+            throw new \Files\Exception\MissingParameterException('Parameter missing: id');
+        }
+
+        if (@$params['id'] && !is_int(@$params['id'])) {
+            throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
+        }
+
+        $response = Api::sendRequest('/scim_logs/' . @$params['id'] . '', 'GET', $params, $options);
+
+        return new ScimLog((array) (@$response->data ?: []), $options);
+    }
+    public static function get($id, $params = [], $options = [])
+    {
+        return self::find($id, $params, $options);
+    }
 }

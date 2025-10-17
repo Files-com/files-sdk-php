@@ -125,6 +125,16 @@ class Permission
     {
         return $this->attributes['partner_id'] = $value;
     }
+    // string # Partner name (if applicable)
+    public function getPartnerName()
+    {
+        return @$this->attributes['partner_name'];
+    }
+
+    public function setPartnerName($value)
+    {
+        return $this->attributes['partner_name'] = $value;
+    }
     // string # Permission type.  See the table referenced in the documentation for an explanation of each permission.
     public function getPermission()
     {

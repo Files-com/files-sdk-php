@@ -65,7 +65,7 @@ class UserLifecycleRule
     {
         return $this->attributes['id'] = $value;
     }
-    // string # User authentication method for the rule
+    // string # User authentication method for which the rule will apply.
     public function getAuthenticationMethod()
     {
         return @$this->attributes['authentication_method'];
@@ -85,36 +85,6 @@ class UserLifecycleRule
     {
         return $this->attributes['group_ids'] = $value;
     }
-    // int64 # Number of days of inactivity before the rule applies
-    public function getInactivityDays()
-    {
-        return @$this->attributes['inactivity_days'];
-    }
-
-    public function setInactivityDays($value)
-    {
-        return $this->attributes['inactivity_days'] = $value;
-    }
-    // boolean # Include folder admins in the rule
-    public function getIncludeFolderAdmins()
-    {
-        return @$this->attributes['include_folder_admins'];
-    }
-
-    public function setIncludeFolderAdmins($value)
-    {
-        return $this->attributes['include_folder_admins'] = $value;
-    }
-    // boolean # Include site admins in the rule
-    public function getIncludeSiteAdmins()
-    {
-        return @$this->attributes['include_site_admins'];
-    }
-
-    public function setIncludeSiteAdmins($value)
-    {
-        return $this->attributes['include_site_admins'] = $value;
-    }
     // string # Action to take on inactive users (disable or delete)
     public function getAction()
     {
@@ -125,15 +95,35 @@ class UserLifecycleRule
     {
         return $this->attributes['action'] = $value;
     }
-    // string # State of the users to apply the rule to (inactive or disabled)
-    public function getUserState()
+    // int64 # Number of days of inactivity before the rule applies
+    public function getInactivityDays()
     {
-        return @$this->attributes['user_state'];
+        return @$this->attributes['inactivity_days'];
     }
 
-    public function setUserState($value)
+    public function setInactivityDays($value)
     {
-        return $this->attributes['user_state'] = $value;
+        return $this->attributes['inactivity_days'] = $value;
+    }
+    // boolean # If true, the rule will apply to folder admins.
+    public function getIncludeFolderAdmins()
+    {
+        return @$this->attributes['include_folder_admins'];
+    }
+
+    public function setIncludeFolderAdmins($value)
+    {
+        return $this->attributes['include_folder_admins'] = $value;
+    }
+    // boolean # If true, the rule will apply to site admins.
+    public function getIncludeSiteAdmins()
+    {
+        return @$this->attributes['include_site_admins'];
+    }
+
+    public function setIncludeSiteAdmins($value)
+    {
+        return $this->attributes['include_site_admins'] = $value;
     }
     // string # User Lifecycle Rule name
     public function getName()
@@ -145,6 +135,16 @@ class UserLifecycleRule
     {
         return $this->attributes['name'] = $value;
     }
+    // string # If provided, only users belonging to Partners with this tag at the Partner level will be affected by the rule. Tags must only contain lowercase letters, numbers, and hyphens.
+    public function getPartnerTag()
+    {
+        return @$this->attributes['partner_tag'];
+    }
+
+    public function setPartnerTag($value)
+    {
+        return $this->attributes['partner_tag'] = $value;
+    }
     // int64 # Site ID
     public function getSiteId()
     {
@@ -155,16 +155,38 @@ class UserLifecycleRule
     {
         return $this->attributes['site_id'] = $value;
     }
+    // string # State of the users to apply the rule to (inactive or disabled)
+    public function getUserState()
+    {
+        return @$this->attributes['user_state'];
+    }
+
+    public function setUserState($value)
+    {
+        return $this->attributes['user_state'] = $value;
+    }
+    // string # If provided, only users with this tag will be affected by the rule. Tags must only contain lowercase letters, numbers, and hyphens.
+    public function getUserTag()
+    {
+        return @$this->attributes['user_tag'];
+    }
+
+    public function setUserTag($value)
+    {
+        return $this->attributes['user_tag'] = $value;
+    }
 
     // Parameters:
     //   action - string - Action to take on inactive users (disable or delete)
-    //   authentication_method - string - User authentication method for the rule
+    //   authentication_method - string - User authentication method for which the rule will apply.
     //   group_ids - array(int64) - Array of Group IDs to which the rule applies. If empty or not set, the rule applies to all users.
     //   inactivity_days - int64 - Number of days of inactivity before the rule applies
-    //   include_site_admins - boolean - Include site admins in the rule
-    //   include_folder_admins - boolean - Include folder admins in the rule
-    //   user_state - string - State of the users to apply the rule to (inactive or disabled)
+    //   include_site_admins - boolean - If true, the rule will apply to site admins.
+    //   include_folder_admins - boolean - If true, the rule will apply to folder admins.
     //   name - string - User Lifecycle Rule name
+    //   partner_tag - string - If provided, only users belonging to Partners with this tag at the Partner level will be affected by the rule. Tags must only contain lowercase letters, numbers, and hyphens.
+    //   user_state - string - State of the users to apply the rule to (inactive or disabled)
+    //   user_tag - string - If provided, only users with this tag will be affected by the rule. Tags must only contain lowercase letters, numbers, and hyphens.
     public function update($params = [])
     {
         if (!is_array($params)) {
@@ -199,12 +221,20 @@ class UserLifecycleRule
             throw new \Files\Exception\InvalidParameterException('$inactivity_days must be of type int; received ' . gettype(@$params['inactivity_days']));
         }
 
+        if (@$params['name'] && !is_string(@$params['name'])) {
+            throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
+        }
+
+        if (@$params['partner_tag'] && !is_string(@$params['partner_tag'])) {
+            throw new \Files\Exception\InvalidParameterException('$partner_tag must be of type string; received ' . gettype(@$params['partner_tag']));
+        }
+
         if (@$params['user_state'] && !is_string(@$params['user_state'])) {
             throw new \Files\Exception\InvalidParameterException('$user_state must be of type string; received ' . gettype(@$params['user_state']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
-            throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
+        if (@$params['user_tag'] && !is_string(@$params['user_tag'])) {
+            throw new \Files\Exception\InvalidParameterException('$user_tag must be of type string; received ' . gettype(@$params['user_tag']));
         }
 
         $response = Api::sendRequest('/user_lifecycle_rules/' . @$params['id'] . '', 'PATCH', $params, $this->options);
@@ -256,6 +286,7 @@ class UserLifecycleRule
     // Parameters:
     //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
     //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
+    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `site_id`.
     public static function all($params = [], $options = [])
     {
         if (@$params['cursor'] && !is_string(@$params['cursor'])) {
@@ -306,13 +337,15 @@ class UserLifecycleRule
 
     // Parameters:
     //   action - string - Action to take on inactive users (disable or delete)
-    //   authentication_method - string - User authentication method for the rule
+    //   authentication_method - string - User authentication method for which the rule will apply.
     //   group_ids - array(int64) - Array of Group IDs to which the rule applies. If empty or not set, the rule applies to all users.
     //   inactivity_days - int64 - Number of days of inactivity before the rule applies
-    //   include_site_admins - boolean - Include site admins in the rule
-    //   include_folder_admins - boolean - Include folder admins in the rule
-    //   user_state - string - State of the users to apply the rule to (inactive or disabled)
+    //   include_site_admins - boolean - If true, the rule will apply to site admins.
+    //   include_folder_admins - boolean - If true, the rule will apply to folder admins.
     //   name - string - User Lifecycle Rule name
+    //   partner_tag - string - If provided, only users belonging to Partners with this tag at the Partner level will be affected by the rule. Tags must only contain lowercase letters, numbers, and hyphens.
+    //   user_state - string - State of the users to apply the rule to (inactive or disabled)
+    //   user_tag - string - If provided, only users with this tag will be affected by the rule. Tags must only contain lowercase letters, numbers, and hyphens.
     public static function create($params = [], $options = [])
     {
         if (@$params['action'] && !is_string(@$params['action'])) {
@@ -331,12 +364,20 @@ class UserLifecycleRule
             throw new \Files\Exception\InvalidParameterException('$inactivity_days must be of type int; received ' . gettype(@$params['inactivity_days']));
         }
 
+        if (@$params['name'] && !is_string(@$params['name'])) {
+            throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
+        }
+
+        if (@$params['partner_tag'] && !is_string(@$params['partner_tag'])) {
+            throw new \Files\Exception\InvalidParameterException('$partner_tag must be of type string; received ' . gettype(@$params['partner_tag']));
+        }
+
         if (@$params['user_state'] && !is_string(@$params['user_state'])) {
             throw new \Files\Exception\InvalidParameterException('$user_state must be of type string; received ' . gettype(@$params['user_state']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
-            throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
+        if (@$params['user_tag'] && !is_string(@$params['user_tag'])) {
+            throw new \Files\Exception\InvalidParameterException('$user_tag must be of type string; received ' . gettype(@$params['user_tag']));
         }
 
         $response = Api::sendRequest('/user_lifecycle_rules', 'POST', $params, $options);

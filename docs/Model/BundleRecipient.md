@@ -23,7 +23,7 @@
 
 ---
 
-## List Bundle Recipients
+## List Share Link Recipients
 
 ```
 $bundle_recipient = new \Files\Model\BundleRecipient();
@@ -45,7 +45,7 @@ $bundle_recipient->list(, [
 
 ---
 
-## Create Bundle Recipient
+## Create Share Link Recipient
 
 ```
 $bundle_recipient = new \Files\Model\BundleRecipient();

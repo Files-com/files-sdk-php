@@ -38,7 +38,7 @@
 
 ---
 
-## List Bundle Registrations
+## List Share Link Registrations
 
 ```
 $bundle_registration = new \Files\Model\BundleRegistration();

@@ -137,7 +137,7 @@
 
 ---
 
-## List Bundles
+## List Share Links
 
 ```
 $bundle = new \Files\Model\Bundle();
@@ -162,7 +162,7 @@ $bundle->list(, [
 
 ---
 
-## Show Bundle
+## Show Share Link
 
 ```
 $bundle = new \Files\Model\Bundle();
@@ -176,7 +176,7 @@ $bundle->find($id);
 
 ---
 
-## Create Bundle
+## Create Share Link
 
 ```
 $bundle = new \Files\Model\Bundle();
@@ -263,7 +263,7 @@ $bundle->share([
 
 ---
 
-## Update Bundle
+## Update Share Link
 
 ```
 $bundle = \Files\Model\Bundle::find($id);
@@ -415,7 +415,7 @@ $bundle->update([
 
 ---
 
-## Delete Bundle
+## Delete Share Link
 
 ```
 $bundle = \Files\Model\Bundle::find($id);

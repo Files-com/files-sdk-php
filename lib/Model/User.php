@@ -860,6 +860,16 @@ class User
     {
         return $this->attributes['clear_2fa'] = $value;
     }
+    // boolean # If true, convert this user to a partner user by assigning the partner_id provided.
+    public function getConvertToPartnerUser()
+    {
+        return @$this->attributes['convert_to_partner_user'];
+    }
+
+    public function setConvertToPartnerUser($value)
+    {
+        return $this->attributes['convert_to_partner_user'] = $value;
+    }
 
     // Unlock user who has been locked out due to failed logins
     public function unlock($params = [])
@@ -983,6 +993,7 @@ class User
     //   user_home - string - Home folder for FTP/SFTP.  Note that this is not used for API, Desktop, or Web interface.
     //   username - string - User's username
     //   clear_2fa - boolean - If true when changing authentication_method from `password` to `sso`, remove all two-factor methods. Ignored in all other cases.
+    //   convert_to_partner_user - boolean - If true, convert this user to a partner user by assigning the partner_id provided.
     public function update($params = [])
     {
         if (!is_array($params)) {

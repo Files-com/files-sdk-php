@@ -21,7 +21,7 @@
 
 ---
 
-## List Bundle Notifications
+## List Share Link Notifications
 
 ```
 $bundle_notification = new \Files\Model\BundleNotification();
@@ -41,7 +41,7 @@ $bundle_notification->list(, [
 
 ---
 
-## Show Bundle Notification
+## Show Share Link Notification
 
 ```
 $bundle_notification = new \Files\Model\BundleNotification();
@@ -55,7 +55,7 @@ $bundle_notification->find($id);
 
 ---
 
-## Create Bundle Notification
+## Create Share Link Notification
 
 ```
 $bundle_notification = new \Files\Model\BundleNotification();
@@ -79,7 +79,7 @@ $bundle_notification->create(, [
 
 ---
 
-## Update Bundle Notification
+## Update Share Link Notification
 
 ```
 $bundle_notification = \Files\Model\BundleNotification::find($id);
@@ -110,7 +110,7 @@ $bundle_notification->update([
 
 ---
 
-## Delete Bundle Notification
+## Delete Share Link Notification
 
 ```
 $bundle_notification = \Files\Model\BundleNotification::find($id);

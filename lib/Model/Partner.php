@@ -75,6 +75,16 @@ class Partner
     {
         return $this->attributes['allow_credential_changes'] = $value;
     }
+    // boolean # Allow Partner Admins to provide GPG keys.
+    public function getAllowProvidingGpgKeys()
+    {
+        return @$this->attributes['allow_providing_gpg_keys'];
+    }
+
+    public function setAllowProvidingGpgKeys($value)
+    {
+        return $this->attributes['allow_providing_gpg_keys'] = $value;
+    }
     // boolean # Allow Partner Admins to create users.
     public function getAllowUserCreation()
     {
@@ -140,6 +150,7 @@ class Partner
     //   name - string - The name of the Partner.
     //   allow_bypassing_2fa_policies - boolean - Allow users created under this Partner to bypass Two-Factor Authentication policies.
     //   allow_credential_changes - boolean - Allow Partner Admins to change or reset credentials for users belonging to this Partner.
+    //   allow_providing_gpg_keys - boolean - Allow Partner Admins to provide GPG keys.
     //   allow_user_creation - boolean - Allow Partner Admins to create users.
     //   notes - string - Notes about this Partner.
     //   root_folder - string - The root folder path for this Partner.
@@ -280,6 +291,7 @@ class Partner
     //   name - string - The name of the Partner.
     //   allow_bypassing_2fa_policies - boolean - Allow users created under this Partner to bypass Two-Factor Authentication policies.
     //   allow_credential_changes - boolean - Allow Partner Admins to change or reset credentials for users belonging to this Partner.
+    //   allow_providing_gpg_keys - boolean - Allow Partner Admins to provide GPG keys.
     //   allow_user_creation - boolean - Allow Partner Admins to create users.
     //   notes - string - Notes about this Partner.
     //   root_folder - string - The root folder path for this Partner.

@@ -95,6 +95,16 @@ class GpgKey
     {
         return $this->attributes['partner_id'] = $value;
     }
+    // string # Name of the Partner who owns this GPG Key, if applicable.
+    public function getPartnerName()
+    {
+        return @$this->attributes['partner_name'];
+    }
+
+    public function setPartnerName($value)
+    {
+        return $this->attributes['partner_name'] = $value;
+    }
     // int64 # User ID who owns this GPG Key, if applicable.
     public function getUserId()
     {

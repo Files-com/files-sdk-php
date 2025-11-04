@@ -125,6 +125,16 @@ class Partner
     {
         return $this->attributes['notes'] = $value;
     }
+    // array(int64) # Array of User IDs that are Partner Admins for this Partner.
+    public function getPartnerAdminIds()
+    {
+        return @$this->attributes['partner_admin_ids'];
+    }
+
+    public function setPartnerAdminIds($value)
+    {
+        return $this->attributes['partner_admin_ids'] = $value;
+    }
     // string # The root folder path for this Partner.
     public function getRootFolder()
     {

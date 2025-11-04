@@ -145,6 +145,16 @@ class Partner
     {
         return $this->attributes['tags'] = $value;
     }
+    // array(int64) # Array of User IDs that belong to this Partner.
+    public function getUserIds()
+    {
+        return @$this->attributes['user_ids'];
+    }
+
+    public function setUserIds($value)
+    {
+        return $this->attributes['user_ids'] = $value;
+    }
 
     // Parameters:
     //   name - string - The name of the Partner.

@@ -167,7 +167,6 @@ class Partner
     }
 
     // Parameters:
-    //   name - string - The name of the Partner.
     //   allow_bypassing_2fa_policies - boolean - Allow users created under this Partner to bypass Two-Factor Authentication policies.
     //   allow_credential_changes - boolean - Allow Partner Admins to change or reset credentials for users belonging to this Partner.
     //   allow_providing_gpg_keys - boolean - Allow Partner Admins to provide GPG keys.
@@ -175,6 +174,7 @@ class Partner
     //   notes - string - Notes about this Partner.
     //   root_folder - string - The root folder path for this Partner.
     //   tags - string - Comma-separated list of Tags for this Partner. Tags are used for other features, such as UserLifecycleRules, which can target specific tags.  Tags must only contain lowercase letters, numbers, and hyphens.
+    //   name - string - The name of the Partner.
     public function update($params = [])
     {
         if (!is_array($params)) {
@@ -193,10 +193,6 @@ class Partner
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
-            throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
-        }
-
         if (@$params['notes'] && !is_string(@$params['notes'])) {
             throw new \Files\Exception\InvalidParameterException('$notes must be of type string; received ' . gettype(@$params['notes']));
         }
@@ -207,6 +203,10 @@ class Partner
 
         if (@$params['tags'] && !is_string(@$params['tags'])) {
             throw new \Files\Exception\InvalidParameterException('$tags must be of type string; received ' . gettype(@$params['tags']));
+        }
+
+        if (@$params['name'] && !is_string(@$params['name'])) {
+            throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
         $response = Api::sendRequest('/partners/' . @$params['id'] . '', 'PATCH', $params, $this->options);
@@ -308,7 +308,6 @@ class Partner
     }
 
     // Parameters:
-    //   name - string - The name of the Partner.
     //   allow_bypassing_2fa_policies - boolean - Allow users created under this Partner to bypass Two-Factor Authentication policies.
     //   allow_credential_changes - boolean - Allow Partner Admins to change or reset credentials for users belonging to this Partner.
     //   allow_providing_gpg_keys - boolean - Allow Partner Admins to provide GPG keys.
@@ -316,10 +315,11 @@ class Partner
     //   notes - string - Notes about this Partner.
     //   root_folder - string - The root folder path for this Partner.
     //   tags - string - Comma-separated list of Tags for this Partner. Tags are used for other features, such as UserLifecycleRules, which can target specific tags.  Tags must only contain lowercase letters, numbers, and hyphens.
+    //   name (required) - string - The name of the Partner.
     public static function create($params = [], $options = [])
     {
-        if (@$params['name'] && !is_string(@$params['name'])) {
-            throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
+        if (!@$params['name']) {
+            throw new \Files\Exception\MissingParameterException('Parameter missing: name');
         }
 
         if (@$params['notes'] && !is_string(@$params['notes'])) {
@@ -332,6 +332,10 @@ class Partner
 
         if (@$params['tags'] && !is_string(@$params['tags'])) {
             throw new \Files\Exception\InvalidParameterException('$tags must be of type string; received ' . gettype(@$params['tags']));
+        }
+
+        if (@$params['name'] && !is_string(@$params['name'])) {
+            throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
         $response = Api::sendRequest('/partners', 'POST', $params, $options);

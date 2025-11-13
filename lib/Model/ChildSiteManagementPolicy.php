@@ -137,7 +137,7 @@ class ChildSiteManagementPolicy
     }
 
     // Parameters:
-    //   value - string
+    //   value - object - Policy configuration data. Attributes differ by policy type. For more information, refer to the Value Hash section of the developer documentation.
     //   skip_child_site_ids - array(int64) - IDs of child sites that this policy has been exempted from. If `skip_child_site_ids` is empty, the policy will be applied to all child sites. To apply a policy to a child site that has been exempted, remove it from `skip_child_site_ids` or set it to an empty array (`[]`).
     //   policy_type - string - Type of policy.  Valid values: `settings`.
     //   name - string - Name for this policy.
@@ -158,10 +158,6 @@ class ChildSiteManagementPolicy
 
         if (@$params['id'] && !is_int(@$params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
-        }
-
-        if (@$params['value'] && !is_string(@$params['value'])) {
-            throw new \Files\Exception\InvalidParameterException('$value must be of type string; received ' . gettype(@$params['value']));
         }
 
         if (@$params['skip_child_site_ids'] && !is_array(@$params['skip_child_site_ids'])) {
@@ -278,7 +274,7 @@ class ChildSiteManagementPolicy
     }
 
     // Parameters:
-    //   value - string
+    //   value - object - Policy configuration data. Attributes differ by policy type. For more information, refer to the Value Hash section of the developer documentation.
     //   skip_child_site_ids - array(int64) - IDs of child sites that this policy has been exempted from. If `skip_child_site_ids` is empty, the policy will be applied to all child sites. To apply a policy to a child site that has been exempted, remove it from `skip_child_site_ids` or set it to an empty array (`[]`).
     //   policy_type (required) - string - Type of policy.  Valid values: `settings`.
     //   name - string - Name for this policy.
@@ -287,10 +283,6 @@ class ChildSiteManagementPolicy
     {
         if (!@$params['policy_type']) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: policy_type');
-        }
-
-        if (@$params['value'] && !is_string(@$params['value'])) {
-            throw new \Files\Exception\InvalidParameterException('$value must be of type string; received ' . gettype(@$params['value']));
         }
 
         if (@$params['skip_child_site_ids'] && !is_array(@$params['skip_child_site_ids'])) {

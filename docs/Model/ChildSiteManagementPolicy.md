@@ -68,7 +68,7 @@ $child_site_management_policy->find($id);
 ```
 $child_site_management_policy = new \Files\Model\ChildSiteManagementPolicy();
 $child_site_management_policy->create(, [
-  'value' => "{ \"color2_left\": \"#000000\" }",
+  'value' => {"color2_left":"#000000"},
   'skip_child_site_ids' => [1,2],
   'policy_type' => "settings",
   'name' => "example",
@@ -79,7 +79,7 @@ $child_site_management_policy->create(, [
 
 ### Parameters
 
-* `value` (string): 
+* `value` (object): Policy configuration data. Attributes differ by policy type. For more information, refer to the Value Hash section of the developer documentation.
 * `skip_child_site_ids` (array(int64)): IDs of child sites that this policy has been exempted from. If `skip_child_site_ids` is empty, the policy will be applied to all child sites. To apply a policy to a child site that has been exempted, remove it from `skip_child_site_ids` or set it to an empty array (`[]`).
 * `policy_type` (string): Required - Type of policy.  Valid values: `settings`.
 * `name` (string): Name for this policy.
@@ -93,7 +93,7 @@ $child_site_management_policy->create(, [
 $child_site_management_policy = \Files\Model\ChildSiteManagementPolicy::find($id);
 
 $child_site_management_policy->update([
-  'value' => "{ \"color2_left\": \"#000000\" }",
+  'value' => {"color2_left":"#000000"},
   'skip_child_site_ids' => [1,2],
   'policy_type' => "settings",
   'name' => "example",
@@ -104,7 +104,7 @@ $child_site_management_policy->update([
 ### Parameters
 
 * `id` (int64): Required - Child Site Management Policy ID.
-* `value` (string): 
+* `value` (object): Policy configuration data. Attributes differ by policy type. For more information, refer to the Value Hash section of the developer documentation.
 * `skip_child_site_ids` (array(int64)): IDs of child sites that this policy has been exempted from. If `skip_child_site_ids` is empty, the policy will be applied to all child sites. To apply a policy to a child site that has been exempted, remove it from `skip_child_site_ids` or set it to an empty array (`[]`).
 * `policy_type` (string): Type of policy.  Valid values: `settings`.
 * `name` (string): Name for this policy.

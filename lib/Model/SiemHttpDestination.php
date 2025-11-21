@@ -95,6 +95,36 @@ class SiemHttpDestination
     {
         return $this->attributes['destination_url'] = $value;
     }
+    // string # Applicable only for destination type: file. Destination folder path on Files.com.
+    public function getFileDestinationPath()
+    {
+        return @$this->attributes['file_destination_path'];
+    }
+
+    public function setFileDestinationPath($value)
+    {
+        return $this->attributes['file_destination_path'] = $value;
+    }
+    // string # Applicable only for destination type: file. Generated file format.
+    public function getFileFormat()
+    {
+        return @$this->attributes['file_format'];
+    }
+
+    public function setFileFormat($value)
+    {
+        return $this->attributes['file_format'] = $value;
+    }
+    // int64 # Applicable only for destination type: file. Interval, in minutes, between file deliveries.
+    public function getFileIntervalMinutes()
+    {
+        return @$this->attributes['file_interval_minutes'];
+    }
+
+    public function setFileIntervalMinutes($value)
+    {
+        return $this->attributes['file_interval_minutes'] = $value;
+    }
     // object # Additional HTTP Headers included in calls to the destination URL
     public function getAdditionalHeaders()
     {
@@ -611,6 +641,9 @@ class SiemHttpDestination
     //   additional_headers - object - Additional HTTP Headers included in calls to the destination URL
     //   sending_active - boolean - Whether this SIEM HTTP Destination is currently being sent to or not
     //   generic_payload_type - string - Applicable only for destination type: generic. Indicates the type of HTTP body. Can be json_newline or json_array. json_newline is multiple log entries as JSON separated by newlines. json_array is a single JSON array containing multiple log entries as JSON.
+    //   file_destination_path - string - Applicable only for destination type: file. Destination folder path on Files.com.
+    //   file_format - string - Applicable only for destination type: file. Generated file format.
+    //   file_interval_minutes - int64 - Applicable only for destination type: file. Interval, in minutes, between file deliveries.
     //   splunk_token - string - Applicable only for destination type: splunk. Authentication token provided by Splunk.
     //   azure_dcr_immutable_id - string - Applicable only for destination types: azure, azure_legacy. Immutable ID of the Data Collection Rule.
     //   azure_stream_name - string - Applicable only for destination type: azure. Name of the stream in the DCR that represents the destination table.
@@ -659,6 +692,18 @@ class SiemHttpDestination
 
         if (@$params['generic_payload_type'] && !is_string(@$params['generic_payload_type'])) {
             throw new \Files\Exception\InvalidParameterException('$generic_payload_type must be of type string; received ' . gettype(@$params['generic_payload_type']));
+        }
+
+        if (@$params['file_destination_path'] && !is_string(@$params['file_destination_path'])) {
+            throw new \Files\Exception\InvalidParameterException('$file_destination_path must be of type string; received ' . gettype(@$params['file_destination_path']));
+        }
+
+        if (@$params['file_format'] && !is_string(@$params['file_format'])) {
+            throw new \Files\Exception\InvalidParameterException('$file_format must be of type string; received ' . gettype(@$params['file_format']));
+        }
+
+        if (@$params['file_interval_minutes'] && !is_int(@$params['file_interval_minutes'])) {
+            throw new \Files\Exception\InvalidParameterException('$file_interval_minutes must be of type int; received ' . gettype(@$params['file_interval_minutes']));
         }
 
         if (@$params['splunk_token'] && !is_string(@$params['splunk_token'])) {
@@ -815,6 +860,9 @@ class SiemHttpDestination
     //   additional_headers - object - Additional HTTP Headers included in calls to the destination URL
     //   sending_active - boolean - Whether this SIEM HTTP Destination is currently being sent to or not
     //   generic_payload_type - string - Applicable only for destination type: generic. Indicates the type of HTTP body. Can be json_newline or json_array. json_newline is multiple log entries as JSON separated by newlines. json_array is a single JSON array containing multiple log entries as JSON.
+    //   file_destination_path - string - Applicable only for destination type: file. Destination folder path on Files.com.
+    //   file_format - string - Applicable only for destination type: file. Generated file format.
+    //   file_interval_minutes - int64 - Applicable only for destination type: file. Interval, in minutes, between file deliveries.
     //   splunk_token - string - Applicable only for destination type: splunk. Authentication token provided by Splunk.
     //   azure_dcr_immutable_id - string - Applicable only for destination types: azure, azure_legacy. Immutable ID of the Data Collection Rule.
     //   azure_stream_name - string - Applicable only for destination type: azure. Name of the stream in the DCR that represents the destination table.
@@ -838,15 +886,11 @@ class SiemHttpDestination
     //   exavault_api_request_send_enabled - boolean - Whether or not sending is enabled for exavault_api_request logs.
     //   settings_change_send_enabled - boolean - Whether or not sending is enabled for settings_change logs.
     //   destination_type (required) - string - Destination Type
-    //   destination_url (required) - string - Destination Url
+    //   destination_url - string - Destination Url
     public static function create($params = [], $options = [])
     {
         if (!@$params['destination_type']) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: destination_type');
-        }
-
-        if (!@$params['destination_url']) {
-            throw new \Files\Exception\MissingParameterException('Parameter missing: destination_url');
         }
 
         if (@$params['name'] && !is_string(@$params['name'])) {
@@ -855,6 +899,18 @@ class SiemHttpDestination
 
         if (@$params['generic_payload_type'] && !is_string(@$params['generic_payload_type'])) {
             throw new \Files\Exception\InvalidParameterException('$generic_payload_type must be of type string; received ' . gettype(@$params['generic_payload_type']));
+        }
+
+        if (@$params['file_destination_path'] && !is_string(@$params['file_destination_path'])) {
+            throw new \Files\Exception\InvalidParameterException('$file_destination_path must be of type string; received ' . gettype(@$params['file_destination_path']));
+        }
+
+        if (@$params['file_format'] && !is_string(@$params['file_format'])) {
+            throw new \Files\Exception\InvalidParameterException('$file_format must be of type string; received ' . gettype(@$params['file_format']));
+        }
+
+        if (@$params['file_interval_minutes'] && !is_int(@$params['file_interval_minutes'])) {
+            throw new \Files\Exception\InvalidParameterException('$file_interval_minutes must be of type int; received ' . gettype(@$params['file_interval_minutes']));
         }
 
         if (@$params['splunk_token'] && !is_string(@$params['splunk_token'])) {
@@ -922,6 +978,9 @@ class SiemHttpDestination
     //   additional_headers - object - Additional HTTP Headers included in calls to the destination URL
     //   sending_active - boolean - Whether this SIEM HTTP Destination is currently being sent to or not
     //   generic_payload_type - string - Applicable only for destination type: generic. Indicates the type of HTTP body. Can be json_newline or json_array. json_newline is multiple log entries as JSON separated by newlines. json_array is a single JSON array containing multiple log entries as JSON.
+    //   file_destination_path - string - Applicable only for destination type: file. Destination folder path on Files.com.
+    //   file_format - string - Applicable only for destination type: file. Generated file format.
+    //   file_interval_minutes - int64 - Applicable only for destination type: file. Interval, in minutes, between file deliveries.
     //   splunk_token - string - Applicable only for destination type: splunk. Authentication token provided by Splunk.
     //   azure_dcr_immutable_id - string - Applicable only for destination types: azure, azure_legacy. Immutable ID of the Data Collection Rule.
     //   azure_stream_name - string - Applicable only for destination type: azure. Name of the stream in the DCR that represents the destination table.
@@ -964,6 +1023,18 @@ class SiemHttpDestination
 
         if (@$params['generic_payload_type'] && !is_string(@$params['generic_payload_type'])) {
             throw new \Files\Exception\InvalidParameterException('$generic_payload_type must be of type string; received ' . gettype(@$params['generic_payload_type']));
+        }
+
+        if (@$params['file_destination_path'] && !is_string(@$params['file_destination_path'])) {
+            throw new \Files\Exception\InvalidParameterException('$file_destination_path must be of type string; received ' . gettype(@$params['file_destination_path']));
+        }
+
+        if (@$params['file_format'] && !is_string(@$params['file_format'])) {
+            throw new \Files\Exception\InvalidParameterException('$file_format must be of type string; received ' . gettype(@$params['file_format']));
+        }
+
+        if (@$params['file_interval_minutes'] && !is_int(@$params['file_interval_minutes'])) {
+            throw new \Files\Exception\InvalidParameterException('$file_interval_minutes must be of type int; received ' . gettype(@$params['file_interval_minutes']));
         }
 
         if (@$params['splunk_token'] && !is_string(@$params['splunk_token'])) {

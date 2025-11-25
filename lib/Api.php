@@ -20,7 +20,7 @@ function middlewareRemoveHeader($header)
 
 class Api
 {
-    const VERSION = "2.0.300";
+    const VERSION = "2.0.301";
     private static function pushRetryHandler($handlerStack)
     {
         $shouldRetry = function ($retries, $request, $response, $exception) {

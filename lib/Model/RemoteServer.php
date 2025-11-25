@@ -125,15 +125,15 @@ class RemoteServer
     {
         return $this->attributes['port'] = $value;
     }
-    // boolean # If true, uploads to this server will be uploaded first to Files.com before being sent to the remote server. This can improve performance in certain access patterns, such as high-latency connections.  It will cause data to be temporarily stored in Files.com.
-    public function getBufferUploadsAlways()
+    // string # If set to always, uploads to this server will be uploaded first to Files.com before being sent to the remote server. This can improve performance in certain access patterns, such as high-latency connections.  It will cause data to be temporarily stored in Files.com. If set to auto, we will perform this optimization if we believe it to be a benefit in a given situation.
+    public function getBufferUploads()
     {
-        return @$this->attributes['buffer_uploads_always'];
+        return @$this->attributes['buffer_uploads'];
     }
 
-    public function setBufferUploadsAlways($value)
+    public function setBufferUploads($value)
     {
-        return $this->attributes['buffer_uploads_always'] = $value;
+        return $this->attributes['buffer_uploads'] = $value;
     }
     // int64 # Max number of parallel connections.  Ignored for S3 connections (we will parallelize these as much as possible).
     public function getMaxConnections()
@@ -916,7 +916,7 @@ class RemoteServer
     //   azure_files_storage_share_name - string - Azure Files:  Storage Share name
     //   backblaze_b2_bucket - string - Backblaze B2 Cloud Storage: Bucket name
     //   backblaze_b2_s3_endpoint - string - Backblaze B2 Cloud Storage: S3 Endpoint
-    //   buffer_uploads_always - boolean - If true, uploads to this server will be uploaded first to Files.com before being sent to the remote server. This can improve performance in certain access patterns, such as high-latency connections.  It will cause data to be temporarily stored in Files.com.
+    //   buffer_uploads - string - If set to always, uploads to this server will be uploaded first to Files.com before being sent to the remote server. This can improve performance in certain access patterns, such as high-latency connections.  It will cause data to be temporarily stored in Files.com. If set to auto, we will perform this optimization if we believe it to be a benefit in a given situation.
     //   cloudflare_access_key - string - Cloudflare: Access Key.
     //   cloudflare_bucket - string - Cloudflare: Bucket name
     //   cloudflare_endpoint - string - Cloudflare: endpoint
@@ -1077,6 +1077,10 @@ class RemoteServer
 
         if (@$params['backblaze_b2_s3_endpoint'] && !is_string(@$params['backblaze_b2_s3_endpoint'])) {
             throw new \Files\Exception\InvalidParameterException('$backblaze_b2_s3_endpoint must be of type string; received ' . gettype(@$params['backblaze_b2_s3_endpoint']));
+        }
+
+        if (@$params['buffer_uploads'] && !is_string(@$params['buffer_uploads'])) {
+            throw new \Files\Exception\InvalidParameterException('$buffer_uploads must be of type string; received ' . gettype(@$params['buffer_uploads']));
         }
 
         if (@$params['cloudflare_access_key'] && !is_string(@$params['cloudflare_access_key'])) {
@@ -1364,7 +1368,7 @@ class RemoteServer
     //   azure_files_storage_share_name - string - Azure Files:  Storage Share name
     //   backblaze_b2_bucket - string - Backblaze B2 Cloud Storage: Bucket name
     //   backblaze_b2_s3_endpoint - string - Backblaze B2 Cloud Storage: S3 Endpoint
-    //   buffer_uploads_always - boolean - If true, uploads to this server will be uploaded first to Files.com before being sent to the remote server. This can improve performance in certain access patterns, such as high-latency connections.  It will cause data to be temporarily stored in Files.com.
+    //   buffer_uploads - string - If set to always, uploads to this server will be uploaded first to Files.com before being sent to the remote server. This can improve performance in certain access patterns, such as high-latency connections.  It will cause data to be temporarily stored in Files.com. If set to auto, we will perform this optimization if we believe it to be a benefit in a given situation.
     //   cloudflare_access_key - string - Cloudflare: Access Key.
     //   cloudflare_bucket - string - Cloudflare: Bucket name
     //   cloudflare_endpoint - string - Cloudflare: endpoint
@@ -1509,6 +1513,10 @@ class RemoteServer
 
         if (@$params['backblaze_b2_s3_endpoint'] && !is_string(@$params['backblaze_b2_s3_endpoint'])) {
             throw new \Files\Exception\InvalidParameterException('$backblaze_b2_s3_endpoint must be of type string; received ' . gettype(@$params['backblaze_b2_s3_endpoint']));
+        }
+
+        if (@$params['buffer_uploads'] && !is_string(@$params['buffer_uploads'])) {
+            throw new \Files\Exception\InvalidParameterException('$buffer_uploads must be of type string; received ' . gettype(@$params['buffer_uploads']));
         }
 
         if (@$params['cloudflare_access_key'] && !is_string(@$params['cloudflare_access_key'])) {

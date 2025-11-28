@@ -115,6 +115,16 @@ class RemoteServer
     {
         return $this->attributes['name'] = $value;
     }
+    // string # Internal description for your reference
+    public function getDescription()
+    {
+        return @$this->attributes['description'];
+    }
+
+    public function setDescription($value)
+    {
+        return $this->attributes['description'] = $value;
+    }
     // int64 # Port for remote server.  Not needed for S3.
     public function getPort()
     {
@@ -920,6 +930,7 @@ class RemoteServer
     //   cloudflare_access_key - string - Cloudflare: Access Key.
     //   cloudflare_bucket - string - Cloudflare: Bucket name
     //   cloudflare_endpoint - string - Cloudflare: endpoint
+    //   description - string - Internal description for your reference
     //   dropbox_teams - boolean - Dropbox: If true, list Team folders in root?
     //   enable_dedicated_ips - boolean - `true` if remote server only accepts connections from dedicated IPs
     //   filebase_access_key - string - Filebase: Access Key.
@@ -1093,6 +1104,10 @@ class RemoteServer
 
         if (@$params['cloudflare_endpoint'] && !is_string(@$params['cloudflare_endpoint'])) {
             throw new \Files\Exception\InvalidParameterException('$cloudflare_endpoint must be of type string; received ' . gettype(@$params['cloudflare_endpoint']));
+        }
+
+        if (@$params['description'] && !is_string(@$params['description'])) {
+            throw new \Files\Exception\InvalidParameterException('$description must be of type string; received ' . gettype(@$params['description']));
         }
 
         if (@$params['filebase_access_key'] && !is_string(@$params['filebase_access_key'])) {
@@ -1372,6 +1387,7 @@ class RemoteServer
     //   cloudflare_access_key - string - Cloudflare: Access Key.
     //   cloudflare_bucket - string - Cloudflare: Bucket name
     //   cloudflare_endpoint - string - Cloudflare: endpoint
+    //   description - string - Internal description for your reference
     //   dropbox_teams - boolean - Dropbox: If true, list Team folders in root?
     //   enable_dedicated_ips - boolean - `true` if remote server only accepts connections from dedicated IPs
     //   filebase_access_key - string - Filebase: Access Key.
@@ -1529,6 +1545,10 @@ class RemoteServer
 
         if (@$params['cloudflare_endpoint'] && !is_string(@$params['cloudflare_endpoint'])) {
             throw new \Files\Exception\InvalidParameterException('$cloudflare_endpoint must be of type string; received ' . gettype(@$params['cloudflare_endpoint']));
+        }
+
+        if (@$params['description'] && !is_string(@$params['description'])) {
+            throw new \Files\Exception\InvalidParameterException('$description must be of type string; received ' . gettype(@$params['description']));
         }
 
         if (@$params['filebase_access_key'] && !is_string(@$params['filebase_access_key'])) {

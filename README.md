@@ -631,6 +631,7 @@ Exception
 |`AlreadyCompletedException`|  `ProcessingFailureException` |
 |`AutomationCannotBeRunManuallyException`|  `ProcessingFailureException` |
 |`BehaviorNotAllowedOnRemoteServerException`|  `ProcessingFailureException` |
+|`BufferedUploadDisabledForThisDestinationException`|  `ProcessingFailureException` |
 |`BundleOnlyAllowsPreviewsException`|  `ProcessingFailureException` |
 |`BundleOperationRequiresSubfolderException`|  `ProcessingFailureException` |
 |`CouldNotCreateParentException`|  `ProcessingFailureException` |

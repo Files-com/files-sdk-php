@@ -890,6 +890,11 @@ class Site
     {
         return @$this->attributes['welcome_custom_text'];
     }
+    // string # Custom footer text for system-generated emails. Supports standard strftime date/time patterns like %Y (4-digit year), %m (month), %d (day).
+    public function getEmailFooterCustomText()
+    {
+        return @$this->attributes['email_footer_custom_text'];
+    }
     // email # Include this email in welcome emails if enabled
     public function getWelcomeEmailCc()
     {
@@ -1061,6 +1066,7 @@ class Site
     //   site_public_footer - string - Custom site footer text for public pages
     //   login_help_text - string - Login help text
     //   use_dedicated_ips_for_smtp - boolean - If using custom SMTP, should we use dedicated IPs to deliver emails?
+    //   email_footer_custom_text - string - Custom footer text for system-generated emails. Supports standard strftime date/time patterns like %Y (4-digit year), %m (month), %d (day).
     //   smtp_address - string - SMTP server hostname or IP
     //   smtp_authentication - string - SMTP server authentication type
     //   smtp_from - string - From address to use when mailing through custom SMTP
@@ -1290,6 +1296,10 @@ class Site
 
         if (@$params['login_help_text'] && !is_string(@$params['login_help_text'])) {
             throw new \Files\Exception\InvalidParameterException('$login_help_text must be of type string; received ' . gettype(@$params['login_help_text']));
+        }
+
+        if (@$params['email_footer_custom_text'] && !is_string(@$params['email_footer_custom_text'])) {
+            throw new \Files\Exception\InvalidParameterException('$email_footer_custom_text must be of type string; received ' . gettype(@$params['email_footer_custom_text']));
         }
 
         if (@$params['smtp_address'] && !is_string(@$params['smtp_address'])) {

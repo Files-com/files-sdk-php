@@ -404,15 +404,15 @@ class File
     {
         return $this->attributes['created_by_remote_server_id'] = $value;
     }
-    // int64 # ID of the Remote Server Sync that created the file/folder
-    public function getCreatedByRemoteServerSyncId()
+    // int64 # ID of the Sync that created the file/folder
+    public function getCreatedBySyncId()
     {
-        return @$this->attributes['created_by_remote_server_sync_id'];
+        return @$this->attributes['created_by_sync_id'];
     }
 
-    public function setCreatedByRemoteServerSyncId($value)
+    public function setCreatedBySyncId($value)
     {
-        return $this->attributes['created_by_remote_server_sync_id'] = $value;
+        return $this->attributes['created_by_sync_id'] = $value;
     }
     // object # Custom metadata map of keys and values. Limited to 32 keys, 256 characters per key and 1024 characters per value.
     public function getCustomMetadata()
@@ -509,15 +509,15 @@ class File
     {
         return $this->attributes['last_modified_by_remote_server_id'] = $value;
     }
-    // int64 # ID of the Remote Server Sync that last modified the file/folder
-    public function getLastModifiedByRemoteServerSyncId()
+    // int64 # ID of the Sync that last modified the file/folder
+    public function getLastModifiedBySyncId()
     {
-        return @$this->attributes['last_modified_by_remote_server_sync_id'];
+        return @$this->attributes['last_modified_by_sync_id'];
     }
 
-    public function setLastModifiedByRemoteServerSyncId($value)
+    public function setLastModifiedBySyncId($value)
     {
-        return $this->attributes['last_modified_by_remote_server_sync_id'] = $value;
+        return $this->attributes['last_modified_by_sync_id'] = $value;
     }
     // date-time # File last modified date/time, according to the server.  This is the timestamp of the last Files.com operation of the file, regardless of what modified timestamp was sent.
     public function getMtime()

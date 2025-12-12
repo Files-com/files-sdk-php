@@ -55,7 +55,7 @@ class GpgKey
     {
         return !!@$this->attributes['id'];
     }
-    // int64 # Your GPG key ID.
+    // int64 # GPG key ID.
     public function getId()
     {
         return @$this->attributes['id'];
@@ -65,7 +65,7 @@ class GpgKey
     {
         return $this->attributes['id'] = $value;
     }
-    // date-time # Your GPG key expiration date.
+    // date-time # GPG key expiration date.
     public function getExpiresAt()
     {
         return @$this->attributes['expires_at'];
@@ -75,7 +75,7 @@ class GpgKey
     {
         return $this->attributes['expires_at'] = $value;
     }
-    // string # Your GPG key name.
+    // string # GPG key name.
     public function getName()
     {
         return @$this->attributes['name'];
@@ -115,7 +115,7 @@ class GpgKey
     {
         return $this->attributes['user_id'] = $value;
     }
-    // string # MD5 hash of your GPG public key
+    // string # MD5 hash of the GPG public key
     public function getPublicKeyMd5()
     {
         return @$this->attributes['public_key_md5'];
@@ -125,7 +125,7 @@ class GpgKey
     {
         return $this->attributes['public_key_md5'] = $value;
     }
-    // string # MD5 hash of your GPG private key.
+    // string # MD5 hash of the GPG private key.
     public function getPrivateKeyMd5()
     {
         return @$this->attributes['private_key_md5'];
@@ -135,7 +135,7 @@ class GpgKey
     {
         return $this->attributes['private_key_md5'] = $value;
     }
-    // string # Your GPG public key
+    // string # GPG public key
     public function getGeneratedPublicKey()
     {
         return @$this->attributes['generated_public_key'];
@@ -145,7 +145,7 @@ class GpgKey
     {
         return $this->attributes['generated_public_key'] = $value;
     }
-    // string # Your GPG private key.
+    // string # GPG private key.
     public function getGeneratedPrivateKey()
     {
         return @$this->attributes['generated_private_key'];
@@ -155,7 +155,7 @@ class GpgKey
     {
         return $this->attributes['generated_private_key'] = $value;
     }
-    // string # Your GPG private key password. Only required for password protected keys.
+    // string # GPG private key password. Only required for password protected keys.
     public function getPrivateKeyPasswordMd5()
     {
         return @$this->attributes['private_key_password_md5'];
@@ -165,7 +165,7 @@ class GpgKey
     {
         return $this->attributes['private_key_password_md5'] = $value;
     }
-    // string # MD5 hash of your GPG public key
+    // string # The GPG public key
     public function getPublicKey()
     {
         return @$this->attributes['public_key'];
@@ -175,7 +175,7 @@ class GpgKey
     {
         return $this->attributes['public_key'] = $value;
     }
-    // string # MD5 hash of your GPG private key.
+    // string # The GPG private key
     public function getPrivateKey()
     {
         return @$this->attributes['private_key'];
@@ -185,7 +185,7 @@ class GpgKey
     {
         return $this->attributes['private_key'] = $value;
     }
-    // string # Your GPG private key password. Only required for password protected keys.
+    // string # The GPG private key password
     public function getPrivateKeyPassword()
     {
         return @$this->attributes['private_key_password'];
@@ -238,10 +238,10 @@ class GpgKey
 
     // Parameters:
     //   partner_id - int64 - Partner ID who owns this GPG Key, if applicable.
-    //   public_key - string - MD5 hash of your GPG public key
-    //   private_key - string - MD5 hash of your GPG private key.
-    //   private_key_password - string - Your GPG private key password. Only required for password protected keys.
-    //   name - string - Your GPG key name.
+    //   public_key - string - The GPG public key
+    //   private_key - string - The GPG private key
+    //   private_key_password - string - The GPG private key password
+    //   name - string - GPG key name.
     public function update($params = [])
     {
         if (!is_array($params)) {
@@ -386,10 +386,10 @@ class GpgKey
     // Parameters:
     //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
     //   partner_id - int64 - Partner ID who owns this GPG Key, if applicable.
-    //   public_key - string - MD5 hash of your GPG public key
-    //   private_key - string - MD5 hash of your GPG private key.
-    //   private_key_password - string - Your GPG private key password. Only required for password protected keys.
-    //   name (required) - string - Your GPG key name.
+    //   public_key - string - The GPG public key
+    //   private_key - string - The GPG private key
+    //   private_key_password - string - The GPG private key password
+    //   name (required) - string - GPG key name.
     //   generate_expires_at - string - Expiration date of the key. Used for the generation of the key. Will be ignored if `generate_keypair` is false.
     //   generate_keypair - boolean - If true, generate a new GPG key pair. Can not be used with `public_key`/`private_key`
     //   generate_full_name - string - Full name of the key owner. Used for the generation of the key. Will be ignored if `generate_keypair` is false.

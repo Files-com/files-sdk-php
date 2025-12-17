@@ -125,7 +125,7 @@ class RemoteServer
     {
         return $this->attributes['description'] = $value;
     }
-    // int64 # Port for remote server.  Not needed for S3.
+    // int64 # Port for remote server.
     public function getPort()
     {
         return @$this->attributes['port'];
@@ -174,6 +174,16 @@ class RemoteServer
     public function setPinnedRegion($value)
     {
         return $this->attributes['pinned_region'] = $value;
+    }
+    // int64 # ID of Remote Server Credential, if applicable.
+    public function getRemoteServerCredentialId()
+    {
+        return @$this->attributes['remote_server_credential_id'];
+    }
+
+    public function setRemoteServerCredentialId($value)
+    {
+        return $this->attributes['remote_server_credential_id'] = $value;
     }
     // string # S3 bucket name
     public function getS3Bucket()
@@ -245,7 +255,7 @@ class RemoteServer
     {
         return $this->attributes['ssl'] = $value;
     }
-    // string # Remote server username.  Not needed for S3 buckets.
+    // string # Remote server username.
     public function getUsername()
     {
         return @$this->attributes['username'];
@@ -960,7 +970,8 @@ class RemoteServer
     //   name - string - Internal name for your reference
     //   one_drive_account_type - string - OneDrive: Either personal or business_other account types
     //   pin_to_site_region - boolean - If true, we will ensure that all communications with this remote server are made through the primary region of the site.  This setting can also be overridden by a site-wide setting which will force it to true.
-    //   port - int64 - Port for remote server.  Not needed for S3.
+    //   port - int64 - Port for remote server.
+    //   remote_server_credential_id - int64 - ID of Remote Server Credential, if applicable.
     //   s3_bucket - string - S3 bucket name
     //   s3_compatible_access_key - string - S3-compatible: Access Key
     //   s3_compatible_bucket - string - S3-compatible: Bucket name
@@ -971,7 +982,7 @@ class RemoteServer
     //   server_host_key - string - Remote server SSH Host Key. If provided, we will require that the server host key matches the provided key. Uses OpenSSH format similar to what would go into ~/.ssh/known_hosts
     //   server_type - string - Remote server type.
     //   ssl - string - Should we require SSL?
-    //   username - string - Remote server username.  Not needed for S3 buckets.
+    //   username - string - Remote server username.
     //   wasabi_access_key - string - Wasabi: Access Key.
     //   wasabi_bucket - string - Wasabi: Bucket name
     //   wasabi_region - string - Wasabi: Region
@@ -1187,6 +1198,10 @@ class RemoteServer
 
         if (@$params['port'] && !is_int(@$params['port'])) {
             throw new \Files\Exception\InvalidParameterException('$port must be of type int; received ' . gettype(@$params['port']));
+        }
+
+        if (@$params['remote_server_credential_id'] && !is_int(@$params['remote_server_credential_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$remote_server_credential_id must be of type int; received ' . gettype(@$params['remote_server_credential_id']));
         }
 
         if (@$params['s3_bucket'] && !is_string(@$params['s3_bucket'])) {
@@ -1422,7 +1437,8 @@ class RemoteServer
     //   name - string - Internal name for your reference
     //   one_drive_account_type - string - OneDrive: Either personal or business_other account types
     //   pin_to_site_region - boolean - If true, we will ensure that all communications with this remote server are made through the primary region of the site.  This setting can also be overridden by a site-wide setting which will force it to true.
-    //   port - int64 - Port for remote server.  Not needed for S3.
+    //   port - int64 - Port for remote server.
+    //   remote_server_credential_id - int64 - ID of Remote Server Credential, if applicable.
     //   s3_bucket - string - S3 bucket name
     //   s3_compatible_access_key - string - S3-compatible: Access Key
     //   s3_compatible_bucket - string - S3-compatible: Bucket name
@@ -1433,7 +1449,7 @@ class RemoteServer
     //   server_host_key - string - Remote server SSH Host Key. If provided, we will require that the server host key matches the provided key. Uses OpenSSH format similar to what would go into ~/.ssh/known_hosts
     //   server_type - string - Remote server type.
     //   ssl - string - Should we require SSL?
-    //   username - string - Remote server username.  Not needed for S3 buckets.
+    //   username - string - Remote server username.
     //   wasabi_access_key - string - Wasabi: Access Key.
     //   wasabi_bucket - string - Wasabi: Bucket name
     //   wasabi_region - string - Wasabi: Region
@@ -1633,6 +1649,10 @@ class RemoteServer
 
         if (@$params['port'] && !is_int(@$params['port'])) {
             throw new \Files\Exception\InvalidParameterException('$port must be of type int; received ' . gettype(@$params['port']));
+        }
+
+        if (@$params['remote_server_credential_id'] && !is_int(@$params['remote_server_credential_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$remote_server_credential_id must be of type int; received ' . gettype(@$params['remote_server_credential_id']));
         }
 
         if (@$params['s3_bucket'] && !is_string(@$params['s3_bucket'])) {

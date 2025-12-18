@@ -535,6 +535,26 @@ class RemoteServer
     {
         return $this->attributes['files_agent_version'] = $value;
     }
+    // boolean # If true, the Files Agent is up to date.
+    public function getFilesAgentUpToDate()
+    {
+        return @$this->attributes['files_agent_up_to_date'];
+    }
+
+    public function setFilesAgentUpToDate($value)
+    {
+        return $this->attributes['files_agent_up_to_date'] = $value;
+    }
+    // string # Latest available Files Agent version
+    public function getFilesAgentLatestVersion()
+    {
+        return @$this->attributes['files_agent_latest_version'];
+    }
+
+    public function setFilesAgentLatestVersion($value)
+    {
+        return $this->attributes['files_agent_latest_version'] = $value;
+    }
     // int64 # Route traffic to outbound on a files-agent
     public function getOutboundAgentId()
     {
@@ -834,6 +854,29 @@ class RemoteServer
     public function setWasabiSecretKey($value)
     {
         return $this->attributes['wasabi_secret_key'] = $value;
+    }
+
+    // Push update to Files Agent
+    public function agentPushUpdate($params = [])
+    {
+        if (!is_array($params)) {
+            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+        }
+
+        if (!@$params['id']) {
+            if (@$this->id) {
+                $params['id'] = $this->id;
+            } else {
+                throw new \Files\Exception\MissingParameterException('Parameter missing: id');
+            }
+        }
+
+        if (@$params['id'] && !is_int(@$params['id'])) {
+            throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
+        }
+
+        $response = Api::sendRequest('/remote_servers/' . @$params['id'] . '/agent_push_update', 'POST', $params, $this->options);
+        return new AgentPushUpdate((array) (@$response->data ?: []), $this->options);
     }
 
     // Post local changes, check in, and download configuration file (used by some Remote Server integrations, such as the Files.com Agent)

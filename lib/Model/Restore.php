@@ -145,6 +145,16 @@ class Restore
     {
         return $this->attributes['prefix'] = $value;
     }
+    // string # Type of restoration to perform. `files` restores deleted filesystem items. `users` restores deleted users and associated access/authentication records.
+    public function getRestorationType()
+    {
+        return @$this->attributes['restoration_type'];
+    }
+
+    public function setRestorationType($value)
+    {
+        return $this->attributes['restoration_type'] = $value;
+    }
     // boolean # If true, we will restore the files in place (into their original paths). If false, we will create a new restoration folder in the root and restore files there.
     public function getRestoreInPlace()
     {
@@ -164,6 +174,66 @@ class Restore
     public function setRestoreDeletedPermissions($value)
     {
         return $this->attributes['restore_deleted_permissions'] = $value;
+    }
+    // int64 # Number of users successfully restored (only present for `restoration_type=users`).
+    public function getUsersRestored()
+    {
+        return @$this->attributes['users_restored'];
+    }
+
+    public function setUsersRestored($value)
+    {
+        return $this->attributes['users_restored'] = $value;
+    }
+    // int64 # Number of users that failed to restore (only present for `restoration_type=users`).
+    public function getUsersErrored()
+    {
+        return @$this->attributes['users_errored'];
+    }
+
+    public function setUsersErrored($value)
+    {
+        return $this->attributes['users_errored'] = $value;
+    }
+    // int64 # Total number of users processed (only present for `restoration_type=users`).
+    public function getUsersTotal()
+    {
+        return @$this->attributes['users_total'];
+    }
+
+    public function setUsersTotal($value)
+    {
+        return $this->attributes['users_total'] = $value;
+    }
+    // int64 # Number of API keys restored (only present for `restoration_type=users`).
+    public function getApiKeysRestored()
+    {
+        return @$this->attributes['api_keys_restored'];
+    }
+
+    public function setApiKeysRestored($value)
+    {
+        return $this->attributes['api_keys_restored'] = $value;
+    }
+    // int64 # Number of public keys restored (only present for `restoration_type=users`).
+    public function getPublicKeysRestored()
+    {
+        return @$this->attributes['public_keys_restored'];
+    }
+
+    public function setPublicKeysRestored($value)
+    {
+        return $this->attributes['public_keys_restored'] = $value;
+    }
+    // int64 # Number of two factor authentication methods restored (only present for `restoration_type=users`).
+    public function getTwoFactorAuthenticationMethodsRestored()
+    {
+        return @$this->attributes['two_factor_authentication_methods_restored'];
+    }
+
+    public function setTwoFactorAuthenticationMethodsRestored($value)
+    {
+        return $this->attributes['two_factor_authentication_methods_restored'] = $value;
     }
     // string # Status of the restoration process.
     public function getStatus()
@@ -235,6 +305,7 @@ class Restore
     // Parameters:
     //   earliest_date (required) - string - Restore all files deleted after this date/time. Don't set this earlier than you need. Can not be greater than 365 days prior to the restore request.
     //   prefix - string - Prefix of the files/folders to restore. To restore a folder, add a trailing slash to the folder name. Do not use a leading slash. To restore all deleted items, specify an empty string (`''`) in the prefix field or omit the field from the request.
+    //   restoration_type - string - Type of restoration to perform. `files` restores deleted filesystem items. `users` restores deleted users and associated access/authentication records.
     //   restore_deleted_permissions - boolean - If true, we will also restore any Permissions that match the same path prefix from the same dates.
     //   restore_in_place - boolean - If true, we will restore the files in place (into their original paths). If false, we will create a new restoration folder in the root and restore files there.
     //   update_timestamps - boolean - If true, we will update the last modified timestamp of restored files to today's date. If false, we might trigger File Expiration to delete the file again.
@@ -250,6 +321,10 @@ class Restore
 
         if (@$params['prefix'] && !is_string(@$params['prefix'])) {
             throw new \Files\Exception\InvalidParameterException('$prefix must be of type string; received ' . gettype(@$params['prefix']));
+        }
+
+        if (@$params['restoration_type'] && !is_string(@$params['restoration_type'])) {
+            throw new \Files\Exception\InvalidParameterException('$restoration_type must be of type string; received ' . gettype(@$params['restoration_type']));
         }
 
         $response = Api::sendRequest('/restores', 'POST', $params, $options);

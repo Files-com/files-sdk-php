@@ -377,7 +377,6 @@ class RemoteServerCredential
     }
 
     // Parameters:
-    //   workspace_id - int64 - Workspace ID (0 for default workspace)
     //   name - string - Internal name for your reference
     //   description - string - Internal description for your reference
     //   server_type - string - Remote server type.  Remote Server Credentials are only valid for a single type of Remote Server.
@@ -424,10 +423,6 @@ class RemoteServerCredential
 
         if (@$params['id'] && !is_int(@$params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
-        }
-
-        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
-            throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
         if (@$params['name'] && !is_string(@$params['name'])) {
@@ -651,7 +646,6 @@ class RemoteServerCredential
     }
 
     // Parameters:
-    //   workspace_id - int64 - Workspace ID (0 for default workspace)
     //   name - string - Internal name for your reference
     //   description - string - Internal description for your reference
     //   server_type - string - Remote server type.  Remote Server Credentials are only valid for a single type of Remote Server.
@@ -682,12 +676,9 @@ class RemoteServerCredential
     //   linode_secret_key - string - Linode: Secret Key
     //   s3_compatible_secret_key - string - S3-compatible: Secret Key
     //   wasabi_secret_key - string - Wasabi: Secret Key
+    //   workspace_id - int64 - Workspace ID (0 for default workspace)
     public static function create($params = [], $options = [])
     {
-        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
-            throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
-        }
-
         if (@$params['name'] && !is_string(@$params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
@@ -806,6 +797,10 @@ class RemoteServerCredential
 
         if (@$params['wasabi_secret_key'] && !is_string(@$params['wasabi_secret_key'])) {
             throw new \Files\Exception\InvalidParameterException('$wasabi_secret_key must be of type string; received ' . gettype(@$params['wasabi_secret_key']));
+        }
+
+        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
         $response = Api::sendRequest('/remote_server_credentials', 'POST', $params, $options);

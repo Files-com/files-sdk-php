@@ -86,8 +86,8 @@ $gpg_key = new \Files\Model\GpgKey();
 $gpg_key->create(, [
   'user_id' => 1,
   'partner_id' => 1,
-  'workspace_id' => 0,
   'name' => "key name",
+  'workspace_id' => 0,
   'generate_expires_at' => "2025-06-19 12:00:00",
   'generate_keypair' => false,
   'generate_full_name' => "John Doe",
@@ -100,11 +100,11 @@ $gpg_key->create(, [
 
 * `user_id` (int64): User ID.  Provide a value of `0` to operate the current session's user.
 * `partner_id` (int64): Partner ID who owns this GPG Key, if applicable.
-* `workspace_id` (int64): Workspace ID (0 for default workspace).
 * `public_key` (string): The GPG public key
 * `private_key` (string): The GPG private key
 * `private_key_password` (string): The GPG private key password
 * `name` (string): Required - GPG key name.
+* `workspace_id` (int64): Workspace ID (0 for default workspace).
 * `generate_expires_at` (string): Expiration date of the key. Used for the generation of the key. Will be ignored if `generate_keypair` is false.
 * `generate_keypair` (boolean): If true, generate a new GPG key pair. Can not be used with `public_key`/`private_key`
 * `generate_full_name` (string): Full name of the key owner. Used for the generation of the key. Will be ignored if `generate_keypair` is false.
@@ -119,7 +119,6 @@ $gpg_key = \Files\Model\GpgKey::find($id);
 
 $gpg_key->update([
   'partner_id' => 1,
-  'workspace_id' => 0,
   'name' => "key name",
 ]);
 ```
@@ -128,7 +127,6 @@ $gpg_key->update([
 
 * `id` (int64): Required - Gpg Key ID.
 * `partner_id` (int64): Partner ID who owns this GPG Key, if applicable.
-* `workspace_id` (int64): Workspace ID (0 for default workspace).
 * `public_key` (string): The GPG public key
 * `private_key` (string): The GPG private key
 * `private_key_password` (string): The GPG private key password

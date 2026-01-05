@@ -80,13 +80,13 @@ $group->create(, [
   'notes' => "example",
   'user_ids' => "1",
   'admin_ids' => "1",
-  'workspace_id' => 0,
   'ftp_permission' => true,
   'sftp_permission' => true,
   'dav_permission' => true,
   'restapi_permission' => true,
   'allowed_ips' => "10.0.0.0/8\n127.0.0.1",
   'name' => "name",
+  'workspace_id' => 0,
 ]);
 ```
 
@@ -96,13 +96,13 @@ $group->create(, [
 * `notes` (string): Group notes.
 * `user_ids` (string): A list of user ids. If sent as a string, should be comma-delimited.
 * `admin_ids` (string): A list of group admin user ids. If sent as a string, should be comma-delimited.
-* `workspace_id` (int64): Workspace ID
 * `ftp_permission` (boolean): If true, users in this group can use FTP to login.  This will override a false value of `ftp_permission` on the user level.
 * `sftp_permission` (boolean): If true, users in this group can use SFTP to login.  This will override a false value of `sftp_permission` on the user level.
 * `dav_permission` (boolean): If true, users in this group can use WebDAV to login.  This will override a false value of `dav_permission` on the user level.
 * `restapi_permission` (boolean): If true, users in this group can use the REST API to login.  This will override a false value of `restapi_permission` on the user level.
 * `allowed_ips` (string): A list of allowed IPs if applicable.  Newline delimited
 * `name` (string): Required - Group name.
+* `workspace_id` (int64): Workspace ID
 
 ---
 
@@ -115,7 +115,6 @@ $group->update([
   'notes' => "example",
   'user_ids' => "1",
   'admin_ids' => "1",
-  'workspace_id' => 0,
   'ftp_permission' => true,
   'sftp_permission' => true,
   'dav_permission' => true,
@@ -131,7 +130,6 @@ $group->update([
 * `notes` (string): Group notes.
 * `user_ids` (string): A list of user ids. If sent as a string, should be comma-delimited.
 * `admin_ids` (string): A list of group admin user ids. If sent as a string, should be comma-delimited.
-* `workspace_id` (int64): Workspace ID
 * `ftp_permission` (boolean): If true, users in this group can use FTP to login.  This will override a false value of `ftp_permission` on the user level.
 * `sftp_permission` (boolean): If true, users in this group can use SFTP to login.  This will override a false value of `sftp_permission` on the user level.
 * `dav_permission` (boolean): If true, users in this group can use WebDAV to login.  This will override a false value of `dav_permission` on the user level.

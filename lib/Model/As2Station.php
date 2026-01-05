@@ -65,6 +65,16 @@ class As2Station
     {
         return $this->attributes['id'] = $value;
     }
+    // int64 # ID of the Workspace associated with this AS2 Station.
+    public function getWorkspaceId()
+    {
+        return @$this->attributes['workspace_id'];
+    }
+
+    public function setWorkspaceId($value)
+    {
+        return $this->attributes['workspace_id'] = $value;
+    }
     // string # The station's formal AS2 name.
     public function getName()
     {
@@ -217,7 +227,7 @@ class As2Station
     }
 
     // Parameters:
-    //   name - string - AS2 Name
+    //   name - string - The station's formal AS2 name.
     //   public_certificate - string
     //   private_key - string
     //   private_key_password - string
@@ -304,7 +314,8 @@ class As2Station
     // Parameters:
     //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
     //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `name`.
+    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `workspace_id` and `name`.
+    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `workspace_id`.
     public static function all($params = [], $options = [])
     {
         if (@$params['cursor'] && !is_string(@$params['cursor'])) {
@@ -354,7 +365,8 @@ class As2Station
     }
 
     // Parameters:
-    //   name (required) - string - AS2 Name
+    //   name (required) - string - The station's formal AS2 name.
+    //   workspace_id - int64 - ID of the Workspace associated with this AS2 Station.
     //   public_certificate (required) - string
     //   private_key (required) - string
     //   private_key_password - string
@@ -374,6 +386,10 @@ class As2Station
 
         if (@$params['name'] && !is_string(@$params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
+        }
+
+        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
         if (@$params['public_certificate'] && !is_string(@$params['public_certificate'])) {

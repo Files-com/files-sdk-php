@@ -190,7 +190,6 @@ class Group
     //   notes - string - Group notes.
     //   user_ids - string - A list of user ids. If sent as a string, should be comma-delimited.
     //   admin_ids - string - A list of group admin user ids. If sent as a string, should be comma-delimited.
-    //   workspace_id - int64 - Workspace ID
     //   ftp_permission - boolean - If true, users in this group can use FTP to login.  This will override a false value of `ftp_permission` on the user level.
     //   sftp_permission - boolean - If true, users in this group can use SFTP to login.  This will override a false value of `sftp_permission` on the user level.
     //   dav_permission - boolean - If true, users in this group can use WebDAV to login.  This will override a false value of `dav_permission` on the user level.
@@ -225,10 +224,6 @@ class Group
 
         if (@$params['admin_ids'] && !is_string(@$params['admin_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$admin_ids must be of type string; received ' . gettype(@$params['admin_ids']));
-        }
-
-        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
-            throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
         if (@$params['allowed_ips'] && !is_string(@$params['allowed_ips'])) {
@@ -349,13 +344,13 @@ class Group
     //   notes - string - Group notes.
     //   user_ids - string - A list of user ids. If sent as a string, should be comma-delimited.
     //   admin_ids - string - A list of group admin user ids. If sent as a string, should be comma-delimited.
-    //   workspace_id - int64 - Workspace ID
     //   ftp_permission - boolean - If true, users in this group can use FTP to login.  This will override a false value of `ftp_permission` on the user level.
     //   sftp_permission - boolean - If true, users in this group can use SFTP to login.  This will override a false value of `sftp_permission` on the user level.
     //   dav_permission - boolean - If true, users in this group can use WebDAV to login.  This will override a false value of `dav_permission` on the user level.
     //   restapi_permission - boolean - If true, users in this group can use the REST API to login.  This will override a false value of `restapi_permission` on the user level.
     //   allowed_ips - string - A list of allowed IPs if applicable.  Newline delimited
     //   name (required) - string - Group name.
+    //   workspace_id - int64 - Workspace ID
     public static function create($params = [], $options = [])
     {
         if (!@$params['name']) {
@@ -374,16 +369,16 @@ class Group
             throw new \Files\Exception\InvalidParameterException('$admin_ids must be of type string; received ' . gettype(@$params['admin_ids']));
         }
 
-        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
-            throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
-        }
-
         if (@$params['allowed_ips'] && !is_string(@$params['allowed_ips'])) {
             throw new \Files\Exception\InvalidParameterException('$allowed_ips must be of type string; received ' . gettype(@$params['allowed_ips']));
         }
 
         if (@$params['name'] && !is_string(@$params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
+        }
+
+        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
         $response = Api::sendRequest('/groups', 'POST', $params, $options);

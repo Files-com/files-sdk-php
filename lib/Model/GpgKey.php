@@ -248,7 +248,6 @@ class GpgKey
 
     // Parameters:
     //   partner_id - int64 - Partner ID who owns this GPG Key, if applicable.
-    //   workspace_id - int64 - Workspace ID (0 for default workspace).
     //   public_key - string - The GPG public key
     //   private_key - string - The GPG private key
     //   private_key_password - string - The GPG private key password
@@ -273,10 +272,6 @@ class GpgKey
 
         if (@$params['partner_id'] && !is_int(@$params['partner_id'])) {
             throw new \Files\Exception\InvalidParameterException('$partner_id must be of type int; received ' . gettype(@$params['partner_id']));
-        }
-
-        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
-            throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
         if (@$params['public_key'] && !is_string(@$params['public_key'])) {
@@ -406,11 +401,11 @@ class GpgKey
     // Parameters:
     //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
     //   partner_id - int64 - Partner ID who owns this GPG Key, if applicable.
-    //   workspace_id - int64 - Workspace ID (0 for default workspace).
     //   public_key - string - The GPG public key
     //   private_key - string - The GPG private key
     //   private_key_password - string - The GPG private key password
     //   name (required) - string - GPG key name.
+    //   workspace_id - int64 - Workspace ID (0 for default workspace).
     //   generate_expires_at - string - Expiration date of the key. Used for the generation of the key. Will be ignored if `generate_keypair` is false.
     //   generate_keypair - boolean - If true, generate a new GPG key pair. Can not be used with `public_key`/`private_key`
     //   generate_full_name - string - Full name of the key owner. Used for the generation of the key. Will be ignored if `generate_keypair` is false.
@@ -429,10 +424,6 @@ class GpgKey
             throw new \Files\Exception\InvalidParameterException('$partner_id must be of type int; received ' . gettype(@$params['partner_id']));
         }
 
-        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
-            throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
-        }
-
         if (@$params['public_key'] && !is_string(@$params['public_key'])) {
             throw new \Files\Exception\InvalidParameterException('$public_key must be of type string; received ' . gettype(@$params['public_key']));
         }
@@ -447,6 +438,10 @@ class GpgKey
 
         if (@$params['name'] && !is_string(@$params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
+        }
+
+        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
         if (@$params['generate_expires_at'] && !is_string(@$params['generate_expires_at'])) {

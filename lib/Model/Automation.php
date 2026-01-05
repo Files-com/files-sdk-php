@@ -522,7 +522,6 @@ class Automation
     //   trigger_actions - array(string) - If trigger is `action`, this is the list of action types on which to trigger the automation. Valid actions are create, read, update, destroy, move, archived_delete, copy
     //   value - object - A Hash of attributes specific to the automation type.
     //   recurring_day - int64 - If trigger type is `daily`, this specifies a day number to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
-    //   workspace_id - int64 - Workspace ID
     //   automation - string - Automation type
     public function update($params = [])
     {
@@ -636,10 +635,6 @@ class Automation
 
         if (@$params['recurring_day'] && !is_int(@$params['recurring_day'])) {
             throw new \Files\Exception\InvalidParameterException('$recurring_day must be of type int; received ' . gettype(@$params['recurring_day']));
-        }
-
-        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
-            throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
         if (@$params['automation'] && !is_string(@$params['automation'])) {
@@ -782,8 +777,8 @@ class Automation
     //   trigger_actions - array(string) - If trigger is `action`, this is the list of action types on which to trigger the automation. Valid actions are create, read, update, destroy, move, archived_delete, copy
     //   value - object - A Hash of attributes specific to the automation type.
     //   recurring_day - int64 - If trigger type is `daily`, this specifies a day number to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
-    //   workspace_id - int64 - Workspace ID
     //   automation (required) - string - Automation type
+    //   workspace_id - int64 - Workspace ID
     public static function create($params = [], $options = [])
     {
         if (!@$params['automation']) {
@@ -886,12 +881,12 @@ class Automation
             throw new \Files\Exception\InvalidParameterException('$recurring_day must be of type int; received ' . gettype(@$params['recurring_day']));
         }
 
-        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
-            throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
-        }
-
         if (@$params['automation'] && !is_string(@$params['automation'])) {
             throw new \Files\Exception\InvalidParameterException('$automation must be of type string; received ' . gettype(@$params['automation']));
+        }
+
+        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
         $response = Api::sendRequest('/automations', 'POST', $params, $options);

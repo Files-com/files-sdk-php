@@ -167,7 +167,7 @@ class Behavior
     }
 
     // Parameters:
-    //   value - string - This field stores a hash of data specific to the type of behavior. See The Behavior Types section for example values for each type of behavior.
+    //   value - object - This field stores a hash of data specific to the type of behavior. See The Behavior Types section for example values for each type of behavior.
     //   attachment_file - file - Certain behaviors may require a file, for instance, the `watermark` behavior requires a watermark image. Attach that file here.
     //   disable_parent_folder_behavior - boolean - If `true`, the parent folder's behavior will be disabled for this folder and its children. This is the main mechanism for canceling out a `recursive` behavior higher in the folder tree.
     //   recursive - boolean - If `true`, behavior is treated as recursive, meaning that it impacts child folders as well.
@@ -190,10 +190,6 @@ class Behavior
 
         if (@$params['id'] && !is_int(@$params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
-        }
-
-        if (@$params['value'] && !is_string(@$params['value'])) {
-            throw new \Files\Exception\InvalidParameterException('$value must be of type string; received ' . gettype(@$params['value']));
         }
 
         if (@$params['name'] && !is_string(@$params['name'])) {
@@ -346,7 +342,7 @@ class Behavior
     }
 
     // Parameters:
-    //   value - string - This field stores a hash of data specific to the type of behavior. See The Behavior Types section for example values for each type of behavior.
+    //   value - object - This field stores a hash of data specific to the type of behavior. See The Behavior Types section for example values for each type of behavior.
     //   attachment_file - file - Certain behaviors may require a file, for instance, the `watermark` behavior requires a watermark image. Attach that file here.
     //   disable_parent_folder_behavior - boolean - If `true`, the parent folder's behavior will be disabled for this folder and its children. This is the main mechanism for canceling out a `recursive` behavior higher in the folder tree.
     //   recursive - boolean - If `true`, behavior is treated as recursive, meaning that it impacts child folders as well.
@@ -362,10 +358,6 @@ class Behavior
 
         if (!@$params['behavior']) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: behavior');
-        }
-
-        if (@$params['value'] && !is_string(@$params['value'])) {
-            throw new \Files\Exception\InvalidParameterException('$value must be of type string; received ' . gettype(@$params['value']));
         }
 
         if (@$params['name'] && !is_string(@$params['name'])) {

@@ -65,6 +65,16 @@ class RemoteServerCredential
     {
         return $this->attributes['id'] = $value;
     }
+    // int64 # Workspace ID (0 for default workspace)
+    public function getWorkspaceId()
+    {
+        return @$this->attributes['workspace_id'];
+    }
+
+    public function setWorkspaceId($value)
+    {
+        return $this->attributes['workspace_id'] = $value;
+    }
     // string # Internal name for your reference
     public function getName()
     {
@@ -367,6 +377,7 @@ class RemoteServerCredential
     }
 
     // Parameters:
+    //   workspace_id - int64 - Workspace ID (0 for default workspace)
     //   name - string - Internal name for your reference
     //   description - string - Internal description for your reference
     //   server_type - string - Remote server type.  Remote Server Credentials are only valid for a single type of Remote Server.
@@ -413,6 +424,10 @@ class RemoteServerCredential
 
         if (@$params['id'] && !is_int(@$params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
+        }
+
+        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
         if (@$params['name'] && !is_string(@$params['name'])) {
@@ -584,7 +599,8 @@ class RemoteServerCredential
     // Parameters:
     //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
     //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
-    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `name`.
+    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `workspace_id` and `id`.
+    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `workspace_id` and `name`. Valid field combinations are `[ workspace_id, name ]`.
     //   filter_prefix - object - If set, return records where the specified field is prefixed by the supplied value. Valid fields are `name`.
     public static function all($params = [], $options = [])
     {
@@ -635,6 +651,7 @@ class RemoteServerCredential
     }
 
     // Parameters:
+    //   workspace_id - int64 - Workspace ID (0 for default workspace)
     //   name - string - Internal name for your reference
     //   description - string - Internal description for your reference
     //   server_type - string - Remote server type.  Remote Server Credentials are only valid for a single type of Remote Server.
@@ -667,6 +684,10 @@ class RemoteServerCredential
     //   wasabi_secret_key - string - Wasabi: Secret Key
     public static function create($params = [], $options = [])
     {
+        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
+        }
+
         if (@$params['name'] && !is_string(@$params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }

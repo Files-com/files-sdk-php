@@ -620,6 +620,16 @@ class User
     {
         return $this->attributes['site_admin'] = $value;
     }
+    // boolean # Is the user a Workspace administrator?  Applicable only to the workspace ID related to this user, if one is set.
+    public function getWorkspaceAdmin()
+    {
+        return @$this->attributes['workspace_admin'];
+    }
+
+    public function setWorkspaceAdmin($value)
+    {
+        return $this->attributes['workspace_admin'] = $value;
+    }
     // int64 # Site ID
     public function getSiteId()
     {
@@ -1011,6 +1021,7 @@ class User
     //   time_zone - string - User time zone
     //   user_root - string - Root folder for FTP (and optionally SFTP if the appropriate site-wide setting is set).  Note that this is not used for API, Desktop, or Web interface.
     //   user_home - string - Home folder for FTP/SFTP.  Note that this is not used for API, Desktop, or Web interface.
+    //   workspace_admin - boolean - Is the user a Workspace administrator?  Applicable only to the workspace ID related to this user, if one is set.
     //   username - string - User's username
     //   clear_2fa - boolean - If true when changing authentication_method from `password` to `sso`, remove all two-factor methods. Ignored in all other cases.
     //   convert_to_partner_user - boolean - If true, convert this user to a partner user by assigning the partner_id provided.
@@ -1324,6 +1335,7 @@ class User
     //   time_zone - string - User time zone
     //   user_root - string - Root folder for FTP (and optionally SFTP if the appropriate site-wide setting is set).  Note that this is not used for API, Desktop, or Web interface.
     //   user_home - string - Home folder for FTP/SFTP.  Note that this is not used for API, Desktop, or Web interface.
+    //   workspace_admin - boolean - Is the user a Workspace administrator?  Applicable only to the workspace ID related to this user, if one is set.
     //   username (required) - string - User's username
     //   workspace_id - int64 - Workspace ID
     public static function create($params = [], $options = [])

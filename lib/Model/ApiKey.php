@@ -214,7 +214,6 @@ class ApiKey
     // Parameters:
     //   description - string - User-supplied description of API key.
     //   expires_at - string - API Key expiration date
-    //   permission_set - string - Permissions for this API Key. It must be full for site-wide API Keys.  Keys with the `desktop_app` permission set only have the ability to do the functions provided in our Desktop App (File and Share Link operations). Keys with the `office_integration` permission set are auto generated, and automatically expire, to allow users to interact with office integration platforms. Additional permission sets may become available in the future, such as for a Site Admin to give a key with no administrator privileges.  If you have ideas for permission sets, please let us know.
     //   name - string - Internal name for the API Key.  For your use.
     public function update($params = [])
     {
@@ -240,10 +239,6 @@ class ApiKey
 
         if (@$params['expires_at'] && !is_string(@$params['expires_at'])) {
             throw new \Files\Exception\InvalidParameterException('$expires_at must be of type string; received ' . gettype(@$params['expires_at']));
-        }
-
-        if (@$params['permission_set'] && !is_string(@$params['permission_set'])) {
-            throw new \Files\Exception\InvalidParameterException('$permission_set must be of type string; received ' . gettype(@$params['permission_set']));
         }
 
         if (@$params['name'] && !is_string(@$params['name'])) {
@@ -369,10 +364,10 @@ class ApiKey
     //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
     //   description - string - User-supplied description of API key.
     //   expires_at - string - API Key expiration date
-    //   permission_set - string - Permissions for this API Key. It must be full for site-wide API Keys.  Keys with the `desktop_app` permission set only have the ability to do the functions provided in our Desktop App (File and Share Link operations). Keys with the `office_integration` permission set are auto generated, and automatically expire, to allow users to interact with office integration platforms. Additional permission sets may become available in the future, such as for a Site Admin to give a key with no administrator privileges.  If you have ideas for permission sets, please let us know.
     //   name (required) - string - Internal name for the API Key.  For your use.
     //   aws_style_credentials - boolean - If `true`, this API key will be usable with AWS-compatible endpoints, such as our Inbound S3-compatible endpoint.
     //   path - string - Folder path restriction for `office_integration` permission set API keys.
+    //   permission_set - string - Permissions for this API Key. It must be full for site-wide API Keys.  Keys with the `desktop_app` permission set only have the ability to do the functions provided in our Desktop App (File and Share Link operations). Keys with the `office_integration` permission set are auto generated, and automatically expire, to allow users to interact with office integration platforms. Additional permission sets may become available in the future, such as for a Site Admin to give a key with no administrator privileges.  If you have ideas for permission sets, please let us know.
     public static function create($params = [], $options = [])
     {
         if (!@$params['name']) {
@@ -391,16 +386,16 @@ class ApiKey
             throw new \Files\Exception\InvalidParameterException('$expires_at must be of type string; received ' . gettype(@$params['expires_at']));
         }
 
-        if (@$params['permission_set'] && !is_string(@$params['permission_set'])) {
-            throw new \Files\Exception\InvalidParameterException('$permission_set must be of type string; received ' . gettype(@$params['permission_set']));
-        }
-
         if (@$params['name'] && !is_string(@$params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
         if (@$params['path'] && !is_string(@$params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
+        }
+
+        if (@$params['permission_set'] && !is_string(@$params['permission_set'])) {
+            throw new \Files\Exception\InvalidParameterException('$permission_set must be of type string; received ' . gettype(@$params['permission_set']));
         }
 
         $response = Api::sendRequest('/api_keys', 'POST', $params, $options);

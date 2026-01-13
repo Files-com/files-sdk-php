@@ -135,26 +135,6 @@ class RemoteServerCredential
     {
         return $this->attributes['wasabi_access_key'] = $value;
     }
-    // string # Azure Blob Storage: Account name
-    public function getAzureBlobStorageAccount()
-    {
-        return @$this->attributes['azure_blob_storage_account'];
-    }
-
-    public function setAzureBlobStorageAccount($value)
-    {
-        return $this->attributes['azure_blob_storage_account'] = $value;
-    }
-    // string # Azure Files: Storage Account name
-    public function getAzureFilesStorageAccount()
-    {
-        return @$this->attributes['azure_files_storage_account'];
-    }
-
-    public function setAzureFilesStorageAccount($value)
-    {
-        return $this->attributes['azure_files_storage_account'] = $value;
-    }
     // string # S3-compatible: Access Key
     public function getS3CompatibleAccessKey()
     {
@@ -381,8 +361,6 @@ class RemoteServerCredential
     //   description - string - Internal description for your reference
     //   server_type - string - Remote server type.  Remote Server Credentials are only valid for a single type of Remote Server.
     //   aws_access_key - string - AWS Access Key.
-    //   azure_blob_storage_account - string - Azure Blob Storage: Account name
-    //   azure_files_storage_account - string - Azure Files: Storage Account name
     //   cloudflare_access_key - string - Cloudflare: Access Key.
     //   filebase_access_key - string - Filebase: Access Key.
     //   google_cloud_storage_s3_compatible_access_key - string - Google Cloud Storage: S3-compatible Access Key.
@@ -439,14 +417,6 @@ class RemoteServerCredential
 
         if (@$params['aws_access_key'] && !is_string(@$params['aws_access_key'])) {
             throw new \Files\Exception\InvalidParameterException('$aws_access_key must be of type string; received ' . gettype(@$params['aws_access_key']));
-        }
-
-        if (@$params['azure_blob_storage_account'] && !is_string(@$params['azure_blob_storage_account'])) {
-            throw new \Files\Exception\InvalidParameterException('$azure_blob_storage_account must be of type string; received ' . gettype(@$params['azure_blob_storage_account']));
-        }
-
-        if (@$params['azure_files_storage_account'] && !is_string(@$params['azure_files_storage_account'])) {
-            throw new \Files\Exception\InvalidParameterException('$azure_files_storage_account must be of type string; received ' . gettype(@$params['azure_files_storage_account']));
         }
 
         if (@$params['cloudflare_access_key'] && !is_string(@$params['cloudflare_access_key'])) {
@@ -650,8 +620,6 @@ class RemoteServerCredential
     //   description - string - Internal description for your reference
     //   server_type - string - Remote server type.  Remote Server Credentials are only valid for a single type of Remote Server.
     //   aws_access_key - string - AWS Access Key.
-    //   azure_blob_storage_account - string - Azure Blob Storage: Account name
-    //   azure_files_storage_account - string - Azure Files: Storage Account name
     //   cloudflare_access_key - string - Cloudflare: Access Key.
     //   filebase_access_key - string - Filebase: Access Key.
     //   google_cloud_storage_s3_compatible_access_key - string - Google Cloud Storage: S3-compatible Access Key.
@@ -693,14 +661,6 @@ class RemoteServerCredential
 
         if (@$params['aws_access_key'] && !is_string(@$params['aws_access_key'])) {
             throw new \Files\Exception\InvalidParameterException('$aws_access_key must be of type string; received ' . gettype(@$params['aws_access_key']));
-        }
-
-        if (@$params['azure_blob_storage_account'] && !is_string(@$params['azure_blob_storage_account'])) {
-            throw new \Files\Exception\InvalidParameterException('$azure_blob_storage_account must be of type string; received ' . gettype(@$params['azure_blob_storage_account']));
-        }
-
-        if (@$params['azure_files_storage_account'] && !is_string(@$params['azure_files_storage_account'])) {
-            throw new \Files\Exception\InvalidParameterException('$azure_files_storage_account must be of type string; received ' . gettype(@$params['azure_files_storage_account']));
         }
 
         if (@$params['cloudflare_access_key'] && !is_string(@$params['cloudflare_access_key'])) {

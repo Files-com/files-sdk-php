@@ -55,7 +55,7 @@ class RemoteServer
     {
         return !!@$this->attributes['id'];
     }
-    // int64 # Remote server ID
+    // int64 # Remote Server ID
     public function getId()
     {
         return @$this->attributes['id'];
@@ -65,7 +65,7 @@ class RemoteServer
     {
         return $this->attributes['id'] = $value;
     }
-    // boolean # If true, this server has been disabled due to failures.  Make any change or set disabled to false to clear this flag.
+    // boolean # If true, this Remote Server has been disabled due to failures.  Make any change or set disabled to false to clear this flag.
     public function getDisabled()
     {
         return @$this->attributes['disabled'];
@@ -75,7 +75,7 @@ class RemoteServer
     {
         return $this->attributes['disabled'] = $value;
     }
-    // string # Type of authentication method
+    // string # Type of authentication method to use
     public function getAuthenticationMethod()
     {
         return @$this->attributes['authentication_method'];
@@ -104,6 +104,16 @@ class RemoteServer
     public function setRemoteHomePath($value)
     {
         return $this->attributes['remote_home_path'] = $value;
+    }
+    // string # Upload staging path.  Applies to SFTP only.  If a path is provided here, files will first be uploaded to this path on the remote folder and the moved into the final correct path via an SFTP move command.  This is required by some remote MFT systems to emulate atomic uploads, which are otherwise not supoprted by SFTP.
+    public function getUploadStagingPath()
+    {
+        return @$this->attributes['upload_staging_path'];
+    }
+
+    public function setUploadStagingPath($value)
+    {
+        return $this->attributes['upload_staging_path'] = $value;
     }
     // string # Internal name for your reference
     public function getName()
@@ -1034,6 +1044,7 @@ class RemoteServer
     //   one_drive_account_type - string - OneDrive: Either personal or business_other account types
     //   pin_to_site_region - boolean - If true, we will ensure that all communications with this remote server are made through the primary region of the site.  This setting can also be overridden by a site-wide setting which will force it to true.
     //   port - int64 - Port for remote server.
+    //   upload_staging_path - string - Upload staging path.  Applies to SFTP only.  If a path is provided here, files will first be uploaded to this path on the remote folder and the moved into the final correct path via an SFTP move command.  This is required by some remote MFT systems to emulate atomic uploads, which are otherwise not supoprted by SFTP.
     //   remote_server_credential_id - int64 - ID of Remote Server Credential, if applicable.
     //   s3_bucket - string - S3 bucket name
     //   s3_compatible_access_key - string - S3-compatible: Access Key
@@ -1261,6 +1272,10 @@ class RemoteServer
 
         if (@$params['port'] && !is_int(@$params['port'])) {
             throw new \Files\Exception\InvalidParameterException('$port must be of type int; received ' . gettype(@$params['port']));
+        }
+
+        if (@$params['upload_staging_path'] && !is_string(@$params['upload_staging_path'])) {
+            throw new \Files\Exception\InvalidParameterException('$upload_staging_path must be of type string; received ' . gettype(@$params['upload_staging_path']));
         }
 
         if (@$params['remote_server_credential_id'] && !is_int(@$params['remote_server_credential_id'])) {
@@ -1501,6 +1516,7 @@ class RemoteServer
     //   one_drive_account_type - string - OneDrive: Either personal or business_other account types
     //   pin_to_site_region - boolean - If true, we will ensure that all communications with this remote server are made through the primary region of the site.  This setting can also be overridden by a site-wide setting which will force it to true.
     //   port - int64 - Port for remote server.
+    //   upload_staging_path - string - Upload staging path.  Applies to SFTP only.  If a path is provided here, files will first be uploaded to this path on the remote folder and the moved into the final correct path via an SFTP move command.  This is required by some remote MFT systems to emulate atomic uploads, which are otherwise not supoprted by SFTP.
     //   remote_server_credential_id - int64 - ID of Remote Server Credential, if applicable.
     //   s3_bucket - string - S3 bucket name
     //   s3_compatible_access_key - string - S3-compatible: Access Key
@@ -1713,6 +1729,10 @@ class RemoteServer
 
         if (@$params['port'] && !is_int(@$params['port'])) {
             throw new \Files\Exception\InvalidParameterException('$port must be of type int; received ' . gettype(@$params['port']));
+        }
+
+        if (@$params['upload_staging_path'] && !is_string(@$params['upload_staging_path'])) {
+            throw new \Files\Exception\InvalidParameterException('$upload_staging_path must be of type string; received ' . gettype(@$params['upload_staging_path']));
         }
 
         if (@$params['remote_server_credential_id'] && !is_int(@$params['remote_server_credential_id'])) {

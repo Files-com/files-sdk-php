@@ -540,6 +540,7 @@ Exception
 |`InvalidUploadOffsetException`|  `BadRequestException` |
 |`InvalidUploadPartGapException`|  `BadRequestException` |
 |`InvalidUploadPartSizeException`|  `BadRequestException` |
+|`InvalidWorkspaceIdHeaderException`|  `BadRequestException` |
 |`MethodNotAllowedException`|  `BadRequestException` |
 |`MultipleSortParamsNotAllowedException`|  `BadRequestException` |
 |`NoValidInputParamsException`|  `BadRequestException` |

@@ -265,6 +265,26 @@ class SiemHttpDestination
     {
         return $this->attributes['datadog_api_key_masked'] = $value;
     }
+    // boolean # Whether or not sending is enabled for action logs.
+    public function getActionSendEnabled()
+    {
+        return @$this->attributes['action_send_enabled'];
+    }
+
+    public function setActionSendEnabled($value)
+    {
+        return $this->attributes['action_send_enabled'] = $value;
+    }
+    // int64 # Number of log entries sent for the lifetime of this destination.
+    public function getActionEntriesSent()
+    {
+        return @$this->attributes['action_entries_sent'];
+    }
+
+    public function setActionEntriesSent($value)
+    {
+        return $this->attributes['action_entries_sent'] = $value;
+    }
     // boolean # Whether or not sending is enabled for sftp_action logs.
     public function getSftpActionSendEnabled()
     {
@@ -655,6 +675,7 @@ class SiemHttpDestination
     //   solar_winds_token - string - Applicable only for destination type: solar_winds. Authentication token provided by Solar Winds.
     //   new_relic_api_key - string - Applicable only for destination type: new_relic. API key provided by New Relic.
     //   datadog_api_key - string - Applicable only for destination type: datadog. API key provided by Datadog.
+    //   action_send_enabled - boolean - Whether or not sending is enabled for action logs.
     //   sftp_action_send_enabled - boolean - Whether or not sending is enabled for sftp_action logs.
     //   ftp_action_send_enabled - boolean - Whether or not sending is enabled for ftp_action logs.
     //   web_dav_action_send_enabled - boolean - Whether or not sending is enabled for web_dav_action logs.
@@ -874,6 +895,7 @@ class SiemHttpDestination
     //   solar_winds_token - string - Applicable only for destination type: solar_winds. Authentication token provided by Solar Winds.
     //   new_relic_api_key - string - Applicable only for destination type: new_relic. API key provided by New Relic.
     //   datadog_api_key - string - Applicable only for destination type: datadog. API key provided by Datadog.
+    //   action_send_enabled - boolean - Whether or not sending is enabled for action logs.
     //   sftp_action_send_enabled - boolean - Whether or not sending is enabled for sftp_action logs.
     //   ftp_action_send_enabled - boolean - Whether or not sending is enabled for ftp_action logs.
     //   web_dav_action_send_enabled - boolean - Whether or not sending is enabled for web_dav_action logs.
@@ -992,6 +1014,7 @@ class SiemHttpDestination
     //   solar_winds_token - string - Applicable only for destination type: solar_winds. Authentication token provided by Solar Winds.
     //   new_relic_api_key - string - Applicable only for destination type: new_relic. API key provided by New Relic.
     //   datadog_api_key - string - Applicable only for destination type: datadog. API key provided by Datadog.
+    //   action_send_enabled - boolean - Whether or not sending is enabled for action logs.
     //   sftp_action_send_enabled - boolean - Whether or not sending is enabled for sftp_action logs.
     //   ftp_action_send_enabled - boolean - Whether or not sending is enabled for ftp_action logs.
     //   web_dav_action_send_enabled - boolean - Whether or not sending is enabled for web_dav_action logs.

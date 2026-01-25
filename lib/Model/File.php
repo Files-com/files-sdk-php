@@ -871,6 +871,29 @@ class File
         return;
     }
 
+    // List the contents of a ZIP file
+    public function zipListContents($params = [])
+    {
+        if (!is_array($params)) {
+            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+        }
+
+        if (!@$params['path']) {
+            if (@$this->path) {
+                $params['path'] = $this->path;
+            } else {
+                throw new \Files\Exception\MissingParameterException('Parameter missing: path');
+            }
+        }
+
+        if (@$params['path'] && !is_string(@$params['path'])) {
+            throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
+        }
+
+        $response = Api::sendRequest('/file_actions/zip_list/' . @$params['path'] . '', 'GET', $params, $this->options);
+        return new ZipListEntry((array) (@$response->data ?: []), $this->options);
+    }
+
     // Copy File/Folder
     //
     // Parameters:
@@ -947,6 +970,50 @@ class File
         }
 
         $response = Api::sendRequest('/file_actions/move/' . @$params['path'] . '', 'POST', $params, $this->options);
+        return new FileAction((array) (@$response->data ?: []), $this->options);
+    }
+
+    // Extract a ZIP file to a destination folder
+    //
+    // Parameters:
+    //   destination (required) - string - Destination folder path for extracted files.
+    //   filename - string - Optional single entry filename to extract.
+    //   overwrite - boolean - Overwrite existing files in the destination?
+    public function unzip($params = [])
+    {
+        if (!is_array($params)) {
+            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+        }
+
+        if (!@$params['path']) {
+            if (@$this->path) {
+                $params['path'] = $this->path;
+            } else {
+                throw new \Files\Exception\MissingParameterException('Parameter missing: path');
+            }
+        }
+
+        if (!@$params['destination']) {
+            if (@$this->destination) {
+                $params['destination'] = $this->destination;
+            } else {
+                throw new \Files\Exception\MissingParameterException('Parameter missing: destination');
+            }
+        }
+
+        if (@$params['path'] && !is_string(@$params['path'])) {
+            throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
+        }
+
+        if (@$params['destination'] && !is_string(@$params['destination'])) {
+            throw new \Files\Exception\InvalidParameterException('$destination must be of type string; received ' . gettype(@$params['destination']));
+        }
+
+        if (@$params['filename'] && !is_string(@$params['filename'])) {
+            throw new \Files\Exception\InvalidParameterException('$filename must be of type string; received ' . gettype(@$params['filename']));
+        }
+
+        $response = Api::sendRequest('/file_actions/unzip', 'POST', $params, $this->options);
         return new FileAction((array) (@$response->data ?: []), $this->options);
     }
 
@@ -1115,5 +1182,32 @@ class File
     public static function get($path, $params = [], $options = [])
     {
         return self::find($path, $params, $options);
+    }
+
+    // Parameters:
+    //   paths (required) - array(string) - Paths to include in the ZIP.
+    //   destination (required) - string - Destination file path for the ZIP.
+    //   overwrite - boolean - Overwrite existing file in the destination?
+    public static function zip($params = [], $options = [])
+    {
+        if (!@$params['paths']) {
+            throw new \Files\Exception\MissingParameterException('Parameter missing: paths');
+        }
+
+        if (!@$params['destination']) {
+            throw new \Files\Exception\MissingParameterException('Parameter missing: destination');
+        }
+
+        if (@$params['paths'] && !is_array(@$params['paths'])) {
+            throw new \Files\Exception\InvalidParameterException('$paths must be of type array; received ' . gettype(@$params['paths']));
+        }
+
+        if (@$params['destination'] && !is_string(@$params['destination'])) {
+            throw new \Files\Exception\InvalidParameterException('$destination must be of type string; received ' . gettype(@$params['destination']));
+        }
+
+        $response = Api::sendRequest('/file_actions/zip', 'POST', $params, $options);
+
+        return new FileAction((array) (@$response->data ?: []), $options);
     }
 }

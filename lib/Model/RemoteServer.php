@@ -115,6 +115,16 @@ class RemoteServer
     {
         return $this->attributes['upload_staging_path'] = $value;
     }
+    // boolean # Allow relative paths in SFTP. If true, paths will not be forced to be absolute, allowing operations relative to the user's home directory.
+    public function getAllowRelativePaths()
+    {
+        return @$this->attributes['allow_relative_paths'];
+    }
+
+    public function setAllowRelativePaths($value)
+    {
+        return $this->attributes['allow_relative_paths'] = $value;
+    }
     // string # Internal name for your reference
     public function getName()
     {
@@ -1009,6 +1019,7 @@ class RemoteServer
     //   linode_secret_key - string - Linode: Secret Key
     //   s3_compatible_secret_key - string - S3-compatible: Secret Key
     //   wasabi_secret_key - string - Wasabi: Secret Key
+    //   allow_relative_paths - boolean - Allow relative paths in SFTP. If true, paths will not be forced to be absolute, allowing operations relative to the user's home directory.
     //   aws_access_key - string - AWS Access Key.
     //   azure_blob_storage_account - string - Azure Blob Storage: Account name
     //   azure_blob_storage_container - string - Azure Blob Storage: Container name
@@ -1481,6 +1492,7 @@ class RemoteServer
     //   linode_secret_key - string - Linode: Secret Key
     //   s3_compatible_secret_key - string - S3-compatible: Secret Key
     //   wasabi_secret_key - string - Wasabi: Secret Key
+    //   allow_relative_paths - boolean - Allow relative paths in SFTP. If true, paths will not be forced to be absolute, allowing operations relative to the user's home directory.
     //   aws_access_key - string - AWS Access Key.
     //   azure_blob_storage_account - string - Azure Blob Storage: Account name
     //   azure_blob_storage_container - string - Azure Blob Storage: Container name

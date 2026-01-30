@@ -60,37 +60,37 @@ class BandwidthSnapshot
     {
         return @$this->attributes['id'];
     }
-    // double # Site bandwidth report bytes received
+    // int64 # Site bandwidth report bytes received
     public function getBytesReceived()
     {
         return @$this->attributes['bytes_received'];
     }
-    // double # Site bandwidth report bytes sent
+    // int64 # Site bandwidth report bytes sent
     public function getBytesSent()
     {
         return @$this->attributes['bytes_sent'];
     }
-    // double # Site sync bandwidth report bytes received
+    // int64 # Site sync bandwidth report bytes received
     public function getSyncBytesReceived()
     {
         return @$this->attributes['sync_bytes_received'];
     }
-    // double # Site sync bandwidth report bytes sent
+    // int64 # Site sync bandwidth report bytes sent
     public function getSyncBytesSent()
     {
         return @$this->attributes['sync_bytes_sent'];
     }
-    // double # Site bandwidth report get requests
+    // int64 # Site bandwidth report get requests
     public function getRequestsGet()
     {
         return @$this->attributes['requests_get'];
     }
-    // double # Site bandwidth report put requests
+    // int64 # Site bandwidth report put requests
     public function getRequestsPut()
     {
         return @$this->attributes['requests_put'];
     }
-    // double # Site bandwidth report other requests
+    // int64 # Site bandwidth report other requests
     public function getRequestsOther()
     {
         return @$this->attributes['requests_other'];

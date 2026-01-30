@@ -75,52 +75,52 @@ class UsageSnapshot
     {
         return @$this->attributes['high_water_user_count'];
     }
-    // double # Current total Storage Usage GB as of end date (not necessarily high water mark, which is used for billing)
+    // int64 # Current total Storage Usage GB as of end date (not necessarily high water mark, which is used for billing)
     public function getCurrentStorage()
     {
         return @$this->attributes['current_storage'];
     }
-    // double # Highest Storage Usage GB recorded in time period (used for billing)
+    // int64 # Highest Storage Usage GB recorded in time period (used for billing)
     public function getHighWaterStorage()
     {
         return @$this->attributes['high_water_storage'];
     }
-    // double # Storage Usage for root folder as of end date (not necessarily high water mark, which is used for billing)
+    // int64 # Storage Usage for root folder as of end date (not necessarily high water mark, which is used for billing)
     public function getRootStorage()
     {
         return @$this->attributes['root_storage'];
     }
-    // double # Storage Usage for files that are deleted but uploaded within last 30 days as of end date (not necessarily high water mark, which is used for billing)
+    // int64 # Storage Usage for files that are deleted but uploaded within last 30 days as of end date (not necessarily high water mark, which is used for billing)
     public function getDeletedFilesCountedInMinimum()
     {
         return @$this->attributes['deleted_files_counted_in_minimum'];
     }
-    // double # Storage Usage for files that are deleted but retained as backups as of end date (not necessarily high water mark, which is used for billing)
+    // int64 # Storage Usage for files that are deleted but retained as backups as of end date (not necessarily high water mark, which is used for billing)
     public function getDeletedFilesStorage()
     {
         return @$this->attributes['deleted_files_storage'];
     }
-    // double # Storage + Transfer Usage - Total Billable amount
+    // int64 # Storage + Transfer Usage - Total Billable amount
     public function getTotalBillableUsage()
     {
         return @$this->attributes['total_billable_usage'];
     }
-    // double # Transfer usage for period - Total Billable amount
+    // int64 # Transfer usage for period - Total Billable amount
     public function getTotalBillableTransferUsage()
     {
         return @$this->attributes['total_billable_transfer_usage'];
     }
-    // double # Transfer Usage for period - Outbound GB from Files Native Storage
+    // int64 # Transfer Usage for period - Outbound GB from Files Native Storage
     public function getBytesSent()
     {
         return @$this->attributes['bytes_sent'];
     }
-    // double # Transfer Usage for period - Inbound GB to Remote Servers (Sync/Mount)
+    // int64 # Transfer Usage for period - Inbound GB to Remote Servers (Sync/Mount)
     public function getSyncBytesReceived()
     {
         return @$this->attributes['sync_bytes_received'];
     }
-    // double # Transfer Usage for period - Outbound GB from Remote Servers (Sync/Mount)
+    // int64 # Transfer Usage for period - Outbound GB from Remote Servers (Sync/Mount)
     public function getSyncBytesSent()
     {
         return @$this->attributes['sync_bytes_sent'];

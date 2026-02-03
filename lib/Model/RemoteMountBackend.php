@@ -135,7 +135,7 @@ class RemoteMountBackend
     {
         return $this->attributes['interval'] = $value;
     }
-    // double # Minimum free CPU percentage required for this backend to be considered healthy.
+    // decimal # Minimum free CPU percentage required for this backend to be considered healthy.
     public function getMinFreeCpu()
     {
         return @$this->attributes['min_free_cpu'];
@@ -145,7 +145,7 @@ class RemoteMountBackend
     {
         return $this->attributes['min_free_cpu'] = $value;
     }
-    // double # Minimum free memory percentage required for this backend to be considered healthy.
+    // decimal # Minimum free memory percentage required for this backend to be considered healthy.
     public function getMinFreeMem()
     {
         return @$this->attributes['min_free_mem'];

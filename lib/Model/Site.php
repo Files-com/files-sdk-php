@@ -575,7 +575,7 @@ class Site
     {
         return @$this->attributes['motd_use_for_sftp'];
     }
-    // double # Next billing amount
+    // decimal # Next billing amount
     public function getNextBillingAmount()
     {
         return @$this->attributes['next_billing_amount'];

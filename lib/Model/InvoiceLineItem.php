@@ -60,7 +60,7 @@ class InvoiceLineItem
     {
         return @$this->attributes['id'];
     }
-    // double # Invoice line item amount
+    // decimal # Invoice line item amount
     public function getAmount()
     {
         return @$this->attributes['amount'];

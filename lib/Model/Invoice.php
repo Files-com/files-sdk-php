@@ -60,12 +60,12 @@ class Invoice
     {
         return @$this->attributes['id'];
     }
-    // double # Line item amount
+    // decimal # Line item amount
     public function getAmount()
     {
         return @$this->attributes['amount'];
     }
-    // double # Line item balance
+    // decimal # Line item balance
     public function getBalance()
     {
         return @$this->attributes['balance'];

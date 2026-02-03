@@ -55,7 +55,7 @@ class PaymentLineItem
     {
         return !!@$this->attributes['id'];
     }
-    // double # Payment line item amount
+    // decimal # Payment line item amount
     public function getAmount()
     {
         return @$this->attributes['amount'];

@@ -60,12 +60,12 @@ class RemoteBandwidthSnapshot
     {
         return @$this->attributes['id'];
     }
-    // double # Site sync bandwidth report bytes received
+    // int64 # Site sync bandwidth report bytes received
     public function getSyncBytesReceived()
     {
         return @$this->attributes['sync_bytes_received'];
     }
-    // double # Site sync bandwidth report bytes sent
+    // int64 # Site sync bandwidth report bytes sent
     public function getSyncBytesSent()
     {
         return @$this->attributes['sync_bytes_sent'];

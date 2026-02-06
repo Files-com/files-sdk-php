@@ -95,6 +95,16 @@ class PartnerSiteRequest
     {
         return $this->attributes['status'] = $value;
     }
+    // string # Main Site Name
+    public function getMainSiteName()
+    {
+        return @$this->attributes['main_site_name'];
+    }
+
+    public function setMainSiteName($value)
+    {
+        return $this->attributes['main_site_name'] = $value;
+    }
     // string # Pairing key used to approve this request on the target site
     public function getPairingKey()
     {

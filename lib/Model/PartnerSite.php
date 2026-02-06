@@ -70,6 +70,34 @@ class PartnerSite
     {
         return @$this->attributes['linked_site_id'];
     }
+    // string # Linked Site Name
+    public function getLinkedSiteName()
+    {
+        return @$this->attributes['linked_site_name'];
+    }
+    // int64 # Main Site ID
+    public function getMainSiteId()
+    {
+        return @$this->attributes['main_site_id'];
+    }
+    // string # Main Site Name
+    public function getMainSiteName()
+    {
+        return @$this->attributes['main_site_name'];
+    }
+
+    public static function linkeds($params = [], $options = [])
+    {
+        $response = Api::sendRequest('/partner_sites/linked_partner_sites', 'GET', $options);
+
+        $return_array = [];
+
+        foreach ($response->data as $obj) {
+            $return_array[] = new PartnerSite((array) $obj, $options);
+        }
+
+        return $return_array;
+    }
 
     // Parameters:
     //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.

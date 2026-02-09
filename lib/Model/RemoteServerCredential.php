@@ -115,6 +115,36 @@ class RemoteServerCredential
     {
         return $this->attributes['aws_access_key'] = $value;
     }
+    // string # AWS IAM Role ARN for AssumeRole authentication.
+    public function getS3AssumeRoleArn()
+    {
+        return @$this->attributes['s3_assume_role_arn'];
+    }
+
+    public function setS3AssumeRoleArn($value)
+    {
+        return $this->attributes['s3_assume_role_arn'] = $value;
+    }
+    // int64 # Session duration in seconds for AssumeRole authentication (900-43200).
+    public function getS3AssumeRoleDurationSeconds()
+    {
+        return @$this->attributes['s3_assume_role_duration_seconds'];
+    }
+
+    public function setS3AssumeRoleDurationSeconds($value)
+    {
+        return $this->attributes['s3_assume_role_duration_seconds'] = $value;
+    }
+    // string # External ID for AssumeRole authentication.
+    public function getS3AssumeRoleExternalId()
+    {
+        return @$this->attributes['s3_assume_role_external_id'];
+    }
+
+    public function setS3AssumeRoleExternalId($value)
+    {
+        return $this->attributes['s3_assume_role_external_id'] = $value;
+    }
     // string # Google Cloud Storage: S3-compatible Access Key.
     public function getGoogleCloudStorageS3CompatibleAccessKey()
     {
@@ -361,6 +391,8 @@ class RemoteServerCredential
     //   description - string - Internal description for your reference
     //   server_type - string - Remote server type.  Remote Server Credentials are only valid for a single type of Remote Server.
     //   aws_access_key - string - AWS Access Key.
+    //   s3_assume_role_arn - string - AWS IAM Role ARN for AssumeRole authentication.
+    //   s3_assume_role_duration_seconds - int64 - Session duration in seconds for AssumeRole authentication (900-43200).
     //   cloudflare_access_key - string - Cloudflare: Access Key.
     //   filebase_access_key - string - Filebase: Access Key.
     //   google_cloud_storage_s3_compatible_access_key - string - Google Cloud Storage: S3-compatible Access Key.
@@ -417,6 +449,14 @@ class RemoteServerCredential
 
         if (@$params['aws_access_key'] && !is_string(@$params['aws_access_key'])) {
             throw new \Files\Exception\InvalidParameterException('$aws_access_key must be of type string; received ' . gettype(@$params['aws_access_key']));
+        }
+
+        if (@$params['s3_assume_role_arn'] && !is_string(@$params['s3_assume_role_arn'])) {
+            throw new \Files\Exception\InvalidParameterException('$s3_assume_role_arn must be of type string; received ' . gettype(@$params['s3_assume_role_arn']));
+        }
+
+        if (@$params['s3_assume_role_duration_seconds'] && !is_int(@$params['s3_assume_role_duration_seconds'])) {
+            throw new \Files\Exception\InvalidParameterException('$s3_assume_role_duration_seconds must be of type int; received ' . gettype(@$params['s3_assume_role_duration_seconds']));
         }
 
         if (@$params['cloudflare_access_key'] && !is_string(@$params['cloudflare_access_key'])) {
@@ -620,6 +660,8 @@ class RemoteServerCredential
     //   description - string - Internal description for your reference
     //   server_type - string - Remote server type.  Remote Server Credentials are only valid for a single type of Remote Server.
     //   aws_access_key - string - AWS Access Key.
+    //   s3_assume_role_arn - string - AWS IAM Role ARN for AssumeRole authentication.
+    //   s3_assume_role_duration_seconds - int64 - Session duration in seconds for AssumeRole authentication (900-43200).
     //   cloudflare_access_key - string - Cloudflare: Access Key.
     //   filebase_access_key - string - Filebase: Access Key.
     //   google_cloud_storage_s3_compatible_access_key - string - Google Cloud Storage: S3-compatible Access Key.
@@ -661,6 +703,14 @@ class RemoteServerCredential
 
         if (@$params['aws_access_key'] && !is_string(@$params['aws_access_key'])) {
             throw new \Files\Exception\InvalidParameterException('$aws_access_key must be of type string; received ' . gettype(@$params['aws_access_key']));
+        }
+
+        if (@$params['s3_assume_role_arn'] && !is_string(@$params['s3_assume_role_arn'])) {
+            throw new \Files\Exception\InvalidParameterException('$s3_assume_role_arn must be of type string; received ' . gettype(@$params['s3_assume_role_arn']));
+        }
+
+        if (@$params['s3_assume_role_duration_seconds'] && !is_int(@$params['s3_assume_role_duration_seconds'])) {
+            throw new \Files\Exception\InvalidParameterException('$s3_assume_role_duration_seconds must be of type int; received ' . gettype(@$params['s3_assume_role_duration_seconds']));
         }
 
         if (@$params['cloudflare_access_key'] && !is_string(@$params['cloudflare_access_key'])) {

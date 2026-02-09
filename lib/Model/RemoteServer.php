@@ -235,6 +235,36 @@ class RemoteServer
     {
         return $this->attributes['aws_access_key'] = $value;
     }
+    // string # AWS IAM Role ARN for AssumeRole authentication.
+    public function getS3AssumeRoleArn()
+    {
+        return @$this->attributes['s3_assume_role_arn'];
+    }
+
+    public function setS3AssumeRoleArn($value)
+    {
+        return $this->attributes['s3_assume_role_arn'] = $value;
+    }
+    // int64 # Session duration in seconds for AssumeRole authentication (900-43200).
+    public function getS3AssumeRoleDurationSeconds()
+    {
+        return @$this->attributes['s3_assume_role_duration_seconds'];
+    }
+
+    public function setS3AssumeRoleDurationSeconds($value)
+    {
+        return $this->attributes['s3_assume_role_duration_seconds'] = $value;
+    }
+    // string # External ID for AssumeRole authentication.
+    public function getS3AssumeRoleExternalId()
+    {
+        return @$this->attributes['s3_assume_role_external_id'];
+    }
+
+    public function setS3AssumeRoleExternalId($value)
+    {
+        return $this->attributes['s3_assume_role_external_id'] = $value;
+    }
     // string # Remote server certificate
     public function getServerCertificate()
     {
@@ -1057,6 +1087,8 @@ class RemoteServer
     //   port - int64 - Port for remote server.
     //   upload_staging_path - string - Upload staging path.  Applies to SFTP only.  If a path is provided here, files will first be uploaded to this path on the remote folder and the moved into the final correct path via an SFTP move command.  This is required by some remote MFT systems to emulate atomic uploads, which are otherwise not supoprted by SFTP.
     //   remote_server_credential_id - int64 - ID of Remote Server Credential, if applicable.
+    //   s3_assume_role_arn - string - AWS IAM Role ARN for AssumeRole authentication.
+    //   s3_assume_role_duration_seconds - int64 - Session duration in seconds for AssumeRole authentication (900-43200).
     //   s3_bucket - string - S3 bucket name
     //   s3_compatible_access_key - string - S3-compatible: Access Key
     //   s3_compatible_bucket - string - S3-compatible: Bucket name
@@ -1291,6 +1323,14 @@ class RemoteServer
 
         if (@$params['remote_server_credential_id'] && !is_int(@$params['remote_server_credential_id'])) {
             throw new \Files\Exception\InvalidParameterException('$remote_server_credential_id must be of type int; received ' . gettype(@$params['remote_server_credential_id']));
+        }
+
+        if (@$params['s3_assume_role_arn'] && !is_string(@$params['s3_assume_role_arn'])) {
+            throw new \Files\Exception\InvalidParameterException('$s3_assume_role_arn must be of type string; received ' . gettype(@$params['s3_assume_role_arn']));
+        }
+
+        if (@$params['s3_assume_role_duration_seconds'] && !is_int(@$params['s3_assume_role_duration_seconds'])) {
+            throw new \Files\Exception\InvalidParameterException('$s3_assume_role_duration_seconds must be of type int; received ' . gettype(@$params['s3_assume_role_duration_seconds']));
         }
 
         if (@$params['s3_bucket'] && !is_string(@$params['s3_bucket'])) {
@@ -1530,6 +1570,8 @@ class RemoteServer
     //   port - int64 - Port for remote server.
     //   upload_staging_path - string - Upload staging path.  Applies to SFTP only.  If a path is provided here, files will first be uploaded to this path on the remote folder and the moved into the final correct path via an SFTP move command.  This is required by some remote MFT systems to emulate atomic uploads, which are otherwise not supoprted by SFTP.
     //   remote_server_credential_id - int64 - ID of Remote Server Credential, if applicable.
+    //   s3_assume_role_arn - string - AWS IAM Role ARN for AssumeRole authentication.
+    //   s3_assume_role_duration_seconds - int64 - Session duration in seconds for AssumeRole authentication (900-43200).
     //   s3_bucket - string - S3 bucket name
     //   s3_compatible_access_key - string - S3-compatible: Access Key
     //   s3_compatible_bucket - string - S3-compatible: Bucket name
@@ -1749,6 +1791,14 @@ class RemoteServer
 
         if (@$params['remote_server_credential_id'] && !is_int(@$params['remote_server_credential_id'])) {
             throw new \Files\Exception\InvalidParameterException('$remote_server_credential_id must be of type int; received ' . gettype(@$params['remote_server_credential_id']));
+        }
+
+        if (@$params['s3_assume_role_arn'] && !is_string(@$params['s3_assume_role_arn'])) {
+            throw new \Files\Exception\InvalidParameterException('$s3_assume_role_arn must be of type string; received ' . gettype(@$params['s3_assume_role_arn']));
+        }
+
+        if (@$params['s3_assume_role_duration_seconds'] && !is_int(@$params['s3_assume_role_duration_seconds'])) {
+            throw new \Files\Exception\InvalidParameterException('$s3_assume_role_duration_seconds must be of type int; received ' . gettype(@$params['s3_assume_role_duration_seconds']));
         }
 
         if (@$params['s3_bucket'] && !is_string(@$params['s3_bucket'])) {

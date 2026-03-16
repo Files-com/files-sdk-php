@@ -150,7 +150,7 @@ class RemoteServerConfigurationFile
     {
         return @$this->attributes['transfer_rate_limit'];
     }
-    // string # Auto update policy ['manual_trigger', 'critical_only', 'always', 'never'] (default critical_only)
+    // string # Auto update policy ['manual_trigger', 'critical_only', 'always', 'never'] (default always)
     public function getAutoUpdatePolicy()
     {
         return @$this->attributes['auto_update_policy'];

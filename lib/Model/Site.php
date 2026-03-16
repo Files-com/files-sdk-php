@@ -120,6 +120,21 @@ class Site
     {
         return @$this->attributes['allow_bundle_names'];
     }
+    // boolean # Allow the site-wide two-factor authentication requirement to be overriden on a per-user-basis?
+    public function getAllowUserLevel2faOverride()
+    {
+        return @$this->attributes['allow_user_level_2fa_override'];
+    }
+    // boolean # Allow the site-wide allowed IP restriction to be overriden on a per-user-basis?
+    public function getAllowUserLevelAllowedIpOverride()
+    {
+        return @$this->attributes['allow_user_level_allowed_ip_override'];
+    }
+    // boolean # Allow the site-wide FTP SSL requirement to be overriden on a per-user-basis?
+    public function getAllowUserLevelSslOverride()
+    {
+        return @$this->attributes['allow_user_level_ssl_override'];
+    }
     // string # Comma separated list of allowed Country codes
     public function getAllowedCountries()
     {
@@ -992,6 +1007,9 @@ class Site
     //   include_password_in_welcome_email - boolean - Include password in emails to new users?
     //   allowed_countries - string - Comma separated list of allowed Country codes
     //   allowed_ips - string - List of allowed IP addresses
+    //   allow_user_level_2fa_override - boolean - Allow the site-wide two-factor authentication requirement to be overriden on a per-user-basis?
+    //   allow_user_level_allowed_ip_override - boolean - Allow the site-wide allowed IP restriction to be overriden on a per-user-basis?
+    //   allow_user_level_ssl_override - boolean - Allow the site-wide FTP SSL requirement to be overriden on a per-user-basis?
     //   disallowed_countries - string - Comma separated list of disallowed Country codes
     //   days_to_retain_backups - int64 - Number of days to keep deleted files
     //   max_prior_passwords - int64 - Number of prior passwords to disallow

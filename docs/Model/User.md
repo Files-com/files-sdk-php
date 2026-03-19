@@ -23,6 +23,7 @@
   "dav_permission": true,
   "disabled": true,
   "disabled_expired_or_inactive": true,
+  "desktop_configuration_profile_id": 1,
   "email": "john.doe@files.com",
   "filesystem_layout": "site_root",
   "first_login_at": "2000-01-01T01:00:00Z",
@@ -99,6 +100,7 @@
 * `dav_permission` (boolean): Can the user connect with WebDAV?
 * `disabled` (boolean): Is user disabled? Disabled users cannot log in, and do not count for billing purposes. Users can be automatically disabled after an inactivity period via a Site setting or schedule to be deactivated after specific date.
 * `disabled_expired_or_inactive` (boolean): Computed property that returns true if user disabled or expired or inactive.
+* `desktop_configuration_profile_id` (int64): Desktop Configuration Profile ID assigned directly to this user, if any.
 * `email` (email): User email address
 * `filesystem_layout` (string): File system layout
 * `first_login_at` (date-time): User's first login time
@@ -229,6 +231,7 @@ $user->create(, [
   'bypass_user_lifecycle_rules' => false,
   'bypass_site_allowed_ips' => false,
   'dav_permission' => true,
+  'desktop_configuration_profile_id' => 1,
   'disabled' => true,
   'filesystem_layout' => "site_root",
   'ftp_permission' => true,
@@ -288,6 +291,7 @@ $user->create(, [
 * `bypass_user_lifecycle_rules` (boolean): Exempt this user from user lifecycle rules?
 * `bypass_site_allowed_ips` (boolean): Allow this user to skip site-wide IP blacklists?
 * `dav_permission` (boolean): Can the user connect with WebDAV?
+* `desktop_configuration_profile_id` (int64): Desktop Configuration Profile ID assigned directly to this user, if any.
 * `disabled` (boolean): Is user disabled? Disabled users cannot log in, and do not count for billing purposes. Users can be automatically disabled after an inactivity period via a Site setting or schedule to be deactivated after specific date.
 * `filesystem_layout` (string): File system layout
 * `ftp_permission` (boolean): Can the user access with FTP/FTPS?
@@ -388,6 +392,7 @@ $user->update([
   'bypass_user_lifecycle_rules' => false,
   'bypass_site_allowed_ips' => false,
   'dav_permission' => true,
+  'desktop_configuration_profile_id' => 1,
   'disabled' => true,
   'filesystem_layout' => "site_root",
   'ftp_permission' => true,
@@ -448,6 +453,7 @@ $user->update([
 * `bypass_user_lifecycle_rules` (boolean): Exempt this user from user lifecycle rules?
 * `bypass_site_allowed_ips` (boolean): Allow this user to skip site-wide IP blacklists?
 * `dav_permission` (boolean): Can the user connect with WebDAV?
+* `desktop_configuration_profile_id` (int64): Desktop Configuration Profile ID assigned directly to this user, if any.
 * `disabled` (boolean): Is user disabled? Disabled users cannot log in, and do not count for billing purposes. Users can be automatically disabled after an inactivity period via a Site setting or schedule to be deactivated after specific date.
 * `filesystem_layout` (string): File system layout
 * `ftp_permission` (boolean): Can the user access with FTP/FTPS?
@@ -506,6 +512,7 @@ $user->update([
   "dav_permission": true,
   "disabled": true,
   "disabled_expired_or_inactive": true,
+  "desktop_configuration_profile_id": 1,
   "email": "john.doe@files.com",
   "filesystem_layout": "site_root",
   "first_login_at": "2000-01-01T01:00:00Z",

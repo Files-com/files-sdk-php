@@ -420,6 +420,16 @@ class Bundle
     {
         return $this->attributes['send_one_time_password_to_recipient_at_registration'] = $value;
     }
+    // int64 # Workspace ID. `0` means the default workspace.
+    public function getWorkspaceId()
+    {
+        return @$this->attributes['workspace_id'];
+    }
+
+    public function setWorkspaceId($value)
+    {
+        return $this->attributes['workspace_id'] = $value;
+    }
     // boolean # Does this bundle have an associated inbox?
     public function getHasInbox()
     {
@@ -586,6 +596,7 @@ class Bundle
     //   start_access_on_date - string - Date when share will start to be accessible. If `nil` access granted right after create.
     //   skip_email - boolean - BundleRegistrations can be saved without providing email?
     //   skip_name - boolean - BundleRegistrations can be saved without providing name?
+    //   workspace_id - int64 - Workspace ID. `0` means the default workspace.
     //   user_id - int64 - The owning user id. Only site admins can set this.
     //   watermark_attachment_delete - boolean - If true, will delete the file stored in watermark_attachment
     //   watermark_attachment_file - file - Preview watermark image applied to all bundle items.
@@ -661,6 +672,10 @@ class Bundle
 
         if (@$params['start_access_on_date'] && !is_string(@$params['start_access_on_date'])) {
             throw new \Files\Exception\InvalidParameterException('$start_access_on_date must be of type string; received ' . gettype(@$params['start_access_on_date']));
+        }
+
+        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
         if (@$params['user_id'] && !is_int(@$params['user_id'])) {
@@ -803,6 +818,7 @@ class Bundle
     //   skip_company - boolean - BundleRegistrations can be saved without providing company?
     //   start_access_on_date - string - Date when share will start to be accessible. If `nil` access granted right after create.
     //   snapshot_id - int64 - ID of the snapshot containing this bundle's contents.
+    //   workspace_id - int64 - Workspace ID. `0` means the default workspace.
     //   watermark_attachment_file - file - Preview watermark image applied to all bundle items.
     public static function create($params = [], $options = [])
     {
@@ -872,6 +888,10 @@ class Bundle
 
         if (@$params['snapshot_id'] && !is_int(@$params['snapshot_id'])) {
             throw new \Files\Exception\InvalidParameterException('$snapshot_id must be of type int; received ' . gettype(@$params['snapshot_id']));
+        }
+
+        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
         $response = Api::sendRequest('/bundles', 'POST', $params, $options);

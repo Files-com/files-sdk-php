@@ -145,9 +145,20 @@ class FormFieldSet
     {
         return $this->attributes['user_id'] = $value;
     }
+    // int64 # Workspace ID
+    public function getWorkspaceId()
+    {
+        return @$this->attributes['workspace_id'];
+    }
+
+    public function setWorkspaceId($value)
+    {
+        return $this->attributes['workspace_id'] = $value;
+    }
 
     // Parameters:
     //   title - string - Title to be displayed
+    //   workspace_id - int64 - Workspace ID
     //   skip_email - boolean - Skip validating form email
     //   skip_name - boolean - Skip validating form name
     //   skip_company - boolean - Skip validating company
@@ -172,6 +183,10 @@ class FormFieldSet
 
         if (@$params['title'] && !is_string(@$params['title'])) {
             throw new \Files\Exception\InvalidParameterException('$title must be of type string; received ' . gettype(@$params['title']));
+        }
+
+        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
         if (@$params['form_fields'] && !is_array(@$params['form_fields'])) {
@@ -283,6 +298,7 @@ class FormFieldSet
     // Parameters:
     //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
     //   title - string - Title to be displayed
+    //   workspace_id - int64 - Workspace ID
     //   skip_email - boolean - Skip validating form email
     //   skip_name - boolean - Skip validating form name
     //   skip_company - boolean - Skip validating company
@@ -295,6 +311,10 @@ class FormFieldSet
 
         if (@$params['title'] && !is_string(@$params['title'])) {
             throw new \Files\Exception\InvalidParameterException('$title must be of type string; received ' . gettype(@$params['title']));
+        }
+
+        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
         if (@$params['form_fields'] && !is_array(@$params['form_fields'])) {

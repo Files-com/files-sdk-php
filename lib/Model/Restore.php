@@ -255,6 +255,16 @@ class Restore
     {
         return $this->attributes['update_timestamps'] = $value;
     }
+    // int64 # Workspace ID for a workspace-scoped restore. `0` means the default site-wide scope.
+    public function getWorkspaceId()
+    {
+        return @$this->attributes['workspace_id'];
+    }
+
+    public function setWorkspaceId($value)
+    {
+        return $this->attributes['workspace_id'] = $value;
+    }
     // array(string) # Error messages received while restoring files and/or directories. Only present if there were errors.
     public function getErrorMessages()
     {
@@ -281,7 +291,7 @@ class Restore
     // Parameters:
     //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
     //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are .
+    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `workspace_id`.
     //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `restoration_type`.
     public static function all($params = [], $options = [])
     {
@@ -311,6 +321,7 @@ class Restore
     //   restore_deleted_permissions - boolean - If true, we will also restore any Permissions that match the same path prefix from the same dates.
     //   restore_in_place - boolean - If true, we will restore the files in place (into their original paths). If false, we will create a new restoration folder in the root and restore files there.
     //   update_timestamps - boolean - If true, we will update the last modified timestamp of restored files to today's date. If false, we might trigger File Expiration to delete the file again.
+    //   workspace_id - int64 - Workspace ID for a workspace-scoped restore. `0` means the default site-wide scope.
     public static function create($params = [], $options = [])
     {
         if (!@$params['earliest_date']) {
@@ -327,6 +338,10 @@ class Restore
 
         if (@$params['restoration_type'] && !is_string(@$params['restoration_type'])) {
             throw new \Files\Exception\InvalidParameterException('$restoration_type must be of type string; received ' . gettype(@$params['restoration_type']));
+        }
+
+        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
         $response = Api::sendRequest('/restores', 'POST', $params, $options);

@@ -125,6 +125,16 @@ class UserLifecycleRule
     {
         return $this->attributes['include_site_admins'] = $value;
     }
+    // boolean # If true, a default-workspace rule also applies to users in all workspaces.
+    public function getApplyToAllWorkspaces()
+    {
+        return @$this->attributes['apply_to_all_workspaces'];
+    }
+
+    public function setApplyToAllWorkspaces($value)
+    {
+        return $this->attributes['apply_to_all_workspaces'] = $value;
+    }
     // string # User Lifecycle Rule name
     public function getName()
     {
@@ -155,6 +165,16 @@ class UserLifecycleRule
     {
         return $this->attributes['site_id'] = $value;
     }
+    // int64 # Workspace ID. `0` means the default workspace.
+    public function getWorkspaceId()
+    {
+        return @$this->attributes['workspace_id'];
+    }
+
+    public function setWorkspaceId($value)
+    {
+        return $this->attributes['workspace_id'] = $value;
+    }
     // string # State of the users to apply the rule to (inactive or disabled)
     public function getUserState()
     {
@@ -178,6 +198,7 @@ class UserLifecycleRule
 
     // Parameters:
     //   action - string - Action to take on inactive users (disable or delete)
+    //   apply_to_all_workspaces - boolean - If true, a default-workspace rule also applies to users in all workspaces.
     //   authentication_method - string - User authentication method for which the rule will apply.
     //   group_ids - array(int64) - Array of Group IDs to which the rule applies. If empty or not set, the rule applies to all users.
     //   inactivity_days - int64 - Number of days of inactivity before the rule applies
@@ -187,6 +208,7 @@ class UserLifecycleRule
     //   partner_tag - string - If provided, only users belonging to Partners with this tag at the Partner level will be affected by the rule. Tags must only contain lowercase letters, numbers, and hyphens.
     //   user_state - string - State of the users to apply the rule to (inactive or disabled)
     //   user_tag - string - If provided, only users with this tag will be affected by the rule. Tags must only contain lowercase letters, numbers, and hyphens.
+    //   workspace_id - int64 - Workspace ID. `0` means the default workspace.
     public function update($params = [])
     {
         if (!is_array($params)) {
@@ -235,6 +257,10 @@ class UserLifecycleRule
 
         if (@$params['user_tag'] && !is_string(@$params['user_tag'])) {
             throw new \Files\Exception\InvalidParameterException('$user_tag must be of type string; received ' . gettype(@$params['user_tag']));
+        }
+
+        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
         $response = Api::sendRequest('/user_lifecycle_rules/' . @$params['id'] . '', 'PATCH', $params, $this->options);
@@ -286,7 +312,8 @@ class UserLifecycleRule
     // Parameters:
     //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
     //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `site_id`.
+    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `site_id` and `workspace_id`.
+    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `workspace_id`.
     public static function all($params = [], $options = [])
     {
         if (@$params['cursor'] && !is_string(@$params['cursor'])) {
@@ -337,6 +364,7 @@ class UserLifecycleRule
 
     // Parameters:
     //   action - string - Action to take on inactive users (disable or delete)
+    //   apply_to_all_workspaces - boolean - If true, a default-workspace rule also applies to users in all workspaces.
     //   authentication_method - string - User authentication method for which the rule will apply.
     //   group_ids - array(int64) - Array of Group IDs to which the rule applies. If empty or not set, the rule applies to all users.
     //   inactivity_days - int64 - Number of days of inactivity before the rule applies
@@ -346,6 +374,7 @@ class UserLifecycleRule
     //   partner_tag - string - If provided, only users belonging to Partners with this tag at the Partner level will be affected by the rule. Tags must only contain lowercase letters, numbers, and hyphens.
     //   user_state - string - State of the users to apply the rule to (inactive or disabled)
     //   user_tag - string - If provided, only users with this tag will be affected by the rule. Tags must only contain lowercase letters, numbers, and hyphens.
+    //   workspace_id - int64 - Workspace ID. `0` means the default workspace.
     public static function create($params = [], $options = [])
     {
         if (@$params['action'] && !is_string(@$params['action'])) {
@@ -378,6 +407,10 @@ class UserLifecycleRule
 
         if (@$params['user_tag'] && !is_string(@$params['user_tag'])) {
             throw new \Files\Exception\InvalidParameterException('$user_tag must be of type string; received ' . gettype(@$params['user_tag']));
+        }
+
+        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
         $response = Api::sendRequest('/user_lifecycle_rules', 'POST', $params, $options);

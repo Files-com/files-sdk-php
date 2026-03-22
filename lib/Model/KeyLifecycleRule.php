@@ -85,6 +85,16 @@ class KeyLifecycleRule
     {
         return $this->attributes['inactivity_days'] = $value;
     }
+    // boolean # If true, a default-workspace rule also applies to keys in all workspaces.
+    public function getApplyToAllWorkspaces()
+    {
+        return @$this->attributes['apply_to_all_workspaces'];
+    }
+
+    public function setApplyToAllWorkspaces($value)
+    {
+        return $this->attributes['apply_to_all_workspaces'] = $value;
+    }
     // string # Key Lifecycle Rule name
     public function getName()
     {
@@ -95,11 +105,23 @@ class KeyLifecycleRule
     {
         return $this->attributes['name'] = $value;
     }
+    // int64 # Workspace ID. `0` means the default workspace.
+    public function getWorkspaceId()
+    {
+        return @$this->attributes['workspace_id'];
+    }
+
+    public function setWorkspaceId($value)
+    {
+        return $this->attributes['workspace_id'] = $value;
+    }
 
     // Parameters:
+    //   apply_to_all_workspaces - boolean - If true, a default-workspace rule also applies to keys in all workspaces.
     //   key_type - string - Key type for which the rule will apply (gpg or ssh).
     //   inactivity_days - int64 - Number of days of inactivity before the rule applies.
     //   name - string - Key Lifecycle Rule name
+    //   workspace_id - int64 - Workspace ID. `0` means the default workspace.
     public function update($params = [])
     {
         if (!is_array($params)) {
@@ -128,6 +150,10 @@ class KeyLifecycleRule
 
         if (@$params['name'] && !is_string(@$params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
+        }
+
+        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
         $response = Api::sendRequest('/key_lifecycle_rules/' . @$params['id'] . '', 'PATCH', $params, $this->options);
@@ -179,8 +205,8 @@ class KeyLifecycleRule
     // Parameters:
     //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
     //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `key_type`.
-    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `key_type`.
+    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `workspace_id` and `key_type`.
+    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `workspace_id`.
     public static function all($params = [], $options = [])
     {
         if (@$params['cursor'] && !is_string(@$params['cursor'])) {
@@ -230,9 +256,11 @@ class KeyLifecycleRule
     }
 
     // Parameters:
+    //   apply_to_all_workspaces - boolean - If true, a default-workspace rule also applies to keys in all workspaces.
     //   key_type - string - Key type for which the rule will apply (gpg or ssh).
     //   inactivity_days - int64 - Number of days of inactivity before the rule applies.
     //   name - string - Key Lifecycle Rule name
+    //   workspace_id - int64 - Workspace ID. `0` means the default workspace.
     public static function create($params = [], $options = [])
     {
         if (@$params['key_type'] && !is_string(@$params['key_type'])) {
@@ -245,6 +273,10 @@ class KeyLifecycleRule
 
         if (@$params['name'] && !is_string(@$params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
+        }
+
+        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
         $response = Api::sendRequest('/key_lifecycle_rules', 'POST', $params, $options);

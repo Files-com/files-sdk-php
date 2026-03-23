@@ -115,6 +115,26 @@ class Permission
     {
         return $this->attributes['group_name'] = $value;
     }
+    // array(int64) # Group IDs when this permission requires multiple groups
+    public function getGroupIds()
+    {
+        return @$this->attributes['group_ids'];
+    }
+
+    public function setGroupIds($value)
+    {
+        return $this->attributes['group_ids'] = $value;
+    }
+    // array(string) # Group names when this permission requires multiple groups
+    public function getGroupNames()
+    {
+        return @$this->attributes['group_names'];
+    }
+
+    public function setGroupNames($value)
+    {
+        return $this->attributes['group_names'] = $value;
+    }
     // int64 # Partner ID (if applicable)
     public function getPartnerId()
     {
@@ -257,6 +277,7 @@ class Permission
     // Parameters:
     //   path (required) - string - Folder path
     //   group_id - int64 - Group ID. Provide `group_name` or `group_id`
+    //   group_ids - string - Group IDs when the permission requires multiple groups. If sent as a string, it should be comma-delimited.
     //   permission - string - Permission type.  Can be `admin`, `full`, `readonly`, `writeonly`, `list`, or `history`
     //   recursive - boolean - Apply to subfolders recursively?
     //   partner_id - int64 - Partner ID if this Permission belongs to a partner.
@@ -276,6 +297,10 @@ class Permission
 
         if (@$params['group_id'] && !is_int(@$params['group_id'])) {
             throw new \Files\Exception\InvalidParameterException('$group_id must be of type int; received ' . gettype(@$params['group_id']));
+        }
+
+        if (@$params['group_ids'] && !is_string(@$params['group_ids'])) {
+            throw new \Files\Exception\InvalidParameterException('$group_ids must be of type string; received ' . gettype(@$params['group_ids']));
         }
 
         if (@$params['permission'] && !is_string(@$params['permission'])) {

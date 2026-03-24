@@ -317,7 +317,7 @@ class Expectation
     }
 
     // Manually open an Expectation window
-    public function trigger($params = [])
+    public function triggerEvaluation($params = [])
     {
         if (!is_array($params)) {
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
@@ -335,7 +335,7 @@ class Expectation
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/expectations/' . @$params['id'] . '/trigger', 'POST', $params, $this->options);
+        $response = Api::sendRequest('/expectations/' . @$params['id'] . '/trigger_evaluation', 'POST', $params, $this->options);
         return new ExpectationEvaluation((array) (@$response->data ?: []), $this->options);
     }
 

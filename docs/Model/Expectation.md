@@ -165,7 +165,7 @@ $expectation->create(, [
 ```
 $expectation = \Files\Model\Expectation::find($id);
 
-$expectation->trigger();
+$expectation->trigger_evaluation();
 ```
 
 ### Parameters

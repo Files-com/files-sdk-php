@@ -43,7 +43,7 @@ $file_comment->listFor($path);
 ```
 $file_comment = new \Files\Model\FileComment();
 $file_comment->create(, [
-  'body' => "body",
+  'body' => "What a great file!",
   'path' => "path",
 ]);
 ```
@@ -62,7 +62,7 @@ $file_comment->create(, [
 $file_comment = current(\Files\Model\FileComment::all());
 
 $file_comment->update([
-  'body' => "body",
+  'body' => "What a great file!",
 ]);
 ```
 

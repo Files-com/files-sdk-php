@@ -63,7 +63,7 @@ $message_comment->find($id);
 $message_comment = new \Files\Model\MessageComment();
 $message_comment->create(, [
   'user_id' => 1,
-  'body' => "body",
+  'body' => "What a great idea, thank you!",
 ]);
 ```
 
@@ -81,7 +81,7 @@ $message_comment->create(, [
 $message_comment = \Files\Model\MessageComment::find($id);
 
 $message_comment->update([
-  'body' => "body",
+  'body' => "What a great idea, thank you!",
 ]);
 ```
 

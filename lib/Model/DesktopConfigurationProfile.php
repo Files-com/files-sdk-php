@@ -95,7 +95,7 @@ class DesktopConfigurationProfile
     {
         return $this->attributes['use_for_all_users'] = $value;
     }
-    // object # Mount point mappings for the desktop app. Keys are mount points (e.g. drive letters) and values are paths in Files.com that the mount points map to.
+    // object # Mount point mappings for the desktop app. Keys must be a single uppercase Windows drive letter other than A, B, or C, and values are Files.com paths to mount there.
     public function getMountMappings()
     {
         return @$this->attributes['mount_mappings'];
@@ -109,7 +109,7 @@ class DesktopConfigurationProfile
     // Parameters:
     //   name - string - Profile name
     //   workspace_id - int64 - Workspace ID
-    //   mount_mappings - object - Mount point mappings for the desktop app. Keys are mount points (e.g. drive letters) and values are paths in Files.com that the mount points map to.
+    //   mount_mappings - object - Mount point mappings for the desktop app. Keys must be a single uppercase Windows drive letter other than A, B, or C, and values are Files.com paths to mount there.
     //   use_for_all_users - boolean - Whether this profile applies to all users in the Workspace by default
     public function update($params = [])
     {
@@ -238,7 +238,7 @@ class DesktopConfigurationProfile
 
     // Parameters:
     //   name (required) - string - Profile name
-    //   mount_mappings (required) - object - Mount point mappings for the desktop app. Keys are mount points (e.g. drive letters) and values are paths in Files.com that the mount points map to.
+    //   mount_mappings (required) - object - Mount point mappings for the desktop app. Keys must be a single uppercase Windows drive letter other than A, B, or C, and values are Files.com paths to mount there.
     //   workspace_id - int64 - Workspace ID
     //   use_for_all_users - boolean - Whether this profile applies to all users in the Workspace by default
     public static function create($params = [], $options = [])

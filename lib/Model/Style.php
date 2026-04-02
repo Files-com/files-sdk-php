@@ -85,6 +85,16 @@ class Style
     {
         return $this->attributes['logo'] = $value;
     }
+    // string # URL to open when a public visitor clicks the logo
+    public function getLogoClickHref()
+    {
+        return @$this->attributes['logo_click_href'];
+    }
+
+    public function setLogoClickHref($value)
+    {
+        return $this->attributes['logo_click_href'] = $value;
+    }
     // Image # Logo thumbnail
     public function getThumbnail()
     {
@@ -95,7 +105,7 @@ class Style
     {
         return $this->attributes['thumbnail'] = $value;
     }
-    // file # Logo for custom branding.
+    // file # Logo for custom branding. Required when creating a new style.
     public function getFile()
     {
         return @$this->attributes['file'];
@@ -107,7 +117,8 @@ class Style
     }
 
     // Parameters:
-    //   file (required) - file - Logo for custom branding.
+    //   file - file - Logo for custom branding. Required when creating a new style.
+    //   logo_click_href - string - URL to open when a public visitor clicks the logo.
     public function update($params = [])
     {
         if (!is_array($params)) {
@@ -122,16 +133,12 @@ class Style
             }
         }
 
-        if (!@$params['file']) {
-            if (@$this->file) {
-                $params['file'] = $this->file;
-            } else {
-                throw new \Files\Exception\MissingParameterException('Parameter missing: file');
-            }
-        }
-
         if (@$params['path'] && !is_string(@$params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
+        }
+
+        if (@$params['logo_click_href'] && !is_string(@$params['logo_click_href'])) {
+            throw new \Files\Exception\InvalidParameterException('$logo_click_href must be of type string; received ' . gettype(@$params['logo_click_href']));
         }
 
         $response = Api::sendRequest('/styles/' . @$params['path'] . '', 'PATCH', $params, $this->options);

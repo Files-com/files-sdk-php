@@ -80,6 +80,11 @@ class UsageDailySnapshot
     {
         return @$this->attributes['write_api_usage'];
     }
+    // decimal # Transformation and AI credits used on this day. Note: initially this tracks GPG encrypt, decrypt, and recrypt usage.
+    public function getTransformationCreditsUsage()
+    {
+        return @$this->attributes['transformation_credits_usage'];
+    }
     // int64 # Number of billable users as of this day.
     public function getUserCount()
     {

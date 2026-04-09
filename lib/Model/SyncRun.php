@@ -165,6 +165,11 @@ class SyncRun
     {
         return @$this->attributes['updated_at'];
     }
+    // array(object) # Array of in-progress file transfers with progress data. Only present when the sync run status is in_progress.
+    public function getLiveTransfers()
+    {
+        return @$this->attributes['live_transfers'];
+    }
 
     // Parameters:
     //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.

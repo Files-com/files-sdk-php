@@ -95,6 +95,26 @@ class Notification
     {
         return $this->attributes['group_name'] = $value;
     }
+    // array(int64) # Group IDs when the notification requires multiple groups
+    public function getGroupIds()
+    {
+        return @$this->attributes['group_ids'];
+    }
+
+    public function setGroupIds($value)
+    {
+        return $this->attributes['group_ids'] = $value;
+    }
+    // array(string) # Group names when the notification requires multiple groups
+    public function getGroupNames()
+    {
+        return @$this->attributes['group_names'];
+    }
+
+    public function setGroupNames($value)
+    {
+        return $this->attributes['group_names'] = $value;
+    }
     // array(int64) # If set, will only notify on actions made by a member of one of the specified groups
     public function getTriggeringGroupIds()
     {
@@ -455,6 +475,7 @@ class Notification
     //   triggering_user_ids - array(int64) - If set, will only notify on actions made one of the specified users
     //   trigger_by_share_recipients - boolean - Notify when actions are performed by a share recipient?
     //   group_id - int64 - The ID of the group to notify.  Provide `user_id`, `username` or `group_id`.
+    //   group_ids - string - Group IDs when the notification requires multiple groups. If sent as a string, it should be comma-delimited.
     //   path - string - Path
     //   username - string - The username of the user to notify.  Provide `user_id`, `username` or `group_id`.
     public static function create($params = [], $options = [])
@@ -485,6 +506,10 @@ class Notification
 
         if (@$params['group_id'] && !is_int(@$params['group_id'])) {
             throw new \Files\Exception\InvalidParameterException('$group_id must be of type int; received ' . gettype(@$params['group_id']));
+        }
+
+        if (@$params['group_ids'] && !is_string(@$params['group_ids'])) {
+            throw new \Files\Exception\InvalidParameterException('$group_ids must be of type string; received ' . gettype(@$params['group_ids']));
         }
 
         if (@$params['path'] && !is_string(@$params['path'])) {

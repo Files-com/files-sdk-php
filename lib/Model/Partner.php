@@ -65,6 +65,16 @@ class Partner
     {
         return $this->attributes['allow_bypassing_2fa_policies'] = $value;
     }
+    // string # A list of allowed IPs for this Partner. Newline delimited. Partner User IP access is allowed when the IP matches the Partner, User, or Site allowed IP lists.
+    public function getAllowedIps()
+    {
+        return @$this->attributes['allowed_ips'];
+    }
+
+    public function setAllowedIps($value)
+    {
+        return $this->attributes['allowed_ips'] = $value;
+    }
     // boolean # Allow Partner Admins to change or reset credentials for users belonging to this Partner.
     public function getAllowCredentialChanges()
     {
@@ -177,6 +187,7 @@ class Partner
     }
 
     // Parameters:
+    //   allowed_ips - string - A list of allowed IPs for this Partner. Newline delimited. Partner User IP access is allowed when the IP matches the Partner, User, or Site allowed IP lists.
     //   allow_bypassing_2fa_policies - boolean - Allow Partner Admins to change Two-Factor Authentication requirements for Partner Users.
     //   allow_credential_changes - boolean - Allow Partner Admins to change or reset credentials for users belonging to this Partner.
     //   allow_providing_gpg_keys - boolean - Allow Partner Admins to provide GPG keys.
@@ -201,6 +212,10 @@ class Partner
 
         if (@$params['id'] && !is_int(@$params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
+        }
+
+        if (@$params['allowed_ips'] && !is_string(@$params['allowed_ips'])) {
+            throw new \Files\Exception\InvalidParameterException('$allowed_ips must be of type string; received ' . gettype(@$params['allowed_ips']));
         }
 
         if (@$params['notes'] && !is_string(@$params['notes'])) {
@@ -319,6 +334,7 @@ class Partner
     }
 
     // Parameters:
+    //   allowed_ips - string - A list of allowed IPs for this Partner. Newline delimited. Partner User IP access is allowed when the IP matches the Partner, User, or Site allowed IP lists.
     //   allow_bypassing_2fa_policies - boolean - Allow Partner Admins to change Two-Factor Authentication requirements for Partner Users.
     //   allow_credential_changes - boolean - Allow Partner Admins to change or reset credentials for users belonging to this Partner.
     //   allow_providing_gpg_keys - boolean - Allow Partner Admins to provide GPG keys.
@@ -336,6 +352,10 @@ class Partner
 
         if (!@$params['root_folder']) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: root_folder');
+        }
+
+        if (@$params['allowed_ips'] && !is_string(@$params['allowed_ips'])) {
+            throw new \Files\Exception\InvalidParameterException('$allowed_ips must be of type string; received ' . gettype(@$params['allowed_ips']));
         }
 
         if (@$params['notes'] && !is_string(@$params['notes'])) {

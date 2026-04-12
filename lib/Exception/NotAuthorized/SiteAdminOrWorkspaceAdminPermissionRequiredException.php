@@ -4,6 +4,6 @@ namespace Files\Exception\NotAuthorized;
 
 use Files\Exception\NotAuthorizedException;
 
-class BillingOrSiteAdminPermissionRequiredException extends NotAuthorizedException
+class SiteAdminOrWorkspaceAdminPermissionRequiredException extends NotAuthorizedException
 {
 }

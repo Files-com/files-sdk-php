@@ -510,6 +510,16 @@ class User
     {
         return $this->attributes['password_validity_days'] = $value;
     }
+    // int64 # Primary group ID for Group Admin scoping
+    public function getPrimaryGroupId()
+    {
+        return @$this->attributes['primary_group_id'];
+    }
+
+    public function setPrimaryGroupId($value)
+    {
+        return $this->attributes['primary_group_id'] = $value;
+    }
     // int64 # Number of public keys associated with this user
     public function getPublicKeysCount()
     {
@@ -1015,6 +1025,7 @@ class User
     //   partner_admin - boolean - Is this user a Partner administrator?
     //   partner_id - int64 - Partner ID if this user belongs to a Partner
     //   password_validity_days - int64 - Number of days to allow user to use the same password
+    //   primary_group_id - int64 - Primary group ID for Group Admin scoping
     //   readonly_site_admin - boolean - Is the user an allowed to view all (non-billing) site configuration for this site?
     //   receive_admin_alerts - boolean - Should the user receive admin alerts such a certificate expiration notifications and overages?
     //   require_login_by - string - Require user to login by specified date otherwise it will be disabled.
@@ -1140,6 +1151,10 @@ class User
 
         if (@$params['password_validity_days'] && !is_int(@$params['password_validity_days'])) {
             throw new \Files\Exception\InvalidParameterException('$password_validity_days must be of type int; received ' . gettype(@$params['password_validity_days']));
+        }
+
+        if (@$params['primary_group_id'] && !is_int(@$params['primary_group_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$primary_group_id must be of type int; received ' . gettype(@$params['primary_group_id']));
         }
 
         if (@$params['require_login_by'] && !is_string(@$params['require_login_by'])) {
@@ -1334,6 +1349,7 @@ class User
     //   partner_admin - boolean - Is this user a Partner administrator?
     //   partner_id - int64 - Partner ID if this user belongs to a Partner
     //   password_validity_days - int64 - Number of days to allow user to use the same password
+    //   primary_group_id - int64 - Primary group ID for Group Admin scoping
     //   readonly_site_admin - boolean - Is the user an allowed to view all (non-billing) site configuration for this site?
     //   receive_admin_alerts - boolean - Should the user receive admin alerts such a certificate expiration notifications and overages?
     //   require_login_by - string - Require user to login by specified date otherwise it will be disabled.
@@ -1446,6 +1462,10 @@ class User
 
         if (@$params['password_validity_days'] && !is_int(@$params['password_validity_days'])) {
             throw new \Files\Exception\InvalidParameterException('$password_validity_days must be of type int; received ' . gettype(@$params['password_validity_days']));
+        }
+
+        if (@$params['primary_group_id'] && !is_int(@$params['primary_group_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$primary_group_id must be of type int; received ' . gettype(@$params['primary_group_id']));
         }
 
         if (@$params['require_login_by'] && !is_string(@$params['require_login_by'])) {

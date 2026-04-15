@@ -70,6 +70,11 @@ class FileMigration
     {
         return @$this->attributes['dest_path'];
     }
+    // string # Reason for the failure, if applicable.
+    public function getFailureMessage()
+    {
+        return @$this->attributes['failure_message'];
+    }
     // int64 # Number of files processed
     public function getFilesMoved()
     {

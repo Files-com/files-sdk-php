@@ -224,6 +224,45 @@ class MetadataCategory
     }
 
     // Parameters:
+    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+    //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
+    //   path (required) - string - Path to operate on.
+    public static function listFor($path, $params = [], $options = [])
+    {
+        if (!is_array($params)) {
+            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+        }
+
+        $params['path'] = $path;
+
+        if (!@$params['path']) {
+            throw new \Files\Exception\MissingParameterException('Parameter missing: path');
+        }
+
+        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        if (@$params['path'] && !is_string(@$params['path'])) {
+            throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
+        }
+
+        $response = Api::sendRequest('/metadata_categories/list_by_path/' . @$params['path'] . '', 'GET', $params, $options);
+
+        $return_array = [];
+
+        foreach ($response->data as $obj) {
+            $return_array[] = new MetadataCategory((array) $obj, $options);
+        }
+
+        return $return_array;
+    }
+
+    // Parameters:
     //   name (required) - string - Name of the metadata category.
     //   default_columns - array(string) - Metadata keys that should appear as columns in the UI by default.
     public static function create($params = [], $options = [])

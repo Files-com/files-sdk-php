@@ -225,6 +225,16 @@ class Notification
     {
         return $this->attributes['send_interval'] = $value;
     }
+    // string # Custom subject line to use for notification emails
+    public function getSubject()
+    {
+        return @$this->attributes['subject'];
+    }
+
+    public function setSubject($value)
+    {
+        return $this->attributes['subject'] = $value;
+    }
     // string # Custom message to include in notification emails
     public function getMessage()
     {
@@ -305,6 +315,7 @@ class Notification
     //   notify_user_actions - boolean - If `true` actions initiated by the user will still result in a notification
     //   recursive - boolean - If `true`, enable notifications for each subfolder in this path
     //   send_interval - string - The time interval that notifications are aggregated by.  Can be `five_minutes`, `fifteen_minutes`, `hourly`, or `daily`.
+    //   subject - string - Custom subject line to use for notification emails
     //   message - string - Custom message to include in notification emails
     //   triggering_filenames - array(string) - Array of filenames (possibly with wildcards) to scope trigger
     //   triggering_group_ids - array(int64) - If set, will only notify on actions made by a member of one of the specified groups
@@ -330,6 +341,10 @@ class Notification
 
         if (@$params['send_interval'] && !is_string(@$params['send_interval'])) {
             throw new \Files\Exception\InvalidParameterException('$send_interval must be of type string; received ' . gettype(@$params['send_interval']));
+        }
+
+        if (@$params['subject'] && !is_string(@$params['subject'])) {
+            throw new \Files\Exception\InvalidParameterException('$subject must be of type string; received ' . gettype(@$params['subject']));
         }
 
         if (@$params['message'] && !is_string(@$params['message'])) {
@@ -469,6 +484,7 @@ class Notification
     //   notify_user_actions - boolean - If `true` actions initiated by the user will still result in a notification
     //   recursive - boolean - If `true`, enable notifications for each subfolder in this path
     //   send_interval - string - The time interval that notifications are aggregated by.  Can be `five_minutes`, `fifteen_minutes`, `hourly`, or `daily`.
+    //   subject - string - Custom subject line to use for notification emails
     //   message - string - Custom message to include in notification emails
     //   triggering_filenames - array(string) - Array of filenames (possibly with wildcards) to scope trigger
     //   triggering_group_ids - array(int64) - If set, will only notify on actions made by a member of one of the specified groups
@@ -486,6 +502,10 @@ class Notification
 
         if (@$params['send_interval'] && !is_string(@$params['send_interval'])) {
             throw new \Files\Exception\InvalidParameterException('$send_interval must be of type string; received ' . gettype(@$params['send_interval']));
+        }
+
+        if (@$params['subject'] && !is_string(@$params['subject'])) {
+            throw new \Files\Exception\InvalidParameterException('$subject must be of type string; received ' . gettype(@$params['subject']));
         }
 
         if (@$params['message'] && !is_string(@$params['message'])) {

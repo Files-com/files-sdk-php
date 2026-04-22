@@ -165,6 +165,16 @@ class Group
     {
         return $this->attributes['restapi_permission'] = $value;
     }
+    // int64 # Desktop Configuration Profile ID assigned to this Group, if any. Users in the Group inherit it unless a direct per-user assignment overrides it.
+    public function getDesktopConfigurationProfileId()
+    {
+        return @$this->attributes['desktop_configuration_profile_id'];
+    }
+
+    public function setDesktopConfigurationProfileId($value)
+    {
+        return $this->attributes['desktop_configuration_profile_id'] = $value;
+    }
     // int64 # Site ID
     public function getSiteId()
     {
@@ -194,6 +204,7 @@ class Group
     //   sftp_permission - boolean - If true, users in this group can use SFTP to login.  This will override a false value of `sftp_permission` on the user level.
     //   dav_permission - boolean - If true, users in this group can use WebDAV to login.  This will override a false value of `dav_permission` on the user level.
     //   restapi_permission - boolean - If true, users in this group can use the REST API to login.  This will override a false value of `restapi_permission` on the user level.
+    //   desktop_configuration_profile_id - int64 - Desktop Configuration Profile ID assigned to this Group, if any. Users in the Group inherit it unless a direct per-user assignment overrides it.
     //   allowed_ips - string - A list of allowed IPs if applicable.  Newline delimited
     //   name - string - Group name.
     public function update($params = [])
@@ -224,6 +235,10 @@ class Group
 
         if (@$params['admin_ids'] && !is_string(@$params['admin_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$admin_ids must be of type string; received ' . gettype(@$params['admin_ids']));
+        }
+
+        if (@$params['desktop_configuration_profile_id'] && !is_int(@$params['desktop_configuration_profile_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$desktop_configuration_profile_id must be of type int; received ' . gettype(@$params['desktop_configuration_profile_id']));
         }
 
         if (@$params['allowed_ips'] && !is_string(@$params['allowed_ips'])) {
@@ -348,6 +363,7 @@ class Group
     //   sftp_permission - boolean - If true, users in this group can use SFTP to login.  This will override a false value of `sftp_permission` on the user level.
     //   dav_permission - boolean - If true, users in this group can use WebDAV to login.  This will override a false value of `dav_permission` on the user level.
     //   restapi_permission - boolean - If true, users in this group can use the REST API to login.  This will override a false value of `restapi_permission` on the user level.
+    //   desktop_configuration_profile_id - int64 - Desktop Configuration Profile ID assigned to this Group, if any. Users in the Group inherit it unless a direct per-user assignment overrides it.
     //   allowed_ips - string - A list of allowed IPs if applicable.  Newline delimited
     //   name (required) - string - Group name.
     //   workspace_id - int64 - Workspace ID
@@ -367,6 +383,10 @@ class Group
 
         if (@$params['admin_ids'] && !is_string(@$params['admin_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$admin_ids must be of type string; received ' . gettype(@$params['admin_ids']));
+        }
+
+        if (@$params['desktop_configuration_profile_id'] && !is_int(@$params['desktop_configuration_profile_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$desktop_configuration_profile_id must be of type int; received ' . gettype(@$params['desktop_configuration_profile_id']));
         }
 
         if (@$params['allowed_ips'] && !is_string(@$params['allowed_ips'])) {

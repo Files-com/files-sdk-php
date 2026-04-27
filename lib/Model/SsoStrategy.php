@@ -265,6 +265,11 @@ class SsoStrategy
     {
         return @$this->attributes['enabled'];
     }
+    // boolean # Should this strategy be displayed on the login page?
+    public function getDisplayOnLoginPage()
+    {
+        return @$this->attributes['display_on_login_page'];
+    }
     // string # LDAP host
     public function getLdapHost()
     {

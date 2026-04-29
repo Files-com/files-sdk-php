@@ -85,6 +85,16 @@ class KeyLifecycleRule
     {
         return $this->attributes['inactivity_days'] = $value;
     }
+    // int64 # Number of days after creation before an SSH key expires. Applies only to SSH keys.
+    public function getExpirationDays()
+    {
+        return @$this->attributes['expiration_days'];
+    }
+
+    public function setExpirationDays($value)
+    {
+        return $this->attributes['expiration_days'] = $value;
+    }
     // boolean # If true, a default-workspace rule also applies to keys in all workspaces.
     public function getApplyToAllWorkspaces()
     {
@@ -118,6 +128,7 @@ class KeyLifecycleRule
 
     // Parameters:
     //   apply_to_all_workspaces - boolean - If true, a default-workspace rule also applies to keys in all workspaces.
+    //   expiration_days - int64 - Number of days after creation before an SSH key expires. Applies only to SSH keys.
     //   key_type - string - Key type for which the rule will apply (gpg or ssh).
     //   inactivity_days - int64 - Number of days of inactivity before the rule applies.
     //   name - string - Key Lifecycle Rule name
@@ -138,6 +149,10 @@ class KeyLifecycleRule
 
         if (@$params['id'] && !is_int(@$params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
+        }
+
+        if (@$params['expiration_days'] && !is_int(@$params['expiration_days'])) {
+            throw new \Files\Exception\InvalidParameterException('$expiration_days must be of type int; received ' . gettype(@$params['expiration_days']));
         }
 
         if (@$params['key_type'] && !is_string(@$params['key_type'])) {
@@ -257,12 +272,17 @@ class KeyLifecycleRule
 
     // Parameters:
     //   apply_to_all_workspaces - boolean - If true, a default-workspace rule also applies to keys in all workspaces.
+    //   expiration_days - int64 - Number of days after creation before an SSH key expires. Applies only to SSH keys.
     //   key_type - string - Key type for which the rule will apply (gpg or ssh).
     //   inactivity_days - int64 - Number of days of inactivity before the rule applies.
     //   name - string - Key Lifecycle Rule name
     //   workspace_id - int64 - Workspace ID. `0` means the default workspace.
     public static function create($params = [], $options = [])
     {
+        if (@$params['expiration_days'] && !is_int(@$params['expiration_days'])) {
+            throw new \Files\Exception\InvalidParameterException('$expiration_days must be of type int; received ' . gettype(@$params['expiration_days']));
+        }
+
         if (@$params['key_type'] && !is_string(@$params['key_type'])) {
             throw new \Files\Exception\InvalidParameterException('$key_type must be of type string; received ' . gettype(@$params['key_type']));
         }

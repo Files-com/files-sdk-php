@@ -90,6 +90,26 @@ class PublicKey
     {
         return @$this->attributes['created_at'];
     }
+    // date-time # Public key expiration date/time
+    public function getExpiresAt()
+    {
+        return @$this->attributes['expires_at'];
+    }
+
+    public function setExpiresAt($value)
+    {
+        return $this->attributes['expires_at'] = $value;
+    }
+    // boolean # Is this public key expired?
+    public function getExpired()
+    {
+        return @$this->attributes['expired'];
+    }
+
+    public function setExpired($value)
+    {
+        return $this->attributes['expired'] = $value;
+    }
     // string # Public key fingerprint (MD5)
     public function getFingerprint()
     {

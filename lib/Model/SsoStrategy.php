@@ -290,10 +290,20 @@ class SsoStrategy
     {
         return @$this->attributes['ldap_port'];
     }
+    // boolean # Use LDAP server settings for scheduled provisioning while using this SSO provider for authentication?
+    public function getLdapProvisioningEnabled()
+    {
+        return @$this->attributes['ldap_provisioning_enabled'];
+    }
     // boolean # Use secure LDAP?
     public function getLdapSecure()
     {
         return @$this->attributes['ldap_secure'];
+    }
+    // string # LDAP server type
+    public function getLdapType()
+    {
+        return @$this->attributes['ldap_type'];
     }
     // string # Username for signing in to LDAP server.
     public function getLdapUsername()

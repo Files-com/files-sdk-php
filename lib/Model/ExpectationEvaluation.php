@@ -125,7 +125,7 @@ class ExpectationEvaluation
     {
         return @$this->attributes['missing_files'];
     }
-    // array(object) # Captured criteria failures for the window.
+    // array(string) # Captured criteria failures for the window.
     public function getCriteriaErrors()
     {
         return @$this->attributes['criteria_errors'];

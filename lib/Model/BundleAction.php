@@ -110,6 +110,16 @@ class BundleAction
     {
         return @$this->attributes['bundle_registration_ip'];
     }
+    // int64 # Id of associated form field set
+    public function getFormFieldSetId()
+    {
+        return @$this->attributes['form_field_set_id'];
+    }
+    // object # Data for form field set with form field ids as keys and user data as values
+    public function getFormFieldData()
+    {
+        return @$this->attributes['form_field_data'];
+    }
 
     // Parameters:
     //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.

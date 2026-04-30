@@ -385,6 +385,16 @@ class RemoteServerCredential
     {
         return $this->attributes['wasabi_secret_key'] = $value;
     }
+    // int64 # ID of Remote Server Credential to copy omitted values from.
+    public function getCopyValuesFromCredentialId()
+    {
+        return @$this->attributes['copy_values_from_credential_id'];
+    }
+
+    public function setCopyValuesFromCredentialId($value)
+    {
+        return $this->attributes['copy_values_from_credential_id'] = $value;
+    }
 
     // Parameters:
     //   name - string - Internal name for your reference
@@ -687,6 +697,7 @@ class RemoteServerCredential
     //   s3_compatible_secret_key - string - S3-compatible: Secret Key
     //   wasabi_secret_key - string - Wasabi: Secret Key
     //   workspace_id - int64 - Workspace ID (0 for default workspace)
+    //   copy_values_from_credential_id - int64 - ID of Remote Server Credential to copy omitted values from.
     public static function create($params = [], $options = [])
     {
         if (@$params['name'] && !is_string(@$params['name'])) {
@@ -811,6 +822,10 @@ class RemoteServerCredential
 
         if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
+        }
+
+        if (@$params['copy_values_from_credential_id'] && !is_int(@$params['copy_values_from_credential_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$copy_values_from_credential_id must be of type int; received ' . gettype(@$params['copy_values_from_credential_id']));
         }
 
         $response = Api::sendRequest('/remote_server_credentials', 'POST', $params, $options);

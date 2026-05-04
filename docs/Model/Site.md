@@ -703,6 +703,7 @@ $site->update(, [
   'bundle_watermark_attachment_delete' => false,
   'login_page_background_image_delete' => false,
   'disable_2fa_with_delay' => false,
+  'redirect_old_subdomain' => false,
 ]);
 ```
 
@@ -884,4 +885,5 @@ $site->update(, [
 * `disable_2fa_with_delay` (boolean): If set to true, we will begin the process of disabling 2FA on this site.
 * `ldap_password_change` (string): New LDAP password.
 * `ldap_password_change_confirmation` (string): Confirm new LDAP password.
+* `redirect_old_subdomain` (boolean): If true, and if changing the site subdomain, then create a redirect from the previous Files.com subdomain to the new Files.com subdomain.
 * `smtp_password` (string): Password for SMTP server.

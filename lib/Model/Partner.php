@@ -105,6 +105,16 @@ class Partner
     {
         return $this->attributes['allow_user_creation'] = $value;
     }
+    // boolean # When `true`, emails sent to Partner users are copied to the responsible User or Group.
+    public function getCcEmailsToResponsibleParty()
+    {
+        return @$this->attributes['cc_emails_to_responsible_party'];
+    }
+
+    public function setCcEmailsToResponsibleParty($value)
+    {
+        return $this->attributes['cc_emails_to_responsible_party'] = $value;
+    }
     // int64 # The unique ID of the Partner.
     public function getId()
     {
@@ -155,6 +165,26 @@ class Partner
     {
         return $this->attributes['partner_admin_ids'] = $value;
     }
+    // int64 # ID of the Group responsible for this Partner.
+    public function getResponsibleGroupId()
+    {
+        return @$this->attributes['responsible_group_id'];
+    }
+
+    public function setResponsibleGroupId($value)
+    {
+        return $this->attributes['responsible_group_id'] = $value;
+    }
+    // int64 # ID of the User responsible for this Partner.
+    public function getResponsibleUserId()
+    {
+        return @$this->attributes['responsible_user_id'];
+    }
+
+    public function setResponsibleUserId($value)
+    {
+        return $this->attributes['responsible_user_id'] = $value;
+    }
     // string # The root folder path for this Partner.
     public function getRootFolder()
     {
@@ -192,7 +222,10 @@ class Partner
     //   allow_credential_changes - boolean - Allow Partner Admins to change or reset credentials for users belonging to this Partner.
     //   allow_providing_gpg_keys - boolean - Allow Partner Admins to provide GPG keys.
     //   allow_user_creation - boolean - Allow Partner Admins to create users.
+    //   cc_emails_to_responsible_party - boolean - When `true`, emails sent to Partner users are copied to the responsible User or Group.
     //   notes - string - Notes about this Partner.
+    //   responsible_group_id - int64 - ID of the Group responsible for this Partner.
+    //   responsible_user_id - int64 - ID of the User responsible for this Partner.
     //   tags - string - Comma-separated list of Tags for this Partner. Tags are used for other features, such as UserLifecycleRules, which can target specific tags.  Tags must only contain lowercase letters, numbers, and hyphens.
     //   name - string - The name of the Partner.
     //   root_folder - string - The root folder path for this Partner.
@@ -220,6 +253,14 @@ class Partner
 
         if (@$params['notes'] && !is_string(@$params['notes'])) {
             throw new \Files\Exception\InvalidParameterException('$notes must be of type string; received ' . gettype(@$params['notes']));
+        }
+
+        if (@$params['responsible_group_id'] && !is_int(@$params['responsible_group_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$responsible_group_id must be of type int; received ' . gettype(@$params['responsible_group_id']));
+        }
+
+        if (@$params['responsible_user_id'] && !is_int(@$params['responsible_user_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$responsible_user_id must be of type int; received ' . gettype(@$params['responsible_user_id']));
         }
 
         if (@$params['tags'] && !is_string(@$params['tags'])) {
@@ -339,7 +380,10 @@ class Partner
     //   allow_credential_changes - boolean - Allow Partner Admins to change or reset credentials for users belonging to this Partner.
     //   allow_providing_gpg_keys - boolean - Allow Partner Admins to provide GPG keys.
     //   allow_user_creation - boolean - Allow Partner Admins to create users.
+    //   cc_emails_to_responsible_party - boolean - When `true`, emails sent to Partner users are copied to the responsible User or Group.
     //   notes - string - Notes about this Partner.
+    //   responsible_group_id - int64 - ID of the Group responsible for this Partner.
+    //   responsible_user_id - int64 - ID of the User responsible for this Partner.
     //   tags - string - Comma-separated list of Tags for this Partner. Tags are used for other features, such as UserLifecycleRules, which can target specific tags.  Tags must only contain lowercase letters, numbers, and hyphens.
     //   name (required) - string - The name of the Partner.
     //   root_folder (required) - string - The root folder path for this Partner.
@@ -360,6 +404,14 @@ class Partner
 
         if (@$params['notes'] && !is_string(@$params['notes'])) {
             throw new \Files\Exception\InvalidParameterException('$notes must be of type string; received ' . gettype(@$params['notes']));
+        }
+
+        if (@$params['responsible_group_id'] && !is_int(@$params['responsible_group_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$responsible_group_id must be of type int; received ' . gettype(@$params['responsible_group_id']));
+        }
+
+        if (@$params['responsible_user_id'] && !is_int(@$params['responsible_user_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$responsible_user_id must be of type int; received ' . gettype(@$params['responsible_user_id']));
         }
 
         if (@$params['tags'] && !is_string(@$params['tags'])) {

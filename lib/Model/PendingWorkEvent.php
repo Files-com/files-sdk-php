@@ -10,11 +10,11 @@ use Files\Logger;
 require_once __DIR__ . '/../Files.php';
 
 /**
- * Class ExternalEvent
+ * Class PendingWorkEvent
  *
  * @package Files
  */
-class ExternalEvent
+class PendingWorkEvent
 {
     private $attributes = [];
     private $options = [];
@@ -60,42 +60,27 @@ class ExternalEvent
     {
         return @$this->attributes['id'];
     }
-
-    public function setId($value)
-    {
-        return $this->attributes['id'] = $value;
-    }
-    // string # Type of event being recorded.
+    // string # Type of pending work event being recorded.
     public function getEventType()
     {
         return @$this->attributes['event_type'];
-    }
-
-    public function setEventType($value)
-    {
-        return $this->attributes['event_type'] = $value;
     }
     // string # Status of event.
     public function getStatus()
     {
         return @$this->attributes['status'];
     }
-
-    public function setStatus($value)
-    {
-        return $this->attributes['status'] = $value;
-    }
-    // string # Event body
+    // string # Event body.
     public function getBody()
     {
         return @$this->attributes['body'];
     }
-
-    public function setBody($value)
+    // array(string) # Event errors.
+    public function getEventErrors()
     {
-        return $this->attributes['body'] = $value;
+        return @$this->attributes['event_errors'];
     }
-    // date-time # External event create date/time
+    // date-time # Event create date/time.
     public function getCreatedAt()
     {
         return @$this->attributes['created_at'];
@@ -105,29 +90,17 @@ class ExternalEvent
     {
         return @$this->attributes['body_url'];
     }
-
-    public function setBodyUrl($value)
+    // int64 # Folder Behavior ID.
+    public function getFolderBehaviorId()
     {
-        return $this->attributes['body_url'] = $value;
+        return @$this->attributes['folder_behavior_id'];
     }
-
-    public function save()
-    {
-        if (@$this->attributes['id']) {
-            throw new \Files\Exception\NotImplementedException('The ExternalEvent object doesn\'t support updates.');
-        } else {
-            $new_obj = self::create($this->attributes, $this->options);
-            $this->attributes = $new_obj->attributes;
-            return true;
-        }
-    }
-
 
     // Parameters:
     //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
     //   per_page - int64 - Number of records to show per page.  (Max: 10,000, 1,000 or less is recommended).
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `created_at`, `status` or `event_type`.
-    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `created_at` and `status`. Valid field combinations are `[ status, created_at ]`.
+    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `created_at`, `status` or `folder_behavior_id`.
+    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `created_at`, `folder_behavior_id` or `status`. Valid field combinations are `[ folder_behavior_id, created_at ]`, `[ status, created_at ]`, `[ folder_behavior_id, status ]` or `[ folder_behavior_id, status, created_at ]`.
     //   filter_gt - object - If set, return records where the specified field is greater than the supplied value. Valid fields are `created_at`.
     //   filter_gteq - object - If set, return records where the specified field is greater than or equal the supplied value. Valid fields are `created_at`.
     //   filter_lt - object - If set, return records where the specified field is less than the supplied value. Valid fields are `created_at`.
@@ -142,19 +115,19 @@ class ExternalEvent
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
-        $response = Api::sendRequest('/external_events', 'GET', $params, $options);
+        $response = Api::sendRequest('/pending_work_events', 'GET', $params, $options);
 
         $return_array = [];
 
         foreach ($response->data as $obj) {
-            $return_array[] = new ExternalEvent((array) $obj, $options);
+            $return_array[] = new PendingWorkEvent((array) $obj, $options);
         }
 
         return $return_array;
     }
 
     // Parameters:
-    //   id (required) - int64 - External Event ID.
+    //   id (required) - int64 - Pending Work Event ID.
     public static function find($id, $params = [], $options = [])
     {
         if (!is_array($params)) {
@@ -171,38 +144,12 @@ class ExternalEvent
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/external_events/' . @$params['id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/pending_work_events/' . @$params['id'] . '', 'GET', $params, $options);
 
-        return new ExternalEvent((array) (@$response->data ?: []), $options);
+        return new PendingWorkEvent((array) (@$response->data ?: []), $options);
     }
     public static function get($id, $params = [], $options = [])
     {
         return self::find($id, $params, $options);
-    }
-
-    // Parameters:
-    //   status (required) - string - Status of event.
-    //   body (required) - string - Event body
-    public static function create($params = [], $options = [])
-    {
-        if (!@$params['status']) {
-            throw new \Files\Exception\MissingParameterException('Parameter missing: status');
-        }
-
-        if (!@$params['body']) {
-            throw new \Files\Exception\MissingParameterException('Parameter missing: body');
-        }
-
-        if (@$params['status'] && !is_string(@$params['status'])) {
-            throw new \Files\Exception\InvalidParameterException('$status must be of type string; received ' . gettype(@$params['status']));
-        }
-
-        if (@$params['body'] && !is_string(@$params['body'])) {
-            throw new \Files\Exception\InvalidParameterException('$body must be of type string; received ' . gettype(@$params['body']));
-        }
-
-        $response = Api::sendRequest('/external_events', 'POST', $params, $options);
-
-        return new ExternalEvent((array) (@$response->data ?: []), $options);
     }
 }

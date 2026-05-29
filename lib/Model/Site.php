@@ -70,6 +70,11 @@ class Site
     {
         return @$this->attributes['additional_text_file_types'];
     }
+    // object # Availability settings for AI features by user class
+    public function getAiFeatureAvailability()
+    {
+        return @$this->attributes['ai_feature_availability'];
+    }
     // boolean # Is SMS two factor authentication allowed?
     public function getAllowed2faMethodSms()
     {
@@ -369,6 +374,11 @@ class Site
     public function getDisallowedCountries()
     {
         return @$this->attributes['disallowed_countries'];
+    }
+    // boolean # If true, all AI features are disabled for this site.
+    public function getDisableAllAiFeatures()
+    {
+        return @$this->attributes['disable_all_ai_features'];
     }
     // boolean # If set, Files.com will not set the CAA records required to generate future SSL certificates for this domain.
     public function getDisableFilesCertificateGeneration()
@@ -1020,6 +1030,8 @@ class Site
     //   motd_use_for_ftp - boolean - Show message to users connecting via FTP
     //   motd_use_for_sftp - boolean - Show message to users connecting via SFTP
     //   left_navigation_visibility - object - Visibility settings for account navigation
+    //   disable_all_ai_features - boolean - If true, all AI features are disabled for this site.
+    //   ai_feature_availability - object - Availability settings for AI features by user class
     //   additional_text_file_types - array(string) - Additional extensions that are considered text files
     //   bundle_require_note - boolean - Do Bundles require internal notes?
     //   bundle_send_shared_receipts - boolean - Do Bundle creators receive receipts of invitations?

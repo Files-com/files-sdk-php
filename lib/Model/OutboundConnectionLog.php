@@ -75,10 +75,20 @@ class OutboundConnectionLog
     {
         return @$this->attributes['src_remote_server_id'];
     }
+    // string # Source Remote Server name
+    public function getSrcRemoteServerName()
+    {
+        return @$this->attributes['src_remote_server_name'];
+    }
     // int64 # Destination Remote Server ID
     public function getDestRemoteServerId()
     {
         return @$this->attributes['dest_remote_server_id'];
+    }
+    // string # Destination Remote Server name
+    public function getDestRemoteServerName()
+    {
+        return @$this->attributes['dest_remote_server_name'];
     }
     // string # Operation Type
     public function getOperation()

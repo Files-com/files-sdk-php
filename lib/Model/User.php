@@ -1144,6 +1144,7 @@ class User
     //   user_home - string - Home folder for FTP/SFTP.  Note that this is not used for API, Desktop, or Web interface.
     //   workspace_admin - boolean - Is the user a Workspace administrator?  Applicable only to the workspace ID related to this user, if one is set.
     //   username - string - User's username
+    //   workspace_id - int64 - Workspace ID
     //   clear_2fa - boolean - If true when changing authentication_method from `password` to `sso`, remove all two-factor methods. Ignored in all other cases.
     //   convert_to_partner_user - boolean - If true, convert this user to a partner user by assigning the partner_id provided.
     public function update($params = [])
@@ -1294,6 +1295,10 @@ class User
 
         if (@$params['username'] && !is_string(@$params['username'])) {
             throw new \Files\Exception\InvalidParameterException('$username must be of type string; received ' . gettype(@$params['username']));
+        }
+
+        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
         $response = Api::sendRequest('/users/' . @$params['id'] . '', 'PATCH', $params, $this->options);

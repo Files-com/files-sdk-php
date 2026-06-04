@@ -236,16 +236,12 @@ class GroupUser
 
 
     // Parameters:
-    //   user_id - int64 - User ID.  If provided, will return group_users of this user.
     //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
     //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
     //   group_id - int64 - Group ID.  If provided, will return group_users of this group.
+    //   user_id - int64 - User ID.  If provided, will return group_users of this user.
     public static function all($params = [], $options = [])
     {
-        if (@$params['user_id'] && !is_int(@$params['user_id'])) {
-            throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
-        }
-
         if (@$params['cursor'] && !is_string(@$params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
@@ -256,6 +252,10 @@ class GroupUser
 
         if (@$params['group_id'] && !is_int(@$params['group_id'])) {
             throw new \Files\Exception\InvalidParameterException('$group_id must be of type int; received ' . gettype(@$params['group_id']));
+        }
+
+        if (@$params['user_id'] && !is_int(@$params['user_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
         $response = Api::sendRequest('/group_users', 'GET', $params, $options);

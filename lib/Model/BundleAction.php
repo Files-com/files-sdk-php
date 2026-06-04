@@ -131,6 +131,8 @@ class BundleAction
     //   filter_gteq - object - If set, return records where the specified field is greater than or equal the supplied value. Valid fields are `created_at`.
     //   filter_lt - object - If set, return records where the specified field is less than the supplied value. Valid fields are `created_at`.
     //   filter_lteq - object - If set, return records where the specified field is less than or equal the supplied value. Valid fields are `created_at`.
+    //   bundle_id - int64 - Bundle ID
+    //   bundle_registration_id - int64 - Bundle Registration ID
     public static function all($params = [], $options = [])
     {
         if (@$params['user_id'] && !is_int(@$params['user_id'])) {
@@ -143,6 +145,14 @@ class BundleAction
 
         if (@$params['per_page'] && !is_int(@$params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        if (@$params['bundle_id'] && !is_int(@$params['bundle_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$bundle_id must be of type int; received ' . gettype(@$params['bundle_id']));
+        }
+
+        if (@$params['bundle_registration_id'] && !is_int(@$params['bundle_registration_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$bundle_registration_id must be of type int; received ' . gettype(@$params['bundle_registration_id']));
         }
 
         $response = Api::sendRequest('/bundle_actions', 'GET', $params, $options);

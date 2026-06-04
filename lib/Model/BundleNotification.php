@@ -199,6 +199,7 @@ class BundleNotification
     //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
     //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `workspace_id` and `bundle_id`.
     //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `bundle_id`.
+    //   bundle_id - int64 - Bundle ID
     public static function all($params = [], $options = [])
     {
         if (@$params['user_id'] && !is_int(@$params['user_id'])) {
@@ -211,6 +212,10 @@ class BundleNotification
 
         if (@$params['per_page'] && !is_int(@$params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        if (@$params['bundle_id'] && !is_int(@$params['bundle_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$bundle_id must be of type int; received ' . gettype(@$params['bundle_id']));
         }
 
         $response = Api::sendRequest('/bundle_notifications', 'GET', $params, $options);

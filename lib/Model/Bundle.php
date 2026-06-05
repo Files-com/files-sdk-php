@@ -290,6 +290,26 @@ class Bundle
     {
         return @$this->attributes['created_at'];
     }
+    // boolean # Indicates if the bundle has been deleted.
+    public function getDeleted()
+    {
+        return @$this->attributes['deleted'];
+    }
+
+    public function setDeleted($value)
+    {
+        return $this->attributes['deleted'] = $value;
+    }
+    // date-time # Bundle deleted at date/time
+    public function getDeletedAt()
+    {
+        return @$this->attributes['deleted_at'];
+    }
+
+    public function setDeletedAt($value)
+    {
+        return $this->attributes['deleted_at'] = $value;
+    }
     // boolean # Do not create subfolders for files uploaded to this share. Note: there are subtle security pitfalls with allowing anonymous uploads from multiple users to live in the same folder. We strongly discourage use of this option unless absolutely required.
     public function getDontSeparateSubmissionsByFolder()
     {
@@ -765,6 +785,7 @@ class Bundle
     //   filter_prefix - object - If set, return records where the specified field is prefixed by the supplied value. Valid fields are `code`.
     //   filter_lt - object - If set, return records where the specified field is less than the supplied value. Valid fields are `created_at` and `expires_at`.
     //   filter_lteq - object - If set, return records where the specified field is less than or equal the supplied value. Valid fields are `created_at` and `expires_at`.
+    //   deleted - boolean - If true, only list deleted Share Links.
     public static function all($params = [], $options = [])
     {
         if (@$params['user_id'] && !is_int(@$params['user_id'])) {

@@ -57,6 +57,8 @@
   "id": 1,
   "bypasses_site_expiration_rules": true,
   "created_at": "2000-01-01T01:00:00Z",
+  "deleted": true,
+  "deleted_at": "2000-01-01T01:00:00Z",
   "dont_separate_submissions_by_folder": true,
   "max_uses": 1,
   "note": "The internal note on the bundle.",
@@ -116,6 +118,8 @@
 * `id` (int64): Bundle ID
 * `bypasses_site_expiration_rules` (boolean): If true, this Share Link bypasses site-wide expiration rules. Only site admins may set this.
 * `created_at` (date-time): Bundle created at date/time
+* `deleted` (boolean): Indicates if the bundle has been deleted.
+* `deleted_at` (date-time): Bundle deleted at date/time
 * `dont_separate_submissions_by_folder` (boolean): Do not create subfolders for files uploaded to this share. Note: there are subtle security pitfalls with allowing anonymous uploads from multiple users to live in the same folder. We strongly discourage use of this option unless absolutely required.
 * `max_uses` (int64): Maximum number of times bundle can be accessed
 * `note` (string): Bundle internal note
@@ -151,6 +155,7 @@
 $bundle = new \Files\Model\Bundle();
 $bundle->list(, [
   'user_id' => 1,
+  'deleted' => false,
 ]);
 ```
 
@@ -167,6 +172,7 @@ $bundle->list(, [
 * `filter_prefix` (object): If set, return records where the specified field is prefixed by the supplied value. Valid fields are `code`.
 * `filter_lt` (object): If set, return records where the specified field is less than the supplied value. Valid fields are `created_at` and `expires_at`.
 * `filter_lteq` (object): If set, return records where the specified field is less than or equal the supplied value. Valid fields are `created_at` and `expires_at`.
+* `deleted` (boolean): If true, only list deleted Share Links.
 
 ---
 
@@ -408,6 +414,8 @@ $bundle->update([
   "id": 1,
   "bypasses_site_expiration_rules": true,
   "created_at": "2000-01-01T01:00:00Z",
+  "deleted": true,
+  "deleted_at": "2000-01-01T01:00:00Z",
   "dont_separate_submissions_by_folder": true,
   "max_uses": 1,
   "note": "The internal note on the bundle.",

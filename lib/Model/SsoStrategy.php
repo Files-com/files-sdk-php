@@ -235,7 +235,7 @@ class SsoStrategy
     {
         return @$this->attributes['provision_company'];
     }
-    // string # 2FA required setting for auto provisioned users.
+    // string # 2FA required setting for auto provisioned users. `use_system_setting` uses the site-wide setting, including SSO exemptions. `always_require` and `never_require` override the site-wide setting when user-level overrides are allowed.
     public function getProvisionRequire2fa()
     {
         return @$this->attributes['provision_require_2fa'];

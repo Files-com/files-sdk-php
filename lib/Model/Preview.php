@@ -70,7 +70,7 @@ class Preview
     {
         return @$this->attributes['download_uri'];
     }
-    // string # Preview type. Can be image, pdf, pdf_native, video, or audio
+    // string # Preview type. Can be image, pdf, pdf_native, video, audio, or text
     public function getType()
     {
         return @$this->attributes['type'];

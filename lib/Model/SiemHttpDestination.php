@@ -155,7 +155,7 @@ class SiemHttpDestination
     {
         return $this->attributes['generic_payload_type'] = $value;
     }
-    // string # Applicable only for destination type: splunk. Authentication token provided by Splunk.
+    // string # Applicable only for destination types: splunk, splunk_compatible. Authentication token for the destination.
     public function getSplunkTokenMasked()
     {
         return @$this->attributes['splunk_token_masked'];
@@ -164,6 +164,16 @@ class SiemHttpDestination
     public function setSplunkTokenMasked($value)
     {
         return $this->attributes['splunk_token_masked'] = $value;
+    }
+    // string # Applicable only for destination type: crowdstrike. Authentication token provided by Crowdstrike.
+    public function getCrowdstrikeTokenMasked()
+    {
+        return @$this->attributes['crowdstrike_token_masked'];
+    }
+
+    public function setCrowdstrikeTokenMasked($value)
+    {
+        return $this->attributes['crowdstrike_token_masked'] = $value;
     }
     // string # Applicable only for destination types: azure, azure_legacy. Immutable ID of the Data Collection Rule.
     public function getAzureDcrImmutableId()
@@ -595,7 +605,7 @@ class SiemHttpDestination
     {
         return $this->attributes['connection_test_entry'] = $value;
     }
-    // string # Applicable only for destination type: splunk. Authentication token provided by Splunk.
+    // string # Applicable only for destination types: splunk, splunk_compatible. Authentication token for the destination.
     public function getSplunkToken()
     {
         return @$this->attributes['splunk_token'];
@@ -604,6 +614,16 @@ class SiemHttpDestination
     public function setSplunkToken($value)
     {
         return $this->attributes['splunk_token'] = $value;
+    }
+    // string # Applicable only for destination type: crowdstrike. Authentication token provided by Crowdstrike.
+    public function getCrowdstrikeToken()
+    {
+        return @$this->attributes['crowdstrike_token'];
+    }
+
+    public function setCrowdstrikeToken($value)
+    {
+        return $this->attributes['crowdstrike_token'] = $value;
     }
     // string # Applicable only for destination type: azure. Client Credentials OAuth Client Secret.
     public function getAzureOauthClientCredentialsClientSecret()
@@ -664,7 +684,8 @@ class SiemHttpDestination
     //   file_destination_path - string - Applicable only for destination type: file. Destination folder path on Files.com.
     //   file_format - string - Applicable only for destination type: file. Generated file format.
     //   file_interval_minutes - int64 - Applicable only for destination type: file. Interval, in minutes, between file deliveries. Valid values are 5, 10, 15, 20, 30, 60, 90, 180, 240, 360.
-    //   splunk_token - string - Applicable only for destination type: splunk. Authentication token provided by Splunk.
+    //   splunk_token - string - Applicable only for destination types: splunk, splunk_compatible. Authentication token for the destination.
+    //   crowdstrike_token - string - Applicable only for destination type: crowdstrike. Authentication token provided by Crowdstrike.
     //   azure_dcr_immutable_id - string - Applicable only for destination types: azure, azure_legacy. Immutable ID of the Data Collection Rule.
     //   azure_stream_name - string - Applicable only for destination type: azure. Name of the stream in the DCR that represents the destination table.
     //   azure_oauth_client_credentials_tenant_id - string - Applicable only for destination types: azure, azure_legacy. Client Credentials OAuth Tenant ID.
@@ -729,6 +750,10 @@ class SiemHttpDestination
 
         if (@$params['splunk_token'] && !is_string(@$params['splunk_token'])) {
             throw new \Files\Exception\InvalidParameterException('$splunk_token must be of type string; received ' . gettype(@$params['splunk_token']));
+        }
+
+        if (@$params['crowdstrike_token'] && !is_string(@$params['crowdstrike_token'])) {
+            throw new \Files\Exception\InvalidParameterException('$crowdstrike_token must be of type string; received ' . gettype(@$params['crowdstrike_token']));
         }
 
         if (@$params['azure_dcr_immutable_id'] && !is_string(@$params['azure_dcr_immutable_id'])) {
@@ -884,7 +909,8 @@ class SiemHttpDestination
     //   file_destination_path - string - Applicable only for destination type: file. Destination folder path on Files.com.
     //   file_format - string - Applicable only for destination type: file. Generated file format.
     //   file_interval_minutes - int64 - Applicable only for destination type: file. Interval, in minutes, between file deliveries. Valid values are 5, 10, 15, 20, 30, 60, 90, 180, 240, 360.
-    //   splunk_token - string - Applicable only for destination type: splunk. Authentication token provided by Splunk.
+    //   splunk_token - string - Applicable only for destination types: splunk, splunk_compatible. Authentication token for the destination.
+    //   crowdstrike_token - string - Applicable only for destination type: crowdstrike. Authentication token provided by Crowdstrike.
     //   azure_dcr_immutable_id - string - Applicable only for destination types: azure, azure_legacy. Immutable ID of the Data Collection Rule.
     //   azure_stream_name - string - Applicable only for destination type: azure. Name of the stream in the DCR that represents the destination table.
     //   azure_oauth_client_credentials_tenant_id - string - Applicable only for destination types: azure, azure_legacy. Client Credentials OAuth Tenant ID.
@@ -937,6 +963,10 @@ class SiemHttpDestination
 
         if (@$params['splunk_token'] && !is_string(@$params['splunk_token'])) {
             throw new \Files\Exception\InvalidParameterException('$splunk_token must be of type string; received ' . gettype(@$params['splunk_token']));
+        }
+
+        if (@$params['crowdstrike_token'] && !is_string(@$params['crowdstrike_token'])) {
+            throw new \Files\Exception\InvalidParameterException('$crowdstrike_token must be of type string; received ' . gettype(@$params['crowdstrike_token']));
         }
 
         if (@$params['azure_dcr_immutable_id'] && !is_string(@$params['azure_dcr_immutable_id'])) {
@@ -1003,7 +1033,8 @@ class SiemHttpDestination
     //   file_destination_path - string - Applicable only for destination type: file. Destination folder path on Files.com.
     //   file_format - string - Applicable only for destination type: file. Generated file format.
     //   file_interval_minutes - int64 - Applicable only for destination type: file. Interval, in minutes, between file deliveries. Valid values are 5, 10, 15, 20, 30, 60, 90, 180, 240, 360.
-    //   splunk_token - string - Applicable only for destination type: splunk. Authentication token provided by Splunk.
+    //   splunk_token - string - Applicable only for destination types: splunk, splunk_compatible. Authentication token for the destination.
+    //   crowdstrike_token - string - Applicable only for destination type: crowdstrike. Authentication token provided by Crowdstrike.
     //   azure_dcr_immutable_id - string - Applicable only for destination types: azure, azure_legacy. Immutable ID of the Data Collection Rule.
     //   azure_stream_name - string - Applicable only for destination type: azure. Name of the stream in the DCR that represents the destination table.
     //   azure_oauth_client_credentials_tenant_id - string - Applicable only for destination types: azure, azure_legacy. Client Credentials OAuth Tenant ID.
@@ -1062,6 +1093,10 @@ class SiemHttpDestination
 
         if (@$params['splunk_token'] && !is_string(@$params['splunk_token'])) {
             throw new \Files\Exception\InvalidParameterException('$splunk_token must be of type string; received ' . gettype(@$params['splunk_token']));
+        }
+
+        if (@$params['crowdstrike_token'] && !is_string(@$params['crowdstrike_token'])) {
+            throw new \Files\Exception\InvalidParameterException('$crowdstrike_token must be of type string; received ' . gettype(@$params['crowdstrike_token']));
         }
 
         if (@$params['azure_dcr_immutable_id'] && !is_string(@$params['azure_dcr_immutable_id'])) {

@@ -255,6 +255,16 @@ class Notification
     {
         return $this->attributes['triggering_filenames'] = $value;
     }
+    // int64 # Workspace ID. `0` means the default workspace.
+    public function getWorkspaceId()
+    {
+        return @$this->attributes['workspace_id'];
+    }
+
+    public function setWorkspaceId($value)
+    {
+        return $this->attributes['workspace_id'] = $value;
+    }
     // boolean # Is the user unsubscribed from this notification?
     public function getUnsubscribed()
     {
@@ -321,6 +331,7 @@ class Notification
     //   triggering_group_ids - array(int64) - If set, will only notify on actions made by a member of one of the specified groups
     //   triggering_user_ids - array(int64) - If set, will only notify on actions made one of the specified users
     //   trigger_by_share_recipients - boolean - Notify when actions are performed by a share recipient?
+    //   workspace_id - int64 - Workspace ID. `0` means the default workspace.
     public function update($params = [])
     {
         if (!is_array($params)) {
@@ -361,6 +372,10 @@ class Notification
 
         if (@$params['triggering_user_ids'] && !is_array(@$params['triggering_user_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$triggering_user_ids must be of type array; received ' . gettype(@$params['triggering_user_ids']));
+        }
+
+        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
         $response = Api::sendRequest('/notifications/' . @$params['id'] . '', 'PATCH', $params, $this->options);
@@ -412,8 +427,8 @@ class Notification
     // Parameters:
     //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
     //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `path`, `user_id` or `group_id`.
-    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `path`, `user_id` or `group_id`.
+    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `workspace_id`, `path`, `user_id` or `group_id`.
+    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `path`, `user_id`, `workspace_id` or `group_id`. Valid field combinations are `[ workspace_id, path ]`, `[ workspace_id, user_id ]`, `[ workspace_id, group_id ]` or `[ workspace_id, user_id, path ]`.
     //   filter_prefix - object - If set, return records where the specified field is prefixed by the supplied value. Valid fields are `path`.
     //   path - string - Show notifications for this Path.
     //   include_ancestors - boolean - If `include_ancestors` is `true` and `path` is specified, include notifications for any parent paths. Ignored if `path` is not specified.
@@ -490,6 +505,7 @@ class Notification
     //   triggering_group_ids - array(int64) - If set, will only notify on actions made by a member of one of the specified groups
     //   triggering_user_ids - array(int64) - If set, will only notify on actions made one of the specified users
     //   trigger_by_share_recipients - boolean - Notify when actions are performed by a share recipient?
+    //   workspace_id - int64 - Workspace ID. `0` means the default workspace.
     //   group_id - int64 - The ID of the group to notify.  Provide `user_id`, `username` or `group_id`.
     //   group_ids - string - Group IDs when the notification requires multiple groups. If sent as a string, it should be comma-delimited.
     //   path - string - Path
@@ -522,6 +538,10 @@ class Notification
 
         if (@$params['triggering_user_ids'] && !is_array(@$params['triggering_user_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$triggering_user_ids must be of type array; received ' . gettype(@$params['triggering_user_ids']));
+        }
+
+        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
         if (@$params['group_id'] && !is_int(@$params['group_id'])) {

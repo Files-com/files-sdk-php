@@ -955,6 +955,11 @@ class Site
     {
         return @$this->attributes['users_can_create_ssh_keys'];
     }
+    // string # How usernames are displayed in the web UI. Can be `username_only`, `full_name_only`, `full_name_username`, `full_name_company`, or `full_name_username_company`.
+    public function getUsernameDisplay()
+    {
+        return @$this->attributes['username_display'];
+    }
     // string # Custom text send in user welcome email
     public function getWelcomeCustomText()
     {
@@ -1053,6 +1058,7 @@ class Site
     //   legacy_checksums_mode - boolean - Use legacy checksums mode?
     //   migrate_remote_server_sync_to_sync - boolean - If true, we will migrate all remote server syncs to the new Sync model.
     //   as2_message_retention_days - int64 - Number of days to retain AS2 messages (incoming and outgoing).
+    //   username_display - string - How usernames are displayed in the web UI. Can be `username_only`, `full_name_only`, `full_name_username`, `full_name_company`, or `full_name_username_company`.
     //   session_expiry_minutes - int64 - Session expiry in minutes
     //   ssl_required - boolean - Is SSL required?  Disabling this is insecure.
     //   sftp_insecure_ciphers - boolean - If true, we will allow weak and known insecure ciphers to be used for SFTP connections.  Enabling this setting severely weakens the security of your site and it is not recommend, except as a last resort for compatibility.
@@ -1263,6 +1269,10 @@ class Site
 
         if (@$params['as2_message_retention_days'] && !is_int(@$params['as2_message_retention_days'])) {
             throw new \Files\Exception\InvalidParameterException('$as2_message_retention_days must be of type int; received ' . gettype(@$params['as2_message_retention_days']));
+        }
+
+        if (@$params['username_display'] && !is_string(@$params['username_display'])) {
+            throw new \Files\Exception\InvalidParameterException('$username_display must be of type string; received ' . gettype(@$params['username_display']));
         }
 
         if (@$params['session_expiry_minutes'] && !is_int(@$params['session_expiry_minutes'])) {

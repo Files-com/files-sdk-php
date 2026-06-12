@@ -180,13 +180,16 @@ $bundle->list(, [
 
 ```
 $bundle = new \Files\Model\Bundle();
-$bundle->find($id);
+$bundle->find($id, [
+  'deleted' => false,
+]);
 ```
 
 
 ### Parameters
 
 * `id` (int64): Required - Bundle ID.
+* `deleted` (boolean): If true, show a deleted Share Link.
 
 ---
 

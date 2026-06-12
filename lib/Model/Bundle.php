@@ -813,6 +813,7 @@ class Bundle
 
     // Parameters:
     //   id (required) - int64 - Bundle ID.
+    //   deleted - boolean - If true, show a deleted Share Link.
     public static function find($id, $params = [], $options = [])
     {
         if (!is_array($params)) {

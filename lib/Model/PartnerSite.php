@@ -55,35 +55,50 @@ class PartnerSite
     {
         return !!@$this->attributes['id'];
     }
-    // int64 # Partner ID
-    public function getPartnerId()
+    // int64 # Host Partner ID
+    public function getHostPartnerId()
     {
-        return @$this->attributes['partner_id'];
+        return @$this->attributes['host_partner_id'];
     }
-    // string # Partner Name
-    public function getPartnerName()
+    // string # Host Partner Name
+    public function getHostPartnerName()
     {
-        return @$this->attributes['partner_name'];
+        return @$this->attributes['host_partner_name'];
     }
-    // int64 # Linked Site ID
-    public function getLinkedSiteId()
+    // int64 # Guest Partner ID
+    public function getGuestPartnerId()
     {
-        return @$this->attributes['linked_site_id'];
+        return @$this->attributes['guest_partner_id'];
     }
-    // string # Linked Site Name
-    public function getLinkedSiteName()
+    // string # Guest Partner Name
+    public function getGuestPartnerName()
     {
-        return @$this->attributes['linked_site_name'];
+        return @$this->attributes['guest_partner_name'];
     }
-    // int64 # Main Site ID
-    public function getMainSiteId()
+    // int64 # Host Site ID
+    public function getHostSiteId()
     {
-        return @$this->attributes['main_site_id'];
+        return @$this->attributes['host_site_id'];
     }
-    // string # Main Site Name
-    public function getMainSiteName()
+    // string # Host Site Name
+    public function getHostSiteName()
     {
-        return @$this->attributes['main_site_name'];
+        return @$this->attributes['host_site_name'];
+    }
+    // int64 # Guest Site ID
+    public function getGuestSiteId()
+    {
+        return @$this->attributes['guest_site_id'];
+    }
+    // string # Guest Site Name
+    public function getGuestSiteName()
+    {
+        return @$this->attributes['guest_site_name'];
+    }
+    // int64 # Workspace ID for the Host Partner
+    public function getWorkspaceId()
+    {
+        return @$this->attributes['workspace_id'];
     }
 
     public static function linkeds($params = [], $options = [])

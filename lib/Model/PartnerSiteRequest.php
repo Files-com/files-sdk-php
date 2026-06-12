@@ -65,25 +65,25 @@ class PartnerSiteRequest
     {
         return $this->attributes['id'] = $value;
     }
-    // int64 # Partner ID
-    public function getPartnerId()
+    // int64 # Host Partner ID
+    public function getHostPartnerId()
     {
-        return @$this->attributes['partner_id'];
+        return @$this->attributes['host_partner_id'];
     }
 
-    public function setPartnerId($value)
+    public function setHostPartnerId($value)
     {
-        return $this->attributes['partner_id'] = $value;
+        return $this->attributes['host_partner_id'] = $value;
     }
-    // int64 # Linked Site ID
-    public function getLinkedSiteId()
+    // int64 # Guest Site ID
+    public function getGuestSiteId()
     {
-        return @$this->attributes['linked_site_id'];
+        return @$this->attributes['guest_site_id'];
     }
 
-    public function setLinkedSiteId($value)
+    public function setGuestSiteId($value)
     {
-        return $this->attributes['linked_site_id'] = $value;
+        return $this->attributes['guest_site_id'] = $value;
     }
     // string # Request status (pending, approved, rejected)
     public function getStatus()
@@ -95,17 +95,17 @@ class PartnerSiteRequest
     {
         return $this->attributes['status'] = $value;
     }
-    // string # Main Site Name
-    public function getMainSiteName()
+    // string # Host Site Name
+    public function getHostSiteName()
     {
-        return @$this->attributes['main_site_name'];
+        return @$this->attributes['host_site_name'];
     }
 
-    public function setMainSiteName($value)
+    public function setHostSiteName($value)
     {
-        return $this->attributes['main_site_name'] = $value;
+        return $this->attributes['host_site_name'] = $value;
     }
-    // string # Pairing key used to approve this request on the target site
+    // string # Pairing key used to approve this request on the Guest Site
     public function getPairingKey()
     {
         return @$this->attributes['pairing_key'];
@@ -264,20 +264,20 @@ class PartnerSiteRequest
     }
 
     // Parameters:
-    //   partner_id (required) - int64 - Partner ID to link with
+    //   host_partner_id (required) - int64 - Host Partner ID to link with
     //   site_url (required) - string - Site URL to link to
     public static function create($params = [], $options = [])
     {
-        if (!@$params['partner_id']) {
-            throw new \Files\Exception\MissingParameterException('Parameter missing: partner_id');
+        if (!@$params['host_partner_id']) {
+            throw new \Files\Exception\MissingParameterException('Parameter missing: host_partner_id');
         }
 
         if (!@$params['site_url']) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: site_url');
         }
 
-        if (@$params['partner_id'] && !is_int(@$params['partner_id'])) {
-            throw new \Files\Exception\InvalidParameterException('$partner_id must be of type int; received ' . gettype(@$params['partner_id']));
+        if (@$params['host_partner_id'] && !is_int(@$params['host_partner_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$host_partner_id must be of type int; received ' . gettype(@$params['host_partner_id']));
         }
 
         if (@$params['site_url'] && !is_string(@$params['site_url'])) {

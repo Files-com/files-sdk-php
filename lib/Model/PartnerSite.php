@@ -55,86 +55,32 @@ class PartnerSite
     {
         return !!@$this->attributes['id'];
     }
-    // int64 # Host Partner ID
-    public function getHostPartnerId()
-    {
-        return @$this->attributes['host_partner_id'];
-    }
-    // string # Host Partner Name
-    public function getHostPartnerName()
-    {
-        return @$this->attributes['host_partner_name'];
-    }
-    // int64 # Guest Partner ID
-    public function getGuestPartnerId()
-    {
-        return @$this->attributes['guest_partner_id'];
-    }
-    // string # Guest Partner Name
-    public function getGuestPartnerName()
-    {
-        return @$this->attributes['guest_partner_name'];
-    }
-    // int64 # Host Site ID
-    public function getHostSiteId()
-    {
-        return @$this->attributes['host_site_id'];
-    }
-    // string # Host Site Name
-    public function getHostSiteName()
-    {
-        return @$this->attributes['host_site_name'];
-    }
-    // int64 # Guest Site ID
-    public function getGuestSiteId()
-    {
-        return @$this->attributes['guest_site_id'];
-    }
-    // string # Guest Site Name
-    public function getGuestSiteName()
-    {
-        return @$this->attributes['guest_site_name'];
-    }
-    // int64 # Workspace ID for the Host Partner
-    public function getWorkspaceId()
-    {
-        return @$this->attributes['workspace_id'];
-    }
 
-    public static function linkeds($params = [], $options = [])
+    public function delete($params = [])
     {
-        $response = Api::sendRequest('/partner_sites/linked_partner_sites', 'GET', $options);
-
-        $return_array = [];
-
-        foreach ($response->data as $obj) {
-            $return_array[] = new PartnerSite((array) $obj, $options);
+        if (!is_array($params)) {
+            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        return $return_array;
+        if (!@$params['id']) {
+            if (@$this->id) {
+                $params['id'] = $this->id;
+            } else {
+                throw new \Files\Exception\MissingParameterException('Parameter missing: id');
+            }
+        }
+
+        if (@$params['id'] && !is_int(@$params['id'])) {
+            throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
+        }
+
+        $response = Api::sendRequest('/partner_sites/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+        return;
     }
 
-    // Parameters:
-    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-    //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
-    public static function all($params = [], $options = [])
+    public function destroy($params = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
-            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
-        }
-
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
-            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
-        }
-
-        $response = Api::sendRequest('/partner_sites', 'GET', $params, $options);
-
-        $return_array = [];
-
-        foreach ($response->data as $obj) {
-            $return_array[] = new PartnerSite((array) $obj, $options);
-        }
-
-        return $return_array;
+        $this->delete($params);
+        return;
     }
 }

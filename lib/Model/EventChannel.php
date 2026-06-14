@@ -75,6 +75,16 @@ class EventChannel
     {
         return $this->attributes['name'] = $value;
     }
+    // int64 # Workspace ID. 0 means the default workspace.
+    public function getWorkspaceId()
+    {
+        return @$this->attributes['workspace_id'];
+    }
+
+    public function setWorkspaceId($value)
+    {
+        return $this->attributes['workspace_id'] = $value;
+    }
     // string # Event Channel description.
     public function getDescription()
     {
@@ -118,6 +128,7 @@ class EventChannel
 
     // Parameters:
     //   name - string - Event Channel name.
+    //   workspace_id - int64 - Workspace ID. 0 means the default workspace.
     //   description - string - Event Channel description.
     //   enabled - boolean - Whether this Event Channel can dispatch events.
     //   default_channel - boolean - Whether this Event Channel is the default destination for newly published events.
@@ -141,6 +152,10 @@ class EventChannel
 
         if (@$params['name'] && !is_string(@$params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
+        }
+
+        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
         if (@$params['description'] && !is_string(@$params['description'])) {
@@ -196,8 +211,8 @@ class EventChannel
     // Parameters:
     //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
     //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `name`, `enabled` or `default_channel`.
-    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `enabled` and `default_channel`.
+    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `name`, `enabled`, `default_channel` or `workspace_id`.
+    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `enabled`, `default_channel` or `workspace_id`. Valid field combinations are `[ workspace_id, enabled ]` and `[ workspace_id, default_channel ]`.
     public static function all($params = [], $options = [])
     {
         if (@$params['cursor'] && !is_string(@$params['cursor'])) {
@@ -248,6 +263,7 @@ class EventChannel
 
     // Parameters:
     //   name (required) - string - Event Channel name.
+    //   workspace_id - int64 - Workspace ID. 0 means the default workspace.
     //   description - string - Event Channel description.
     //   enabled - boolean - Whether this Event Channel can dispatch events.
     //   default_channel - boolean - Whether this Event Channel is the default destination for newly published events.
@@ -259,6 +275,10 @@ class EventChannel
 
         if (@$params['name'] && !is_string(@$params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
+        }
+
+        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
         if (@$params['description'] && !is_string(@$params['description'])) {

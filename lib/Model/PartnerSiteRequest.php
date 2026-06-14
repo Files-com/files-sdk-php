@@ -75,15 +75,15 @@ class PartnerSiteRequest
     {
         return $this->attributes['host_partner_id'] = $value;
     }
-    // int64 # Guest Site ID
-    public function getGuestSiteId()
+    // string # Guest Site URL
+    public function getGuestSiteUrl()
     {
-        return @$this->attributes['guest_site_id'];
+        return @$this->attributes['guest_site_url'];
     }
 
-    public function setGuestSiteId($value)
+    public function setGuestSiteUrl($value)
     {
-        return $this->attributes['guest_site_id'] = $value;
+        return $this->attributes['guest_site_url'] = $value;
     }
     // string # Request status (pending, approved, rejected)
     public function getStatus()
@@ -124,62 +124,6 @@ class PartnerSiteRequest
     public function getUpdatedAt()
     {
         return @$this->attributes['updated_at'];
-    }
-    // string # Site URL to link to
-    public function getSiteUrl()
-    {
-        return @$this->attributes['site_url'];
-    }
-
-    public function setSiteUrl($value)
-    {
-        return $this->attributes['site_url'] = $value;
-    }
-
-    // Reject partner site request
-    public function reject($params = [])
-    {
-        if (!is_array($params)) {
-            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
-        }
-
-        if (!@$params['id']) {
-            if (@$this->id) {
-                $params['id'] = $this->id;
-            } else {
-                throw new \Files\Exception\MissingParameterException('Parameter missing: id');
-            }
-        }
-
-        if (@$params['id'] && !is_int(@$params['id'])) {
-            throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
-        }
-
-        $response = Api::sendRequest('/partner_site_requests/' . @$params['id'] . '/reject', 'POST', $params, $this->options);
-        return;
-    }
-
-    // Approve partner site request
-    public function approve($params = [])
-    {
-        if (!is_array($params)) {
-            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
-        }
-
-        if (!@$params['id']) {
-            if (@$this->id) {
-                $params['id'] = $this->id;
-            } else {
-                throw new \Files\Exception\MissingParameterException('Parameter missing: id');
-            }
-        }
-
-        if (@$params['id'] && !is_int(@$params['id'])) {
-            throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
-        }
-
-        $response = Api::sendRequest('/partner_site_requests/' . @$params['id'] . '/approve', 'POST', $params, $this->options);
-        return;
     }
 
     public function delete($params = [])
@@ -225,6 +169,8 @@ class PartnerSiteRequest
     // Parameters:
     //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
     //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `host_partner_id`.
+    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `host_partner_id`.
     public static function all($params = [], $options = [])
     {
         if (@$params['cursor'] && !is_string(@$params['cursor'])) {
@@ -265,27 +211,61 @@ class PartnerSiteRequest
 
     // Parameters:
     //   host_partner_id (required) - int64 - Host Partner ID to link with
-    //   site_url (required) - string - Site URL to link to
+    //   guest_site_url (required) - string - Guest Site URL to link to
     public static function create($params = [], $options = [])
     {
         if (!@$params['host_partner_id']) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: host_partner_id');
         }
 
-        if (!@$params['site_url']) {
-            throw new \Files\Exception\MissingParameterException('Parameter missing: site_url');
+        if (!@$params['guest_site_url']) {
+            throw new \Files\Exception\MissingParameterException('Parameter missing: guest_site_url');
         }
 
         if (@$params['host_partner_id'] && !is_int(@$params['host_partner_id'])) {
             throw new \Files\Exception\InvalidParameterException('$host_partner_id must be of type int; received ' . gettype(@$params['host_partner_id']));
         }
 
-        if (@$params['site_url'] && !is_string(@$params['site_url'])) {
-            throw new \Files\Exception\InvalidParameterException('$site_url must be of type string; received ' . gettype(@$params['site_url']));
+        if (@$params['guest_site_url'] && !is_string(@$params['guest_site_url'])) {
+            throw new \Files\Exception\InvalidParameterException('$guest_site_url must be of type string; received ' . gettype(@$params['guest_site_url']));
         }
 
         $response = Api::sendRequest('/partner_site_requests', 'POST', $params, $options);
 
         return new PartnerSiteRequest((array) (@$response->data ?: []), $options);
+    }
+
+    // Parameters:
+    //   pairing_key (required) - string - Pairing key for the partner site request
+    public static function reject($params = [], $options = [])
+    {
+        if (!@$params['pairing_key']) {
+            throw new \Files\Exception\MissingParameterException('Parameter missing: pairing_key');
+        }
+
+        if (@$params['pairing_key'] && !is_string(@$params['pairing_key'])) {
+            throw new \Files\Exception\InvalidParameterException('$pairing_key must be of type string; received ' . gettype(@$params['pairing_key']));
+        }
+
+        $response = Api::sendRequest('/partner_site_requests/reject', 'POST', $params, $options);
+
+        return;
+    }
+
+    // Parameters:
+    //   pairing_key (required) - string - Pairing key for the partner site request
+    public static function approve($params = [], $options = [])
+    {
+        if (!@$params['pairing_key']) {
+            throw new \Files\Exception\MissingParameterException('Parameter missing: pairing_key');
+        }
+
+        if (@$params['pairing_key'] && !is_string(@$params['pairing_key'])) {
+            throw new \Files\Exception\InvalidParameterException('$pairing_key must be of type string; received ' . gettype(@$params['pairing_key']));
+        }
+
+        $response = Api::sendRequest('/partner_site_requests/approve', 'POST', $params, $options);
+
+        return;
     }
 }

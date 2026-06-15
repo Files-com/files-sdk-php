@@ -335,6 +335,26 @@ class RemoteServer
     {
         return $this->attributes['google_cloud_storage_bucket'] = $value;
     }
+    // string # Google Cloud Storage: Authentication method. Can be json, hmac, or oauth.
+    public function getGoogleCloudStorageAuthenticationMethod()
+    {
+        return @$this->attributes['google_cloud_storage_authentication_method'];
+    }
+
+    public function setGoogleCloudStorageAuthenticationMethod($value)
+    {
+        return $this->attributes['google_cloud_storage_authentication_method'] = $value;
+    }
+    // string # Google Cloud Storage: OAuth scope. Can be https://www.googleapis.com/auth/devstorage.read_only or https://www.googleapis.com/auth/devstorage.read_write.
+    public function getGoogleCloudStorageOauthScope()
+    {
+        return @$this->attributes['google_cloud_storage_oauth_scope'];
+    }
+
+    public function setGoogleCloudStorageOauthScope($value)
+    {
+        return $this->attributes['google_cloud_storage_oauth_scope'] = $value;
+    }
     // string # Google Cloud Storage: Project ID
     public function getGoogleCloudStorageProjectId()
     {
@@ -1083,7 +1103,9 @@ class RemoteServer
     //   files_agent_root - string - Agent local root path
     //   files_agent_version - string - Files Agent version
     //   outbound_agent_id - int64 - Route traffic to outbound on a files-agent
+    //   google_cloud_storage_authentication_method - string - Google Cloud Storage: Authentication method. Can be json, hmac, or oauth.
     //   google_cloud_storage_bucket - string - Google Cloud Storage: Bucket Name
+    //   google_cloud_storage_oauth_scope - string - Google Cloud Storage: OAuth scope. Can be https://www.googleapis.com/auth/devstorage.read_only or https://www.googleapis.com/auth/devstorage.read_write.
     //   google_cloud_storage_project_id - string - Google Cloud Storage: Project ID
     //   google_cloud_storage_s3_compatible_access_key - string - Google Cloud Storage: S3-compatible Access Key.
     //   hostname - string - Hostname or IP address
@@ -1284,8 +1306,16 @@ class RemoteServer
             throw new \Files\Exception\InvalidParameterException('$outbound_agent_id must be of type int; received ' . gettype(@$params['outbound_agent_id']));
         }
 
+        if (@$params['google_cloud_storage_authentication_method'] && !is_string(@$params['google_cloud_storage_authentication_method'])) {
+            throw new \Files\Exception\InvalidParameterException('$google_cloud_storage_authentication_method must be of type string; received ' . gettype(@$params['google_cloud_storage_authentication_method']));
+        }
+
         if (@$params['google_cloud_storage_bucket'] && !is_string(@$params['google_cloud_storage_bucket'])) {
             throw new \Files\Exception\InvalidParameterException('$google_cloud_storage_bucket must be of type string; received ' . gettype(@$params['google_cloud_storage_bucket']));
+        }
+
+        if (@$params['google_cloud_storage_oauth_scope'] && !is_string(@$params['google_cloud_storage_oauth_scope'])) {
+            throw new \Files\Exception\InvalidParameterException('$google_cloud_storage_oauth_scope must be of type string; received ' . gettype(@$params['google_cloud_storage_oauth_scope']));
         }
 
         if (@$params['google_cloud_storage_project_id'] && !is_string(@$params['google_cloud_storage_project_id'])) {
@@ -1567,7 +1597,9 @@ class RemoteServer
     //   files_agent_root - string - Agent local root path
     //   files_agent_version - string - Files Agent version
     //   outbound_agent_id - int64 - Route traffic to outbound on a files-agent
+    //   google_cloud_storage_authentication_method - string - Google Cloud Storage: Authentication method. Can be json, hmac, or oauth.
     //   google_cloud_storage_bucket - string - Google Cloud Storage: Bucket Name
+    //   google_cloud_storage_oauth_scope - string - Google Cloud Storage: OAuth scope. Can be https://www.googleapis.com/auth/devstorage.read_only or https://www.googleapis.com/auth/devstorage.read_write.
     //   google_cloud_storage_project_id - string - Google Cloud Storage: Project ID
     //   google_cloud_storage_s3_compatible_access_key - string - Google Cloud Storage: S3-compatible Access Key.
     //   hostname - string - Hostname or IP address
@@ -1753,8 +1785,16 @@ class RemoteServer
             throw new \Files\Exception\InvalidParameterException('$outbound_agent_id must be of type int; received ' . gettype(@$params['outbound_agent_id']));
         }
 
+        if (@$params['google_cloud_storage_authentication_method'] && !is_string(@$params['google_cloud_storage_authentication_method'])) {
+            throw new \Files\Exception\InvalidParameterException('$google_cloud_storage_authentication_method must be of type string; received ' . gettype(@$params['google_cloud_storage_authentication_method']));
+        }
+
         if (@$params['google_cloud_storage_bucket'] && !is_string(@$params['google_cloud_storage_bucket'])) {
             throw new \Files\Exception\InvalidParameterException('$google_cloud_storage_bucket must be of type string; received ' . gettype(@$params['google_cloud_storage_bucket']));
+        }
+
+        if (@$params['google_cloud_storage_oauth_scope'] && !is_string(@$params['google_cloud_storage_oauth_scope'])) {
+            throw new \Files\Exception\InvalidParameterException('$google_cloud_storage_oauth_scope must be of type string; received ' . gettype(@$params['google_cloud_storage_oauth_scope']));
         }
 
         if (@$params['google_cloud_storage_project_id'] && !is_string(@$params['google_cloud_storage_project_id'])) {

@@ -32,6 +32,8 @@
   "ssl": "if_available",
   "username": "user",
   "google_cloud_storage_bucket": "my-bucket",
+  "google_cloud_storage_authentication_method": "json",
+  "google_cloud_storage_oauth_scope": "https://www.googleapis.com/auth/devstorage.read_only",
   "google_cloud_storage_project_id": "my-project",
   "google_cloud_storage_s3_compatible_access_key": "example",
   "backblaze_b2_s3_endpoint": "s3.us-west-001.backblazeb2.com",
@@ -104,6 +106,8 @@
 * `ssl` (string): Should we require SSL?
 * `username` (string): Remote server username.
 * `google_cloud_storage_bucket` (string): Google Cloud Storage: Bucket Name
+* `google_cloud_storage_authentication_method` (string): Google Cloud Storage: Authentication method. Can be json, hmac, or oauth.
+* `google_cloud_storage_oauth_scope` (string): Google Cloud Storage: OAuth scope. Can be https://www.googleapis.com/auth/devstorage.read_only or https://www.googleapis.com/auth/devstorage.read_write.
 * `google_cloud_storage_project_id` (string): Google Cloud Storage: Project ID
 * `google_cloud_storage_s3_compatible_access_key` (string): Google Cloud Storage: S3-compatible Access Key.
 * `backblaze_b2_s3_endpoint` (string): Backblaze B2 Cloud Storage: S3 Endpoint
@@ -243,7 +247,9 @@ $remote_server->create(, [
   'files_agent_root' => "example",
   'files_agent_version' => "example",
   'outbound_agent_id' => 1,
+  'google_cloud_storage_authentication_method' => "json",
   'google_cloud_storage_bucket' => "my-bucket",
+  'google_cloud_storage_oauth_scope' => "https://www.googleapis.com/auth/devstorage.read_only",
   'google_cloud_storage_project_id' => "my-project",
   'google_cloud_storage_s3_compatible_access_key' => "example",
   'hostname' => "remote-server.com",
@@ -324,7 +330,9 @@ $remote_server->create(, [
 * `files_agent_root` (string): Agent local root path
 * `files_agent_version` (string): Files Agent version
 * `outbound_agent_id` (int64): Route traffic to outbound on a files-agent
+* `google_cloud_storage_authentication_method` (string): Google Cloud Storage: Authentication method. Can be json, hmac, or oauth.
 * `google_cloud_storage_bucket` (string): Google Cloud Storage: Bucket Name
+* `google_cloud_storage_oauth_scope` (string): Google Cloud Storage: OAuth scope. Can be https://www.googleapis.com/auth/devstorage.read_only or https://www.googleapis.com/auth/devstorage.read_write.
 * `google_cloud_storage_project_id` (string): Google Cloud Storage: Project ID
 * `google_cloud_storage_s3_compatible_access_key` (string): Google Cloud Storage: S3-compatible Access Key.
 * `hostname` (string): Hostname or IP address
@@ -486,7 +494,9 @@ $remote_server->update([
   'files_agent_root' => "example",
   'files_agent_version' => "example",
   'outbound_agent_id' => 1,
+  'google_cloud_storage_authentication_method' => "json",
   'google_cloud_storage_bucket' => "my-bucket",
+  'google_cloud_storage_oauth_scope' => "https://www.googleapis.com/auth/devstorage.read_only",
   'google_cloud_storage_project_id' => "my-project",
   'google_cloud_storage_s3_compatible_access_key' => "example",
   'hostname' => "remote-server.com",
@@ -566,7 +576,9 @@ $remote_server->update([
 * `files_agent_root` (string): Agent local root path
 * `files_agent_version` (string): Files Agent version
 * `outbound_agent_id` (int64): Route traffic to outbound on a files-agent
+* `google_cloud_storage_authentication_method` (string): Google Cloud Storage: Authentication method. Can be json, hmac, or oauth.
 * `google_cloud_storage_bucket` (string): Google Cloud Storage: Bucket Name
+* `google_cloud_storage_oauth_scope` (string): Google Cloud Storage: OAuth scope. Can be https://www.googleapis.com/auth/devstorage.read_only or https://www.googleapis.com/auth/devstorage.read_write.
 * `google_cloud_storage_project_id` (string): Google Cloud Storage: Project ID
 * `google_cloud_storage_s3_compatible_access_key` (string): Google Cloud Storage: S3-compatible Access Key.
 * `hostname` (string): Hostname or IP address
@@ -630,6 +642,8 @@ $remote_server->update([
   "ssl": "if_available",
   "username": "user",
   "google_cloud_storage_bucket": "my-bucket",
+  "google_cloud_storage_authentication_method": "json",
+  "google_cloud_storage_oauth_scope": "https://www.googleapis.com/auth/devstorage.read_only",
   "google_cloud_storage_project_id": "my-project",
   "google_cloud_storage_s3_compatible_access_key": "example",
   "backblaze_b2_s3_endpoint": "s3.us-west-001.backblazeb2.com",

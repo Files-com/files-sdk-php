@@ -95,6 +95,16 @@ class BundleNotification
     {
         return $this->attributes['notify_on_upload'] = $value;
     }
+    // boolean # Is the current user the user to notify?
+    public function getNotifyCurrentUser()
+    {
+        return @$this->attributes['notify_current_user'];
+    }
+
+    public function setNotifyCurrentUser($value)
+    {
+        return $this->attributes['notify_current_user'] = $value;
+    }
     // int64 # The id of the user to notify.
     public function getNotifyUserId()
     {

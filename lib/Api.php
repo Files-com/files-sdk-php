@@ -20,7 +20,7 @@ function middlewareRemoveHeader($header)
 
 class Api
 {
-    const VERSION = "2.0.575";
+    const VERSION = "2.0.576";
     private static function pushRetryHandler($handlerStack)
     {
         $shouldRetry = function ($retries, $request, $response, $exception) {
@@ -177,6 +177,9 @@ class Api
             $headers['Accept'] = 'application/json';
 
             $sessionId = @$options['session_id'] ?: Files::getSessionId();
+            $workspaceId = array_key_exists('workspace_id', $options)
+              ? $options['workspace_id']
+              : Files::getWorkspaceId();
 
             if ($sessionId) {
                 $headers['X-FilesAPI-Auth'] = $sessionId;
@@ -193,6 +196,10 @@ class Api
 
                     $headers['X-FilesAPI-Key'] = $apiKey;
                 }
+            }
+
+            if ($workspaceId !== null && $workspaceId !== '') {
+                $headers['X-Files-Workspace-Id'] = (string) $workspaceId;
             }
         }
 

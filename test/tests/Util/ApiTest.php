@@ -11,6 +11,8 @@ use Files\Model\Bundle;
 use Files\Model\Folder;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
@@ -116,6 +118,72 @@ class ApiTest extends TestCase
             $this->assertEquals($error->getData()->host, 'test.host');
             $this->assertEquals($error->getHttpCode(), 403);
         }
+    }
+
+    public function testUsesConfiguredWorkspaceId()
+    {
+        Files::setApiKey('test-key');
+        Files::setWorkspaceId(123);
+
+        $history = [];
+        $mock = new MockHandler([
+            new Response(200, ['Content-Type' => 'application/json'], '[]')
+        ]);
+        $stack = HandlerStack::create($mock);
+        $stack->push(Middleware::history($history));
+        Files::setHandler($stack);
+
+        Folder::listFor('/');
+
+        $this->assertCount(1, $history);
+        $request = $history[0]['request'];
+        $this->assertEquals('123', $request->getHeaderLine('X-Files-Workspace-Id'));
+
+        Files::setWorkspaceId(null);
+    }
+
+    public function testUsesPerCallWorkspaceId()
+    {
+        Files::setApiKey('test-key');
+        Files::setWorkspaceId(123);
+
+        $history = [];
+        $mock = new MockHandler([
+            new Response(200, ['Content-Type' => 'application/json'], '[]')
+        ]);
+        $stack = HandlerStack::create($mock);
+        $stack->push(Middleware::history($history));
+        Files::setHandler($stack);
+
+        Folder::listFor('/', [], ['workspace_id' => 456]);
+
+        $this->assertCount(1, $history);
+        $request = $history[0]['request'];
+        $this->assertEquals('456', $request->getHeaderLine('X-Files-Workspace-Id'));
+
+        Files::setWorkspaceId(null);
+    }
+
+    public function testAllowsPerCallWorkspaceIdToBeCleared()
+    {
+        Files::setApiKey('test-key');
+        Files::setWorkspaceId(123);
+
+        $history = [];
+        $mock = new MockHandler([
+            new Response(200, ['Content-Type' => 'application/json'], '[]')
+        ]);
+        $stack = HandlerStack::create($mock);
+        $stack->push(Middleware::history($history));
+        Files::setHandler($stack);
+
+        Folder::listFor('/', [], ['workspace_id' => null]);
+
+        $this->assertCount(1, $history);
+        $request = $history[0]['request'];
+        $this->assertFalse($request->hasHeader('X-Files-Workspace-Id'));
+
+        Files::setWorkspaceId(null);
     }
 
     public function testNotFound()

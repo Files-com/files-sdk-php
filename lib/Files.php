@@ -30,6 +30,7 @@ class Files
     private static $baseUrl = 'https://app.files.com';
     private static $endpointPrefix = '/api/rest/v1';
     private static $sessionId = null;
+    private static $workspaceId = null;
     private static $language = null;
     private static $handler = null;
 
@@ -64,6 +65,11 @@ class Files
         return self::$sessionId;
     }
 
+    public static function getWorkspaceId()
+    {
+        return self::$workspaceId;
+    }
+
     public static function getLanguage()
     {
         return self::$language;
@@ -92,6 +98,11 @@ class Files
     public static function setSessionId($apiKey)
     {
         self::$sessionId = $apiKey;
+    }
+
+    public static function setWorkspaceId($workspaceId)
+    {
+        self::$workspaceId = $workspaceId;
     }
 
     public static function setLanguage($language)

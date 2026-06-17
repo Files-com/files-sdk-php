@@ -984,6 +984,112 @@ class File
         return new FileAction((array) (@$response->data ?: []), $this->options);
     }
 
+    // Decrypt a GPG-encrypted file and save it to a destination path
+    //
+    // Parameters:
+    //   destination (required) - string - Destination file path for the decrypted file.
+    //   gpg_key_ids - array(int64) - GPG Key IDs to decrypt with. If omitted, every accessible private GPG key in the source workspace is used.
+    //   gpg_key_partner_id - int64 - Partner ID whose GPG keys should be used for decryption.
+    //   use_all_private_keys - boolean - Use every accessible private GPG key in the source workspace for decryption.
+    //   ignore_mdc_error - boolean - Ignore errors from the MDC (modification detection code) check.
+    //   overwrite - boolean - Overwrite existing file in the destination?
+    public function gpgDecrypt($params = [])
+    {
+        if (!is_array($params)) {
+            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+        }
+
+        if (!@$params['path']) {
+            if (@$this->path) {
+                $params['path'] = $this->path;
+            } else {
+                throw new \Files\Exception\MissingParameterException('Parameter missing: path');
+            }
+        }
+
+        if (!@$params['destination']) {
+            if (@$this->destination) {
+                $params['destination'] = $this->destination;
+            } else {
+                throw new \Files\Exception\MissingParameterException('Parameter missing: destination');
+            }
+        }
+
+        if (@$params['path'] && !is_string(@$params['path'])) {
+            throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
+        }
+
+        if (@$params['destination'] && !is_string(@$params['destination'])) {
+            throw new \Files\Exception\InvalidParameterException('$destination must be of type string; received ' . gettype(@$params['destination']));
+        }
+
+        if (@$params['gpg_key_ids'] && !is_array(@$params['gpg_key_ids'])) {
+            throw new \Files\Exception\InvalidParameterException('$gpg_key_ids must be of type array; received ' . gettype(@$params['gpg_key_ids']));
+        }
+
+        if (@$params['gpg_key_partner_id'] && !is_int(@$params['gpg_key_partner_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$gpg_key_partner_id must be of type int; received ' . gettype(@$params['gpg_key_partner_id']));
+        }
+
+        $response = Api::sendRequest('/file_actions/gpg_decrypt/' . @$params['path'] . '', 'POST', $params, $this->options);
+        return new FileAction((array) (@$response->data ?: []), $this->options);
+    }
+
+    // Encrypt a file with GPG and save it to a destination path
+    //
+    // Parameters:
+    //   destination (required) - string - Destination file path for the encrypted file.
+    //   gpg_key_ids - array(int64) - GPG Key IDs to encrypt with.
+    //   gpg_key_partner_id - int64 - Partner ID whose GPG keys should be used for encryption.
+    //   signing_key_id - int64 - Optional GPG Key ID to sign with.
+    //   armor - boolean - Output ASCII-armored encrypted data.
+    //   overwrite - boolean - Overwrite existing file in the destination?
+    public function gpgEncrypt($params = [])
+    {
+        if (!is_array($params)) {
+            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+        }
+
+        if (!@$params['path']) {
+            if (@$this->path) {
+                $params['path'] = $this->path;
+            } else {
+                throw new \Files\Exception\MissingParameterException('Parameter missing: path');
+            }
+        }
+
+        if (!@$params['destination']) {
+            if (@$this->destination) {
+                $params['destination'] = $this->destination;
+            } else {
+                throw new \Files\Exception\MissingParameterException('Parameter missing: destination');
+            }
+        }
+
+        if (@$params['path'] && !is_string(@$params['path'])) {
+            throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
+        }
+
+        if (@$params['destination'] && !is_string(@$params['destination'])) {
+            throw new \Files\Exception\InvalidParameterException('$destination must be of type string; received ' . gettype(@$params['destination']));
+        }
+
+        if (@$params['gpg_key_ids'] && !is_array(@$params['gpg_key_ids'])) {
+            throw new \Files\Exception\InvalidParameterException('$gpg_key_ids must be of type array; received ' . gettype(@$params['gpg_key_ids']));
+        }
+
+        if (@$params['gpg_key_partner_id'] && !is_int(@$params['gpg_key_partner_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$gpg_key_partner_id must be of type int; received ' . gettype(@$params['gpg_key_partner_id']));
+        }
+
+        if (@$params['signing_key_id'] && !is_int(@$params['signing_key_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$signing_key_id must be of type int; received ' . gettype(@$params['signing_key_id']));
+        }
+
+        $response = Api::sendRequest('/file_actions/gpg_encrypt/' . @$params['path'] . '', 'POST', $params, $this->options);
+        return new FileAction((array) (@$response->data ?: []), $this->options);
+    }
+
     // Extract a ZIP file to a destination folder
     //
     // Parameters:

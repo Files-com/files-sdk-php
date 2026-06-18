@@ -95,15 +95,15 @@ class GroupUser
     {
         return $this->attributes['admin'] = $value;
     }
-    // string # Comma-delimited list of usernames who belong to this group (separated by commas).
-    public function getUsernames()
+    // string # Username of the user
+    public function getUsername()
     {
-        return @$this->attributes['usernames'];
+        return @$this->attributes['username'];
     }
 
-    public function setUsernames($value)
+    public function setUsername($value)
     {
-        return $this->attributes['usernames'] = $value;
+        return $this->attributes['username'] = $value;
     }
     // int64 # Group User ID.
     public function getId()

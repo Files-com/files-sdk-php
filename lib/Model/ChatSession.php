@@ -55,7 +55,7 @@ class ChatSession
     {
         return !!@$this->attributes['id'];
     }
-    // int64 # Chat Session ID.
+    // string # Chat Session ID.
     public function getId()
     {
         return @$this->attributes['id'];
@@ -111,7 +111,7 @@ class ChatSession
     }
 
     // Parameters:
-    //   id (required) - int64 - Chat Session ID.
+    //   id (required) - string - Chat Session ID.
     public static function find($id, $params = [], $options = [])
     {
         if (!is_array($params)) {
@@ -124,8 +124,8 @@ class ChatSession
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
-            throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
+        if (@$params['id'] && !is_string(@$params['id'])) {
+            throw new \Files\Exception\InvalidParameterException('$id must be of type string; received ' . gettype(@$params['id']));
         }
 
         $response = Api::sendRequest('/chat_sessions/' . @$params['id'] . '', 'GET', $params, $options);

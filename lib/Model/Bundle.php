@@ -330,6 +330,16 @@ class Bundle
     {
         return $this->attributes['max_uses'] = $value;
     }
+    // string # Internal name for identifying this Share Link.
+    public function getInternalName()
+    {
+        return @$this->attributes['internal_name'];
+    }
+
+    public function setInternalName($value)
+    {
+        return $this->attributes['internal_name'] = $value;
+    }
     // string # Bundle internal note
     public function getNote()
     {
@@ -626,6 +636,7 @@ class Bundle
     //   inbox_id - int64 - ID of the associated inbox, if available.
     //   max_uses - int64 - Maximum number of times bundle can be accessed
     //   group_id - int64 - Owning group ID. If set, members of this group can view, edit, and share this Share Link.
+    //   internal_name - string - Internal name for identifying this Share Link.
     //   note - string - Bundle internal note
     //   path_template - string - Template for creating submission subfolders. Can use the uploader's name, email address, ip, company, `strftime` directives, and any custom form data.
     //   path_template_time_zone - string - Timezone to use when rendering timestamps in path templates.
@@ -698,6 +709,10 @@ class Bundle
 
         if (@$params['group_id'] && !is_int(@$params['group_id'])) {
             throw new \Files\Exception\InvalidParameterException('$group_id must be of type int; received ' . gettype(@$params['group_id']));
+        }
+
+        if (@$params['internal_name'] && !is_string(@$params['internal_name'])) {
+            throw new \Files\Exception\InvalidParameterException('$internal_name must be of type string; received ' . gettype(@$params['internal_name']));
         }
 
         if (@$params['note'] && !is_string(@$params['note'])) {
@@ -851,6 +866,7 @@ class Bundle
     //   finalize_snapshot - boolean - If true, finalize the snapshot of this bundle's contents. Note that `create_snapshot` must also be true.
     //   max_uses - int64 - Maximum number of times bundle can be accessed
     //   group_id - int64 - Owning group ID. If set, members of this group can view, edit, and share this Share Link.
+    //   internal_name - string - Internal name for identifying this Share Link.
     //   description - string - Public description
     //   note - string - Bundle internal note
     //   code - string - Bundle code.  This code forms the end part of the Public URL.
@@ -902,6 +918,10 @@ class Bundle
 
         if (@$params['group_id'] && !is_int(@$params['group_id'])) {
             throw new \Files\Exception\InvalidParameterException('$group_id must be of type int; received ' . gettype(@$params['group_id']));
+        }
+
+        if (@$params['internal_name'] && !is_string(@$params['internal_name'])) {
+            throw new \Files\Exception\InvalidParameterException('$internal_name must be of type string; received ' . gettype(@$params['internal_name']));
         }
 
         if (@$params['description'] && !is_string(@$params['description'])) {

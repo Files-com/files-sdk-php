@@ -984,6 +984,81 @@ class File
         return new FileAction((array) (@$response->data ?: []), $this->options);
     }
 
+    // Transform a file and save the output to a destination path
+    //
+    // Parameters:
+    //   destination (required) - string - Destination file path for the transformed output.
+    //   transform_type (required) - string - Transform type. Supported values are `image_convert` and `document_convert`.
+    //   target_format (required) - string - Destination format to create.
+    //   width - int64 - Maximum output width for image_convert.
+    //   height - int64 - Maximum output height for image_convert.
+    //   overwrite - boolean - Overwrite existing file in the destination?
+    public function transform($params = [])
+    {
+        if (!is_array($params)) {
+            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+        }
+
+        if (!@$params['path']) {
+            if (@$this->path) {
+                $params['path'] = $this->path;
+            } else {
+                throw new \Files\Exception\MissingParameterException('Parameter missing: path');
+            }
+        }
+
+        if (!@$params['destination']) {
+            if (@$this->destination) {
+                $params['destination'] = $this->destination;
+            } else {
+                throw new \Files\Exception\MissingParameterException('Parameter missing: destination');
+            }
+        }
+
+        if (!@$params['transform_type']) {
+            if (@$this->transform_type) {
+                $params['transform_type'] = $this->transform_type;
+            } else {
+                throw new \Files\Exception\MissingParameterException('Parameter missing: transform_type');
+            }
+        }
+
+        if (!@$params['target_format']) {
+            if (@$this->target_format) {
+                $params['target_format'] = $this->target_format;
+            } else {
+                throw new \Files\Exception\MissingParameterException('Parameter missing: target_format');
+            }
+        }
+
+        if (@$params['path'] && !is_string(@$params['path'])) {
+            throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
+        }
+
+        if (@$params['destination'] && !is_string(@$params['destination'])) {
+            throw new \Files\Exception\InvalidParameterException('$destination must be of type string; received ' . gettype(@$params['destination']));
+        }
+
+        if (@$params['transform_type'] && !is_string(@$params['transform_type'])) {
+            throw new \Files\Exception\InvalidParameterException('$transform_type must be of type string; received ' . gettype(@$params['transform_type']));
+        }
+
+        if (@$params['target_format'] && !is_string(@$params['target_format'])) {
+            throw new \Files\Exception\InvalidParameterException('$target_format must be of type string; received ' . gettype(@$params['target_format']));
+        }
+
+        if (@$params['width'] && !is_int(@$params['width'])) {
+            throw new \Files\Exception\InvalidParameterException('$width must be of type int; received ' . gettype(@$params['width']));
+        }
+
+        if (@$params['height'] && !is_int(@$params['height'])) {
+            throw new \Files\Exception\InvalidParameterException('$height must be of type int; received ' . gettype(@$params['height']));
+        }
+
+        $response = Api::sendRequest('/file_actions/transform/' . @$params['path'] . '', 'POST', $params, $this->options);
+        return new FileAction((array) (@$response->data ?: []), $this->options);
+    }
+
     // Decrypt a GPG-encrypted file and save it to a destination path
     //
     // Parameters:

@@ -65,6 +65,11 @@ class ChatSession
     {
         return @$this->attributes['user_id'];
     }
+    // int64 # AI Task ID. Present when the conversation was started by an AI Task.
+    public function getAiTaskId()
+    {
+        return @$this->attributes['ai_task_id'];
+    }
     // int64 # Workspace ID. `0` means the default workspace.
     public function getWorkspaceId()
     {
@@ -89,6 +94,7 @@ class ChatSession
     // Parameters:
     //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
     //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `ai_task_id`.
     public static function all($params = [], $options = [])
     {
         if (@$params['cursor'] && !is_string(@$params['cursor'])) {

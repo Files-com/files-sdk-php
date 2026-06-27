@@ -657,6 +657,7 @@ Exception
 |`SiteNotFoundException`|  `NotFoundException` |
 |`UserNotFoundException`|  `NotFoundException` |
 |`AgentUnavailableException`|  `ProcessingFailureException` |
+|`AiTaskCannotBeRunManuallyException`|  `ProcessingFailureException` |
 |`AlreadyCompletedException`|  `ProcessingFailureException` |
 |`AutomationCannotBeRunManuallyException`|  `ProcessingFailureException` |
 |`BehaviorNotAllowedOnRemoteServerException`|  `ProcessingFailureException` |

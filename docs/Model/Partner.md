@@ -11,6 +11,7 @@
   "allow_user_creation": true,
   "cc_emails_to_responsible_party": true,
   "id": 1,
+  "ai_assistant_personality_id": 1,
   "workspace_id": 1,
   "name": "Acme Corp",
   "notes": "This is a note about the partner.",
@@ -39,6 +40,7 @@
 * `allow_user_creation` (boolean): Allow Partner Admins to create users.
 * `cc_emails_to_responsible_party` (boolean): When `true`, emails sent to Partner users are copied to the responsible User or Group.
 * `id` (int64): The unique ID of the Partner.
+* `ai_assistant_personality_id` (int64): AI Assistant Personality ID assigned to this Partner, if any. Users in the Partner inherit it unless a direct per-user assignment overrides it.
 * `workspace_id` (int64): ID of the Workspace associated with this Partner.
 * `name` (string): The name of the Partner.
 * `notes` (string): Notes about this Partner.
@@ -88,6 +90,7 @@ $partner->find($id);
 ```
 $partner = new \Files\Model\Partner();
 $partner->create(, [
+  'ai_assistant_personality_id' => 1,
   'allowed_ips' => "10.0.0.0/8\n127.0.0.1",
   'allow_bypassing_2fa_policies' => false,
   'allow_credential_changes' => false,
@@ -107,6 +110,7 @@ $partner->create(, [
 
 ### Parameters
 
+* `ai_assistant_personality_id` (int64): AI Assistant Personality ID assigned to this Partner, if any. Users in the Partner inherit it unless a direct per-user assignment overrides it.
 * `allowed_ips` (string): A list of allowed IPs for this Partner. Newline delimited. Partner User IP access is allowed when the IP matches the Partner, User, or Site allowed IP lists.
 * `allow_bypassing_2fa_policies` (boolean): Allow Partner Admins to change Two-Factor Authentication requirements for Partner Users.
 * `allow_credential_changes` (boolean): Allow Partner Admins to change or reset credentials for users belonging to this Partner.
@@ -129,6 +133,7 @@ $partner->create(, [
 $partner = \Files\Model\Partner::find($id);
 
 $partner->update([
+  'ai_assistant_personality_id' => 1,
   'allowed_ips' => "10.0.0.0/8\n127.0.0.1",
   'allow_bypassing_2fa_policies' => false,
   'allow_credential_changes' => false,
@@ -147,6 +152,7 @@ $partner->update([
 ### Parameters
 
 * `id` (int64): Required - Partner ID.
+* `ai_assistant_personality_id` (int64): AI Assistant Personality ID assigned to this Partner, if any. Users in the Partner inherit it unless a direct per-user assignment overrides it.
 * `allowed_ips` (string): A list of allowed IPs for this Partner. Newline delimited. Partner User IP access is allowed when the IP matches the Partner, User, or Site allowed IP lists.
 * `allow_bypassing_2fa_policies` (boolean): Allow Partner Admins to change Two-Factor Authentication requirements for Partner Users.
 * `allow_credential_changes` (boolean): Allow Partner Admins to change or reset credentials for users belonging to this Partner.
@@ -171,6 +177,7 @@ $partner->update([
   "allow_user_creation": true,
   "cc_emails_to_responsible_party": true,
   "id": 1,
+  "ai_assistant_personality_id": 1,
   "workspace_id": 1,
   "name": "Acme Corp",
   "notes": "This is a note about the partner.",

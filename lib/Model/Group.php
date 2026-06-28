@@ -125,6 +125,16 @@ class Group
     {
         return $this->attributes['usernames'] = $value;
     }
+    // int64 # AI Assistant Personality ID assigned to this Group, if any. Users in the Group inherit it unless a direct per-user or Partner assignment overrides it.
+    public function getAiAssistantPersonalityId()
+    {
+        return @$this->attributes['ai_assistant_personality_id'];
+    }
+
+    public function setAiAssistantPersonalityId($value)
+    {
+        return $this->attributes['ai_assistant_personality_id'] = $value;
+    }
     // boolean # If true, users in this group can use FTP to login.  This will override a false value of `ftp_permission` on the user level.
     public function getFtpPermission()
     {
@@ -200,6 +210,7 @@ class Group
     //   notes - string - Group notes.
     //   user_ids - string - A list of user ids. If sent as a string, should be comma-delimited.
     //   admin_ids - string - A list of group admin user ids. If sent as a string, should be comma-delimited.
+    //   ai_assistant_personality_id - int64 - AI Assistant Personality ID assigned to this Group, if any. Users in the Group inherit it unless a direct per-user or Partner assignment overrides it.
     //   ftp_permission - boolean - If true, users in this group can use FTP to login.  This will override a false value of `ftp_permission` on the user level.
     //   sftp_permission - boolean - If true, users in this group can use SFTP to login.  This will override a false value of `sftp_permission` on the user level.
     //   dav_permission - boolean - If true, users in this group can use WebDAV to login.  This will override a false value of `dav_permission` on the user level.
@@ -235,6 +246,10 @@ class Group
 
         if (@$params['admin_ids'] && !is_string(@$params['admin_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$admin_ids must be of type string; received ' . gettype(@$params['admin_ids']));
+        }
+
+        if (@$params['ai_assistant_personality_id'] && !is_int(@$params['ai_assistant_personality_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$ai_assistant_personality_id must be of type int; received ' . gettype(@$params['ai_assistant_personality_id']));
         }
 
         if (@$params['desktop_configuration_profile_id'] && !is_int(@$params['desktop_configuration_profile_id'])) {
@@ -359,6 +374,7 @@ class Group
     //   notes - string - Group notes.
     //   user_ids - string - A list of user ids. If sent as a string, should be comma-delimited.
     //   admin_ids - string - A list of group admin user ids. If sent as a string, should be comma-delimited.
+    //   ai_assistant_personality_id - int64 - AI Assistant Personality ID assigned to this Group, if any. Users in the Group inherit it unless a direct per-user or Partner assignment overrides it.
     //   ftp_permission - boolean - If true, users in this group can use FTP to login.  This will override a false value of `ftp_permission` on the user level.
     //   sftp_permission - boolean - If true, users in this group can use SFTP to login.  This will override a false value of `sftp_permission` on the user level.
     //   dav_permission - boolean - If true, users in this group can use WebDAV to login.  This will override a false value of `dav_permission` on the user level.
@@ -383,6 +399,10 @@ class Group
 
         if (@$params['admin_ids'] && !is_string(@$params['admin_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$admin_ids must be of type string; received ' . gettype(@$params['admin_ids']));
+        }
+
+        if (@$params['ai_assistant_personality_id'] && !is_int(@$params['ai_assistant_personality_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$ai_assistant_personality_id must be of type int; received ' . gettype(@$params['ai_assistant_personality_id']));
         }
 
         if (@$params['desktop_configuration_profile_id'] && !is_int(@$params['desktop_configuration_profile_id'])) {

@@ -105,6 +105,16 @@ class AiTask
     {
         return $this->attributes['prompt'] = $value;
     }
+    // string # Permissions used by the internal API key for this AI Task. Valid values are `full` and `files_only`.
+    public function getPermissionSet()
+    {
+        return @$this->attributes['permission_set'];
+    }
+
+    public function setPermissionSet($value)
+    {
+        return $this->attributes['permission_set'] = $value;
+    }
     // string # Path scope used for action-triggered AI Tasks. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
     public function getPath()
     {
@@ -286,6 +296,7 @@ class AiTask
     //   interval - string - If trigger is `daily`, this specifies how often to run the AI Task.
     //   name - string - AI Task name.
     //   path - string - Path scope used for action-triggered AI Tasks.
+    //   permission_set - string - Permissions used by the internal API key for this AI Task. Valid values are `full` and `files_only`.
     //   prompt - string - Prompt sent when this AI Task is invoked.
     //   recurring_day - int64 - If trigger is `daily`, this selects the day number inside the chosen interval.
     //   schedule_days_of_week - array(int64) - If trigger is `custom_schedule`, the 0-based weekdays used by the schedule.
@@ -331,6 +342,10 @@ class AiTask
 
         if (@$params['path'] && !is_string(@$params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
+        }
+
+        if (@$params['permission_set'] && !is_string(@$params['permission_set'])) {
+            throw new \Files\Exception\InvalidParameterException('$permission_set must be of type string; received ' . gettype(@$params['permission_set']));
         }
 
         if (@$params['prompt'] && !is_string(@$params['prompt'])) {
@@ -475,6 +490,7 @@ class AiTask
     //   interval - string - If trigger is `daily`, this specifies how often to run the AI Task.
     //   name (required) - string - AI Task name.
     //   path - string - Path scope used for action-triggered AI Tasks.
+    //   permission_set - string - Permissions used by the internal API key for this AI Task. Valid values are `full` and `files_only`.
     //   prompt (required) - string - Prompt sent when this AI Task is invoked.
     //   recurring_day - int64 - If trigger is `daily`, this selects the day number inside the chosen interval.
     //   schedule_days_of_week - array(int64) - If trigger is `custom_schedule`, the 0-based weekdays used by the schedule.
@@ -512,6 +528,10 @@ class AiTask
 
         if (@$params['path'] && !is_string(@$params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
+        }
+
+        if (@$params['permission_set'] && !is_string(@$params['permission_set'])) {
+            throw new \Files\Exception\InvalidParameterException('$permission_set must be of type string; received ' . gettype(@$params['permission_set']));
         }
 
         if (@$params['prompt'] && !is_string(@$params['prompt'])) {

@@ -685,6 +685,16 @@ class RemoteServer
     {
         return $this->attributes['filebase_access_key'] = $value;
     }
+    // string # Files.com direct link: paired API key prefix.
+    public function getFilesApiKeyPrefix()
+    {
+        return @$this->attributes['files_api_key_prefix'];
+    }
+
+    public function setFilesApiKeyPrefix($value)
+    {
+        return $this->attributes['files_api_key_prefix'] = $value;
+    }
     // string # Cloudflare: Bucket name
     public function getCloudflareBucket()
     {
@@ -955,6 +965,16 @@ class RemoteServer
     {
         return $this->attributes['wasabi_secret_key'] = $value;
     }
+    // string # Files.com direct link: API key used once to pair the remote server.
+    public function getFilesApiKey()
+    {
+        return @$this->attributes['files_api_key'];
+    }
+
+    public function setFilesApiKey($value)
+    {
+        return $this->attributes['files_api_key'] = $value;
+    }
 
     // Push update to Files Agent
     public function agentPushUpdate($params = [])
@@ -1099,6 +1119,7 @@ class RemoteServer
     //   enable_dedicated_ips - boolean - `true` if remote server only accepts connections from dedicated IPs
     //   filebase_access_key - string - Filebase: Access Key.
     //   filebase_bucket - string - Filebase: Bucket name
+    //   files_api_key - string - Files.com direct link: API key used once to pair the remote server.
     //   files_agent_permission_set - string - Local permissions for files agent. read_only, write_only, or read_write
     //   files_agent_root - string - Agent local root path
     //   files_agent_version - string - Files Agent version
@@ -1288,6 +1309,10 @@ class RemoteServer
 
         if (@$params['filebase_bucket'] && !is_string(@$params['filebase_bucket'])) {
             throw new \Files\Exception\InvalidParameterException('$filebase_bucket must be of type string; received ' . gettype(@$params['filebase_bucket']));
+        }
+
+        if (@$params['files_api_key'] && !is_string(@$params['files_api_key'])) {
+            throw new \Files\Exception\InvalidParameterException('$files_api_key must be of type string; received ' . gettype(@$params['files_api_key']));
         }
 
         if (@$params['files_agent_permission_set'] && !is_string(@$params['files_agent_permission_set'])) {
@@ -1593,6 +1618,7 @@ class RemoteServer
     //   enable_dedicated_ips - boolean - `true` if remote server only accepts connections from dedicated IPs
     //   filebase_access_key - string - Filebase: Access Key.
     //   filebase_bucket - string - Filebase: Bucket name
+    //   files_api_key - string - Files.com direct link: API key used once to pair the remote server.
     //   files_agent_permission_set - string - Local permissions for files agent. read_only, write_only, or read_write
     //   files_agent_root - string - Agent local root path
     //   files_agent_version - string - Files Agent version
@@ -1767,6 +1793,10 @@ class RemoteServer
 
         if (@$params['filebase_bucket'] && !is_string(@$params['filebase_bucket'])) {
             throw new \Files\Exception\InvalidParameterException('$filebase_bucket must be of type string; received ' . gettype(@$params['filebase_bucket']));
+        }
+
+        if (@$params['files_api_key'] && !is_string(@$params['files_api_key'])) {
+            throw new \Files\Exception\InvalidParameterException('$files_api_key must be of type string; received ' . gettype(@$params['files_api_key']));
         }
 
         if (@$params['files_agent_permission_set'] && !is_string(@$params['files_agent_permission_set'])) {

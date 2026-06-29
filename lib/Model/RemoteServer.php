@@ -975,7 +975,7 @@ class RemoteServer
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/remote_servers/' . @$params['id'] . '/agent_push_update', 'POST', $params, $this->options);
+        $response = Api::sendRequest('/remote_servers/' . rawurlencode(strval(@$params['id'])) . '/agent_push_update', 'POST', $params, $this->options);
         return new AgentPushUpdate((array) (@$response->data ?: []), $this->options);
     }
 
@@ -1055,7 +1055,7 @@ class RemoteServer
             throw new \Files\Exception\InvalidParameterException('$subdomain must be of type string; received ' . gettype(@$params['subdomain']));
         }
 
-        $response = Api::sendRequest('/remote_servers/' . @$params['id'] . '/configuration_file', 'POST', $params, $this->options);
+        $response = Api::sendRequest('/remote_servers/' . rawurlencode(strval(@$params['id'])) . '/configuration_file', 'POST', $params, $this->options);
         return new RemoteServerConfigurationFile((array) (@$response->data ?: []), $this->options);
     }
 
@@ -1430,7 +1430,7 @@ class RemoteServer
             throw new \Files\Exception\InvalidParameterException('$wasabi_region must be of type string; received ' . gettype(@$params['wasabi_region']));
         }
 
-        $response = Api::sendRequest('/remote_servers/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+        $response = Api::sendRequest('/remote_servers/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
         return new RemoteServer((array) (@$response->data ?: []), $this->options);
     }
 
@@ -1452,7 +1452,7 @@ class RemoteServer
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/remote_servers/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+        $response = Api::sendRequest('/remote_servers/' . rawurlencode(strval(@$params['id'])) . '', 'DELETE', $params, $this->options);
         return;
     }
 
@@ -1521,7 +1521,7 @@ class RemoteServer
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/remote_servers/' . @$params['id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/remote_servers/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
         return new RemoteServer((array) (@$response->data ?: []), $options);
     }
@@ -1548,7 +1548,7 @@ class RemoteServer
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/remote_servers/' . @$params['id'] . '/configuration_file', 'GET', $params, $options);
+        $response = Api::sendRequest('/remote_servers/' . rawurlencode(strval(@$params['id'])) . '/configuration_file', 'GET', $params, $options);
 
         return new RemoteServerConfigurationFile((array) (@$response->data ?: []), $options);
     }

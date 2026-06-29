@@ -100,7 +100,7 @@ class Workspace
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        $response = Api::sendRequest('/workspaces/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+        $response = Api::sendRequest('/workspaces/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
         return new Workspace((array) (@$response->data ?: []), $this->options);
     }
 
@@ -122,7 +122,7 @@ class Workspace
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/workspaces/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+        $response = Api::sendRequest('/workspaces/' . rawurlencode(strval(@$params['id'])) . '', 'DELETE', $params, $this->options);
         return;
     }
 
@@ -191,7 +191,7 @@ class Workspace
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/workspaces/' . @$params['id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/workspaces/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
         return new Workspace((array) (@$response->data ?: []), $options);
     }

@@ -170,7 +170,7 @@ class History
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        $response = Api::sendRequest('/history/files/' . @$params['path'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/history/files/' . rawurlencode(strval(@$params['path'])) . '', 'GET', $params, $options);
 
         $return_array = [];
 
@@ -225,7 +225,7 @@ class History
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        $response = Api::sendRequest('/history/folders/' . @$params['path'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/history/folders/' . rawurlencode(strval(@$params['path'])) . '', 'GET', $params, $options);
 
         $return_array = [];
 
@@ -280,7 +280,7 @@ class History
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        $response = Api::sendRequest('/history/users/' . @$params['user_id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/history/users/' . rawurlencode(strval(@$params['user_id'])) . '', 'GET', $params, $options);
 
         $return_array = [];
 

@@ -274,7 +274,7 @@ class UserLifecycleRule
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
-        $response = Api::sendRequest('/user_lifecycle_rules/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+        $response = Api::sendRequest('/user_lifecycle_rules/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
         return new UserLifecycleRule((array) (@$response->data ?: []), $this->options);
     }
 
@@ -296,7 +296,7 @@ class UserLifecycleRule
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/user_lifecycle_rules/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+        $response = Api::sendRequest('/user_lifecycle_rules/' . rawurlencode(strval(@$params['id'])) . '', 'DELETE', $params, $this->options);
         return;
     }
 
@@ -364,7 +364,7 @@ class UserLifecycleRule
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/user_lifecycle_rules/' . @$params['id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/user_lifecycle_rules/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
         return new UserLifecycleRule((array) (@$response->data ?: []), $options);
     }

@@ -335,7 +335,7 @@ class Expectation
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/expectations/' . @$params['id'] . '/trigger_evaluation', 'POST', $params, $this->options);
+        $response = Api::sendRequest('/expectations/' . rawurlencode(strval(@$params['id'])) . '/trigger_evaluation', 'POST', $params, $this->options);
         return new ExpectationEvaluation((array) (@$response->data ?: []), $this->options);
     }
 
@@ -445,7 +445,7 @@ class Expectation
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
-        $response = Api::sendRequest('/expectations/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+        $response = Api::sendRequest('/expectations/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
         return new Expectation((array) (@$response->data ?: []), $this->options);
     }
 
@@ -467,7 +467,7 @@ class Expectation
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/expectations/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+        $response = Api::sendRequest('/expectations/' . rawurlencode(strval(@$params['id'])) . '', 'DELETE', $params, $this->options);
         return;
     }
 
@@ -535,7 +535,7 @@ class Expectation
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/expectations/' . @$params['id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/expectations/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
         return new Expectation((array) (@$response->data ?: []), $options);
     }

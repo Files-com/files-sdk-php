@@ -375,7 +375,7 @@ class Sync
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/syncs/' . @$params['id'] . '/dry_run', 'POST', $params, $this->options);
+        $response = Api::sendRequest('/syncs/' . rawurlencode(strval(@$params['id'])) . '/dry_run', 'POST', $params, $this->options);
         return;
     }
 
@@ -398,7 +398,7 @@ class Sync
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/syncs/' . @$params['id'] . '/manual_run', 'POST', $params, $this->options);
+        $response = Api::sendRequest('/syncs/' . rawurlencode(strval(@$params['id'])) . '/manual_run', 'POST', $params, $this->options);
         return;
     }
 
@@ -510,7 +510,7 @@ class Sync
             throw new \Files\Exception\InvalidParameterException('$trigger_file must be of type string; received ' . gettype(@$params['trigger_file']));
         }
 
-        $response = Api::sendRequest('/syncs/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+        $response = Api::sendRequest('/syncs/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
         return new Sync((array) (@$response->data ?: []), $this->options);
     }
 
@@ -532,7 +532,7 @@ class Sync
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/syncs/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+        $response = Api::sendRequest('/syncs/' . rawurlencode(strval(@$params['id'])) . '', 'DELETE', $params, $this->options);
         return;
     }
 
@@ -600,7 +600,7 @@ class Sync
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/syncs/' . @$params['id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/syncs/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
         return new Sync((array) (@$response->data ?: []), $options);
     }

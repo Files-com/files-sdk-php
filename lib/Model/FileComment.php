@@ -128,7 +128,7 @@ class FileComment
             throw new \Files\Exception\InvalidParameterException('$body must be of type string; received ' . gettype(@$params['body']));
         }
 
-        $response = Api::sendRequest('/file_comments/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+        $response = Api::sendRequest('/file_comments/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
         return new FileComment((array) (@$response->data ?: []), $this->options);
     }
 
@@ -150,7 +150,7 @@ class FileComment
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/file_comments/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+        $response = Api::sendRequest('/file_comments/' . rawurlencode(strval(@$params['id'])) . '', 'DELETE', $params, $this->options);
         return;
     }
 
@@ -202,7 +202,7 @@ class FileComment
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        $response = Api::sendRequest('/file_comments/files/' . @$params['path'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/file_comments/files/' . rawurlencode(strval(@$params['path'])) . '', 'GET', $params, $options);
 
         $return_array = [];
 

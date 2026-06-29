@@ -224,7 +224,7 @@ class SyncRun
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/sync_runs/' . @$params['id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/sync_runs/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
         return new SyncRun((array) (@$response->data ?: []), $options);
     }

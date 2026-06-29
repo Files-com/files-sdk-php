@@ -264,7 +264,7 @@ class Group
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        $response = Api::sendRequest('/groups/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+        $response = Api::sendRequest('/groups/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
         return new Group((array) (@$response->data ?: []), $this->options);
     }
 
@@ -286,7 +286,7 @@ class Group
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/groups/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+        $response = Api::sendRequest('/groups/' . rawurlencode(strval(@$params['id'])) . '', 'DELETE', $params, $this->options);
         return;
     }
 
@@ -361,7 +361,7 @@ class Group
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/groups/' . @$params['id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/groups/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
         return new Group((array) (@$response->data ?: []), $options);
     }

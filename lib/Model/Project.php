@@ -108,7 +108,7 @@ class Project
             throw new \Files\Exception\InvalidParameterException('$global_access must be of type string; received ' . gettype(@$params['global_access']));
         }
 
-        $response = Api::sendRequest('/projects/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+        $response = Api::sendRequest('/projects/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
         return new Project((array) (@$response->data ?: []), $this->options);
     }
 
@@ -130,7 +130,7 @@ class Project
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/projects/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+        $response = Api::sendRequest('/projects/' . rawurlencode(strval(@$params['id'])) . '', 'DELETE', $params, $this->options);
         return;
     }
 
@@ -196,7 +196,7 @@ class Project
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/projects/' . @$params['id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/projects/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
         return new Project((array) (@$response->data ?: []), $options);
     }

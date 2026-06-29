@@ -154,7 +154,7 @@ class Request
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/requests/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+        $response = Api::sendRequest('/requests/' . rawurlencode(strval(@$params['id'])) . '', 'DELETE', $params, $this->options);
         return;
     }
 
@@ -237,7 +237,7 @@ class Request
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        $response = Api::sendRequest('/requests/folders/' . @$params['path'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/requests/folders/' . rawurlencode(strval(@$params['path'])) . '', 'GET', $params, $options);
 
         $return_array = [];
 

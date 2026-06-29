@@ -300,7 +300,7 @@ class Partner
             throw new \Files\Exception\InvalidParameterException('$root_folder must be of type string; received ' . gettype(@$params['root_folder']));
         }
 
-        $response = Api::sendRequest('/partners/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+        $response = Api::sendRequest('/partners/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
         return new Partner((array) (@$response->data ?: []), $this->options);
     }
 
@@ -322,7 +322,7 @@ class Partner
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/partners/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+        $response = Api::sendRequest('/partners/' . rawurlencode(strval(@$params['id'])) . '', 'DELETE', $params, $this->options);
         return;
     }
 
@@ -390,7 +390,7 @@ class Partner
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/partners/' . @$params['id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/partners/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
         return new Partner((array) (@$response->data ?: []), $options);
     }

@@ -139,7 +139,7 @@ class UserSecurityEvent
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/user_security_events/' . @$params['id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/user_security_events/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
         return new UserSecurityEvent((array) (@$response->data ?: []), $options);
     }

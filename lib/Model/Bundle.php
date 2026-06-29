@@ -617,7 +617,7 @@ class Bundle
             throw new \Files\Exception\InvalidParameterException('$recipients must be of type array; received ' . gettype(@$params['recipients']));
         }
 
-        $response = Api::sendRequest('/bundles/' . @$params['id'] . '/share', 'POST', $params, $this->options);
+        $response = Api::sendRequest('/bundles/' . rawurlencode(strval(@$params['id'])) . '/share', 'POST', $params, $this->options);
         return;
     }
 
@@ -743,7 +743,7 @@ class Bundle
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
-        $response = Api::sendRequest('/bundles/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+        $response = Api::sendRequest('/bundles/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
         return new Bundle((array) (@$response->data ?: []), $this->options);
     }
 
@@ -765,7 +765,7 @@ class Bundle
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/bundles/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+        $response = Api::sendRequest('/bundles/' . rawurlencode(strval(@$params['id'])) . '', 'DELETE', $params, $this->options);
         return;
     }
 
@@ -845,7 +845,7 @@ class Bundle
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/bundles/' . @$params['id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/bundles/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
         return new Bundle((array) (@$response->data ?: []), $options);
     }

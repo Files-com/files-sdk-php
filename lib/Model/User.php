@@ -1040,7 +1040,7 @@ class User
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/users/' . @$params['id'] . '/unlock', 'POST', $params, $this->options);
+        $response = Api::sendRequest('/users/' . rawurlencode(strval(@$params['id'])) . '/unlock', 'POST', $params, $this->options);
         return;
     }
 
@@ -1063,7 +1063,7 @@ class User
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/users/' . @$params['id'] . '/resend_welcome_email', 'POST', $params, $this->options);
+        $response = Api::sendRequest('/users/' . rawurlencode(strval(@$params['id'])) . '/resend_welcome_email', 'POST', $params, $this->options);
         return;
     }
 
@@ -1086,7 +1086,7 @@ class User
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/users/' . @$params['id'] . '/2fa/reset', 'POST', $params, $this->options);
+        $response = Api::sendRequest('/users/' . rawurlencode(strval(@$params['id'])) . '/2fa/reset', 'POST', $params, $this->options);
         return;
     }
 
@@ -1316,7 +1316,7 @@ class User
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
-        $response = Api::sendRequest('/users/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+        $response = Api::sendRequest('/users/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
         return new User((array) (@$response->data ?: []), $this->options);
     }
 
@@ -1344,7 +1344,7 @@ class User
             throw new \Files\Exception\InvalidParameterException('$new_owner_id must be of type int; received ' . gettype(@$params['new_owner_id']));
         }
 
-        $response = Api::sendRequest('/users/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+        $response = Api::sendRequest('/users/' . rawurlencode(strval(@$params['id'])) . '', 'DELETE', $params, $this->options);
         return;
     }
 
@@ -1428,7 +1428,7 @@ class User
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/users/' . @$params['id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/users/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
         return new User((array) (@$response->data ?: []), $options);
     }

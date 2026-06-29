@@ -124,7 +124,7 @@ class UserRequest
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/user_requests/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+        $response = Api::sendRequest('/user_requests/' . rawurlencode(strval(@$params['id'])) . '', 'DELETE', $params, $this->options);
         return;
     }
 
@@ -188,7 +188,7 @@ class UserRequest
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/user_requests/' . @$params['id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/user_requests/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
         return new UserRequest((array) (@$response->data ?: []), $options);
     }

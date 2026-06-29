@@ -332,7 +332,7 @@ class As2Partner
             throw new \Files\Exception\InvalidParameterException('$public_certificate must be of type string; received ' . gettype(@$params['public_certificate']));
         }
 
-        $response = Api::sendRequest('/as2_partners/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+        $response = Api::sendRequest('/as2_partners/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
         return new As2Partner((array) (@$response->data ?: []), $this->options);
     }
 
@@ -354,7 +354,7 @@ class As2Partner
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/as2_partners/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+        $response = Api::sendRequest('/as2_partners/' . rawurlencode(strval(@$params['id'])) . '', 'DELETE', $params, $this->options);
         return;
     }
 
@@ -422,7 +422,7 @@ class As2Partner
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/as2_partners/' . @$params['id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/as2_partners/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
         return new As2Partner((array) (@$response->data ?: []), $options);
     }

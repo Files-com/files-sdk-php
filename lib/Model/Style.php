@@ -141,7 +141,7 @@ class Style
             throw new \Files\Exception\InvalidParameterException('$logo_click_href must be of type string; received ' . gettype(@$params['logo_click_href']));
         }
 
-        $response = Api::sendRequest('/styles/' . @$params['path'] . '', 'PATCH', $params, $this->options);
+        $response = Api::sendRequest('/styles/' . rawurlencode(strval(@$params['path'])) . '', 'PATCH', $params, $this->options);
         return new Style((array) (@$response->data ?: []), $this->options);
     }
 
@@ -163,7 +163,7 @@ class Style
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        $response = Api::sendRequest('/styles/' . @$params['path'] . '', 'DELETE', $params, $this->options);
+        $response = Api::sendRequest('/styles/' . rawurlencode(strval(@$params['path'])) . '', 'DELETE', $params, $this->options);
         return;
     }
 
@@ -198,7 +198,7 @@ class Style
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        $response = Api::sendRequest('/styles/' . @$params['path'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/styles/' . rawurlencode(strval(@$params['path'])) . '', 'GET', $params, $options);
 
         return new Style((array) (@$response->data ?: []), $options);
     }

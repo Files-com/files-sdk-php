@@ -145,7 +145,7 @@ class Snapshot
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/snapshots/' . @$params['id'] . '/finalize', 'POST', $params, $this->options);
+        $response = Api::sendRequest('/snapshots/' . rawurlencode(strval(@$params['id'])) . '/finalize', 'POST', $params, $this->options);
         return;
     }
 
@@ -183,7 +183,7 @@ class Snapshot
             throw new \Files\Exception\InvalidParameterException('$paths must be of type array; received ' . gettype(@$params['paths']));
         }
 
-        $response = Api::sendRequest('/snapshots/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+        $response = Api::sendRequest('/snapshots/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
         return new Snapshot((array) (@$response->data ?: []), $this->options);
     }
 
@@ -205,7 +205,7 @@ class Snapshot
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/snapshots/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+        $response = Api::sendRequest('/snapshots/' . rawurlencode(strval(@$params['id'])) . '', 'DELETE', $params, $this->options);
         return;
     }
 
@@ -271,7 +271,7 @@ class Snapshot
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/snapshots/' . @$params['id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/snapshots/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
         return new Snapshot((array) (@$response->data ?: []), $options);
     }

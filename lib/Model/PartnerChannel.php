@@ -230,7 +230,7 @@ class PartnerChannel
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        $response = Api::sendRequest('/partner_channels/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+        $response = Api::sendRequest('/partner_channels/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
         return new PartnerChannel((array) (@$response->data ?: []), $this->options);
     }
 
@@ -252,7 +252,7 @@ class PartnerChannel
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/partner_channels/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+        $response = Api::sendRequest('/partner_channels/' . rawurlencode(strval(@$params['id'])) . '', 'DELETE', $params, $this->options);
         return;
     }
 
@@ -320,7 +320,7 @@ class PartnerChannel
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/partner_channels/' . @$params['id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/partner_channels/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
         return new PartnerChannel((array) (@$response->data ?: []), $options);
     }

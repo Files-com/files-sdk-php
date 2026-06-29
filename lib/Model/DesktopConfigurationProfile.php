@@ -148,7 +148,7 @@ class DesktopConfigurationProfile
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
-        $response = Api::sendRequest('/desktop_configuration_profiles/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+        $response = Api::sendRequest('/desktop_configuration_profiles/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
         return new DesktopConfigurationProfile((array) (@$response->data ?: []), $this->options);
     }
 
@@ -170,7 +170,7 @@ class DesktopConfigurationProfile
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/desktop_configuration_profiles/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+        $response = Api::sendRequest('/desktop_configuration_profiles/' . rawurlencode(strval(@$params['id'])) . '', 'DELETE', $params, $this->options);
         return;
     }
 
@@ -238,7 +238,7 @@ class DesktopConfigurationProfile
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/desktop_configuration_profiles/' . @$params['id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/desktop_configuration_profiles/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
         return new DesktopConfigurationProfile((array) (@$response->data ?: []), $options);
     }

@@ -193,7 +193,7 @@ class FormFieldSet
             throw new \Files\Exception\InvalidParameterException('$form_fields must be of type array; received ' . gettype(@$params['form_fields']));
         }
 
-        $response = Api::sendRequest('/form_field_sets/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+        $response = Api::sendRequest('/form_field_sets/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
         return new FormFieldSet((array) (@$response->data ?: []), $this->options);
     }
 
@@ -215,7 +215,7 @@ class FormFieldSet
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/form_field_sets/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+        $response = Api::sendRequest('/form_field_sets/' . rawurlencode(strval(@$params['id'])) . '', 'DELETE', $params, $this->options);
         return;
     }
 
@@ -286,7 +286,7 @@ class FormFieldSet
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/form_field_sets/' . @$params['id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/form_field_sets/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
         return new FormFieldSet((array) (@$response->data ?: []), $options);
     }

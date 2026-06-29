@@ -74,7 +74,7 @@ class PartnerSite
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/partner_sites/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+        $response = Api::sendRequest('/partner_sites/' . rawurlencode(strval(@$params['id'])) . '', 'DELETE', $params, $this->options);
         return;
     }
 

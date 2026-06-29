@@ -163,7 +163,7 @@ class Payment
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/payments/' . @$params['id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/payments/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
         return new AccountLineItem((array) (@$response->data ?: []), $options);
     }

@@ -175,7 +175,7 @@ class SsoEvent
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/sso_events/' . @$params['id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/sso_events/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
         return new SsoEvent((array) (@$response->data ?: []), $options);
     }

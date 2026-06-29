@@ -565,7 +565,7 @@ class RemoteServerCredential
             throw new \Files\Exception\InvalidParameterException('$wasabi_secret_key must be of type string; received ' . gettype(@$params['wasabi_secret_key']));
         }
 
-        $response = Api::sendRequest('/remote_server_credentials/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+        $response = Api::sendRequest('/remote_server_credentials/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
         return new RemoteServerCredential((array) (@$response->data ?: []), $this->options);
     }
 
@@ -587,7 +587,7 @@ class RemoteServerCredential
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/remote_server_credentials/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+        $response = Api::sendRequest('/remote_server_credentials/' . rawurlencode(strval(@$params['id'])) . '', 'DELETE', $params, $this->options);
         return;
     }
 
@@ -656,7 +656,7 @@ class RemoteServerCredential
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/remote_server_credentials/' . @$params['id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/remote_server_credentials/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
         return new RemoteServerCredential((array) (@$response->data ?: []), $options);
     }

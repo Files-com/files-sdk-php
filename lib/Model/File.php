@@ -813,7 +813,7 @@ class File
             throw new \Files\Exception\InvalidParameterException('$preview_size must be of type string; received ' . gettype(@$params['preview_size']));
         }
 
-        $response = Api::sendRequest('/files/' . @$params['path'] . '', 'GET', $params, $this->options);
+        $response = Api::sendRequest('/files/' . rawurlencode(strval(@$params['path'])) . '', 'GET', $params, $this->options);
         return new File((array) (@$response->data ?: []), $this->options);
     }
 
@@ -847,7 +847,7 @@ class File
             throw new \Files\Exception\InvalidParameterException('$priority_color must be of type string; received ' . gettype(@$params['priority_color']));
         }
 
-        $response = Api::sendRequest('/files/' . @$params['path'] . '', 'PATCH', $params, $this->options);
+        $response = Api::sendRequest('/files/' . rawurlencode(strval(@$params['path'])) . '', 'PATCH', $params, $this->options);
         return new File((array) (@$response->data ?: []), $this->options);
     }
 
@@ -871,7 +871,7 @@ class File
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        $response = Api::sendRequest('/files/' . @$params['path'] . '', 'DELETE', $params, $this->options);
+        $response = Api::sendRequest('/files/' . rawurlencode(strval(@$params['path'])) . '', 'DELETE', $params, $this->options);
         return;
     }
 
@@ -900,7 +900,7 @@ class File
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        $response = Api::sendRequest('/file_actions/zip_list/' . @$params['path'] . '', 'GET', $params, $this->options);
+        $response = Api::sendRequest('/file_actions/zip_list/' . rawurlencode(strval(@$params['path'])) . '', 'GET', $params, $this->options);
         return new ZipListEntry((array) (@$response->data ?: []), $this->options);
     }
 
@@ -941,7 +941,7 @@ class File
             throw new \Files\Exception\InvalidParameterException('$destination must be of type string; received ' . gettype(@$params['destination']));
         }
 
-        $response = Api::sendRequest('/file_actions/copy/' . @$params['path'] . '', 'POST', $params, $this->options);
+        $response = Api::sendRequest('/file_actions/copy/' . rawurlencode(strval(@$params['path'])) . '', 'POST', $params, $this->options);
         return new FileAction((array) (@$response->data ?: []), $this->options);
     }
 
@@ -980,7 +980,7 @@ class File
             throw new \Files\Exception\InvalidParameterException('$destination must be of type string; received ' . gettype(@$params['destination']));
         }
 
-        $response = Api::sendRequest('/file_actions/move/' . @$params['path'] . '', 'POST', $params, $this->options);
+        $response = Api::sendRequest('/file_actions/move/' . rawurlencode(strval(@$params['path'])) . '', 'POST', $params, $this->options);
         return new FileAction((array) (@$response->data ?: []), $this->options);
     }
 
@@ -1055,7 +1055,7 @@ class File
             throw new \Files\Exception\InvalidParameterException('$height must be of type int; received ' . gettype(@$params['height']));
         }
 
-        $response = Api::sendRequest('/file_actions/transform/' . @$params['path'] . '', 'POST', $params, $this->options);
+        $response = Api::sendRequest('/file_actions/transform/' . rawurlencode(strval(@$params['path'])) . '', 'POST', $params, $this->options);
         return new FileAction((array) (@$response->data ?: []), $this->options);
     }
 
@@ -1106,7 +1106,7 @@ class File
             throw new \Files\Exception\InvalidParameterException('$gpg_key_partner_id must be of type int; received ' . gettype(@$params['gpg_key_partner_id']));
         }
 
-        $response = Api::sendRequest('/file_actions/gpg_decrypt/' . @$params['path'] . '', 'POST', $params, $this->options);
+        $response = Api::sendRequest('/file_actions/gpg_decrypt/' . rawurlencode(strval(@$params['path'])) . '', 'POST', $params, $this->options);
         return new FileAction((array) (@$response->data ?: []), $this->options);
     }
 
@@ -1161,7 +1161,7 @@ class File
             throw new \Files\Exception\InvalidParameterException('$signing_key_id must be of type int; received ' . gettype(@$params['signing_key_id']));
         }
 
-        $response = Api::sendRequest('/file_actions/gpg_encrypt/' . @$params['path'] . '', 'POST', $params, $this->options);
+        $response = Api::sendRequest('/file_actions/gpg_encrypt/' . rawurlencode(strval(@$params['path'])) . '', 'POST', $params, $this->options);
         return new FileAction((array) (@$response->data ?: []), $this->options);
     }
 
@@ -1258,7 +1258,7 @@ class File
             throw new \Files\Exception\InvalidParameterException('$size must be of type int; received ' . gettype(@$params['size']));
         }
 
-        $response = Api::sendRequest('/file_actions/begin_upload/' . @$params['path'] . '', 'POST', $params, $this->options);
+        $response = Api::sendRequest('/file_actions/begin_upload/' . rawurlencode(strval(@$params['path'])) . '', 'POST', $params, $this->options);
         return new FileUploadPart((array) (@$response->data ?: []), $this->options);
     }
 
@@ -1339,7 +1339,7 @@ class File
             throw new \Files\Exception\InvalidParameterException('$structure must be of type string; received ' . gettype(@$params['structure']));
         }
 
-        $response = Api::sendRequest('/files/' . @$params['path'] . '', 'POST', $params, $options);
+        $response = Api::sendRequest('/files/' . rawurlencode(strval(@$params['path'])) . '', 'POST', $params, $options);
 
         return new File((array) (@$response->data ?: []), $options);
     }
@@ -1369,7 +1369,7 @@ class File
             throw new \Files\Exception\InvalidParameterException('$preview_size must be of type string; received ' . gettype(@$params['preview_size']));
         }
 
-        $response = Api::sendRequest('/file_actions/metadata/' . @$params['path'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/file_actions/metadata/' . rawurlencode(strval(@$params['path'])) . '', 'GET', $params, $options);
 
         return new File((array) (@$response->data ?: []), $options);
     }

@@ -163,7 +163,7 @@ class Invoice
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/invoices/' . @$params['id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/invoices/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
         return new AccountLineItem((array) (@$response->data ?: []), $options);
     }

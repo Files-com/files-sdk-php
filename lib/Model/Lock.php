@@ -208,7 +208,7 @@ class Lock
             throw new \Files\Exception\InvalidParameterException('$token must be of type string; received ' . gettype(@$params['token']));
         }
 
-        $response = Api::sendRequest('/locks/' . @$params['path'] . '', 'DELETE', $params, $this->options);
+        $response = Api::sendRequest('/locks/' . rawurlencode(strval(@$params['path'])) . '', 'DELETE', $params, $this->options);
         return;
     }
 
@@ -255,7 +255,7 @@ class Lock
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        $response = Api::sendRequest('/locks/' . @$params['path'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/locks/' . rawurlencode(strval(@$params['path'])) . '', 'GET', $params, $options);
 
         $return_array = [];
 
@@ -292,7 +292,7 @@ class Lock
             throw new \Files\Exception\InvalidParameterException('$timeout must be of type int; received ' . gettype(@$params['timeout']));
         }
 
-        $response = Api::sendRequest('/locks/' . @$params['path'] . '', 'POST', $params, $options);
+        $response = Api::sendRequest('/locks/' . rawurlencode(strval(@$params['path'])) . '', 'POST', $params, $options);
 
         return new Lock((array) (@$response->data ?: []), $options);
     }

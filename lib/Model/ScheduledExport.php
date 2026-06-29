@@ -307,7 +307,7 @@ class ScheduledExport
             throw new \Files\Exception\InvalidParameterException('$holiday_region must be of type string; received ' . gettype(@$params['holiday_region']));
         }
 
-        $response = Api::sendRequest('/scheduled_exports/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+        $response = Api::sendRequest('/scheduled_exports/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
         return new ScheduledExport((array) (@$response->data ?: []), $this->options);
     }
 
@@ -329,7 +329,7 @@ class ScheduledExport
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/scheduled_exports/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+        $response = Api::sendRequest('/scheduled_exports/' . rawurlencode(strval(@$params['id'])) . '', 'DELETE', $params, $this->options);
         return;
     }
 
@@ -398,7 +398,7 @@ class ScheduledExport
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/scheduled_exports/' . @$params['id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/scheduled_exports/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
         return new ScheduledExport((array) (@$response->data ?: []), $options);
     }

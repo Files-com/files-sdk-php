@@ -175,7 +175,7 @@ class EventDeliveryAttempt
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/event_delivery_attempts/' . @$params['id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/event_delivery_attempts/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
         return new EventDeliveryAttempt((array) (@$response->data ?: []), $options);
     }

@@ -485,7 +485,7 @@ class Automation
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/automations/' . @$params['id'] . '/manual_run', 'POST', $params, $this->options);
+        $response = Api::sendRequest('/automations/' . rawurlencode(strval(@$params['id'])) . '/manual_run', 'POST', $params, $this->options);
         return;
     }
 
@@ -641,7 +641,7 @@ class Automation
             throw new \Files\Exception\InvalidParameterException('$automation must be of type string; received ' . gettype(@$params['automation']));
         }
 
-        $response = Api::sendRequest('/automations/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+        $response = Api::sendRequest('/automations/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
         return new Automation((array) (@$response->data ?: []), $this->options);
     }
 
@@ -663,7 +663,7 @@ class Automation
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/automations/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+        $response = Api::sendRequest('/automations/' . rawurlencode(strval(@$params['id'])) . '', 'DELETE', $params, $this->options);
         return;
     }
 
@@ -735,7 +735,7 @@ class Automation
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/automations/' . @$params['id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/automations/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
         return new Automation((array) (@$response->data ?: []), $options);
     }

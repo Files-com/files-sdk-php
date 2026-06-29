@@ -162,7 +162,7 @@ class GroupUser
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        $response = Api::sendRequest('/group_users/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+        $response = Api::sendRequest('/group_users/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
         return new GroupUser((array) (@$response->data ?: []), $this->options);
     }
 
@@ -211,7 +211,7 @@ class GroupUser
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        $response = Api::sendRequest('/group_users/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+        $response = Api::sendRequest('/group_users/' . rawurlencode(strval(@$params['id'])) . '', 'DELETE', $params, $this->options);
         return;
     }
 

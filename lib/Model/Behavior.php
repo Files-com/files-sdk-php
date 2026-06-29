@@ -200,7 +200,7 @@ class Behavior
             throw new \Files\Exception\InvalidParameterException('$description must be of type string; received ' . gettype(@$params['description']));
         }
 
-        $response = Api::sendRequest('/behaviors/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+        $response = Api::sendRequest('/behaviors/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
         return new Behavior((array) (@$response->data ?: []), $this->options);
     }
 
@@ -222,7 +222,7 @@ class Behavior
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/behaviors/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+        $response = Api::sendRequest('/behaviors/' . rawurlencode(strval(@$params['id'])) . '', 'DELETE', $params, $this->options);
         return;
     }
 
@@ -290,7 +290,7 @@ class Behavior
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/behaviors/' . @$params['id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/behaviors/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
         return new Behavior((array) (@$response->data ?: []), $options);
     }
@@ -330,7 +330,7 @@ class Behavior
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        $response = Api::sendRequest('/behaviors/folders/' . @$params['path'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/behaviors/folders/' . rawurlencode(strval(@$params['path'])) . '', 'GET', $params, $options);
 
         $return_array = [];
 

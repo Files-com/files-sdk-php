@@ -139,7 +139,7 @@ class ScimLog
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/scim_logs/' . @$params['id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/scim_logs/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
         return new ScimLog((array) (@$response->data ?: []), $options);
     }

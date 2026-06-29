@@ -214,7 +214,7 @@ class EventSubscription
             throw new \Files\Exception\InvalidParameterException('$event_target_ids must be of type array; received ' . gettype(@$params['event_target_ids']));
         }
 
-        $response = Api::sendRequest('/event_subscriptions/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+        $response = Api::sendRequest('/event_subscriptions/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
         return new EventSubscription((array) (@$response->data ?: []), $this->options);
     }
 
@@ -236,7 +236,7 @@ class EventSubscription
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/event_subscriptions/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+        $response = Api::sendRequest('/event_subscriptions/' . rawurlencode(strval(@$params['id'])) . '', 'DELETE', $params, $this->options);
         return;
     }
 
@@ -304,7 +304,7 @@ class EventSubscription
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/event_subscriptions/' . @$params['id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/event_subscriptions/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
         return new EventSubscription((array) (@$response->data ?: []), $options);
     }

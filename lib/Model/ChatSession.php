@@ -134,7 +134,7 @@ class ChatSession
             throw new \Files\Exception\InvalidParameterException('$id must be of type string; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/chat_sessions/' . @$params['id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/chat_sessions/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
         return new ChatSession((array) (@$response->data ?: []), $options);
     }

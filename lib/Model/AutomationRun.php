@@ -184,7 +184,7 @@ class AutomationRun
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/automation_runs/' . @$params['id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/automation_runs/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
         return new AutomationRun((array) (@$response->data ?: []), $options);
     }

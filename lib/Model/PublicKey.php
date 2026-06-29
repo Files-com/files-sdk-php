@@ -273,7 +273,7 @@ class PublicKey
             throw new \Files\Exception\InvalidParameterException('$title must be of type string; received ' . gettype(@$params['title']));
         }
 
-        $response = Api::sendRequest('/public_keys/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+        $response = Api::sendRequest('/public_keys/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
         return new PublicKey((array) (@$response->data ?: []), $this->options);
     }
 
@@ -295,7 +295,7 @@ class PublicKey
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/public_keys/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+        $response = Api::sendRequest('/public_keys/' . rawurlencode(strval(@$params['id'])) . '', 'DELETE', $params, $this->options);
         return;
     }
 
@@ -372,7 +372,7 @@ class PublicKey
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/public_keys/' . @$params['id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/public_keys/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
         return new PublicKey((array) (@$response->data ?: []), $options);
     }

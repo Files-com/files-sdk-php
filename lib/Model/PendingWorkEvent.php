@@ -144,7 +144,7 @@ class PendingWorkEvent
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/pending_work_events/' . @$params['id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/pending_work_events/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
         return new PendingWorkEvent((array) (@$response->data ?: []), $options);
     }

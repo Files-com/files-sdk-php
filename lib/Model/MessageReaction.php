@@ -104,7 +104,7 @@ class MessageReaction
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/message_reactions/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+        $response = Api::sendRequest('/message_reactions/' . rawurlencode(strval(@$params['id'])) . '', 'DELETE', $params, $this->options);
         return;
     }
 
@@ -182,7 +182,7 @@ class MessageReaction
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/message_reactions/' . @$params['id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/message_reactions/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
         return new MessageReaction((array) (@$response->data ?: []), $options);
     }

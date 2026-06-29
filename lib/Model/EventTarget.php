@@ -184,7 +184,7 @@ class EventTarget
             throw new \Files\Exception\InvalidParameterException('$target_type must be of type string; received ' . gettype(@$params['target_type']));
         }
 
-        $response = Api::sendRequest('/event_targets/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+        $response = Api::sendRequest('/event_targets/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
         return new EventTarget((array) (@$response->data ?: []), $this->options);
     }
 
@@ -206,7 +206,7 @@ class EventTarget
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/event_targets/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+        $response = Api::sendRequest('/event_targets/' . rawurlencode(strval(@$params['id'])) . '', 'DELETE', $params, $this->options);
         return;
     }
 
@@ -274,7 +274,7 @@ class EventTarget
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/event_targets/' . @$params['id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/event_targets/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
         return new EventTarget((array) (@$response->data ?: []), $options);
     }

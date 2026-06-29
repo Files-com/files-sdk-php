@@ -162,7 +162,7 @@ class EventChannel
             throw new \Files\Exception\InvalidParameterException('$description must be of type string; received ' . gettype(@$params['description']));
         }
 
-        $response = Api::sendRequest('/event_channels/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+        $response = Api::sendRequest('/event_channels/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
         return new EventChannel((array) (@$response->data ?: []), $this->options);
     }
 
@@ -184,7 +184,7 @@ class EventChannel
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/event_channels/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+        $response = Api::sendRequest('/event_channels/' . rawurlencode(strval(@$params['id'])) . '', 'DELETE', $params, $this->options);
         return;
     }
 
@@ -252,7 +252,7 @@ class EventChannel
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/event_channels/' . @$params['id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/event_channels/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
         return new EventChannel((array) (@$response->data ?: []), $options);
     }

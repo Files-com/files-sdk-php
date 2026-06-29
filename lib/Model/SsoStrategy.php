@@ -335,7 +335,7 @@ class SsoStrategy
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/sso_strategies/' . @$params['id'] . '/sync', 'POST', $params, $this->options);
+        $response = Api::sendRequest('/sso_strategies/' . rawurlencode(strval(@$params['id'])) . '/sync', 'POST', $params, $this->options);
         return;
     }
 
@@ -382,7 +382,7 @@ class SsoStrategy
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/sso_strategies/' . @$params['id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/sso_strategies/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
         return new SsoStrategy((array) (@$response->data ?: []), $options);
     }

@@ -175,7 +175,7 @@ class CustomDomain
             throw new \Files\Exception\InvalidParameterException('$domain must be of type string; received ' . gettype(@$params['domain']));
         }
 
-        $response = Api::sendRequest('/custom_domains/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+        $response = Api::sendRequest('/custom_domains/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
         return new CustomDomain((array) (@$response->data ?: []), $this->options);
     }
 
@@ -197,7 +197,7 @@ class CustomDomain
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/custom_domains/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+        $response = Api::sendRequest('/custom_domains/' . rawurlencode(strval(@$params['id'])) . '', 'DELETE', $params, $this->options);
         return;
     }
 
@@ -264,7 +264,7 @@ class CustomDomain
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/custom_domains/' . @$params['id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/custom_domains/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
         return new CustomDomain((array) (@$response->data ?: []), $options);
     }

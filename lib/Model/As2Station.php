@@ -265,7 +265,7 @@ class As2Station
             throw new \Files\Exception\InvalidParameterException('$private_key_password must be of type string; received ' . gettype(@$params['private_key_password']));
         }
 
-        $response = Api::sendRequest('/as2_stations/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+        $response = Api::sendRequest('/as2_stations/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
         return new As2Station((array) (@$response->data ?: []), $this->options);
     }
 
@@ -287,7 +287,7 @@ class As2Station
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/as2_stations/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+        $response = Api::sendRequest('/as2_stations/' . rawurlencode(strval(@$params['id'])) . '', 'DELETE', $params, $this->options);
         return;
     }
 
@@ -355,7 +355,7 @@ class As2Station
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/as2_stations/' . @$params['id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/as2_stations/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
         return new As2Station((array) (@$response->data ?: []), $options);
     }

@@ -476,7 +476,7 @@ class Folder
             throw new \Files\Exception\InvalidParameterException('$modified_at_datetime must be of type string; received ' . gettype(@$params['modified_at_datetime']));
         }
 
-        $response = Api::sendRequest('/folders/' . @$params['path'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/folders/' . rawurlencode(strval(@$params['path'])) . '', 'GET', $params, $options);
 
         $return_array = [];
 
@@ -511,7 +511,7 @@ class Folder
             throw new \Files\Exception\InvalidParameterException('$provided_mtime must be of type string; received ' . gettype(@$params['provided_mtime']));
         }
 
-        $response = Api::sendRequest('/folders/' . @$params['path'] . '', 'POST', $params, $options);
+        $response = Api::sendRequest('/folders/' . rawurlencode(strval(@$params['path'])) . '', 'POST', $params, $options);
 
         return new File((array) (@$response->data ?: []), $options);
     }

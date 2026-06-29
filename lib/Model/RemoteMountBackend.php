@@ -245,7 +245,7 @@ class RemoteMountBackend
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/remote_mount_backends/' . @$params['id'] . '/reset_status', 'POST', $params, $this->options);
+        $response = Api::sendRequest('/remote_mount_backends/' . rawurlencode(strval(@$params['id'])) . '/reset_status', 'POST', $params, $this->options);
         return;
     }
 
@@ -312,7 +312,7 @@ class RemoteMountBackend
             throw new \Files\Exception\InvalidParameterException('$remote_server_id must be of type int; received ' . gettype(@$params['remote_server_id']));
         }
 
-        $response = Api::sendRequest('/remote_mount_backends/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+        $response = Api::sendRequest('/remote_mount_backends/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
         return new RemoteMountBackend((array) (@$response->data ?: []), $this->options);
     }
 
@@ -334,7 +334,7 @@ class RemoteMountBackend
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/remote_mount_backends/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+        $response = Api::sendRequest('/remote_mount_backends/' . rawurlencode(strval(@$params['id'])) . '', 'DELETE', $params, $this->options);
         return;
     }
 
@@ -401,7 +401,7 @@ class RemoteMountBackend
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/remote_mount_backends/' . @$params['id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/remote_mount_backends/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
         return new RemoteMountBackend((array) (@$response->data ?: []), $options);
     }

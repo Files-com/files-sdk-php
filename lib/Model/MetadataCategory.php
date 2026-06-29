@@ -125,7 +125,7 @@ class MetadataCategory
             throw new \Files\Exception\InvalidParameterException('$default_columns must be of type array; received ' . gettype(@$params['default_columns']));
         }
 
-        $response = Api::sendRequest('/metadata_categories/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+        $response = Api::sendRequest('/metadata_categories/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
         return new MetadataCategory((array) (@$response->data ?: []), $this->options);
     }
 
@@ -147,7 +147,7 @@ class MetadataCategory
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/metadata_categories/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+        $response = Api::sendRequest('/metadata_categories/' . rawurlencode(strval(@$params['id'])) . '', 'DELETE', $params, $this->options);
         return;
     }
 
@@ -214,7 +214,7 @@ class MetadataCategory
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/metadata_categories/' . @$params['id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/metadata_categories/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
         return new MetadataCategory((array) (@$response->data ?: []), $options);
     }
@@ -251,7 +251,7 @@ class MetadataCategory
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        $response = Api::sendRequest('/metadata_categories/list_by_path/' . @$params['path'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/metadata_categories/list_by_path/' . rawurlencode(strval(@$params['path'])) . '', 'GET', $params, $options);
 
         $return_array = [];
 

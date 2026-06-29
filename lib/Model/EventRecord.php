@@ -180,7 +180,7 @@ class EventRecord
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/event_records/' . @$params['id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/event_records/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
         return new EventRecord((array) (@$response->data ?: []), $options);
     }

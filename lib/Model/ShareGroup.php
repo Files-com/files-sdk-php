@@ -140,7 +140,7 @@ class ShareGroup
             throw new \Files\Exception\InvalidParameterException('$members must be of type array; received ' . gettype(@$params['members']));
         }
 
-        $response = Api::sendRequest('/share_groups/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+        $response = Api::sendRequest('/share_groups/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
         return new ShareGroup((array) (@$response->data ?: []), $this->options);
     }
 
@@ -162,7 +162,7 @@ class ShareGroup
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/share_groups/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+        $response = Api::sendRequest('/share_groups/' . rawurlencode(strval(@$params['id'])) . '', 'DELETE', $params, $this->options);
         return;
     }
 
@@ -233,7 +233,7 @@ class ShareGroup
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/share_groups/' . @$params['id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/share_groups/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
         return new ShareGroup((array) (@$response->data ?: []), $options);
     }

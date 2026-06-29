@@ -124,7 +124,7 @@ class FileMigration
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/file_migrations/' . @$params['id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/file_migrations/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
         return new FileMigration((array) (@$response->data ?: []), $options);
     }

@@ -150,7 +150,7 @@ class ExpectationIncident
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/expectation_incidents/' . @$params['id'] . '/resolve', 'POST', $params, $this->options);
+        $response = Api::sendRequest('/expectation_incidents/' . rawurlencode(strval(@$params['id'])) . '/resolve', 'POST', $params, $this->options);
         return new ExpectationIncident((array) (@$response->data ?: []), $this->options);
     }
 
@@ -188,7 +188,7 @@ class ExpectationIncident
             throw new \Files\Exception\InvalidParameterException('$snoozed_until must be of type string; received ' . gettype(@$params['snoozed_until']));
         }
 
-        $response = Api::sendRequest('/expectation_incidents/' . @$params['id'] . '/snooze', 'POST', $params, $this->options);
+        $response = Api::sendRequest('/expectation_incidents/' . rawurlencode(strval(@$params['id'])) . '/snooze', 'POST', $params, $this->options);
         return new ExpectationIncident((array) (@$response->data ?: []), $this->options);
     }
 
@@ -211,7 +211,7 @@ class ExpectationIncident
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/expectation_incidents/' . @$params['id'] . '/acknowledge', 'POST', $params, $this->options);
+        $response = Api::sendRequest('/expectation_incidents/' . rawurlencode(strval(@$params['id'])) . '/acknowledge', 'POST', $params, $this->options);
         return new ExpectationIncident((array) (@$response->data ?: []), $this->options);
     }
 
@@ -259,7 +259,7 @@ class ExpectationIncident
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/expectation_incidents/' . @$params['id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/expectation_incidents/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
         return new ExpectationIncident((array) (@$response->data ?: []), $options);
     }

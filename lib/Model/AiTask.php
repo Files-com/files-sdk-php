@@ -285,7 +285,7 @@ class AiTask
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/ai_tasks/' . @$params['id'] . '/manual_run', 'POST', $params, $this->options);
+        $response = Api::sendRequest('/ai_tasks/' . rawurlencode(strval(@$params['id'])) . '/manual_run', 'POST', $params, $this->options);
         return;
     }
 
@@ -384,7 +384,7 @@ class AiTask
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
-        $response = Api::sendRequest('/ai_tasks/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+        $response = Api::sendRequest('/ai_tasks/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
         return new AiTask((array) (@$response->data ?: []), $this->options);
     }
 
@@ -406,7 +406,7 @@ class AiTask
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/ai_tasks/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+        $response = Api::sendRequest('/ai_tasks/' . rawurlencode(strval(@$params['id'])) . '', 'DELETE', $params, $this->options);
         return;
     }
 
@@ -474,7 +474,7 @@ class AiTask
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/ai_tasks/' . @$params['id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/ai_tasks/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
         return new AiTask((array) (@$response->data ?: []), $options);
     }

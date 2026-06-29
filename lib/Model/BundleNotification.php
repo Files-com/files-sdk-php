@@ -157,7 +157,7 @@ class BundleNotification
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/bundle_notifications/' . @$params['id'] . '', 'PATCH', $params, $this->options);
+        $response = Api::sendRequest('/bundle_notifications/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
         return new BundleNotification((array) (@$response->data ?: []), $this->options);
     }
 
@@ -179,7 +179,7 @@ class BundleNotification
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/bundle_notifications/' . @$params['id'] . '', 'DELETE', $params, $this->options);
+        $response = Api::sendRequest('/bundle_notifications/' . rawurlencode(strval(@$params['id'])) . '', 'DELETE', $params, $this->options);
         return;
     }
 
@@ -257,7 +257,7 @@ class BundleNotification
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/bundle_notifications/' . @$params['id'] . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/bundle_notifications/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
         return new BundleNotification((array) (@$response->data ?: []), $options);
     }

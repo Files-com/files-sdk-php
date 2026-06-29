@@ -186,6 +186,26 @@ class ApiTest extends TestCase
         Files::setWorkspaceId(null);
     }
 
+    public function testFileDeleteEncodesReturnedPathBeforeRequest()
+    {
+        Files::setApiKey('test-key');
+
+        $history = [];
+        $mock = new MockHandler([
+            new Response(204, [], '')
+        ]);
+        $stack = HandlerStack::create($mock);
+        $stack->push(Middleware::history($history));
+        Files::setHandler($stack);
+
+        \Files\Model\File::deletePath('root/data?recursive=true');
+
+        $this->assertCount(1, $history);
+        $uri = $history[0]['request']->getUri();
+        $this->assertEquals('/api/rest/v1/files/root%2Fdata%3Frecursive%3Dtrue', $uri->getPath());
+        $this->assertEquals('', $uri->getQuery());
+    }
+
     public function testNotFound()
     {
         Files::setApiKey('test-key');

@@ -988,8 +988,9 @@ class File
     //
     // Parameters:
     //   destination (required) - string - Destination file path for the transformed output.
-    //   transform_type (required) - string - Transform type. Supported values are `image_convert` and `document_convert`.
+    //   transform_type (required) - string - Transform type. Supported values are `image_convert`, `document_convert`, and `files_transform_script_execute`.
     //   target_format (required) - string - Destination format to create.
+    //   script - string - Files TransformScript source. Required when transform_type is `files_transform_script_execute`.
     //   width - int64 - Maximum output width for image_convert.
     //   height - int64 - Maximum output height for image_convert.
     //   overwrite - boolean - Overwrite existing file in the destination?
@@ -1045,6 +1046,10 @@ class File
 
         if (@$params['target_format'] && !is_string(@$params['target_format'])) {
             throw new \Files\Exception\InvalidParameterException('$target_format must be of type string; received ' . gettype(@$params['target_format']));
+        }
+
+        if (@$params['script'] && !is_string(@$params['script'])) {
+            throw new \Files\Exception\InvalidParameterException('$script must be of type string; received ' . gettype(@$params['script']));
         }
 
         if (@$params['width'] && !is_int(@$params['width'])) {

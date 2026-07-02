@@ -75,6 +75,16 @@ class AiAssistantPersonality
     {
         return $this->attributes['workspace_id'] = $value;
     }
+    // string # AI Assistant Personality name.
+    public function getName()
+    {
+        return @$this->attributes['name'];
+    }
+
+    public function setName($value)
+    {
+        return $this->attributes['name'] = $value;
+    }
     // string # System prompt injected into the in-app AI Assistant.
     public function getSystemPrompt()
     {
@@ -118,6 +128,7 @@ class AiAssistantPersonality
 
     // Parameters:
     //   apply_to_all_workspaces - boolean - If true, this default-workspace personality can apply to users in all workspaces.
+    //   name - string - AI Assistant Personality name.
     //   system_prompt - string - System prompt injected into the in-app AI Assistant.
     //   use_by_default - boolean - Whether this personality is the default personality for the Workspace.
     //   workspace_id - int64 - Workspace ID. `0` means the default workspace.
@@ -137,6 +148,10 @@ class AiAssistantPersonality
 
         if (@$params['id'] && !is_int(@$params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
+        }
+
+        if (@$params['name'] && !is_string(@$params['name'])) {
+            throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
         if (@$params['system_prompt'] && !is_string(@$params['system_prompt'])) {
@@ -248,13 +263,22 @@ class AiAssistantPersonality
 
     // Parameters:
     //   apply_to_all_workspaces - boolean - If true, this default-workspace personality can apply to users in all workspaces.
+    //   name (required) - string - AI Assistant Personality name.
     //   system_prompt (required) - string - System prompt injected into the in-app AI Assistant.
     //   use_by_default - boolean - Whether this personality is the default personality for the Workspace.
     //   workspace_id - int64 - Workspace ID. `0` means the default workspace.
     public static function create($params = [], $options = [])
     {
+        if (!@$params['name']) {
+            throw new \Files\Exception\MissingParameterException('Parameter missing: name');
+        }
+
         if (!@$params['system_prompt']) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: system_prompt');
+        }
+
+        if (@$params['name'] && !is_string(@$params['name'])) {
+            throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
         if (@$params['system_prompt'] && !is_string(@$params['system_prompt'])) {

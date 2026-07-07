@@ -39,4 +39,14 @@ class PathUtilTest extends TestCase
     {
         $this->assertEquals('a/b/c', Util\PathUtil::normalizeForComparison("a", "b", "c"));
     }
+
+    public function testNormalizePreservesPathIdentity()
+    {
+        $this->assertEquals('remote/path/to/file.txt', Util\PathUtil::normalize("/../../remote\\path//./to/file.txt"));
+        $this->assertEquals('remote/path/to/file.txt', Util\PathUtil::normalize('remote/../path/to/file.txt'));
+        $this->assertEquals(
+            '_/RemoteServers/42/remote/path/to/file.txt',
+            Util\PathUtil::normalize('_', 'RemoteServers', '42', "/../../remote\\path//./to/file.txt")
+        );
+    }
 }

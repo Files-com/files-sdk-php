@@ -90,6 +90,11 @@ class File
         $response = Api::sendRequest('/files/' . rawurlencode($fileUploadPart->path), 'POST', $params);
     }
 
+    private static function underscoreDestinationPath($root, $id, $relativePath = null)
+    {
+        return \Files\Util\PathUtil::normalize('_', $root, strval($id), $relativePath);
+    }
+
     private static function uploadChunks($io, $path, $upload = null, $etags = [], $params = [])
     {
         $bytesWritten = 0;
@@ -165,6 +170,22 @@ class File
 
         return $response;
     }
+
+    public static function uploadToRemoteServer($remoteServerId, $destinationPath, $sourceFilePath, $params = [])
+    {
+        return self::uploadFile(self::underscoreDestinationPath('RemoteServers', $remoteServerId, $destinationPath), $sourceFilePath, $params);
+    }
+
+    public static function uploadToSnapshot($snapshotId, $destinationPath, $sourceFilePath, $params = [])
+    {
+        return self::uploadFile(self::underscoreDestinationPath('Snapshots', $snapshotId, $destinationPath), $sourceFilePath, $params);
+    }
+
+    public static function uploadToChildSite($siteId, $destinationPath, $sourceFilePath, $params = [])
+    {
+        return self::uploadFile(self::underscoreDestinationPath('Sites', $siteId, $destinationPath), $sourceFilePath, $params);
+    }
+
 
     public static function uploadData($destinationPath, $data, $params = [])
     {
@@ -310,6 +331,25 @@ class File
         return $response->data;
     }
 
+    public function copyToRemoteServer($remoteServerId, $destinationPath, $params = [])
+    {
+        $params['destination'] = self::underscoreDestinationPath('RemoteServers', $remoteServerId, $destinationPath);
+        return $this->copy($params);
+    }
+
+    public function copyToSnapshot($snapshotId, $destinationPath, $params = [])
+    {
+        $params['destination'] = self::underscoreDestinationPath('Snapshots', $snapshotId, $destinationPath);
+        return $this->copy($params);
+    }
+
+    public function copyToChildSite($siteId, $destinationPath, $params = [])
+    {
+        $params['destination'] = self::underscoreDestinationPath('Sites', $siteId, $destinationPath);
+        return $this->copy($params);
+    }
+
+
     public function moveTo($destinationFilePath)
     {
         if (!$this->path) {
@@ -324,6 +364,25 @@ class File
         $response = Api::sendRequest('/file_actions/move/' . rawurlencode($this->path), 'POST', $params);
         return $response->data;
     }
+
+    public function moveToRemoteServer($remoteServerId, $destinationPath, $params = [])
+    {
+        $params['destination'] = self::underscoreDestinationPath('RemoteServers', $remoteServerId, $destinationPath);
+        return $this->move($params);
+    }
+
+    public function moveToSnapshot($snapshotId, $destinationPath, $params = [])
+    {
+        $params['destination'] = self::underscoreDestinationPath('Snapshots', $snapshotId, $destinationPath);
+        return $this->move($params);
+    }
+
+    public function moveToChildSite($siteId, $destinationPath, $params = [])
+    {
+        $params['destination'] = self::underscoreDestinationPath('Sites', $siteId, $destinationPath);
+        return $this->move($params);
+    }
+
     // string # File/Folder path. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
     public function getPath()
     {

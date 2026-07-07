@@ -231,19 +231,19 @@ class PathUtil
         return $path;
     }
 
-    private static function normalize(...$args)
+    public static function normalize(...$args)
     {
         $allPaths = [];
-        if (gettype($args) == 'array' && count($args) == 1) {
+        if (count($args) == 1 && is_array($args[0])) {
             $args = $args[0];
         }
 
         foreach ($args as $arg) {
-            $paths = explode('/', strval($arg));
+            $paths = explode('/', str_replace('\\', '/', strval($arg)));
             foreach ($paths as $path) {
                 $path = self::u8($path);
                 $path = preg_replace(self::$nullByte, "", $path);
-                $path = str_replace('\\', '/', $path);
+                $path = self::cleanpath($path);
                 if ($path != null && strlen($path) > 0) {
                     $allPaths[] = $path;
                 }

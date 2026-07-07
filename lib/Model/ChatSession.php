@@ -60,6 +60,11 @@ class ChatSession
     {
         return @$this->attributes['id'];
     }
+    // string # Short AI-generated chat title.
+    public function getTitle()
+    {
+        return @$this->attributes['title'];
+    }
     // int64 # User ID.
     public function getUserId()
     {

@@ -125,6 +125,16 @@ class Behavior
     {
         return $this->attributes['value'] = $value;
     }
+    // string # Public URL for this publicly hosted folder when the `Serve Publicly` behavior has a key configured.  When a Custom Domain with `public_hosting` destination is attached to this behavior, the URL uses that domain.  Otherwise it uses the site's `subdomain.hosted-by-files.com` host.
+    public function getPublicHostingUrl()
+    {
+        return @$this->attributes['public_hosting_url'];
+    }
+
+    public function setPublicHostingUrl($value)
+    {
+        return $this->attributes['public_hosting_url'] = $value;
+    }
     // boolean # If true, the parent folder's behavior will be disabled for this folder and its children.
     public function getDisableParentFolderBehavior()
     {

@@ -10,11 +10,11 @@ use Files\Logger;
 require_once __DIR__ . '/../Files.php';
 
 /**
- * Class PartnerChannel
+ * Class PartnerChannelTemplate
  *
  * @package Files
  */
-class PartnerChannel
+class PartnerChannelTemplate
 {
     private $attributes = [];
     private $options = [];
@@ -55,7 +55,7 @@ class PartnerChannel
     {
         return !!@$this->attributes['id'];
     }
-    // int64 # The unique ID of the Partner Channel.
+    // int64 # The unique ID of the Partner Channel Template.
     public function getId()
     {
         return @$this->attributes['id'];
@@ -65,7 +65,7 @@ class PartnerChannel
     {
         return $this->attributes['id'] = $value;
     }
-    // int64 # ID of the Workspace associated with this Partner Channel.
+    // int64 # ID of the Workspace associated with this Partner Channel Template.
     public function getWorkspaceId()
     {
         return @$this->attributes['workspace_id'];
@@ -75,25 +75,15 @@ class PartnerChannel
     {
         return $this->attributes['workspace_id'] = $value;
     }
-    // int64 # ID of the Partner this Channel belongs to.
-    public function getPartnerId()
+    // string # The name of the Partner Channel Template.
+    public function getName()
     {
-        return @$this->attributes['partner_id'];
+        return @$this->attributes['name'];
     }
 
-    public function setPartnerId($value)
+    public function setName($value)
     {
-        return $this->attributes['partner_id'] = $value;
-    }
-    // int64 # ID of the Partner Channel Template that manages this Channel, if any.
-    public function getPartnerChannelTemplateId()
-    {
-        return @$this->attributes['partner_channel_template_id'];
-    }
-
-    public function setPartnerChannelTemplateId($value)
-    {
-        return $this->attributes['partner_channel_template_id'] = $value;
+        return $this->attributes['name'] = $value;
     }
     // string # Channel path relative to the Partner root folder. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
     public function getPath()
@@ -165,7 +155,7 @@ class PartnerChannel
     {
         return $this->attributes['from_partner_managed_folder_paths'] = $value;
     }
-    // string # Resolved to-Partner folder name after Channel override and default.
+    // string # Resolved to-Partner folder name after Template override and default.
     public function getEffectiveToPartnerFolderName()
     {
         return @$this->attributes['effective_to_partner_folder_name'];
@@ -175,7 +165,7 @@ class PartnerChannel
     {
         return $this->attributes['effective_to_partner_folder_name'] = $value;
     }
-    // string # Resolved from-Partner folder name after Channel override and default.
+    // string # Resolved from-Partner folder name after Template override and default.
     public function getEffectiveFromPartnerFolderName()
     {
         return @$this->attributes['effective_from_partner_folder_name'];
@@ -185,36 +175,6 @@ class PartnerChannel
     {
         return $this->attributes['effective_from_partner_folder_name'] = $value;
     }
-    // string # Resolved Channel folder path.
-    public function getChannelPath()
-    {
-        return @$this->attributes['channel_path'];
-    }
-
-    public function setChannelPath($value)
-    {
-        return $this->attributes['channel_path'] = $value;
-    }
-    // string # Resolved to-Partner folder path.
-    public function getToPartnerFolderPath()
-    {
-        return @$this->attributes['to_partner_folder_path'];
-    }
-
-    public function setToPartnerFolderPath($value)
-    {
-        return $this->attributes['to_partner_folder_path'] = $value;
-    }
-    // string # Resolved from-Partner folder path.
-    public function getFromPartnerFolderPath()
-    {
-        return @$this->attributes['from_partner_folder_path'];
-    }
-
-    public function setFromPartnerFolderPath($value)
-    {
-        return $this->attributes['from_partner_folder_path'] = $value;
-    }
 
     // Parameters:
     //   from_partner_folder_name - string - Optional Channel-level from-Partner folder name override.
@@ -223,6 +183,7 @@ class PartnerChannel
     //   to_partner_folder_name - string - Optional Channel-level to-Partner folder name override.
     //   to_partner_managed_folder_paths - array(string) - Managed folder paths inside the to-Partner folder.
     //   to_partner_route_path - string - Optional route path for files delivered to the Partner.
+    //   name - string - The name of the Partner Channel Template.
     //   path - string - Channel path relative to the Partner root folder.
     public function update($params = [])
     {
@@ -266,12 +227,16 @@ class PartnerChannel
             throw new \Files\Exception\InvalidParameterException('$to_partner_route_path must be of type string; received ' . gettype(@$params['to_partner_route_path']));
         }
 
+        if (@$params['name'] && !is_string(@$params['name'])) {
+            throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
+        }
+
         if (@$params['path'] && !is_string(@$params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        $response = Api::sendRequest('/partner_channels/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
-        return new PartnerChannel((array) (@$response->data ?: []), $this->options);
+        $response = Api::sendRequest('/partner_channel_templates/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
+        return new PartnerChannelTemplate((array) (@$response->data ?: []), $this->options);
     }
 
     public function delete($params = [])
@@ -292,7 +257,7 @@ class PartnerChannel
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/partner_channels/' . rawurlencode(strval(@$params['id'])) . '', 'DELETE', $params, $this->options);
+        $response = Api::sendRequest('/partner_channel_templates/' . rawurlencode(strval(@$params['id'])) . '', 'DELETE', $params, $this->options);
         return;
     }
 
@@ -319,8 +284,8 @@ class PartnerChannel
     // Parameters:
     //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
     //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `workspace_id`, `path` or `partner_id`.
-    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `partner_id` and `workspace_id`. Valid field combinations are `[ workspace_id, partner_id ]`.
+    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `workspace_id` and `name`.
+    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `workspace_id`.
     public static function all($params = [], $options = [])
     {
         if (@$params['cursor'] && !is_string(@$params['cursor'])) {
@@ -331,19 +296,19 @@ class PartnerChannel
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
-        $response = Api::sendRequest('/partner_channels', 'GET', $params, $options);
+        $response = Api::sendRequest('/partner_channel_templates', 'GET', $params, $options);
 
         $return_array = [];
 
         foreach ($response->data as $obj) {
-            $return_array[] = new PartnerChannel((array) $obj, $options);
+            $return_array[] = new PartnerChannelTemplate((array) $obj, $options);
         }
 
         return $return_array;
     }
 
     // Parameters:
-    //   id (required) - int64 - Partner Channel ID.
+    //   id (required) - int64 - Partner Channel Template ID.
     public static function find($id, $params = [], $options = [])
     {
         if (!is_array($params)) {
@@ -360,9 +325,9 @@ class PartnerChannel
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/partner_channels/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/partner_channel_templates/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
-        return new PartnerChannel((array) (@$response->data ?: []), $options);
+        return new PartnerChannelTemplate((array) (@$response->data ?: []), $options);
     }
     public static function get($id, $params = [], $options = [])
     {
@@ -376,13 +341,13 @@ class PartnerChannel
     //   to_partner_folder_name - string - Optional Channel-level to-Partner folder name override.
     //   to_partner_managed_folder_paths - array(string) - Managed folder paths inside the to-Partner folder.
     //   to_partner_route_path - string - Optional route path for files delivered to the Partner.
-    //   partner_id (required) - int64 - ID of the Partner this Channel belongs to.
+    //   name (required) - string - The name of the Partner Channel Template.
     //   path (required) - string - Channel path relative to the Partner root folder.
-    //   workspace_id - int64 - ID of the Workspace associated with this Partner Channel.
+    //   workspace_id - int64 - ID of the Workspace associated with this Partner Channel Template.
     public static function create($params = [], $options = [])
     {
-        if (!@$params['partner_id']) {
-            throw new \Files\Exception\MissingParameterException('Parameter missing: partner_id');
+        if (!@$params['name']) {
+            throw new \Files\Exception\MissingParameterException('Parameter missing: name');
         }
 
         if (!@$params['path']) {
@@ -413,8 +378,8 @@ class PartnerChannel
             throw new \Files\Exception\InvalidParameterException('$to_partner_route_path must be of type string; received ' . gettype(@$params['to_partner_route_path']));
         }
 
-        if (@$params['partner_id'] && !is_int(@$params['partner_id'])) {
-            throw new \Files\Exception\InvalidParameterException('$partner_id must be of type int; received ' . gettype(@$params['partner_id']));
+        if (@$params['name'] && !is_string(@$params['name'])) {
+            throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
         if (@$params['path'] && !is_string(@$params['path'])) {
@@ -425,8 +390,8 @@ class PartnerChannel
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
-        $response = Api::sendRequest('/partner_channels', 'POST', $params, $options);
+        $response = Api::sendRequest('/partner_channel_templates', 'POST', $params, $options);
 
-        return new PartnerChannel((array) (@$response->data ?: []), $options);
+        return new PartnerChannelTemplate((array) (@$response->data ?: []), $options);
     }
 }

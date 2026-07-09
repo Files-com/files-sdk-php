@@ -175,6 +175,16 @@ class Partner
     {
         return $this->attributes['partner_admin_ids'] = $value;
     }
+    // int64 # ID of the Partner Channel Template assigned to this Partner.
+    public function getPartnerChannelTemplateId()
+    {
+        return @$this->attributes['partner_channel_template_id'];
+    }
+
+    public function setPartnerChannelTemplateId($value)
+    {
+        return $this->attributes['partner_channel_template_id'] = $value;
+    }
     // string # This site's role in Partner Site relationships for this Partner. Can be `host`, `guest`, `host_and_guest`, or null.
     public function getPartnershipRole()
     {
@@ -245,6 +255,7 @@ class Partner
     //   allow_user_creation - boolean - Allow Partner Admins to create users.
     //   cc_emails_to_responsible_party - boolean - When `true`, emails sent to Partner users are copied to the responsible User or Group.
     //   notes - string - Notes about this Partner.
+    //   partner_channel_template_id - int64 - ID of the Partner Channel Template assigned to this Partner.
     //   responsible_group_id - int64 - ID of the Group responsible for this Partner.
     //   responsible_user_id - int64 - ID of the User responsible for this Partner.
     //   tags - string - Comma-separated list of Tags for this Partner. Tags are used for other features, such as UserLifecycleRules, which can target specific tags.  Tags must only contain lowercase letters, numbers, and hyphens.
@@ -278,6 +289,10 @@ class Partner
 
         if (@$params['notes'] && !is_string(@$params['notes'])) {
             throw new \Files\Exception\InvalidParameterException('$notes must be of type string; received ' . gettype(@$params['notes']));
+        }
+
+        if (@$params['partner_channel_template_id'] && !is_int(@$params['partner_channel_template_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$partner_channel_template_id must be of type int; received ' . gettype(@$params['partner_channel_template_id']));
         }
 
         if (@$params['responsible_group_id'] && !is_int(@$params['responsible_group_id'])) {
@@ -408,6 +423,7 @@ class Partner
     //   allow_user_creation - boolean - Allow Partner Admins to create users.
     //   cc_emails_to_responsible_party - boolean - When `true`, emails sent to Partner users are copied to the responsible User or Group.
     //   notes - string - Notes about this Partner.
+    //   partner_channel_template_id - int64 - ID of the Partner Channel Template assigned to this Partner.
     //   responsible_group_id - int64 - ID of the Group responsible for this Partner.
     //   responsible_user_id - int64 - ID of the User responsible for this Partner.
     //   tags - string - Comma-separated list of Tags for this Partner. Tags are used for other features, such as UserLifecycleRules, which can target specific tags.  Tags must only contain lowercase letters, numbers, and hyphens.
@@ -434,6 +450,10 @@ class Partner
 
         if (@$params['notes'] && !is_string(@$params['notes'])) {
             throw new \Files\Exception\InvalidParameterException('$notes must be of type string; received ' . gettype(@$params['notes']));
+        }
+
+        if (@$params['partner_channel_template_id'] && !is_int(@$params['partner_channel_template_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$partner_channel_template_id must be of type int; received ' . gettype(@$params['partner_channel_template_id']));
         }
 
         if (@$params['responsible_group_id'] && !is_int(@$params['responsible_group_id'])) {

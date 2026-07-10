@@ -115,25 +115,25 @@ class PartnerChannelTemplate
     {
         return $this->attributes['from_partner_folder_name'] = $value;
     }
-    // string # Optional route path for files uploaded by the Partner.
-    public function getFromPartnerRoutePath()
+    // string # Optional route path pattern for files uploaded by the Partner. Supports {{partner_name}}.
+    public function getFromPartnerRoutePathPattern()
     {
-        return @$this->attributes['from_partner_route_path'];
+        return @$this->attributes['from_partner_route_path_pattern'];
     }
 
-    public function setFromPartnerRoutePath($value)
+    public function setFromPartnerRoutePathPattern($value)
     {
-        return $this->attributes['from_partner_route_path'] = $value;
+        return $this->attributes['from_partner_route_path_pattern'] = $value;
     }
-    // string # Optional route path for files delivered to the Partner.
-    public function getToPartnerRoutePath()
+    // string # Optional route path pattern for files delivered to the Partner. Supports {{partner_name}}.
+    public function getToPartnerRoutePathPattern()
     {
-        return @$this->attributes['to_partner_route_path'];
+        return @$this->attributes['to_partner_route_path_pattern'];
     }
 
-    public function setToPartnerRoutePath($value)
+    public function setToPartnerRoutePathPattern($value)
     {
-        return $this->attributes['to_partner_route_path'] = $value;
+        return $this->attributes['to_partner_route_path_pattern'] = $value;
     }
     // array(string) # Managed folder paths inside the to-Partner folder.
     public function getToPartnerManagedFolderPaths()
@@ -179,10 +179,10 @@ class PartnerChannelTemplate
     // Parameters:
     //   from_partner_folder_name - string - Optional Channel-level from-Partner folder name override.
     //   from_partner_managed_folder_paths - array(string) - Managed folder paths inside the from-Partner folder.
-    //   from_partner_route_path - string - Optional route path for files uploaded by the Partner.
+    //   from_partner_route_path_pattern - string - Optional route path pattern for files uploaded by the Partner. Supports {{partner_name}}.
     //   to_partner_folder_name - string - Optional Channel-level to-Partner folder name override.
     //   to_partner_managed_folder_paths - array(string) - Managed folder paths inside the to-Partner folder.
-    //   to_partner_route_path - string - Optional route path for files delivered to the Partner.
+    //   to_partner_route_path_pattern - string - Optional route path pattern for files delivered to the Partner. Supports {{partner_name}}.
     //   name - string - The name of the Partner Channel Template.
     //   path - string - Channel path relative to the Partner root folder.
     public function update($params = [])
@@ -211,8 +211,8 @@ class PartnerChannelTemplate
             throw new \Files\Exception\InvalidParameterException('$from_partner_managed_folder_paths must be of type array; received ' . gettype(@$params['from_partner_managed_folder_paths']));
         }
 
-        if (@$params['from_partner_route_path'] && !is_string(@$params['from_partner_route_path'])) {
-            throw new \Files\Exception\InvalidParameterException('$from_partner_route_path must be of type string; received ' . gettype(@$params['from_partner_route_path']));
+        if (@$params['from_partner_route_path_pattern'] && !is_string(@$params['from_partner_route_path_pattern'])) {
+            throw new \Files\Exception\InvalidParameterException('$from_partner_route_path_pattern must be of type string; received ' . gettype(@$params['from_partner_route_path_pattern']));
         }
 
         if (@$params['to_partner_folder_name'] && !is_string(@$params['to_partner_folder_name'])) {
@@ -223,8 +223,8 @@ class PartnerChannelTemplate
             throw new \Files\Exception\InvalidParameterException('$to_partner_managed_folder_paths must be of type array; received ' . gettype(@$params['to_partner_managed_folder_paths']));
         }
 
-        if (@$params['to_partner_route_path'] && !is_string(@$params['to_partner_route_path'])) {
-            throw new \Files\Exception\InvalidParameterException('$to_partner_route_path must be of type string; received ' . gettype(@$params['to_partner_route_path']));
+        if (@$params['to_partner_route_path_pattern'] && !is_string(@$params['to_partner_route_path_pattern'])) {
+            throw new \Files\Exception\InvalidParameterException('$to_partner_route_path_pattern must be of type string; received ' . gettype(@$params['to_partner_route_path_pattern']));
         }
 
         if (@$params['name'] && !is_string(@$params['name'])) {
@@ -337,10 +337,10 @@ class PartnerChannelTemplate
     // Parameters:
     //   from_partner_folder_name - string - Optional Channel-level from-Partner folder name override.
     //   from_partner_managed_folder_paths - array(string) - Managed folder paths inside the from-Partner folder.
-    //   from_partner_route_path - string - Optional route path for files uploaded by the Partner.
+    //   from_partner_route_path_pattern - string - Optional route path pattern for files uploaded by the Partner. Supports {{partner_name}}.
     //   to_partner_folder_name - string - Optional Channel-level to-Partner folder name override.
     //   to_partner_managed_folder_paths - array(string) - Managed folder paths inside the to-Partner folder.
-    //   to_partner_route_path - string - Optional route path for files delivered to the Partner.
+    //   to_partner_route_path_pattern - string - Optional route path pattern for files delivered to the Partner. Supports {{partner_name}}.
     //   name (required) - string - The name of the Partner Channel Template.
     //   path (required) - string - Channel path relative to the Partner root folder.
     //   workspace_id - int64 - ID of the Workspace associated with this Partner Channel Template.
@@ -362,8 +362,8 @@ class PartnerChannelTemplate
             throw new \Files\Exception\InvalidParameterException('$from_partner_managed_folder_paths must be of type array; received ' . gettype(@$params['from_partner_managed_folder_paths']));
         }
 
-        if (@$params['from_partner_route_path'] && !is_string(@$params['from_partner_route_path'])) {
-            throw new \Files\Exception\InvalidParameterException('$from_partner_route_path must be of type string; received ' . gettype(@$params['from_partner_route_path']));
+        if (@$params['from_partner_route_path_pattern'] && !is_string(@$params['from_partner_route_path_pattern'])) {
+            throw new \Files\Exception\InvalidParameterException('$from_partner_route_path_pattern must be of type string; received ' . gettype(@$params['from_partner_route_path_pattern']));
         }
 
         if (@$params['to_partner_folder_name'] && !is_string(@$params['to_partner_folder_name'])) {
@@ -374,8 +374,8 @@ class PartnerChannelTemplate
             throw new \Files\Exception\InvalidParameterException('$to_partner_managed_folder_paths must be of type array; received ' . gettype(@$params['to_partner_managed_folder_paths']));
         }
 
-        if (@$params['to_partner_route_path'] && !is_string(@$params['to_partner_route_path'])) {
-            throw new \Files\Exception\InvalidParameterException('$to_partner_route_path must be of type string; received ' . gettype(@$params['to_partner_route_path']));
+        if (@$params['to_partner_route_path_pattern'] && !is_string(@$params['to_partner_route_path_pattern'])) {
+            throw new \Files\Exception\InvalidParameterException('$to_partner_route_path_pattern must be of type string; received ' . gettype(@$params['to_partner_route_path_pattern']));
         }
 
         if (@$params['name'] && !is_string(@$params['name'])) {

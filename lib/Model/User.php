@@ -240,6 +240,16 @@ class User
     {
         return $this->attributes['desktop_configuration_profile_id'] = $value;
     }
+    // int64 # Integration Centric Profile ID assigned directly to this user, if any.
+    public function getIntegrationCentricProfileId()
+    {
+        return @$this->attributes['integration_centric_profile_id'];
+    }
+
+    public function setIntegrationCentricProfileId($value)
+    {
+        return $this->attributes['integration_centric_profile_id'] = $value;
+    }
     // email # User email address
     public function getEmail()
     {
@@ -1118,6 +1128,7 @@ class User
     //   filesystem_layout - string - File system layout
     //   ftp_permission - boolean - Can the user access with FTP/FTPS?
     //   header_text - string - Text to display to the user in the header of the UI
+    //   integration_centric_profile_id - int64 - Integration Centric Profile ID assigned directly to this user, if any.
     //   language - string - Preferred language
     //   notification_daily_send_time - int64 - Hour of the day at which daily notifications should be sent. Can be in range 0 to 23
     //   name - string - User's full name
@@ -1242,6 +1253,10 @@ class User
 
         if (@$params['header_text'] && !is_string(@$params['header_text'])) {
             throw new \Files\Exception\InvalidParameterException('$header_text must be of type string; received ' . gettype(@$params['header_text']));
+        }
+
+        if (@$params['integration_centric_profile_id'] && !is_int(@$params['integration_centric_profile_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$integration_centric_profile_id must be of type int; received ' . gettype(@$params['integration_centric_profile_id']));
         }
 
         if (@$params['language'] && !is_string(@$params['language'])) {
@@ -1465,6 +1480,7 @@ class User
     //   filesystem_layout - string - File system layout
     //   ftp_permission - boolean - Can the user access with FTP/FTPS?
     //   header_text - string - Text to display to the user in the header of the UI
+    //   integration_centric_profile_id - int64 - Integration Centric Profile ID assigned directly to this user, if any.
     //   language - string - Preferred language
     //   notification_daily_send_time - int64 - Hour of the day at which daily notifications should be sent. Can be in range 0 to 23
     //   name - string - User's full name
@@ -1575,6 +1591,10 @@ class User
 
         if (@$params['header_text'] && !is_string(@$params['header_text'])) {
             throw new \Files\Exception\InvalidParameterException('$header_text must be of type string; received ' . gettype(@$params['header_text']));
+        }
+
+        if (@$params['integration_centric_profile_id'] && !is_int(@$params['integration_centric_profile_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$integration_centric_profile_id must be of type int; received ' . gettype(@$params['integration_centric_profile_id']));
         }
 
         if (@$params['language'] && !is_string(@$params['language'])) {

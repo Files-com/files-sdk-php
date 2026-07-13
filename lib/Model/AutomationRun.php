@@ -75,6 +75,11 @@ class AutomationRun
     {
         return @$this->attributes['workspace_id'];
     }
+    // date-time # Date/time at which cancellation was requested.
+    public function getCancelRequestedAt()
+    {
+        return @$this->attributes['cancel_requested_at'];
+    }
     // date-time # Automation run completion/failure date/time.
     public function getCompletedAt()
     {
@@ -110,7 +115,7 @@ class AutomationRun
     {
         return @$this->attributes['runtime'];
     }
-    // string # The success status of the AutomationRun. One of `running`, `success`, `partial_failure`, or `failure`.
+    // string # The status of the AutomationRun. One of `queued`, `running`, `success`, `partial_failure`, `failure`, `skipped`, or `canceled`.
     public function getStatus()
     {
         return @$this->attributes['status'];
@@ -130,6 +135,11 @@ class AutomationRun
     {
         return @$this->attributes['definition'];
     }
+    // object # Status and execution stage for each node in this run. For performance reasons, this is not provided when listing Automation runs.
+    public function getNodeStates()
+    {
+        return @$this->attributes['node_states'];
+    }
     // string # Link to the run journal artifact.
     public function getJournalUrl()
     {
@@ -139,6 +149,29 @@ class AutomationRun
     public function getStatusMessagesUrl()
     {
         return @$this->attributes['status_messages_url'];
+    }
+
+    // Cancel Automation Run
+    public function cancel($params = [])
+    {
+        if (!is_array($params)) {
+            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+        }
+
+        if (!@$params['id']) {
+            if (@$this->id) {
+                $params['id'] = $this->id;
+            } else {
+                throw new \Files\Exception\MissingParameterException('Parameter missing: id');
+            }
+        }
+
+        if (@$params['id'] && !is_int(@$params['id'])) {
+            throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
+        }
+
+        $response = Api::sendRequest('/automation_runs/' . rawurlencode(strval(@$params['id'])) . '/cancel', 'POST', $params, $this->options);
+        return new AutomationRun((array) (@$response->data ?: []), $this->options);
     }
 
     // Parameters:

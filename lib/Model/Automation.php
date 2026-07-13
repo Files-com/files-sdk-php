@@ -125,6 +125,16 @@ class Automation
     {
         return $this->attributes['description'] = $value;
     }
+    // object # Automation v2 graph definition.
+    public function getDefinition()
+    {
+        return @$this->attributes['definition'];
+    }
+
+    public function setDefinition($value)
+    {
+        return $this->attributes['definition'] = $value;
+    }
     // string # If set, this string in the destination path will be replaced with the value in `destination_replace_to`.
     public function getDestinationReplaceFrom()
     {
@@ -284,6 +294,16 @@ class Automation
     public function setPathTimeZone($value)
     {
         return $this->attributes['path_time_zone'] = $value;
+    }
+    // int64 # Current Automation v2 definition version.
+    public function getVersion()
+    {
+        return @$this->attributes['version'];
+    }
+
+    public function setVersion($value)
+    {
+        return $this->attributes['version'] = $value;
     }
     // int64 # If trigger type is `daily`, this specifies a day number to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
     public function getRecurringDay()

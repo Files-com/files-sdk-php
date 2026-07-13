@@ -65,6 +65,11 @@ class AutomationRun
     {
         return @$this->attributes['automation_id'];
     }
+    // int64 # ID of the immutable Automation version pinned by this run.
+    public function getAutomationVersionId()
+    {
+        return @$this->attributes['automation_version_id'];
+    }
     // int64 # Workspace ID.
     public function getWorkspaceId()
     {
@@ -119,6 +124,16 @@ class AutomationRun
     public function getFailedOperations()
     {
         return @$this->attributes['failed_operations'];
+    }
+    // object # Automation definition snapshot pinned by this run. For performance reasons, this is not provided when listing Automation runs.
+    public function getDefinition()
+    {
+        return @$this->attributes['definition'];
+    }
+    // string # Link to the run journal artifact.
+    public function getJournalUrl()
+    {
+        return @$this->attributes['journal_url'];
     }
     // string # Link to status messages log file.
     public function getStatusMessagesUrl()

@@ -764,6 +764,13 @@ class Automation
         return self::find($id, $params, $options);
     }
 
+    public static function getAuthoringSchema($params = [], $options = [])
+    {
+        $response = Api::sendRequest('/automations/authoring_schema', 'GET', $options);
+
+        return new AutomationAuthoringSchema((array) (@$response->data ?: []), $options);
+    }
+
     // Parameters:
     //   source - string - Source path/glob.  See Automation docs for exact description, but this is used to filter for files in the `path` to find files to operate on. Supports globs, except on remote mounts.
     //   destinations - array(string) - A list of destination paths. Use a trailing slash for folder destinations and omit it for file destinations.

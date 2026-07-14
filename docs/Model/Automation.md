@@ -179,6 +179,16 @@ $automation->find($id);
 
 ---
 
+## Show the Automation v2 authoring schema and active node catalog
+
+```
+$automation = new \Files\Model\Automation();
+$automation->getAuthoringSchema
+```
+
+
+---
+
 ## Create Automation
 
 ```

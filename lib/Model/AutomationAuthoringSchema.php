@@ -60,6 +60,11 @@ class AutomationAuthoringSchema
     {
         return @$this->attributes['definition_schema'];
     }
+    // array(object) # Typed error families accepted by Automation v2 on_error rules.
+    public function getErrorFamilies()
+    {
+        return @$this->attributes['error_families'];
+    }
     // array(object) # Active Automation v2 node authoring metadata.
     public function getNodes()
     {

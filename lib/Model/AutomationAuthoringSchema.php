@@ -70,4 +70,9 @@ class AutomationAuthoringSchema
     {
         return @$this->attributes['nodes'];
     }
+    // string # Stable public URL for the Automation v2 graph definition JSON Schema.
+    public function getSchemaUrl()
+    {
+        return @$this->attributes['schema_url'];
+    }
 }

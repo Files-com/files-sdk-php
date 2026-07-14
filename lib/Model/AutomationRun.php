@@ -110,6 +110,16 @@ class AutomationRun
     {
         return @$this->attributes['retry_of_run_id'];
     }
+    // int64 # ID of the run whose persisted node outputs this run reused.
+    public function getRerunOfRunId()
+    {
+        return @$this->attributes['rerun_of_run_id'];
+    }
+    // string # Node at which this run resumed execution.
+    public function getRerunFromNodeId()
+    {
+        return @$this->attributes['rerun_from_node_id'];
+    }
     // double # Automation run runtime.
     public function getRuntime()
     {
@@ -139,6 +149,11 @@ class AutomationRun
     public function getNodeStates()
     {
         return @$this->attributes['node_states'];
+    }
+    // array(object) # Execution status, timing, and bounded output summaries for each node. For performance reasons, this is not provided when listing Automation runs.
+    public function getExecutionNodes()
+    {
+        return @$this->attributes['execution_nodes'];
     }
     // string # Link to the run journal artifact.
     public function getJournalUrl()
@@ -171,6 +186,44 @@ class AutomationRun
         }
 
         $response = Api::sendRequest('/automation_runs/' . rawurlencode(strval(@$params['id'])) . '/cancel', 'POST', $params, $this->options);
+        return new AutomationRun((array) (@$response->data ?: []), $this->options);
+    }
+
+    // Re-run Automation from Node
+    //
+    // Parameters:
+    //   node_id (required) - string - Node ID at which execution should resume.
+    public function rerun($params = [])
+    {
+        if (!is_array($params)) {
+            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+        }
+
+        if (!@$params['id']) {
+            if (@$this->id) {
+                $params['id'] = $this->id;
+            } else {
+                throw new \Files\Exception\MissingParameterException('Parameter missing: id');
+            }
+        }
+
+        if (!@$params['node_id']) {
+            if (@$this->node_id) {
+                $params['node_id'] = $this->node_id;
+            } else {
+                throw new \Files\Exception\MissingParameterException('Parameter missing: node_id');
+            }
+        }
+
+        if (@$params['id'] && !is_int(@$params['id'])) {
+            throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
+        }
+
+        if (@$params['node_id'] && !is_string(@$params['node_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$node_id must be of type string; received ' . gettype(@$params['node_id']));
+        }
+
+        $response = Api::sendRequest('/automation_runs/' . rawurlencode(strval(@$params['id'])) . '/rerun', 'POST', $params, $this->options);
         return new AutomationRun((array) (@$response->data ?: []), $this->options);
     }
 
@@ -239,5 +292,37 @@ class AutomationRun
     public static function get($id, $params = [], $options = [])
     {
         return self::find($id, $params, $options);
+    }
+
+    // Parameters:
+    //   id (required) - int64 - Automation Run ID.
+    //   node_id (required) - string - Node ID from the pinned Automation definition.
+    public static function findNode($id, $params = [], $options = [])
+    {
+        if (!is_array($params)) {
+            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+        }
+
+        $params['id'] = $id;
+
+        if (!@$params['id']) {
+            throw new \Files\Exception\MissingParameterException('Parameter missing: id');
+        }
+
+        if (!@$params['node_id']) {
+            throw new \Files\Exception\MissingParameterException('Parameter missing: node_id');
+        }
+
+        if (@$params['id'] && !is_int(@$params['id'])) {
+            throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
+        }
+
+        if (@$params['node_id'] && !is_string(@$params['node_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$node_id must be of type string; received ' . gettype(@$params['node_id']));
+        }
+
+        $response = Api::sendRequest('/automation_runs/' . rawurlencode(strval(@$params['id'])) . '/node', 'GET', $params, $options);
+
+        return new AutomationExecutionNode((array) (@$response->data ?: []), $options);
     }
 }

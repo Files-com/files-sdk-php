@@ -195,6 +195,16 @@ class Automation
     {
         return $this->attributes['import_urls'] = $value;
     }
+    // string # If trigger is `email`, this is the address that triggers the Automation.
+    public function getInboundEmailAddress()
+    {
+        return @$this->attributes['inbound_email_address'];
+    }
+
+    public function setInboundEmailAddress($value)
+    {
+        return $this->attributes['inbound_email_address'] = $value;
+    }
     // boolean # Normally copy and move automations that use globs will implicitly preserve the source folder structure in the destination.  If this flag is `true`, the source folder structure will be flattened in the destination.  This is useful for copying or moving files from multiple folders into a single destination folder.
     public function getFlattenDestinationStructure()
     {
@@ -486,7 +496,10 @@ class Automation
         return $this->attributes['holiday_region'] = $value;
     }
 
-    // Manually Run Automation
+    // Manually Run Automation. v2 Automations require Site or Workspace Admin permission
+    //
+    // Parameters:
+    //   items - array(object) - Initial items for a v2 manual trigger. Each item contains exactly one `file` path or `data` object.
     public function manualRun($params = [])
     {
         if (!is_array($params)) {
@@ -503,6 +516,10 @@ class Automation
 
         if (@$params['id'] && !is_int(@$params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
+        }
+
+        if (@$params['items'] && !is_array(@$params['items'])) {
+            throw new \Files\Exception\InvalidParameterException('$items must be of type array; received ' . gettype(@$params['items']));
         }
 
         $response = Api::sendRequest('/automations/' . rawurlencode(strval(@$params['id'])) . '/manual_run', 'POST', $params, $this->options);

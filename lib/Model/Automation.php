@@ -496,6 +496,29 @@ class Automation
         return $this->attributes['holiday_region'] = $value;
     }
 
+    // Upgrade a legacy Automation to Automation v2
+    public function upgrade($params = [])
+    {
+        if (!is_array($params)) {
+            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+        }
+
+        if (!@$params['id']) {
+            if (@$this->id) {
+                $params['id'] = $this->id;
+            } else {
+                throw new \Files\Exception\MissingParameterException('Parameter missing: id');
+            }
+        }
+
+        if (@$params['id'] && !is_int(@$params['id'])) {
+            throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
+        }
+
+        $response = Api::sendRequest('/automations/' . rawurlencode(strval(@$params['id'])) . '/upgrade', 'POST', $params, $this->options);
+        return new Automation((array) (@$response->data ?: []), $this->options);
+    }
+
     // Manually Run Automation. v2 Automations require Site or Workspace Admin permission
     //
     // Parameters:

@@ -698,6 +698,16 @@ class File
     {
         return $this->attributes['download_uri'] = $value;
     }
+    // DirectConnectionInfo # Optional direct connection information for direct Agent transfer attempts
+    public function getDirectConnectionInfo()
+    {
+        return @$this->attributes['direct_connection_info'];
+    }
+
+    public function setDirectConnectionInfo($value)
+    {
+        return $this->attributes['direct_connection_info'] = $value;
+    }
     // string # Bookmark/priority color of file/folder
     public function getPriorityColor()
     {
@@ -838,6 +848,16 @@ class File
     {
         return $this->attributes['buffered_upload'] = $value;
     }
+    // boolean # Include optional direct connection information for a direct Agent transfer attempt?
+    public function getWithDirectConnectionInfo()
+    {
+        return @$this->attributes['with_direct_connection_info'];
+    }
+
+    public function setWithDirectConnectionInfo($value)
+    {
+        return $this->attributes['with_direct_connection_info'] = $value;
+    }
 
     // Download File
     //
@@ -846,6 +866,7 @@ class File
     //   preview_size - string - Request a preview size.  Can be `small` (default), `large`, `xlarge`, or `pdf`.
     //   with_previews - boolean - Include file preview information?
     //   with_priority_color - boolean - Include file priority color information?
+    //   with_direct_connection_info - boolean - Include optional direct connection information for a direct Agent transfer attempt?
     public function download($params = [])
     {
         if (!is_array($params)) {
@@ -1284,6 +1305,7 @@ class File
     //   size - int64 - Total bytes of file being uploaded (include bytes being retained if appending/restarting).
     //   with_rename - boolean - Allow file rename instead of overwrite?
     //   buffered_upload - boolean - If true, and the path refers to a destination not stored on Files.com (such as a remote server mount), the upload will be uploaded first to Files.com before being sent to the remote server mount. This can allow clients to upload using parallel parts to a remote server destination that does not offer parallel parts support natively.
+    //   with_direct_connection_info - boolean - Include optional direct connection information for a direct Agent transfer attempt?
     public function beginUpload($params = [])
     {
         if (!is_array($params)) {
@@ -1351,6 +1373,7 @@ class File
     //   structure - string - If copying folder, copy just the structure?
     //   with_rename - boolean - Allow file rename instead of overwrite?
     //   buffered_upload - boolean - If true, and the path refers to a destination not stored on Files.com (such as a remote server mount), the upload will be uploaded first to Files.com before being sent to the remote server mount. This can allow clients to upload using parallel parts to a remote server destination that does not offer parallel parts support natively.
+    //   with_direct_connection_info - boolean - Include optional direct connection information for a direct Agent transfer attempt?
     public static function create($path, $params = [], $options = [])
     {
         if (!is_array($params)) {

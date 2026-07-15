@@ -135,4 +135,9 @@ class FileUploadPart
     {
         return @$this->attributes['upload_uri'];
     }
+    // DirectConnectionInfo # Optional direct connection information for direct Agent transfer attempts
+    public function getDirectConnectionInfo()
+    {
+        return @$this->attributes['direct_connection_info'];
+    }
 }

@@ -370,6 +370,16 @@ class Folder
     {
         return $this->attributes['download_uri'] = $value;
     }
+    // DirectConnectionInfo # Optional direct connection information for direct Agent transfer attempts
+    public function getDirectConnectionInfo()
+    {
+        return @$this->attributes['direct_connection_info'];
+    }
+
+    public function setDirectConnectionInfo($value)
+    {
+        return $this->attributes['direct_connection_info'] = $value;
+    }
     // string # Bookmark/priority color of file/folder
     public function getPriorityColor()
     {

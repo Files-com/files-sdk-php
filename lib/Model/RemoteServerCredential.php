@@ -205,6 +205,36 @@ class RemoteServerCredential
     {
         return $this->attributes['linode_access_key'] = $value;
     }
+    // string # SharePoint: Microsoft Entra tenant ID for app-only authentication.
+    public function getSharepointTenantId()
+    {
+        return @$this->attributes['sharepoint_tenant_id'];
+    }
+
+    public function setSharepointTenantId($value)
+    {
+        return $this->attributes['sharepoint_tenant_id'] = $value;
+    }
+    // string # SharePoint: Microsoft Entra application client ID for app-only authentication.
+    public function getSharepointClientId()
+    {
+        return @$this->attributes['sharepoint_client_id'];
+    }
+
+    public function setSharepointClientId($value)
+    {
+        return $this->attributes['sharepoint_client_id'] = $value;
+    }
+    // string # SharePoint: App-only credential type. Either secret or certificate.
+    public function getSharepointAppCredentialType()
+    {
+        return @$this->attributes['sharepoint_app_credential_type'];
+    }
+
+    public function setSharepointAppCredentialType($value)
+    {
+        return $this->attributes['sharepoint_app_credential_type'] = $value;
+    }
     // string # Remote server username.
     public function getUsername()
     {
@@ -375,6 +405,26 @@ class RemoteServerCredential
     {
         return $this->attributes['s3_compatible_secret_key'] = $value;
     }
+    // string # SharePoint: PEM-encoded certificate and unencrypted private key for app-only authentication.
+    public function getSharepointClientCertificate()
+    {
+        return @$this->attributes['sharepoint_client_certificate'];
+    }
+
+    public function setSharepointClientCertificate($value)
+    {
+        return $this->attributes['sharepoint_client_certificate'] = $value;
+    }
+    // string # SharePoint: Microsoft Entra application client secret for app-only authentication.
+    public function getSharepointClientSecret()
+    {
+        return @$this->attributes['sharepoint_client_secret'];
+    }
+
+    public function setSharepointClientSecret($value)
+    {
+        return $this->attributes['sharepoint_client_secret'] = $value;
+    }
     // string # Wasabi: Secret Key
     public function getWasabiSecretKey()
     {
@@ -408,6 +458,8 @@ class RemoteServerCredential
     //   google_cloud_storage_s3_compatible_access_key - string - Google Cloud Storage: S3-compatible Access Key.
     //   linode_access_key - string - Linode: Access Key
     //   s3_compatible_access_key - string - S3-compatible: Access Key
+    //   sharepoint_client_id - string - SharePoint: Microsoft Entra application client ID for app-only authentication.
+    //   sharepoint_tenant_id - string - SharePoint: Microsoft Entra tenant ID for app-only authentication.
     //   username - string - Remote server username.
     //   wasabi_access_key - string - Wasabi: Access Key.
     //   password - string - Password, if needed.
@@ -426,6 +478,8 @@ class RemoteServerCredential
     //   google_cloud_storage_s3_compatible_secret_key - string - Google Cloud Storage: S3-compatible secret key
     //   linode_secret_key - string - Linode: Secret Key
     //   s3_compatible_secret_key - string - S3-compatible: Secret Key
+    //   sharepoint_client_certificate - string - SharePoint: PEM-encoded certificate and unencrypted private key for app-only authentication.
+    //   sharepoint_client_secret - string - SharePoint: Microsoft Entra application client secret for app-only authentication.
     //   wasabi_secret_key - string - Wasabi: Secret Key
     public function update($params = [])
     {
@@ -487,6 +541,14 @@ class RemoteServerCredential
 
         if (@$params['s3_compatible_access_key'] && !is_string(@$params['s3_compatible_access_key'])) {
             throw new \Files\Exception\InvalidParameterException('$s3_compatible_access_key must be of type string; received ' . gettype(@$params['s3_compatible_access_key']));
+        }
+
+        if (@$params['sharepoint_client_id'] && !is_string(@$params['sharepoint_client_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$sharepoint_client_id must be of type string; received ' . gettype(@$params['sharepoint_client_id']));
+        }
+
+        if (@$params['sharepoint_tenant_id'] && !is_string(@$params['sharepoint_tenant_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$sharepoint_tenant_id must be of type string; received ' . gettype(@$params['sharepoint_tenant_id']));
         }
 
         if (@$params['username'] && !is_string(@$params['username'])) {
@@ -559,6 +621,14 @@ class RemoteServerCredential
 
         if (@$params['s3_compatible_secret_key'] && !is_string(@$params['s3_compatible_secret_key'])) {
             throw new \Files\Exception\InvalidParameterException('$s3_compatible_secret_key must be of type string; received ' . gettype(@$params['s3_compatible_secret_key']));
+        }
+
+        if (@$params['sharepoint_client_certificate'] && !is_string(@$params['sharepoint_client_certificate'])) {
+            throw new \Files\Exception\InvalidParameterException('$sharepoint_client_certificate must be of type string; received ' . gettype(@$params['sharepoint_client_certificate']));
+        }
+
+        if (@$params['sharepoint_client_secret'] && !is_string(@$params['sharepoint_client_secret'])) {
+            throw new \Files\Exception\InvalidParameterException('$sharepoint_client_secret must be of type string; received ' . gettype(@$params['sharepoint_client_secret']));
         }
 
         if (@$params['wasabi_secret_key'] && !is_string(@$params['wasabi_secret_key'])) {
@@ -677,6 +747,8 @@ class RemoteServerCredential
     //   google_cloud_storage_s3_compatible_access_key - string - Google Cloud Storage: S3-compatible Access Key.
     //   linode_access_key - string - Linode: Access Key
     //   s3_compatible_access_key - string - S3-compatible: Access Key
+    //   sharepoint_client_id - string - SharePoint: Microsoft Entra application client ID for app-only authentication.
+    //   sharepoint_tenant_id - string - SharePoint: Microsoft Entra tenant ID for app-only authentication.
     //   username - string - Remote server username.
     //   wasabi_access_key - string - Wasabi: Access Key.
     //   password - string - Password, if needed.
@@ -695,6 +767,8 @@ class RemoteServerCredential
     //   google_cloud_storage_s3_compatible_secret_key - string - Google Cloud Storage: S3-compatible secret key
     //   linode_secret_key - string - Linode: Secret Key
     //   s3_compatible_secret_key - string - S3-compatible: Secret Key
+    //   sharepoint_client_certificate - string - SharePoint: PEM-encoded certificate and unencrypted private key for app-only authentication.
+    //   sharepoint_client_secret - string - SharePoint: Microsoft Entra application client secret for app-only authentication.
     //   wasabi_secret_key - string - Wasabi: Secret Key
     //   workspace_id - int64 - Workspace ID (0 for default workspace)
     //   copy_values_from_credential_id - int64 - ID of Remote Server Credential to copy omitted values from.
@@ -742,6 +816,14 @@ class RemoteServerCredential
 
         if (@$params['s3_compatible_access_key'] && !is_string(@$params['s3_compatible_access_key'])) {
             throw new \Files\Exception\InvalidParameterException('$s3_compatible_access_key must be of type string; received ' . gettype(@$params['s3_compatible_access_key']));
+        }
+
+        if (@$params['sharepoint_client_id'] && !is_string(@$params['sharepoint_client_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$sharepoint_client_id must be of type string; received ' . gettype(@$params['sharepoint_client_id']));
+        }
+
+        if (@$params['sharepoint_tenant_id'] && !is_string(@$params['sharepoint_tenant_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$sharepoint_tenant_id must be of type string; received ' . gettype(@$params['sharepoint_tenant_id']));
         }
 
         if (@$params['username'] && !is_string(@$params['username'])) {
@@ -814,6 +896,14 @@ class RemoteServerCredential
 
         if (@$params['s3_compatible_secret_key'] && !is_string(@$params['s3_compatible_secret_key'])) {
             throw new \Files\Exception\InvalidParameterException('$s3_compatible_secret_key must be of type string; received ' . gettype(@$params['s3_compatible_secret_key']));
+        }
+
+        if (@$params['sharepoint_client_certificate'] && !is_string(@$params['sharepoint_client_certificate'])) {
+            throw new \Files\Exception\InvalidParameterException('$sharepoint_client_certificate must be of type string; received ' . gettype(@$params['sharepoint_client_certificate']));
+        }
+
+        if (@$params['sharepoint_client_secret'] && !is_string(@$params['sharepoint_client_secret'])) {
+            throw new \Files\Exception\InvalidParameterException('$sharepoint_client_secret must be of type string; received ' . gettype(@$params['sharepoint_client_secret']));
         }
 
         if (@$params['wasabi_secret_key'] && !is_string(@$params['wasabi_secret_key'])) {

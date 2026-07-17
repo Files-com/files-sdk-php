@@ -455,6 +455,56 @@ class RemoteServer
     {
         return $this->attributes['one_drive_account_type'] = $value;
     }
+    // string # SharePoint: Microsoft Entra tenant ID for app-only authentication.
+    public function getSharepointTenantId()
+    {
+        return @$this->attributes['sharepoint_tenant_id'];
+    }
+
+    public function setSharepointTenantId($value)
+    {
+        return $this->attributes['sharepoint_tenant_id'] = $value;
+    }
+    // string # SharePoint: Microsoft Entra application client ID for app-only authentication.
+    public function getSharepointClientId()
+    {
+        return @$this->attributes['sharepoint_client_id'];
+    }
+
+    public function setSharepointClientId($value)
+    {
+        return $this->attributes['sharepoint_client_id'] = $value;
+    }
+    // boolean # SharePoint: If true, this remote server uses Microsoft Entra app-only authentication.
+    public function getSharepointAppAuthentication()
+    {
+        return @$this->attributes['sharepoint_app_authentication'];
+    }
+
+    public function setSharepointAppAuthentication($value)
+    {
+        return $this->attributes['sharepoint_app_authentication'] = $value;
+    }
+    // string # SharePoint: App-only credential type. Either secret or certificate.
+    public function getSharepointAppCredentialType()
+    {
+        return @$this->attributes['sharepoint_app_credential_type'];
+    }
+
+    public function setSharepointAppCredentialType($value)
+    {
+        return $this->attributes['sharepoint_app_credential_type'] = $value;
+    }
+    // string # SharePoint: Site URL to scope app-only authentication to a single site. Leave blank to browse all sites.
+    public function getSharepointSiteUrl()
+    {
+        return @$this->attributes['sharepoint_site_url'];
+    }
+
+    public function setSharepointSiteUrl($value)
+    {
+        return $this->attributes['sharepoint_site_url'] = $value;
+    }
     // string # Azure Blob Storage: Account name
     public function getAzureBlobStorageAccount()
     {
@@ -825,6 +875,26 @@ class RemoteServer
     {
         return $this->attributes['reset_authentication'] = $value;
     }
+    // string # SharePoint: PEM-encoded certificate and unencrypted private key for app-only authentication.
+    public function getSharepointClientCertificate()
+    {
+        return @$this->attributes['sharepoint_client_certificate'];
+    }
+
+    public function setSharepointClientCertificate($value)
+    {
+        return $this->attributes['sharepoint_client_certificate'] = $value;
+    }
+    // string # SharePoint: Microsoft Entra application client secret for app-only authentication.
+    public function getSharepointClientSecret()
+    {
+        return @$this->attributes['sharepoint_client_secret'];
+    }
+
+    public function setSharepointClientSecret($value)
+    {
+        return $this->attributes['sharepoint_client_secret'] = $value;
+    }
     // string # SSL client certificate.
     public function getSslCertificate()
     {
@@ -1094,6 +1164,8 @@ class RemoteServer
     //   private_key - string - Private key, if needed.
     //   private_key_passphrase - string - Passphrase for private key if needed.
     //   reset_authentication - boolean - Reset authenticated account?
+    //   sharepoint_client_certificate - string - SharePoint: PEM-encoded certificate and unencrypted private key for app-only authentication.
+    //   sharepoint_client_secret - string - SharePoint: Microsoft Entra application client secret for app-only authentication.
     //   ssl_certificate - string - SSL client certificate.
     //   aws_secret_key - string - AWS: secret key.
     //   azure_blob_storage_access_key - string - Azure Blob Storage: Access Key
@@ -1162,6 +1234,9 @@ class RemoteServer
     //   server_certificate - string - Remote server certificate
     //   server_host_key - string - Remote server SSH Host Key. If provided, we will require that the server host key matches the provided key. Uses OpenSSH format similar to what would go into ~/.ssh/known_hosts
     //   server_type - string - Remote server type.
+    //   sharepoint_client_id - string - SharePoint: Microsoft Entra application client ID for app-only authentication.
+    //   sharepoint_site_url - string - SharePoint: Site URL to scope app-only authentication to a single site. Leave blank to browse all sites.
+    //   sharepoint_tenant_id - string - SharePoint: Microsoft Entra tenant ID for app-only authentication.
     //   ssl - string - Should we require SSL?
     //   username - string - Remote server username.
     //   wasabi_access_key - string - Wasabi: Access Key.
@@ -1195,6 +1270,14 @@ class RemoteServer
 
         if (@$params['private_key_passphrase'] && !is_string(@$params['private_key_passphrase'])) {
             throw new \Files\Exception\InvalidParameterException('$private_key_passphrase must be of type string; received ' . gettype(@$params['private_key_passphrase']));
+        }
+
+        if (@$params['sharepoint_client_certificate'] && !is_string(@$params['sharepoint_client_certificate'])) {
+            throw new \Files\Exception\InvalidParameterException('$sharepoint_client_certificate must be of type string; received ' . gettype(@$params['sharepoint_client_certificate']));
+        }
+
+        if (@$params['sharepoint_client_secret'] && !is_string(@$params['sharepoint_client_secret'])) {
+            throw new \Files\Exception\InvalidParameterException('$sharepoint_client_secret must be of type string; received ' . gettype(@$params['sharepoint_client_secret']));
         }
 
         if (@$params['ssl_certificate'] && !is_string(@$params['ssl_certificate'])) {
@@ -1443,6 +1526,18 @@ class RemoteServer
 
         if (@$params['server_type'] && !is_string(@$params['server_type'])) {
             throw new \Files\Exception\InvalidParameterException('$server_type must be of type string; received ' . gettype(@$params['server_type']));
+        }
+
+        if (@$params['sharepoint_client_id'] && !is_string(@$params['sharepoint_client_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$sharepoint_client_id must be of type string; received ' . gettype(@$params['sharepoint_client_id']));
+        }
+
+        if (@$params['sharepoint_site_url'] && !is_string(@$params['sharepoint_site_url'])) {
+            throw new \Files\Exception\InvalidParameterException('$sharepoint_site_url must be of type string; received ' . gettype(@$params['sharepoint_site_url']));
+        }
+
+        if (@$params['sharepoint_tenant_id'] && !is_string(@$params['sharepoint_tenant_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$sharepoint_tenant_id must be of type string; received ' . gettype(@$params['sharepoint_tenant_id']));
         }
 
         if (@$params['ssl'] && !is_string(@$params['ssl'])) {
@@ -1599,6 +1694,8 @@ class RemoteServer
     //   private_key - string - Private key, if needed.
     //   private_key_passphrase - string - Passphrase for private key if needed.
     //   reset_authentication - boolean - Reset authenticated account?
+    //   sharepoint_client_certificate - string - SharePoint: PEM-encoded certificate and unencrypted private key for app-only authentication.
+    //   sharepoint_client_secret - string - SharePoint: Microsoft Entra application client secret for app-only authentication.
     //   ssl_certificate - string - SSL client certificate.
     //   aws_secret_key - string - AWS: secret key.
     //   azure_blob_storage_access_key - string - Azure Blob Storage: Access Key
@@ -1667,6 +1764,9 @@ class RemoteServer
     //   server_certificate - string - Remote server certificate
     //   server_host_key - string - Remote server SSH Host Key. If provided, we will require that the server host key matches the provided key. Uses OpenSSH format similar to what would go into ~/.ssh/known_hosts
     //   server_type - string - Remote server type.
+    //   sharepoint_client_id - string - SharePoint: Microsoft Entra application client ID for app-only authentication.
+    //   sharepoint_site_url - string - SharePoint: Site URL to scope app-only authentication to a single site. Leave blank to browse all sites.
+    //   sharepoint_tenant_id - string - SharePoint: Microsoft Entra tenant ID for app-only authentication.
     //   ssl - string - Should we require SSL?
     //   username - string - Remote server username.
     //   wasabi_access_key - string - Wasabi: Access Key.
@@ -1689,6 +1789,14 @@ class RemoteServer
 
         if (@$params['private_key_passphrase'] && !is_string(@$params['private_key_passphrase'])) {
             throw new \Files\Exception\InvalidParameterException('$private_key_passphrase must be of type string; received ' . gettype(@$params['private_key_passphrase']));
+        }
+
+        if (@$params['sharepoint_client_certificate'] && !is_string(@$params['sharepoint_client_certificate'])) {
+            throw new \Files\Exception\InvalidParameterException('$sharepoint_client_certificate must be of type string; received ' . gettype(@$params['sharepoint_client_certificate']));
+        }
+
+        if (@$params['sharepoint_client_secret'] && !is_string(@$params['sharepoint_client_secret'])) {
+            throw new \Files\Exception\InvalidParameterException('$sharepoint_client_secret must be of type string; received ' . gettype(@$params['sharepoint_client_secret']));
         }
 
         if (@$params['ssl_certificate'] && !is_string(@$params['ssl_certificate'])) {
@@ -1937,6 +2045,18 @@ class RemoteServer
 
         if (@$params['server_type'] && !is_string(@$params['server_type'])) {
             throw new \Files\Exception\InvalidParameterException('$server_type must be of type string; received ' . gettype(@$params['server_type']));
+        }
+
+        if (@$params['sharepoint_client_id'] && !is_string(@$params['sharepoint_client_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$sharepoint_client_id must be of type string; received ' . gettype(@$params['sharepoint_client_id']));
+        }
+
+        if (@$params['sharepoint_site_url'] && !is_string(@$params['sharepoint_site_url'])) {
+            throw new \Files\Exception\InvalidParameterException('$sharepoint_site_url must be of type string; received ' . gettype(@$params['sharepoint_site_url']));
+        }
+
+        if (@$params['sharepoint_tenant_id'] && !is_string(@$params['sharepoint_tenant_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$sharepoint_tenant_id must be of type string; received ' . gettype(@$params['sharepoint_tenant_id']));
         }
 
         if (@$params['ssl'] && !is_string(@$params['ssl'])) {

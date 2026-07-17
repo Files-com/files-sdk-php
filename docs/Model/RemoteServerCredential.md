@@ -19,6 +19,9 @@
   "filebase_access_key": "example",
   "cloudflare_access_key": "example",
   "linode_access_key": "example",
+  "sharepoint_tenant_id": "00000000-0000-0000-0000-000000000000",
+  "sharepoint_client_id": "00000000-0000-0000-0000-000000000000",
+  "sharepoint_app_credential_type": "secret",
   "username": "user"
 }
 ```
@@ -38,6 +41,9 @@
 * `filebase_access_key` (string): Filebase: Access Key.
 * `cloudflare_access_key` (string): Cloudflare: Access Key.
 * `linode_access_key` (string): Linode: Access Key
+* `sharepoint_tenant_id` (string): SharePoint: Microsoft Entra tenant ID for app-only authentication.
+* `sharepoint_client_id` (string): SharePoint: Microsoft Entra application client ID for app-only authentication.
+* `sharepoint_app_credential_type` (string): SharePoint: App-only credential type. Either secret or certificate.
 * `username` (string): Remote server username.
 * `password` (string): Password, if needed.
 * `private_key` (string): Private key, if needed.
@@ -55,6 +61,8 @@
 * `google_cloud_storage_s3_compatible_secret_key` (string): Google Cloud Storage: S3-compatible secret key
 * `linode_secret_key` (string): Linode: Secret Key
 * `s3_compatible_secret_key` (string): S3-compatible: Secret Key
+* `sharepoint_client_certificate` (string): SharePoint: PEM-encoded certificate and unencrypted private key for app-only authentication.
+* `sharepoint_client_secret` (string): SharePoint: Microsoft Entra application client secret for app-only authentication.
 * `wasabi_secret_key` (string): Wasabi: Secret Key
 * `copy_values_from_credential_id` (int64): ID of Remote Server Credential to copy omitted values from.
 
@@ -108,6 +116,8 @@ $remote_server_credential->create(, [
   'google_cloud_storage_s3_compatible_access_key' => "example",
   'linode_access_key' => "example",
   's3_compatible_access_key' => "example",
+  'sharepoint_client_id' => "00000000-0000-0000-0000-000000000000",
+  'sharepoint_tenant_id' => "00000000-0000-0000-0000-000000000000",
   'username' => "user",
   'wasabi_access_key' => "example",
   'workspace_id' => 0,
@@ -129,6 +139,8 @@ $remote_server_credential->create(, [
 * `google_cloud_storage_s3_compatible_access_key` (string): Google Cloud Storage: S3-compatible Access Key.
 * `linode_access_key` (string): Linode: Access Key
 * `s3_compatible_access_key` (string): S3-compatible: Access Key
+* `sharepoint_client_id` (string): SharePoint: Microsoft Entra application client ID for app-only authentication.
+* `sharepoint_tenant_id` (string): SharePoint: Microsoft Entra tenant ID for app-only authentication.
 * `username` (string): Remote server username.
 * `wasabi_access_key` (string): Wasabi: Access Key.
 * `password` (string): Password, if needed.
@@ -147,6 +159,8 @@ $remote_server_credential->create(, [
 * `google_cloud_storage_s3_compatible_secret_key` (string): Google Cloud Storage: S3-compatible secret key
 * `linode_secret_key` (string): Linode: Secret Key
 * `s3_compatible_secret_key` (string): S3-compatible: Secret Key
+* `sharepoint_client_certificate` (string): SharePoint: PEM-encoded certificate and unencrypted private key for app-only authentication.
+* `sharepoint_client_secret` (string): SharePoint: Microsoft Entra application client secret for app-only authentication.
 * `wasabi_secret_key` (string): Wasabi: Secret Key
 * `workspace_id` (int64): Workspace ID (0 for default workspace)
 * `copy_values_from_credential_id` (int64): ID of Remote Server Credential to copy omitted values from.
@@ -170,6 +184,8 @@ $remote_server_credential->update([
   'google_cloud_storage_s3_compatible_access_key' => "example",
   'linode_access_key' => "example",
   's3_compatible_access_key' => "example",
+  'sharepoint_client_id' => "00000000-0000-0000-0000-000000000000",
+  'sharepoint_tenant_id' => "00000000-0000-0000-0000-000000000000",
   'username' => "user",
   'wasabi_access_key' => "example",
 ]);
@@ -189,6 +205,8 @@ $remote_server_credential->update([
 * `google_cloud_storage_s3_compatible_access_key` (string): Google Cloud Storage: S3-compatible Access Key.
 * `linode_access_key` (string): Linode: Access Key
 * `s3_compatible_access_key` (string): S3-compatible: Access Key
+* `sharepoint_client_id` (string): SharePoint: Microsoft Entra application client ID for app-only authentication.
+* `sharepoint_tenant_id` (string): SharePoint: Microsoft Entra tenant ID for app-only authentication.
 * `username` (string): Remote server username.
 * `wasabi_access_key` (string): Wasabi: Access Key.
 * `password` (string): Password, if needed.
@@ -207,6 +225,8 @@ $remote_server_credential->update([
 * `google_cloud_storage_s3_compatible_secret_key` (string): Google Cloud Storage: S3-compatible secret key
 * `linode_secret_key` (string): Linode: Secret Key
 * `s3_compatible_secret_key` (string): S3-compatible: Secret Key
+* `sharepoint_client_certificate` (string): SharePoint: PEM-encoded certificate and unencrypted private key for app-only authentication.
+* `sharepoint_client_secret` (string): SharePoint: Microsoft Entra application client secret for app-only authentication.
 * `wasabi_secret_key` (string): Wasabi: Secret Key
 
 ### Example Response
@@ -228,6 +248,9 @@ $remote_server_credential->update([
   "filebase_access_key": "example",
   "cloudflare_access_key": "example",
   "linode_access_key": "example",
+  "sharepoint_tenant_id": "00000000-0000-0000-0000-000000000000",
+  "sharepoint_client_id": "00000000-0000-0000-0000-000000000000",
+  "sharepoint_app_credential_type": "secret",
   "username": "user"
 }
 ```

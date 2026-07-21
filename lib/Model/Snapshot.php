@@ -115,6 +115,16 @@ class Snapshot
     {
         return $this->attributes['bundle_id'] = $value;
     }
+    // int64 # Workspace ID. `0` means the default workspace.
+    public function getWorkspaceId()
+    {
+        return @$this->attributes['workspace_id'];
+    }
+
+    public function setWorkspaceId($value)
+    {
+        return $this->attributes['workspace_id'] = $value;
+    }
     // array(string) # An array of paths to add to the snapshot.
     public function getPaths()
     {
@@ -284,6 +294,7 @@ class Snapshot
     //   expires_at - string - When the snapshot expires.
     //   name - string - A name for the snapshot.
     //   paths - array(string) - An array of paths to add to the snapshot.
+    //   workspace_id - int64 - Workspace ID. `0` means the default workspace.
     public static function create($params = [], $options = [])
     {
         if (@$params['expires_at'] && !is_string(@$params['expires_at'])) {
@@ -296,6 +307,10 @@ class Snapshot
 
         if (@$params['paths'] && !is_array(@$params['paths'])) {
             throw new \Files\Exception\InvalidParameterException('$paths must be of type array; received ' . gettype(@$params['paths']));
+        }
+
+        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
         $response = Api::sendRequest('/snapshots', 'POST', $params, $options);

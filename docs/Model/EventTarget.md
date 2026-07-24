@@ -23,8 +23,8 @@
 * `workspace_id` (int64): Workspace ID. 0 means the default workspace or site-wide.
 * `apply_to_all_workspaces` (boolean): If true, this default-workspace target can receive events from all workspaces.
 * `enabled` (boolean): Whether this Event Target can receive events.
-* `config` (object): Event Target configuration.
-* `delivery_policy` (object): Event Target delivery policy. Email targets support batch_interval in seconds, between 600 and 86400.
+* `config` (object): Event Target configuration. Folder targets accept path and format (json or csv).
+* `delivery_policy` (object): Event Target delivery policy. Email and folder targets support batch_interval in seconds, between 600 and 86400.
 * `created_at` (date-time): Event Target create date/time.
 * `updated_at` (date-time): Event Target update date/time.
 
@@ -69,10 +69,10 @@ $event_target->create(, [
   'name' => "example",
   'workspace_id' => 1,
   'apply_to_all_workspaces' => true,
-  'target_type' => "example",
   'enabled' => true,
   'config' => "example",
   'delivery_policy' => "example",
+  'target_type' => "example",
 ]);
 ```
 
@@ -82,10 +82,10 @@ $event_target->create(, [
 * `name` (string): Required - Event Target name.
 * `workspace_id` (int64): Workspace ID. 0 means the default workspace or site-wide.
 * `apply_to_all_workspaces` (boolean): If true, this default-workspace target can receive events from all workspaces.
-* `target_type` (string): Required - Event Target type.
 * `enabled` (boolean): Whether this Event Target can receive events.
-* `config` (object): Required - Event Target configuration.
-* `delivery_policy` (object): Event Target delivery policy. Email targets support batch_interval in seconds, between 600 and 86400.
+* `config` (object): Required - Event Target configuration. Folder targets accept path and format (json or csv).
+* `delivery_policy` (object): Event Target delivery policy. Email and folder targets support batch_interval in seconds, between 600 and 86400.
+* `target_type` (string): Required - Event Target type.
 
 ---
 
@@ -98,7 +98,6 @@ $event_target->update([
   'name' => "example",
   'workspace_id' => 1,
   'apply_to_all_workspaces' => true,
-  'target_type' => "example",
   'enabled' => true,
   'config' => "example",
   'delivery_policy' => "example",
@@ -111,10 +110,9 @@ $event_target->update([
 * `name` (string): Event Target name.
 * `workspace_id` (int64): Workspace ID. 0 means the default workspace or site-wide.
 * `apply_to_all_workspaces` (boolean): If true, this default-workspace target can receive events from all workspaces.
-* `target_type` (string): Event Target type.
 * `enabled` (boolean): Whether this Event Target can receive events.
-* `config` (object): Event Target configuration.
-* `delivery_policy` (object): Event Target delivery policy. Email targets support batch_interval in seconds, between 600 and 86400.
+* `config` (object): Event Target configuration. Folder targets accept path and format (json or csv).
+* `delivery_policy` (object): Event Target delivery policy. Email and folder targets support batch_interval in seconds, between 600 and 86400.
 
 ### Example Response
 

@@ -115,7 +115,7 @@ class EventTarget
     {
         return $this->attributes['enabled'] = $value;
     }
-    // object # Event Target configuration.
+    // object # Event Target configuration. Folder targets accept path and format (json or csv).
     public function getConfig()
     {
         return @$this->attributes['config'];
@@ -125,7 +125,7 @@ class EventTarget
     {
         return $this->attributes['config'] = $value;
     }
-    // object # Event Target delivery policy. Email targets support batch_interval in seconds, between 600 and 86400.
+    // object # Event Target delivery policy. Email and folder targets support batch_interval in seconds, between 600 and 86400.
     public function getDeliveryPolicy()
     {
         return @$this->attributes['delivery_policy'];
@@ -150,10 +150,9 @@ class EventTarget
     //   name - string - Event Target name.
     //   workspace_id - int64 - Workspace ID. 0 means the default workspace or site-wide.
     //   apply_to_all_workspaces - boolean - If true, this default-workspace target can receive events from all workspaces.
-    //   target_type - string - Event Target type.
     //   enabled - boolean - Whether this Event Target can receive events.
-    //   config - object - Event Target configuration.
-    //   delivery_policy - object - Event Target delivery policy. Email targets support batch_interval in seconds, between 600 and 86400.
+    //   config - object - Event Target configuration. Folder targets accept path and format (json or csv).
+    //   delivery_policy - object - Event Target delivery policy. Email and folder targets support batch_interval in seconds, between 600 and 86400.
     public function update($params = [])
     {
         if (!is_array($params)) {
@@ -178,10 +177,6 @@ class EventTarget
 
         if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
-        }
-
-        if (@$params['target_type'] && !is_string(@$params['target_type'])) {
-            throw new \Files\Exception\InvalidParameterException('$target_type must be of type string; received ' . gettype(@$params['target_type']));
         }
 
         $response = Api::sendRequest('/event_targets/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
@@ -287,22 +282,22 @@ class EventTarget
     //   name (required) - string - Event Target name.
     //   workspace_id - int64 - Workspace ID. 0 means the default workspace or site-wide.
     //   apply_to_all_workspaces - boolean - If true, this default-workspace target can receive events from all workspaces.
-    //   target_type (required) - string - Event Target type.
     //   enabled - boolean - Whether this Event Target can receive events.
-    //   config (required) - object - Event Target configuration.
-    //   delivery_policy - object - Event Target delivery policy. Email targets support batch_interval in seconds, between 600 and 86400.
+    //   config (required) - object - Event Target configuration. Folder targets accept path and format (json or csv).
+    //   delivery_policy - object - Event Target delivery policy. Email and folder targets support batch_interval in seconds, between 600 and 86400.
+    //   target_type (required) - string - Event Target type.
     public static function create($params = [], $options = [])
     {
         if (!@$params['name']) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: name');
         }
 
-        if (!@$params['target_type']) {
-            throw new \Files\Exception\MissingParameterException('Parameter missing: target_type');
-        }
-
         if (!@$params['config']) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: config');
+        }
+
+        if (!@$params['target_type']) {
+            throw new \Files\Exception\MissingParameterException('Parameter missing: target_type');
         }
 
         if (@$params['name'] && !is_string(@$params['name'])) {

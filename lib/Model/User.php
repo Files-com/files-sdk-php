@@ -690,6 +690,26 @@ class User
     {
         return $this->attributes['password_expired'] = $value;
     }
+    // int64 # ID of the internal Group responsible for this Partner User, overriding the Partner default.
+    public function getResponsibleGroupId()
+    {
+        return @$this->attributes['responsible_group_id'];
+    }
+
+    public function setResponsibleGroupId($value)
+    {
+        return $this->attributes['responsible_group_id'] = $value;
+    }
+    // int64 # ID of the internal User responsible for this Partner User, overriding the Partner default.
+    public function getResponsibleUserId()
+    {
+        return @$this->attributes['responsible_user_id'];
+    }
+
+    public function setResponsibleUserId($value)
+    {
+        return $this->attributes['responsible_user_id'] = $value;
+    }
     // boolean # Is the user an allowed to view all (non-billing) site configuration for this site?
     public function getReadonlySiteAdmin()
     {
@@ -1151,6 +1171,8 @@ class User
     //   notify_on_all_expectation_failures - boolean - Should the user receive expectation failures and misses via email?
     //   require_login_by - string - Require user to login by specified date otherwise it will be disabled.
     //   require_password_change - boolean - Is a password change required upon next user login?
+    //   responsible_group_id - int64 - ID of the internal Group responsible for this Partner User, overriding the Partner default.
+    //   responsible_user_id - int64 - ID of the internal User responsible for this Partner User, overriding the Partner default.
     //   restapi_permission - boolean - Can this user access the Web app, Desktop app, SDKs, or REST API?  (All of these tools use the API internally, so this is one unified permission set.)
     //   self_managed - boolean - Does this user manage it's own credentials or is it a shared/bot user?
     //   sftp_permission - boolean - Can the user access with SFTP?
@@ -1293,6 +1315,14 @@ class User
 
         if (@$params['require_login_by'] && !is_string(@$params['require_login_by'])) {
             throw new \Files\Exception\InvalidParameterException('$require_login_by must be of type string; received ' . gettype(@$params['require_login_by']));
+        }
+
+        if (@$params['responsible_group_id'] && !is_int(@$params['responsible_group_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$responsible_group_id must be of type int; received ' . gettype(@$params['responsible_group_id']));
+        }
+
+        if (@$params['responsible_user_id'] && !is_int(@$params['responsible_user_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$responsible_user_id must be of type int; received ' . gettype(@$params['responsible_user_id']));
         }
 
         if (@$params['ssl_required'] && !is_string(@$params['ssl_required'])) {
@@ -1503,6 +1533,8 @@ class User
     //   notify_on_all_expectation_failures - boolean - Should the user receive expectation failures and misses via email?
     //   require_login_by - string - Require user to login by specified date otherwise it will be disabled.
     //   require_password_change - boolean - Is a password change required upon next user login?
+    //   responsible_group_id - int64 - ID of the internal Group responsible for this Partner User, overriding the Partner default.
+    //   responsible_user_id - int64 - ID of the internal User responsible for this Partner User, overriding the Partner default.
     //   restapi_permission - boolean - Can this user access the Web app, Desktop app, SDKs, or REST API?  (All of these tools use the API internally, so this is one unified permission set.)
     //   self_managed - boolean - Does this user manage it's own credentials or is it a shared/bot user?
     //   sftp_permission - boolean - Can the user access with SFTP?
@@ -1631,6 +1663,14 @@ class User
 
         if (@$params['require_login_by'] && !is_string(@$params['require_login_by'])) {
             throw new \Files\Exception\InvalidParameterException('$require_login_by must be of type string; received ' . gettype(@$params['require_login_by']));
+        }
+
+        if (@$params['responsible_group_id'] && !is_int(@$params['responsible_group_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$responsible_group_id must be of type int; received ' . gettype(@$params['responsible_group_id']));
+        }
+
+        if (@$params['responsible_user_id'] && !is_int(@$params['responsible_user_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$responsible_user_id must be of type int; received ' . gettype(@$params['responsible_user_id']));
         }
 
         if (@$params['ssl_required'] && !is_string(@$params['ssl_required'])) {

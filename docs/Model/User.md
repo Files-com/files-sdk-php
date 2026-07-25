@@ -70,6 +70,8 @@
   "active_2fa": true,
   "require_password_change": true,
   "password_expired": true,
+  "responsible_group_id": 1,
+  "responsible_user_id": 1,
   "readonly_site_admin": true,
   "restapi_permission": true,
   "self_managed": true,
@@ -159,6 +161,8 @@
 * `active_2fa` (boolean): Is 2fa active for the user?
 * `require_password_change` (boolean): Is a password change required upon next user login?
 * `password_expired` (boolean): Is user's password expired?
+* `responsible_group_id` (int64): ID of the internal Group responsible for this Partner User, overriding the Partner default.
+* `responsible_user_id` (int64): ID of the internal User responsible for this Partner User, overriding the Partner default.
 * `readonly_site_admin` (boolean): Is the user an allowed to view all (non-billing) site configuration for this site?
 * `restapi_permission` (boolean): Can this user access the Web app, Desktop app, SDKs, or REST API?  (All of these tools use the API internally, so this is one unified permission set.)
 * `self_managed` (boolean): Does this user manage it's own credentials or is it a shared/bot user?
@@ -285,6 +289,8 @@ $user->create(, [
   'notify_on_all_expectation_failures' => true,
   'require_login_by' => "2000-01-01T01:00:00Z",
   'require_password_change' => true,
+  'responsible_group_id' => 1,
+  'responsible_user_id' => 1,
   'restapi_permission' => true,
   'self_managed' => true,
   'sftp_permission' => true,
@@ -357,6 +363,8 @@ $user->create(, [
 * `notify_on_all_expectation_failures` (boolean): Should the user receive expectation failures and misses via email?
 * `require_login_by` (string): Require user to login by specified date otherwise it will be disabled.
 * `require_password_change` (boolean): Is a password change required upon next user login?
+* `responsible_group_id` (int64): ID of the internal Group responsible for this Partner User, overriding the Partner default.
+* `responsible_user_id` (int64): ID of the internal User responsible for this Partner User, overriding the Partner default.
 * `restapi_permission` (boolean): Can this user access the Web app, Desktop app, SDKs, or REST API?  (All of these tools use the API internally, so this is one unified permission set.)
 * `self_managed` (boolean): Does this user manage it's own credentials or is it a shared/bot user?
 * `sftp_permission` (boolean): Can the user access with SFTP?
@@ -470,6 +478,8 @@ $user->update([
   'notify_on_all_expectation_failures' => true,
   'require_login_by' => "2000-01-01T01:00:00Z",
   'require_password_change' => true,
+  'responsible_group_id' => 1,
+  'responsible_user_id' => 1,
   'restapi_permission' => true,
   'self_managed' => true,
   'sftp_permission' => true,
@@ -544,6 +554,8 @@ $user->update([
 * `notify_on_all_expectation_failures` (boolean): Should the user receive expectation failures and misses via email?
 * `require_login_by` (string): Require user to login by specified date otherwise it will be disabled.
 * `require_password_change` (boolean): Is a password change required upon next user login?
+* `responsible_group_id` (int64): ID of the internal Group responsible for this Partner User, overriding the Partner default.
+* `responsible_user_id` (int64): ID of the internal User responsible for this Partner User, overriding the Partner default.
 * `restapi_permission` (boolean): Can this user access the Web app, Desktop app, SDKs, or REST API?  (All of these tools use the API internally, so this is one unified permission set.)
 * `self_managed` (boolean): Does this user manage it's own credentials or is it a shared/bot user?
 * `sftp_permission` (boolean): Can the user access with SFTP?
@@ -633,6 +645,8 @@ $user->update([
   "active_2fa": true,
   "require_password_change": true,
   "password_expired": true,
+  "responsible_group_id": 1,
+  "responsible_user_id": 1,
   "readonly_site_admin": true,
   "restapi_permission": true,
   "self_managed": true,

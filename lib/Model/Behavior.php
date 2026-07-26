@@ -155,6 +155,36 @@ class Behavior
     {
         return $this->attributes['recursive'] = $value;
     }
+    // boolean # If true, this behavior is inherited from a higher scope rather than owned by the requested workspace.
+    public function getInherited()
+    {
+        return @$this->attributes['inherited'];
+    }
+
+    public function setInherited($value)
+    {
+        return $this->attributes['inherited'] = $value;
+    }
+    // boolean # If true, this behavior is controlled by a parent-site policy and cannot be modified locally.
+    public function getManaged()
+    {
+        return @$this->attributes['managed'];
+    }
+
+    public function setManaged($value)
+    {
+        return $this->attributes['managed'] = $value;
+    }
+    // boolean # If true, this behavior may only be modified by a site admin because it is at the site root or disables a root behavior.
+    public function getRootBehaviorSiteAdminOnly()
+    {
+        return @$this->attributes['root_behavior_site_admin_only'];
+    }
+
+    public function setRootBehaviorSiteAdminOnly($value)
+    {
+        return $this->attributes['root_behavior_site_admin_only'] = $value;
+    }
     // file # Certain behaviors may require a file, for instance, the `watermark` behavior requires a watermark image. Attach that file here.
     public function getAttachmentFile()
     {

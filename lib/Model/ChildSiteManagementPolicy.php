@@ -95,7 +95,7 @@ class ChildSiteManagementPolicy
     {
         return $this->attributes['description'] = $value;
     }
-    // object # Policy configuration data. Attributes differ by policy type. For more information, refer to the Value Hash section of the developer documentation.
+    // object # Policy configuration data. Settings policies accept site settings plus an optional `folder_behaviors` array for parent-managed root behaviors on child sites. For more information, refer to the Value Hash section of the developer documentation.
     public function getValue()
     {
         return @$this->attributes['value'];

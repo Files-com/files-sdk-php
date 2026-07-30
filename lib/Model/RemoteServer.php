@@ -705,6 +705,16 @@ class RemoteServer
     {
         return $this->attributes['files_agent_supports_push_updates'] = $value;
     }
+    // boolean # Whether the Files Agent Proxy recently validated a direct transfer connection. `true` means a direct connection was recently validated (actual availability can vary by client network), `false` means direct transfers are enabled but not currently available, and `null` means direct transfers are disabled or unsupported. Only provided for a connected Files Agent when showing a single Remote Server.
+    public function getDirectTransferAvailable()
+    {
+        return @$this->attributes['direct_transfer_available'];
+    }
+
+    public function setDirectTransferAvailable($value)
+    {
+        return $this->attributes['direct_transfer_available'] = $value;
+    }
     // int64 # Route traffic to outbound on a files-agent
     public function getOutboundAgentId()
     {

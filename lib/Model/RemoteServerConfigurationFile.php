@@ -80,6 +80,11 @@ class RemoteServerConfigurationFile
     {
         return @$this->attributes['root'];
     }
+    // string # Optional customer-facing name for this Agent installation
+    public function getNodeName()
+    {
+        return @$this->attributes['node_name'];
+    }
     // boolean # Follow symlinks when traversing directories
     public function getFollowLinks()
     {

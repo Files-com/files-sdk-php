@@ -1066,6 +1066,29 @@ class RemoteServer
         return $this->attributes['files_api_key'] = $value;
     }
 
+    // List Files.com Agent nodes
+    public function agentNodes($params = [])
+    {
+        if (!is_array($params)) {
+            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+        }
+
+        if (!@$params['id']) {
+            if (@$this->id) {
+                $params['id'] = $this->id;
+            } else {
+                throw new \Files\Exception\MissingParameterException('Parameter missing: id');
+            }
+        }
+
+        if (@$params['id'] && !is_int(@$params['id'])) {
+            throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
+        }
+
+        $response = Api::sendRequest('/remote_servers/' . rawurlencode(strval(@$params['id'])) . '/agent_nodes', 'GET', $params, $this->options);
+        return new AgentNode((array) (@$response->data ?: []), $this->options);
+    }
+
     // Push update to Files Agent
     public function agentPushUpdate($params = [])
     {

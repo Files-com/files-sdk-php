@@ -80,6 +80,11 @@ class SsoStrategy
     {
         return @$this->attributes['id'];
     }
+    // boolean # Is strategy enabled?  This may become automatically set to `false` after a high number and duration of failures.
+    public function getEnabled()
+    {
+        return @$this->attributes['enabled'];
+    }
     // int64 # Count of users with this SSO Strategy
     public function getUserCount()
     {
@@ -259,11 +264,6 @@ class SsoStrategy
     public function getLdapDomain()
     {
         return @$this->attributes['ldap_domain'];
-    }
-    // boolean # Is strategy enabled?  This may become automatically set to `false` after a high number and duration of failures.
-    public function getEnabled()
-    {
-        return @$this->attributes['enabled'];
     }
     // boolean # Should this strategy be displayed on the login page?
     public function getDisplayOnLoginPage()

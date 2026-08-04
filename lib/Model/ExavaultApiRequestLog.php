@@ -65,7 +65,7 @@ class ExavaultApiRequestLog
     {
         return @$this->attributes['endpoint'];
     }
-    // int64 # Exavault API Version
+    // double # Exavault API Version
     public function getVersion()
     {
         return @$this->attributes['version'];

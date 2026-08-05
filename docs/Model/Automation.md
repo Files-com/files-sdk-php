@@ -386,7 +386,7 @@ $automation->upgrade();
 
 ---
 
-## Manually Run Automation. v2 Automations require Site or Workspace Admin permission
+## Manually Run Automation
 
 ```
 $automation = \Files\Model\Automation::find($id);

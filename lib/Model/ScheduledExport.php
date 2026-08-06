@@ -155,6 +155,16 @@ class ScheduledExport
     {
         return $this->attributes['recurring_day'] = $value;
     }
+    // int64 # If trigger is `custom_schedule`, the reusable Schedule used instead of the scheduled export's schedule fields.
+    public function getScheduleId()
+    {
+        return @$this->attributes['schedule_id'];
+    }
+
+    public function setScheduleId($value)
+    {
+        return $this->attributes['schedule_id'] = $value;
+    }
     // array(int64) # If trigger is `custom_schedule`, the 0-based weekdays used by the schedule.
     public function getScheduleDaysOfWeek()
     {
@@ -165,7 +175,7 @@ class ScheduledExport
     {
         return $this->attributes['schedule_days_of_week'] = $value;
     }
-    // array(string) # Times of day in HH:MM format for schedule-driven exports.
+    // array(string) # Times of day in HH:MM format for the scheduled export schedule.
     public function getScheduleTimesOfDay()
     {
         return @$this->attributes['schedule_times_of_day'];
@@ -175,7 +185,7 @@ class ScheduledExport
     {
         return $this->attributes['schedule_times_of_day'] = $value;
     }
-    // string # Time zone used by the scheduled export.
+    // string # Time zone used by the scheduled export schedule.
     public function getScheduleTimeZone()
     {
         return @$this->attributes['schedule_time_zone'];
@@ -185,7 +195,7 @@ class ScheduledExport
     {
         return $this->attributes['schedule_time_zone'] = $value;
     }
-    // string # Optional holiday region used by schedule-driven exports.
+    // string # Optional holiday region used by the scheduled export schedule.
     public function getHolidayRegion()
     {
         return @$this->attributes['holiday_region'];
@@ -245,10 +255,11 @@ class ScheduledExport
     //   trigger - string - Schedule trigger type: `daily` or `custom_schedule`.
     //   interval - string - If trigger is `daily`, this specifies how often to run the scheduled export.
     //   recurring_day - int64 - If trigger is `daily`, this selects the day number inside the chosen interval.
+    //   schedule_id - int64 - If trigger is `custom_schedule`, the reusable Schedule used instead of the scheduled export's schedule fields.
     //   schedule_days_of_week - array(int64) - If trigger is `custom_schedule`, the 0-based weekdays used by the schedule.
-    //   schedule_times_of_day - array(string) - Times of day in HH:MM format for schedule-driven exports.
-    //   schedule_time_zone - string - Time zone used by the scheduled export.
-    //   holiday_region - string - Optional holiday region used by schedule-driven exports.
+    //   schedule_times_of_day - array(string) - Times of day in HH:MM format for the scheduled export schedule.
+    //   schedule_time_zone - string - Time zone used by the scheduled export schedule.
+    //   holiday_region - string - Optional holiday region used by the scheduled export schedule.
     public function update($params = [])
     {
         if (!is_array($params)) {
@@ -289,6 +300,10 @@ class ScheduledExport
 
         if (@$params['recurring_day'] && !is_int(@$params['recurring_day'])) {
             throw new \Files\Exception\InvalidParameterException('$recurring_day must be of type int; received ' . gettype(@$params['recurring_day']));
+        }
+
+        if (@$params['schedule_id'] && !is_int(@$params['schedule_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$schedule_id must be of type int; received ' . gettype(@$params['schedule_id']));
         }
 
         if (@$params['schedule_days_of_week'] && !is_array(@$params['schedule_days_of_week'])) {
@@ -416,10 +431,11 @@ class ScheduledExport
     //   trigger - string - Schedule trigger type: `daily` or `custom_schedule`.
     //   interval - string - If trigger is `daily`, this specifies how often to run the scheduled export.
     //   recurring_day - int64 - If trigger is `daily`, this selects the day number inside the chosen interval.
+    //   schedule_id - int64 - If trigger is `custom_schedule`, the reusable Schedule used instead of the scheduled export's schedule fields.
     //   schedule_days_of_week - array(int64) - If trigger is `custom_schedule`, the 0-based weekdays used by the schedule.
-    //   schedule_times_of_day - array(string) - Times of day in HH:MM format for schedule-driven exports.
-    //   schedule_time_zone - string - Time zone used by the scheduled export.
-    //   holiday_region - string - Optional holiday region used by schedule-driven exports.
+    //   schedule_times_of_day - array(string) - Times of day in HH:MM format for the scheduled export schedule.
+    //   schedule_time_zone - string - Time zone used by the scheduled export schedule.
+    //   holiday_region - string - Optional holiday region used by the scheduled export schedule.
     public static function create($params = [], $options = [])
     {
         if (!@$params['name']) {
@@ -452,6 +468,10 @@ class ScheduledExport
 
         if (@$params['recurring_day'] && !is_int(@$params['recurring_day'])) {
             throw new \Files\Exception\InvalidParameterException('$recurring_day must be of type int; received ' . gettype(@$params['recurring_day']));
+        }
+
+        if (@$params['schedule_id'] && !is_int(@$params['schedule_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$schedule_id must be of type int; received ' . gettype(@$params['schedule_id']));
         }
 
         if (@$params['schedule_days_of_week'] && !is_array(@$params['schedule_days_of_week'])) {

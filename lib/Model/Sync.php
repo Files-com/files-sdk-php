@@ -305,6 +305,16 @@ class Sync
     {
         return $this->attributes['recurring_day'] = $value;
     }
+    // int64 # If trigger is `custom_schedule`, the reusable Schedule used instead of the sync's schedule fields.
+    public function getScheduleId()
+    {
+        return @$this->attributes['schedule_id'];
+    }
+
+    public function setScheduleId($value)
+    {
+        return $this->attributes['schedule_id'] = $value;
+    }
     // array(int64) # If trigger is `custom_schedule`, Custom schedule description for when the sync should be run. 0-based days of the week. 0 is Sunday, 1 is Monday, etc.
     public function getScheduleDaysOfWeek()
     {
@@ -325,7 +335,7 @@ class Sync
     {
         return $this->attributes['schedule_times_of_day'] = $value;
     }
-    // string # Time zone for scheduled times. If not set, times are interpreted as UTC.
+    // string # Time zone for the schedule. If not set, times are interpreted as UTC.
     public function getScheduleTimeZone()
     {
         return @$this->attributes['schedule_time_zone'];
@@ -335,7 +345,7 @@ class Sync
     {
         return $this->attributes['schedule_time_zone'] = $value;
     }
-    // string # Skip sync if there is a formal, observed holiday for this region.
+    // string # Skip the sync if there is a formal, observed holiday for this region.
     public function getHolidayRegion()
     {
         return @$this->attributes['holiday_region'];
@@ -409,14 +419,15 @@ class Sync
     //   dest_remote_server_id - int64 - Remote server ID for the destination (if remote)
     //   disabled - boolean - Is this sync disabled?
     //   exclude_patterns - array(string) - Array of glob patterns to exclude
-    //   holiday_region - string - Skip sync if there is a formal, observed holiday for this region.
+    //   holiday_region - string - Skip the sync if there is a formal, observed holiday for this region.
     //   include_patterns - array(string) - Array of glob patterns to include
     //   interval - string - If trigger is `daily`, this specifies how often to run this sync.  One of: `day`, `week`, `week_end`, `month`, `month_end`, `quarter`, `quarter_end`, `year`, `year_end`
     //   keep_after_copy - boolean - Keep files after copying?
     //   name - string - Name for this sync job
     //   recurring_day - int64 - If trigger type is `daily`, this specifies a day number to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
+    //   schedule_id - int64 - If trigger is `custom_schedule`, the reusable Schedule used instead of the sync's schedule fields.
     //   schedule_days_of_week - array(int64) - If trigger is `custom_schedule`, Custom schedule description for when the sync should be run. 0-based days of the week. 0 is Sunday, 1 is Monday, etc.
-    //   schedule_time_zone - string - Time zone for scheduled times. If not set, times are interpreted as UTC.
+    //   schedule_time_zone - string - Time zone for the schedule. If not set, times are interpreted as UTC.
     //   schedule_times_of_day - array(string) - Times of day to run in HH:MM format. For `custom_schedule`, run at these times on specified days of week. For `daily`, run at these times on the scheduled interval date.
     //   src_path - string - Absolute source path for the sync
     //   src_remote_server_id - int64 - Remote server ID for the source (if remote)
@@ -476,6 +487,10 @@ class Sync
 
         if (@$params['recurring_day'] && !is_int(@$params['recurring_day'])) {
             throw new \Files\Exception\InvalidParameterException('$recurring_day must be of type int; received ' . gettype(@$params['recurring_day']));
+        }
+
+        if (@$params['schedule_id'] && !is_int(@$params['schedule_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$schedule_id must be of type int; received ' . gettype(@$params['schedule_id']));
         }
 
         if (@$params['schedule_days_of_week'] && !is_array(@$params['schedule_days_of_week'])) {
@@ -616,14 +631,15 @@ class Sync
     //   dest_remote_server_id - int64 - Remote server ID for the destination (if remote)
     //   disabled - boolean - Is this sync disabled?
     //   exclude_patterns - array(string) - Array of glob patterns to exclude
-    //   holiday_region - string - Skip sync if there is a formal, observed holiday for this region.
+    //   holiday_region - string - Skip the sync if there is a formal, observed holiday for this region.
     //   include_patterns - array(string) - Array of glob patterns to include
     //   interval - string - If trigger is `daily`, this specifies how often to run this sync.  One of: `day`, `week`, `week_end`, `month`, `month_end`, `quarter`, `quarter_end`, `year`, `year_end`
     //   keep_after_copy - boolean - Keep files after copying?
     //   name - string - Name for this sync job
     //   recurring_day - int64 - If trigger type is `daily`, this specifies a day number to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
+    //   schedule_id - int64 - If trigger is `custom_schedule`, the reusable Schedule used instead of the sync's schedule fields.
     //   schedule_days_of_week - array(int64) - If trigger is `custom_schedule`, Custom schedule description for when the sync should be run. 0-based days of the week. 0 is Sunday, 1 is Monday, etc.
-    //   schedule_time_zone - string - Time zone for scheduled times. If not set, times are interpreted as UTC.
+    //   schedule_time_zone - string - Time zone for the schedule. If not set, times are interpreted as UTC.
     //   schedule_times_of_day - array(string) - Times of day to run in HH:MM format. For `custom_schedule`, run at these times on specified days of week. For `daily`, run at these times on the scheduled interval date.
     //   src_path - string - Absolute source path for the sync
     //   src_remote_server_id - int64 - Remote server ID for the source (if remote)
@@ -668,6 +684,10 @@ class Sync
 
         if (@$params['recurring_day'] && !is_int(@$params['recurring_day'])) {
             throw new \Files\Exception\InvalidParameterException('$recurring_day must be of type int; received ' . gettype(@$params['recurring_day']));
+        }
+
+        if (@$params['schedule_id'] && !is_int(@$params['schedule_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$schedule_id must be of type int; received ' . gettype(@$params['schedule_id']));
         }
 
         if (@$params['schedule_days_of_week'] && !is_array(@$params['schedule_days_of_week'])) {

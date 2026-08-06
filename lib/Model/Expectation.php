@@ -175,6 +175,16 @@ class Expectation
     {
         return $this->attributes['recurring_day'] = $value;
     }
+    // int64 # If trigger is `custom_schedule`, the reusable Schedule used instead of the Expectation's schedule fields.
+    public function getScheduleId()
+    {
+        return @$this->attributes['schedule_id'];
+    }
+
+    public function setScheduleId($value)
+    {
+        return $this->attributes['schedule_id'] = $value;
+    }
     // array(int64) # If trigger is `custom_schedule`, the 0-based weekdays used by the schedule.
     public function getScheduleDaysOfWeek()
     {
@@ -185,7 +195,7 @@ class Expectation
     {
         return $this->attributes['schedule_days_of_week'] = $value;
     }
-    // array(string) # Times of day in HH:MM format for schedule-driven expectations.
+    // array(string) # Times of day in HH:MM format for the Expectation schedule.
     public function getScheduleTimesOfDay()
     {
         return @$this->attributes['schedule_times_of_day'];
@@ -195,7 +205,7 @@ class Expectation
     {
         return $this->attributes['schedule_times_of_day'] = $value;
     }
-    // string # Time zone used by the expectation schedule.
+    // string # Time zone used by the Expectation schedule.
     public function getScheduleTimeZone()
     {
         return @$this->attributes['schedule_time_zone'];
@@ -205,7 +215,7 @@ class Expectation
     {
         return $this->attributes['schedule_time_zone'] = $value;
     }
-    // string # Optional holiday region used by schedule-driven expectations.
+    // string # Optional holiday region used by the Expectation schedule.
     public function getHolidayRegion()
     {
         return @$this->attributes['holiday_region'];
@@ -349,10 +359,11 @@ class Expectation
     //   trigger - string - How this expectation opens windows.
     //   interval - string - If trigger is `daily`, this specifies how often to run the expectation.
     //   recurring_day - int64 - If trigger is `daily`, this selects the day number inside the chosen interval.
+    //   schedule_id - int64 - If trigger is `custom_schedule`, the reusable Schedule used instead of the Expectation's schedule fields.
     //   schedule_days_of_week - array(int64) - If trigger is `custom_schedule`, the 0-based weekdays used by the schedule.
-    //   schedule_times_of_day - array(string) - Times of day in HH:MM format for schedule-driven expectations.
-    //   schedule_time_zone - string - Time zone used by the expectation schedule.
-    //   holiday_region - string - Optional holiday region used by schedule-driven expectations.
+    //   schedule_times_of_day - array(string) - Times of day in HH:MM format for the Expectation schedule.
+    //   schedule_time_zone - string - Time zone used by the Expectation schedule.
+    //   holiday_region - string - Optional holiday region used by the Expectation schedule.
     //   lookback_interval - int64 - How many seconds before the due boundary the window starts.
     //   late_acceptance_interval - int64 - How many seconds a schedule-driven window may remain eligible to close as late.
     //   inactivity_interval - int64 - How many quiet seconds are required before final closure.
@@ -407,6 +418,10 @@ class Expectation
 
         if (@$params['recurring_day'] && !is_int(@$params['recurring_day'])) {
             throw new \Files\Exception\InvalidParameterException('$recurring_day must be of type int; received ' . gettype(@$params['recurring_day']));
+        }
+
+        if (@$params['schedule_id'] && !is_int(@$params['schedule_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$schedule_id must be of type int; received ' . gettype(@$params['schedule_id']));
         }
 
         if (@$params['schedule_days_of_week'] && !is_array(@$params['schedule_days_of_week'])) {
@@ -554,10 +569,11 @@ class Expectation
     //   trigger - string - How this expectation opens windows.
     //   interval - string - If trigger is `daily`, this specifies how often to run the expectation.
     //   recurring_day - int64 - If trigger is `daily`, this selects the day number inside the chosen interval.
+    //   schedule_id - int64 - If trigger is `custom_schedule`, the reusable Schedule used instead of the Expectation's schedule fields.
     //   schedule_days_of_week - array(int64) - If trigger is `custom_schedule`, the 0-based weekdays used by the schedule.
-    //   schedule_times_of_day - array(string) - Times of day in HH:MM format for schedule-driven expectations.
-    //   schedule_time_zone - string - Time zone used by the expectation schedule.
-    //   holiday_region - string - Optional holiday region used by schedule-driven expectations.
+    //   schedule_times_of_day - array(string) - Times of day in HH:MM format for the Expectation schedule.
+    //   schedule_time_zone - string - Time zone used by the Expectation schedule.
+    //   holiday_region - string - Optional holiday region used by the Expectation schedule.
     //   lookback_interval - int64 - How many seconds before the due boundary the window starts.
     //   late_acceptance_interval - int64 - How many seconds a schedule-driven window may remain eligible to close as late.
     //   inactivity_interval - int64 - How many quiet seconds are required before final closure.
@@ -596,6 +612,10 @@ class Expectation
 
         if (@$params['recurring_day'] && !is_int(@$params['recurring_day'])) {
             throw new \Files\Exception\InvalidParameterException('$recurring_day must be of type int; received ' . gettype(@$params['recurring_day']));
+        }
+
+        if (@$params['schedule_id'] && !is_int(@$params['schedule_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$schedule_id must be of type int; received ' . gettype(@$params['schedule_id']));
         }
 
         if (@$params['schedule_days_of_week'] && !is_array(@$params['schedule_days_of_week'])) {

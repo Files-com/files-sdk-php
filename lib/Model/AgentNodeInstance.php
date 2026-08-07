@@ -10,11 +10,11 @@ use Files\Logger;
 require_once __DIR__ . '/../Files.php';
 
 /**
- * Class AgentNode
+ * Class AgentNodeInstance
  *
  * @package Files
  */
-class AgentNode
+class AgentNodeInstance
 {
     private $attributes = [];
     private $options = [];
@@ -55,49 +55,39 @@ class AgentNode
     {
         return !!@$this->attributes['id'];
     }
-    // string # Stable Agent installation ID
-    public function getNodeId()
+    // string # Ephemeral ID for this running Agent process
+    public function getInstanceId()
     {
-        return @$this->attributes['node_id'];
+        return @$this->attributes['instance_id'];
     }
-    // string # Customer-configured Agent node name
-    public function getName()
+    // string # Role of this process during an Agent update
+    public function getProcessState()
     {
-        return @$this->attributes['name'];
+        return @$this->attributes['process_state'];
     }
-    // string # Hostname reported by the Agent
-    public function getHostname()
-    {
-        return @$this->attributes['hostname'];
-    }
-    // string # Configured traffic preference
-    public function getAvailabilityRole()
-    {
-        return @$this->attributes['availability_role'];
-    }
-    // string # Whether this node currently has an available Agent instance
+    // string # Whether this process has an available proxy connection
     public function getStatus()
     {
         return @$this->attributes['status'];
     }
-    // boolean # Whether this node is the current default route for new unscoped work
+    // boolean # Whether this process receives new unscoped work for its node
     public function getIsDefault()
     {
         return @$this->attributes['is_default'];
     }
-    // boolean # Whether the proxy recently validated a direct connection to this Agent node. False means direct transfers are enabled but not currently available; null means disabled or unsupported.
-    public function getDirectTransferAvailable()
+    // string # Agent version reported by this process
+    public function getAgentVersion()
     {
-        return @$this->attributes['direct_transfer_available'];
+        return @$this->attributes['agent_version'];
     }
-    // date-time # Most recent successful node observation
+    // date-time # Most recent successful observation for this process
     public function getLastSeenAt()
     {
         return @$this->attributes['last_seen_at'];
     }
-    // array(object) # Current Agent processes for this node
-    public function getInstances()
+    // array(object) # Proxy connections observed for this process
+    public function getConnections()
     {
-        return @$this->attributes['instances'];
+        return @$this->attributes['connections'];
     }
 }

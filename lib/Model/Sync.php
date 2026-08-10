@@ -305,6 +305,16 @@ class Sync
     {
         return $this->attributes['recurring_day'] = $value;
     }
+    // array(int64) # If trigger type is `daily`, this specifies one or more day numbers to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
+    public function getRecurringDays()
+    {
+        return @$this->attributes['recurring_days'];
+    }
+
+    public function setRecurringDays($value)
+    {
+        return $this->attributes['recurring_days'] = $value;
+    }
     // int64 # If trigger is `custom_schedule`, the reusable Schedule used instead of the sync's schedule fields.
     public function getScheduleId()
     {
@@ -425,6 +435,7 @@ class Sync
     //   keep_after_copy - boolean - Keep files after copying?
     //   name - string - Name for this sync job
     //   recurring_day - int64 - If trigger type is `daily`, this specifies a day number to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
+    //   recurring_days - array(int64) - If trigger type is `daily`, this specifies one or more day numbers to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
     //   schedule_id - int64 - If trigger is `custom_schedule`, the reusable Schedule used instead of the sync's schedule fields.
     //   schedule_days_of_week - array(int64) - If trigger is `custom_schedule`, Custom schedule description for when the sync should be run. 0-based days of the week. 0 is Sunday, 1 is Monday, etc.
     //   schedule_time_zone - string - Time zone for the schedule. If not set, times are interpreted as UTC.
@@ -487,6 +498,10 @@ class Sync
 
         if (@$params['recurring_day'] && !is_int(@$params['recurring_day'])) {
             throw new \Files\Exception\InvalidParameterException('$recurring_day must be of type int; received ' . gettype(@$params['recurring_day']));
+        }
+
+        if (@$params['recurring_days'] && !is_array(@$params['recurring_days'])) {
+            throw new \Files\Exception\InvalidParameterException('$recurring_days must be of type array; received ' . gettype(@$params['recurring_days']));
         }
 
         if (@$params['schedule_id'] && !is_int(@$params['schedule_id'])) {
@@ -637,6 +652,7 @@ class Sync
     //   keep_after_copy - boolean - Keep files after copying?
     //   name - string - Name for this sync job
     //   recurring_day - int64 - If trigger type is `daily`, this specifies a day number to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
+    //   recurring_days - array(int64) - If trigger type is `daily`, this specifies one or more day numbers to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
     //   schedule_id - int64 - If trigger is `custom_schedule`, the reusable Schedule used instead of the sync's schedule fields.
     //   schedule_days_of_week - array(int64) - If trigger is `custom_schedule`, Custom schedule description for when the sync should be run. 0-based days of the week. 0 is Sunday, 1 is Monday, etc.
     //   schedule_time_zone - string - Time zone for the schedule. If not set, times are interpreted as UTC.
@@ -684,6 +700,10 @@ class Sync
 
         if (@$params['recurring_day'] && !is_int(@$params['recurring_day'])) {
             throw new \Files\Exception\InvalidParameterException('$recurring_day must be of type int; received ' . gettype(@$params['recurring_day']));
+        }
+
+        if (@$params['recurring_days'] && !is_array(@$params['recurring_days'])) {
+            throw new \Files\Exception\InvalidParameterException('$recurring_days must be of type array; received ' . gettype(@$params['recurring_days']));
         }
 
         if (@$params['schedule_id'] && !is_int(@$params['schedule_id'])) {

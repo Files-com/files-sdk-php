@@ -325,6 +325,16 @@ class Automation
     {
         return $this->attributes['recurring_day'] = $value;
     }
+    // array(int64) # If trigger type is `daily`, this specifies one or more day numbers to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
+    public function getRecurringDays()
+    {
+        return @$this->attributes['recurring_days'];
+    }
+
+    public function setRecurringDays($value)
+    {
+        return $this->attributes['recurring_days'] = $value;
+    }
     // int64 # If trigger is `custom_schedule`, the reusable Schedule used instead of the automation's schedule fields.
     public function getScheduleId()
     {
@@ -593,6 +603,7 @@ class Automation
     //   trigger_actions - array(string) - If trigger is `action`, this is the list of action types on which to trigger the automation. Valid actions are create, copy, move, archived_delete, update, read, destroy
     //   value - object - A Hash of attributes specific to the automation type.
     //   recurring_day - int64 - If trigger type is `daily`, this specifies a day number to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
+    //   recurring_days - array(int64) - If trigger type is `daily`, this specifies one or more day numbers to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
     //   automation - string - Automation type
     public function update($params = [])
     {
@@ -710,6 +721,10 @@ class Automation
 
         if (@$params['recurring_day'] && !is_int(@$params['recurring_day'])) {
             throw new \Files\Exception\InvalidParameterException('$recurring_day must be of type int; received ' . gettype(@$params['recurring_day']));
+        }
+
+        if (@$params['recurring_days'] && !is_array(@$params['recurring_days'])) {
+            throw new \Files\Exception\InvalidParameterException('$recurring_days must be of type array; received ' . gettype(@$params['recurring_days']));
         }
 
         if (@$params['automation'] && !is_string(@$params['automation'])) {
@@ -860,6 +875,7 @@ class Automation
     //   trigger_actions - array(string) - If trigger is `action`, this is the list of action types on which to trigger the automation. Valid actions are create, copy, move, archived_delete, update, read, destroy
     //   value - object - A Hash of attributes specific to the automation type.
     //   recurring_day - int64 - If trigger type is `daily`, this specifies a day number to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
+    //   recurring_days - array(int64) - If trigger type is `daily`, this specifies one or more day numbers to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
     //   automation (required) - string - Automation type
     //   workspace_id - int64 - Workspace ID
     public static function create($params = [], $options = [])
@@ -966,6 +982,10 @@ class Automation
 
         if (@$params['recurring_day'] && !is_int(@$params['recurring_day'])) {
             throw new \Files\Exception\InvalidParameterException('$recurring_day must be of type int; received ' . gettype(@$params['recurring_day']));
+        }
+
+        if (@$params['recurring_days'] && !is_array(@$params['recurring_days'])) {
+            throw new \Files\Exception\InvalidParameterException('$recurring_days must be of type array; received ' . gettype(@$params['recurring_days']));
         }
 
         if (@$params['automation'] && !is_string(@$params['automation'])) {

@@ -175,6 +175,16 @@ class Expectation
     {
         return $this->attributes['recurring_day'] = $value;
     }
+    // array(int64) # If trigger is `daily`, this selects one or more day numbers inside a `week`, `month`, `quarter`, or `year` interval.
+    public function getRecurringDays()
+    {
+        return @$this->attributes['recurring_days'];
+    }
+
+    public function setRecurringDays($value)
+    {
+        return $this->attributes['recurring_days'] = $value;
+    }
     // int64 # If trigger is `custom_schedule`, the reusable Schedule used instead of the Expectation's schedule fields.
     public function getScheduleId()
     {
@@ -359,6 +369,7 @@ class Expectation
     //   trigger - string - How this expectation opens windows.
     //   interval - string - If trigger is `daily`, this specifies how often to run the expectation.
     //   recurring_day - int64 - If trigger is `daily`, this selects the day number inside the chosen interval.
+    //   recurring_days - array(int64) - If trigger is `daily`, this selects one or more day numbers inside a `week`, `month`, `quarter`, or `year` interval.
     //   schedule_id - int64 - If trigger is `custom_schedule`, the reusable Schedule used instead of the Expectation's schedule fields.
     //   schedule_days_of_week - array(int64) - If trigger is `custom_schedule`, the 0-based weekdays used by the schedule.
     //   schedule_times_of_day - array(string) - Times of day in HH:MM format for the Expectation schedule.
@@ -418,6 +429,10 @@ class Expectation
 
         if (@$params['recurring_day'] && !is_int(@$params['recurring_day'])) {
             throw new \Files\Exception\InvalidParameterException('$recurring_day must be of type int; received ' . gettype(@$params['recurring_day']));
+        }
+
+        if (@$params['recurring_days'] && !is_array(@$params['recurring_days'])) {
+            throw new \Files\Exception\InvalidParameterException('$recurring_days must be of type array; received ' . gettype(@$params['recurring_days']));
         }
 
         if (@$params['schedule_id'] && !is_int(@$params['schedule_id'])) {
@@ -569,6 +584,7 @@ class Expectation
     //   trigger - string - How this expectation opens windows.
     //   interval - string - If trigger is `daily`, this specifies how often to run the expectation.
     //   recurring_day - int64 - If trigger is `daily`, this selects the day number inside the chosen interval.
+    //   recurring_days - array(int64) - If trigger is `daily`, this selects one or more day numbers inside a `week`, `month`, `quarter`, or `year` interval.
     //   schedule_id - int64 - If trigger is `custom_schedule`, the reusable Schedule used instead of the Expectation's schedule fields.
     //   schedule_days_of_week - array(int64) - If trigger is `custom_schedule`, the 0-based weekdays used by the schedule.
     //   schedule_times_of_day - array(string) - Times of day in HH:MM format for the Expectation schedule.
@@ -612,6 +628,10 @@ class Expectation
 
         if (@$params['recurring_day'] && !is_int(@$params['recurring_day'])) {
             throw new \Files\Exception\InvalidParameterException('$recurring_day must be of type int; received ' . gettype(@$params['recurring_day']));
+        }
+
+        if (@$params['recurring_days'] && !is_array(@$params['recurring_days'])) {
+            throw new \Files\Exception\InvalidParameterException('$recurring_days must be of type array; received ' . gettype(@$params['recurring_days']));
         }
 
         if (@$params['schedule_id'] && !is_int(@$params['schedule_id'])) {

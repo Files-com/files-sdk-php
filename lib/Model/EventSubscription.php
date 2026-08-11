@@ -105,6 +105,26 @@ class EventSubscription
     {
         return $this->attributes['name'] = $value;
     }
+    // string # Custom subject line to use for notification emails.
+    public function getSubject()
+    {
+        return @$this->attributes['subject'];
+    }
+
+    public function setSubject($value)
+    {
+        return $this->attributes['subject'] = $value;
+    }
+    // string # Custom message to include in notification emails.
+    public function getMessage()
+    {
+        return @$this->attributes['message'];
+    }
+
+    public function setMessage($value)
+    {
+        return $this->attributes['message'] = $value;
+    }
     // boolean # Whether this Event Subscription can dispatch events.
     public function getEnabled()
     {
@@ -171,6 +191,8 @@ class EventSubscription
     //   workspace_id - int64 - Workspace ID. 0 means the default workspace or site-wide.
     //   apply_to_all_workspaces - boolean - If true, this default-workspace subscription applies to events from all workspaces.
     //   name - string - Event Subscription name.
+    //   subject - string - Custom subject line to use for notification emails.
+    //   message - string - Custom message to include in notification emails.
     //   enabled - boolean - Whether this Event Subscription can dispatch events.
     //   event_types - array(string) - Event type strings matched by this subscription. Blank means all event types.
     //   filter - object - Structured event payload filter.
@@ -204,6 +226,14 @@ class EventSubscription
 
         if (@$params['name'] && !is_string(@$params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
+        }
+
+        if (@$params['subject'] && !is_string(@$params['subject'])) {
+            throw new \Files\Exception\InvalidParameterException('$subject must be of type string; received ' . gettype(@$params['subject']));
+        }
+
+        if (@$params['message'] && !is_string(@$params['message'])) {
+            throw new \Files\Exception\InvalidParameterException('$message must be of type string; received ' . gettype(@$params['message']));
         }
 
         if (@$params['event_types'] && !is_array(@$params['event_types'])) {
@@ -318,6 +348,8 @@ class EventSubscription
     //   workspace_id - int64 - Workspace ID. 0 means the default workspace or site-wide.
     //   apply_to_all_workspaces - boolean - If true, this default-workspace subscription applies to events from all workspaces.
     //   name (required) - string - Event Subscription name.
+    //   subject - string - Custom subject line to use for notification emails.
+    //   message - string - Custom message to include in notification emails.
     //   enabled - boolean - Whether this Event Subscription can dispatch events.
     //   event_types - array(string) - Event type strings matched by this subscription. Blank means all event types.
     //   filter - object - Structured event payload filter.
@@ -339,6 +371,14 @@ class EventSubscription
 
         if (@$params['name'] && !is_string(@$params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
+        }
+
+        if (@$params['subject'] && !is_string(@$params['subject'])) {
+            throw new \Files\Exception\InvalidParameterException('$subject must be of type string; received ' . gettype(@$params['subject']));
+        }
+
+        if (@$params['message'] && !is_string(@$params['message'])) {
+            throw new \Files\Exception\InvalidParameterException('$message must be of type string; received ' . gettype(@$params['message']));
         }
 
         if (@$params['event_types'] && !is_array(@$params['event_types'])) {

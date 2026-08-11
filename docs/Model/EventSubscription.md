@@ -9,6 +9,8 @@
   "workspace_id": 1,
   "apply_to_all_workspaces": true,
   "name": "example",
+  "subject": "example",
+  "message": "example",
   "enabled": true,
   "event_types": [
     "example"
@@ -28,6 +30,8 @@
 * `workspace_id` (int64): Workspace ID. 0 means the default workspace or site-wide.
 * `apply_to_all_workspaces` (boolean): If true, this default-workspace subscription applies to events from all workspaces.
 * `name` (string): Event Subscription name.
+* `subject` (string): Custom subject line to use for notification emails.
+* `message` (string): Custom message to include in notification emails.
 * `enabled` (boolean): Whether this Event Subscription can dispatch events.
 * `event_types` (array(string)): Event type strings matched by this subscription. Blank means all event types.
 * `filter` (object): Structured event payload filter.
@@ -78,6 +82,8 @@ $event_subscription->create(, [
   'workspace_id' => 1,
   'apply_to_all_workspaces' => true,
   'name' => "example",
+  'subject' => "example",
+  'message' => "example",
   'enabled' => true,
   'event_types' => ["example"],
   'delivery_policy' => "example",
@@ -92,6 +98,8 @@ $event_subscription->create(, [
 * `workspace_id` (int64): Workspace ID. 0 means the default workspace or site-wide.
 * `apply_to_all_workspaces` (boolean): If true, this default-workspace subscription applies to events from all workspaces.
 * `name` (string): Required - Event Subscription name.
+* `subject` (string): Custom subject line to use for notification emails.
+* `message` (string): Custom message to include in notification emails.
 * `enabled` (boolean): Whether this Event Subscription can dispatch events.
 * `event_types` (array(string)): Event type strings matched by this subscription. Blank means all event types.
 * `filter` (object): Structured event payload filter.
@@ -110,6 +118,8 @@ $event_subscription->update([
   'workspace_id' => 1,
   'apply_to_all_workspaces' => true,
   'name' => "example",
+  'subject' => "example",
+  'message' => "example",
   'enabled' => true,
   'event_types' => ["example"],
   'delivery_policy' => "example",
@@ -124,6 +134,8 @@ $event_subscription->update([
 * `workspace_id` (int64): Workspace ID. 0 means the default workspace or site-wide.
 * `apply_to_all_workspaces` (boolean): If true, this default-workspace subscription applies to events from all workspaces.
 * `name` (string): Event Subscription name.
+* `subject` (string): Custom subject line to use for notification emails.
+* `message` (string): Custom message to include in notification emails.
 * `enabled` (boolean): Whether this Event Subscription can dispatch events.
 * `event_types` (array(string)): Event type strings matched by this subscription. Blank means all event types.
 * `filter` (object): Structured event payload filter.
@@ -139,6 +151,8 @@ $event_subscription->update([
   "workspace_id": 1,
   "apply_to_all_workspaces": true,
   "name": "example",
+  "subject": "example",
+  "message": "example",
   "enabled": true,
   "event_types": [
     "example"

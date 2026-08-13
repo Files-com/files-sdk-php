@@ -215,6 +215,11 @@ class Site
     {
         return @$this->attributes['bundle_require_share_recipient'];
     }
+    // boolean # If true, new Share Links must send a one-time password to the recipient when they register. Requires bundle_require_share_recipient and cannot be enabled with bundle_password_required.
+    public function getBundleSendOneTimePasswordToRecipientAtRegistration()
+    {
+        return @$this->attributes['bundle_send_one_time_password_to_recipient_at_registration'];
+    }
     // boolean # Do Bundles require internal notes?
     public function getBundleRequireNote()
     {
@@ -1120,6 +1125,7 @@ class Site
     //   bundle_password_required - boolean - Do Bundles require password protection?
     //   bundle_require_registration - boolean - Do Bundles require registration?
     //   bundle_require_share_recipient - boolean - Do Bundles require recipients for sharing?
+    //   bundle_send_one_time_password_to_recipient_at_registration - boolean - If true, new Share Links must send a one-time password to the recipient when they register. Requires bundle_require_share_recipient and cannot be enabled with bundle_password_required.
     //   bundle_registration_notifications - string - Do Bundle owners receive registration notification?
     //   bundle_activity_notifications - string - Do Bundle owners receive activity notifications?
     //   bundle_upload_receipt_notifications - string - Do Bundle uploaders receive upload confirmation notifications?

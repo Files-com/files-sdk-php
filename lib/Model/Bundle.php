@@ -500,6 +500,16 @@ class Bundle
     {
         return $this->attributes['dont_allow_folders_in_uploads'] = $value;
     }
+    // array(object) # Upload slots requested by the associated Inbox. Each slot contains a name used as its label and destination subfolder name.
+    public function getRequestedUploadSlots()
+    {
+        return @$this->attributes['requested_upload_slots'];
+    }
+
+    public function setRequestedUploadSlots($value)
+    {
+        return $this->attributes['requested_upload_slots'] = $value;
+    }
     // array(string) # A list of paths in this bundle.  For performance reasons, this is not provided when listing bundles.
     public function getPaths()
     {

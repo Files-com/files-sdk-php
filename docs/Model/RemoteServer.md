@@ -81,7 +81,7 @@
   "linode_bucket": "my-bucket",
   "linode_access_key": "example",
   "linode_region": "us-east-1",
-  "supports_versioning": true
+  "supports_versioning": false
 }
 ```
 
@@ -779,7 +779,7 @@ $remote_server->update([
   "linode_bucket": "my-bucket",
   "linode_access_key": "example",
   "linode_region": "us-east-1",
-  "supports_versioning": true
+  "supports_versioning": false
 }
 ```
 

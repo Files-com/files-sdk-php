@@ -11,7 +11,30 @@
   "automation": "create_folder",
   "deleted": true,
   "description": "example",
-  "definition": "example",
+  "definition": {
+    "schema_version": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger_manual"
+      },
+      {
+        "id": "create_reports",
+        "type": "create_folder",
+        "config": {
+          "destinations": [
+            "reports/"
+          ]
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": "trigger",
+        "to": "create_reports"
+      }
+    ]
+  },
   "destination_replace_from": "example",
   "destination_replace_to": "example",
   "destinations": [
@@ -41,7 +64,7 @@
   "ignore_locked_folders": true,
   "interval": "week",
   "last_modified_at": "2000-01-01T01:00:00Z",
-  "legacy_folder_matching": true,
+  "legacy_folder_matching": false,
   "name": "example",
   "overwrite_files": true,
   "path": "example",
@@ -221,7 +244,7 @@ $automation->create(, [
   'always_overwrite_size_matching_files' => true,
   'always_serialize_jobs' => true,
   'description' => "example",
-  'definition' => "example",
+  'definition' => {"schema_version":1,"nodes":[{"id":"trigger","type":"trigger_manual"},{"id":"create_reports","type":"create_folder","config":{"destinations":["reports/"]}}],"edges":[{"from":"trigger","to":"create_reports"}]},
   'disabled' => true,
   'exclude_pattern' => "path/to/exclude/*",
   'import_urls' => [{"name":"users.json","url":"http://example.com/users","method":"POST","headers":{"Content-Type":"application/json"},"content":{"group":"support"}}],
@@ -309,7 +332,30 @@ $automation->upgrade();
   "automation": "create_folder",
   "deleted": true,
   "description": "example",
-  "definition": "example",
+  "definition": {
+    "schema_version": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger_manual"
+      },
+      {
+        "id": "create_reports",
+        "type": "create_folder",
+        "config": {
+          "destinations": [
+            "reports/"
+          ]
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": "trigger",
+        "to": "create_reports"
+      }
+    ]
+  },
   "destination_replace_from": "example",
   "destination_replace_to": "example",
   "destinations": [
@@ -339,7 +385,7 @@ $automation->upgrade();
   "ignore_locked_folders": true,
   "interval": "week",
   "last_modified_at": "2000-01-01T01:00:00Z",
-  "legacy_folder_matching": true,
+  "legacy_folder_matching": false,
   "name": "example",
   "overwrite_files": true,
   "path": "example",
@@ -446,7 +492,7 @@ $automation->update([
   'always_overwrite_size_matching_files' => true,
   'always_serialize_jobs' => true,
   'description' => "example",
-  'definition' => "example",
+  'definition' => {"schema_version":1,"nodes":[{"id":"trigger","type":"trigger_manual"},{"id":"create_reports","type":"create_folder","config":{"destinations":["reports/"]}}],"edges":[{"from":"trigger","to":"create_reports"}]},
   'disabled' => true,
   'exclude_pattern' => "path/to/exclude/*",
   'import_urls' => [{"name":"users.json","url":"http://example.com/users","method":"POST","headers":{"Content-Type":"application/json"},"content":{"group":"support"}}],
@@ -518,7 +564,30 @@ $automation->update([
   "automation": "create_folder",
   "deleted": true,
   "description": "example",
-  "definition": "example",
+  "definition": {
+    "schema_version": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger_manual"
+      },
+      {
+        "id": "create_reports",
+        "type": "create_folder",
+        "config": {
+          "destinations": [
+            "reports/"
+          ]
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": "trigger",
+        "to": "create_reports"
+      }
+    ]
+  },
   "destination_replace_from": "example",
   "destination_replace_to": "example",
   "destinations": [
@@ -548,7 +617,7 @@ $automation->update([
   "ignore_locked_folders": true,
   "interval": "week",
   "last_modified_at": "2000-01-01T01:00:00Z",
-  "legacy_folder_matching": true,
+  "legacy_folder_matching": false,
   "name": "example",
   "overwrite_files": true,
   "path": "example",

@@ -55,7 +55,7 @@ class HolidayCalendar
     {
         return !!@$this->attributes['id'];
     }
-    // int64 # Holiday Calendar ID. Use `custom_<id>` as a scheduled resource's `holiday_region`.
+    // int64 # Holiday Calendar ID. Set a scheduled resource's `holiday_region` to `custom_` followed by this ID to make it skip the days in this calendar.
     public function getId()
     {
         return @$this->attributes['id'];
@@ -75,7 +75,7 @@ class HolidayCalendar
     {
         return $this->attributes['name'] = $value;
     }
-    // object # Holiday rules for the calendar. For more information, refer to the Holiday Calendars section of the Files.com documentation.
+    // object # Holiday rules for the calendar.
     public function getDefinition()
     {
         return @$this->attributes['definition'];
@@ -97,6 +97,7 @@ class HolidayCalendar
     }
 
     // Parameters:
+    //   definition - object - Holiday rules for the calendar.
     //   name - string - Holiday Calendar name.
     public function update($params = [])
     {
@@ -219,9 +220,14 @@ class HolidayCalendar
     }
 
     // Parameters:
+    //   definition (required) - object - Holiday rules for the calendar.
     //   name (required) - string - Holiday Calendar name.
     public static function create($params = [], $options = [])
     {
+        if (!@$params['definition']) {
+            throw new \Files\Exception\MissingParameterException('Parameter missing: definition');
+        }
+
         if (!@$params['name']) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: name');
         }

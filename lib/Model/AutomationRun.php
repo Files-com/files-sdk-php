@@ -70,6 +70,11 @@ class AutomationRun
     {
         return @$this->attributes['automation_version_id'];
     }
+    // int64 # Pinned Automation v2 definition version.
+    public function getVersion()
+    {
+        return @$this->attributes['version'];
+    }
     // int64 # Workspace ID.
     public function getWorkspaceId()
     {

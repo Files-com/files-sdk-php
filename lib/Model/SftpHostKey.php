@@ -55,6 +55,16 @@ class SftpHostKey
     {
         return !!@$this->attributes['id'];
     }
+    // boolean # If true, use this SFTP Host Key.
+    public function getActive()
+    {
+        return @$this->attributes['active'];
+    }
+
+    public function setActive($value)
+    {
+        return $this->attributes['active'] = $value;
+    }
     // int64 # SFTP Host Key ID
     public function getId()
     {
@@ -74,6 +84,16 @@ class SftpHostKey
     public function setName($value)
     {
         return $this->attributes['name'] = $value;
+    }
+    // string # SSH key type
+    public function getKeyType()
+    {
+        return @$this->attributes['key_type'];
+    }
+
+    public function setKeyType($value)
+    {
+        return $this->attributes['key_type'] = $value;
     }
     // string # MD5 Fingerprint of the public key
     public function getFingerprintMd5()
@@ -107,6 +127,7 @@ class SftpHostKey
     }
 
     // Parameters:
+    //   active - boolean - If true, use this SFTP Host Key.
     //   name - string - The friendly name of this SFTP Host Key.
     //   private_key - string - The private key data.
     public function update($params = [])
@@ -233,6 +254,7 @@ class SftpHostKey
     }
 
     // Parameters:
+    //   active - boolean - If true, use this SFTP Host Key.
     //   name - string - The friendly name of this SFTP Host Key.
     //   private_key - string - The private key data.
     public static function create($params = [], $options = [])

@@ -6,6 +6,7 @@
 {
   "id": 1,
   "workspace_id": 1,
+  "direction": "two_way",
   "partner_id": 1,
   "partner_channel_template_id": 1,
   "path": "claims/medical",
@@ -29,6 +30,7 @@
 
 * `id` (int64): The unique ID of the Partner Channel.
 * `workspace_id` (int64): ID of the Workspace associated with this Partner Channel.
+* `direction` (string): Channel directions. `two_way` enables both directions, `to_partner` enables outgoing downloads, and `from_partner` enables incoming uploads.
 * `partner_id` (int64): ID of the Partner this Channel belongs to.
 * `partner_channel_template_id` (int64): ID of the Partner Channel Template that manages this Channel, if any.
 * `path` (string): Channel path relative to the Partner root folder. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
@@ -82,6 +84,7 @@ $partner_channel->find($id);
 ```
 $partner_channel = new \Files\Model\PartnerChannel();
 $partner_channel->create(, [
+  'direction' => "two_way",
   'from_partner_folder_name' => "incoming",
   'from_partner_managed_folder_paths' => ["claims/received"],
   'from_partner_route_path' => "processing/from-partner",
@@ -97,6 +100,7 @@ $partner_channel->create(, [
 
 ### Parameters
 
+* `direction` (string): Channel directions. `two_way` enables both directions, `to_partner` enables outgoing downloads, and `from_partner` enables incoming uploads.
 * `from_partner_folder_name` (string): Optional Channel-level from-Partner folder name override.
 * `from_partner_managed_folder_paths` (array(string)): Managed folder paths inside the from-Partner folder.
 * `from_partner_route_path` (string): Optional route path for files uploaded by the Partner.
@@ -115,6 +119,7 @@ $partner_channel->create(, [
 $partner_channel = \Files\Model\PartnerChannel::find($id);
 
 $partner_channel->update([
+  'direction' => "two_way",
   'from_partner_folder_name' => "incoming",
   'from_partner_managed_folder_paths' => ["claims/received"],
   'from_partner_route_path' => "processing/from-partner",
@@ -128,6 +133,7 @@ $partner_channel->update([
 ### Parameters
 
 * `id` (int64): Required - Partner Channel ID.
+* `direction` (string): Channel directions. `two_way` enables both directions, `to_partner` enables outgoing downloads, and `from_partner` enables incoming uploads.
 * `from_partner_folder_name` (string): Optional Channel-level from-Partner folder name override.
 * `from_partner_managed_folder_paths` (array(string)): Managed folder paths inside the from-Partner folder.
 * `from_partner_route_path` (string): Optional route path for files uploaded by the Partner.
@@ -142,6 +148,7 @@ $partner_channel->update([
 {
   "id": 1,
   "workspace_id": 1,
+  "direction": "two_way",
   "partner_id": 1,
   "partner_channel_template_id": 1,
   "path": "claims/medical",

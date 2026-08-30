@@ -75,6 +75,16 @@ class PartnerChannel
     {
         return $this->attributes['workspace_id'] = $value;
     }
+    // string # Channel directions. `two_way` enables both directions, `to_partner` enables outgoing downloads, and `from_partner` enables incoming uploads.
+    public function getDirection()
+    {
+        return @$this->attributes['direction'];
+    }
+
+    public function setDirection($value)
+    {
+        return $this->attributes['direction'] = $value;
+    }
     // int64 # ID of the Partner this Channel belongs to.
     public function getPartnerId()
     {
@@ -217,6 +227,7 @@ class PartnerChannel
     }
 
     // Parameters:
+    //   direction - string - Channel directions. `two_way` enables both directions, `to_partner` enables outgoing downloads, and `from_partner` enables incoming uploads.
     //   from_partner_folder_name - string - Optional Channel-level from-Partner folder name override.
     //   from_partner_managed_folder_paths - array(string) - Managed folder paths inside the from-Partner folder.
     //   from_partner_route_path - string - Optional route path for files uploaded by the Partner.
@@ -240,6 +251,10 @@ class PartnerChannel
 
         if (@$params['id'] && !is_int(@$params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
+        }
+
+        if (@$params['direction'] && !is_string(@$params['direction'])) {
+            throw new \Files\Exception\InvalidParameterException('$direction must be of type string; received ' . gettype(@$params['direction']));
         }
 
         if (@$params['from_partner_folder_name'] && !is_string(@$params['from_partner_folder_name'])) {
@@ -370,6 +385,7 @@ class PartnerChannel
     }
 
     // Parameters:
+    //   direction - string - Channel directions. `two_way` enables both directions, `to_partner` enables outgoing downloads, and `from_partner` enables incoming uploads.
     //   from_partner_folder_name - string - Optional Channel-level from-Partner folder name override.
     //   from_partner_managed_folder_paths - array(string) - Managed folder paths inside the from-Partner folder.
     //   from_partner_route_path - string - Optional route path for files uploaded by the Partner.
@@ -387,6 +403,10 @@ class PartnerChannel
 
         if (!@$params['path']) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: path');
+        }
+
+        if (@$params['direction'] && !is_string(@$params['direction'])) {
+            throw new \Files\Exception\InvalidParameterException('$direction must be of type string; received ' . gettype(@$params['direction']));
         }
 
         if (@$params['from_partner_folder_name'] && !is_string(@$params['from_partner_folder_name'])) {

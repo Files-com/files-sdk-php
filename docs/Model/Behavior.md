@@ -11,7 +11,11 @@
   "name": "example",
   "description": "example",
   "value": {
-    "method": "GET"
+    "urls": [
+      "https://example.com/webhook"
+    ],
+    "method": "POST",
+    "encoding": "JSON"
   },
   "public_hosting_url": "example",
   "disable_parent_folder_behavior": true,
@@ -97,7 +101,7 @@ $behavior->listFor($path, [
 ```
 $behavior = new \Files\Model\Behavior();
 $behavior->create(, [
-  'value' => "{\"method\": \"GET\"}",
+  'value' => {"urls":["https://example.com/webhook"],"method":"POST","encoding":"JSON"},
   'disable_parent_folder_behavior' => false,
   'recursive' => false,
   'name' => "example",
@@ -110,7 +114,7 @@ $behavior->create(, [
 
 ### Parameters
 
-* `value` (object): This field stores a hash of data specific to the type of behavior. See The Behavior Types section for example values for each type of behavior.
+* `value` (object): This field stores data specific to the type of behavior. See The Behavior Types section for the accepted value for each type of behavior.
 * `attachment_file` (file): Certain behaviors may require a file, for instance, the `watermark` behavior requires a watermark image. Attach that file here.
 * `disable_parent_folder_behavior` (boolean): If `true`, the parent folder's behavior will be disabled for this folder and its children. This is the main mechanism for canceling out a `recursive` behavior higher in the folder tree.
 * `recursive` (boolean): Whether the behavior should apply to child folders. This is only configurable for behavior types whose recursion mode is `sometimes`; `always` behaviors stay recursive and `never` behaviors stay non-recursive.
@@ -152,7 +156,7 @@ $behavior->webhookTest(, [
 $behavior = \Files\Model\Behavior::find($id);
 
 $behavior->update([
-  'value' => "{\"method\": \"GET\"}",
+  'value' => {"urls":["https://example.com/webhook"],"method":"POST","encoding":"JSON"},
   'disable_parent_folder_behavior' => false,
   'recursive' => false,
   'name' => "example",
@@ -164,7 +168,7 @@ $behavior->update([
 ### Parameters
 
 * `id` (int64): Required - Behavior ID.
-* `value` (object): This field stores a hash of data specific to the type of behavior. See The Behavior Types section for example values for each type of behavior.
+* `value` (object): This field stores data specific to the type of behavior. See The Behavior Types section for the accepted value for each type of behavior.
 * `attachment_file` (file): Certain behaviors may require a file, for instance, the `watermark` behavior requires a watermark image. Attach that file here.
 * `disable_parent_folder_behavior` (boolean): If `true`, the parent folder's behavior will be disabled for this folder and its children. This is the main mechanism for canceling out a `recursive` behavior higher in the folder tree.
 * `recursive` (boolean): Whether the behavior should apply to child folders. This is only configurable for behavior types whose recursion mode is `sometimes`; `always` behaviors stay recursive and `never` behaviors stay non-recursive.
@@ -183,7 +187,11 @@ $behavior->update([
   "name": "example",
   "description": "example",
   "value": {
-    "method": "GET"
+    "urls": [
+      "https://example.com/webhook"
+    ],
+    "method": "POST",
+    "encoding": "JSON"
   },
   "public_hosting_url": "example",
   "disable_parent_folder_behavior": true,

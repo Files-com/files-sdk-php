@@ -1040,7 +1040,7 @@ class User
     {
         return $this->attributes['clear_2fa'] = $value;
     }
-    // boolean # If true, convert this user to a partner user by assigning the partner_id provided.
+    // boolean # Required when assigning a Partner to an existing non-Partner user. If true, convert the user by assigning the partner_id provided.
     public function getConvertToPartnerUser()
     {
         return @$this->attributes['convert_to_partner_user'];
@@ -1190,7 +1190,7 @@ class User
     //   username - string - User's username
     //   workspace_id - int64 - Workspace ID
     //   clear_2fa - boolean - If true when changing authentication_method from `password` to `sso`, remove all two-factor methods. Ignored in all other cases.
-    //   convert_to_partner_user - boolean - If true, convert this user to a partner user by assigning the partner_id provided.
+    //   convert_to_partner_user - boolean - Required when assigning a Partner to an existing non-Partner user. If true, convert the user by assigning the partner_id provided.
     public function update($params = [])
     {
         if (!is_array($params)) {

@@ -125,6 +125,16 @@ class EventSubscription
     {
         return $this->attributes['message'] = $value;
     }
+    // boolean # If true, notification email bodies contain only the custom message, omitting event details and the review button. Requires a custom message, defaults to false, and does not affect non-email targets.
+    public function getMessageOnly()
+    {
+        return @$this->attributes['message_only'];
+    }
+
+    public function setMessageOnly($value)
+    {
+        return $this->attributes['message_only'] = $value;
+    }
     // boolean # Whether this Event Subscription can dispatch events.
     public function getEnabled()
     {
@@ -193,6 +203,7 @@ class EventSubscription
     //   name - string - Event Subscription name.
     //   subject - string - Custom subject line to use for notification emails.
     //   message - string - Custom message to include in notification emails.
+    //   message_only - boolean - If true, notification email bodies contain only the custom message, omitting event details and the review button. Requires a custom message, defaults to false, and does not affect non-email targets.
     //   enabled - boolean - Whether this Event Subscription can dispatch events.
     //   event_types - array(string) - Event type strings matched by this subscription. Blank means all event types.
     //   filter - object - Structured event payload filter.
@@ -350,6 +361,7 @@ class EventSubscription
     //   name (required) - string - Event Subscription name.
     //   subject - string - Custom subject line to use for notification emails.
     //   message - string - Custom message to include in notification emails.
+    //   message_only - boolean - If true, notification email bodies contain only the custom message, omitting event details and the review button. Requires a custom message, defaults to false, and does not affect non-email targets.
     //   enabled - boolean - Whether this Event Subscription can dispatch events.
     //   event_types - array(string) - Event type strings matched by this subscription. Blank means all event types.
     //   filter - object - Structured event payload filter.

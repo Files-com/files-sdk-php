@@ -20,7 +20,7 @@ function middlewareRemoveHeader($header)
 
 class Api
 {
-    const VERSION = "2.0.651";
+    const VERSION = "2.0.652";
     private static function pushRetryHandler($handlerStack)
     {
         $shouldRetry = function ($retries, $request, $response, $exception) {
@@ -226,7 +226,6 @@ class Api
                         'body' => is_array($params)
                           ? ('payload keys: ' . ($params ? implode(', ', array_keys($params)) : '(none)'))
                           : ('<' . gettype($params) . '>'),
-                        'headers' => array_merge($headers, ['X-FilesAPI-Key' => '<redacted>']),
                     ]
                 )
             );

@@ -130,7 +130,7 @@ class SsoStrategy
     {
         return @$this->attributes['scim_username'];
     }
-    // string # SCIM OAuth Access Token.
+    // string # SCIM OAuth Access Token. Only returned when the token is first issued or reset.
     public function getScimOauthAccessToken()
     {
         return @$this->attributes['scim_oauth_access_token'];

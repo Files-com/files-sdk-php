@@ -65,6 +65,16 @@ class SftpHostKey
     {
         return $this->attributes['active'] = $value;
     }
+    // int64 # Custom Domain ID. If set, this key is used only for that Custom Domain.
+    public function getCustomDomainId()
+    {
+        return @$this->attributes['custom_domain_id'];
+    }
+
+    public function setCustomDomainId($value)
+    {
+        return $this->attributes['custom_domain_id'] = $value;
+    }
     // int64 # SFTP Host Key ID
     public function getId()
     {
@@ -128,6 +138,7 @@ class SftpHostKey
 
     // Parameters:
     //   active - boolean - If true, use this SFTP Host Key.
+    //   custom_domain_id - int64 - Custom Domain ID. If set, this key is used only for that Custom Domain.
     //   name - string - The friendly name of this SFTP Host Key.
     //   private_key - string - The private key data.
     public function update($params = [])
@@ -146,6 +157,10 @@ class SftpHostKey
 
         if (@$params['id'] && !is_int(@$params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
+        }
+
+        if (@$params['custom_domain_id'] && !is_int(@$params['custom_domain_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$custom_domain_id must be of type int; received ' . gettype(@$params['custom_domain_id']));
         }
 
         if (@$params['name'] && !is_string(@$params['name'])) {
@@ -255,10 +270,15 @@ class SftpHostKey
 
     // Parameters:
     //   active - boolean - If true, use this SFTP Host Key.
+    //   custom_domain_id - int64 - Custom Domain ID. If set, this key is used only for that Custom Domain.
     //   name - string - The friendly name of this SFTP Host Key.
     //   private_key - string - The private key data.
     public static function create($params = [], $options = [])
     {
+        if (@$params['custom_domain_id'] && !is_int(@$params['custom_domain_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$custom_domain_id must be of type int; received ' . gettype(@$params['custom_domain_id']));
+        }
+
         if (@$params['name'] && !is_string(@$params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }

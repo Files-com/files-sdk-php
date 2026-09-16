@@ -125,6 +125,16 @@ class CustomDomain
     {
         return $this->attributes['folder_behavior_id'] = $value;
     }
+    // array(string) # Dedicated public IP addresses allocated to this Custom Domain.
+    public function getIpAddresses()
+    {
+        return @$this->attributes['ip_addresses'];
+    }
+
+    public function setIpAddresses($value)
+    {
+        return $this->attributes['ip_addresses'] = $value;
+    }
     // date-time # When this Custom Domain was created.
     public function getCreatedAt()
     {
@@ -271,6 +281,38 @@ class CustomDomain
     public static function get($id, $params = [], $options = [])
     {
         return self::find($id, $params, $options);
+    }
+
+    // Parameters:
+    //   id (required) - int64 - Custom Domain ID.
+    //   count (required) - int64 - Number of dedicated IP addresses to allocate.
+    public static function createAllocateIp($id, $params = [], $options = [])
+    {
+        if (!is_array($params)) {
+            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+        }
+
+        $params['id'] = $id;
+
+        if (!@$params['id']) {
+            throw new \Files\Exception\MissingParameterException('Parameter missing: id');
+        }
+
+        if (!@$params['count']) {
+            throw new \Files\Exception\MissingParameterException('Parameter missing: count');
+        }
+
+        if (@$params['id'] && !is_int(@$params['id'])) {
+            throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
+        }
+
+        if (@$params['count'] && !is_int(@$params['count'])) {
+            throw new \Files\Exception\InvalidParameterException('$count must be of type int; received ' . gettype(@$params['count']));
+        }
+
+        $response = Api::sendRequest('/custom_domains/' . rawurlencode(strval(@$params['id'])) . '/allocate_ips', 'POST', $params, $options);
+
+        return new CustomDomain((array) (@$response->data ?: []), $options);
     }
 
     // Parameters:

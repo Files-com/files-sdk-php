@@ -5,6 +5,7 @@
 ```
 {
   "active": true,
+  "custom_domain_id": 1,
   "id": 1,
   "name": "My Key",
   "key_type": "ssh-rsa",
@@ -14,6 +15,7 @@
 ```
 
 * `active` (boolean): If true, use this SFTP Host Key.
+* `custom_domain_id` (int64): Custom Domain ID. If set, this key is used only for that Custom Domain.
 * `id` (int64): SFTP Host Key ID
 * `name` (string): The friendly name of this SFTP Host Key.
 * `key_type` (string): SSH key type
@@ -58,6 +60,7 @@ $sftp_host_key->find($id);
 $sftp_host_key = new \Files\Model\SftpHostKey();
 $sftp_host_key->create(, [
   'active' => true,
+  'custom_domain_id' => 1,
   'name' => "My Key",
 ]);
 ```
@@ -66,6 +69,7 @@ $sftp_host_key->create(, [
 ### Parameters
 
 * `active` (boolean): If true, use this SFTP Host Key.
+* `custom_domain_id` (int64): Custom Domain ID. If set, this key is used only for that Custom Domain.
 * `name` (string): The friendly name of this SFTP Host Key.
 * `private_key` (string): The private key data.
 
@@ -78,6 +82,7 @@ $sftp_host_key = \Files\Model\SftpHostKey::find($id);
 
 $sftp_host_key->update([
   'active' => true,
+  'custom_domain_id' => 1,
   'name' => "My Key",
 ]);
 ```
@@ -86,6 +91,7 @@ $sftp_host_key->update([
 
 * `id` (int64): Required - Sftp Host Key ID.
 * `active` (boolean): If true, use this SFTP Host Key.
+* `custom_domain_id` (int64): Custom Domain ID. If set, this key is used only for that Custom Domain.
 * `name` (string): The friendly name of this SFTP Host Key.
 * `private_key` (string): The private key data.
 
@@ -94,6 +100,7 @@ $sftp_host_key->update([
 ```json
 {
   "active": true,
+  "custom_domain_id": 1,
   "id": 1,
   "name": "My Key",
   "key_type": "ssh-rsa",

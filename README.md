@@ -584,7 +584,6 @@ Exception
 |`ApiKeySessionsNotSupportedException`|  `NotAuthenticatedException` |
 |`AuthenticationRequiredException`|  `NotAuthenticatedException` |
 |`BundleRegistrationCodeFailedException`|  `NotAuthenticatedException` |
-|`FilesAgentTokenFailedException`|  `NotAuthenticatedException` |
 |`InboxRegistrationCodeFailedException`|  `NotAuthenticatedException` |
 |`InvalidCredentialsException`|  `NotAuthenticatedException` |
 |`InvalidOauthException`|  `NotAuthenticatedException` |

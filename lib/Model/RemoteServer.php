@@ -65,7 +65,7 @@ class RemoteServer
     {
         return $this->attributes['id'] = $value;
     }
-    // boolean # If true, this Remote Server has been disabled due to failures.  Make any change or set disabled to false to clear this flag.
+    // boolean # If true, this Remote Server is disabled. Updating it clears this flag, except for retired Agent v1 records, which remain disabled.
     public function getDisabled()
     {
         return @$this->attributes['disabled'];
@@ -655,16 +655,6 @@ class RemoteServer
     {
         return $this->attributes['files_agent_root'] = $value;
     }
-    // string # Files Agent API Token
-    public function getFilesAgentApiToken()
-    {
-        return @$this->attributes['files_agent_api_token'];
-    }
-
-    public function setFilesAgentApiToken($value)
-    {
-        return $this->attributes['files_agent_api_token'] = $value;
-    }
     // string # Files Agent version
     public function getFilesAgentVersion()
     {
@@ -1110,86 +1100,6 @@ class RemoteServer
 
         $response = Api::sendRequest('/remote_servers/' . rawurlencode(strval(@$params['id'])) . '/agent_push_update', 'POST', $params, $this->options);
         return new AgentPushUpdate((array) (@$response->data ?: []), $this->options);
-    }
-
-    // Post local changes, check in, and download configuration file (used by some Remote Server integrations, such as the Files.com Agent)
-    //
-    // Parameters:
-    //   api_token - string - Files Agent API Token
-    //   permission_set - string - The permission set for the agent ['read_write', 'read_only', 'write_only']
-    //   root - string - The root directory for the agent
-    //   hostname - string
-    //   port - int64 - Incoming port for files agent connections
-    //   status - string - either running or shutdown
-    //   config_version - string - agent config version
-    //   private_key - string - The private key for the agent
-    //   public_key - string - public key
-    //   server_host_key - string
-    //   subdomain - string - Files.com subdomain site name
-    public function configurationFile($params = [])
-    {
-        if (!is_array($params)) {
-            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
-        }
-
-        if (!@$params['id']) {
-            if (@$this->id) {
-                $params['id'] = $this->id;
-            } else {
-                throw new \Files\Exception\MissingParameterException('Parameter missing: id');
-            }
-        }
-
-        if (@$params['id'] && !is_int(@$params['id'])) {
-            throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
-        }
-
-        if (@$params['api_token'] && !is_string(@$params['api_token'])) {
-            throw new \Files\Exception\InvalidParameterException('$api_token must be of type string; received ' . gettype(@$params['api_token']));
-        }
-
-        if (@$params['permission_set'] && !is_string(@$params['permission_set'])) {
-            throw new \Files\Exception\InvalidParameterException('$permission_set must be of type string; received ' . gettype(@$params['permission_set']));
-        }
-
-        if (@$params['root'] && !is_string(@$params['root'])) {
-            throw new \Files\Exception\InvalidParameterException('$root must be of type string; received ' . gettype(@$params['root']));
-        }
-
-        if (@$params['hostname'] && !is_string(@$params['hostname'])) {
-            throw new \Files\Exception\InvalidParameterException('$hostname must be of type string; received ' . gettype(@$params['hostname']));
-        }
-
-        if (@$params['port'] && !is_int(@$params['port'])) {
-            throw new \Files\Exception\InvalidParameterException('$port must be of type int; received ' . gettype(@$params['port']));
-        }
-
-        if (@$params['status'] && !is_string(@$params['status'])) {
-            throw new \Files\Exception\InvalidParameterException('$status must be of type string; received ' . gettype(@$params['status']));
-        }
-
-        if (@$params['config_version'] && !is_string(@$params['config_version'])) {
-            throw new \Files\Exception\InvalidParameterException('$config_version must be of type string; received ' . gettype(@$params['config_version']));
-        }
-
-        if (@$params['private_key'] && !is_string(@$params['private_key'])) {
-            throw new \Files\Exception\InvalidParameterException('$private_key must be of type string; received ' . gettype(@$params['private_key']));
-        }
-
-        if (@$params['public_key'] && !is_string(@$params['public_key'])) {
-            throw new \Files\Exception\InvalidParameterException('$public_key must be of type string; received ' . gettype(@$params['public_key']));
-        }
-
-        if (@$params['server_host_key'] && !is_string(@$params['server_host_key'])) {
-            throw new \Files\Exception\InvalidParameterException('$server_host_key must be of type string; received ' . gettype(@$params['server_host_key']));
-        }
-
-        if (@$params['subdomain'] && !is_string(@$params['subdomain'])) {
-            throw new \Files\Exception\InvalidParameterException('$subdomain must be of type string; received ' . gettype(@$params['subdomain']));
-        }
-
-        $response = Api::sendRequest('/remote_servers/' . rawurlencode(strval(@$params['id'])) . '/configuration_file', 'POST', $params, $this->options);
-        return new RemoteServerConfigurationFile((array) (@$response->data ?: []), $this->options);
     }
 
     // Parameters:

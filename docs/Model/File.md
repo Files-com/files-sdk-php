@@ -14,7 +14,7 @@
   "created_by_remote_server_id": 1,
   "created_by_sync_id": 1,
   "custom_metadata": {
-    "key": "value"
+    "department": "finance"
   },
   "display_name": "file.txt",
   "type": "file",
@@ -115,7 +115,7 @@
 ```
 $file = new \Files\Model\File();
 $file->create($path, [
-  'custom_metadata' => {"key":"value"},
+  'custom_metadata' => {"department":"finance"},
   'length' => 1,
   'mkdir_parents' => false,
   'part' => 1,
@@ -229,7 +229,7 @@ $file->download([
   "created_by_remote_server_id": 1,
   "created_by_sync_id": 1,
   "custom_metadata": {
-    "key": "value"
+    "department": "finance"
   },
   "display_name": "file.txt",
   "type": "file",
@@ -282,7 +282,7 @@ $file->download([
 $file = \Files\Model\File::find($path);
 
 $file->update([
-  'custom_metadata' => {"key":"value"},
+  'custom_metadata' => {"department":"finance"},
   'provided_mtime' => "2000-01-01T01:00:00Z",
   'priority_color' => "red",
 ]);
@@ -309,7 +309,7 @@ $file->update([
   "created_by_remote_server_id": 1,
   "created_by_sync_id": 1,
   "custom_metadata": {
-    "key": "value"
+    "department": "finance"
   },
   "display_name": "file.txt",
   "type": "file",

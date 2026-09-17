@@ -12,7 +12,7 @@
   "file_format": "example",
   "file_interval_minutes": 1,
   "additional_headers": {
-    "key": "example value"
+    "Authorization": "Bearer YOUR_TOKEN"
   },
   "sending_active": true,
   "generic_payload_type": "example",
@@ -164,7 +164,7 @@ $siem_http_destination->find($id);
 $siem_http_destination = new \Files\Model\SiemHttpDestination();
 $siem_http_destination->create(, [
   'name' => "example",
-  'additional_headers' => {"key":"example value"},
+  'additional_headers' => {"Authorization":"Bearer YOUR_TOKEN"},
   'sending_active' => true,
   'generic_payload_type' => "example",
   'file_destination_path' => "example",
@@ -240,7 +240,7 @@ $siem_http_destination->sendTestEntry(, [
   'destination_type' => "example",
   'destination_url' => "example",
   'name' => "example",
-  'additional_headers' => {"key":"example value"},
+  'additional_headers' => {"Authorization":"Bearer YOUR_TOKEN"},
   'sending_active' => true,
   'generic_payload_type' => "example",
   'file_destination_path' => "example",
@@ -313,7 +313,7 @@ $siem_http_destination = \Files\Model\SiemHttpDestination::find($id);
 
 $siem_http_destination->update([
   'name' => "example",
-  'additional_headers' => {"key":"example value"},
+  'additional_headers' => {"Authorization":"Bearer YOUR_TOKEN"},
   'sending_active' => true,
   'generic_payload_type' => "example",
   'file_destination_path' => "example",
@@ -390,7 +390,7 @@ $siem_http_destination->update([
   "file_format": "example",
   "file_interval_minutes": 1,
   "additional_headers": {
-    "key": "example value"
+    "Authorization": "Bearer YOUR_TOKEN"
   },
   "sending_active": true,
   "generic_payload_type": "example",

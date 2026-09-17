@@ -10,7 +10,7 @@
   "use_for_all_users": false,
   "disable_drive_mounting": false,
   "mount_mappings": {
-    "key": "example value"
+    "W": "Americas"
   }
 }
 ```
@@ -61,7 +61,7 @@ $desktop_configuration_profile->find($id);
 $desktop_configuration_profile = new \Files\Model\DesktopConfigurationProfile();
 $desktop_configuration_profile->create(, [
   'name' => "North America Desktop Profile",
-  'mount_mappings' => {"key":"example value"},
+  'mount_mappings' => {"W":"Americas"},
   'workspace_id' => 1,
   'use_for_all_users' => false,
   'disable_drive_mounting' => false,
@@ -87,7 +87,7 @@ $desktop_configuration_profile = \Files\Model\DesktopConfigurationProfile::find(
 $desktop_configuration_profile->update([
   'name' => "North America Desktop Profile",
   'workspace_id' => 1,
-  'mount_mappings' => {"key":"example value"},
+  'mount_mappings' => {"W":"Americas"},
   'use_for_all_users' => false,
   'disable_drive_mounting' => false,
 ]);
@@ -112,7 +112,7 @@ $desktop_configuration_profile->update([
   "use_for_all_users": false,
   "disable_drive_mounting": false,
   "mount_mappings": {
-    "key": "example value"
+    "W": "Americas"
   }
 }
 ```

@@ -99,6 +99,7 @@ $partner_site_request->reject(, [
 $partner_site_request = new \Files\Model\PartnerSiteRequest();
 $partner_site_request->approve(, [
   'pairing_key' => "pairing_key",
+  'partner_id' => 1,
 ]);
 ```
 
@@ -106,6 +107,7 @@ $partner_site_request->approve(, [
 ### Parameters
 
 * `pairing_key` (string): Required - Pairing key for the partner site request
+* `partner_id` (int64): ID of an existing Partner on this site, with the host role, that represents the requesting organization. The connection binds to that Partner and makes it host_and_guest. When omitted, a guest Partner named after the host site is created.
 
 ---
 

@@ -115,6 +115,16 @@ class Partner
     {
         return $this->attributes['cc_emails_to_responsible_party'] = $value;
     }
+    // array(object) # Approved Connected Sites relationships for this Partner, in both directions. Empty when this Partner has no connections. Read-only.
+    public function getConnections()
+    {
+        return @$this->attributes['connections'];
+    }
+
+    public function setConnections($value)
+    {
+        return $this->attributes['connections'] = $value;
+    }
     // int64 # The unique ID of the Partner.
     public function getId()
     {

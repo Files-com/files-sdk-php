@@ -20,7 +20,37 @@ function middlewareRemoveHeader($header)
 
 class Api
 {
-    const VERSION = "2.0.667";
+    const VERSION = "2.0.668";
+
+    private static function urlOrigin($url)
+    {
+        $parts = parse_url($url);
+        if (!$parts || !isset($parts['scheme']) || !isset($parts['host'])) {
+            return null;
+        }
+
+        $scheme = strtolower($parts['scheme']);
+        $port = isset($parts['port']) ? $parts['port'] : ($scheme === 'https' ? 443 : 80);
+        return $scheme . '://' . strtolower($parts['host']) . ':' . $port;
+    }
+
+    private static function redirectAuthMiddleware($baseUrl)
+    {
+        $baseOrigin = self::urlOrigin($baseUrl);
+        return function ($handler) use ($baseOrigin) {
+            $authHeadersStripped = false;
+            return function ($request, $options) use ($handler, $baseOrigin, &$authHeadersStripped) {
+                if ($authHeadersStripped || self::urlOrigin((string) $request->getUri()) !== $baseOrigin) {
+                    $authHeadersStripped = true;
+                    foreach (['X-FilesAPI-Key', 'X-FilesAPI-Auth', 'X-Files-Workspace-Id'] as $header) {
+                        $request = $request->withoutHeader($header);
+                    }
+                }
+                return $handler($request, $options);
+            };
+        };
+    }
+
     private static function pushRetryHandler($handlerStack)
     {
         $shouldRetry = function ($retries, $request, $response, $exception) {
@@ -63,6 +93,11 @@ class Api
         Logger::debug("Sending request: " . $verb . " $url");
 
         $handlerStack = HandlerStack::create(Files::getHandler());
+        $handlerStack->after(
+            'allow_redirects',
+            self::redirectAuthMiddleware($baseUrl),
+            'files_auth_redirects'
+        );
         self::pushRetryHandler($handlerStack);
 
         // for security, Content-Length is disallowed on GET requests

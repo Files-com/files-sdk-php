@@ -186,6 +186,69 @@ class ApiTest extends TestCase
         Files::setWorkspaceId(null);
     }
 
+    public function testCrossOriginRedirectStripsFilesAuthHeaders()
+    {
+        Files::setBaseUrl('https://app.files.com');
+        Files::setApiKey('test-key');
+        Files::setSessionId('test-session');
+        Files::setWorkspaceId(123);
+
+        $history = [];
+        $mock = new MockHandler([
+            new Response(302, ['Location' => 'https://storage.example.test/download']),
+            new Response(302, ['Location' => 'https://app.files.com/returned']),
+            new Response(200, ['Content-Type' => 'application/json'], '[]')
+        ]);
+        $handler = function ($request, $options) use (&$history, $mock) {
+            $history[] = ['request' => $request, 'options' => $options];
+            return $mock($request, $options);
+        };
+        Files::setHandler($handler);
+
+        Api::sendRequest('/folders', 'GET');
+
+        $this->assertCount(3, $history);
+        $redirectedRequest = $history[1]['request'];
+        $this->assertFalse($redirectedRequest->hasHeader('X-FilesAPI-Key'));
+        $this->assertFalse($redirectedRequest->hasHeader('X-FilesAPI-Auth'));
+        $this->assertFalse($redirectedRequest->hasHeader('X-Files-Workspace-Id'));
+        $returnedRequest = $history[2]['request'];
+        $this->assertFalse($returnedRequest->hasHeader('X-FilesAPI-Key'));
+        $this->assertFalse($returnedRequest->hasHeader('X-FilesAPI-Auth'));
+        $this->assertFalse($returnedRequest->hasHeader('X-Files-Workspace-Id'));
+
+        Files::setSessionId(null);
+        Files::setWorkspaceId(null);
+    }
+
+    public function testSameOriginRedirectKeepsFilesAuthHeaders()
+    {
+        Files::setBaseUrl('https://app.files.com');
+        Files::setApiKey('test-key');
+        Files::setSessionId(null);
+        Files::setWorkspaceId(123);
+
+        $history = [];
+        $mock = new MockHandler([
+            new Response(302, ['Location' => 'https://app.files.com/redirected']),
+            new Response(200, ['Content-Type' => 'application/json'], '[]')
+        ]);
+        $handler = function ($request, $options) use (&$history, $mock) {
+            $history[] = ['request' => $request, 'options' => $options];
+            return $mock($request, $options);
+        };
+        Files::setHandler($handler);
+
+        Api::sendRequest('/folders', 'GET');
+
+        $this->assertCount(2, $history);
+        $redirectedRequest = $history[1]['request'];
+        $this->assertEquals('test-key', $redirectedRequest->getHeaderLine('X-FilesAPI-Key'));
+        $this->assertEquals('123', $redirectedRequest->getHeaderLine('X-Files-Workspace-Id'));
+
+        Files::setWorkspaceId(null);
+    }
+
     public function testFileDeleteEncodesReturnedPathBeforeRequest()
     {
         Files::setApiKey('test-key');

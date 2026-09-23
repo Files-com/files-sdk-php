@@ -65,6 +65,16 @@ class ActionNotificationExport
     {
         return $this->attributes['id'] = $value;
     }
+    // int64 # Workspace whose logs are exported. Set to `0` for the default workspace. A null value means a site-wide export.
+    public function getWorkspaceId()
+    {
+        return @$this->attributes['workspace_id'];
+    }
+
+    public function setWorkspaceId($value)
+    {
+        return $this->attributes['workspace_id'] = $value;
+    }
     // string # Version of the underlying records for the export.
     public function getExportVersion()
     {
@@ -237,6 +247,7 @@ class ActionNotificationExport
 
     // Parameters:
     //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
+    //   workspace_id - int64 - Workspace whose logs are exported. Set to `0` for the default workspace. A null value means a site-wide export.
     //   start_at - string - Start date/time of export range.
     //   end_at - string - End date/time of export range.
     //   query_message - string - Error message associated with the request, if any.
@@ -250,6 +261,10 @@ class ActionNotificationExport
     {
         if (@$params['user_id'] && !is_int(@$params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
+        }
+
+        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
         if (@$params['start_at'] && !is_string(@$params['start_at'])) {

@@ -6,8 +6,20 @@ namespace Files {
 
     function handleErrorResponse($error)
     {
+        if ($error instanceof Exception\FilesException) {
+            throw $error;
+        }
+
         $className = null;
         $errorData = null;
+        $message = $error->getMessage();
+        if (method_exists($error, 'getRequest')) {
+            Logger::debug($message);
+            $uri = (string) $error->getRequest()->getUri();
+            if ($uri !== '') {
+                $message = str_replace($uri, '[redacted]', $message);
+            }
+        }
 
         switch (get_class($error)) {
             case 'GuzzleHttp\\Exception\\TransferException':
@@ -38,17 +50,17 @@ namespace Files {
         if (!$className) {
             if (method_exists($error, 'getResponse')) {
                 $response = $error->getResponse();
-                $errorData = json_decode($response->getBody()->getContents());
+                $errorData = $response === null ? null : json_decode($response->getBody()->getContents());
             } else {
                 $response = $error;
             }
 
             if ($response === null) {
-                throw new Exception\FilesException($error->getMessage(), $error->getCode());
+                throw new Exception\FilesException($message, $error->getCode());
             }
 
             if ($errorData === null) {
-                throw new Exception\FilesException($error->getMessage(), $error->getCode());
+                throw new Exception\FilesException($message, $error->getCode());
             }
 
             if (is_array($errorData)) {
@@ -57,7 +69,7 @@ namespace Files {
 
             if ($errorData) {
                 if (!@$errorData->type) {
-                    throw new Exception\FilesException($error->getMessage(), $error->getCode());
+                    throw new Exception\FilesException($message, $error->getCode());
                 }
 
                 $toPascalCase = function ($errorPart) {
@@ -82,6 +94,6 @@ namespace Files {
             $ExceptionClass = '\\Files\\Exception\\ApiException';
         }
 
-        throw new $ExceptionClass($error->getMessage(), $error->getCode(), $errorData);
+        throw new $ExceptionClass($message, $error->getCode(), $errorData);
     }
 }

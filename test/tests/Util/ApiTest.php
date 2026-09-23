@@ -19,6 +19,66 @@ use PHPUnit\Framework\TestCase;
 
 class ApiTest extends TestCase
 {
+    public function testTransferConnectionErrorsHideSignedUrls()
+    {
+        $url = 'https://transfer.example.test/private-part?X-Amz-Credential=credential&X-Amz-Signature=signature';
+        $originalRetries = Files::$maxNetworkRetries;
+        $originalMinDelay = Files::$minNetworkRetryDelay;
+        $originalMaxDelay = Files::$maxNetworkRetryDelay;
+        $originalLogLevel = Files::$logLevel;
+        $originalHandler = Files::getHandler();
+        $originalOutput = Logger::getOutputStream();
+        Files::$maxNetworkRetries = 1;
+        Files::$minNetworkRetryDelay = 0;
+        Files::$maxNetworkRetryDelay = 0;
+
+        try {
+            foreach ([LogLevel::INFO, LogLevel::DEBUG] as $level) {
+                foreach (['PUT', 'GET'] as $method) {
+                    $output = fopen('php://memory', 'w+');
+                    Logger::setOutputStream($output);
+                    Files::$logLevel = $level;
+                    $error = new \GuzzleHttp\Exception\ConnectException(
+                        'cURL error 7: Failed to connect for ' . $url,
+                        new Request($method, $url)
+                    );
+                    $mock = new MockHandler([$error, $error]);
+                    Files::setHandler($mock);
+
+                    try {
+                        if ($method === 'PUT') {
+                            Api::sendFile($url, $method, 'part');
+                        } else {
+                            Api::sendRequest($url, $method);
+                        }
+                        $this->fail('Expected a transfer error');
+                    } catch (\Files\Exception\ApiConnectException $caught) {
+                        $this->assertNotFalse(strpos($caught->getMessage(), 'cURL error 7'));
+                        foreach (['transfer.example.test', 'private-part', 'credential', 'signature'] as $secret) {
+                            $this->assertFalse(strpos($caught->getMessage(), $secret));
+                        }
+                    }
+                    $this->assertCount(0, $mock);
+                    rewind($output);
+                    $logs = stream_get_contents($output);
+                    if ($level === LogLevel::INFO) {
+                        $this->assertFalse(strpos($logs, $url));
+                    } else {
+                        $this->assertNotFalse(strpos($logs, $url));
+                    }
+                    fclose($output);
+                }
+            }
+        } finally {
+            Files::$maxNetworkRetries = $originalRetries;
+            Files::$minNetworkRetryDelay = $originalMinDelay;
+            Files::$maxNetworkRetryDelay = $originalMaxDelay;
+            Files::$logLevel = $originalLogLevel;
+            Files::setHandler($originalHandler);
+            Logger::setOutputStream($originalOutput);
+        }
+    }
+
     public function testListApiKeys()
     {
         Files::setApiKey('test-key');

@@ -32,7 +32,23 @@ class PathUtilTest extends TestCase
      */
     public function testSame($a, $b)
     {
+        $this->assertSame($b, Util\PathUtil::normalizeForComparison($a));
+        $this->assertSame($b, Util\PathUtil::normalizeForComparison($b));
         $this->assertEquals(true, Util\PathUtil::same($a, $b), "PathUtil::same failed for $a==$b");
+    }
+
+    public function testServerComparisonExamples()
+    {
+        $examples = json_decode(file_get_contents(__DIR__ . '/../../../shared/comparison_examples.json'), true);
+        foreach ($examples as $pair) {
+            $this->assertSame($pair[1], Util\PathUtil::normalizeForComparison($pair[0]));
+        }
+    }
+
+    public function testDistinctNumericPathNames()
+    {
+        $this->assertFalse(Util\PathUtil::same("0e1", "0e2"));
+        $this->assertFalse(Util\PathUtil::same("0", "00"));
     }
 
     public function testSplatOnNormalizeForComparison()

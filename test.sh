@@ -21,7 +21,7 @@ run_php_vers()
   cd "${DIR}/test" || exit 1 # Force the path
   rm -rf vendor
   rm composer.lock # Remove the lock so we can update deps for different PHP versions
-  $1 "${DIR}/composer.phar" install
+  $1 "${DIR}/composer.phar" install || exit 1
   FILES_SESSION_ENV="development" "$1" ./vendor/bin/phpunit --testsuite default || exit 1
   rm .phpunit.result.cache # We don't want to save the result cache between runs
 }

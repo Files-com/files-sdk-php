@@ -20,7 +20,7 @@ function middlewareRemoveHeader($header)
 
 class Api
 {
-    const VERSION = "2.0.675";
+    const VERSION = "2.0.676";
 
     private static function urlOrigin($url)
     {

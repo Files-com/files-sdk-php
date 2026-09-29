@@ -65,6 +65,36 @@ class CustomDomain
     {
         return $this->attributes['id'] = $value;
     }
+    // int64 # Workspace ID (0 for the default workspace).
+    public function getWorkspaceId()
+    {
+        return @$this->attributes['workspace_id'];
+    }
+
+    public function setWorkspaceId($value)
+    {
+        return $this->attributes['workspace_id'] = $value;
+    }
+    // boolean # Allow all workspaces to use this default-workspace Custom Domain.
+    public function getAvailableToAllWorkspaces()
+    {
+        return @$this->attributes['available_to_all_workspaces'];
+    }
+
+    public function setAvailableToAllWorkspaces($value)
+    {
+        return $this->attributes['available_to_all_workspaces'] = $value;
+    }
+    // array(string) # Eligible public IP addresses for Remote Server outbound connections. Empty when this Custom Domain is not eligible for outbound selection.
+    public function getOutboundIpAddresses()
+    {
+        return @$this->attributes['outbound_ip_addresses'];
+    }
+
+    public function setOutboundIpAddresses($value)
+    {
+        return $this->attributes['outbound_ip_addresses'] = $value;
+    }
     // string # Customer-owned domain name.
     public function getDomain()
     {
@@ -147,6 +177,8 @@ class CustomDomain
     }
 
     // Parameters:
+    //   available_to_all_workspaces - boolean - Allow all workspaces to use this default-workspace Custom Domain.
+    //   workspace_id - int64 - Workspace ID (0 for the default workspace).
     //   destination - string - Where this custom domain routes. Can be `site_alias`, `public_hosting`, `s3_endpoint`, or `unassigned` (not routing traffic). Set to `unassigned` automatically when a bound `public_hosting` folder behavior is deleted, and can be set manually via the API for any reason.
     //   folder_behavior_id - int64 - Public Hosting behavior ID when this domain routes to a specific Public Hosting behavior.  Preserved as historical context when `destination` becomes `unassigned`.
     //   ssl_certificate_id - int64 - Current SSL certificate ID.
@@ -167,6 +199,10 @@ class CustomDomain
 
         if (@$params['id'] && !is_int(@$params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
+        }
+
+        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
         if (@$params['destination'] && !is_string(@$params['destination'])) {
@@ -234,7 +270,8 @@ class CustomDomain
     // Parameters:
     //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
     //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `id`.
+    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `workspace_id`, `id` or `available_to_all_workspaces`.
+    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `workspace_id`.
     public static function all($params = [], $options = [])
     {
         if (@$params['cursor'] && !is_string(@$params['cursor'])) {
@@ -316,6 +353,8 @@ class CustomDomain
     }
 
     // Parameters:
+    //   available_to_all_workspaces - boolean - Allow all workspaces to use this default-workspace Custom Domain.
+    //   workspace_id - int64 - Workspace ID (0 for the default workspace).
     //   destination - string - Where this custom domain routes. Can be `site_alias`, `public_hosting`, `s3_endpoint`, or `unassigned` (not routing traffic). Set to `unassigned` automatically when a bound `public_hosting` folder behavior is deleted, and can be set manually via the API for any reason.
     //   folder_behavior_id - int64 - Public Hosting behavior ID when this domain routes to a specific Public Hosting behavior.  Preserved as historical context when `destination` becomes `unassigned`.
     //   ssl_certificate_id - int64 - Current SSL certificate ID.
@@ -324,6 +363,10 @@ class CustomDomain
     {
         if (!@$params['domain']) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: domain');
+        }
+
+        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
         if (@$params['destination'] && !is_string(@$params['destination'])) {

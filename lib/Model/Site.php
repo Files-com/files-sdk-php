@@ -595,6 +595,11 @@ class Site
     {
         return @$this->attributes['ldap_secure'];
     }
+    // string # How to validate the LDAP server certificate. `require_match` validates the certificate chain and hostname; `allow_any` disables certificate validation.
+    public function getLdapServerCertificate()
+    {
+        return @$this->attributes['ldap_server_certificate'];
+    }
     // string # LDAP type
     public function getLdapType()
     {
@@ -1205,6 +1210,7 @@ class Site
     //   ldap_host_3 - string - LDAP backup host
     //   ldap_port - int64 - LDAP port
     //   ldap_secure - boolean - Use secure LDAP?
+    //   ldap_server_certificate - string - How to validate the LDAP server certificate. `require_match` validates the certificate chain and hostname; `allow_any` disables certificate validation.
     //   ldap_username - string - Username for signing in to LDAP server.
     //   ldap_username_field - string - LDAP username field
     //   ldap_domain - string - Domain name that will be appended to usernames
@@ -1479,6 +1485,10 @@ class Site
 
         if (@$params['ldap_port'] && !is_int(@$params['ldap_port'])) {
             throw new \Files\Exception\InvalidParameterException('$ldap_port must be of type int; received ' . gettype(@$params['ldap_port']));
+        }
+
+        if (@$params['ldap_server_certificate'] && !is_string(@$params['ldap_server_certificate'])) {
+            throw new \Files\Exception\InvalidParameterException('$ldap_server_certificate must be of type string; received ' . gettype(@$params['ldap_server_certificate']));
         }
 
         if (@$params['ldap_username'] && !is_string(@$params['ldap_username'])) {

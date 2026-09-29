@@ -300,6 +300,11 @@ class SsoStrategy
     {
         return @$this->attributes['ldap_secure'];
     }
+    // string # How to validate the LDAP server certificate. `require_match` validates the certificate chain and hostname; `allow_any` disables certificate validation.
+    public function getLdapServerCertificate()
+    {
+        return @$this->attributes['ldap_server_certificate'];
+    }
     // string # LDAP server type
     public function getLdapType()
     {

@@ -600,6 +600,7 @@ Exception
 |`BillingPermissionRequiredException`|  `NotAuthorizedException` |
 |`BundleMaximumUsesReachedException`|  `NotAuthorizedException` |
 |`BundlePermissionRequiredException`|  `NotAuthorizedException` |
+|`CannotAdministerHigherLevelUserException`|  `NotAuthorizedException` |
 |`CannotLoginWhileUsingKeyException`|  `NotAuthorizedException` |
 |`CantActForOtherUserException`|  `NotAuthorizedException` |
 |`ContactAdminForPasswordChangeHelpException`|  `NotAuthorizedException` |
@@ -701,6 +702,7 @@ Exception
 |`MultipleProcessingErrorsException`|  `ProcessingFailureException` |
 |`PathTooLongException`|  `ProcessingFailureException` |
 |`RecipientAlreadySharedException`|  `ProcessingFailureException` |
+|`RemoteEntryReadOnlyException`|  `ProcessingFailureException` |
 |`RemoteServerErrorException`|  `ProcessingFailureException` |
 |`ResourceBelongsToParentSiteException`|  `ProcessingFailureException` |
 |`ResourceLockedException`|  `ProcessingFailureException` |

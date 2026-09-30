@@ -723,6 +723,7 @@ Exception
 |`TooManySharesException`|  `RateLimitedException` |
 |`AutomationsUnavailableException`|  `ServiceUnavailableException` |
 |`MigrationInProgressException`|  `ServiceUnavailableException` |
+|`SearchUnavailableException`|  `ServiceUnavailableException` |
 |`SiteDisabledException`|  `ServiceUnavailableException` |
 |`UploadsUnavailableException`|  `ServiceUnavailableException` |
 |`AccountAlreadyExistsException`|  `SiteConfigurationException` |

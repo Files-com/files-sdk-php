@@ -225,7 +225,7 @@ class ScheduledExport
     {
         return $this->attributes['human_readable_schedule'] = $value;
     }
-    // date-time # Most recent scheduled run time.
+    // date-time # Most recent scheduled attempt time, including attempts that failed validation.
     public function getLastRunAt()
     {
         return @$this->attributes['last_run_at'];
@@ -244,6 +244,16 @@ class ScheduledExport
     public function setLastExportId($value)
     {
         return $this->attributes['last_export_id'] = $value;
+    }
+    // string # Validation error from the most recent scheduled attempt. The schedule remains enabled and retries at its next scheduled time. Cleared when an export is successfully created; does not describe errors during export generation.
+    public function getLastError()
+    {
+        return @$this->attributes['last_error'];
+    }
+
+    public function setLastError($value)
+    {
+        return $this->attributes['last_error'] = $value;
     }
     // date-time # Creation time.
     public function getCreatedAt()

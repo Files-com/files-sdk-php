@@ -905,6 +905,11 @@ class Site
     {
         return @$this->attributes['smtp_port'];
     }
+    // string # Custom SMTP encryption mode: if_available (default) uses STARTTLS when offered and otherwise sends credentials and messages unencrypted; require requires STARTTLS before authentication; require_implicit uses TLS from connection start; never disables TLS. TLS verifies the server certificate against smtp_address.
+    public function getSmtpSsl()
+    {
+        return @$this->attributes['smtp_ssl'];
+    }
     // string # SMTP server username
     public function getSmtpUsername()
     {
@@ -1209,6 +1214,7 @@ class Site
     //   smtp_from - string - From address to use when mailing through custom SMTP
     //   smtp_username - string - SMTP server username
     //   smtp_port - int64 - SMTP server port
+    //   smtp_ssl - string - Custom SMTP encryption mode: if_available (default) uses STARTTLS when offered and otherwise sends credentials and messages unencrypted; require requires STARTTLS before authentication; require_implicit uses TLS from connection start; never disables TLS. TLS verifies the server certificate against smtp_address.
     //   ldap_enabled - boolean - Main LDAP setting: is LDAP enabled?
     //   ldap_type - string - LDAP type
     //   ldap_host - string - LDAP host
@@ -1471,6 +1477,10 @@ class Site
 
         if (@$params['smtp_port'] && !is_int(@$params['smtp_port'])) {
             throw new \Files\Exception\InvalidParameterException('$smtp_port must be of type int; received ' . gettype(@$params['smtp_port']));
+        }
+
+        if (@$params['smtp_ssl'] && !is_string(@$params['smtp_ssl'])) {
+            throw new \Files\Exception\InvalidParameterException('$smtp_ssl must be of type string; received ' . gettype(@$params['smtp_ssl']));
         }
 
         if (@$params['ldap_type'] && !is_string(@$params['ldap_type'])) {

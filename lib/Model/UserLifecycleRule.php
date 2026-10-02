@@ -115,7 +115,7 @@ class UserLifecycleRule
     {
         return $this->attributes['include_folder_admins'] = $value;
     }
-    // boolean # If true, the rule will apply to site admins.
+    // boolean # If true, the rule includes Site Administrators, who always belong to the Default Workspace. Can only be enabled when `workspace_id` is `0`.
     public function getIncludeSiteAdmins()
     {
         return @$this->attributes['include_site_admins'];
@@ -125,7 +125,7 @@ class UserLifecycleRule
     {
         return $this->attributes['include_site_admins'] = $value;
     }
-    // boolean # If true, a default-workspace rule also applies to users in all workspaces.
+    // boolean # If true, a Default Workspace rule also applies to users in all Custom Workspaces. Can only be enabled when `workspace_id` is `0`.
     public function getApplyToAllWorkspaces()
     {
         return @$this->attributes['apply_to_all_workspaces'];
@@ -175,7 +175,7 @@ class UserLifecycleRule
     {
         return $this->attributes['site_id'] = $value;
     }
-    // int64 # Workspace ID. `0` means the default workspace.
+    // int64 # Workspace whose users the rule applies to. `0` means the Default Workspace. A Custom Workspace rule applies only to users who belong to that Workspace, regardless of access granted to other users.
     public function getWorkspaceId()
     {
         return @$this->attributes['workspace_id'];
@@ -208,18 +208,18 @@ class UserLifecycleRule
 
     // Parameters:
     //   action - string - Action to take on inactive users (disable or delete)
-    //   apply_to_all_workspaces - boolean - If true, a default-workspace rule also applies to users in all workspaces.
+    //   apply_to_all_workspaces - boolean - If true, a Default Workspace rule also applies to users in all Custom Workspaces. Can only be enabled when `workspace_id` is `0`.
     //   authentication_method - string - User authentication method for which the rule will apply. Use `all_non_sso` to target every non-SSO authentication method with one rule.
     //   group_ids - array(int64) - Array of Group IDs to which the rule applies. If empty or not set, the rule applies to all users.
     //   inactivity_days - int64 - Number of days of inactivity before the rule applies
-    //   include_site_admins - boolean - If true, the rule will apply to site admins.
+    //   include_site_admins - boolean - If true, the rule includes Site Administrators, who always belong to the Default Workspace. Can only be enabled when `workspace_id` is `0`.
     //   include_folder_admins - boolean - If true, the rule will apply to folder admins.
     //   name - string - User Lifecycle Rule name
     //   notify_users - boolean - If true, users will be emailed before the rule disables or deletes them.
     //   partner_tag - string - If provided, only users belonging to Partners with this tag at the Partner level will be affected by the rule. Tags must only contain lowercase letters, numbers, and hyphens.
     //   user_state - string - State of the users to apply the rule to (inactive or disabled)
     //   user_tag - string - If provided, only users with this tag will be affected by the rule. Tags must only contain lowercase letters, numbers, and hyphens.
-    //   workspace_id - int64 - Workspace ID. `0` means the default workspace.
+    //   workspace_id - int64 - Workspace whose users the rule applies to. `0` means the Default Workspace. A Custom Workspace rule applies only to users who belong to that Workspace, regardless of access granted to other users.
     public function update($params = [])
     {
         if (!is_array($params)) {
@@ -375,18 +375,18 @@ class UserLifecycleRule
 
     // Parameters:
     //   action - string - Action to take on inactive users (disable or delete)
-    //   apply_to_all_workspaces - boolean - If true, a default-workspace rule also applies to users in all workspaces.
+    //   apply_to_all_workspaces - boolean - If true, a Default Workspace rule also applies to users in all Custom Workspaces. Can only be enabled when `workspace_id` is `0`.
     //   authentication_method - string - User authentication method for which the rule will apply. Use `all_non_sso` to target every non-SSO authentication method with one rule.
     //   group_ids - array(int64) - Array of Group IDs to which the rule applies. If empty or not set, the rule applies to all users.
     //   inactivity_days - int64 - Number of days of inactivity before the rule applies
-    //   include_site_admins - boolean - If true, the rule will apply to site admins.
+    //   include_site_admins - boolean - If true, the rule includes Site Administrators, who always belong to the Default Workspace. Can only be enabled when `workspace_id` is `0`.
     //   include_folder_admins - boolean - If true, the rule will apply to folder admins.
     //   name - string - User Lifecycle Rule name
     //   notify_users - boolean - If true, users will be emailed before the rule disables or deletes them.
     //   partner_tag - string - If provided, only users belonging to Partners with this tag at the Partner level will be affected by the rule. Tags must only contain lowercase letters, numbers, and hyphens.
     //   user_state - string - State of the users to apply the rule to (inactive or disabled)
     //   user_tag - string - If provided, only users with this tag will be affected by the rule. Tags must only contain lowercase letters, numbers, and hyphens.
-    //   workspace_id - int64 - Workspace ID. `0` means the default workspace.
+    //   workspace_id - int64 - Workspace whose users the rule applies to. `0` means the Default Workspace. A Custom Workspace rule applies only to users who belong to that Workspace, regardless of access granted to other users.
     public static function create($params = [], $options = [])
     {
         if (@$params['action'] && !is_string(@$params['action'])) {

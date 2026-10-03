@@ -55,6 +55,16 @@ class HistoryExport
     {
         return !!@$this->attributes['id'];
     }
+    // int64 # Workspace of the export. 0 represents the default workspace. A null value means a site-wide export.
+    public function getWorkspaceId()
+    {
+        return @$this->attributes['workspace_id'];
+    }
+
+    public function setWorkspaceId($value)
+    {
+        return $this->attributes['workspace_id'] = $value;
+    }
     // int64 # History Export ID
     public function getId()
     {

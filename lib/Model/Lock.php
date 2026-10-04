@@ -175,6 +175,16 @@ class Lock
     {
         return $this->attributes['username'] = $value;
     }
+    // string # Require this existing, unexpired token before refreshing or replacing a lock. Set token to the same value to refresh, or a different value to replace.
+    public function getExpectedToken()
+    {
+        return @$this->attributes['expected_token'];
+    }
+
+    public function setExpectedToken($value)
+    {
+        return $this->attributes['expected_token'] = $value;
+    }
 
     // Parameters:
     //   token (required) - string - Lock token
@@ -268,6 +278,8 @@ class Lock
 
     // Parameters:
     //   path (required) - string - Path
+    //   token - string - Lock token. With expected_token, use the same value to refresh or a different value to replace the existing token.
+    //   expected_token - string - Require this existing, unexpired token before refreshing or replacing a lock. Set token to the same value to refresh, or a different value to replace.
     //   allow_access_by_any_user - boolean - Can lock be modified by users other than its creator?
     //   exclusive - boolean - Is lock exclusive?
     //   recursive - boolean - Does lock apply to subfolders?
@@ -286,6 +298,14 @@ class Lock
 
         if (@$params['path'] && !is_string(@$params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
+        }
+
+        if (@$params['token'] && !is_string(@$params['token'])) {
+            throw new \Files\Exception\InvalidParameterException('$token must be of type string; received ' . gettype(@$params['token']));
+        }
+
+        if (@$params['expected_token'] && !is_string(@$params['expected_token'])) {
+            throw new \Files\Exception\InvalidParameterException('$expected_token must be of type string; received ' . gettype(@$params['expected_token']));
         }
 
         if (@$params['timeout'] && !is_int(@$params['timeout'])) {

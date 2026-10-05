@@ -95,7 +95,7 @@ class Lock
     {
         return $this->attributes['recursive'] = $value;
     }
-    // string # Owner of the lock.  This can be any arbitrary string.
+    // string # Arbitrary descriptive label for the lock. Does not change the lock creator or permissions.
     public function getOwner()
     {
         return @$this->attributes['owner'];
@@ -283,6 +283,7 @@ class Lock
     //   allow_access_by_any_user - boolean - Can lock be modified by users other than its creator?
     //   exclusive - boolean - Is lock exclusive?
     //   recursive - boolean - Does lock apply to subfolders?
+    //   owner - string - Arbitrary descriptive label for the lock. Does not change the lock creator or permissions.
     //   timeout - int64 - Lock timeout in seconds
     public static function create($path, $params = [], $options = [])
     {
@@ -306,6 +307,10 @@ class Lock
 
         if (@$params['expected_token'] && !is_string(@$params['expected_token'])) {
             throw new \Files\Exception\InvalidParameterException('$expected_token must be of type string; received ' . gettype(@$params['expected_token']));
+        }
+
+        if (@$params['owner'] && !is_string(@$params['owner'])) {
+            throw new \Files\Exception\InvalidParameterException('$owner must be of type string; received ' . gettype(@$params['owner']));
         }
 
         if (@$params['timeout'] && !is_int(@$params['timeout'])) {

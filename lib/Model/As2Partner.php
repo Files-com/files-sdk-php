@@ -265,6 +265,26 @@ class As2Partner
     {
         return $this->attributes['http_auth_password'] = $value;
     }
+    // string # Base64-encoded PKCS#12 (.pfx or .p12) file containing the partner's public certificate. Provide this instead of public_certificate. Any private key in the file is discarded. A public-only file must contain exactly one certificate.
+    public function getPkcs12()
+    {
+        return @$this->attributes['pkcs12'];
+    }
+
+    public function setPkcs12($value)
+    {
+        return $this->attributes['pkcs12'] = $value;
+    }
+    // string # Password for pkcs12. The file and password are used only for import; the extracted public certificate is stored as PEM.
+    public function getPkcs12Password()
+    {
+        return @$this->attributes['pkcs12_password'];
+    }
+
+    public function setPkcs12Password($value)
+    {
+        return $this->attributes['pkcs12_password'] = $value;
+    }
 
     // Parameters:
     //   enable_dedicated_ips - boolean - If `true`, we will use your site's dedicated IPs for all outbound connections to this AS2 Partner.
@@ -278,6 +298,8 @@ class As2Partner
     //   name - string - The partner's formal AS2 name.
     //   uri - string - Public URI where we will send the AS2 messages (via HTTP/HTTPS).
     //   public_certificate - string - Public certificate for AS2 Partner.  Note: This is the certificate for AS2 message security, not a certificate used for HTTPS authentication.
+    //   pkcs12 - string - Base64-encoded PKCS#12 (.pfx or .p12) file containing the partner's public certificate. Provide this instead of public_certificate. Any private key in the file is discarded. A public-only file must contain exactly one certificate.
+    //   pkcs12_password - string - Password for pkcs12. The file and password are used only for import; the extracted public certificate is stored as PEM.
     public function update($params = [])
     {
         if (!is_array($params)) {
@@ -330,6 +352,14 @@ class As2Partner
 
         if (@$params['public_certificate'] && !is_string(@$params['public_certificate'])) {
             throw new \Files\Exception\InvalidParameterException('$public_certificate must be of type string; received ' . gettype(@$params['public_certificate']));
+        }
+
+        if (@$params['pkcs12'] && !is_string(@$params['pkcs12'])) {
+            throw new \Files\Exception\InvalidParameterException('$pkcs12 must be of type string; received ' . gettype(@$params['pkcs12']));
+        }
+
+        if (@$params['pkcs12_password'] && !is_string(@$params['pkcs12_password'])) {
+            throw new \Files\Exception\InvalidParameterException('$pkcs12_password must be of type string; received ' . gettype(@$params['pkcs12_password']));
         }
 
         $response = Api::sendRequest('/as2_partners/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
@@ -443,7 +473,9 @@ class As2Partner
     //   as2_station_id (required) - int64 - ID of the AS2 Station associated with this partner.
     //   name (required) - string - The partner's formal AS2 name.
     //   uri (required) - string - Public URI where we will send the AS2 messages (via HTTP/HTTPS).
-    //   public_certificate (required) - string - Public certificate for AS2 Partner.  Note: This is the certificate for AS2 message security, not a certificate used for HTTPS authentication.
+    //   public_certificate - string - Public certificate for AS2 Partner.  Note: This is the certificate for AS2 message security, not a certificate used for HTTPS authentication.
+    //   pkcs12 - string - Base64-encoded PKCS#12 (.pfx or .p12) file containing the partner's public certificate. Provide this instead of public_certificate. Any private key in the file is discarded. A public-only file must contain exactly one certificate.
+    //   pkcs12_password - string - Password for pkcs12. The file and password are used only for import; the extracted public certificate is stored as PEM.
     public static function create($params = [], $options = [])
     {
         if (!@$params['as2_station_id']) {
@@ -456,10 +488,6 @@ class As2Partner
 
         if (!@$params['uri']) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: uri');
-        }
-
-        if (!@$params['public_certificate']) {
-            throw new \Files\Exception\MissingParameterException('Parameter missing: public_certificate');
         }
 
         if (@$params['http_auth_username'] && !is_string(@$params['http_auth_username'])) {
@@ -500,6 +528,14 @@ class As2Partner
 
         if (@$params['public_certificate'] && !is_string(@$params['public_certificate'])) {
             throw new \Files\Exception\InvalidParameterException('$public_certificate must be of type string; received ' . gettype(@$params['public_certificate']));
+        }
+
+        if (@$params['pkcs12'] && !is_string(@$params['pkcs12'])) {
+            throw new \Files\Exception\InvalidParameterException('$pkcs12 must be of type string; received ' . gettype(@$params['pkcs12']));
+        }
+
+        if (@$params['pkcs12_password'] && !is_string(@$params['pkcs12_password'])) {
+            throw new \Files\Exception\InvalidParameterException('$pkcs12_password must be of type string; received ' . gettype(@$params['pkcs12_password']));
         }
 
         $response = Api::sendRequest('/as2_partners', 'POST', $params, $options);

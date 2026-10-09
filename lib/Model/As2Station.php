@@ -205,7 +205,7 @@ class As2Station
     {
         return $this->attributes['private_key_password_md5'] = $value;
     }
-    // string
+    // string # PEM-encoded private key matching public_certificate.
     public function getPrivateKey()
     {
         return @$this->attributes['private_key'];
@@ -215,7 +215,7 @@ class As2Station
     {
         return $this->attributes['private_key'] = $value;
     }
-    // string
+    // string # Password for the PEM-encoded private key.
     public function getPrivateKeyPassword()
     {
         return @$this->attributes['private_key_password'];
@@ -225,12 +225,34 @@ class As2Station
     {
         return $this->attributes['private_key_password'] = $value;
     }
+    // string # Base64-encoded PKCS#12 (.pfx or .p12) file containing the identity's certificate and private key. Provide this instead of public_certificate and private_key.
+    public function getPkcs12()
+    {
+        return @$this->attributes['pkcs12'];
+    }
+
+    public function setPkcs12($value)
+    {
+        return $this->attributes['pkcs12'] = $value;
+    }
+    // string # Password for pkcs12. The file and password are used only for import; the extracted certificate and private key are stored as PEM.
+    public function getPkcs12Password()
+    {
+        return @$this->attributes['pkcs12_password'];
+    }
+
+    public function setPkcs12Password($value)
+    {
+        return $this->attributes['pkcs12_password'] = $value;
+    }
 
     // Parameters:
     //   name - string - The station's formal AS2 name.
-    //   public_certificate - string
-    //   private_key - string
-    //   private_key_password - string
+    //   public_certificate - string - Public certificate used for message security.
+    //   private_key - string - PEM-encoded private key matching public_certificate.
+    //   private_key_password - string - Password for the PEM-encoded private key.
+    //   pkcs12 - string - Base64-encoded PKCS#12 (.pfx or .p12) file containing the identity's replacement certificate and private key. Provide this instead of public_certificate and private_key.
+    //   pkcs12_password - string - Password for pkcs12. The file and password are used only for import; the extracted certificate and private key are stored as PEM.
     public function update($params = [])
     {
         if (!is_array($params)) {
@@ -263,6 +285,14 @@ class As2Station
 
         if (@$params['private_key_password'] && !is_string(@$params['private_key_password'])) {
             throw new \Files\Exception\InvalidParameterException('$private_key_password must be of type string; received ' . gettype(@$params['private_key_password']));
+        }
+
+        if (@$params['pkcs12'] && !is_string(@$params['pkcs12'])) {
+            throw new \Files\Exception\InvalidParameterException('$pkcs12 must be of type string; received ' . gettype(@$params['pkcs12']));
+        }
+
+        if (@$params['pkcs12_password'] && !is_string(@$params['pkcs12_password'])) {
+            throw new \Files\Exception\InvalidParameterException('$pkcs12_password must be of type string; received ' . gettype(@$params['pkcs12_password']));
         }
 
         $response = Api::sendRequest('/as2_stations/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
@@ -367,21 +397,15 @@ class As2Station
     // Parameters:
     //   name (required) - string - The station's formal AS2 name.
     //   workspace_id - int64 - ID of the Workspace associated with this AS2 Station.
-    //   public_certificate (required) - string
-    //   private_key (required) - string
-    //   private_key_password - string
+    //   public_certificate - string - Public certificate used for message security.
+    //   private_key - string - PEM-encoded private key matching public_certificate.
+    //   private_key_password - string - Password for the PEM-encoded private key.
+    //   pkcs12 - string - Base64-encoded PKCS#12 (.pfx or .p12) file containing the identity's certificate and private key. Provide this instead of public_certificate and private_key.
+    //   pkcs12_password - string - Password for pkcs12. The file and password are used only for import; the extracted certificate and private key are stored as PEM.
     public static function create($params = [], $options = [])
     {
         if (!@$params['name']) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: name');
-        }
-
-        if (!@$params['public_certificate']) {
-            throw new \Files\Exception\MissingParameterException('Parameter missing: public_certificate');
-        }
-
-        if (!@$params['private_key']) {
-            throw new \Files\Exception\MissingParameterException('Parameter missing: private_key');
         }
 
         if (@$params['name'] && !is_string(@$params['name'])) {
@@ -402,6 +426,14 @@ class As2Station
 
         if (@$params['private_key_password'] && !is_string(@$params['private_key_password'])) {
             throw new \Files\Exception\InvalidParameterException('$private_key_password must be of type string; received ' . gettype(@$params['private_key_password']));
+        }
+
+        if (@$params['pkcs12'] && !is_string(@$params['pkcs12'])) {
+            throw new \Files\Exception\InvalidParameterException('$pkcs12 must be of type string; received ' . gettype(@$params['pkcs12']));
+        }
+
+        if (@$params['pkcs12_password'] && !is_string(@$params['pkcs12_password'])) {
+            throw new \Files\Exception\InvalidParameterException('$pkcs12_password must be of type string; received ' . gettype(@$params['pkcs12_password']));
         }
 
         $response = Api::sendRequest('/as2_stations', 'POST', $params, $options);

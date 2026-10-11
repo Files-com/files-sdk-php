@@ -60,7 +60,7 @@ class FileAction
     {
         return @$this->attributes['status'];
     }
-    // int64 # If status is pending, this is the id of the File Migration to check for status updates.
+    // int64 # If status is pending, this is the id of the File Migration to check for status updates.  Delete actions include it whenever the deletion runs as a File Migration, including while it is processing.
     public function getFileMigrationId()
     {
         return @$this->attributes['file_migration_id'];

@@ -984,6 +984,32 @@ class File
         return new ZipListEntry((array) (@$response->data ?: []), $this->options);
     }
 
+    // Delete File/Folder and return its File Action.  A pending or processing deletion continues in the background after this returns; check its File Migration for completion.  Waiting for the File Migration does not cancel the deletion
+    //
+    // Parameters:
+    //   recursive - boolean - If true, will recursively delete folders.  Otherwise, will error on non-empty folders.
+    public function beginDelete($params = [])
+    {
+        if (!is_array($params)) {
+            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+        }
+
+        if (!@$params['path']) {
+            if (@$this->path) {
+                $params['path'] = $this->path;
+            } else {
+                throw new \Files\Exception\MissingParameterException('Parameter missing: path');
+            }
+        }
+
+        if (@$params['path'] && !is_string(@$params['path'])) {
+            throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
+        }
+
+        $response = Api::sendRequest('/file_actions/delete/' . rawurlencode(strval(@$params['path'])) . '', 'POST', $params, $this->options);
+        return new FileAction((array) (@$response->data ?: []), $this->options);
+    }
+
     // Copy File/Folder
     //
     // Parameters:

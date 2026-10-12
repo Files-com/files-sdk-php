@@ -23,6 +23,7 @@
   "form_field_set": {
     "id": 1,
     "title": "Sample Form Title",
+    "require_complete_metadata_capture": false,
     "form_layout": [
       1,
       2,
@@ -403,6 +404,7 @@ $bundle->update([
   "form_field_set": {
     "id": 1,
     "title": "Sample Form Title",
+    "require_complete_metadata_capture": false,
     "form_layout": [
       1,
       2,

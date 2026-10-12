@@ -75,6 +75,11 @@ class EventDeliveryAttempt
     {
         return @$this->attributes['event_target_id'];
     }
+    // int64 # Shared summary ID when this event is delivered in a Slack or Teams subfolder summary. All events in a summary share its delivery outcome.
+    public function getActivityNotificationBatchId()
+    {
+        return @$this->attributes['activity_notification_batch_id'];
+    }
     // int64 # Workspace ID. 0 means the default workspace or site-wide.
     public function getWorkspaceId()
     {

@@ -655,7 +655,7 @@ class Site
     {
         return @$this->attributes['max_prior_passwords'];
     }
-    // object # List of site settings managed by the parent site
+    // object # Site settings managed by the parent site. Each key identifies a managed setting, with a null value. Non-secret effective values are returned in their own Site settings fields.
     public function getManagedSiteSettings()
     {
         return @$this->attributes['managed_site_settings'];

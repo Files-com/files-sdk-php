@@ -313,7 +313,7 @@ try {
 
 ```php title="Range Filter Example"
 try {
-  // users who haven't logged in since 2024-01-01
+  // users who have logged in on or after 2024-01-01
   $users = \Files\Model\User::list(array(
     'filter_gteq' => array("last_login_at" => "2024-01-01")
   ));

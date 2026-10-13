@@ -85,9 +85,11 @@ class File
         return new FileUploadPart($partData);
     }
 
-    private static function completeUpload($fileUploadPart, $params = [])
+    // An upload ends at the path its parts were requested at. The path an upload part reports is the API's own, which
+    // need not resolve in the caller's context: in a workspace it can be the site path, _/Workspaces/<id>/...
+    private static function completeUpload($path, $params = [])
     {
-        $response = Api::sendRequest('/files/' . rawurlencode($fileUploadPart->path), 'POST', $params);
+        $response = Api::sendRequest('/files/' . rawurlencode($path), 'POST', $params);
     }
 
     private static function underscoreDestinationPath($root, $id, $relativePath = null)
@@ -166,7 +168,7 @@ class File
             'size' => $filesize
         ];
 
-        $response = self::completeUpload($upload, $params);
+        $response = self::completeUpload($destinationPath, $params);
 
         return $response;
     }
@@ -216,7 +218,7 @@ class File
             'size' => $bytesWritten
         ];
 
-        $response = self::completeUpload($upload, $params);
+        $response = self::completeUpload($destinationPath, $params);
 
         return $response;
     }

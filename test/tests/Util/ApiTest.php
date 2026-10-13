@@ -329,6 +329,94 @@ class ApiTest extends TestCase
         $this->assertEquals('', $uri->getQuery());
     }
 
+    // In a workspace, the API can report an upload part's path as the site path of the workspace's file.
+    public function testUploadEndsAtItsDestinationNotThePathItsPartsReport()
+    {
+        Files::setBaseUrl('https://app.files.com');
+        Files::setApiKey('test-key');
+        Files::setWorkspaceId(123);
+        $destination = 'reports/daily.csv';
+        $data = 'hello';
+        $sourceFilePath = tempnam(sys_get_temp_dir(), 'files-upload');
+        file_put_contents($sourceFilePath, $data);
+        $uploads = [
+            'uploadFile' => function () use ($destination, $sourceFilePath) {
+                \Files\Model\File::uploadFile($destination, $sourceFilePath);
+            },
+            // A file handle: PHP 5.6 reports a php://temp stream's end only after reading past it, which adds a part.
+            'uploadData' => function () use ($destination, $sourceFilePath) {
+                $stream = fopen($sourceFilePath, 'rb');
+                try {
+                    \Files\Model\File::uploadData($destination, $stream);
+                } finally {
+                    if (is_resource($stream)) {
+                        fclose($stream);
+                    }
+                }
+            },
+        ];
+
+        try {
+            foreach ($uploads as $upload => $uploadToDestination) {
+                $history = [];
+                $mock = new MockHandler([
+                    $this->uploadPartResponse(1),
+                    new Response(200, ['ETag' => '"etag-1"']),
+                    $this->uploadPartResponse(2),
+                    new Response(200, ['ETag' => '"etag-2"']),
+                    new Response(201, ['Content-Type' => 'application/json'], '{"path": "reports/daily.csv"}'),
+                ]);
+                $stack = HandlerStack::create($mock);
+                $stack->push(Middleware::history($history));
+                Files::setHandler($stack);
+
+                $uploadToDestination();
+
+                $requestLines = array_map(function ($transaction) {
+                    return $transaction['request']->getMethod() . ' ' . $transaction['request']->getUri();
+                }, $history);
+                $this->assertSame([
+                    'POST https://app.files.com/api/rest/v1/files/reports%2Fdaily.csv',
+                    'PUT https://storage.example.test/part-1?X-Amz-Signature=signed',
+                    'POST https://app.files.com/api/rest/v1/files/reports%2Fdaily.csv',
+                    'PUT https://storage.example.test/part-2?X-Amz-Signature=signed',
+                    'POST https://app.files.com/api/rest/v1/files/reports%2Fdaily.csv',
+                ], $requestLines, $upload);
+
+                foreach ([0, 2, 4] as $apiRequest) {
+                    $workspaceId = $history[$apiRequest]['request']->getHeaderLine('X-Files-Workspace-Id');
+                    $this->assertSame('123', $workspaceId, $upload);
+                }
+                $this->assertSame('hel', (string) $history[1]['request']->getBody(), $upload);
+                $this->assertSame('lo', (string) $history[3]['request']->getBody(), $upload);
+
+                $completion = json_decode((string) $history[4]['request']->getBody(), true);
+                $this->assertSame('end', $completion['action'], $upload);
+                $this->assertSame('upload-ref', $completion['ref'], $upload);
+                $this->assertSame([
+                    ['etag' => '"etag-1"', 'part' => 1],
+                    ['etag' => '"etag-2"', 'part' => 2],
+                ], $completion['etags'], $upload);
+                $this->assertSame(strlen($data), $completion['size'], $upload);
+            }
+        } finally {
+            Files::setWorkspaceId(null);
+            unlink($sourceFilePath);
+        }
+    }
+
+    private function uploadPartResponse($partNumber)
+    {
+        return new Response(200, ['Content-Type' => 'application/json'], json_encode([
+            'http_method' => 'PUT',
+            'part_number' => $partNumber,
+            'partsize' => 3,
+            'path' => '_/Workspaces/123/reports/daily.csv',
+            'ref' => 'upload-ref',
+            'upload_uri' => 'https://storage.example.test/part-' . $partNumber . '?X-Amz-Signature=signed',
+        ]));
+    }
+
     public function testNotFound()
     {
         Files::setApiKey('test-key');

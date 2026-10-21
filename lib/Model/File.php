@@ -56,40 +56,209 @@ class File
         return !!@$this->attributes['path'];
     }
 
-    private static function openUpload($path, $params = [])
+    // A caller's upload parameters, split by where they go. provided_mtime and custom_metadata, which only the end of
+    // an upload takes, go to the end, as given. The state an upload helper owns (where the upload goes, its parts and
+    // ref, and the end's action, size, length, ETags and restart) is never taken from them: a parameter of one of those
+    // names is not sent. Every other parameter goes with the request for the first part, as before.
+    private static function splitUploadParams($params)
     {
-        $params = array_merge($params, ['action' => 'put']);
-        $response = Api::sendRequest('/files/' . rawurlencode($path), 'POST', $params);
+        if (!is_array($params)) {
+            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+        }
 
-        $partData = (array) (@$response->data ?: []);
-        $partData['headers'] = $response->headers;
-        $partData['parameters'] = $params;
+        $first = [];
+        $end = [];
+        foreach ($params as $name => $value) {
+            if (in_array($name, ['provided_mtime', 'custom_metadata'], true)) {
+                $end[$name] = $value;
+            } elseif (!in_array($name, ['path', 'part', 'parts', 'ref', 'restart', 'action', 'size', 'length', 'etags'], true)) {
+                $first[$name] = $value;
+            }
+        }
 
-        return new FileUploadPart($partData);
+        return [$first, $end];
     }
 
-    private static function continueUpload($path, $partNumber, $firstFileUploadPart)
+    // A caller's upload options, split into the progress callback, which only the helper calls, and the rest, which the
+    // upload's API requests take as the generated methods do. No option reaches a part's storage request.
+    private static function splitUploadOptions($options)
     {
-        $params = [
-            'action' => 'put',
-            'part' => $partNumber,
-            'ref' => $firstFileUploadPart->ref,
-        ];
+        if (!is_array($options)) {
+            throw new \Files\Exception\InvalidParameterException('$options must be of type array; received ' . gettype($options));
+        }
 
-        $response = Api::sendRequest('/files/' . rawurlencode($path), 'POST', $params);
+        $progress = isset($options['progress']) ? $options['progress'] : null;
+        if ($progress !== null && !is_callable($progress)) {
+            throw new \Files\Exception\InvalidParameterException('$options[\'progress\'] must be callable; received ' . gettype($progress));
+        }
 
-        $partData = (array) (@$response->data ?: []);
-        $partData['headers'] = $response->headers;
-        $partData['parameters'] = $params;
-
-        return new FileUploadPart($partData);
+        unset($options['progress']);
+        return [$options, $progress];
     }
 
-    // An upload ends at the path its parts were requested at. The path an upload part reports is the API's own, which
-    // need not resolve in the caller's context: in a workspace it can be the site path, _/Workspaces/<id>/...
-    private static function completeUpload($path, $params = [])
+    // Begins part $number of the upload to $path with File#beginUpload, one part a request: the first with the caller's
+    // $first parameters, each later one by the upload's $ref. The API must grant exactly that part, of the upload's
+    // ref, with a positive partsize and an upload_uri; anything else is refused before the part is read or sent.
+    private static function beginUploadPart($path, $number, $ref, $first, $options)
     {
-        $response = Api::sendRequest('/files/' . rawurlencode($path), 'POST', $params);
+        $request = $number === 1
+            ? $first + ['part' => 1, 'parts' => 1]
+            : ['ref' => $ref, 'part' => $number, 'parts' => 1];
+        $parts = (new File(['path' => $path], $options))->beginUpload($request);
+
+        $part = count($parts) === 1 ? $parts[0] : null;
+        $grantedRef = $part ? $part->getRef() : null;
+        if (
+            !$part || $part->getPartNumber() !== $number
+            || !is_string($grantedRef) || $grantedRef === '' || ($ref !== null && $grantedRef !== $ref)
+            || !is_int($part->getPartsize()) || $part->getPartsize() <= 0
+            || !is_string($part->getUploadUri()) || $part->getUploadUri() === ''
+        ) {
+            throw new \Files\Exception\ApiBadResponseException('Beginning part ' . $number . ' of the upload to ' . $path . ' granted ' . count($parts) . ' parts, not just that part of the upload with a positive partsize and an upload_uri');
+        }
+
+        return $part;
+    }
+
+    // How a granted part is sent: with its http_method (PUT, the usual one, when it gives none) and exactly the headers
+    // it gives, each a string. Form parameters and a form body, which a grant can also ask for, have no meaning this
+    // helper knows, so a grant asking for either is refused before the part is read or sent.
+    private static function uploadPartInstructions($part, $number)
+    {
+        $method = $part->getHttpMethod();
+        if ($method === null || $method === '') {
+            $method = 'PUT';
+        }
+
+        if (!is_string($method) || !preg_match('/\A[!#$%&\'*+.^_`|~0-9A-Za-z-]+\z/', $method)) {
+            throw new \Files\Exception\ApiBadResponseException('Part ' . $number . ' is granted an http_method that is not an HTTP method');
+        }
+
+        foreach (['parameters' => $part->getParameters(), 'send' => $part->getSend()] as $name => $value) {
+            if ($value !== null && $value !== '' && (array) $value !== []) {
+                throw new \Files\Exception\NotImplementedException('Part ' . $number . ' asks for ' . $name . ', which the upload helpers do not send');
+            }
+        }
+
+        $headers = $part->getHeaders();
+        if ($headers !== null && !is_array($headers) && !is_object($headers)) {
+            throw new \Files\Exception\ApiBadResponseException('Part ' . $number . ' is granted headers that are not a map of names to values');
+        }
+
+        $headers = (array) $headers;
+        foreach ($headers as $name => $value) {
+            if (!is_string($value)) {
+                throw new \Files\Exception\ApiBadResponseException('Part ' . $number . ' is granted the header ' . $name . ' with a value that is not a string');
+            }
+        }
+
+        return [$method, $headers];
+    }
+
+    // The value of a header a grant names, its name matched case-insensitively, as HTTP header names are; null when it
+    // names no such header.
+    private static function grantedHeader($headers, $name)
+    {
+        foreach ($headers as $key => $value) {
+            if (strcasecmp((string) $key, $name) === 0) {
+                return $value;
+            }
+        }
+
+        return null;
+    }
+
+    // The next part's bytes from $io: as many reads as it takes to fill $partsize bytes, or fewer when the source ends.
+    // A read that fails, or that gives nothing before the source ends, stops the upload before the part is sent: these
+    // helpers read blocking streams, which give nothing only at their end.
+    private static function readUploadPart($io, $partsize)
+    {
+        $bytes = '';
+        while (strlen($bytes) < $partsize) {
+            $read = fread($io, $partsize - strlen($bytes));
+            if ($read === false) {
+                throw new \Files\Exception\InvalidParameterException('Reading the upload\'s source failed');
+            }
+
+            if ($read === '') {
+                if (feof($io)) {
+                    break;
+                }
+
+                throw new \Files\Exception\InvalidParameterException('The upload\'s source gave no bytes before its end');
+            }
+
+            $bytes .= $read;
+        }
+
+        return $bytes;
+    }
+
+    // The ETag that acknowledges a part: its response must be a success giving exactly one ETag (matched in any case)
+    // that is not empty. Anything else stops the upload, with the part unacknowledged.
+    private static function uploadPartReceipt($response, $number)
+    {
+        $etags = Api::headerValues($response->headers, 'ETag');
+        if ($response->status < 200 || $response->status >= 300 || count($etags) !== 1 || !is_string($etags[0]) || $etags[0] === '') {
+            throw new \Files\Exception\ApiBadResponseException('The response to part ' . $number . ' (status ' . $response->status . ') did not acknowledge it with exactly one ETag');
+        }
+
+        return $etags[0];
+    }
+
+    // Uploads what $io holds to $path, a part at a time as the API grants each, and returns the upload's ref, each
+    // part's ETag and the bytes acknowledged. Each part is filled from as many reads as it takes, and the upload ends
+    // with the part during which the source ends (so a source ending exactly where a part ends sends one more, empty,
+    // part). $progress, when given, is called after each part is acknowledged; anything it throws stops the upload
+    // there, before any later part or the end.
+    private static function uploadParts($io, $path, $first, $options, $total, $progress)
+    {
+        $ref = null;
+        $etags = [];
+        $acknowledged = 0;
+        $number = 0;
+        while (true) {
+            $number++;
+            $part = self::beginUploadPart($path, $number, $ref, $first, $options);
+            $ref = $part->getRef();
+            list($method, $headers) = self::uploadPartInstructions($part, $number);
+            $bytes = self::readUploadPart($io, $part->getPartsize());
+
+            // Content-Type and Content-Length are added only when the grant names no such header, in any case; a
+            // granted Content-Length must be the part's own.
+            $contentLength = self::grantedHeader($headers, 'Content-Length');
+            if ($contentLength !== null && $contentLength !== (string) strlen($bytes)) {
+                throw new \Files\Exception\ApiBadResponseException('Part ' . $number . ' is granted a Content-Length other than its ' . strlen($bytes) . ' bytes');
+            }
+
+            if ($contentLength === null) {
+                $headers += ['Content-Length' => strlen($bytes)];
+            }
+
+            if (self::grantedHeader($headers, 'Content-Type') === null) {
+                $headers += ['Content-Type' => 'application/octet-stream'];
+            }
+
+            // A part whose grant says it cannot be retried (retry_parts false) is sent once. Otherwise a connection
+            // failure is retried as for any request; a grant without retry_parts keeps that policy, which is the SDK's,
+            // not a service guarantee.
+            $response = Api::sendFile($part->getUploadUri(), $method, $bytes, $headers, $part->getRetryParts() !== false);
+            $etags[] = ['etag' => self::uploadPartReceipt($response, $number), 'part' => $number];
+            $acknowledged += strlen($bytes);
+
+            if ($progress !== null) {
+                call_user_func($progress, [
+                    'total_bytes' => $total,
+                    'acknowledged_bytes' => $acknowledged,
+                    'part_number' => $number,
+                    'part_bytes' => strlen($bytes),
+                ]);
+            }
+
+            if (feof($io)) {
+                return [$ref, $etags, $acknowledged];
+            }
+        }
     }
 
     private static function underscoreDestinationPath($root, $id, $relativePath = null)
@@ -97,51 +266,14 @@ class File
         return \Files\Util\PathUtil::normalize('_', $root, strval($id), $relativePath);
     }
 
-    private static function uploadChunks($io, $path, $upload = null, $etags = [], $params = [])
-    {
-        $bytesWritten = 0;
-        while (true) {
-            if (empty($upload)) {
-                $params = array_merge($params, [
-                    'part' => 1
-                ]);
-            } else {
-                $params = array_merge($params, [
-                    'ref' => $upload->ref,
-                    'part' => $upload->part_number + 1
-                ]);
-            }
-
-            $beginUpload = empty($upload) ? self::openUpload($path, $params) : self::continueUpload($path, $upload->part_number + 1, $upload);
-            $upload = is_array($beginUpload) ? array_shift($beginUpload) : $beginUpload;
-
-            $buf = fread($io, $upload->partsize);
-            $buf = $buf === false ? '' : $buf;
-            $bytesWritten += strlen($buf);
-
-            $method = strtolower($upload->http_method);
-            $headers = [
-                'Content-Length' => strlen($buf),
-                'Content-Type' => 'application/octet-stream'
-            ];
-
-
-            $response = Api::sendFile($upload->upload_uri, 'PUT', $buf, $headers);
-
-            if ($response->headers['ETag']) {
-                array_push($etags, [
-                    'etag' => $response->headers['ETag'][0],
-                    'part' => $upload->part_number
-                ]);
-            }
-
-            if (feof($io)) {
-                return [$upload, $etags, $bytesWritten];
-            }
-        }
-    }
-
-    public static function uploadFile($destinationPath, $sourceFilePath, $params = [])
+    // Uploads the file at $sourceFilePath to $destinationPath part by part (uploadParts), and returns nothing. The
+    // upload ends at $destinationPath: the path a part reports is the API's own, which need not resolve in the caller's
+    // context (in a workspace it can be the site path, _/Workspaces/<id>/...). $params: see splitUploadParams;
+    // provided_mtime defaults to the file's modification time. $options: those of the generated methods, for the
+    // upload's API requests, and progress, a callable given an array of total_bytes (the file's size),
+    // acknowledged_bytes, part_number and part_bytes after each part is acknowledged; anything it throws stops the
+    // upload and is thrown here. The file is closed on every path.
+    public static function uploadFile($destinationPath, $sourceFilePath, $params = [], $options = [])
     {
         if (!$destinationPath) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: destinationPath');
@@ -155,41 +287,52 @@ class File
             throw new \Files\Exception\EmptyPropertyException('Empty sourceFilePath: No such file or directory');
         }
 
-        $sourceFileHandle = fopen($sourceFilePath, 'rb');
-        $filesize = filesize($sourceFilePath);
-        list($upload, $etags, $bytesWritten) = File::uploadChunks($sourceFileHandle, $destinationPath, null, [], $params);
-        fclose($sourceFileHandle);
+        list($first, $end) = self::splitUploadParams($params);
+        list($apiOptions, $progress) = self::splitUploadOptions($options);
 
-        $params = [
+        $sourceFileHandle = fopen($sourceFilePath, 'rb');
+        try {
+            $filesize = filesize($sourceFilePath);
+            list($ref, $etags, $bytesWritten) = self::uploadParts($sourceFileHandle, $destinationPath, $first, $apiOptions, $filesize, $progress);
+        } finally {
+            if (is_resource($sourceFileHandle)) {
+                fclose($sourceFileHandle);
+            }
+        }
+
+        self::create($destinationPath, array_merge([
             'action' => 'end',
-            'ref' => $upload->ref,
+            'ref' => $ref,
             'etags' => $etags,
             'provided_mtime' => date('c', filemtime($sourceFilePath)),
             'size' => $filesize
-        ];
+        ], $end), $apiOptions);
 
-        $response = self::completeUpload($destinationPath, $params);
-
-        return $response;
+        return null;
     }
 
-    public static function uploadToRemoteServer($remoteServerId, $destinationPath, $sourceFilePath, $params = [])
+    public static function uploadToRemoteServer($remoteServerId, $destinationPath, $sourceFilePath, $params = [], $options = [])
     {
-        return self::uploadFile(self::underscoreDestinationPath('RemoteServers', $remoteServerId, $destinationPath), $sourceFilePath, $params);
+        return self::uploadFile(self::underscoreDestinationPath('RemoteServers', $remoteServerId, $destinationPath), $sourceFilePath, $params, $options);
     }
 
-    public static function uploadToSnapshot($snapshotId, $destinationPath, $sourceFilePath, $params = [])
+    public static function uploadToSnapshot($snapshotId, $destinationPath, $sourceFilePath, $params = [], $options = [])
     {
-        return self::uploadFile(self::underscoreDestinationPath('Snapshots', $snapshotId, $destinationPath), $sourceFilePath, $params);
+        return self::uploadFile(self::underscoreDestinationPath('Snapshots', $snapshotId, $destinationPath), $sourceFilePath, $params, $options);
     }
 
-    public static function uploadToChildSite($siteId, $destinationPath, $sourceFilePath, $params = [])
+    public static function uploadToChildSite($siteId, $destinationPath, $sourceFilePath, $params = [], $options = [])
     {
-        return self::uploadFile(self::underscoreDestinationPath('Sites', $siteId, $destinationPath), $sourceFilePath, $params);
+        return self::uploadFile(self::underscoreDestinationPath('Sites', $siteId, $destinationPath), $sourceFilePath, $params, $options);
     }
 
 
-    public static function uploadData($destinationPath, $data, $params = [])
+    // Uploads $data, a string or a stream read from where it stands, to $destinationPath as uploadFile does, and
+    // returns nothing; provided_mtime defaults to now, and progress gives total_bytes for a string only (null for a
+    // stream). A caller's stream is closed once every part is acknowledged and progress has returned, before the upload
+    // ends, so a failure of the end leaves it closed; any earlier failure leaves it open. A string's own stream is
+    // closed on every path.
+    public static function uploadData($destinationPath, $data, $params = [], $options = [])
     {
         if (!$destinationPath) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: destinationPath');
@@ -199,7 +342,11 @@ class File
             throw new \Files\Exception\MissingParameterException('Parameter missing: data');
         }
 
-        if (!is_resource($data)) {
+        list($first, $end) = self::splitUploadParams($params);
+        list($apiOptions, $progress) = self::splitUploadOptions($options);
+
+        $owned = !is_resource($data);
+        if ($owned) {
             $stream = fopen('php://temp', 'r+');
             fwrite($stream, $data);
             rewind($stream);
@@ -207,20 +354,27 @@ class File
             $stream = $data;
         }
 
-        list($upload, $etags, $bytesWritten) = File::uploadChunks($stream, $destinationPath, null, [], $params);
-        fclose($stream);
+        try {
+            list($ref, $etags, $bytesWritten) = self::uploadParts($stream, $destinationPath, $first, $apiOptions, $owned ? strlen($data) : null, $progress);
+        } finally {
+            if ($owned) {
+                fclose($stream);
+            }
+        }
 
-        $params = [
+        if (!$owned) {
+            fclose($stream);
+        }
+
+        self::create($destinationPath, array_merge([
             'action' => 'end',
-            'ref' => $upload->ref,
+            'ref' => $ref,
             'etags' => $etags,
             'provided_mtime' => date('c', time()),
             'size' => $bytesWritten
-        ];
+        ], $end), $apiOptions);
 
-        $response = self::completeUpload($destinationPath, $params);
-
-        return $response;
+        return null;
     }
 
     public static function getDownloadUrl($remoteFilePath)
@@ -253,9 +407,13 @@ class File
 
         $response = Api::sendRequest($downloadUrl, 'GET', null, $options);
 
-        $fetchedLength = intval($response->headers['Content-Length'][0]);
-        $totalLength = $response->headers['Content-Range']
-            ? intval(explode('/', $response->headers['Content-Range'][0])[1])
+        // Header names are case-insensitive. A whole response has no Content-Range; one without Content-Length (a
+        // chunked body) reports 0 received, as before.
+        $contentLength = Api::headerValues($response->headers, 'Content-Length');
+        $contentRange = Api::headerValues($response->headers, 'Content-Range');
+        $fetchedLength = $contentLength ? intval($contentLength[0]) : 0;
+        $totalLength = $contentRange
+            ? intval(explode('/', $contentRange[0])[1])
             : $fetchedLength;
 
         return (object) [
@@ -983,7 +1141,13 @@ class File
         }
 
         $response = Api::sendRequest('/file_actions/zip_list/' . rawurlencode(strval(@$params['path'])) . '', 'GET', $params, $this->options);
-        return new ZipListEntry((array) (@$response->data ?: []), $this->options);
+        $return_array = [];
+
+        foreach ($response->data as $obj) {
+            $return_array[] = new ZipListEntry((array) $obj, $this->options);
+        }
+
+        return $return_array;
     }
 
     // Delete File/Folder and return its File Action.  A pending or processing deletion continues in the background after this returns; check its File Migration for completion.  Waiting for the File Migration does not cancel the deletion
@@ -1373,7 +1537,13 @@ class File
         }
 
         $response = Api::sendRequest('/file_actions/begin_upload/' . rawurlencode(strval(@$params['path'])) . '', 'POST', $params, $this->options);
-        return new FileUploadPart((array) (@$response->data ?: []), $this->options);
+        $return_array = [];
+
+        foreach ($response->data as $obj) {
+            $return_array[] = new FileUploadPart((array) $obj, $this->options);
+        }
+
+        return $return_array;
     }
 
     public function save()

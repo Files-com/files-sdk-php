@@ -7,7 +7,13 @@
     stopOnSkipped="false"
     backupGlobals="false"
     bootstrap="./vendor/autoload.php">
-    <testsuite name="default">
-        <directory suffix='.php'>./tests</directory>
-    </testsuite>
+    <testsuites>
+        <testsuite name="default">
+            <directory suffix='.php'>./tests</directory>
+        </testsuite>
+        <!-- The shared API scenarios, generated from verification/scenarios/api.json; api-scenarios.sh runs them. -->
+        <testsuite name="api-scenarios">
+            <directory suffix='Test.php'>./scenarios</directory>
+        </testsuite>
+    </testsuites>
 </phpunit>

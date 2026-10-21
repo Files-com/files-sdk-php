@@ -20,7 +20,7 @@ function middlewareRemoveHeader($header)
 
 class Api
 {
-    const VERSION = "2.0.719";
+    const VERSION = "2.0.720";
 
     private static function urlOrigin($url)
     {
@@ -77,7 +77,7 @@ class Api
         $handlerStack->push(Middleware::retry($shouldRetry, $getRetryDelay));
     }
 
-    private static function sendVerbatim($path, $verb, $options)
+    private static function sendVerbatim($path, $verb, $options, $retryConnectErrors = true)
     {
         $isExternal = preg_match('@^[a-zA-Z]+://@', $path);
         $baseUrl = Files::getBaseUrl();
@@ -98,7 +98,9 @@ class Api
             self::redirectAuthMiddleware($baseUrl),
             'files_auth_redirects'
         );
-        self::pushRetryHandler($handlerStack);
+        if ($retryConnectErrors) {
+            self::pushRetryHandler($handlerStack);
+        }
 
         // for security, Content-Length is disallowed on GET requests
         if (strtoupper($verb) === 'GET') {
@@ -141,7 +143,10 @@ class Api
         return $result;
     }
 
-    public static function sendFile($url, $verb, $body, $headers = [])
+    // Sends a body with only the headers given (no API credential), such as an upload part to its upload_uri. A request
+    // that cannot connect is retried as any request is, unless $retryConnectErrors is false: then it is sent once, and
+    // a connection failure is thrown as an ApiConnectException.
+    public static function sendFile($url, $verb, $body, $headers = [], $retryConnectErrors = true)
     {
         $params = ['body' => $body];
 
@@ -149,13 +154,26 @@ class Api
             $params['headers'] = $headers;
         }
 
-        return self::sendVerbatim($url, $verb, $params);
+        return self::sendVerbatim($url, $verb, $params, $retryConnectErrors);
+    }
+
+    // A response header's values, its name matched case-insensitively, as HTTP header names are: an empty array when
+    // the response has no such header.
+    public static function headerValues($headers, $name)
+    {
+        foreach ($headers as $key => $values) {
+            if (strcasecmp((string) $key, $name) === 0) {
+                return $values;
+            }
+        }
+
+        return [];
     }
 
     private static function autoPaginate($path, $verb, $params, $options, $response, $metadata = [])
     {
         if (Files::$autoPaginate) {
-            $nextCursor = current(@$response->headers['X-Files-Cursor'] ?: []);
+            $nextCursor = current(self::headerValues($response->headers, 'X-Files-Cursor'));
 
             $autoPaginateCount = @$metadata['autoPaginateCount'];
             $previousAutoPaginateData = @$metadata['previousAutoPaginateData'];

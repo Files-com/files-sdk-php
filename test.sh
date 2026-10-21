@@ -6,6 +6,21 @@ ran_php_tests=()
 ran_php_style=()
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
+# For each PHP below, the generated API scenario tests run after the unit tests (api-scenarios.sh), against the simulator
+# generated from the same schema. FILES_API_SCENARIOS_MOCK_SERVER names the generated mock-server directory, with its
+# bundle installed; without it the run fails before anything else runs. The results go to FILES_API_SCENARIOS_OUT, one
+# folder for each PHP, or else to a new temporary folder that is removed when the run passes and kept, and named, when
+# it fails.
+if [[ -z "${FILES_API_SCENARIOS_MOCK_SERVER:-}" ]]; then
+  echo "FILES_API_SCENARIOS_MOCK_SERVER must name the generated simulator the API scenario tests run against" >&2
+  exit 1
+fi
+scenario_results="${FILES_API_SCENARIOS_OUT:-}"
+if [[ -z "${scenario_results}" ]]; then
+  scenario_results="$(mktemp -d)" || exit 1
+  trap 'status=$?; if [[ ${status} -eq 0 ]]; then rm -rf "${scenario_results}"; else echo "test.sh failed (exit ${status}); the API scenario results are kept in ${scenario_results}" >&2; fi' EXIT
+fi
+
 exists()
 {
   command -v "$1" >/dev/null 2>&1
@@ -23,6 +38,7 @@ run_php_vers()
   rm composer.lock # Remove the lock so we can update deps for different PHP versions
   $1 "${DIR}/composer.phar" install || exit 1
   FILES_SESSION_ENV="development" "$1" ./vendor/bin/phpunit --testsuite default || exit 1
+  "${DIR}/api-scenarios.sh" "$1" "${scenario_results}/$1" || exit 1
   rm .phpunit.result.cache # We don't want to save the result cache between runs
 }
 

@@ -55,10 +55,15 @@ class As2IncomingMessage
     {
         return !!@$this->attributes['id'];
     }
-    // int64 # Id of the AS2 Partner.
+    // int64 # ID of this AS2 incoming message record.
     public function getId()
     {
         return @$this->attributes['id'];
+    }
+    // int64 # ID of the incoming message record this message was replayed from. Empty for messages received directly from a trading partner.
+    public function getReplayedFromMessageId()
+    {
+        return @$this->attributes['replayed_from_message_id'];
     }
     // int64 # ID of the Workspace associated with this AS2 Incoming Message.
     public function getWorkspaceId()
@@ -229,6 +234,29 @@ class As2IncomingMessage
     public function getMdnResponseUri()
     {
         return @$this->attributes['mdn_response_uri'];
+    }
+
+    // Replay AS2 Incoming Message
+    public function replay($params = [])
+    {
+        if (!is_array($params)) {
+            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+        }
+
+        if (!@$params['id']) {
+            if (@$this->id) {
+                $params['id'] = $this->id;
+            } else {
+                throw new \Files\Exception\MissingParameterException('Parameter missing: id');
+            }
+        }
+
+        if (@$params['id'] && !is_int(@$params['id'])) {
+            throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
+        }
+
+        $response = Api::sendRequest('/as2_incoming_messages/' . rawurlencode(strval(@$params['id'])) . '/replay', 'POST', $params, $this->options);
+        return new As2IncomingMessage((array) (@$response->data ?: []), $this->options);
     }
 
     // Parameters:

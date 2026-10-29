@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class KeyLifecycleRule
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class KeyLifecycleRule
     // int64 # Key Lifecycle Rule ID
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
     public function setId($value)
@@ -68,7 +66,7 @@ class KeyLifecycleRule
     // string # Key type for which the rule will apply (gpg, ssh, or api).
     public function getKeyType()
     {
-        return @$this->attributes['key_type'];
+        return isset($this->attributes['key_type']) ? $this->attributes['key_type'] : null;
     }
 
     public function setKeyType($value)
@@ -78,7 +76,7 @@ class KeyLifecycleRule
     // int64 # Number of days of inactivity before the rule applies.
     public function getInactivityDays()
     {
-        return @$this->attributes['inactivity_days'];
+        return isset($this->attributes['inactivity_days']) ? $this->attributes['inactivity_days'] : null;
     }
 
     public function setInactivityDays($value)
@@ -88,7 +86,7 @@ class KeyLifecycleRule
     // int64 # Number of days after creation before an SSH key expires. Applies only to SSH keys.
     public function getExpirationDays()
     {
-        return @$this->attributes['expiration_days'];
+        return isset($this->attributes['expiration_days']) ? $this->attributes['expiration_days'] : null;
     }
 
     public function setExpirationDays($value)
@@ -98,7 +96,7 @@ class KeyLifecycleRule
     // boolean # If true, a default-workspace rule also applies to keys in all workspaces.
     public function getApplyToAllWorkspaces()
     {
-        return @$this->attributes['apply_to_all_workspaces'];
+        return isset($this->attributes['apply_to_all_workspaces']) ? $this->attributes['apply_to_all_workspaces'] : null;
     }
 
     public function setApplyToAllWorkspaces($value)
@@ -108,7 +106,7 @@ class KeyLifecycleRule
     // string # Key Lifecycle Rule name
     public function getName()
     {
-        return @$this->attributes['name'];
+        return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
 
     public function setName($value)
@@ -118,7 +116,7 @@ class KeyLifecycleRule
     // int64 # Workspace ID. `0` means the default workspace.
     public function getWorkspaceId()
     {
-        return @$this->attributes['workspace_id'];
+        return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
 
     public function setWorkspaceId($value)
@@ -139,7 +137,7 @@ class KeyLifecycleRule
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -147,27 +145,27 @@ class KeyLifecycleRule
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (@$params['expiration_days'] && !is_int(@$params['expiration_days'])) {
+        if (!empty($params['expiration_days']) && !is_int($params['expiration_days'])) {
             throw new \Files\Exception\InvalidParameterException('$expiration_days must be of type int; received ' . gettype(@$params['expiration_days']));
         }
 
-        if (@$params['key_type'] && !is_string(@$params['key_type'])) {
+        if (!empty($params['key_type']) && !is_string($params['key_type'])) {
             throw new \Files\Exception\InvalidParameterException('$key_type must be of type string; received ' . gettype(@$params['key_type']));
         }
 
-        if (@$params['inactivity_days'] && !is_int(@$params['inactivity_days'])) {
+        if (!empty($params['inactivity_days']) && !is_int($params['inactivity_days'])) {
             throw new \Files\Exception\InvalidParameterException('$inactivity_days must be of type int; received ' . gettype(@$params['inactivity_days']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
@@ -181,7 +179,7 @@ class KeyLifecycleRule
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -189,7 +187,7 @@ class KeyLifecycleRule
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -224,11 +222,11 @@ class KeyLifecycleRule
     //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `key_type` and `workspace_id`. Valid field combinations are `[ workspace_id, key_type ]`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -253,11 +251,11 @@ class KeyLifecycleRule
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -279,23 +277,23 @@ class KeyLifecycleRule
     //   workspace_id - int64 - Workspace ID. `0` means the default workspace.
     public static function create($params = [], $options = [])
     {
-        if (@$params['expiration_days'] && !is_int(@$params['expiration_days'])) {
+        if (!empty($params['expiration_days']) && !is_int($params['expiration_days'])) {
             throw new \Files\Exception\InvalidParameterException('$expiration_days must be of type int; received ' . gettype(@$params['expiration_days']));
         }
 
-        if (@$params['key_type'] && !is_string(@$params['key_type'])) {
+        if (!empty($params['key_type']) && !is_string($params['key_type'])) {
             throw new \Files\Exception\InvalidParameterException('$key_type must be of type string; received ' . gettype(@$params['key_type']));
         }
 
-        if (@$params['inactivity_days'] && !is_int(@$params['inactivity_days'])) {
+        if (!empty($params['inactivity_days']) && !is_int($params['inactivity_days'])) {
             throw new \Files\Exception\InvalidParameterException('$inactivity_days must be of type int; received ' . gettype(@$params['inactivity_days']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 

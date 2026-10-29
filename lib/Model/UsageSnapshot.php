@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class UsageSnapshot
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,82 +56,82 @@ class UsageSnapshot
     // int64 # Usage snapshot ID
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
     // date-time # Usage snapshot start date/time
     public function getStartAt()
     {
-        return @$this->attributes['start_at'];
+        return isset($this->attributes['start_at']) ? $this->attributes['start_at'] : null;
     }
     // date-time # Usage snapshot end date/time
     public function getEndAt()
     {
-        return @$this->attributes['end_at'];
+        return isset($this->attributes['end_at']) ? $this->attributes['end_at'] : null;
     }
     // int64 # Highest user count number in time period
     public function getHighWaterUserCount()
     {
-        return @$this->attributes['high_water_user_count'];
+        return isset($this->attributes['high_water_user_count']) ? $this->attributes['high_water_user_count'] : null;
     }
     // int64 # Total Transformation and AI credits used in this usage period. Updated daily. Does not include credits consumed today.
     public function getTransformationCreditsUsage()
     {
-        return @$this->attributes['transformation_credits_usage'];
+        return isset($this->attributes['transformation_credits_usage']) ? $this->attributes['transformation_credits_usage'] : null;
     }
     // int64 # Current total Storage Usage GB as of end date (not necessarily high water mark, which is used for billing)
     public function getCurrentStorage()
     {
-        return @$this->attributes['current_storage'];
+        return isset($this->attributes['current_storage']) ? $this->attributes['current_storage'] : null;
     }
     // int64 # Highest Storage Usage GB recorded in time period (used for billing)
     public function getHighWaterStorage()
     {
-        return @$this->attributes['high_water_storage'];
+        return isset($this->attributes['high_water_storage']) ? $this->attributes['high_water_storage'] : null;
     }
     // int64 # Storage Usage for root folder as of end date (not necessarily high water mark, which is used for billing)
     public function getRootStorage()
     {
-        return @$this->attributes['root_storage'];
+        return isset($this->attributes['root_storage']) ? $this->attributes['root_storage'] : null;
     }
     // int64 # Storage Usage for files that are deleted but uploaded within last 30 days as of end date (not necessarily high water mark, which is used for billing)
     public function getDeletedFilesCountedInMinimum()
     {
-        return @$this->attributes['deleted_files_counted_in_minimum'];
+        return isset($this->attributes['deleted_files_counted_in_minimum']) ? $this->attributes['deleted_files_counted_in_minimum'] : null;
     }
     // int64 # Storage Usage for files that are deleted but retained as backups as of end date (not necessarily high water mark, which is used for billing)
     public function getDeletedFilesStorage()
     {
-        return @$this->attributes['deleted_files_storage'];
+        return isset($this->attributes['deleted_files_storage']) ? $this->attributes['deleted_files_storage'] : null;
     }
     // int64 # Storage + Transfer Usage - Total Billable amount
     public function getTotalBillableUsage()
     {
-        return @$this->attributes['total_billable_usage'];
+        return isset($this->attributes['total_billable_usage']) ? $this->attributes['total_billable_usage'] : null;
     }
     // int64 # Transfer usage for period - Total Billable amount
     public function getTotalBillableTransferUsage()
     {
-        return @$this->attributes['total_billable_transfer_usage'];
+        return isset($this->attributes['total_billable_transfer_usage']) ? $this->attributes['total_billable_transfer_usage'] : null;
     }
     // int64 # Transfer Usage for period - Outbound GB from Files Native Storage
     public function getBytesSent()
     {
-        return @$this->attributes['bytes_sent'];
+        return isset($this->attributes['bytes_sent']) ? $this->attributes['bytes_sent'] : null;
     }
     // int64 # Transfer Usage for period - Inbound GB to Remote Servers (Sync/Mount)
     public function getSyncBytesReceived()
     {
-        return @$this->attributes['sync_bytes_received'];
+        return isset($this->attributes['sync_bytes_received']) ? $this->attributes['sync_bytes_received'] : null;
     }
     // int64 # Transfer Usage for period - Outbound GB from Remote Servers (Sync/Mount)
     public function getSyncBytesSent()
     {
-        return @$this->attributes['sync_bytes_sent'];
+        return isset($this->attributes['sync_bytes_sent']) ? $this->attributes['sync_bytes_sent'] : null;
     }
     // array(object) # Storage Usage - map of root folders to their usage as of end date (not necessarily high water mark, which is used for billing)
     public function getUsageByTopLevelDir()
     {
-        return @$this->attributes['usage_by_top_level_dir'];
+        return isset($this->attributes['usage_by_top_level_dir']) ? $this->attributes['usage_by_top_level_dir'] : null;
     }
 
     // Parameters:
@@ -141,11 +139,11 @@ class UsageSnapshot
     //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 

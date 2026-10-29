@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class IntegrationCentricProfile
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class IntegrationCentricProfile
     // int64 # Integration Centric Profile ID
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
     public function setId($value)
@@ -68,7 +66,7 @@ class IntegrationCentricProfile
     // string # Profile name
     public function getName()
     {
-        return @$this->attributes['name'];
+        return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
 
     public function setName($value)
@@ -78,7 +76,7 @@ class IntegrationCentricProfile
     // int64 # Workspace ID
     public function getWorkspaceId()
     {
-        return @$this->attributes['workspace_id'];
+        return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
 
     public function setWorkspaceId($value)
@@ -88,7 +86,7 @@ class IntegrationCentricProfile
     // boolean # Whether this profile applies to all users in the Workspace by default
     public function getUseForAllUsers()
     {
-        return @$this->attributes['use_for_all_users'];
+        return isset($this->attributes['use_for_all_users']) ? $this->attributes['use_for_all_users'] : null;
     }
 
     public function setUseForAllUsers($value)
@@ -98,7 +96,7 @@ class IntegrationCentricProfile
     // array(object) # Remote Server integrations the user is expected to add and connect. Each entry requires `server_type` and may include a display `name`.
     public function getExpectedRemoteServers()
     {
-        return @$this->attributes['expected_remote_servers'];
+        return isset($this->attributes['expected_remote_servers']) ? $this->attributes['expected_remote_servers'] : null;
     }
 
     public function setExpectedRemoteServers($value)
@@ -117,7 +115,7 @@ class IntegrationCentricProfile
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -125,19 +123,19 @@ class IntegrationCentricProfile
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
-        if (@$params['expected_remote_servers'] && !is_array(@$params['expected_remote_servers'])) {
+        if (!empty($params['expected_remote_servers']) && !is_array($params['expected_remote_servers'])) {
             throw new \Files\Exception\InvalidParameterException('$expected_remote_servers must be of type array; received ' . gettype(@$params['expected_remote_servers']));
         }
 
@@ -151,7 +149,7 @@ class IntegrationCentricProfile
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -159,7 +157,7 @@ class IntegrationCentricProfile
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -194,11 +192,11 @@ class IntegrationCentricProfile
     //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `workspace_id`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -223,11 +221,11 @@ class IntegrationCentricProfile
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -247,23 +245,23 @@ class IntegrationCentricProfile
     //   use_for_all_users - boolean - Whether this profile applies to all users in the Workspace by default
     public static function create($params = [], $options = [])
     {
-        if (!@$params['name']) {
+        if (empty($params['name'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: name');
         }
 
-        if (!@$params['expected_remote_servers']) {
+        if (empty($params['expected_remote_servers'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: expected_remote_servers');
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['expected_remote_servers'] && !is_array(@$params['expected_remote_servers'])) {
+        if (!empty($params['expected_remote_servers']) && !is_array($params['expected_remote_servers'])) {
             throw new \Files\Exception\InvalidParameterException('$expected_remote_servers must be of type array; received ' . gettype(@$params['expected_remote_servers']));
         }
 
-        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 

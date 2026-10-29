@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class ChildSiteManagementPolicy
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class ChildSiteManagementPolicy
     // int64 # Policy ID.
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
     public function setId($value)
@@ -68,7 +66,7 @@ class ChildSiteManagementPolicy
     // string # Type of policy.  Valid values: `settings`.
     public function getPolicyType()
     {
-        return @$this->attributes['policy_type'];
+        return isset($this->attributes['policy_type']) ? $this->attributes['policy_type'] : null;
     }
 
     public function setPolicyType($value)
@@ -78,7 +76,7 @@ class ChildSiteManagementPolicy
     // string # Name for this policy.
     public function getName()
     {
-        return @$this->attributes['name'];
+        return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
 
     public function setName($value)
@@ -88,7 +86,7 @@ class ChildSiteManagementPolicy
     // string # Description for this policy.
     public function getDescription()
     {
-        return @$this->attributes['description'];
+        return isset($this->attributes['description']) ? $this->attributes['description'] : null;
     }
 
     public function setDescription($value)
@@ -98,7 +96,7 @@ class ChildSiteManagementPolicy
     // object # Policy configuration data. On a Child Site, contains only managed setting names with null values. Settings policies accept site settings plus an optional `folder_behaviors` array for parent-managed root behaviors on child sites. For more information, refer to the Value Hash section of the developer documentation.
     public function getValue()
     {
-        return @$this->attributes['value'];
+        return isset($this->attributes['value']) ? $this->attributes['value'] : null;
     }
 
     public function setValue($value)
@@ -108,7 +106,7 @@ class ChildSiteManagementPolicy
     // array(int64) # IDs of child sites that this policy has been applied to. This field is read-only.
     public function getAppliedChildSiteIds()
     {
-        return @$this->attributes['applied_child_site_ids'];
+        return isset($this->attributes['applied_child_site_ids']) ? $this->attributes['applied_child_site_ids'] : null;
     }
 
     public function setAppliedChildSiteIds($value)
@@ -118,7 +116,7 @@ class ChildSiteManagementPolicy
     // array(int64) # IDs of child sites excluded from this default policy.
     public function getSkipChildSiteIds()
     {
-        return @$this->attributes['skip_child_site_ids'];
+        return isset($this->attributes['skip_child_site_ids']) ? $this->attributes['skip_child_site_ids'] : null;
     }
 
     public function setSkipChildSiteIds($value)
@@ -128,7 +126,7 @@ class ChildSiteManagementPolicy
     // array(int64) # IDs of child sites explicitly assigned to this non-default policy.
     public function getChildSiteIds()
     {
-        return @$this->attributes['child_site_ids'];
+        return isset($this->attributes['child_site_ids']) ? $this->attributes['child_site_ids'] : null;
     }
 
     public function setChildSiteIds($value)
@@ -138,7 +136,7 @@ class ChildSiteManagementPolicy
     // boolean # Whether this policy applies to child sites not explicitly assigned to another policy.
     public function getDefaultPolicy()
     {
-        return @$this->attributes['default_policy'];
+        return isset($this->attributes['default_policy']) ? $this->attributes['default_policy'] : null;
     }
 
     public function setDefaultPolicy($value)
@@ -148,12 +146,12 @@ class ChildSiteManagementPolicy
     // date-time # When this policy was created.
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
     // date-time # When this policy was last updated.
     public function getUpdatedAt()
     {
-        return @$this->attributes['updated_at'];
+        return isset($this->attributes['updated_at']) ? $this->attributes['updated_at'] : null;
     }
 
     // Parameters:
@@ -170,7 +168,7 @@ class ChildSiteManagementPolicy
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -178,27 +176,27 @@ class ChildSiteManagementPolicy
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (@$params['skip_child_site_ids'] && !is_array(@$params['skip_child_site_ids'])) {
+        if (!empty($params['skip_child_site_ids']) && !is_array($params['skip_child_site_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$skip_child_site_ids must be of type array; received ' . gettype(@$params['skip_child_site_ids']));
         }
 
-        if (@$params['child_site_ids'] && !is_array(@$params['child_site_ids'])) {
+        if (!empty($params['child_site_ids']) && !is_array($params['child_site_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$child_site_ids must be of type array; received ' . gettype(@$params['child_site_ids']));
         }
 
-        if (@$params['policy_type'] && !is_string(@$params['policy_type'])) {
+        if (!empty($params['policy_type']) && !is_string($params['policy_type'])) {
             throw new \Files\Exception\InvalidParameterException('$policy_type must be of type string; received ' . gettype(@$params['policy_type']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['description'] && !is_string(@$params['description'])) {
+        if (!empty($params['description']) && !is_string($params['description'])) {
             throw new \Files\Exception\InvalidParameterException('$description must be of type string; received ' . gettype(@$params['description']));
         }
 
@@ -212,7 +210,7 @@ class ChildSiteManagementPolicy
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -220,7 +218,7 @@ class ChildSiteManagementPolicy
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -253,11 +251,11 @@ class ChildSiteManagementPolicy
     //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -282,11 +280,11 @@ class ChildSiteManagementPolicy
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -309,27 +307,27 @@ class ChildSiteManagementPolicy
     //   description - string - Description for this policy.
     public static function create($params = [], $options = [])
     {
-        if (!@$params['policy_type']) {
+        if (empty($params['policy_type'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: policy_type');
         }
 
-        if (@$params['skip_child_site_ids'] && !is_array(@$params['skip_child_site_ids'])) {
+        if (!empty($params['skip_child_site_ids']) && !is_array($params['skip_child_site_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$skip_child_site_ids must be of type array; received ' . gettype(@$params['skip_child_site_ids']));
         }
 
-        if (@$params['child_site_ids'] && !is_array(@$params['child_site_ids'])) {
+        if (!empty($params['child_site_ids']) && !is_array($params['child_site_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$child_site_ids must be of type array; received ' . gettype(@$params['child_site_ids']));
         }
 
-        if (@$params['policy_type'] && !is_string(@$params['policy_type'])) {
+        if (!empty($params['policy_type']) && !is_string($params['policy_type'])) {
             throw new \Files\Exception\InvalidParameterException('$policy_type must be of type string; received ' . gettype(@$params['policy_type']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['description'] && !is_string(@$params['description'])) {
+        if (!empty($params['description']) && !is_string($params['description'])) {
             throw new \Files\Exception\InvalidParameterException('$description must be of type string; received ' . gettype(@$params['description']));
         }
 

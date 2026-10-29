@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class FormFieldSet
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class FormFieldSet
     // int64 # Form field set id
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
     public function setId($value)
@@ -68,7 +66,7 @@ class FormFieldSet
     // string # Title to be displayed
     public function getTitle()
     {
-        return @$this->attributes['title'];
+        return isset($this->attributes['title']) ? $this->attributes['title'] : null;
     }
 
     public function setTitle($value)
@@ -78,7 +76,7 @@ class FormFieldSet
     // boolean # Reject answers over 1024 characters or more than 32 answered custom fields to ensure complete file metadata capture
     public function getRequireCompleteMetadataCapture()
     {
-        return @$this->attributes['require_complete_metadata_capture'];
+        return isset($this->attributes['require_complete_metadata_capture']) ? $this->attributes['require_complete_metadata_capture'] : null;
     }
 
     public function setRequireCompleteMetadataCapture($value)
@@ -88,7 +86,7 @@ class FormFieldSet
     // array(int64) # Layout of the form
     public function getFormLayout()
     {
-        return @$this->attributes['form_layout'];
+        return isset($this->attributes['form_layout']) ? $this->attributes['form_layout'] : null;
     }
 
     public function setFormLayout($value)
@@ -98,7 +96,7 @@ class FormFieldSet
     // array(object) # Associated form field definitions; authenticated form field set responses include historical definitions, while form_layout identifies current fields
     public function getFormFields()
     {
-        return @$this->attributes['form_fields'];
+        return isset($this->attributes['form_fields']) ? $this->attributes['form_fields'] : null;
     }
 
     public function setFormFields($value)
@@ -108,7 +106,7 @@ class FormFieldSet
     // boolean # Any associated InboxRegistrations or BundleRegistrations can be saved without providing name
     public function getSkipName()
     {
-        return @$this->attributes['skip_name'];
+        return isset($this->attributes['skip_name']) ? $this->attributes['skip_name'] : null;
     }
 
     public function setSkipName($value)
@@ -118,7 +116,7 @@ class FormFieldSet
     // boolean # Any associated InboxRegistrations or BundleRegistrations can be saved without providing email
     public function getSkipEmail()
     {
-        return @$this->attributes['skip_email'];
+        return isset($this->attributes['skip_email']) ? $this->attributes['skip_email'] : null;
     }
 
     public function setSkipEmail($value)
@@ -128,7 +126,7 @@ class FormFieldSet
     // boolean # Any associated InboxRegistrations or BundleRegistrations can be saved without providing company
     public function getSkipCompany()
     {
-        return @$this->attributes['skip_company'];
+        return isset($this->attributes['skip_company']) ? $this->attributes['skip_company'] : null;
     }
 
     public function setSkipCompany($value)
@@ -138,7 +136,7 @@ class FormFieldSet
     // boolean # Form Field Set is in use by an active Inbox / Bundle / Inbox Registration / Bundle Registration
     public function getInUse()
     {
-        return @$this->attributes['in_use'];
+        return isset($this->attributes['in_use']) ? $this->attributes['in_use'] : null;
     }
 
     public function setInUse($value)
@@ -148,7 +146,7 @@ class FormFieldSet
     // int64 # User ID.  Provide a value of `0` to operate the current session's user.
     public function getUserId()
     {
-        return @$this->attributes['user_id'];
+        return isset($this->attributes['user_id']) ? $this->attributes['user_id'] : null;
     }
 
     public function setUserId($value)
@@ -158,7 +156,7 @@ class FormFieldSet
     // int64 # Workspace ID
     public function getWorkspaceId()
     {
-        return @$this->attributes['workspace_id'];
+        return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
 
     public function setWorkspaceId($value)
@@ -180,7 +178,7 @@ class FormFieldSet
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -188,19 +186,19 @@ class FormFieldSet
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (@$params['title'] && !is_string(@$params['title'])) {
+        if (!empty($params['title']) && !is_string($params['title'])) {
             throw new \Files\Exception\InvalidParameterException('$title must be of type string; received ' . gettype(@$params['title']));
         }
 
-        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
-        if (@$params['form_fields'] && !is_array(@$params['form_fields'])) {
+        if (!empty($params['form_fields']) && !is_array($params['form_fields'])) {
             throw new \Files\Exception\InvalidParameterException('$form_fields must be of type array; received ' . gettype(@$params['form_fields']));
         }
 
@@ -214,7 +212,7 @@ class FormFieldSet
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -222,7 +220,7 @@ class FormFieldSet
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -256,15 +254,15 @@ class FormFieldSet
     //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
     public static function all($params = [], $options = [])
     {
-        if (@$params['user_id'] && !is_int(@$params['user_id'])) {
+        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -289,11 +287,11 @@ class FormFieldSet
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -317,19 +315,19 @@ class FormFieldSet
     //   form_fields - array(object)
     public static function create($params = [], $options = [])
     {
-        if (@$params['user_id'] && !is_int(@$params['user_id'])) {
+        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (@$params['title'] && !is_string(@$params['title'])) {
+        if (!empty($params['title']) && !is_string($params['title'])) {
             throw new \Files\Exception\InvalidParameterException('$title must be of type string; received ' . gettype(@$params['title']));
         }
 
-        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
-        if (@$params['form_fields'] && !is_array(@$params['form_fields'])) {
+        if (!empty($params['form_fields']) && !is_array($params['form_fields'])) {
             throw new \Files\Exception\InvalidParameterException('$form_fields must be of type array; received ' . gettype(@$params['form_fields']));
         }
 

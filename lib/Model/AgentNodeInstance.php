@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class AgentNodeInstance
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,36 +56,36 @@ class AgentNodeInstance
     // string # Ephemeral ID for this running Agent process
     public function getInstanceId()
     {
-        return @$this->attributes['instance_id'];
+        return isset($this->attributes['instance_id']) ? $this->attributes['instance_id'] : null;
     }
     // string # Role of this process during an Agent update
     public function getProcessState()
     {
-        return @$this->attributes['process_state'];
+        return isset($this->attributes['process_state']) ? $this->attributes['process_state'] : null;
     }
     // string # Whether this process has an available proxy connection
     public function getStatus()
     {
-        return @$this->attributes['status'];
+        return isset($this->attributes['status']) ? $this->attributes['status'] : null;
     }
     // boolean # Whether this process receives new unscoped work for its node
     public function getIsDefault()
     {
-        return @$this->attributes['is_default'];
+        return isset($this->attributes['is_default']) ? $this->attributes['is_default'] : null;
     }
     // string # Agent version reported by this process
     public function getAgentVersion()
     {
-        return @$this->attributes['agent_version'];
+        return isset($this->attributes['agent_version']) ? $this->attributes['agent_version'] : null;
     }
     // date-time # Most recent successful observation for this process
     public function getLastSeenAt()
     {
-        return @$this->attributes['last_seen_at'];
+        return isset($this->attributes['last_seen_at']) ? $this->attributes['last_seen_at'] : null;
     }
     // array(object) # Proxy connections observed for this process
     public function getConnections()
     {
-        return @$this->attributes['connections'];
+        return isset($this->attributes['connections']) ? $this->attributes['connections'] : null;
     }
 }

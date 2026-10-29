@@ -1130,3 +1130,11 @@ job lives in its process: keep the job, its files and streams open and unchanged
 another process or after a crash.
 
 These defaults are starting choices of this SDK, not measured performance.
+
+## Native file and directory handles
+
+Use PHP file and SPL interfaces through the `files://` stream wrapper. See [native files](native-files.md) and [native directories](native-directories.md) for registration, supported operations and limitations.
+
+## API region routing
+
+See [API region routing](docs/RegionRouting.md) for automatic region continuation and its policy override.

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class BundleDownload
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,27 +56,27 @@ class BundleDownload
     // BundleRegistration
     public function getBundleRegistration()
     {
-        return @$this->attributes['bundle_registration'];
+        return isset($this->attributes['bundle_registration']) ? $this->attributes['bundle_registration'] : null;
     }
     // string # Download method (file or full_zip)
     public function getDownloadMethod()
     {
-        return @$this->attributes['download_method'];
+        return isset($this->attributes['download_method']) ? $this->attributes['download_method'] : null;
     }
     // string # Download path. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
     public function getPath()
     {
-        return @$this->attributes['path'];
+        return isset($this->attributes['path']) ? $this->attributes['path'] : null;
     }
     // int64 # Workspace ID. `0` means the default workspace.
     public function getWorkspaceId()
     {
-        return @$this->attributes['workspace_id'];
+        return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
     // date-time # Download date/time
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
 
     // Parameters:
@@ -94,19 +92,19 @@ class BundleDownload
     //   bundle_registration_id - int64 - BundleRegistration ID
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
-        if (@$params['bundle_id'] && !is_int(@$params['bundle_id'])) {
+        if (!empty($params['bundle_id']) && !is_int($params['bundle_id'])) {
             throw new \Files\Exception\InvalidParameterException('$bundle_id must be of type int; received ' . gettype(@$params['bundle_id']));
         }
 
-        if (@$params['bundle_registration_id'] && !is_int(@$params['bundle_registration_id'])) {
+        if (!empty($params['bundle_registration_id']) && !is_int($params['bundle_registration_id'])) {
             throw new \Files\Exception\InvalidParameterException('$bundle_registration_id must be of type int; received ' . gettype(@$params['bundle_registration_id']));
         }
 

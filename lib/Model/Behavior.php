@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class Behavior
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class Behavior
     // int64 # Folder behavior ID
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
     public function setId($value)
@@ -68,7 +66,7 @@ class Behavior
     // string # Folder path.  Note that Behavior paths cannot be updated once initially set.  You will need to remove and re-create the behavior on the new path. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
     public function getPath()
     {
-        return @$this->attributes['path'];
+        return isset($this->attributes['path']) ? $this->attributes['path'] : null;
     }
 
     public function setPath($value)
@@ -78,7 +76,7 @@ class Behavior
     // string # URL for attached file
     public function getAttachmentUrl()
     {
-        return @$this->attributes['attachment_url'];
+        return isset($this->attributes['attachment_url']) ? $this->attributes['attachment_url'] : null;
     }
 
     public function setAttachmentUrl($value)
@@ -88,7 +86,7 @@ class Behavior
     // string # Behavior type.
     public function getBehavior()
     {
-        return @$this->attributes['behavior'];
+        return isset($this->attributes['behavior']) ? $this->attributes['behavior'] : null;
     }
 
     public function setBehavior($value)
@@ -98,7 +96,7 @@ class Behavior
     // string # Name for this behavior.
     public function getName()
     {
-        return @$this->attributes['name'];
+        return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
 
     public function setName($value)
@@ -108,7 +106,7 @@ class Behavior
     // string # Description for this behavior.
     public function getDescription()
     {
-        return @$this->attributes['description'];
+        return isset($this->attributes['description']) ? $this->attributes['description'] : null;
     }
 
     public function setDescription($value)
@@ -118,7 +116,7 @@ class Behavior
     // object # Settings for this behavior.  See the section above for an example value to provide here.  Formatting is different for each Behavior type.  May be sent as nested JSON or a single JSON-encoded string.  If using XML encoding for the API call, this data must be sent as a JSON-encoded string.
     public function getValue()
     {
-        return @$this->attributes['value'];
+        return isset($this->attributes['value']) ? $this->attributes['value'] : null;
     }
 
     public function setValue($value)
@@ -128,7 +126,7 @@ class Behavior
     // string # Public URL for this publicly hosted folder when the `Serve Publicly` behavior has a key configured. When a Custom Domain with `public_hosting` destination is attached to this behavior, the URL uses that domain. Otherwise it uses the site's `subdomain.hosted-by-files.com` host, unless `custom_domain_only` is enabled, in which case no URL is returned.
     public function getPublicHostingUrl()
     {
-        return @$this->attributes['public_hosting_url'];
+        return isset($this->attributes['public_hosting_url']) ? $this->attributes['public_hosting_url'] : null;
     }
 
     public function setPublicHostingUrl($value)
@@ -138,7 +136,7 @@ class Behavior
     // boolean # If true, disables the inherited behavior for this folder and its children. Valid only for behavior types that child folders may override, and requires recursive to be true. Rejected for all other behavior types.
     public function getDisableParentFolderBehavior()
     {
-        return @$this->attributes['disable_parent_folder_behavior'];
+        return isset($this->attributes['disable_parent_folder_behavior']) ? $this->attributes['disable_parent_folder_behavior'] : null;
     }
 
     public function setDisableParentFolderBehavior($value)
@@ -148,7 +146,7 @@ class Behavior
     // boolean # Whether this behavior is recursive for this record. `always` behaviors are always `true`, `never` behaviors are always `false`, and `sometimes` behaviors may be either value.
     public function getRecursive()
     {
-        return @$this->attributes['recursive'];
+        return isset($this->attributes['recursive']) ? $this->attributes['recursive'] : null;
     }
 
     public function setRecursive($value)
@@ -158,7 +156,7 @@ class Behavior
     // boolean # If true, this behavior is inherited from a higher scope rather than owned by the requested workspace.
     public function getInherited()
     {
-        return @$this->attributes['inherited'];
+        return isset($this->attributes['inherited']) ? $this->attributes['inherited'] : null;
     }
 
     public function setInherited($value)
@@ -168,7 +166,7 @@ class Behavior
     // boolean # If true, this behavior is controlled by a parent-site policy and cannot be modified locally.
     public function getManaged()
     {
-        return @$this->attributes['managed'];
+        return isset($this->attributes['managed']) ? $this->attributes['managed'] : null;
     }
 
     public function setManaged($value)
@@ -178,7 +176,7 @@ class Behavior
     // boolean # If true, this behavior may only be modified by a site admin because it is at the site root or disables a root behavior.
     public function getRootBehaviorSiteAdminOnly()
     {
-        return @$this->attributes['root_behavior_site_admin_only'];
+        return isset($this->attributes['root_behavior_site_admin_only']) ? $this->attributes['root_behavior_site_admin_only'] : null;
     }
 
     public function setRootBehaviorSiteAdminOnly($value)
@@ -188,7 +186,7 @@ class Behavior
     // file # Certain behaviors may require a file, for instance, the `watermark` behavior requires a watermark image. Attach that file here.
     public function getAttachmentFile()
     {
-        return @$this->attributes['attachment_file'];
+        return isset($this->attributes['attachment_file']) ? $this->attributes['attachment_file'] : null;
     }
 
     public function setAttachmentFile($value)
@@ -198,7 +196,7 @@ class Behavior
     // boolean # If `true`, delete the file stored in `attachment`.
     public function getAttachmentDelete()
     {
-        return @$this->attributes['attachment_delete'];
+        return isset($this->attributes['attachment_delete']) ? $this->attributes['attachment_delete'] : null;
     }
 
     public function setAttachmentDelete($value)
@@ -220,7 +218,7 @@ class Behavior
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -228,15 +226,15 @@ class Behavior
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['description'] && !is_string(@$params['description'])) {
+        if (!empty($params['description']) && !is_string($params['description'])) {
             throw new \Files\Exception\InvalidParameterException('$description must be of type string; received ' . gettype(@$params['description']));
         }
 
@@ -250,7 +248,7 @@ class Behavior
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -258,7 +256,7 @@ class Behavior
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -293,11 +291,11 @@ class Behavior
     //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `clickwrap_id`, `form_field_set_id`, `impacts_ui`, `remote_server_id` or `behavior`. Valid field combinations are `[ impacts_ui, behavior ]` and `[ behavior, remote_server_id ]`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -322,11 +320,11 @@ class Behavior
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -354,19 +352,19 @@ class Behavior
 
         $params['path'] = $path;
 
-        if (!@$params['path']) {
+        if (empty($params['path'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: path');
         }
 
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
-        if (@$params['path'] && !is_string(@$params['path'])) {
+        if (!empty($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
@@ -392,27 +390,27 @@ class Behavior
     //   behavior (required) - string - Behavior type.
     public static function create($params = [], $options = [])
     {
-        if (!@$params['path']) {
+        if (empty($params['path'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: path');
         }
 
-        if (!@$params['behavior']) {
+        if (empty($params['behavior'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: behavior');
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['description'] && !is_string(@$params['description'])) {
+        if (!empty($params['description']) && !is_string($params['description'])) {
             throw new \Files\Exception\InvalidParameterException('$description must be of type string; received ' . gettype(@$params['description']));
         }
 
-        if (@$params['path'] && !is_string(@$params['path'])) {
+        if (!empty($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (@$params['behavior'] && !is_string(@$params['behavior'])) {
+        if (!empty($params['behavior']) && !is_string($params['behavior'])) {
             throw new \Files\Exception\InvalidParameterException('$behavior must be of type string; received ' . gettype(@$params['behavior']));
         }
 
@@ -430,23 +428,23 @@ class Behavior
     //   action - string - Action for test body.
     public static function webhookTest($params = [], $options = [])
     {
-        if (!@$params['url']) {
+        if (empty($params['url'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: url');
         }
 
-        if (@$params['url'] && !is_string(@$params['url'])) {
+        if (!empty($params['url']) && !is_string($params['url'])) {
             throw new \Files\Exception\InvalidParameterException('$url must be of type string; received ' . gettype(@$params['url']));
         }
 
-        if (@$params['method'] && !is_string(@$params['method'])) {
+        if (!empty($params['method']) && !is_string($params['method'])) {
             throw new \Files\Exception\InvalidParameterException('$method must be of type string; received ' . gettype(@$params['method']));
         }
 
-        if (@$params['encoding'] && !is_string(@$params['encoding'])) {
+        if (!empty($params['encoding']) && !is_string($params['encoding'])) {
             throw new \Files\Exception\InvalidParameterException('$encoding must be of type string; received ' . gettype(@$params['encoding']));
         }
 
-        if (@$params['action'] && !is_string(@$params['action'])) {
+        if (!empty($params['action']) && !is_string($params['action'])) {
             throw new \Files\Exception\InvalidParameterException('$action must be of type string; received ' . gettype(@$params['action']));
         }
 

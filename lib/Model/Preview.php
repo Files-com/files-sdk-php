@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class Preview
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,26 +56,26 @@ class Preview
     // int64 # Preview ID
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
     // string # Preview status.  Can be invalid, not_generated, generating, complete, or file_too_large
     public function getStatus()
     {
-        return @$this->attributes['status'];
+        return isset($this->attributes['status']) ? $this->attributes['status'] : null;
     }
     // string # Link to download preview
     public function getDownloadUri()
     {
-        return @$this->attributes['download_uri'];
+        return isset($this->attributes['download_uri']) ? $this->attributes['download_uri'] : null;
     }
     // string # Preview type. Can be image, pdf, pdf_native, video, audio, or text
     public function getType()
     {
-        return @$this->attributes['type'];
+        return isset($this->attributes['type']) ? $this->attributes['type'] : null;
     }
     // string # Preview size
     public function getSize()
     {
-        return @$this->attributes['size'];
+        return isset($this->attributes['size']) ? $this->attributes['size'] : null;
     }
 }

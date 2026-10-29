@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class ExpectationEvaluation
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,92 +56,92 @@ class ExpectationEvaluation
     // int64 # ExpectationEvaluation ID
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
     // int64 # Workspace ID. `0` means the default workspace.
     public function getWorkspaceId()
     {
-        return @$this->attributes['workspace_id'];
+        return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
     // int64 # Expectation ID.
     public function getExpectationId()
     {
-        return @$this->attributes['expectation_id'];
+        return isset($this->attributes['expectation_id']) ? $this->attributes['expectation_id'] : null;
     }
     // string # Evaluation status.
     public function getStatus()
     {
-        return @$this->attributes['status'];
+        return isset($this->attributes['status']) ? $this->attributes['status'] : null;
     }
     // string # How the evaluation window was opened.
     public function getOpenedVia()
     {
-        return @$this->attributes['opened_via'];
+        return isset($this->attributes['opened_via']) ? $this->attributes['opened_via'] : null;
     }
     // date-time # When the evaluation row was opened.
     public function getOpenedAt()
     {
-        return @$this->attributes['opened_at'];
+        return isset($this->attributes['opened_at']) ? $this->attributes['opened_at'] : null;
     }
     // date-time # Logical start of the candidate window.
     public function getWindowStartAt()
     {
-        return @$this->attributes['window_start_at'];
+        return isset($this->attributes['window_start_at']) ? $this->attributes['window_start_at'] : null;
     }
     // date-time # Actual candidate cutoff boundary for the window.
     public function getWindowEndAt()
     {
-        return @$this->attributes['window_end_at'];
+        return isset($this->attributes['window_end_at']) ? $this->attributes['window_end_at'] : null;
     }
     // date-time # Logical due boundary for schedule-driven windows.
     public function getDeadlineAt()
     {
-        return @$this->attributes['deadline_at'];
+        return isset($this->attributes['deadline_at']) ? $this->attributes['deadline_at'] : null;
     }
     // date-time # Logical cutoff for late acceptance, when present.
     public function getLateAcceptanceCutoffAt()
     {
-        return @$this->attributes['late_acceptance_cutoff_at'];
+        return isset($this->attributes['late_acceptance_cutoff_at']) ? $this->attributes['late_acceptance_cutoff_at'] : null;
     }
     // date-time # Hard stop after which the window may not remain open.
     public function getHardCloseAt()
     {
-        return @$this->attributes['hard_close_at'];
+        return isset($this->attributes['hard_close_at']) ? $this->attributes['hard_close_at'] : null;
     }
     // date-time # When the evaluation row was finalized.
     public function getClosedAt()
     {
-        return @$this->attributes['closed_at'];
+        return isset($this->attributes['closed_at']) ? $this->attributes['closed_at'] : null;
     }
     // array(object) # Captured evidence for files that matched the window.
     public function getMatchedFiles()
     {
-        return @$this->attributes['matched_files'];
+        return isset($this->attributes['matched_files']) ? $this->attributes['matched_files'] : null;
     }
     // array(object) # Captured evidence for required files that were missing.
     public function getMissingFiles()
     {
-        return @$this->attributes['missing_files'];
+        return isset($this->attributes['missing_files']) ? $this->attributes['missing_files'] : null;
     }
     // array(string) # Captured criteria failures for the window, including file-scoped FTS errors and returned validation details.
     public function getCriteriaErrors()
     {
-        return @$this->attributes['criteria_errors'];
+        return isset($this->attributes['criteria_errors']) ? $this->attributes['criteria_errors'] : null;
     }
     // object # Compact evaluator summary payload.
     public function getSummary()
     {
-        return @$this->attributes['summary'];
+        return isset($this->attributes['summary']) ? $this->attributes['summary'] : null;
     }
     // date-time # Creation time.
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
     // date-time # Last update time.
     public function getUpdatedAt()
     {
-        return @$this->attributes['updated_at'];
+        return isset($this->attributes['updated_at']) ? $this->attributes['updated_at'] : null;
     }
 
     // Parameters:
@@ -153,11 +151,11 @@ class ExpectationEvaluation
     //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `expectation_id` and `workspace_id`. Valid field combinations are `[ workspace_id, expectation_id ]`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -182,11 +180,11 @@ class ExpectationEvaluation
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 

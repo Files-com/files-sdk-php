@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class Image
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,11 +56,11 @@ class Image
     // string # Image name
     public function getName()
     {
-        return @$this->attributes['name'];
+        return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
     // string # Image URI
     public function getUri()
     {
-        return @$this->attributes['uri'];
+        return isset($this->attributes['uri']) ? $this->attributes['uri'] : null;
     }
 }

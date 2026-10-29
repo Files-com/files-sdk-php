@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class SyncLog
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,62 +56,62 @@ class SyncLog
     // date-time # Start Time of Action. Deprecrated: Use created_at.
     public function getTimestamp()
     {
-        return @$this->attributes['timestamp'];
+        return isset($this->attributes['timestamp']) ? $this->attributes['timestamp'] : null;
     }
     // int64 # Sync ID
     public function getSyncId()
     {
-        return @$this->attributes['sync_id'];
+        return isset($this->attributes['sync_id']) ? $this->attributes['sync_id'] : null;
     }
     // int64 # External Event ID used by legacy syncs
     public function getExternalEventId()
     {
-        return @$this->attributes['external_event_id'];
+        return isset($this->attributes['external_event_id']) ? $this->attributes['external_event_id'] : null;
     }
     // int64 # Sync Run ID
     public function getSyncRunId()
     {
-        return @$this->attributes['sync_run_id'];
+        return isset($this->attributes['sync_run_id']) ? $this->attributes['sync_run_id'] : null;
     }
     // string # Error type, if applicable
     public function getErrorType()
     {
-        return @$this->attributes['error_type'];
+        return isset($this->attributes['error_type']) ? $this->attributes['error_type'] : null;
     }
     // string # Message
     public function getMessage()
     {
-        return @$this->attributes['message'];
+        return isset($this->attributes['message']) ? $this->attributes['message'] : null;
     }
     // string # Operation type
     public function getOperation()
     {
-        return @$this->attributes['operation'];
+        return isset($this->attributes['operation']) ? $this->attributes['operation'] : null;
     }
     // string # File path. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
     public function getPath()
     {
-        return @$this->attributes['path'];
+        return isset($this->attributes['path']) ? $this->attributes['path'] : null;
     }
     // int64 # File size
     public function getSize()
     {
-        return @$this->attributes['size'];
+        return isset($this->attributes['size']) ? $this->attributes['size'] : null;
     }
     // string # File type
     public function getFileType()
     {
-        return @$this->attributes['file_type'];
+        return isset($this->attributes['file_type']) ? $this->attributes['file_type'] : null;
     }
     // string # Status
     public function getStatus()
     {
-        return @$this->attributes['status'];
+        return isset($this->attributes['status']) ? $this->attributes['status'] : null;
     }
     // date-time # Start Time of Action
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
 
     // Parameters:
@@ -126,11 +124,11 @@ class SyncLog
     //   filter_lteq - object - If set, return records where the specified field is less than or equal the supplied value. Valid fields are `created_at`. Valid field combinations are `[ external_event_id ]`, `[ operation ]`, `[ status ]`, `[ sync_id ]`, `[ created_at ]`, `[ sync_run_id ]`, `[ external_event_id, operation ]`, `[ external_event_id, status ]`, `[ external_event_id, sync_id ]`, `[ external_event_id, created_at ]`, `[ external_event_id, sync_run_id ]`, `[ operation, status ]`, `[ operation, sync_id ]`, `[ operation, created_at ]`, `[ operation, sync_run_id ]`, `[ status, sync_id ]`, `[ status, created_at ]`, `[ status, sync_run_id ]`, `[ sync_id, created_at ]`, `[ sync_id, sync_run_id ]`, `[ created_at, sync_run_id ]`, `[ external_event_id, operation, status ]`, `[ external_event_id, operation, sync_id ]`, `[ external_event_id, operation, created_at ]`, `[ external_event_id, operation, sync_run_id ]`, `[ external_event_id, status, sync_id ]`, `[ external_event_id, status, created_at ]`, `[ external_event_id, status, sync_run_id ]`, `[ external_event_id, sync_id, created_at ]`, `[ external_event_id, sync_id, sync_run_id ]`, `[ external_event_id, created_at, sync_run_id ]`, `[ operation, status, sync_id ]`, `[ operation, status, created_at ]`, `[ operation, status, sync_run_id ]`, `[ operation, sync_id, created_at ]`, `[ operation, sync_id, sync_run_id ]`, `[ operation, created_at, sync_run_id ]`, `[ status, sync_id, created_at ]`, `[ status, sync_id, sync_run_id ]`, `[ status, created_at, sync_run_id ]`, `[ sync_id, created_at, sync_run_id ]`, `[ external_event_id, operation, status, sync_id ]`, `[ external_event_id, operation, status, created_at ]`, `[ external_event_id, operation, status, sync_run_id ]`, `[ external_event_id, operation, sync_id, created_at ]`, `[ external_event_id, operation, sync_id, sync_run_id ]`, `[ external_event_id, operation, created_at, sync_run_id ]`, `[ external_event_id, status, sync_id, created_at ]`, `[ external_event_id, status, sync_id, sync_run_id ]`, `[ external_event_id, status, created_at, sync_run_id ]`, `[ external_event_id, sync_id, created_at, sync_run_id ]`, `[ operation, status, sync_id, created_at ]`, `[ operation, status, sync_id, sync_run_id ]`, `[ operation, status, created_at, sync_run_id ]`, `[ operation, sync_id, created_at, sync_run_id ]`, `[ status, sync_id, created_at, sync_run_id ]`, `[ external_event_id, operation, status, sync_id, created_at ]`, `[ external_event_id, operation, status, sync_id, sync_run_id ]`, `[ external_event_id, operation, status, created_at, sync_run_id ]`, `[ external_event_id, operation, sync_id, created_at, sync_run_id ]`, `[ external_event_id, status, sync_id, created_at, sync_run_id ]`, `[ operation, status, sync_id, created_at, sync_run_id ]` or `[ external_event_id, operation, status, sync_id, created_at, sync_run_id ]`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 

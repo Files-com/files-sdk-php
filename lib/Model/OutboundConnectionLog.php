@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class OutboundConnectionLog
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,87 +56,87 @@ class OutboundConnectionLog
     // date-time # Start Time of Action. Deprecrated: Use created_at.
     public function getTimestamp()
     {
-        return @$this->attributes['timestamp'];
+        return isset($this->attributes['timestamp']) ? $this->attributes['timestamp'] : null;
     }
     // string # Remote Path. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
     public function getPath()
     {
-        return @$this->attributes['path'];
+        return isset($this->attributes['path']) ? $this->attributes['path'] : null;
     }
     // string # End User IP
     public function getClientIp()
     {
-        return @$this->attributes['client_ip'];
+        return isset($this->attributes['client_ip']) ? $this->attributes['client_ip'] : null;
     }
     // int64 # Source Remote Server ID
     public function getSrcRemoteServerId()
     {
-        return @$this->attributes['src_remote_server_id'];
+        return isset($this->attributes['src_remote_server_id']) ? $this->attributes['src_remote_server_id'] : null;
     }
     // string # Source Remote Server name
     public function getSrcRemoteServerName()
     {
-        return @$this->attributes['src_remote_server_name'];
+        return isset($this->attributes['src_remote_server_name']) ? $this->attributes['src_remote_server_name'] : null;
     }
     // int64 # Destination Remote Server ID
     public function getDestRemoteServerId()
     {
-        return @$this->attributes['dest_remote_server_id'];
+        return isset($this->attributes['dest_remote_server_id']) ? $this->attributes['dest_remote_server_id'] : null;
     }
     // string # Destination Remote Server name
     public function getDestRemoteServerName()
     {
-        return @$this->attributes['dest_remote_server_name'];
+        return isset($this->attributes['dest_remote_server_name']) ? $this->attributes['dest_remote_server_name'] : null;
     }
     // string # Operation Type
     public function getOperation()
     {
-        return @$this->attributes['operation'];
+        return isset($this->attributes['operation']) ? $this->attributes['operation'] : null;
     }
     // string # Error message, if applicable
     public function getErrorMessage()
     {
-        return @$this->attributes['error_message'];
+        return isset($this->attributes['error_message']) ? $this->attributes['error_message'] : null;
     }
     // string # Error operation, if applicable
     public function getErrorOperation()
     {
-        return @$this->attributes['error_operation'];
+        return isset($this->attributes['error_operation']) ? $this->attributes['error_operation'] : null;
     }
     // string # Error type, if applicable
     public function getErrorType()
     {
-        return @$this->attributes['error_type'];
+        return isset($this->attributes['error_type']) ? $this->attributes['error_type'] : null;
     }
     // string # Status
     public function getStatus()
     {
-        return @$this->attributes['status'];
+        return isset($this->attributes['status']) ? $this->attributes['status'] : null;
     }
     // int64 # Duration (in milliseconds)
     public function getDurationMs()
     {
-        return @$this->attributes['duration_ms'];
+        return isset($this->attributes['duration_ms']) ? $this->attributes['duration_ms'] : null;
     }
     // int64 # Data Length in Bytes. Present for upload actions that transfer data.
     public function getBytesUploaded()
     {
-        return @$this->attributes['bytes_uploaded'];
+        return isset($this->attributes['bytes_uploaded']) ? $this->attributes['bytes_uploaded'] : null;
     }
     // int64 # Data Length in Bytes. Present for download actions that transfer data.
     public function getBytesDownloaded()
     {
-        return @$this->attributes['bytes_downloaded'];
+        return isset($this->attributes['bytes_downloaded']) ? $this->attributes['bytes_downloaded'] : null;
     }
     // int64 # Number of entries returned for a folder list action.
     public function getListCount()
     {
-        return @$this->attributes['list_count'];
+        return isset($this->attributes['list_count']) ? $this->attributes['list_count'] : null;
     }
     // date-time # Start Time of Action
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
 
     // Parameters:
@@ -152,11 +150,11 @@ class OutboundConnectionLog
     //   filter_lteq - object - If set, return records where the specified field is less than or equal the supplied value. Valid fields are `created_at`. Valid field combinations are `[ operation ]`, `[ status ]`, `[ src_remote_server_id ]`, `[ dest_remote_server_id ]`, `[ path ]`, `[ client_ip ]`, `[ created_at ]`, `[ operation, status ]`, `[ operation, src_remote_server_id ]`, `[ operation, dest_remote_server_id ]`, `[ operation, path ]`, `[ operation, client_ip ]`, `[ operation, created_at ]`, `[ status, src_remote_server_id ]`, `[ status, dest_remote_server_id ]`, `[ status, path ]`, `[ status, client_ip ]`, `[ status, created_at ]`, `[ src_remote_server_id, dest_remote_server_id ]`, `[ src_remote_server_id, path ]`, `[ src_remote_server_id, client_ip ]`, `[ src_remote_server_id, created_at ]`, `[ dest_remote_server_id, path ]`, `[ dest_remote_server_id, client_ip ]`, `[ dest_remote_server_id, created_at ]`, `[ path, client_ip ]`, `[ path, created_at ]`, `[ client_ip, created_at ]`, `[ operation, status, src_remote_server_id ]`, `[ operation, status, dest_remote_server_id ]`, `[ operation, status, path ]`, `[ operation, status, client_ip ]`, `[ operation, status, created_at ]`, `[ operation, src_remote_server_id, dest_remote_server_id ]`, `[ operation, src_remote_server_id, path ]`, `[ operation, src_remote_server_id, client_ip ]`, `[ operation, src_remote_server_id, created_at ]`, `[ operation, dest_remote_server_id, path ]`, `[ operation, dest_remote_server_id, client_ip ]`, `[ operation, dest_remote_server_id, created_at ]`, `[ operation, path, client_ip ]`, `[ operation, path, created_at ]`, `[ operation, client_ip, created_at ]`, `[ status, src_remote_server_id, dest_remote_server_id ]`, `[ status, src_remote_server_id, path ]`, `[ status, src_remote_server_id, client_ip ]`, `[ status, src_remote_server_id, created_at ]`, `[ status, dest_remote_server_id, path ]`, `[ status, dest_remote_server_id, client_ip ]`, `[ status, dest_remote_server_id, created_at ]`, `[ status, path, client_ip ]`, `[ status, path, created_at ]`, `[ status, client_ip, created_at ]`, `[ src_remote_server_id, dest_remote_server_id, path ]`, `[ src_remote_server_id, dest_remote_server_id, client_ip ]`, `[ src_remote_server_id, dest_remote_server_id, created_at ]`, `[ src_remote_server_id, path, client_ip ]`, `[ src_remote_server_id, path, created_at ]`, `[ src_remote_server_id, client_ip, created_at ]`, `[ dest_remote_server_id, path, client_ip ]`, `[ dest_remote_server_id, path, created_at ]`, `[ dest_remote_server_id, client_ip, created_at ]`, `[ path, client_ip, created_at ]`, `[ operation, status, src_remote_server_id, dest_remote_server_id ]`, `[ operation, status, src_remote_server_id, path ]`, `[ operation, status, src_remote_server_id, client_ip ]`, `[ operation, status, src_remote_server_id, created_at ]`, `[ operation, status, dest_remote_server_id, path ]`, `[ operation, status, dest_remote_server_id, client_ip ]`, `[ operation, status, dest_remote_server_id, created_at ]`, `[ operation, status, path, client_ip ]`, `[ operation, status, path, created_at ]`, `[ operation, status, client_ip, created_at ]`, `[ operation, src_remote_server_id, dest_remote_server_id, path ]`, `[ operation, src_remote_server_id, dest_remote_server_id, client_ip ]`, `[ operation, src_remote_server_id, dest_remote_server_id, created_at ]`, `[ operation, src_remote_server_id, path, client_ip ]`, `[ operation, src_remote_server_id, path, created_at ]`, `[ operation, src_remote_server_id, client_ip, created_at ]`, `[ operation, dest_remote_server_id, path, client_ip ]`, `[ operation, dest_remote_server_id, path, created_at ]`, `[ operation, dest_remote_server_id, client_ip, created_at ]`, `[ operation, path, client_ip, created_at ]`, `[ status, src_remote_server_id, dest_remote_server_id, path ]`, `[ status, src_remote_server_id, dest_remote_server_id, client_ip ]`, `[ status, src_remote_server_id, dest_remote_server_id, created_at ]`, `[ status, src_remote_server_id, path, client_ip ]`, `[ status, src_remote_server_id, path, created_at ]`, `[ status, src_remote_server_id, client_ip, created_at ]`, `[ status, dest_remote_server_id, path, client_ip ]`, `[ status, dest_remote_server_id, path, created_at ]`, `[ status, dest_remote_server_id, client_ip, created_at ]`, `[ status, path, client_ip, created_at ]`, `[ src_remote_server_id, dest_remote_server_id, path, client_ip ]`, `[ src_remote_server_id, dest_remote_server_id, path, created_at ]`, `[ src_remote_server_id, dest_remote_server_id, client_ip, created_at ]`, `[ src_remote_server_id, path, client_ip, created_at ]`, `[ dest_remote_server_id, path, client_ip, created_at ]`, `[ operation, status, src_remote_server_id, dest_remote_server_id, path ]`, `[ operation, status, src_remote_server_id, dest_remote_server_id, client_ip ]`, `[ operation, status, src_remote_server_id, dest_remote_server_id, created_at ]`, `[ operation, status, src_remote_server_id, path, client_ip ]`, `[ operation, status, src_remote_server_id, path, created_at ]`, `[ operation, status, src_remote_server_id, client_ip, created_at ]`, `[ operation, status, dest_remote_server_id, path, client_ip ]`, `[ operation, status, dest_remote_server_id, path, created_at ]`, `[ operation, status, dest_remote_server_id, client_ip, created_at ]`, `[ operation, status, path, client_ip, created_at ]`, `[ operation, src_remote_server_id, dest_remote_server_id, path, client_ip ]`, `[ operation, src_remote_server_id, dest_remote_server_id, path, created_at ]`, `[ operation, src_remote_server_id, dest_remote_server_id, client_ip, created_at ]`, `[ operation, src_remote_server_id, path, client_ip, created_at ]`, `[ operation, dest_remote_server_id, path, client_ip, created_at ]`, `[ status, src_remote_server_id, dest_remote_server_id, path, client_ip ]`, `[ status, src_remote_server_id, dest_remote_server_id, path, created_at ]`, `[ status, src_remote_server_id, dest_remote_server_id, client_ip, created_at ]`, `[ status, src_remote_server_id, path, client_ip, created_at ]`, `[ status, dest_remote_server_id, path, client_ip, created_at ]`, `[ src_remote_server_id, dest_remote_server_id, path, client_ip, created_at ]`, `[ operation, status, src_remote_server_id, dest_remote_server_id, path, client_ip ]`, `[ operation, status, src_remote_server_id, dest_remote_server_id, path, created_at ]`, `[ operation, status, src_remote_server_id, dest_remote_server_id, client_ip, created_at ]`, `[ operation, status, src_remote_server_id, path, client_ip, created_at ]`, `[ operation, status, dest_remote_server_id, path, client_ip, created_at ]`, `[ operation, src_remote_server_id, dest_remote_server_id, path, client_ip, created_at ]`, `[ status, src_remote_server_id, dest_remote_server_id, path, client_ip, created_at ]` or `[ operation, status, src_remote_server_id, dest_remote_server_id, path, client_ip, created_at ]`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 

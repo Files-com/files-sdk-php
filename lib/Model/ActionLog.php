@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class ActionLog
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,72 +56,72 @@ class ActionLog
     // string # The type of action performed
     public function getAction()
     {
-        return @$this->attributes['action'];
+        return isset($this->attributes['action']) ? $this->attributes['action'] : null;
     }
     // date-time # Time the action was performed
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
     // string # Destination path, for moves and copies
     public function getDestination()
     {
-        return @$this->attributes['destination'];
+        return isset($this->attributes['destination']) ? $this->attributes['destination'] : null;
     }
     // string # Failure type, if applicable
     public function getFailureType()
     {
-        return @$this->attributes['failure_type'];
+        return isset($this->attributes['failure_type']) ? $this->attributes['failure_type'] : null;
     }
     // string # Folder involved in the action
     public function getFolder()
     {
-        return @$this->attributes['folder'];
+        return isset($this->attributes['folder']) ? $this->attributes['folder'] : null;
     }
     // string # Interface used to perform the action
     public function getInterface()
     {
-        return @$this->attributes['interface'];
+        return isset($this->attributes['interface']) ? $this->attributes['interface'] : null;
     }
     // string # IP address from which the action was performed
     public function getIp()
     {
-        return @$this->attributes['ip'];
+        return isset($this->attributes['ip']) ? $this->attributes['ip'] : null;
     }
     // int64 # File or Folder ID associated with the action
     public function getMetadataDmId()
     {
-        return @$this->attributes['metadata_dm_id'];
+        return isset($this->attributes['metadata_dm_id']) ? $this->attributes['metadata_dm_id'] : null;
     }
     // int64 # Parent File or Folder ID associated with the action
     public function getParentMetadataDmId()
     {
-        return @$this->attributes['parent_metadata_dm_id'];
+        return isset($this->attributes['parent_metadata_dm_id']) ? $this->attributes['parent_metadata_dm_id'] : null;
     }
     // string # File path. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
     public function getPath()
     {
-        return @$this->attributes['path'];
+        return isset($this->attributes['path']) ? $this->attributes['path'] : null;
     }
     // int64 # Site ID where the action took place
     public function getSiteId()
     {
-        return @$this->attributes['site_id'];
+        return isset($this->attributes['site_id']) ? $this->attributes['site_id'] : null;
     }
     // string # Source path, for moves and copies
     public function getSrc()
     {
-        return @$this->attributes['src'];
+        return isset($this->attributes['src']) ? $this->attributes['src'] : null;
     }
     // int64 # User ID who performed the action
     public function getUserId()
     {
-        return @$this->attributes['user_id'];
+        return isset($this->attributes['user_id']) ? $this->attributes['user_id'] : null;
     }
     // string # Username who performed the action
     public function getUsername()
     {
-        return @$this->attributes['username'];
+        return isset($this->attributes['username']) ? $this->attributes['username'] : null;
     }
 
     // Parameters:
@@ -137,11 +135,11 @@ class ActionLog
     //   filter_lteq - object - If set, return records where the specified field is less than or equal the supplied value. Valid fields are `created_at`. Valid field combinations are `[ folder ]`, `[ path ]`, `[ src ]`, `[ destination ]`, `[ created_at ]`, `[ user_id ]`, `[ username ]`, `[ folder, path ]`, `[ folder, src ]`, `[ folder, destination ]`, `[ folder, created_at ]`, `[ folder, user_id ]`, `[ folder, username ]`, `[ path, src ]`, `[ path, destination ]`, `[ path, created_at ]`, `[ path, user_id ]`, `[ path, username ]`, `[ src, destination ]`, `[ src, created_at ]`, `[ src, user_id ]`, `[ src, username ]`, `[ destination, created_at ]`, `[ destination, user_id ]`, `[ destination, username ]`, `[ created_at, user_id ]`, `[ created_at, username ]`, `[ user_id, username ]`, `[ folder, path, src ]`, `[ folder, path, destination ]`, `[ folder, path, created_at ]`, `[ folder, path, user_id ]`, `[ folder, path, username ]`, `[ folder, src, destination ]`, `[ folder, src, created_at ]`, `[ folder, src, user_id ]`, `[ folder, src, username ]`, `[ folder, destination, created_at ]`, `[ folder, destination, user_id ]`, `[ folder, destination, username ]`, `[ folder, created_at, user_id ]`, `[ folder, created_at, username ]`, `[ folder, user_id, username ]`, `[ path, src, destination ]`, `[ path, src, created_at ]`, `[ path, src, user_id ]`, `[ path, src, username ]`, `[ path, destination, created_at ]`, `[ path, destination, user_id ]`, `[ path, destination, username ]`, `[ path, created_at, user_id ]`, `[ path, created_at, username ]`, `[ path, user_id, username ]`, `[ src, destination, created_at ]`, `[ src, destination, user_id ]`, `[ src, destination, username ]`, `[ src, created_at, user_id ]`, `[ src, created_at, username ]`, `[ src, user_id, username ]`, `[ destination, created_at, user_id ]`, `[ destination, created_at, username ]`, `[ destination, user_id, username ]`, `[ created_at, user_id, username ]`, `[ folder, path, src, destination ]`, `[ folder, path, src, created_at ]`, `[ folder, path, src, user_id ]`, `[ folder, path, src, username ]`, `[ folder, path, destination, created_at ]`, `[ folder, path, destination, user_id ]`, `[ folder, path, destination, username ]`, `[ folder, path, created_at, user_id ]`, `[ folder, path, created_at, username ]`, `[ folder, path, user_id, username ]`, `[ folder, src, destination, created_at ]`, `[ folder, src, destination, user_id ]`, `[ folder, src, destination, username ]`, `[ folder, src, created_at, user_id ]`, `[ folder, src, created_at, username ]`, `[ folder, src, user_id, username ]`, `[ folder, destination, created_at, user_id ]`, `[ folder, destination, created_at, username ]`, `[ folder, destination, user_id, username ]`, `[ folder, created_at, user_id, username ]`, `[ path, src, destination, created_at ]`, `[ path, src, destination, user_id ]`, `[ path, src, destination, username ]`, `[ path, src, created_at, user_id ]`, `[ path, src, created_at, username ]`, `[ path, src, user_id, username ]`, `[ path, destination, created_at, user_id ]`, `[ path, destination, created_at, username ]`, `[ path, destination, user_id, username ]`, `[ path, created_at, user_id, username ]`, `[ src, destination, created_at, user_id ]`, `[ src, destination, created_at, username ]`, `[ src, destination, user_id, username ]`, `[ src, created_at, user_id, username ]`, `[ destination, created_at, user_id, username ]`, `[ folder, path, src, destination, created_at ]`, `[ folder, path, src, destination, user_id ]`, `[ folder, path, src, destination, username ]`, `[ folder, path, src, created_at, user_id ]`, `[ folder, path, src, created_at, username ]`, `[ folder, path, src, user_id, username ]`, `[ folder, path, destination, created_at, user_id ]`, `[ folder, path, destination, created_at, username ]`, `[ folder, path, destination, user_id, username ]`, `[ folder, path, created_at, user_id, username ]`, `[ folder, src, destination, created_at, user_id ]`, `[ folder, src, destination, created_at, username ]`, `[ folder, src, destination, user_id, username ]`, `[ folder, src, created_at, user_id, username ]`, `[ folder, destination, created_at, user_id, username ]`, `[ path, src, destination, created_at, user_id ]`, `[ path, src, destination, created_at, username ]`, `[ path, src, destination, user_id, username ]`, `[ path, src, created_at, user_id, username ]`, `[ path, destination, created_at, user_id, username ]`, `[ src, destination, created_at, user_id, username ]`, `[ folder, path, src, destination, created_at, user_id ]`, `[ folder, path, src, destination, created_at, username ]`, `[ folder, path, src, destination, user_id, username ]`, `[ folder, path, src, created_at, user_id, username ]`, `[ folder, path, destination, created_at, user_id, username ]`, `[ folder, src, destination, created_at, user_id, username ]`, `[ path, src, destination, created_at, user_id, username ]` or `[ folder, path, src, destination, created_at, user_id, username ]`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 

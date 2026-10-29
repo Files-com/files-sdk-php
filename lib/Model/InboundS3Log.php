@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class InboundS3Log
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,57 +56,57 @@ class InboundS3Log
     // string # Request Path. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
     public function getPath()
     {
-        return @$this->attributes['path'];
+        return isset($this->attributes['path']) ? $this->attributes['path'] : null;
     }
     // string # Client IP
     public function getClientIp()
     {
-        return @$this->attributes['client_ip'];
+        return isset($this->attributes['client_ip']) ? $this->attributes['client_ip'] : null;
     }
     // string # S3 Operation Type
     public function getOperation()
     {
-        return @$this->attributes['operation'];
+        return isset($this->attributes['operation']) ? $this->attributes['operation'] : null;
     }
     // string # HTTP Status Code
     public function getStatus()
     {
-        return @$this->attributes['status'];
+        return isset($this->attributes['status']) ? $this->attributes['status'] : null;
     }
     // string # AWS Access Key ID
     public function getAwsAccessKey()
     {
-        return @$this->attributes['aws_access_key'];
+        return isset($this->attributes['aws_access_key']) ? $this->attributes['aws_access_key'] : null;
     }
     // string # Error message, if applicable
     public function getErrorMessage()
     {
-        return @$this->attributes['error_message'];
+        return isset($this->attributes['error_message']) ? $this->attributes['error_message'] : null;
     }
     // string # Error type, if applicable
     public function getErrorType()
     {
-        return @$this->attributes['error_type'];
+        return isset($this->attributes['error_type']) ? $this->attributes['error_type'] : null;
     }
     // int64 # Duration (in milliseconds)
     public function getDurationMs()
     {
-        return @$this->attributes['duration_ms'];
+        return isset($this->attributes['duration_ms']) ? $this->attributes['duration_ms'] : null;
     }
     // string # Request ID
     public function getRequestId()
     {
-        return @$this->attributes['request_id'];
+        return isset($this->attributes['request_id']) ? $this->attributes['request_id'] : null;
     }
     // string # User Agent
     public function getUserAgent()
     {
-        return @$this->attributes['user_agent'];
+        return isset($this->attributes['user_agent']) ? $this->attributes['user_agent'] : null;
     }
     // date-time # Start Time of Request
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
 
     // Parameters:
@@ -122,11 +120,11 @@ class InboundS3Log
     //   filter_lteq - object - If set, return records where the specified field is less than or equal the supplied value. Valid fields are `created_at`. Valid field combinations are `[ operation ]`, `[ status ]`, `[ path ]`, `[ client_ip ]`, `[ created_at ]`, `[ operation, status ]`, `[ operation, path ]`, `[ operation, client_ip ]`, `[ operation, created_at ]`, `[ status, path ]`, `[ status, client_ip ]`, `[ status, created_at ]`, `[ path, client_ip ]`, `[ path, created_at ]`, `[ client_ip, created_at ]`, `[ operation, status, path ]`, `[ operation, status, client_ip ]`, `[ operation, status, created_at ]`, `[ operation, path, client_ip ]`, `[ operation, path, created_at ]`, `[ operation, client_ip, created_at ]`, `[ status, path, client_ip ]`, `[ status, path, created_at ]`, `[ status, client_ip, created_at ]`, `[ path, client_ip, created_at ]`, `[ operation, status, path, client_ip ]`, `[ operation, status, path, created_at ]`, `[ operation, status, client_ip, created_at ]`, `[ operation, path, client_ip, created_at ]` or `[ status, path, client_ip, created_at ]`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 

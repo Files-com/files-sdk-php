@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class ChatMessage
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,21 +56,21 @@ class ChatMessage
     // int64 # Chat Message ID.
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
     // string # Message role.
     public function getRole()
     {
-        return @$this->attributes['role'];
+        return isset($this->attributes['role']) ? $this->attributes['role'] : null;
     }
     // string # Message content.
     public function getContent()
     {
-        return @$this->attributes['content'];
+        return isset($this->attributes['content']) ? $this->attributes['content'] : null;
     }
     // date-time # Message creation date/time.
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
 }

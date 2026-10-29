@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class UserAdditionalEmailRecipient
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class UserAdditionalEmailRecipient
     // int64 # User additional email recipient ID
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
     public function setId($value)
@@ -68,7 +66,7 @@ class UserAdditionalEmailRecipient
     // int64 # User ID
     public function getUserId()
     {
-        return @$this->attributes['user_id'];
+        return isset($this->attributes['user_id']) ? $this->attributes['user_id'] : null;
     }
 
     public function setUserId($value)
@@ -78,7 +76,7 @@ class UserAdditionalEmailRecipient
     // int64 # Workspace ID (0 for default workspace).
     public function getWorkspaceId()
     {
-        return @$this->attributes['workspace_id'];
+        return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
 
     public function setWorkspaceId($value)
@@ -88,7 +86,7 @@ class UserAdditionalEmailRecipient
     // string # Additional email recipient address
     public function getEmail()
     {
-        return @$this->attributes['email'];
+        return isset($this->attributes['email']) ? $this->attributes['email'] : null;
     }
 
     public function setEmail($value)
@@ -98,7 +96,7 @@ class UserAdditionalEmailRecipient
     // date-time # Created at date/time
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
 
     // Parameters:
@@ -109,7 +107,7 @@ class UserAdditionalEmailRecipient
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -117,11 +115,11 @@ class UserAdditionalEmailRecipient
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (@$params['email'] && !is_string(@$params['email'])) {
+        if (!empty($params['email']) && !is_string($params['email'])) {
             throw new \Files\Exception\InvalidParameterException('$email must be of type string; received ' . gettype(@$params['email']));
         }
 
@@ -135,7 +133,7 @@ class UserAdditionalEmailRecipient
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -143,7 +141,7 @@ class UserAdditionalEmailRecipient
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -180,15 +178,15 @@ class UserAdditionalEmailRecipient
     //   filter_prefix - object - If set, return records where the specified field is prefixed by the supplied value. Valid fields are `email`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['user_id'] && !is_int(@$params['user_id'])) {
+        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -213,11 +211,11 @@ class UserAdditionalEmailRecipient
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -235,15 +233,15 @@ class UserAdditionalEmailRecipient
     //   email (required) - string - Additional email recipient address
     public static function create($params = [], $options = [])
     {
-        if (!@$params['email']) {
+        if (empty($params['email'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: email');
         }
 
-        if (@$params['user_id'] && !is_int(@$params['user_id'])) {
+        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (@$params['email'] && !is_string(@$params['email'])) {
+        if (!empty($params['email']) && !is_string($params['email'])) {
             throw new \Files\Exception\InvalidParameterException('$email must be of type string; received ' . gettype(@$params['email']));
         }
 

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class Site
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,1017 +56,1017 @@ class Site
     // int64 # Site Id
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
     // string # Site name
     public function getName()
     {
-        return @$this->attributes['name'];
+        return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
     // array(string) # Additional extensions that are considered text files
     public function getAdditionalTextFileTypes()
     {
-        return @$this->attributes['additional_text_file_types'];
+        return isset($this->attributes['additional_text_file_types']) ? $this->attributes['additional_text_file_types'] : null;
     }
     // object # Availability settings for AI features. Each feature requires the site_admins, workspace_admins, folder_admins, and all_users keys. Optional selected_group_members defaults to false; when true, members of at least one group in group_ids get access regardless of the other options. All availability options are additive: any enabled option matching the user grants access. Optional group_ids is an array of integer IDs of active groups on this site, from any workspace. Omitted or empty group_ids grants no access through selected_group_members and does not affect other options. Disabling all AI features overrides these settings.
     public function getAiFeatureAvailability()
     {
-        return @$this->attributes['ai_feature_availability'];
+        return isset($this->attributes['ai_feature_availability']) ? $this->attributes['ai_feature_availability'] : null;
     }
     // boolean # Is SMS two factor authentication allowed?
     public function getAllowed2faMethodSms()
     {
-        return @$this->attributes['allowed_2fa_method_sms'];
+        return isset($this->attributes['allowed_2fa_method_sms']) ? $this->attributes['allowed_2fa_method_sms'] : null;
     }
     // boolean # Is TOTP two factor authentication allowed?
     public function getAllowed2faMethodTotp()
     {
-        return @$this->attributes['allowed_2fa_method_totp'];
+        return isset($this->attributes['allowed_2fa_method_totp']) ? $this->attributes['allowed_2fa_method_totp'] : null;
     }
     // boolean # Is WebAuthn two factor authentication allowed?
     public function getAllowed2faMethodWebauthn()
     {
-        return @$this->attributes['allowed_2fa_method_webauthn'];
+        return isset($this->attributes['allowed_2fa_method_webauthn']) ? $this->attributes['allowed_2fa_method_webauthn'] : null;
     }
     // boolean # Is yubikey two factor authentication allowed?
     public function getAllowed2faMethodYubi()
     {
-        return @$this->attributes['allowed_2fa_method_yubi'];
+        return isset($this->attributes['allowed_2fa_method_yubi']) ? $this->attributes['allowed_2fa_method_yubi'] : null;
     }
     // boolean # Is OTP via email two factor authentication allowed?
     public function getAllowed2faMethodEmail()
     {
-        return @$this->attributes['allowed_2fa_method_email'];
+        return isset($this->attributes['allowed_2fa_method_email']) ? $this->attributes['allowed_2fa_method_email'] : null;
     }
     // boolean # Is OTP via static codes for two factor authentication allowed?
     public function getAllowed2faMethodStatic()
     {
-        return @$this->attributes['allowed_2fa_method_static'];
+        return isset($this->attributes['allowed_2fa_method_static']) ? $this->attributes['allowed_2fa_method_static'] : null;
     }
     // boolean # Are users allowed to configure their two factor authentication to be bypassed for FTP/SFTP/WebDAV?
     public function getAllowed2faMethodBypassForFtpSftpDav()
     {
-        return @$this->attributes['allowed_2fa_method_bypass_for_ftp_sftp_dav'];
+        return isset($this->attributes['allowed_2fa_method_bypass_for_ftp_sftp_dav']) ? $this->attributes['allowed_2fa_method_bypass_for_ftp_sftp_dav'] : null;
     }
     // int64 # User ID for the main site administrator
     public function getAdminUserId()
     {
-        return @$this->attributes['admin_user_id'];
+        return isset($this->attributes['admin_user_id']) ? $this->attributes['admin_user_id'] : null;
     }
     // boolean # Allow admins to bypass the locked subfolders setting.
     public function getAdminsBypassLockedSubfolders()
     {
-        return @$this->attributes['admins_bypass_locked_subfolders'];
+        return isset($this->attributes['admins_bypass_locked_subfolders']) ? $this->attributes['admins_bypass_locked_subfolders'] : null;
     }
     // boolean # Are manual Bundle names allowed?
     public function getAllowBundleNames()
     {
-        return @$this->attributes['allow_bundle_names'];
+        return isset($this->attributes['allow_bundle_names']) ? $this->attributes['allow_bundle_names'] : null;
     }
     // boolean # Allow the site-wide two-factor authentication requirement to be overriden on a per-user-basis?
     public function getAllowUserLevel2faOverride()
     {
-        return @$this->attributes['allow_user_level_2fa_override'];
+        return isset($this->attributes['allow_user_level_2fa_override']) ? $this->attributes['allow_user_level_2fa_override'] : null;
     }
     // boolean # Allow the site-wide allowed IP restriction to be overriden on a per-user-basis?
     public function getAllowUserLevelAllowedIpOverride()
     {
-        return @$this->attributes['allow_user_level_allowed_ip_override'];
+        return isset($this->attributes['allow_user_level_allowed_ip_override']) ? $this->attributes['allow_user_level_allowed_ip_override'] : null;
     }
     // boolean # Allow the site-wide FTP SSL requirement to be overriden on a per-user-basis?
     public function getAllowUserLevelSslOverride()
     {
-        return @$this->attributes['allow_user_level_ssl_override'];
+        return isset($this->attributes['allow_user_level_ssl_override']) ? $this->attributes['allow_user_level_ssl_override'] : null;
     }
     // string # Comma separated list of allowed Country codes
     public function getAllowedCountries()
     {
-        return @$this->attributes['allowed_countries'];
+        return isset($this->attributes['allowed_countries']) ? $this->attributes['allowed_countries'] : null;
     }
     // string # List of allowed IP addresses
     public function getAllowedIps()
     {
-        return @$this->attributes['allowed_ips'];
+        return isset($this->attributes['allowed_ips']) ? $this->attributes['allowed_ips'] : null;
     }
     // boolean # Require Parent Site users entering this Child Site to match its allowed IP addresses in addition to their existing IP restrictions. Applies to all Workspaces. Defaults to false.
     public function getEnforceParentSiteUserIpRestrictions()
     {
-        return @$this->attributes['enforce_parent_site_user_ip_restrictions'];
+        return isset($this->attributes['enforce_parent_site_user_ip_restrictions']) ? $this->attributes['enforce_parent_site_user_ip_restrictions'] : null;
     }
     // boolean # Create parent directories if they do not exist during uploads?  This is primarily used to work around broken upload clients that assume servers will perform this step.
     public function getAlwaysMkdirParents()
     {
-        return @$this->attributes['always_mkdir_parents'];
+        return isset($this->attributes['always_mkdir_parents']) ? $this->attributes['always_mkdir_parents'] : null;
     }
     // int64 # Number of days to retain AS2 messages (incoming and outgoing).
     public function getAs2MessageRetentionDays()
     {
-        return @$this->attributes['as2_message_retention_days'];
+        return isset($this->attributes['as2_message_retention_days']) ? $this->attributes['as2_message_retention_days'] : null;
     }
     // boolean # If false, rename conflicting files instead of asking for overwrite confirmation.  Only applies to web interface.
     public function getAskAboutOverwrites()
     {
-        return @$this->attributes['ask_about_overwrites'];
+        return isset($this->attributes['ask_about_overwrites']) ? $this->attributes['ask_about_overwrites'] : null;
     }
     // string # Do Bundle owners receive activity notifications?
     public function getBundleActivityNotifications()
     {
-        return @$this->attributes['bundle_activity_notifications'];
+        return isset($this->attributes['bundle_activity_notifications']) ? $this->attributes['bundle_activity_notifications'] : null;
     }
     // int64 # Site-wide Bundle expiration in days
     public function getBundleExpiration()
     {
-        return @$this->attributes['bundle_expiration'];
+        return isset($this->attributes['bundle_expiration']) ? $this->attributes['bundle_expiration'] : null;
     }
     // string # Custom error message to show when bundle is not found.
     public function getBundleNotFoundMessage()
     {
-        return @$this->attributes['bundle_not_found_message'];
+        return isset($this->attributes['bundle_not_found_message']) ? $this->attributes['bundle_not_found_message'] : null;
     }
     // boolean # Do Bundles require password protection?
     public function getBundlePasswordRequired()
     {
-        return @$this->attributes['bundle_password_required'];
+        return isset($this->attributes['bundle_password_required']) ? $this->attributes['bundle_password_required'] : null;
     }
     // boolean # If true, new Share Links created by a user with a primary group will default to that group as owner.
     public function getBundlesDefaultOwnedByPrimaryGroup()
     {
-        return @$this->attributes['bundles_default_owned_by_primary_group'];
+        return isset($this->attributes['bundles_default_owned_by_primary_group']) ? $this->attributes['bundles_default_owned_by_primary_group'] : null;
     }
     // array(string) # List of email domains to disallow when entering a Bundle/Inbox recipients
     public function getBundleRecipientBlacklistDomains()
     {
-        return @$this->attributes['bundle_recipient_blacklist_domains'];
+        return isset($this->attributes['bundle_recipient_blacklist_domains']) ? $this->attributes['bundle_recipient_blacklist_domains'] : null;
     }
     // boolean # Disallow free email domains for Bundle/Inbox recipients?
     public function getBundleRecipientBlacklistFreeEmailDomains()
     {
-        return @$this->attributes['bundle_recipient_blacklist_free_email_domains'];
+        return isset($this->attributes['bundle_recipient_blacklist_free_email_domains']) ? $this->attributes['bundle_recipient_blacklist_free_email_domains'] : null;
     }
     // string # Do Bundle owners receive registration notification?
     public function getBundleRegistrationNotifications()
     {
-        return @$this->attributes['bundle_registration_notifications'];
+        return isset($this->attributes['bundle_registration_notifications']) ? $this->attributes['bundle_registration_notifications'] : null;
     }
     // boolean # Do Bundles require registration?
     public function getBundleRequireRegistration()
     {
-        return @$this->attributes['bundle_require_registration'];
+        return isset($this->attributes['bundle_require_registration']) ? $this->attributes['bundle_require_registration'] : null;
     }
     // boolean # Do Bundles require recipients for sharing?
     public function getBundleRequireShareRecipient()
     {
-        return @$this->attributes['bundle_require_share_recipient'];
+        return isset($this->attributes['bundle_require_share_recipient']) ? $this->attributes['bundle_require_share_recipient'] : null;
     }
     // boolean # If true, new Share Links must send a one-time password to the recipient when they register. Requires bundle_require_share_recipient and cannot be enabled with bundle_password_required.
     public function getBundleSendOneTimePasswordToRecipientAtRegistration()
     {
-        return @$this->attributes['bundle_send_one_time_password_to_recipient_at_registration'];
+        return isset($this->attributes['bundle_send_one_time_password_to_recipient_at_registration']) ? $this->attributes['bundle_send_one_time_password_to_recipient_at_registration'] : null;
     }
     // boolean # Do Bundles require internal notes?
     public function getBundleRequireNote()
     {
-        return @$this->attributes['bundle_require_note'];
+        return isset($this->attributes['bundle_require_note']) ? $this->attributes['bundle_require_note'] : null;
     }
     // boolean # Do Bundle creators receive receipts of invitations?
     public function getBundleSendSharedReceipts()
     {
-        return @$this->attributes['bundle_send_shared_receipts'];
+        return isset($this->attributes['bundle_send_shared_receipts']) ? $this->attributes['bundle_send_shared_receipts'] : null;
     }
     // string # Do Bundle uploaders receive upload confirmation notifications?
     public function getBundleUploadReceiptNotifications()
     {
-        return @$this->attributes['bundle_upload_receipt_notifications'];
+        return isset($this->attributes['bundle_upload_receipt_notifications']) ? $this->attributes['bundle_upload_receipt_notifications'] : null;
     }
     // Image # Preview watermark image applied to all bundle items.
     public function getBundleWatermarkAttachment()
     {
-        return @$this->attributes['bundle_watermark_attachment'];
+        return isset($this->attributes['bundle_watermark_attachment']) ? $this->attributes['bundle_watermark_attachment'] : null;
     }
     // object # Preview watermark settings applied to all bundle items. Uses the same keys as Behavior.value
     public function getBundleWatermarkValue()
     {
-        return @$this->attributes['bundle_watermark_value'];
+        return isset($this->attributes['bundle_watermark_value']) ? $this->attributes['bundle_watermark_value'] : null;
     }
     // boolean # Calculate CRC32 checksums for files?
     public function getCalculateFileChecksumsCrc32()
     {
-        return @$this->attributes['calculate_file_checksums_crc32'];
+        return isset($this->attributes['calculate_file_checksums_crc32']) ? $this->attributes['calculate_file_checksums_crc32'] : null;
     }
     // boolean # Calculate MD5 checksums for files?
     public function getCalculateFileChecksumsMd5()
     {
-        return @$this->attributes['calculate_file_checksums_md5'];
+        return isset($this->attributes['calculate_file_checksums_md5']) ? $this->attributes['calculate_file_checksums_md5'] : null;
     }
     // boolean # Calculate SHA1 checksums for files?
     public function getCalculateFileChecksumsSha1()
     {
-        return @$this->attributes['calculate_file_checksums_sha1'];
+        return isset($this->attributes['calculate_file_checksums_sha1']) ? $this->attributes['calculate_file_checksums_sha1'] : null;
     }
     // boolean # Calculate SHA256 checksums for files?
     public function getCalculateFileChecksumsSha256()
     {
-        return @$this->attributes['calculate_file_checksums_sha256'];
+        return isset($this->attributes['calculate_file_checksums_sha256']) ? $this->attributes['calculate_file_checksums_sha256'] : null;
     }
     // boolean # If true, administrators on this site's Child Sites, including Folder Admins, can list this site's Default Workspace users and groups and grant them folder permissions and notifications on Child Site paths.
     public function getChildSiteFolderAdminsCanSeeParentSiteDirectory()
     {
-        return @$this->attributes['child_site_folder_admins_can_see_parent_site_directory'];
+        return isset($this->attributes['child_site_folder_admins_can_see_parent_site_directory']) ? $this->attributes['child_site_folder_admins_can_see_parent_site_directory'] : null;
     }
     // boolean # If true, Workspace Administrators and Folder Admins in a Custom Workspace can list the Default Workspace users and groups that have permissions in that Workspace and choose them as Email Notification recipients.
     public function getWorkspaceFolderAdminsCanSeeDefaultWorkspaceDirectory()
     {
-        return @$this->attributes['workspace_folder_admins_can_see_default_workspace_directory'];
+        return isset($this->attributes['workspace_folder_admins_can_see_default_workspace_directory']) ? $this->attributes['workspace_folder_admins_can_see_default_workspace_directory'] : null;
     }
     // boolean # Require email authentication, virus, and spam checks for incoming emails to Inboxes and Incoming Email Automations in every Workspace on this site?
     public function getUploadsViaEmailAuthentication()
     {
-        return @$this->attributes['uploads_via_email_authentication'];
+        return isset($this->attributes['uploads_via_email_authentication']) ? $this->attributes['uploads_via_email_authentication'] : null;
     }
     // string # Page link and button color
     public function getColor2Left()
     {
-        return @$this->attributes['color2_left'];
+        return isset($this->attributes['color2_left']) ? $this->attributes['color2_left'] : null;
     }
     // string # Top bar link color
     public function getColor2Link()
     {
-        return @$this->attributes['color2_link'];
+        return isset($this->attributes['color2_link']) ? $this->attributes['color2_link'] : null;
     }
     // string # Page link and button color
     public function getColor2Text()
     {
-        return @$this->attributes['color2_text'];
+        return isset($this->attributes['color2_text']) ? $this->attributes['color2_text'] : null;
     }
     // string # Top bar background color
     public function getColor2Top()
     {
-        return @$this->attributes['color2_top'];
+        return isset($this->attributes['color2_top']) ? $this->attributes['color2_top'] : null;
     }
     // string # Top bar text color
     public function getColor2TopText()
     {
-        return @$this->attributes['color2_top_text'];
+        return isset($this->attributes['color2_top_text']) ? $this->attributes['color2_top_text'] : null;
     }
     // string # Site main contact name
     public function getContactName()
     {
-        return @$this->attributes['contact_name'];
+        return isset($this->attributes['contact_name']) ? $this->attributes['contact_name'] : null;
     }
     // date-time # Time this site was created
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
     // string # Preferred currency
     public function getCurrency()
     {
-        return @$this->attributes['currency'];
+        return isset($this->attributes['currency']) ? $this->attributes['currency'] : null;
     }
     // boolean # Is this site using a custom namespace for users?
     public function getCustomNamespace()
     {
-        return @$this->attributes['custom_namespace'];
+        return isset($this->attributes['custom_namespace']) ? $this->attributes['custom_namespace'] : null;
     }
     // boolean # Is WebDAV enabled?
     public function getDavEnabled()
     {
-        return @$this->attributes['dav_enabled'];
+        return isset($this->attributes['dav_enabled']) ? $this->attributes['dav_enabled'] : null;
     }
     // boolean # Use user FTP roots also for WebDAV?
     public function getDavUserRootEnabled()
     {
-        return @$this->attributes['dav_user_root_enabled'];
+        return isset($this->attributes['dav_user_root_enabled']) ? $this->attributes['dav_user_root_enabled'] : null;
     }
     // int64 # Number of days to keep deleted files
     public function getDaysToRetainBackups()
     {
-        return @$this->attributes['days_to_retain_backups'];
+        return isset($this->attributes['days_to_retain_backups']) ? $this->attributes['days_to_retain_backups'] : null;
     }
     // boolean # If true, allow public viewers of Bundles with full permissions to use document editing integrations.
     public function getDocumentEditsInBundleAllowed()
     {
-        return @$this->attributes['document_edits_in_bundle_allowed'];
+        return isset($this->attributes['document_edits_in_bundle_allowed']) ? $this->attributes['document_edits_in_bundle_allowed'] : null;
     }
     // string # Site default time zone
     public function getDefaultTimeZone()
     {
-        return @$this->attributes['default_time_zone'];
+        return isset($this->attributes['default_time_zone']) ? $this->attributes['default_time_zone'] : null;
     }
     // boolean # Is the desktop app enabled?
     public function getDesktopApp()
     {
-        return @$this->attributes['desktop_app'];
+        return isset($this->attributes['desktop_app']) ? $this->attributes['desktop_app'] : null;
     }
     // boolean # Is desktop app session IP pinning enabled?
     public function getDesktopAppSessionIpPinning()
     {
-        return @$this->attributes['desktop_app_session_ip_pinning'];
+        return isset($this->attributes['desktop_app_session_ip_pinning']) ? $this->attributes['desktop_app_session_ip_pinning'] : null;
     }
     // int64 # Desktop app session lifetime (in hours)
     public function getDesktopAppSessionLifetime()
     {
-        return @$this->attributes['desktop_app_session_lifetime'];
+        return isset($this->attributes['desktop_app_session_lifetime']) ? $this->attributes['desktop_app_session_lifetime'] : null;
     }
     // boolean # Use legacy checksums mode?
     public function getLegacyChecksumsMode()
     {
-        return @$this->attributes['legacy_checksums_mode'];
+        return isset($this->attributes['legacy_checksums_mode']) ? $this->attributes['legacy_checksums_mode'] : null;
     }
     // boolean # If true, we will migrate all remote server syncs to the new Sync model.
     public function getMigrateRemoteServerSyncToSync()
     {
-        return @$this->attributes['migrate_remote_server_sync_to_sync'];
+        return isset($this->attributes['migrate_remote_server_sync_to_sync']) ? $this->attributes['migrate_remote_server_sync_to_sync'] : null;
     }
     // boolean # Is OAuth DCR (dynamic client registration) for MCP enabled?
     public function getMcpDcrEnabled()
     {
-        return @$this->attributes['mcp_dcr_enabled'];
+        return isset($this->attributes['mcp_dcr_enabled']) ? $this->attributes['mcp_dcr_enabled'] : null;
     }
     // boolean # Is the mobile app enabled?
     public function getMobileApp()
     {
-        return @$this->attributes['mobile_app'];
+        return isset($this->attributes['mobile_app']) ? $this->attributes['mobile_app'] : null;
     }
     // boolean # Is mobile app session IP pinning enabled?
     public function getMobileAppSessionIpPinning()
     {
-        return @$this->attributes['mobile_app_session_ip_pinning'];
+        return isset($this->attributes['mobile_app_session_ip_pinning']) ? $this->attributes['mobile_app_session_ip_pinning'] : null;
     }
     // int64 # Mobile app session lifetime (in hours)
     public function getMobileAppSessionLifetime()
     {
-        return @$this->attributes['mobile_app_session_lifetime'];
+        return isset($this->attributes['mobile_app_session_lifetime']) ? $this->attributes['mobile_app_session_lifetime'] : null;
     }
     // string # Comma separated list of disallowed Country codes
     public function getDisallowedCountries()
     {
-        return @$this->attributes['disallowed_countries'];
+        return isset($this->attributes['disallowed_countries']) ? $this->attributes['disallowed_countries'] : null;
     }
     // boolean # If true, all AI features are disabled for this site.
     public function getDisableAllAiFeatures()
     {
-        return @$this->attributes['disable_all_ai_features'];
+        return isset($this->attributes['disable_all_ai_features']) ? $this->attributes['disable_all_ai_features'] : null;
     }
     // boolean # If set, Files.com will not set the CAA records required to generate future SSL certificates for this domain.
     public function getDisableFilesCertificateGeneration()
     {
-        return @$this->attributes['disable_files_certificate_generation'];
+        return isset($this->attributes['disable_files_certificate_generation']) ? $this->attributes['disable_files_certificate_generation'] : null;
     }
     // boolean # Are notifications disabled?
     public function getDisableNotifications()
     {
-        return @$this->attributes['disable_notifications'];
+        return isset($this->attributes['disable_notifications']) ? $this->attributes['disable_notifications'] : null;
     }
     // boolean # If true, file operations produce file_action.activity.v1 EventChannel events in all workspaces. Defaults to false; subscription filters and workspace access still control delivery.
     public function getFileActivityEventsEnabled()
     {
-        return @$this->attributes['file_activity_events_enabled'];
+        return isset($this->attributes['file_activity_events_enabled']) ? $this->attributes['file_activity_events_enabled'] : null;
     }
     // boolean # Is password reset disabled?
     public function getDisablePasswordReset()
     {
-        return @$this->attributes['disable_password_reset'];
+        return isset($this->attributes['disable_password_reset']) ? $this->attributes['disable_password_reset'] : null;
     }
     // string # Custom domain
     public function getDomain()
     {
-        return @$this->attributes['domain'];
+        return isset($this->attributes['domain']) ? $this->attributes['domain'] : null;
     }
     // boolean # Send HSTS (HTTP Strict Transport Security) header when visitors access the site via a custom domain?
     public function getDomainHstsHeader()
     {
-        return @$this->attributes['domain_hsts_header'];
+        return isset($this->attributes['domain_hsts_header']) ? $this->attributes['domain_hsts_header'] : null;
     }
     // string # Letsencrypt chain to use when registering SSL Certificate for domain. No longer used as of 2026.
     public function getDomainLetsencryptChain()
     {
-        return @$this->attributes['domain_letsencrypt_chain'];
+        return isset($this->attributes['domain_letsencrypt_chain']) ? $this->attributes['domain_letsencrypt_chain'] : null;
     }
     // email # Main email for this site
     public function getEmail()
     {
-        return @$this->attributes['email'];
+        return isset($this->attributes['email']) ? $this->attributes['email'] : null;
     }
     // boolean # Are FedRAMP security restrictions enabled for this site?
     public function getFedramp()
     {
-        return @$this->attributes['fedramp'];
+        return isset($this->attributes['fedramp']) ? $this->attributes['fedramp'] : null;
     }
     // boolean # Allow other Files.com sites to use this site's API keys for native Files.com Remote Server connections? Defaults to true and applies to all keys and workspaces on this site. When false, new pairings and access through existing connections are rejected without revoking keys or deleting connections. Re-enabling permits access again with usable keys. Does not disable this site's connections to other sites, ordinary API access, or Connected Sites.
     public function getFilesComRemoteServerEnabled()
     {
-        return @$this->attributes['files_com_remote_server_enabled'];
+        return isset($this->attributes['files_com_remote_server_enabled']) ? $this->attributes['files_com_remote_server_enabled'] : null;
     }
     // boolean # Is FTP enabled?
     public function getFtpEnabled()
     {
-        return @$this->attributes['ftp_enabled'];
+        return isset($this->attributes['ftp_enabled']) ? $this->attributes['ftp_enabled'] : null;
     }
     // email # Reply-to email for this site
     public function getReplyToEmail()
     {
-        return @$this->attributes['reply_to_email'];
+        return isset($this->attributes['reply_to_email']) ? $this->attributes['reply_to_email'] : null;
     }
     // boolean # If true, groups can be manually created / modified / deleted by Site Admins. Otherwise, groups can only be managed via your SSO provider.
     public function getNonSsoGroupsAllowed()
     {
-        return @$this->attributes['non_sso_groups_allowed'];
+        return isset($this->attributes['non_sso_groups_allowed']) ? $this->attributes['non_sso_groups_allowed'] : null;
     }
     // boolean # If true, users can be manually created / modified / deleted by Site Admins. Otherwise, users can only be managed via your SSO provider.
     public function getNonSsoUsersAllowed()
     {
-        return @$this->attributes['non_sso_users_allowed'];
+        return isset($this->attributes['non_sso_users_allowed']) ? $this->attributes['non_sso_users_allowed'] : null;
     }
     // boolean # If true, permissions for this site must be bound to a group (not a user).
     public function getFolderPermissionsGroupsOnly()
     {
-        return @$this->attributes['folder_permissions_groups_only'];
+        return isset($this->attributes['folder_permissions_groups_only']) ? $this->attributes['folder_permissions_groups_only'] : null;
     }
     // boolean # Allow group admins to create users in their groups
     public function getGroupAdminsCanAddUsers()
     {
-        return @$this->attributes['group_admins_can_add_users'];
+        return isset($this->attributes['group_admins_can_add_users']) ? $this->attributes['group_admins_can_add_users'] : null;
     }
     // boolean # Allow group admins to add or remove existing users in their groups
     public function getGroupAdminsCanManageGroupMemberships()
     {
-        return @$this->attributes['group_admins_can_manage_group_memberships'];
+        return isset($this->attributes['group_admins_can_manage_group_memberships']) ? $this->attributes['group_admins_can_manage_group_memberships'] : null;
     }
     // boolean # Allow group admins to delete users in their groups
     public function getGroupAdminsCanDeleteUsers()
     {
-        return @$this->attributes['group_admins_can_delete_users'];
+        return isset($this->attributes['group_admins_can_delete_users']) ? $this->attributes['group_admins_can_delete_users'] : null;
     }
     // boolean # Allow group admins to enable or disable users in their groups
     public function getGroupAdminsCanEnableDisableUsers()
     {
-        return @$this->attributes['group_admins_can_enable_disable_users'];
+        return isset($this->attributes['group_admins_can_enable_disable_users']) ? $this->attributes['group_admins_can_enable_disable_users'] : null;
     }
     // boolean # Allow group admins to modify users in their groups
     public function getGroupAdminsCanModifyUsers()
     {
-        return @$this->attributes['group_admins_can_modify_users'];
+        return isset($this->attributes['group_admins_can_modify_users']) ? $this->attributes['group_admins_can_modify_users'] : null;
     }
     // boolean # Allow group admins to exempt users in their groups from lifecycle rules
     public function getGroupAdminsCanBypassUserLifecycleRules()
     {
-        return @$this->attributes['group_admins_can_bypass_user_lifecycle_rules'];
+        return isset($this->attributes['group_admins_can_bypass_user_lifecycle_rules']) ? $this->attributes['group_admins_can_bypass_user_lifecycle_rules'] : null;
     }
     // boolean # Allow group admins to reset passwords for users in their groups
     public function getGroupAdminsCanResetPasswords()
     {
-        return @$this->attributes['group_admins_can_reset_passwords'];
+        return isset($this->attributes['group_admins_can_reset_passwords']) ? $this->attributes['group_admins_can_reset_passwords'] : null;
     }
     // boolean # Allow group admins to set password authentication method
     public function getGroupAdminsCanSetUserPassword()
     {
-        return @$this->attributes['group_admins_can_set_user_password'];
+        return isset($this->attributes['group_admins_can_set_user_password']) ? $this->attributes['group_admins_can_set_user_password'] : null;
     }
     // boolean # Is there a signed HIPAA BAA between Files.com and this site?
     public function getHipaa()
     {
-        return @$this->attributes['hipaa'];
+        return isset($this->attributes['hipaa']) ? $this->attributes['hipaa'] : null;
     }
     // Image # Branded icon 128x128
     public function getIcon128()
     {
-        return @$this->attributes['icon128'];
+        return isset($this->attributes['icon128']) ? $this->attributes['icon128'] : null;
     }
     // Image # Branded icon 16x16
     public function getIcon16()
     {
-        return @$this->attributes['icon16'];
+        return isset($this->attributes['icon16']) ? $this->attributes['icon16'] : null;
     }
     // Image # Branded icon 32x32
     public function getIcon32()
     {
-        return @$this->attributes['icon32'];
+        return isset($this->attributes['icon32']) ? $this->attributes['icon32'] : null;
     }
     // Image # Branded icon 48x48
     public function getIcon48()
     {
-        return @$this->attributes['icon48'];
+        return isset($this->attributes['icon48']) ? $this->attributes['icon48'] : null;
     }
     // date-time # Can files be modified?
     public function getImmutableFilesSetAt()
     {
-        return @$this->attributes['immutable_files_set_at'];
+        return isset($this->attributes['immutable_files_set_at']) ? $this->attributes['immutable_files_set_at'] : null;
     }
     // boolean # Include password in emails to new users?
     public function getIncludePasswordInWelcomeEmail()
     {
-        return @$this->attributes['include_password_in_welcome_email'];
+        return isset($this->attributes['include_password_in_welcome_email']) ? $this->attributes['include_password_in_welcome_email'] : null;
     }
     // string # Site default language
     public function getLanguage()
     {
-        return @$this->attributes['language'];
+        return isset($this->attributes['language']) ? $this->attributes['language'] : null;
     }
     // string # Base DN for looking up users in LDAP server
     public function getLdapBaseDn()
     {
-        return @$this->attributes['ldap_base_dn'];
+        return isset($this->attributes['ldap_base_dn']) ? $this->attributes['ldap_base_dn'] : null;
     }
     // string # Domain name that will be appended to usernames
     public function getLdapDomain()
     {
-        return @$this->attributes['ldap_domain'];
+        return isset($this->attributes['ldap_domain']) ? $this->attributes['ldap_domain'] : null;
     }
     // boolean # Main LDAP setting: is LDAP enabled?
     public function getLdapEnabled()
     {
-        return @$this->attributes['ldap_enabled'];
+        return isset($this->attributes['ldap_enabled']) ? $this->attributes['ldap_enabled'] : null;
     }
     // string # Should we sync groups from LDAP server?
     public function getLdapGroupAction()
     {
-        return @$this->attributes['ldap_group_action'];
+        return isset($this->attributes['ldap_group_action']) ? $this->attributes['ldap_group_action'] : null;
     }
     // string # Comma or newline separated list of group names (with optional wildcards) to exclude when syncing.
     public function getLdapGroupExclusion()
     {
-        return @$this->attributes['ldap_group_exclusion'];
+        return isset($this->attributes['ldap_group_exclusion']) ? $this->attributes['ldap_group_exclusion'] : null;
     }
     // string # Comma or newline separated list of group names (with optional wildcards) to include when syncing.
     public function getLdapGroupInclusion()
     {
-        return @$this->attributes['ldap_group_inclusion'];
+        return isset($this->attributes['ldap_group_inclusion']) ? $this->attributes['ldap_group_inclusion'] : null;
     }
     // string # LDAP host
     public function getLdapHost()
     {
-        return @$this->attributes['ldap_host'];
+        return isset($this->attributes['ldap_host']) ? $this->attributes['ldap_host'] : null;
     }
     // string # LDAP backup host
     public function getLdapHost2()
     {
-        return @$this->attributes['ldap_host_2'];
+        return isset($this->attributes['ldap_host_2']) ? $this->attributes['ldap_host_2'] : null;
     }
     // string # LDAP backup host
     public function getLdapHost3()
     {
-        return @$this->attributes['ldap_host_3'];
+        return isset($this->attributes['ldap_host_3']) ? $this->attributes['ldap_host_3'] : null;
     }
     // int64 # LDAP port
     public function getLdapPort()
     {
-        return @$this->attributes['ldap_port'];
+        return isset($this->attributes['ldap_port']) ? $this->attributes['ldap_port'] : null;
     }
     // boolean # Use secure LDAP?
     public function getLdapSecure()
     {
-        return @$this->attributes['ldap_secure'];
+        return isset($this->attributes['ldap_secure']) ? $this->attributes['ldap_secure'] : null;
     }
     // string # How to validate the LDAP server certificate. `require_match` validates the certificate chain and hostname; `allow_any` disables certificate validation.
     public function getLdapServerCertificate()
     {
-        return @$this->attributes['ldap_server_certificate'];
+        return isset($this->attributes['ldap_server_certificate']) ? $this->attributes['ldap_server_certificate'] : null;
     }
     // string # LDAP type
     public function getLdapType()
     {
-        return @$this->attributes['ldap_type'];
+        return isset($this->attributes['ldap_type']) ? $this->attributes['ldap_type'] : null;
     }
     // string # Should we sync users from LDAP server?
     public function getLdapUserAction()
     {
-        return @$this->attributes['ldap_user_action'];
+        return isset($this->attributes['ldap_user_action']) ? $this->attributes['ldap_user_action'] : null;
     }
     // string # Comma or newline separated list of group names (with optional wildcards) - if provided, only users in these groups will be added or synced.
     public function getLdapUserIncludeGroups()
     {
-        return @$this->attributes['ldap_user_include_groups'];
+        return isset($this->attributes['ldap_user_include_groups']) ? $this->attributes['ldap_user_include_groups'] : null;
     }
     // string # Username for signing in to LDAP server.
     public function getLdapUsername()
     {
-        return @$this->attributes['ldap_username'];
+        return isset($this->attributes['ldap_username']) ? $this->attributes['ldap_username'] : null;
     }
     // string # LDAP username field
     public function getLdapUsernameField()
     {
-        return @$this->attributes['ldap_username_field'];
+        return isset($this->attributes['ldap_username_field']) ? $this->attributes['ldap_username_field'] : null;
     }
     // string # Login help text
     public function getLoginHelpText()
     {
-        return @$this->attributes['login_help_text'];
+        return isset($this->attributes['login_help_text']) ? $this->attributes['login_help_text'] : null;
     }
     // Image # Branded logo
     public function getLogo()
     {
-        return @$this->attributes['logo'];
+        return isset($this->attributes['logo']) ? $this->attributes['logo'] : null;
     }
     // Image # Branded login page background
     public function getLoginPageBackgroundImage()
     {
-        return @$this->attributes['login_page_background_image'];
+        return isset($this->attributes['login_page_background_image']) ? $this->attributes['login_page_background_image'] : null;
     }
     // int64 # Number of prior passwords to disallow
     public function getMaxPriorPasswords()
     {
-        return @$this->attributes['max_prior_passwords'];
+        return isset($this->attributes['max_prior_passwords']) ? $this->attributes['max_prior_passwords'] : null;
     }
     // object # Site settings managed by the parent site. Each key identifies a managed setting, with a null value. Non-secret effective values are returned in their own Site settings fields.
     public function getManagedSiteSettings()
     {
-        return @$this->attributes['managed_site_settings'];
+        return isset($this->attributes['managed_site_settings']) ? $this->attributes['managed_site_settings'] : null;
     }
     // string # A message to show users when they connect via FTP or SFTP.
     public function getMotdText()
     {
-        return @$this->attributes['motd_text'];
+        return isset($this->attributes['motd_text']) ? $this->attributes['motd_text'] : null;
     }
     // boolean # Show message to users connecting via FTP
     public function getMotdUseForFtp()
     {
-        return @$this->attributes['motd_use_for_ftp'];
+        return isset($this->attributes['motd_use_for_ftp']) ? $this->attributes['motd_use_for_ftp'] : null;
     }
     // boolean # Show message to users connecting via SFTP
     public function getMotdUseForSftp()
     {
-        return @$this->attributes['motd_use_for_sftp'];
+        return isset($this->attributes['motd_use_for_sftp']) ? $this->attributes['motd_use_for_sftp'] : null;
     }
     // decimal # Next billing amount
     public function getNextBillingAmount()
     {
-        return @$this->attributes['next_billing_amount'];
+        return isset($this->attributes['next_billing_amount']) ? $this->attributes['next_billing_amount'] : null;
     }
     // string # Next billing date
     public function getNextBillingDate()
     {
-        return @$this->attributes['next_billing_date'];
+        return isset($this->attributes['next_billing_date']) ? $this->attributes['next_billing_date'] : null;
     }
     // boolean # If true, allows users to use a document editing integration.
     public function getOfficeIntegrationAvailable()
     {
-        return @$this->attributes['office_integration_available'];
+        return isset($this->attributes['office_integration_available']) ? $this->attributes['office_integration_available'] : null;
     }
     // string # Which document editing integration to support. Files.com Editor or Microsoft Office for the Web.
     public function getOfficeIntegrationType()
     {
-        return @$this->attributes['office_integration_type'];
+        return isset($this->attributes['office_integration_type']) ? $this->attributes['office_integration_type'] : null;
     }
     // string # Link to scheduling a meeting with our Sales team
     public function getOncehubLink()
     {
-        return @$this->attributes['oncehub_link'];
+        return isset($this->attributes['oncehub_link']) ? $this->attributes['oncehub_link'] : null;
     }
     // boolean # Use servers in the USA only?
     public function getOptOutGlobal()
     {
-        return @$this->attributes['opt_out_global'];
+        return isset($this->attributes['opt_out_global']) ? $this->attributes['opt_out_global'] : null;
     }
     // boolean # Is this site's billing overdue?
     public function getOverdue()
     {
-        return @$this->attributes['overdue'];
+        return isset($this->attributes['overdue']) ? $this->attributes['overdue'] : null;
     }
     // int64 # Shortest password length for users
     public function getPasswordMinLength()
     {
-        return @$this->attributes['password_min_length'];
+        return isset($this->attributes['password_min_length']) ? $this->attributes['password_min_length'] : null;
     }
     // boolean # Require a letter in passwords?
     public function getPasswordRequireLetter()
     {
-        return @$this->attributes['password_require_letter'];
+        return isset($this->attributes['password_require_letter']) ? $this->attributes['password_require_letter'] : null;
     }
     // boolean # Require lower and upper case letters in passwords?
     public function getPasswordRequireMixed()
     {
-        return @$this->attributes['password_require_mixed'];
+        return isset($this->attributes['password_require_mixed']) ? $this->attributes['password_require_mixed'] : null;
     }
     // boolean # Require a number in passwords?
     public function getPasswordRequireNumber()
     {
-        return @$this->attributes['password_require_number'];
+        return isset($this->attributes['password_require_number']) ? $this->attributes['password_require_number'] : null;
     }
     // boolean # Require special characters in password?
     public function getPasswordRequireSpecial()
     {
-        return @$this->attributes['password_require_special'];
+        return isset($this->attributes['password_require_special']) ? $this->attributes['password_require_special'] : null;
     }
     // boolean # Require passwords that have not been previously breached? (see https://haveibeenpwned.com/)
     public function getPasswordRequireUnbreached()
     {
-        return @$this->attributes['password_require_unbreached'];
+        return isset($this->attributes['password_require_unbreached']) ? $this->attributes['password_require_unbreached'] : null;
     }
     // boolean # Require bundles' passwords, and passwords for other items (inboxes, public shares, etc.) to conform to the same requirements as users' passwords?
     public function getPasswordRequirementsApplyToBundles()
     {
-        return @$this->attributes['password_requirements_apply_to_bundles'];
+        return isset($this->attributes['password_requirements_apply_to_bundles']) ? $this->attributes['password_requirements_apply_to_bundles'] : null;
     }
     // int64 # Number of days password is valid
     public function getPasswordValidityDays()
     {
-        return @$this->attributes['password_validity_days'];
+        return isset($this->attributes['password_validity_days']) ? $this->attributes['password_validity_days'] : null;
     }
     // string # Site phone number
     public function getPhone()
     {
-        return @$this->attributes['phone'];
+        return isset($this->attributes['phone']) ? $this->attributes['phone'] : null;
     }
     // boolean # If true, we will ensure that all internal communications with any remote server are made through the primary region of the site. This setting overrides individual remote server settings.
     public function getPinAllRemoteServersToSiteRegion()
     {
-        return @$this->attributes['pin_all_remote_servers_to_site_region'];
+        return isset($this->attributes['pin_all_remote_servers_to_site_region']) ? $this->attributes['pin_all_remote_servers_to_site_region'] : null;
     }
     // boolean # If true, we will prevent non-administrators from receiving any permissions directly on the root folder.  This is commonly used to prevent the accidental application of permissions.
     public function getPreventRootPermissionsForNonSiteAdmins()
     {
-        return @$this->attributes['prevent_root_permissions_for_non_site_admins'];
+        return isset($this->attributes['prevent_root_permissions_for_non_site_admins']) ? $this->attributes['prevent_root_permissions_for_non_site_admins'] : null;
     }
     // boolean # If true, protocol access permissions on users will be ignored, and only protocol access permissions set on Groups will be honored.  Make sure that your current user is a member of a group with API permission when changing this value to avoid locking yourself out of your site.
     public function getProtocolAccessGroupsOnly()
     {
-        return @$this->attributes['protocol_access_groups_only'];
+        return isset($this->attributes['protocol_access_groups_only']) ? $this->attributes['protocol_access_groups_only'] : null;
     }
     // boolean # Require two-factor authentication for all users?
     public function getRequire2fa()
     {
-        return @$this->attributes['require_2fa'];
+        return isset($this->attributes['require_2fa']) ? $this->attributes['require_2fa'] : null;
     }
     // boolean # If true, only site admins may create, modify, or delete any behavior at the site root, or a skip that would disable one.
     public function getRestrictRootFolderBehaviorsToSiteAdmins()
     {
-        return @$this->attributes['restrict_root_folder_behaviors_to_site_admins'];
+        return isset($this->attributes['restrict_root_folder_behaviors_to_site_admins']) ? $this->attributes['restrict_root_folder_behaviors_to_site_admins'] : null;
     }
     // boolean # If true, supported protective behaviors at the site root also apply within named workspaces. Requires restrict_root_folder_behaviors_to_site_admins to be enabled.
     public function getRootFolderBehaviorsApplyToWorkspaces()
     {
-        return @$this->attributes['root_folder_behaviors_apply_to_workspaces'];
+        return isset($this->attributes['root_folder_behaviors_apply_to_workspaces']) ? $this->attributes['root_folder_behaviors_apply_to_workspaces'] : null;
     }
     // boolean # If true, SSO users using the default user-level two-factor authentication setting are exempt from the site-wide two-factor authentication requirement.
     public function getRequire2faExemptAllSsoUsers()
     {
-        return @$this->attributes['require_2fa_exempt_all_sso_users'];
+        return isset($this->attributes['require_2fa_exempt_all_sso_users']) ? $this->attributes['require_2fa_exempt_all_sso_users'] : null;
     }
     // date-time # If set, requirement for two-factor authentication has been scheduled to end on this date-time.
     public function getRequire2faStopTime()
     {
-        return @$this->attributes['require_2fa_stop_time'];
+        return isset($this->attributes['require_2fa_stop_time']) ? $this->attributes['require_2fa_stop_time'] : null;
     }
     // boolean # Auto-removes bundles for disabled/deleted users and enforces bundle expiry within user access period.
     public function getRevokeBundleAccessOnDisableOrDelete()
     {
-        return @$this->attributes['revoke_bundle_access_on_disable_or_delete'];
+        return isset($this->attributes['revoke_bundle_access_on_disable_or_delete']) ? $this->attributes['revoke_bundle_access_on_disable_or_delete'] : null;
     }
     // string # What type of user is required to use two-factor authentication (when require_2fa is set to `true` for this site)?
     public function getRequire2faUserType()
     {
-        return @$this->attributes['require_2fa_user_type'];
+        return isset($this->attributes['require_2fa_user_type']) ? $this->attributes['require_2fa_user_type'] : null;
     }
     // boolean # If true, we will hide the 'Remember Me' box on Inbox and Bundle registration pages, requiring that the user logout and log back in every time they visit the page.
     public function getRequireLogoutFromBundlesAndInboxes()
     {
-        return @$this->attributes['require_logout_from_bundles_and_inboxes'];
+        return isset($this->attributes['require_logout_from_bundles_and_inboxes']) ? $this->attributes['require_logout_from_bundles_and_inboxes'] : null;
     }
     // Session # Current session
     public function getSession()
     {
-        return @$this->attributes['session'];
+        return isset($this->attributes['session']) ? $this->attributes['session'] : null;
     }
     // boolean # Is the S3-compatible endpoint enabled for all users and workspaces on this site? Defaults to true. When false, user and group S3 permissions do not allow access.
     public function getS3CompatibleEndpointEnabled()
     {
-        return @$this->attributes['s3_compatible_endpoint_enabled'];
+        return isset($this->attributes['s3_compatible_endpoint_enabled']) ? $this->attributes['s3_compatible_endpoint_enabled'] : null;
     }
     // boolean # Is SFTP enabled?
     public function getSftpEnabled()
     {
-        return @$this->attributes['sftp_enabled'];
+        return isset($this->attributes['sftp_enabled']) ? $this->attributes['sftp_enabled'] : null;
     }
     // boolean # Finalize partial SFTP uploads from interrupted connections? Default: true.
     public function getSftpFinalizePartialUploads()
     {
-        return @$this->attributes['sftp_finalize_partial_uploads'];
+        return isset($this->attributes['sftp_finalize_partial_uploads']) ? $this->attributes['sftp_finalize_partial_uploads'] : null;
     }
     // string # Sftp Host Key Type
     public function getSftpHostKeyType()
     {
-        return @$this->attributes['sftp_host_key_type'];
+        return isset($this->attributes['sftp_host_key_type']) ? $this->attributes['sftp_host_key_type'] : null;
     }
     // int64 # Id of the currently selected custom SFTP Host Key
     public function getActiveSftpHostKeyId()
     {
-        return @$this->attributes['active_sftp_host_key_id'];
+        return isset($this->attributes['active_sftp_host_key_id']) ? $this->attributes['active_sftp_host_key_id'] : null;
     }
     // array(int64) # Ids of the selected custom SFTP Host Keys
     public function getActiveSftpHostKeyIds()
     {
-        return @$this->attributes['active_sftp_host_key_ids'];
+        return isset($this->attributes['active_sftp_host_key_ids']) ? $this->attributes['active_sftp_host_key_ids'] : null;
     }
     // boolean # If true, we will allow weak and known insecure ciphers to be used for SFTP connections.  Enabling this setting severely weakens the security of your site and it is not recommend, except as a last resort for compatibility.
     public function getSftpInsecureCiphers()
     {
-        return @$this->attributes['sftp_insecure_ciphers'];
+        return isset($this->attributes['sftp_insecure_ciphers']) ? $this->attributes['sftp_insecure_ciphers'] : null;
     }
     // boolean # If true, we will allow weak Diffie Hellman parameters to be used within ciphers for SFTP that are otherwise on our secure list.  This has the effect of making the cipher weaker than our normal threshold for security, but is required to support certain legacy or broken SSH and MFT clients.  Enabling this weakens security, but not nearly as much as enabling the full `sftp_insecure_ciphers` option.
     public function getSftpInsecureDiffieHellman()
     {
-        return @$this->attributes['sftp_insecure_diffie_hellman'];
+        return isset($this->attributes['sftp_insecure_diffie_hellman']) ? $this->attributes['sftp_insecure_diffie_hellman'] : null;
     }
     // boolean # Use user FTP roots also for SFTP?
     public function getSftpUserRootEnabled()
     {
-        return @$this->attributes['sftp_user_root_enabled'];
+        return isset($this->attributes['sftp_user_root_enabled']) ? $this->attributes['sftp_user_root_enabled'] : null;
     }
     // boolean # Allow bundle creation
     public function getSharingEnabled()
     {
-        return @$this->attributes['sharing_enabled'];
+        return isset($this->attributes['sharing_enabled']) ? $this->attributes['sharing_enabled'] : null;
     }
     // boolean # Show log in link in user notifications?
     public function getShowUserNotificationsLogInLink()
     {
-        return @$this->attributes['show_user_notifications_log_in_link'];
+        return isset($this->attributes['show_user_notifications_log_in_link']) ? $this->attributes['show_user_notifications_log_in_link'] : null;
     }
     // boolean # Show request access link for users without access?  Currently unused.
     public function getShowRequestAccessLink()
     {
-        return @$this->attributes['show_request_access_link'];
+        return isset($this->attributes['show_request_access_link']) ? $this->attributes['show_request_access_link'] : null;
     }
     // string # Custom site footer text for authenticated pages
     public function getSiteFooter()
     {
-        return @$this->attributes['site_footer'];
+        return isset($this->attributes['site_footer']) ? $this->attributes['site_footer'] : null;
     }
     // string # Custom site header text for authenticated pages
     public function getSiteHeader()
     {
-        return @$this->attributes['site_header'];
+        return isset($this->attributes['site_header']) ? $this->attributes['site_header'] : null;
     }
     // string # Custom site footer text for public pages
     public function getSitePublicFooter()
     {
-        return @$this->attributes['site_public_footer'];
+        return isset($this->attributes['site_public_footer']) ? $this->attributes['site_public_footer'] : null;
     }
     // string # Custom site header text for public pages
     public function getSitePublicHeader()
     {
-        return @$this->attributes['site_public_header'];
+        return isset($this->attributes['site_public_header']) ? $this->attributes['site_public_header'] : null;
     }
     // string # SMTP server hostname or IP
     public function getSmtpAddress()
     {
-        return @$this->attributes['smtp_address'];
+        return isset($this->attributes['smtp_address']) ? $this->attributes['smtp_address'] : null;
     }
     // string # SMTP server authentication type
     public function getSmtpAuthentication()
     {
-        return @$this->attributes['smtp_authentication'];
+        return isset($this->attributes['smtp_authentication']) ? $this->attributes['smtp_authentication'] : null;
     }
     // string # From address to use when mailing through custom SMTP
     public function getSmtpFrom()
     {
-        return @$this->attributes['smtp_from'];
+        return isset($this->attributes['smtp_from']) ? $this->attributes['smtp_from'] : null;
     }
     // int64 # SMTP server port
     public function getSmtpPort()
     {
-        return @$this->attributes['smtp_port'];
+        return isset($this->attributes['smtp_port']) ? $this->attributes['smtp_port'] : null;
     }
     // string # Custom SMTP encryption mode: if_available (default) uses STARTTLS when offered and otherwise sends credentials and messages unencrypted. A certificate-verified STARTTLS connection automatically changes if_available to require unless smtp_ssl is managed by a parent policy. require requires STARTTLS before authentication; require_implicit uses TLS from connection start; never disables TLS. TLS verifies the server certificate against smtp_address. Encryption is never automatically downgraded.
     public function getSmtpSsl()
     {
-        return @$this->attributes['smtp_ssl'];
+        return isset($this->attributes['smtp_ssl']) ? $this->attributes['smtp_ssl'] : null;
     }
     // string # SMTP server username
     public function getSmtpUsername()
     {
-        return @$this->attributes['smtp_username'];
+        return isset($this->attributes['smtp_username']) ? $this->attributes['smtp_username'] : null;
     }
     // int64 # Session expiry in minutes
     public function getSessionExpiryMinutes()
     {
-        return @$this->attributes['session_expiry_minutes'];
+        return isset($this->attributes['session_expiry_minutes']) ? $this->attributes['session_expiry_minutes'] : null;
     }
     // boolean # Allow snapshot share links creation
     public function getSnapshotSharingEnabled()
     {
-        return @$this->attributes['snapshot_sharing_enabled'];
+        return isset($this->attributes['snapshot_sharing_enabled']) ? $this->attributes['snapshot_sharing_enabled'] : null;
     }
     // boolean # Is SSL required?  Disabling this is insecure.
     public function getSslRequired()
     {
-        return @$this->attributes['ssl_required'];
+        return isset($this->attributes['ssl_required']) ? $this->attributes['ssl_required'] : null;
     }
     // string # Site subdomain
     public function getSubdomain()
     {
-        return @$this->attributes['subdomain'];
+        return isset($this->attributes['subdomain']) ? $this->attributes['subdomain'] : null;
     }
     // date-time # If switching plans, when does the new plan take effect?
     public function getSwitchToPlanDate()
     {
-        return @$this->attributes['switch_to_plan_date'];
+        return isset($this->attributes['switch_to_plan_date']) ? $this->attributes['switch_to_plan_date'] : null;
     }
     // int64 # Number of days left in trial
     public function getTrialDaysLeft()
     {
-        return @$this->attributes['trial_days_left'];
+        return isset($this->attributes['trial_days_left']) ? $this->attributes['trial_days_left'] : null;
     }
     // date-time # When does this Site trial expire?
     public function getTrialUntil()
     {
-        return @$this->attributes['trial_until'];
+        return isset($this->attributes['trial_until']) ? $this->attributes['trial_until'] : null;
     }
     // boolean # If using custom SMTP, should we use dedicated IPs to deliver emails?
     public function getUseDedicatedIpsForSmtp()
     {
-        return @$this->attributes['use_dedicated_ips_for_smtp'];
+        return isset($this->attributes['use_dedicated_ips_for_smtp']) ? $this->attributes['use_dedicated_ips_for_smtp'] : null;
     }
     // boolean # Allow uploaders to set `provided_modified_at` for uploaded files?
     public function getUseProvidedModifiedAt()
     {
-        return @$this->attributes['use_provided_modified_at'];
+        return isset($this->attributes['use_provided_modified_at']) ? $this->attributes['use_provided_modified_at'] : null;
     }
     // User # User of current session
     public function getUser()
     {
-        return @$this->attributes['user'];
+        return isset($this->attributes['user']) ? $this->attributes['user'] : null;
     }
     // boolean # Will users be locked out after incorrect login attempts?
     public function getUserLockout()
     {
-        return @$this->attributes['user_lockout'];
+        return isset($this->attributes['user_lockout']) ? $this->attributes['user_lockout'] : null;
     }
     // int64 # How many hours to lock user out for failed password?
     public function getUserLockoutLockPeriod()
     {
-        return @$this->attributes['user_lockout_lock_period'];
+        return isset($this->attributes['user_lockout_lock_period']) ? $this->attributes['user_lockout_lock_period'] : null;
     }
     // int64 # Number of login tries within `user_lockout_within` hours before users are locked out
     public function getUserLockoutTries()
     {
-        return @$this->attributes['user_lockout_tries'];
+        return isset($this->attributes['user_lockout_tries']) ? $this->attributes['user_lockout_tries'] : null;
     }
     // int64 # Number of hours for user lockout window
     public function getUserLockoutWithin()
     {
-        return @$this->attributes['user_lockout_within'];
+        return isset($this->attributes['user_lockout_within']) ? $this->attributes['user_lockout_within'] : null;
     }
     // boolean # Enable User Requests feature
     public function getUserRequestsEnabled()
     {
-        return @$this->attributes['user_requests_enabled'];
+        return isset($this->attributes['user_requests_enabled']) ? $this->attributes['user_requests_enabled'] : null;
     }
     // boolean # Send email to site admins when a user request is received?
     public function getUserRequestsNotifyAdmins()
     {
-        return @$this->attributes['user_requests_notify_admins'];
+        return isset($this->attributes['user_requests_notify_admins']) ? $this->attributes['user_requests_notify_admins'] : null;
     }
     // boolean # Allow users to create their own API keys?
     public function getUsersCanCreateApiKeys()
     {
-        return @$this->attributes['users_can_create_api_keys'];
+        return isset($this->attributes['users_can_create_api_keys']) ? $this->attributes['users_can_create_api_keys'] : null;
     }
     // boolean # Allow users to create their own SSH keys?
     public function getUsersCanCreateSshKeys()
     {
-        return @$this->attributes['users_can_create_ssh_keys'];
+        return isset($this->attributes['users_can_create_ssh_keys']) ? $this->attributes['users_can_create_ssh_keys'] : null;
     }
     // string # How usernames are displayed in the web UI. Can be `username_only`, `full_name_only`, `full_name_username`, `full_name_company`, or `full_name_username_company`.
     public function getUsernameDisplay()
     {
-        return @$this->attributes['username_display'];
+        return isset($this->attributes['username_display']) ? $this->attributes['username_display'] : null;
     }
     // string # Custom text send in user welcome email
     public function getWelcomeCustomText()
     {
-        return @$this->attributes['welcome_custom_text'];
+        return isset($this->attributes['welcome_custom_text']) ? $this->attributes['welcome_custom_text'] : null;
     }
     // string # Custom footer text for system-generated emails (as Markdown). Supports standard strftime date/time patterns like %Y (4-digit year), %m (month), %d (day).
     public function getEmailFooterCustomText()
     {
-        return @$this->attributes['email_footer_custom_text'];
+        return isset($this->attributes['email_footer_custom_text']) ? $this->attributes['email_footer_custom_text'] : null;
     }
     // email # Include this email in welcome emails if enabled
     public function getWelcomeEmailCc()
     {
-        return @$this->attributes['welcome_email_cc'];
+        return isset($this->attributes['welcome_email_cc']) ? $this->attributes['welcome_email_cc'] : null;
     }
     // string # Include this email subject in welcome emails if enabled
     public function getWelcomeEmailSubject()
     {
-        return @$this->attributes['welcome_email_subject'];
+        return isset($this->attributes['welcome_email_subject']) ? $this->attributes['welcome_email_subject'] : null;
     }
     // boolean # Will the welcome email be sent to new users?
     public function getWelcomeEmailEnabled()
     {
-        return @$this->attributes['welcome_email_enabled'];
+        return isset($this->attributes['welcome_email_enabled']) ? $this->attributes['welcome_email_enabled'] : null;
     }
     // string # Does the welcome screen appear?
     public function getWelcomeScreen()
     {
-        return @$this->attributes['welcome_screen'];
+        return isset($this->attributes['welcome_screen']) ? $this->attributes['welcome_screen'] : null;
     }
     // boolean # Does FTP user Windows emulation mode?
     public function getWindowsModeFtp()
     {
-        return @$this->attributes['windows_mode_ftp'];
+        return isset($this->attributes['windows_mode_ftp']) ? $this->attributes['windows_mode_ftp'] : null;
     }
 
     public static function get($params = [], $options = [])
@@ -1285,303 +1283,303 @@ class Site
     //   smtp_password - string - Password for SMTP server.
     public static function update($params = [], $options = [])
     {
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['subdomain'] && !is_string(@$params['subdomain'])) {
+        if (!empty($params['subdomain']) && !is_string($params['subdomain'])) {
             throw new \Files\Exception\InvalidParameterException('$subdomain must be of type string; received ' . gettype(@$params['subdomain']));
         }
 
-        if (@$params['domain'] && !is_string(@$params['domain'])) {
+        if (!empty($params['domain']) && !is_string($params['domain'])) {
             throw new \Files\Exception\InvalidParameterException('$domain must be of type string; received ' . gettype(@$params['domain']));
         }
 
-        if (@$params['domain_letsencrypt_chain'] && !is_string(@$params['domain_letsencrypt_chain'])) {
+        if (!empty($params['domain_letsencrypt_chain']) && !is_string($params['domain_letsencrypt_chain'])) {
             throw new \Files\Exception\InvalidParameterException('$domain_letsencrypt_chain must be of type string; received ' . gettype(@$params['domain_letsencrypt_chain']));
         }
 
-        if (@$params['email'] && !is_string(@$params['email'])) {
+        if (!empty($params['email']) && !is_string($params['email'])) {
             throw new \Files\Exception\InvalidParameterException('$email must be of type string; received ' . gettype(@$params['email']));
         }
 
-        if (@$params['reply_to_email'] && !is_string(@$params['reply_to_email'])) {
+        if (!empty($params['reply_to_email']) && !is_string($params['reply_to_email'])) {
             throw new \Files\Exception\InvalidParameterException('$reply_to_email must be of type string; received ' . gettype(@$params['reply_to_email']));
         }
 
-        if (@$params['bundle_expiration'] && !is_int(@$params['bundle_expiration'])) {
+        if (!empty($params['bundle_expiration']) && !is_int($params['bundle_expiration'])) {
             throw new \Files\Exception\InvalidParameterException('$bundle_expiration must be of type int; received ' . gettype(@$params['bundle_expiration']));
         }
 
-        if (@$params['welcome_email_cc'] && !is_string(@$params['welcome_email_cc'])) {
+        if (!empty($params['welcome_email_cc']) && !is_string($params['welcome_email_cc'])) {
             throw new \Files\Exception\InvalidParameterException('$welcome_email_cc must be of type string; received ' . gettype(@$params['welcome_email_cc']));
         }
 
-        if (@$params['welcome_email_subject'] && !is_string(@$params['welcome_email_subject'])) {
+        if (!empty($params['welcome_email_subject']) && !is_string($params['welcome_email_subject'])) {
             throw new \Files\Exception\InvalidParameterException('$welcome_email_subject must be of type string; received ' . gettype(@$params['welcome_email_subject']));
         }
 
-        if (@$params['welcome_custom_text'] && !is_string(@$params['welcome_custom_text'])) {
+        if (!empty($params['welcome_custom_text']) && !is_string($params['welcome_custom_text'])) {
             throw new \Files\Exception\InvalidParameterException('$welcome_custom_text must be of type string; received ' . gettype(@$params['welcome_custom_text']));
         }
 
-        if (@$params['language'] && !is_string(@$params['language'])) {
+        if (!empty($params['language']) && !is_string($params['language'])) {
             throw new \Files\Exception\InvalidParameterException('$language must be of type string; received ' . gettype(@$params['language']));
         }
 
-        if (@$params['default_time_zone'] && !is_string(@$params['default_time_zone'])) {
+        if (!empty($params['default_time_zone']) && !is_string($params['default_time_zone'])) {
             throw new \Files\Exception\InvalidParameterException('$default_time_zone must be of type string; received ' . gettype(@$params['default_time_zone']));
         }
 
-        if (@$params['desktop_app_session_lifetime'] && !is_int(@$params['desktop_app_session_lifetime'])) {
+        if (!empty($params['desktop_app_session_lifetime']) && !is_int($params['desktop_app_session_lifetime'])) {
             throw new \Files\Exception\InvalidParameterException('$desktop_app_session_lifetime must be of type int; received ' . gettype(@$params['desktop_app_session_lifetime']));
         }
 
-        if (@$params['mobile_app_session_lifetime'] && !is_int(@$params['mobile_app_session_lifetime'])) {
+        if (!empty($params['mobile_app_session_lifetime']) && !is_int($params['mobile_app_session_lifetime'])) {
             throw new \Files\Exception\InvalidParameterException('$mobile_app_session_lifetime must be of type int; received ' . gettype(@$params['mobile_app_session_lifetime']));
         }
 
-        if (@$params['welcome_screen'] && !is_string(@$params['welcome_screen'])) {
+        if (!empty($params['welcome_screen']) && !is_string($params['welcome_screen'])) {
             throw new \Files\Exception\InvalidParameterException('$welcome_screen must be of type string; received ' . gettype(@$params['welcome_screen']));
         }
 
-        if (@$params['office_integration_type'] && !is_string(@$params['office_integration_type'])) {
+        if (!empty($params['office_integration_type']) && !is_string($params['office_integration_type'])) {
             throw new \Files\Exception\InvalidParameterException('$office_integration_type must be of type string; received ' . gettype(@$params['office_integration_type']));
         }
 
-        if (@$params['motd_text'] && !is_string(@$params['motd_text'])) {
+        if (!empty($params['motd_text']) && !is_string($params['motd_text'])) {
             throw new \Files\Exception\InvalidParameterException('$motd_text must be of type string; received ' . gettype(@$params['motd_text']));
         }
 
-        if (@$params['additional_text_file_types'] && !is_array(@$params['additional_text_file_types'])) {
+        if (!empty($params['additional_text_file_types']) && !is_array($params['additional_text_file_types'])) {
             throw new \Files\Exception\InvalidParameterException('$additional_text_file_types must be of type array; received ' . gettype(@$params['additional_text_file_types']));
         }
 
-        if (@$params['as2_message_retention_days'] && !is_int(@$params['as2_message_retention_days'])) {
+        if (!empty($params['as2_message_retention_days']) && !is_int($params['as2_message_retention_days'])) {
             throw new \Files\Exception\InvalidParameterException('$as2_message_retention_days must be of type int; received ' . gettype(@$params['as2_message_retention_days']));
         }
 
-        if (@$params['username_display'] && !is_string(@$params['username_display'])) {
+        if (!empty($params['username_display']) && !is_string($params['username_display'])) {
             throw new \Files\Exception\InvalidParameterException('$username_display must be of type string; received ' . gettype(@$params['username_display']));
         }
 
-        if (@$params['session_expiry_minutes'] && !is_int(@$params['session_expiry_minutes'])) {
+        if (!empty($params['session_expiry_minutes']) && !is_int($params['session_expiry_minutes'])) {
             throw new \Files\Exception\InvalidParameterException('$session_expiry_minutes must be of type int; received ' . gettype(@$params['session_expiry_minutes']));
         }
 
-        if (@$params['user_lockout_tries'] && !is_int(@$params['user_lockout_tries'])) {
+        if (!empty($params['user_lockout_tries']) && !is_int($params['user_lockout_tries'])) {
             throw new \Files\Exception\InvalidParameterException('$user_lockout_tries must be of type int; received ' . gettype(@$params['user_lockout_tries']));
         }
 
-        if (@$params['user_lockout_within'] && !is_int(@$params['user_lockout_within'])) {
+        if (!empty($params['user_lockout_within']) && !is_int($params['user_lockout_within'])) {
             throw new \Files\Exception\InvalidParameterException('$user_lockout_within must be of type int; received ' . gettype(@$params['user_lockout_within']));
         }
 
-        if (@$params['user_lockout_lock_period'] && !is_int(@$params['user_lockout_lock_period'])) {
+        if (!empty($params['user_lockout_lock_period']) && !is_int($params['user_lockout_lock_period'])) {
             throw new \Files\Exception\InvalidParameterException('$user_lockout_lock_period must be of type int; received ' . gettype(@$params['user_lockout_lock_period']));
         }
 
-        if (@$params['allowed_countries'] && !is_string(@$params['allowed_countries'])) {
+        if (!empty($params['allowed_countries']) && !is_string($params['allowed_countries'])) {
             throw new \Files\Exception\InvalidParameterException('$allowed_countries must be of type string; received ' . gettype(@$params['allowed_countries']));
         }
 
-        if (@$params['allowed_ips'] && !is_string(@$params['allowed_ips'])) {
+        if (!empty($params['allowed_ips']) && !is_string($params['allowed_ips'])) {
             throw new \Files\Exception\InvalidParameterException('$allowed_ips must be of type string; received ' . gettype(@$params['allowed_ips']));
         }
 
-        if (@$params['disallowed_countries'] && !is_string(@$params['disallowed_countries'])) {
+        if (!empty($params['disallowed_countries']) && !is_string($params['disallowed_countries'])) {
             throw new \Files\Exception\InvalidParameterException('$disallowed_countries must be of type string; received ' . gettype(@$params['disallowed_countries']));
         }
 
-        if (@$params['days_to_retain_backups'] && !is_int(@$params['days_to_retain_backups'])) {
+        if (!empty($params['days_to_retain_backups']) && !is_int($params['days_to_retain_backups'])) {
             throw new \Files\Exception\InvalidParameterException('$days_to_retain_backups must be of type int; received ' . gettype(@$params['days_to_retain_backups']));
         }
 
-        if (@$params['max_prior_passwords'] && !is_int(@$params['max_prior_passwords'])) {
+        if (!empty($params['max_prior_passwords']) && !is_int($params['max_prior_passwords'])) {
             throw new \Files\Exception\InvalidParameterException('$max_prior_passwords must be of type int; received ' . gettype(@$params['max_prior_passwords']));
         }
 
-        if (@$params['password_validity_days'] && !is_int(@$params['password_validity_days'])) {
+        if (!empty($params['password_validity_days']) && !is_int($params['password_validity_days'])) {
             throw new \Files\Exception\InvalidParameterException('$password_validity_days must be of type int; received ' . gettype(@$params['password_validity_days']));
         }
 
-        if (@$params['password_min_length'] && !is_int(@$params['password_min_length'])) {
+        if (!empty($params['password_min_length']) && !is_int($params['password_min_length'])) {
             throw new \Files\Exception\InvalidParameterException('$password_min_length must be of type int; received ' . gettype(@$params['password_min_length']));
         }
 
-        if (@$params['bundle_not_found_message'] && !is_string(@$params['bundle_not_found_message'])) {
+        if (!empty($params['bundle_not_found_message']) && !is_string($params['bundle_not_found_message'])) {
             throw new \Files\Exception\InvalidParameterException('$bundle_not_found_message must be of type string; received ' . gettype(@$params['bundle_not_found_message']));
         }
 
-        if (@$params['bundle_registration_notifications'] && !is_string(@$params['bundle_registration_notifications'])) {
+        if (!empty($params['bundle_registration_notifications']) && !is_string($params['bundle_registration_notifications'])) {
             throw new \Files\Exception\InvalidParameterException('$bundle_registration_notifications must be of type string; received ' . gettype(@$params['bundle_registration_notifications']));
         }
 
-        if (@$params['bundle_activity_notifications'] && !is_string(@$params['bundle_activity_notifications'])) {
+        if (!empty($params['bundle_activity_notifications']) && !is_string($params['bundle_activity_notifications'])) {
             throw new \Files\Exception\InvalidParameterException('$bundle_activity_notifications must be of type string; received ' . gettype(@$params['bundle_activity_notifications']));
         }
 
-        if (@$params['bundle_upload_receipt_notifications'] && !is_string(@$params['bundle_upload_receipt_notifications'])) {
+        if (!empty($params['bundle_upload_receipt_notifications']) && !is_string($params['bundle_upload_receipt_notifications'])) {
             throw new \Files\Exception\InvalidParameterException('$bundle_upload_receipt_notifications must be of type string; received ' . gettype(@$params['bundle_upload_receipt_notifications']));
         }
 
-        if (@$params['sftp_host_key_type'] && !is_string(@$params['sftp_host_key_type'])) {
+        if (!empty($params['sftp_host_key_type']) && !is_string($params['sftp_host_key_type'])) {
             throw new \Files\Exception\InvalidParameterException('$sftp_host_key_type must be of type string; received ' . gettype(@$params['sftp_host_key_type']));
         }
 
-        if (@$params['active_sftp_host_key_id'] && !is_int(@$params['active_sftp_host_key_id'])) {
+        if (!empty($params['active_sftp_host_key_id']) && !is_int($params['active_sftp_host_key_id'])) {
             throw new \Files\Exception\InvalidParameterException('$active_sftp_host_key_id must be of type int; received ' . gettype(@$params['active_sftp_host_key_id']));
         }
 
-        if (@$params['active_sftp_host_key_ids'] && !is_array(@$params['active_sftp_host_key_ids'])) {
+        if (!empty($params['active_sftp_host_key_ids']) && !is_array($params['active_sftp_host_key_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$active_sftp_host_key_ids must be of type array; received ' . gettype(@$params['active_sftp_host_key_ids']));
         }
 
-        if (@$params['bundle_recipient_blacklist_domains'] && !is_array(@$params['bundle_recipient_blacklist_domains'])) {
+        if (!empty($params['bundle_recipient_blacklist_domains']) && !is_array($params['bundle_recipient_blacklist_domains'])) {
             throw new \Files\Exception\InvalidParameterException('$bundle_recipient_blacklist_domains must be of type array; received ' . gettype(@$params['bundle_recipient_blacklist_domains']));
         }
 
-        if (@$params['require_2fa_user_type'] && !is_string(@$params['require_2fa_user_type'])) {
+        if (!empty($params['require_2fa_user_type']) && !is_string($params['require_2fa_user_type'])) {
             throw new \Files\Exception\InvalidParameterException('$require_2fa_user_type must be of type string; received ' . gettype(@$params['require_2fa_user_type']));
         }
 
-        if (@$params['color2_top'] && !is_string(@$params['color2_top'])) {
+        if (!empty($params['color2_top']) && !is_string($params['color2_top'])) {
             throw new \Files\Exception\InvalidParameterException('$color2_top must be of type string; received ' . gettype(@$params['color2_top']));
         }
 
-        if (@$params['color2_left'] && !is_string(@$params['color2_left'])) {
+        if (!empty($params['color2_left']) && !is_string($params['color2_left'])) {
             throw new \Files\Exception\InvalidParameterException('$color2_left must be of type string; received ' . gettype(@$params['color2_left']));
         }
 
-        if (@$params['color2_link'] && !is_string(@$params['color2_link'])) {
+        if (!empty($params['color2_link']) && !is_string($params['color2_link'])) {
             throw new \Files\Exception\InvalidParameterException('$color2_link must be of type string; received ' . gettype(@$params['color2_link']));
         }
 
-        if (@$params['color2_text'] && !is_string(@$params['color2_text'])) {
+        if (!empty($params['color2_text']) && !is_string($params['color2_text'])) {
             throw new \Files\Exception\InvalidParameterException('$color2_text must be of type string; received ' . gettype(@$params['color2_text']));
         }
 
-        if (@$params['color2_top_text'] && !is_string(@$params['color2_top_text'])) {
+        if (!empty($params['color2_top_text']) && !is_string($params['color2_top_text'])) {
             throw new \Files\Exception\InvalidParameterException('$color2_top_text must be of type string; received ' . gettype(@$params['color2_top_text']));
         }
 
-        if (@$params['site_header'] && !is_string(@$params['site_header'])) {
+        if (!empty($params['site_header']) && !is_string($params['site_header'])) {
             throw new \Files\Exception\InvalidParameterException('$site_header must be of type string; received ' . gettype(@$params['site_header']));
         }
 
-        if (@$params['site_footer'] && !is_string(@$params['site_footer'])) {
+        if (!empty($params['site_footer']) && !is_string($params['site_footer'])) {
             throw new \Files\Exception\InvalidParameterException('$site_footer must be of type string; received ' . gettype(@$params['site_footer']));
         }
 
-        if (@$params['site_public_header'] && !is_string(@$params['site_public_header'])) {
+        if (!empty($params['site_public_header']) && !is_string($params['site_public_header'])) {
             throw new \Files\Exception\InvalidParameterException('$site_public_header must be of type string; received ' . gettype(@$params['site_public_header']));
         }
 
-        if (@$params['site_public_footer'] && !is_string(@$params['site_public_footer'])) {
+        if (!empty($params['site_public_footer']) && !is_string($params['site_public_footer'])) {
             throw new \Files\Exception\InvalidParameterException('$site_public_footer must be of type string; received ' . gettype(@$params['site_public_footer']));
         }
 
-        if (@$params['login_help_text'] && !is_string(@$params['login_help_text'])) {
+        if (!empty($params['login_help_text']) && !is_string($params['login_help_text'])) {
             throw new \Files\Exception\InvalidParameterException('$login_help_text must be of type string; received ' . gettype(@$params['login_help_text']));
         }
 
-        if (@$params['email_footer_custom_text'] && !is_string(@$params['email_footer_custom_text'])) {
+        if (!empty($params['email_footer_custom_text']) && !is_string($params['email_footer_custom_text'])) {
             throw new \Files\Exception\InvalidParameterException('$email_footer_custom_text must be of type string; received ' . gettype(@$params['email_footer_custom_text']));
         }
 
-        if (@$params['smtp_address'] && !is_string(@$params['smtp_address'])) {
+        if (!empty($params['smtp_address']) && !is_string($params['smtp_address'])) {
             throw new \Files\Exception\InvalidParameterException('$smtp_address must be of type string; received ' . gettype(@$params['smtp_address']));
         }
 
-        if (@$params['smtp_authentication'] && !is_string(@$params['smtp_authentication'])) {
+        if (!empty($params['smtp_authentication']) && !is_string($params['smtp_authentication'])) {
             throw new \Files\Exception\InvalidParameterException('$smtp_authentication must be of type string; received ' . gettype(@$params['smtp_authentication']));
         }
 
-        if (@$params['smtp_from'] && !is_string(@$params['smtp_from'])) {
+        if (!empty($params['smtp_from']) && !is_string($params['smtp_from'])) {
             throw new \Files\Exception\InvalidParameterException('$smtp_from must be of type string; received ' . gettype(@$params['smtp_from']));
         }
 
-        if (@$params['smtp_username'] && !is_string(@$params['smtp_username'])) {
+        if (!empty($params['smtp_username']) && !is_string($params['smtp_username'])) {
             throw new \Files\Exception\InvalidParameterException('$smtp_username must be of type string; received ' . gettype(@$params['smtp_username']));
         }
 
-        if (@$params['smtp_port'] && !is_int(@$params['smtp_port'])) {
+        if (!empty($params['smtp_port']) && !is_int($params['smtp_port'])) {
             throw new \Files\Exception\InvalidParameterException('$smtp_port must be of type int; received ' . gettype(@$params['smtp_port']));
         }
 
-        if (@$params['smtp_ssl'] && !is_string(@$params['smtp_ssl'])) {
+        if (!empty($params['smtp_ssl']) && !is_string($params['smtp_ssl'])) {
             throw new \Files\Exception\InvalidParameterException('$smtp_ssl must be of type string; received ' . gettype(@$params['smtp_ssl']));
         }
 
-        if (@$params['ldap_type'] && !is_string(@$params['ldap_type'])) {
+        if (!empty($params['ldap_type']) && !is_string($params['ldap_type'])) {
             throw new \Files\Exception\InvalidParameterException('$ldap_type must be of type string; received ' . gettype(@$params['ldap_type']));
         }
 
-        if (@$params['ldap_host'] && !is_string(@$params['ldap_host'])) {
+        if (!empty($params['ldap_host']) && !is_string($params['ldap_host'])) {
             throw new \Files\Exception\InvalidParameterException('$ldap_host must be of type string; received ' . gettype(@$params['ldap_host']));
         }
 
-        if (@$params['ldap_host_2'] && !is_string(@$params['ldap_host_2'])) {
+        if (!empty($params['ldap_host_2']) && !is_string($params['ldap_host_2'])) {
             throw new \Files\Exception\InvalidParameterException('$ldap_host_2 must be of type string; received ' . gettype(@$params['ldap_host_2']));
         }
 
-        if (@$params['ldap_host_3'] && !is_string(@$params['ldap_host_3'])) {
+        if (!empty($params['ldap_host_3']) && !is_string($params['ldap_host_3'])) {
             throw new \Files\Exception\InvalidParameterException('$ldap_host_3 must be of type string; received ' . gettype(@$params['ldap_host_3']));
         }
 
-        if (@$params['ldap_port'] && !is_int(@$params['ldap_port'])) {
+        if (!empty($params['ldap_port']) && !is_int($params['ldap_port'])) {
             throw new \Files\Exception\InvalidParameterException('$ldap_port must be of type int; received ' . gettype(@$params['ldap_port']));
         }
 
-        if (@$params['ldap_server_certificate'] && !is_string(@$params['ldap_server_certificate'])) {
+        if (!empty($params['ldap_server_certificate']) && !is_string($params['ldap_server_certificate'])) {
             throw new \Files\Exception\InvalidParameterException('$ldap_server_certificate must be of type string; received ' . gettype(@$params['ldap_server_certificate']));
         }
 
-        if (@$params['ldap_username'] && !is_string(@$params['ldap_username'])) {
+        if (!empty($params['ldap_username']) && !is_string($params['ldap_username'])) {
             throw new \Files\Exception\InvalidParameterException('$ldap_username must be of type string; received ' . gettype(@$params['ldap_username']));
         }
 
-        if (@$params['ldap_username_field'] && !is_string(@$params['ldap_username_field'])) {
+        if (!empty($params['ldap_username_field']) && !is_string($params['ldap_username_field'])) {
             throw new \Files\Exception\InvalidParameterException('$ldap_username_field must be of type string; received ' . gettype(@$params['ldap_username_field']));
         }
 
-        if (@$params['ldap_domain'] && !is_string(@$params['ldap_domain'])) {
+        if (!empty($params['ldap_domain']) && !is_string($params['ldap_domain'])) {
             throw new \Files\Exception\InvalidParameterException('$ldap_domain must be of type string; received ' . gettype(@$params['ldap_domain']));
         }
 
-        if (@$params['ldap_user_action'] && !is_string(@$params['ldap_user_action'])) {
+        if (!empty($params['ldap_user_action']) && !is_string($params['ldap_user_action'])) {
             throw new \Files\Exception\InvalidParameterException('$ldap_user_action must be of type string; received ' . gettype(@$params['ldap_user_action']));
         }
 
-        if (@$params['ldap_group_action'] && !is_string(@$params['ldap_group_action'])) {
+        if (!empty($params['ldap_group_action']) && !is_string($params['ldap_group_action'])) {
             throw new \Files\Exception\InvalidParameterException('$ldap_group_action must be of type string; received ' . gettype(@$params['ldap_group_action']));
         }
 
-        if (@$params['ldap_user_include_groups'] && !is_string(@$params['ldap_user_include_groups'])) {
+        if (!empty($params['ldap_user_include_groups']) && !is_string($params['ldap_user_include_groups'])) {
             throw new \Files\Exception\InvalidParameterException('$ldap_user_include_groups must be of type string; received ' . gettype(@$params['ldap_user_include_groups']));
         }
 
-        if (@$params['ldap_group_exclusion'] && !is_string(@$params['ldap_group_exclusion'])) {
+        if (!empty($params['ldap_group_exclusion']) && !is_string($params['ldap_group_exclusion'])) {
             throw new \Files\Exception\InvalidParameterException('$ldap_group_exclusion must be of type string; received ' . gettype(@$params['ldap_group_exclusion']));
         }
 
-        if (@$params['ldap_group_inclusion'] && !is_string(@$params['ldap_group_inclusion'])) {
+        if (!empty($params['ldap_group_inclusion']) && !is_string($params['ldap_group_inclusion'])) {
             throw new \Files\Exception\InvalidParameterException('$ldap_group_inclusion must be of type string; received ' . gettype(@$params['ldap_group_inclusion']));
         }
 
-        if (@$params['ldap_base_dn'] && !is_string(@$params['ldap_base_dn'])) {
+        if (!empty($params['ldap_base_dn']) && !is_string($params['ldap_base_dn'])) {
             throw new \Files\Exception\InvalidParameterException('$ldap_base_dn must be of type string; received ' . gettype(@$params['ldap_base_dn']));
         }
 
-        if (@$params['ldap_password_change'] && !is_string(@$params['ldap_password_change'])) {
+        if (!empty($params['ldap_password_change']) && !is_string($params['ldap_password_change'])) {
             throw new \Files\Exception\InvalidParameterException('$ldap_password_change must be of type string; received ' . gettype(@$params['ldap_password_change']));
         }
 
-        if (@$params['ldap_password_change_confirmation'] && !is_string(@$params['ldap_password_change_confirmation'])) {
+        if (!empty($params['ldap_password_change_confirmation']) && !is_string($params['ldap_password_change_confirmation'])) {
             throw new \Files\Exception\InvalidParameterException('$ldap_password_change_confirmation must be of type string; received ' . gettype(@$params['ldap_password_change_confirmation']));
         }
 
-        if (@$params['smtp_password'] && !is_string(@$params['smtp_password'])) {
+        if (!empty($params['smtp_password']) && !is_string($params['smtp_password'])) {
             throw new \Files\Exception\InvalidParameterException('$smtp_password must be of type string; received ' . gettype(@$params['smtp_password']));
         }
 

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class EventDeliveryAttempt
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,82 +56,82 @@ class EventDeliveryAttempt
     // int64 # Event Delivery Attempt ID
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
     // int64 # Event Record ID
     public function getEventRecordId()
     {
-        return @$this->attributes['event_record_id'];
+        return isset($this->attributes['event_record_id']) ? $this->attributes['event_record_id'] : null;
     }
     // int64 # Event Subscription ID
     public function getEventSubscriptionId()
     {
-        return @$this->attributes['event_subscription_id'];
+        return isset($this->attributes['event_subscription_id']) ? $this->attributes['event_subscription_id'] : null;
     }
     // int64 # Event Target ID
     public function getEventTargetId()
     {
-        return @$this->attributes['event_target_id'];
+        return isset($this->attributes['event_target_id']) ? $this->attributes['event_target_id'] : null;
     }
     // int64 # Shared summary ID when this event is delivered in a Slack or Teams subfolder summary. All events in a summary share its delivery outcome.
     public function getActivityNotificationBatchId()
     {
-        return @$this->attributes['activity_notification_batch_id'];
+        return isset($this->attributes['activity_notification_batch_id']) ? $this->attributes['activity_notification_batch_id'] : null;
     }
     // int64 # Workspace ID. 0 means the default workspace or site-wide.
     public function getWorkspaceId()
     {
-        return @$this->attributes['workspace_id'];
+        return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
     // string # Delivery status.
     public function getStatus()
     {
-        return @$this->attributes['status'];
+        return isset($this->attributes['status']) ? $this->attributes['status'] : null;
     }
     // int64 # Number of delivery attempts made.
     public function getAttemptNumber()
     {
-        return @$this->attributes['attempt_number'];
+        return isset($this->attributes['attempt_number']) ? $this->attributes['attempt_number'] : null;
     }
     // int64 # HTTP response code, if applicable.
     public function getResponseCode()
     {
-        return @$this->attributes['response_code'];
+        return isset($this->attributes['response_code']) ? $this->attributes['response_code'] : null;
     }
     // string # Delivery error message, if applicable.
     public function getErrorMessage()
     {
-        return @$this->attributes['error_message'];
+        return isset($this->attributes['error_message']) ? $this->attributes['error_message'] : null;
     }
     // string # Delivery response body, if applicable.
     public function getResponseBody()
     {
-        return @$this->attributes['response_body'];
+        return isset($this->attributes['response_body']) ? $this->attributes['response_body'] : null;
     }
     // int64 # Delivery latency in milliseconds.
     public function getLatencyMs()
     {
-        return @$this->attributes['latency_ms'];
+        return isset($this->attributes['latency_ms']) ? $this->attributes['latency_ms'] : null;
     }
     // date-time # Successful delivery date/time.
     public function getDeliveredAt()
     {
-        return @$this->attributes['delivered_at'];
+        return isset($this->attributes['delivered_at']) ? $this->attributes['delivered_at'] : null;
     }
     // date-time # Most recent attempt date/time.
     public function getLastAttemptedAt()
     {
-        return @$this->attributes['last_attempted_at'];
+        return isset($this->attributes['last_attempted_at']) ? $this->attributes['last_attempted_at'] : null;
     }
     // date-time # Next scheduled attempt date/time.
     public function getNextAttemptAt()
     {
-        return @$this->attributes['next_attempt_at'];
+        return isset($this->attributes['next_attempt_at']) ? $this->attributes['next_attempt_at'] : null;
     }
     // date-time # Delivery Attempt create date/time.
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
 
     // Parameters:
@@ -143,11 +141,11 @@ class EventDeliveryAttempt
     //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `status`, `workspace_id`, `event_record_id` or `event_target_id`. Valid field combinations are `[ workspace_id, status ]`, `[ workspace_id, event_record_id ]` or `[ workspace_id, event_target_id ]`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -172,11 +170,11 @@ class EventDeliveryAttempt
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 

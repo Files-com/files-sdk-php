@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class HolidayCalendar
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class HolidayCalendar
     // int64 # Holiday Calendar ID. Set a scheduled resource's `holiday_region` to `custom_` followed by this ID to make it skip the days in this calendar.
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
     public function setId($value)
@@ -68,7 +66,7 @@ class HolidayCalendar
     // string # Holiday Calendar name.
     public function getName()
     {
-        return @$this->attributes['name'];
+        return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
 
     public function setName($value)
@@ -78,7 +76,7 @@ class HolidayCalendar
     // object # Holiday rules for the calendar.
     public function getDefinition()
     {
-        return @$this->attributes['definition'];
+        return isset($this->attributes['definition']) ? $this->attributes['definition'] : null;
     }
 
     public function setDefinition($value)
@@ -88,12 +86,12 @@ class HolidayCalendar
     // date-time # Creation time.
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
     // date-time # Last update time.
     public function getUpdatedAt()
     {
-        return @$this->attributes['updated_at'];
+        return isset($this->attributes['updated_at']) ? $this->attributes['updated_at'] : null;
     }
 
     // Parameters:
@@ -105,7 +103,7 @@ class HolidayCalendar
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -113,11 +111,11 @@ class HolidayCalendar
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
@@ -131,7 +129,7 @@ class HolidayCalendar
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -139,7 +137,7 @@ class HolidayCalendar
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -173,11 +171,11 @@ class HolidayCalendar
     //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are .
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -202,11 +200,11 @@ class HolidayCalendar
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -224,15 +222,15 @@ class HolidayCalendar
     //   name (required) - string - Holiday Calendar name.
     public static function create($params = [], $options = [])
     {
-        if (!@$params['definition']) {
+        if (empty($params['definition'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: definition');
         }
 
-        if (!@$params['name']) {
+        if (empty($params['name'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: name');
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class SftpHostKey
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class SftpHostKey
     // boolean # If true, use this SFTP Host Key.
     public function getActive()
     {
-        return @$this->attributes['active'];
+        return isset($this->attributes['active']) ? $this->attributes['active'] : null;
     }
 
     public function setActive($value)
@@ -68,7 +66,7 @@ class SftpHostKey
     // int64 # Custom Domain ID. If set, this key is used only for that Custom Domain.
     public function getCustomDomainId()
     {
-        return @$this->attributes['custom_domain_id'];
+        return isset($this->attributes['custom_domain_id']) ? $this->attributes['custom_domain_id'] : null;
     }
 
     public function setCustomDomainId($value)
@@ -78,7 +76,7 @@ class SftpHostKey
     // int64 # SFTP Host Key ID
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
     public function setId($value)
@@ -88,7 +86,7 @@ class SftpHostKey
     // string # The friendly name of this SFTP Host Key.
     public function getName()
     {
-        return @$this->attributes['name'];
+        return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
 
     public function setName($value)
@@ -98,7 +96,7 @@ class SftpHostKey
     // string # SSH key type
     public function getKeyType()
     {
-        return @$this->attributes['key_type'];
+        return isset($this->attributes['key_type']) ? $this->attributes['key_type'] : null;
     }
 
     public function setKeyType($value)
@@ -108,7 +106,7 @@ class SftpHostKey
     // string # MD5 Fingerprint of the public key
     public function getFingerprintMd5()
     {
-        return @$this->attributes['fingerprint_md5'];
+        return isset($this->attributes['fingerprint_md5']) ? $this->attributes['fingerprint_md5'] : null;
     }
 
     public function setFingerprintMd5($value)
@@ -118,7 +116,7 @@ class SftpHostKey
     // string # SHA256 Fingerprint of the public key
     public function getFingerprintSha256()
     {
-        return @$this->attributes['fingerprint_sha256'];
+        return isset($this->attributes['fingerprint_sha256']) ? $this->attributes['fingerprint_sha256'] : null;
     }
 
     public function setFingerprintSha256($value)
@@ -128,7 +126,7 @@ class SftpHostKey
     // string # The private key data.
     public function getPrivateKey()
     {
-        return @$this->attributes['private_key'];
+        return isset($this->attributes['private_key']) ? $this->attributes['private_key'] : null;
     }
 
     public function setPrivateKey($value)
@@ -147,7 +145,7 @@ class SftpHostKey
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -155,19 +153,19 @@ class SftpHostKey
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (@$params['custom_domain_id'] && !is_int(@$params['custom_domain_id'])) {
+        if (!empty($params['custom_domain_id']) && !is_int($params['custom_domain_id'])) {
             throw new \Files\Exception\InvalidParameterException('$custom_domain_id must be of type int; received ' . gettype(@$params['custom_domain_id']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['private_key'] && !is_string(@$params['private_key'])) {
+        if (!empty($params['private_key']) && !is_string($params['private_key'])) {
             throw new \Files\Exception\InvalidParameterException('$private_key must be of type string; received ' . gettype(@$params['private_key']));
         }
 
@@ -181,7 +179,7 @@ class SftpHostKey
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -189,7 +187,7 @@ class SftpHostKey
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -222,11 +220,11 @@ class SftpHostKey
     //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -251,11 +249,11 @@ class SftpHostKey
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -275,15 +273,15 @@ class SftpHostKey
     //   private_key - string - The private key data.
     public static function create($params = [], $options = [])
     {
-        if (@$params['custom_domain_id'] && !is_int(@$params['custom_domain_id'])) {
+        if (!empty($params['custom_domain_id']) && !is_int($params['custom_domain_id'])) {
             throw new \Files\Exception\InvalidParameterException('$custom_domain_id must be of type int; received ' . gettype(@$params['custom_domain_id']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['private_key'] && !is_string(@$params['private_key'])) {
+        if (!empty($params['private_key']) && !is_string($params['private_key'])) {
             throw new \Files\Exception\InvalidParameterException('$private_key must be of type string; received ' . gettype(@$params['private_key']));
         }
 

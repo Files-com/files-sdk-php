@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class User
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class User
     // int64 # User ID
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
     public function setId($value)
@@ -68,7 +66,7 @@ class User
     // string # User's username
     public function getUsername()
     {
-        return @$this->attributes['username'];
+        return isset($this->attributes['username']) ? $this->attributes['username'] : null;
     }
 
     public function setUsername($value)
@@ -78,7 +76,7 @@ class User
     // array(int64) # List of group IDs of which this user is an administrator
     public function getAdminGroupIds()
     {
-        return @$this->attributes['admin_group_ids'];
+        return isset($this->attributes['admin_group_ids']) ? $this->attributes['admin_group_ids'] : null;
     }
 
     public function setAdminGroupIds($value)
@@ -88,7 +86,7 @@ class User
     // string # A list of allowed IPs if applicable.  Newline delimited
     public function getAllowedIps()
     {
-        return @$this->attributes['allowed_ips'];
+        return isset($this->attributes['allowed_ips']) ? $this->attributes['allowed_ips'] : null;
     }
 
     public function setAllowedIps($value)
@@ -98,7 +96,7 @@ class User
     // boolean # If `true`, the user can user create Bundles (aka Share Links). Use the bundle permission instead.
     public function getAttachmentsPermission()
     {
-        return @$this->attributes['attachments_permission'];
+        return isset($this->attributes['attachments_permission']) ? $this->attributes['attachments_permission'] : null;
     }
 
     public function setAttachmentsPermission($value)
@@ -108,7 +106,7 @@ class User
     // int64 # Number of API keys associated with this user
     public function getApiKeysCount()
     {
-        return @$this->attributes['api_keys_count'];
+        return isset($this->attributes['api_keys_count']) ? $this->attributes['api_keys_count'] : null;
     }
 
     public function setApiKeysCount($value)
@@ -118,7 +116,7 @@ class User
     // date-time # Scheduled Date/Time at which user will be deactivated
     public function getAuthenticateUntil()
     {
-        return @$this->attributes['authenticate_until'];
+        return isset($this->attributes['authenticate_until']) ? $this->attributes['authenticate_until'] : null;
     }
 
     public function setAuthenticateUntil($value)
@@ -128,7 +126,7 @@ class User
     // string # How is this user authenticated?
     public function getAuthenticationMethod()
     {
-        return @$this->attributes['authentication_method'];
+        return isset($this->attributes['authentication_method']) ? $this->attributes['authentication_method'] : null;
     }
 
     public function setAuthenticationMethod($value)
@@ -138,7 +136,7 @@ class User
     // string # URL holding the user's avatar
     public function getAvatarUrl()
     {
-        return @$this->attributes['avatar_url'];
+        return isset($this->attributes['avatar_url']) ? $this->attributes['avatar_url'] : null;
     }
 
     public function setAvatarUrl($value)
@@ -148,7 +146,7 @@ class User
     // boolean # Is this a billable user record?
     public function getBillable()
     {
-        return @$this->attributes['billable'];
+        return isset($this->attributes['billable']) ? $this->attributes['billable'] : null;
     }
 
     public function setBillable($value)
@@ -158,7 +156,7 @@ class User
     // boolean # Allow this user to perform operations on the account, payments, and invoices?
     public function getBillingPermission()
     {
-        return @$this->attributes['billing_permission'];
+        return isset($this->attributes['billing_permission']) ? $this->attributes['billing_permission'] : null;
     }
 
     public function setBillingPermission($value)
@@ -168,7 +166,7 @@ class User
     // boolean # Allow this user to skip site-wide IP blacklists?
     public function getBypassSiteAllowedIps()
     {
-        return @$this->attributes['bypass_site_allowed_ips'];
+        return isset($this->attributes['bypass_site_allowed_ips']) ? $this->attributes['bypass_site_allowed_ips'] : null;
     }
 
     public function setBypassSiteAllowedIps($value)
@@ -178,7 +176,7 @@ class User
     // boolean # Exempt this user from user lifecycle rules?
     public function getBypassUserLifecycleRules()
     {
-        return @$this->attributes['bypass_user_lifecycle_rules'];
+        return isset($this->attributes['bypass_user_lifecycle_rules']) ? $this->attributes['bypass_user_lifecycle_rules'] : null;
     }
 
     public function setBypassUserLifecycleRules($value)
@@ -188,12 +186,12 @@ class User
     // date-time # When this user was created
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
     // boolean # Can the user connect with WebDAV?
     public function getDavPermission()
     {
-        return @$this->attributes['dav_permission'];
+        return isset($this->attributes['dav_permission']) ? $this->attributes['dav_permission'] : null;
     }
 
     public function setDavPermission($value)
@@ -203,7 +201,7 @@ class User
     // boolean # Is user disabled? Disabled users cannot log in, and do not count for billing purposes. Users can be automatically disabled after an inactivity period via a Site setting or schedule to be deactivated after specific date.
     public function getDisabled()
     {
-        return @$this->attributes['disabled'];
+        return isset($this->attributes['disabled']) ? $this->attributes['disabled'] : null;
     }
 
     public function setDisabled($value)
@@ -213,7 +211,7 @@ class User
     // boolean # Computed property that returns true if user disabled or expired or inactive.
     public function getDisabledExpiredOrInactive()
     {
-        return @$this->attributes['disabled_expired_or_inactive'];
+        return isset($this->attributes['disabled_expired_or_inactive']) ? $this->attributes['disabled_expired_or_inactive'] : null;
     }
 
     public function setDisabledExpiredOrInactive($value)
@@ -223,7 +221,7 @@ class User
     // int64 # AI Assistant Personality ID assigned directly to this user, if any.
     public function getAiAssistantPersonalityId()
     {
-        return @$this->attributes['ai_assistant_personality_id'];
+        return isset($this->attributes['ai_assistant_personality_id']) ? $this->attributes['ai_assistant_personality_id'] : null;
     }
 
     public function setAiAssistantPersonalityId($value)
@@ -233,7 +231,7 @@ class User
     // int64 # Desktop Configuration Profile ID assigned directly to this user, if any.
     public function getDesktopConfigurationProfileId()
     {
-        return @$this->attributes['desktop_configuration_profile_id'];
+        return isset($this->attributes['desktop_configuration_profile_id']) ? $this->attributes['desktop_configuration_profile_id'] : null;
     }
 
     public function setDesktopConfigurationProfileId($value)
@@ -243,7 +241,7 @@ class User
     // int64 # Integration Centric Profile ID assigned directly to this user, if any.
     public function getIntegrationCentricProfileId()
     {
-        return @$this->attributes['integration_centric_profile_id'];
+        return isset($this->attributes['integration_centric_profile_id']) ? $this->attributes['integration_centric_profile_id'] : null;
     }
 
     public function setIntegrationCentricProfileId($value)
@@ -253,7 +251,7 @@ class User
     // email # User email address
     public function getEmail()
     {
-        return @$this->attributes['email'];
+        return isset($this->attributes['email']) ? $this->attributes['email'] : null;
     }
 
     public function setEmail($value)
@@ -263,7 +261,7 @@ class User
     // string # File system layout
     public function getFilesystemLayout()
     {
-        return @$this->attributes['filesystem_layout'];
+        return isset($this->attributes['filesystem_layout']) ? $this->attributes['filesystem_layout'] : null;
     }
 
     public function setFilesystemLayout($value)
@@ -273,7 +271,7 @@ class User
     // date-time # User's first login time
     public function getFirstLoginAt()
     {
-        return @$this->attributes['first_login_at'];
+        return isset($this->attributes['first_login_at']) ? $this->attributes['first_login_at'] : null;
     }
 
     public function setFirstLoginAt($value)
@@ -283,7 +281,7 @@ class User
     // boolean # Can the user access with FTP/FTPS?
     public function getFtpPermission()
     {
-        return @$this->attributes['ftp_permission'];
+        return isset($this->attributes['ftp_permission']) ? $this->attributes['ftp_permission'] : null;
     }
 
     public function setFtpPermission($value)
@@ -293,7 +291,7 @@ class User
     // string # Comma-separated list of group IDs of which this user is a member
     public function getGroupIds()
     {
-        return @$this->attributes['group_ids'];
+        return isset($this->attributes['group_ids']) ? $this->attributes['group_ids'] : null;
     }
 
     public function setGroupIds($value)
@@ -303,7 +301,7 @@ class User
     // string # Text to display to the user in the header of the UI
     public function getHeaderText()
     {
-        return @$this->attributes['header_text'];
+        return isset($this->attributes['header_text']) ? $this->attributes['header_text'] : null;
     }
 
     public function setHeaderText($value)
@@ -313,7 +311,7 @@ class User
     // string # Preferred language
     public function getLanguage()
     {
-        return @$this->attributes['language'];
+        return isset($this->attributes['language']) ? $this->attributes['language'] : null;
     }
 
     public function setLanguage($value)
@@ -323,7 +321,7 @@ class User
     // date-time # User's most recent login time via any protocol
     public function getLastLoginAt()
     {
-        return @$this->attributes['last_login_at'];
+        return isset($this->attributes['last_login_at']) ? $this->attributes['last_login_at'] : null;
     }
 
     public function setLastLoginAt($value)
@@ -333,7 +331,7 @@ class User
     // date-time # User's most recent login time via web
     public function getLastWebLoginAt()
     {
-        return @$this->attributes['last_web_login_at'];
+        return isset($this->attributes['last_web_login_at']) ? $this->attributes['last_web_login_at'] : null;
     }
 
     public function setLastWebLoginAt($value)
@@ -343,7 +341,7 @@ class User
     // date-time # User's most recent login time via FTP
     public function getLastFtpLoginAt()
     {
-        return @$this->attributes['last_ftp_login_at'];
+        return isset($this->attributes['last_ftp_login_at']) ? $this->attributes['last_ftp_login_at'] : null;
     }
 
     public function setLastFtpLoginAt($value)
@@ -353,7 +351,7 @@ class User
     // date-time # User's most recent login time via SFTP
     public function getLastSftpLoginAt()
     {
-        return @$this->attributes['last_sftp_login_at'];
+        return isset($this->attributes['last_sftp_login_at']) ? $this->attributes['last_sftp_login_at'] : null;
     }
 
     public function setLastSftpLoginAt($value)
@@ -363,7 +361,7 @@ class User
     // date-time # User's most recent login time via WebDAV
     public function getLastDavLoginAt()
     {
-        return @$this->attributes['last_dav_login_at'];
+        return isset($this->attributes['last_dav_login_at']) ? $this->attributes['last_dav_login_at'] : null;
     }
 
     public function setLastDavLoginAt($value)
@@ -373,7 +371,7 @@ class User
     // date-time # User's most recent login time via Desktop app
     public function getLastDesktopLoginAt()
     {
-        return @$this->attributes['last_desktop_login_at'];
+        return isset($this->attributes['last_desktop_login_at']) ? $this->attributes['last_desktop_login_at'] : null;
     }
 
     public function setLastDesktopLoginAt($value)
@@ -383,7 +381,7 @@ class User
     // date-time # User's most recent login time via Rest API
     public function getLastRestapiLoginAt()
     {
-        return @$this->attributes['last_restapi_login_at'];
+        return isset($this->attributes['last_restapi_login_at']) ? $this->attributes['last_restapi_login_at'] : null;
     }
 
     public function setLastRestapiLoginAt($value)
@@ -393,7 +391,7 @@ class User
     // date-time # User's most recent API use time
     public function getLastApiUseAt()
     {
-        return @$this->attributes['last_api_use_at'];
+        return isset($this->attributes['last_api_use_at']) ? $this->attributes['last_api_use_at'] : null;
     }
 
     public function setLastApiUseAt($value)
@@ -403,7 +401,7 @@ class User
     // date-time # User's most recent activity time, which is the latest of most recent login, most recent API use, enablement, or creation
     public function getLastActiveAt()
     {
-        return @$this->attributes['last_active_at'];
+        return isset($this->attributes['last_active_at']) ? $this->attributes['last_active_at'] : null;
     }
 
     public function setLastActiveAt($value)
@@ -413,7 +411,7 @@ class User
     // string # The most recent protocol and cipher used
     public function getLastProtocolCipher()
     {
-        return @$this->attributes['last_protocol_cipher'];
+        return isset($this->attributes['last_protocol_cipher']) ? $this->attributes['last_protocol_cipher'] : null;
     }
 
     public function setLastProtocolCipher($value)
@@ -423,7 +421,7 @@ class User
     // date-time # Time in the future that the user will no longer be locked out if applicable
     public function getLockoutExpires()
     {
-        return @$this->attributes['lockout_expires'];
+        return isset($this->attributes['lockout_expires']) ? $this->attributes['lockout_expires'] : null;
     }
 
     public function setLockoutExpires($value)
@@ -433,7 +431,7 @@ class User
     // string # User's full name
     public function getName()
     {
-        return @$this->attributes['name'];
+        return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
 
     public function setName($value)
@@ -443,7 +441,7 @@ class User
     // string # User's company
     public function getCompany()
     {
-        return @$this->attributes['company'];
+        return isset($this->attributes['company']) ? $this->attributes['company'] : null;
     }
 
     public function setCompany($value)
@@ -453,7 +451,7 @@ class User
     // string # Any internal notes on the user
     public function getNotes()
     {
-        return @$this->attributes['notes'];
+        return isset($this->attributes['notes']) ? $this->attributes['notes'] : null;
     }
 
     public function setNotes($value)
@@ -463,7 +461,7 @@ class User
     // int64 # Hour of the day at which daily notifications should be sent. Can be in range 0 to 23
     public function getNotificationDailySendTime()
     {
-        return @$this->attributes['notification_daily_send_time'];
+        return isset($this->attributes['notification_daily_send_time']) ? $this->attributes['notification_daily_send_time'] : null;
     }
 
     public function setNotificationDailySendTime($value)
@@ -473,7 +471,7 @@ class User
     // boolean # Enable integration with Office for the web?
     public function getOfficeIntegrationEnabled()
     {
-        return @$this->attributes['office_integration_enabled'];
+        return isset($this->attributes['office_integration_enabled']) ? $this->attributes['office_integration_enabled'] : null;
     }
 
     public function setOfficeIntegrationEnabled($value)
@@ -483,7 +481,7 @@ class User
     // boolean # Is this user a Partner administrator?
     public function getPartnerAdmin()
     {
-        return @$this->attributes['partner_admin'];
+        return isset($this->attributes['partner_admin']) ? $this->attributes['partner_admin'] : null;
     }
 
     public function setPartnerAdmin($value)
@@ -493,7 +491,7 @@ class User
     // int64 # Partner ID if this user belongs to a Partner
     public function getPartnerId()
     {
-        return @$this->attributes['partner_id'];
+        return isset($this->attributes['partner_id']) ? $this->attributes['partner_id'] : null;
     }
 
     public function setPartnerId($value)
@@ -503,7 +501,7 @@ class User
     // string # Name of the Partner if this user belongs to a Partner
     public function getPartnerName()
     {
-        return @$this->attributes['partner_name'];
+        return isset($this->attributes['partner_name']) ? $this->attributes['partner_name'] : null;
     }
 
     public function setPartnerName($value)
@@ -513,7 +511,7 @@ class User
     // date-time # Last time the user's password was set
     public function getPasswordSetAt()
     {
-        return @$this->attributes['password_set_at'];
+        return isset($this->attributes['password_set_at']) ? $this->attributes['password_set_at'] : null;
     }
 
     public function setPasswordSetAt($value)
@@ -523,7 +521,7 @@ class User
     // int64 # Number of days to allow user to use the same password
     public function getPasswordValidityDays()
     {
-        return @$this->attributes['password_validity_days'];
+        return isset($this->attributes['password_validity_days']) ? $this->attributes['password_validity_days'] : null;
     }
 
     public function setPasswordValidityDays($value)
@@ -533,7 +531,7 @@ class User
     // int64 # Primary group ID for Group Admin scoping
     public function getPrimaryGroupId()
     {
-        return @$this->attributes['primary_group_id'];
+        return isset($this->attributes['primary_group_id']) ? $this->attributes['primary_group_id'] : null;
     }
 
     public function setPrimaryGroupId($value)
@@ -543,7 +541,7 @@ class User
     // int64 # Number of public keys associated with this user
     public function getPublicKeysCount()
     {
-        return @$this->attributes['public_keys_count'];
+        return isset($this->attributes['public_keys_count']) ? $this->attributes['public_keys_count'] : null;
     }
 
     public function setPublicKeysCount($value)
@@ -553,7 +551,7 @@ class User
     // boolean # Deprecated. Use notify_on_all_site_warnings and granular failure notification preferences instead.
     public function getReceiveAdminAlerts()
     {
-        return @$this->attributes['receive_admin_alerts'];
+        return isset($this->attributes['receive_admin_alerts']) ? $this->attributes['receive_admin_alerts'] : null;
     }
 
     public function setReceiveAdminAlerts($value)
@@ -563,7 +561,7 @@ class User
     // boolean # Should the user receive site warnings via email?
     public function getNotifyOnAllSiteWarnings()
     {
-        return @$this->attributes['notify_on_all_site_warnings'];
+        return isset($this->attributes['notify_on_all_site_warnings']) ? $this->attributes['notify_on_all_site_warnings'] : null;
     }
 
     public function setNotifyOnAllSiteWarnings($value)
@@ -573,7 +571,7 @@ class User
     // boolean # Should the user receive sso/scim/ldap configuration/sync failures via email?
     public function getNotifyOnAllSsoFailures()
     {
-        return @$this->attributes['notify_on_all_sso_failures'];
+        return isset($this->attributes['notify_on_all_sso_failures']) ? $this->attributes['notify_on_all_sso_failures'] : null;
     }
 
     public function setNotifyOnAllSsoFailures($value)
@@ -583,7 +581,7 @@ class User
     // boolean # Should the user receive user security events via email?
     public function getNotifyOnAllUserSecurityEvents()
     {
-        return @$this->attributes['notify_on_all_user_security_events'];
+        return isset($this->attributes['notify_on_all_user_security_events']) ? $this->attributes['notify_on_all_user_security_events'] : null;
     }
 
     public function setNotifyOnAllUserSecurityEvents($value)
@@ -593,7 +591,7 @@ class User
     // boolean # Should the user receive pending work failures via email?
     public function getNotifyOnAllPendingWorkFailures()
     {
-        return @$this->attributes['notify_on_all_pending_work_failures'];
+        return isset($this->attributes['notify_on_all_pending_work_failures']) ? $this->attributes['notify_on_all_pending_work_failures'] : null;
     }
 
     public function setNotifyOnAllPendingWorkFailures($value)
@@ -603,7 +601,7 @@ class User
     // boolean # Should the user receive siem failures via email?
     public function getNotifyOnAllSiemHttpDestinationFailures()
     {
-        return @$this->attributes['notify_on_all_siem_http_destination_failures'];
+        return isset($this->attributes['notify_on_all_siem_http_destination_failures']) ? $this->attributes['notify_on_all_siem_http_destination_failures'] : null;
     }
 
     public function setNotifyOnAllSiemHttpDestinationFailures($value)
@@ -613,7 +611,7 @@ class User
     // boolean # Should the user receive sync failures via email?
     public function getNotifyOnAllSyncFailures()
     {
-        return @$this->attributes['notify_on_all_sync_failures'];
+        return isset($this->attributes['notify_on_all_sync_failures']) ? $this->attributes['notify_on_all_sync_failures'] : null;
     }
 
     public function setNotifyOnAllSyncFailures($value)
@@ -623,7 +621,7 @@ class User
     // boolean # Should the user receive automation failures via email?
     public function getNotifyOnAllAutomationFailures()
     {
-        return @$this->attributes['notify_on_all_automation_failures'];
+        return isset($this->attributes['notify_on_all_automation_failures']) ? $this->attributes['notify_on_all_automation_failures'] : null;
     }
 
     public function setNotifyOnAllAutomationFailures($value)
@@ -633,7 +631,7 @@ class User
     // boolean # Should the user receive expectation failures and misses via email?
     public function getNotifyOnAllExpectationFailures()
     {
-        return @$this->attributes['notify_on_all_expectation_failures'];
+        return isset($this->attributes['notify_on_all_expectation_failures']) ? $this->attributes['notify_on_all_expectation_failures'] : null;
     }
 
     public function setNotifyOnAllExpectationFailures($value)
@@ -643,7 +641,7 @@ class User
     // string # 2FA required setting. `use_system_setting` uses the site-wide setting, including SSO exemptions. `always_require` and `never_require` override the site-wide setting when user-level overrides are allowed.
     public function getRequire2fa()
     {
-        return @$this->attributes['require_2fa'];
+        return isset($this->attributes['require_2fa']) ? $this->attributes['require_2fa'] : null;
     }
 
     public function setRequire2fa($value)
@@ -653,7 +651,7 @@ class User
     // date-time # Require user to login by specified date otherwise it will be disabled.
     public function getRequireLoginBy()
     {
-        return @$this->attributes['require_login_by'];
+        return isset($this->attributes['require_login_by']) ? $this->attributes['require_login_by'] : null;
     }
 
     public function setRequireLoginBy($value)
@@ -663,7 +661,7 @@ class User
     // boolean # Is 2fa active for the user?
     public function getActive2fa()
     {
-        return @$this->attributes['active_2fa'];
+        return isset($this->attributes['active_2fa']) ? $this->attributes['active_2fa'] : null;
     }
 
     public function setActive2fa($value)
@@ -673,7 +671,7 @@ class User
     // boolean # Is a password change required upon next user login?
     public function getRequirePasswordChange()
     {
-        return @$this->attributes['require_password_change'];
+        return isset($this->attributes['require_password_change']) ? $this->attributes['require_password_change'] : null;
     }
 
     public function setRequirePasswordChange($value)
@@ -683,7 +681,7 @@ class User
     // boolean # Is user's password expired?
     public function getPasswordExpired()
     {
-        return @$this->attributes['password_expired'];
+        return isset($this->attributes['password_expired']) ? $this->attributes['password_expired'] : null;
     }
 
     public function setPasswordExpired($value)
@@ -693,7 +691,7 @@ class User
     // int64 # ID of the internal Group responsible for this Partner User, overriding the Partner default.
     public function getResponsibleGroupId()
     {
-        return @$this->attributes['responsible_group_id'];
+        return isset($this->attributes['responsible_group_id']) ? $this->attributes['responsible_group_id'] : null;
     }
 
     public function setResponsibleGroupId($value)
@@ -703,7 +701,7 @@ class User
     // int64 # ID of the internal User responsible for this Partner User, overriding the Partner default.
     public function getResponsibleUserId()
     {
-        return @$this->attributes['responsible_user_id'];
+        return isset($this->attributes['responsible_user_id']) ? $this->attributes['responsible_user_id'] : null;
     }
 
     public function setResponsibleUserId($value)
@@ -713,7 +711,7 @@ class User
     // boolean # Is the user an allowed to view all (non-billing) site configuration for this site?
     public function getReadonlySiteAdmin()
     {
-        return @$this->attributes['readonly_site_admin'];
+        return isset($this->attributes['readonly_site_admin']) ? $this->attributes['readonly_site_admin'] : null;
     }
 
     public function setReadonlySiteAdmin($value)
@@ -723,7 +721,7 @@ class User
     // boolean # Can this user access the Web app, Desktop app, SDKs, or REST API?  (All of these tools use the API internally, so this is one unified permission set.)
     public function getRestapiPermission()
     {
-        return @$this->attributes['restapi_permission'];
+        return isset($this->attributes['restapi_permission']) ? $this->attributes['restapi_permission'] : null;
     }
 
     public function setRestapiPermission($value)
@@ -733,7 +731,7 @@ class User
     // boolean # Can the user access the S3-compatible endpoint? Defaults to true.
     public function getS3CompatibleEndpointPermission()
     {
-        return @$this->attributes['s3_compatible_endpoint_permission'];
+        return isset($this->attributes['s3_compatible_endpoint_permission']) ? $this->attributes['s3_compatible_endpoint_permission'] : null;
     }
 
     public function setS3CompatibleEndpointPermission($value)
@@ -743,7 +741,7 @@ class User
     // boolean # Does this user manage it's own credentials or is it a shared/bot user?
     public function getSelfManaged()
     {
-        return @$this->attributes['self_managed'];
+        return isset($this->attributes['self_managed']) ? $this->attributes['self_managed'] : null;
     }
 
     public function setSelfManaged($value)
@@ -753,7 +751,7 @@ class User
     // boolean # Can the user access with SFTP?
     public function getSftpPermission()
     {
-        return @$this->attributes['sftp_permission'];
+        return isset($this->attributes['sftp_permission']) ? $this->attributes['sftp_permission'] : null;
     }
 
     public function setSftpPermission($value)
@@ -763,7 +761,7 @@ class User
     // boolean # Is the user an administrator for this site?
     public function getSiteAdmin()
     {
-        return @$this->attributes['site_admin'];
+        return isset($this->attributes['site_admin']) ? $this->attributes['site_admin'] : null;
     }
 
     public function setSiteAdmin($value)
@@ -773,7 +771,7 @@ class User
     // boolean # Whether the user is an administrator of their own Custom Workspace. Does not reflect administration granted through Permissions.
     public function getWorkspaceAdmin()
     {
-        return @$this->attributes['workspace_admin'];
+        return isset($this->attributes['workspace_admin']) ? $this->attributes['workspace_admin'] : null;
     }
 
     public function setWorkspaceAdmin($value)
@@ -783,7 +781,7 @@ class User
     // int64 # Site ID
     public function getSiteId()
     {
-        return @$this->attributes['site_id'];
+        return isset($this->attributes['site_id']) ? $this->attributes['site_id'] : null;
     }
 
     public function setSiteId($value)
@@ -793,7 +791,7 @@ class User
     // int64 # ID of the Workspace the user belongs to. 0 is the Default Workspace.
     public function getWorkspaceId()
     {
-        return @$this->attributes['workspace_id'];
+        return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
 
     public function setWorkspaceId($value)
@@ -803,7 +801,7 @@ class User
     // int64 # Workspace ID the user should land in by default when more than one Workspace is available.
     public function getDefaultWorkspaceId()
     {
-        return @$this->attributes['default_workspace_id'];
+        return isset($this->attributes['default_workspace_id']) ? $this->attributes['default_workspace_id'] : null;
     }
 
     public function setDefaultWorkspaceId($value)
@@ -813,7 +811,7 @@ class User
     // boolean # Skip Welcome page in the UI?
     public function getSkipWelcomeScreen()
     {
-        return @$this->attributes['skip_welcome_screen'];
+        return isset($this->attributes['skip_welcome_screen']) ? $this->attributes['skip_welcome_screen'] : null;
     }
 
     public function setSkipWelcomeScreen($value)
@@ -823,7 +821,7 @@ class User
     // string # SSL required setting
     public function getSslRequired()
     {
-        return @$this->attributes['ssl_required'];
+        return isset($this->attributes['ssl_required']) ? $this->attributes['ssl_required'] : null;
     }
 
     public function setSslRequired($value)
@@ -833,7 +831,7 @@ class User
     // int64 # SSO (Single Sign On) strategy ID for the user, if applicable.
     public function getSsoStrategyId()
     {
-        return @$this->attributes['sso_strategy_id'];
+        return isset($this->attributes['sso_strategy_id']) ? $this->attributes['sso_strategy_id'] : null;
     }
 
     public function setSsoStrategyId($value)
@@ -843,7 +841,7 @@ class User
     // boolean # Is this user managed by a SsoStrategy?
     public function getExternallyManaged()
     {
-        return @$this->attributes['externally_managed'];
+        return isset($this->attributes['externally_managed']) ? $this->attributes['externally_managed'] : null;
     }
 
     public function setExternallyManaged($value)
@@ -853,7 +851,7 @@ class User
     // string # Comma-separated list of Tags for this user. Tags are used for other features, such as UserLifecycleRules, which can target specific tags.  Tags must only contain lowercase letters, numbers, and hyphens.
     public function getTags()
     {
-        return @$this->attributes['tags'];
+        return isset($this->attributes['tags']) ? $this->attributes['tags'] : null;
     }
 
     public function setTags($value)
@@ -863,7 +861,7 @@ class User
     // string # User time zone
     public function getTimeZone()
     {
-        return @$this->attributes['time_zone'];
+        return isset($this->attributes['time_zone']) ? $this->attributes['time_zone'] : null;
     }
 
     public function setTimeZone($value)
@@ -873,7 +871,7 @@ class User
     // string # Type(s) of 2FA methods in use, for programmatic use.  Will be either `sms`, `totp`, `webauthn`, `yubi`, `email`, or multiple values sorted alphabetically and joined by an underscore.  Does not specify whether user has more than one of a given method.
     public function getTypeOf2fa()
     {
-        return @$this->attributes['type_of_2fa'];
+        return isset($this->attributes['type_of_2fa']) ? $this->attributes['type_of_2fa'] : null;
     }
 
     public function setTypeOf2fa($value)
@@ -883,7 +881,7 @@ class User
     // string # Type(s) of 2FA methods in use, formatted for displaying in the UI.  Unlike `type_of_2fa`, this value will make clear when a user has more than 1 of the same type of method.
     public function getTypeOf2faForDisplay()
     {
-        return @$this->attributes['type_of_2fa_for_display'];
+        return isset($this->attributes['type_of_2fa_for_display']) ? $this->attributes['type_of_2fa_for_display'] : null;
     }
 
     public function setTypeOf2faForDisplay($value)
@@ -893,7 +891,7 @@ class User
     // string # If filesystem layout is user_root, this path is the root path the user is fixed to for all interfaces. If the filesystem layout is site_root or partner_root, this acts as a root folder only for FTP and SFTP (SFTP applicability also requires a site-wide setting to be set). For partner_root layout, this path is relative to the Partner root folder for all callers and blank opts out of an additional protocol root. In this situation, this path is not applied to the API, Desktop, or Web interface.
     public function getUserRoot()
     {
-        return @$this->attributes['user_root'];
+        return isset($this->attributes['user_root']) ? $this->attributes['user_root'] : null;
     }
 
     public function setUserRoot($value)
@@ -903,7 +901,7 @@ class User
     // string # Home folder for FTP/SFTP. For users with the partner_root filesystem layout, this path is relative to the Partner root folder. In all other cases, it is an absolute path. Only applies to FTP and SFTP, and not any other interface.
     public function getUserHome()
     {
-        return @$this->attributes['user_home'];
+        return isset($this->attributes['user_home']) ? $this->attributes['user_home'] : null;
     }
 
     public function setUserHome($value)
@@ -913,7 +911,7 @@ class User
     // int64 # Number of days remaining until password expires
     public function getDaysRemainingUntilPasswordExpire()
     {
-        return @$this->attributes['days_remaining_until_password_expire'];
+        return isset($this->attributes['days_remaining_until_password_expire']) ? $this->attributes['days_remaining_until_password_expire'] : null;
     }
 
     public function setDaysRemainingUntilPasswordExpire($value)
@@ -923,7 +921,7 @@ class User
     // date-time # Password expiration datetime
     public function getPasswordExpireAt()
     {
-        return @$this->attributes['password_expire_at'];
+        return isset($this->attributes['password_expire_at']) ? $this->attributes['password_expire_at'] : null;
     }
 
     public function setPasswordExpireAt($value)
@@ -933,7 +931,7 @@ class User
     // file # An image file for your user avatar.
     public function getAvatarFile()
     {
-        return @$this->attributes['avatar_file'];
+        return isset($this->attributes['avatar_file']) ? $this->attributes['avatar_file'] : null;
     }
 
     public function setAvatarFile($value)
@@ -943,7 +941,7 @@ class User
     // boolean # If true, the avatar will be deleted.
     public function getAvatarDelete()
     {
-        return @$this->attributes['avatar_delete'];
+        return isset($this->attributes['avatar_delete']) ? $this->attributes['avatar_delete'] : null;
     }
 
     public function setAvatarDelete($value)
@@ -953,7 +951,7 @@ class User
     // string # Used for changing a password on an existing user.
     public function getChangePassword()
     {
-        return @$this->attributes['change_password'];
+        return isset($this->attributes['change_password']) ? $this->attributes['change_password'] : null;
     }
 
     public function setChangePassword($value)
@@ -963,7 +961,7 @@ class User
     // string # Optional, but if provided, we will ensure that it matches the value sent in `change_password`.
     public function getChangePasswordConfirmation()
     {
-        return @$this->attributes['change_password_confirmation'];
+        return isset($this->attributes['change_password_confirmation']) ? $this->attributes['change_password_confirmation'] : null;
     }
 
     public function setChangePasswordConfirmation($value)
@@ -973,7 +971,7 @@ class User
     // string # Permission to grant on the User Root upon creation, or on the Workspace root when the User Root is blank. For the Default Workspace, a blank User Root uses the site root. `admin` on a Custom Workspace's root grants Workspace Administrator access; on a subfolder it grants Folder Admin access. Can be blank or `admin`, `full`, `read`, `write`, `list`, `read+write`, `list+write`, or `history`.
     public function getGrantPermission()
     {
-        return @$this->attributes['grant_permission'];
+        return isset($this->attributes['grant_permission']) ? $this->attributes['grant_permission'] : null;
     }
 
     public function setGrantPermission($value)
@@ -983,7 +981,7 @@ class User
     // int64 # Group ID to associate this user with.
     public function getGroupId()
     {
-        return @$this->attributes['group_id'];
+        return isset($this->attributes['group_id']) ? $this->attributes['group_id'] : null;
     }
 
     public function setGroupId($value)
@@ -993,7 +991,7 @@ class User
     // string # Pre-calculated hash of the user's password. If supplied, this will be used to authenticate the user on first login. Supported hash methods are MD5, SHA1, and SHA256.
     public function getImportedPasswordHash()
     {
-        return @$this->attributes['imported_password_hash'];
+        return isset($this->attributes['imported_password_hash']) ? $this->attributes['imported_password_hash'] : null;
     }
 
     public function setImportedPasswordHash($value)
@@ -1003,7 +1001,7 @@ class User
     // string # User password.
     public function getPassword()
     {
-        return @$this->attributes['password'];
+        return isset($this->attributes['password']) ? $this->attributes['password'] : null;
     }
 
     public function setPassword($value)
@@ -1013,7 +1011,7 @@ class User
     // string # Optional, but if provided, we will ensure that it matches the value sent in `password`.
     public function getPasswordConfirmation()
     {
-        return @$this->attributes['password_confirmation'];
+        return isset($this->attributes['password_confirmation']) ? $this->attributes['password_confirmation'] : null;
     }
 
     public function setPasswordConfirmation($value)
@@ -1023,7 +1021,7 @@ class User
     // boolean # Signifies that the user has read all the announcements in the UI.
     public function getAnnouncementsRead()
     {
-        return @$this->attributes['announcements_read'];
+        return isset($this->attributes['announcements_read']) ? $this->attributes['announcements_read'] : null;
     }
 
     public function setAnnouncementsRead($value)
@@ -1033,7 +1031,7 @@ class User
     // boolean # If true when changing authentication_method from `password` to `sso`, remove all two-factor methods. Ignored in all other cases.
     public function getClear2fa()
     {
-        return @$this->attributes['clear_2fa'];
+        return isset($this->attributes['clear_2fa']) ? $this->attributes['clear_2fa'] : null;
     }
 
     public function setClear2fa($value)
@@ -1043,7 +1041,7 @@ class User
     // boolean # Required when assigning a Partner to an existing non-Partner user. If true, convert the user by assigning the partner_id provided.
     public function getConvertToPartnerUser()
     {
-        return @$this->attributes['convert_to_partner_user'];
+        return isset($this->attributes['convert_to_partner_user']) ? $this->attributes['convert_to_partner_user'] : null;
     }
 
     public function setConvertToPartnerUser($value)
@@ -1058,7 +1056,7 @@ class User
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -1066,7 +1064,7 @@ class User
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -1081,7 +1079,7 @@ class User
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -1089,7 +1087,7 @@ class User
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -1104,7 +1102,7 @@ class User
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -1112,7 +1110,7 @@ class User
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -1197,7 +1195,7 @@ class User
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -1205,159 +1203,159 @@ class User
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (@$params['change_password'] && !is_string(@$params['change_password'])) {
+        if (!empty($params['change_password']) && !is_string($params['change_password'])) {
             throw new \Files\Exception\InvalidParameterException('$change_password must be of type string; received ' . gettype(@$params['change_password']));
         }
 
-        if (@$params['change_password_confirmation'] && !is_string(@$params['change_password_confirmation'])) {
+        if (!empty($params['change_password_confirmation']) && !is_string($params['change_password_confirmation'])) {
             throw new \Files\Exception\InvalidParameterException('$change_password_confirmation must be of type string; received ' . gettype(@$params['change_password_confirmation']));
         }
 
-        if (@$params['email'] && !is_string(@$params['email'])) {
+        if (!empty($params['email']) && !is_string($params['email'])) {
             throw new \Files\Exception\InvalidParameterException('$email must be of type string; received ' . gettype(@$params['email']));
         }
 
-        if (@$params['grant_permission'] && !is_string(@$params['grant_permission'])) {
+        if (!empty($params['grant_permission']) && !is_string($params['grant_permission'])) {
             throw new \Files\Exception\InvalidParameterException('$grant_permission must be of type string; received ' . gettype(@$params['grant_permission']));
         }
 
-        if (@$params['group_id'] && !is_int(@$params['group_id'])) {
+        if (!empty($params['group_id']) && !is_int($params['group_id'])) {
             throw new \Files\Exception\InvalidParameterException('$group_id must be of type int; received ' . gettype(@$params['group_id']));
         }
 
-        if (@$params['group_ids'] && !is_string(@$params['group_ids'])) {
+        if (!empty($params['group_ids']) && !is_string($params['group_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$group_ids must be of type string; received ' . gettype(@$params['group_ids']));
         }
 
-        if (@$params['imported_password_hash'] && !is_string(@$params['imported_password_hash'])) {
+        if (!empty($params['imported_password_hash']) && !is_string($params['imported_password_hash'])) {
             throw new \Files\Exception\InvalidParameterException('$imported_password_hash must be of type string; received ' . gettype(@$params['imported_password_hash']));
         }
 
-        if (@$params['password'] && !is_string(@$params['password'])) {
+        if (!empty($params['password']) && !is_string($params['password'])) {
             throw new \Files\Exception\InvalidParameterException('$password must be of type string; received ' . gettype(@$params['password']));
         }
 
-        if (@$params['password_confirmation'] && !is_string(@$params['password_confirmation'])) {
+        if (!empty($params['password_confirmation']) && !is_string($params['password_confirmation'])) {
             throw new \Files\Exception\InvalidParameterException('$password_confirmation must be of type string; received ' . gettype(@$params['password_confirmation']));
         }
 
-        if (@$params['ai_assistant_personality_id'] && !is_int(@$params['ai_assistant_personality_id'])) {
+        if (!empty($params['ai_assistant_personality_id']) && !is_int($params['ai_assistant_personality_id'])) {
             throw new \Files\Exception\InvalidParameterException('$ai_assistant_personality_id must be of type int; received ' . gettype(@$params['ai_assistant_personality_id']));
         }
 
-        if (@$params['allowed_ips'] && !is_string(@$params['allowed_ips'])) {
+        if (!empty($params['allowed_ips']) && !is_string($params['allowed_ips'])) {
             throw new \Files\Exception\InvalidParameterException('$allowed_ips must be of type string; received ' . gettype(@$params['allowed_ips']));
         }
 
-        if (@$params['authenticate_until'] && !is_string(@$params['authenticate_until'])) {
+        if (!empty($params['authenticate_until']) && !is_string($params['authenticate_until'])) {
             throw new \Files\Exception\InvalidParameterException('$authenticate_until must be of type string; received ' . gettype(@$params['authenticate_until']));
         }
 
-        if (@$params['authentication_method'] && !is_string(@$params['authentication_method'])) {
+        if (!empty($params['authentication_method']) && !is_string($params['authentication_method'])) {
             throw new \Files\Exception\InvalidParameterException('$authentication_method must be of type string; received ' . gettype(@$params['authentication_method']));
         }
 
-        if (@$params['desktop_configuration_profile_id'] && !is_int(@$params['desktop_configuration_profile_id'])) {
+        if (!empty($params['desktop_configuration_profile_id']) && !is_int($params['desktop_configuration_profile_id'])) {
             throw new \Files\Exception\InvalidParameterException('$desktop_configuration_profile_id must be of type int; received ' . gettype(@$params['desktop_configuration_profile_id']));
         }
 
-        if (@$params['default_workspace_id'] && !is_int(@$params['default_workspace_id'])) {
+        if (!empty($params['default_workspace_id']) && !is_int($params['default_workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$default_workspace_id must be of type int; received ' . gettype(@$params['default_workspace_id']));
         }
 
-        if (@$params['filesystem_layout'] && !is_string(@$params['filesystem_layout'])) {
+        if (!empty($params['filesystem_layout']) && !is_string($params['filesystem_layout'])) {
             throw new \Files\Exception\InvalidParameterException('$filesystem_layout must be of type string; received ' . gettype(@$params['filesystem_layout']));
         }
 
-        if (@$params['header_text'] && !is_string(@$params['header_text'])) {
+        if (!empty($params['header_text']) && !is_string($params['header_text'])) {
             throw new \Files\Exception\InvalidParameterException('$header_text must be of type string; received ' . gettype(@$params['header_text']));
         }
 
-        if (@$params['integration_centric_profile_id'] && !is_int(@$params['integration_centric_profile_id'])) {
+        if (!empty($params['integration_centric_profile_id']) && !is_int($params['integration_centric_profile_id'])) {
             throw new \Files\Exception\InvalidParameterException('$integration_centric_profile_id must be of type int; received ' . gettype(@$params['integration_centric_profile_id']));
         }
 
-        if (@$params['language'] && !is_string(@$params['language'])) {
+        if (!empty($params['language']) && !is_string($params['language'])) {
             throw new \Files\Exception\InvalidParameterException('$language must be of type string; received ' . gettype(@$params['language']));
         }
 
-        if (@$params['notification_daily_send_time'] && !is_int(@$params['notification_daily_send_time'])) {
+        if (!empty($params['notification_daily_send_time']) && !is_int($params['notification_daily_send_time'])) {
             throw new \Files\Exception\InvalidParameterException('$notification_daily_send_time must be of type int; received ' . gettype(@$params['notification_daily_send_time']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['company'] && !is_string(@$params['company'])) {
+        if (!empty($params['company']) && !is_string($params['company'])) {
             throw new \Files\Exception\InvalidParameterException('$company must be of type string; received ' . gettype(@$params['company']));
         }
 
-        if (@$params['notes'] && !is_string(@$params['notes'])) {
+        if (!empty($params['notes']) && !is_string($params['notes'])) {
             throw new \Files\Exception\InvalidParameterException('$notes must be of type string; received ' . gettype(@$params['notes']));
         }
 
-        if (@$params['partner_id'] && !is_int(@$params['partner_id'])) {
+        if (!empty($params['partner_id']) && !is_int($params['partner_id'])) {
             throw new \Files\Exception\InvalidParameterException('$partner_id must be of type int; received ' . gettype(@$params['partner_id']));
         }
 
-        if (@$params['password_validity_days'] && !is_int(@$params['password_validity_days'])) {
+        if (!empty($params['password_validity_days']) && !is_int($params['password_validity_days'])) {
             throw new \Files\Exception\InvalidParameterException('$password_validity_days must be of type int; received ' . gettype(@$params['password_validity_days']));
         }
 
-        if (@$params['primary_group_id'] && !is_int(@$params['primary_group_id'])) {
+        if (!empty($params['primary_group_id']) && !is_int($params['primary_group_id'])) {
             throw new \Files\Exception\InvalidParameterException('$primary_group_id must be of type int; received ' . gettype(@$params['primary_group_id']));
         }
 
-        if (@$params['require_login_by'] && !is_string(@$params['require_login_by'])) {
+        if (!empty($params['require_login_by']) && !is_string($params['require_login_by'])) {
             throw new \Files\Exception\InvalidParameterException('$require_login_by must be of type string; received ' . gettype(@$params['require_login_by']));
         }
 
-        if (@$params['responsible_group_id'] && !is_int(@$params['responsible_group_id'])) {
+        if (!empty($params['responsible_group_id']) && !is_int($params['responsible_group_id'])) {
             throw new \Files\Exception\InvalidParameterException('$responsible_group_id must be of type int; received ' . gettype(@$params['responsible_group_id']));
         }
 
-        if (@$params['responsible_user_id'] && !is_int(@$params['responsible_user_id'])) {
+        if (!empty($params['responsible_user_id']) && !is_int($params['responsible_user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$responsible_user_id must be of type int; received ' . gettype(@$params['responsible_user_id']));
         }
 
-        if (@$params['ssl_required'] && !is_string(@$params['ssl_required'])) {
+        if (!empty($params['ssl_required']) && !is_string($params['ssl_required'])) {
             throw new \Files\Exception\InvalidParameterException('$ssl_required must be of type string; received ' . gettype(@$params['ssl_required']));
         }
 
-        if (@$params['sso_strategy_id'] && !is_int(@$params['sso_strategy_id'])) {
+        if (!empty($params['sso_strategy_id']) && !is_int($params['sso_strategy_id'])) {
             throw new \Files\Exception\InvalidParameterException('$sso_strategy_id must be of type int; received ' . gettype(@$params['sso_strategy_id']));
         }
 
-        if (@$params['require_2fa'] && !is_string(@$params['require_2fa'])) {
+        if (!empty($params['require_2fa']) && !is_string($params['require_2fa'])) {
             throw new \Files\Exception\InvalidParameterException('$require_2fa must be of type string; received ' . gettype(@$params['require_2fa']));
         }
 
-        if (@$params['tags'] && !is_string(@$params['tags'])) {
+        if (!empty($params['tags']) && !is_string($params['tags'])) {
             throw new \Files\Exception\InvalidParameterException('$tags must be of type string; received ' . gettype(@$params['tags']));
         }
 
-        if (@$params['time_zone'] && !is_string(@$params['time_zone'])) {
+        if (!empty($params['time_zone']) && !is_string($params['time_zone'])) {
             throw new \Files\Exception\InvalidParameterException('$time_zone must be of type string; received ' . gettype(@$params['time_zone']));
         }
 
-        if (@$params['user_root'] && !is_string(@$params['user_root'])) {
+        if (!empty($params['user_root']) && !is_string($params['user_root'])) {
             throw new \Files\Exception\InvalidParameterException('$user_root must be of type string; received ' . gettype(@$params['user_root']));
         }
 
-        if (@$params['user_home'] && !is_string(@$params['user_home'])) {
+        if (!empty($params['user_home']) && !is_string($params['user_home'])) {
             throw new \Files\Exception\InvalidParameterException('$user_home must be of type string; received ' . gettype(@$params['user_home']));
         }
 
-        if (@$params['username'] && !is_string(@$params['username'])) {
+        if (!empty($params['username']) && !is_string($params['username'])) {
             throw new \Files\Exception\InvalidParameterException('$username must be of type string; received ' . gettype(@$params['username']));
         }
 
-        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
@@ -1373,7 +1371,7 @@ class User
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -1381,11 +1379,11 @@ class User
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (@$params['new_owner_id'] && !is_int(@$params['new_owner_id'])) {
+        if (!empty($params['new_owner_id']) && !is_int($params['new_owner_id'])) {
             throw new \Files\Exception\InvalidParameterException('$new_owner_id must be of type int; received ' . gettype(@$params['new_owner_id']));
         }
 
@@ -1429,19 +1427,19 @@ class User
     //   search - string - Searches for partial matches of name, username, or email.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
-        if (@$params['ids'] && !is_string(@$params['ids'])) {
+        if (!empty($params['ids']) && !is_string($params['ids'])) {
             throw new \Files\Exception\InvalidParameterException('$ids must be of type string; received ' . gettype(@$params['ids']));
         }
 
-        if (@$params['search'] && !is_string(@$params['search'])) {
+        if (!empty($params['search']) && !is_string($params['search'])) {
             throw new \Files\Exception\InvalidParameterException('$search must be of type string; received ' . gettype(@$params['search']));
         }
 
@@ -1466,11 +1464,11 @@ class User
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -1554,159 +1552,159 @@ class User
     //   workspace_id - int64 - ID of the Workspace the user belongs to. 0 is the Default Workspace.
     public static function create($params = [], $options = [])
     {
-        if (!@$params['username']) {
+        if (empty($params['username'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: username');
         }
 
-        if (@$params['change_password'] && !is_string(@$params['change_password'])) {
+        if (!empty($params['change_password']) && !is_string($params['change_password'])) {
             throw new \Files\Exception\InvalidParameterException('$change_password must be of type string; received ' . gettype(@$params['change_password']));
         }
 
-        if (@$params['change_password_confirmation'] && !is_string(@$params['change_password_confirmation'])) {
+        if (!empty($params['change_password_confirmation']) && !is_string($params['change_password_confirmation'])) {
             throw new \Files\Exception\InvalidParameterException('$change_password_confirmation must be of type string; received ' . gettype(@$params['change_password_confirmation']));
         }
 
-        if (@$params['email'] && !is_string(@$params['email'])) {
+        if (!empty($params['email']) && !is_string($params['email'])) {
             throw new \Files\Exception\InvalidParameterException('$email must be of type string; received ' . gettype(@$params['email']));
         }
 
-        if (@$params['grant_permission'] && !is_string(@$params['grant_permission'])) {
+        if (!empty($params['grant_permission']) && !is_string($params['grant_permission'])) {
             throw new \Files\Exception\InvalidParameterException('$grant_permission must be of type string; received ' . gettype(@$params['grant_permission']));
         }
 
-        if (@$params['group_id'] && !is_int(@$params['group_id'])) {
+        if (!empty($params['group_id']) && !is_int($params['group_id'])) {
             throw new \Files\Exception\InvalidParameterException('$group_id must be of type int; received ' . gettype(@$params['group_id']));
         }
 
-        if (@$params['group_ids'] && !is_string(@$params['group_ids'])) {
+        if (!empty($params['group_ids']) && !is_string($params['group_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$group_ids must be of type string; received ' . gettype(@$params['group_ids']));
         }
 
-        if (@$params['imported_password_hash'] && !is_string(@$params['imported_password_hash'])) {
+        if (!empty($params['imported_password_hash']) && !is_string($params['imported_password_hash'])) {
             throw new \Files\Exception\InvalidParameterException('$imported_password_hash must be of type string; received ' . gettype(@$params['imported_password_hash']));
         }
 
-        if (@$params['password'] && !is_string(@$params['password'])) {
+        if (!empty($params['password']) && !is_string($params['password'])) {
             throw new \Files\Exception\InvalidParameterException('$password must be of type string; received ' . gettype(@$params['password']));
         }
 
-        if (@$params['password_confirmation'] && !is_string(@$params['password_confirmation'])) {
+        if (!empty($params['password_confirmation']) && !is_string($params['password_confirmation'])) {
             throw new \Files\Exception\InvalidParameterException('$password_confirmation must be of type string; received ' . gettype(@$params['password_confirmation']));
         }
 
-        if (@$params['ai_assistant_personality_id'] && !is_int(@$params['ai_assistant_personality_id'])) {
+        if (!empty($params['ai_assistant_personality_id']) && !is_int($params['ai_assistant_personality_id'])) {
             throw new \Files\Exception\InvalidParameterException('$ai_assistant_personality_id must be of type int; received ' . gettype(@$params['ai_assistant_personality_id']));
         }
 
-        if (@$params['allowed_ips'] && !is_string(@$params['allowed_ips'])) {
+        if (!empty($params['allowed_ips']) && !is_string($params['allowed_ips'])) {
             throw new \Files\Exception\InvalidParameterException('$allowed_ips must be of type string; received ' . gettype(@$params['allowed_ips']));
         }
 
-        if (@$params['authenticate_until'] && !is_string(@$params['authenticate_until'])) {
+        if (!empty($params['authenticate_until']) && !is_string($params['authenticate_until'])) {
             throw new \Files\Exception\InvalidParameterException('$authenticate_until must be of type string; received ' . gettype(@$params['authenticate_until']));
         }
 
-        if (@$params['authentication_method'] && !is_string(@$params['authentication_method'])) {
+        if (!empty($params['authentication_method']) && !is_string($params['authentication_method'])) {
             throw new \Files\Exception\InvalidParameterException('$authentication_method must be of type string; received ' . gettype(@$params['authentication_method']));
         }
 
-        if (@$params['desktop_configuration_profile_id'] && !is_int(@$params['desktop_configuration_profile_id'])) {
+        if (!empty($params['desktop_configuration_profile_id']) && !is_int($params['desktop_configuration_profile_id'])) {
             throw new \Files\Exception\InvalidParameterException('$desktop_configuration_profile_id must be of type int; received ' . gettype(@$params['desktop_configuration_profile_id']));
         }
 
-        if (@$params['default_workspace_id'] && !is_int(@$params['default_workspace_id'])) {
+        if (!empty($params['default_workspace_id']) && !is_int($params['default_workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$default_workspace_id must be of type int; received ' . gettype(@$params['default_workspace_id']));
         }
 
-        if (@$params['filesystem_layout'] && !is_string(@$params['filesystem_layout'])) {
+        if (!empty($params['filesystem_layout']) && !is_string($params['filesystem_layout'])) {
             throw new \Files\Exception\InvalidParameterException('$filesystem_layout must be of type string; received ' . gettype(@$params['filesystem_layout']));
         }
 
-        if (@$params['header_text'] && !is_string(@$params['header_text'])) {
+        if (!empty($params['header_text']) && !is_string($params['header_text'])) {
             throw new \Files\Exception\InvalidParameterException('$header_text must be of type string; received ' . gettype(@$params['header_text']));
         }
 
-        if (@$params['integration_centric_profile_id'] && !is_int(@$params['integration_centric_profile_id'])) {
+        if (!empty($params['integration_centric_profile_id']) && !is_int($params['integration_centric_profile_id'])) {
             throw new \Files\Exception\InvalidParameterException('$integration_centric_profile_id must be of type int; received ' . gettype(@$params['integration_centric_profile_id']));
         }
 
-        if (@$params['language'] && !is_string(@$params['language'])) {
+        if (!empty($params['language']) && !is_string($params['language'])) {
             throw new \Files\Exception\InvalidParameterException('$language must be of type string; received ' . gettype(@$params['language']));
         }
 
-        if (@$params['notification_daily_send_time'] && !is_int(@$params['notification_daily_send_time'])) {
+        if (!empty($params['notification_daily_send_time']) && !is_int($params['notification_daily_send_time'])) {
             throw new \Files\Exception\InvalidParameterException('$notification_daily_send_time must be of type int; received ' . gettype(@$params['notification_daily_send_time']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['company'] && !is_string(@$params['company'])) {
+        if (!empty($params['company']) && !is_string($params['company'])) {
             throw new \Files\Exception\InvalidParameterException('$company must be of type string; received ' . gettype(@$params['company']));
         }
 
-        if (@$params['notes'] && !is_string(@$params['notes'])) {
+        if (!empty($params['notes']) && !is_string($params['notes'])) {
             throw new \Files\Exception\InvalidParameterException('$notes must be of type string; received ' . gettype(@$params['notes']));
         }
 
-        if (@$params['partner_id'] && !is_int(@$params['partner_id'])) {
+        if (!empty($params['partner_id']) && !is_int($params['partner_id'])) {
             throw new \Files\Exception\InvalidParameterException('$partner_id must be of type int; received ' . gettype(@$params['partner_id']));
         }
 
-        if (@$params['password_validity_days'] && !is_int(@$params['password_validity_days'])) {
+        if (!empty($params['password_validity_days']) && !is_int($params['password_validity_days'])) {
             throw new \Files\Exception\InvalidParameterException('$password_validity_days must be of type int; received ' . gettype(@$params['password_validity_days']));
         }
 
-        if (@$params['primary_group_id'] && !is_int(@$params['primary_group_id'])) {
+        if (!empty($params['primary_group_id']) && !is_int($params['primary_group_id'])) {
             throw new \Files\Exception\InvalidParameterException('$primary_group_id must be of type int; received ' . gettype(@$params['primary_group_id']));
         }
 
-        if (@$params['require_login_by'] && !is_string(@$params['require_login_by'])) {
+        if (!empty($params['require_login_by']) && !is_string($params['require_login_by'])) {
             throw new \Files\Exception\InvalidParameterException('$require_login_by must be of type string; received ' . gettype(@$params['require_login_by']));
         }
 
-        if (@$params['responsible_group_id'] && !is_int(@$params['responsible_group_id'])) {
+        if (!empty($params['responsible_group_id']) && !is_int($params['responsible_group_id'])) {
             throw new \Files\Exception\InvalidParameterException('$responsible_group_id must be of type int; received ' . gettype(@$params['responsible_group_id']));
         }
 
-        if (@$params['responsible_user_id'] && !is_int(@$params['responsible_user_id'])) {
+        if (!empty($params['responsible_user_id']) && !is_int($params['responsible_user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$responsible_user_id must be of type int; received ' . gettype(@$params['responsible_user_id']));
         }
 
-        if (@$params['ssl_required'] && !is_string(@$params['ssl_required'])) {
+        if (!empty($params['ssl_required']) && !is_string($params['ssl_required'])) {
             throw new \Files\Exception\InvalidParameterException('$ssl_required must be of type string; received ' . gettype(@$params['ssl_required']));
         }
 
-        if (@$params['sso_strategy_id'] && !is_int(@$params['sso_strategy_id'])) {
+        if (!empty($params['sso_strategy_id']) && !is_int($params['sso_strategy_id'])) {
             throw new \Files\Exception\InvalidParameterException('$sso_strategy_id must be of type int; received ' . gettype(@$params['sso_strategy_id']));
         }
 
-        if (@$params['require_2fa'] && !is_string(@$params['require_2fa'])) {
+        if (!empty($params['require_2fa']) && !is_string($params['require_2fa'])) {
             throw new \Files\Exception\InvalidParameterException('$require_2fa must be of type string; received ' . gettype(@$params['require_2fa']));
         }
 
-        if (@$params['tags'] && !is_string(@$params['tags'])) {
+        if (!empty($params['tags']) && !is_string($params['tags'])) {
             throw new \Files\Exception\InvalidParameterException('$tags must be of type string; received ' . gettype(@$params['tags']));
         }
 
-        if (@$params['time_zone'] && !is_string(@$params['time_zone'])) {
+        if (!empty($params['time_zone']) && !is_string($params['time_zone'])) {
             throw new \Files\Exception\InvalidParameterException('$time_zone must be of type string; received ' . gettype(@$params['time_zone']));
         }
 
-        if (@$params['user_root'] && !is_string(@$params['user_root'])) {
+        if (!empty($params['user_root']) && !is_string($params['user_root'])) {
             throw new \Files\Exception\InvalidParameterException('$user_root must be of type string; received ' . gettype(@$params['user_root']));
         }
 
-        if (@$params['user_home'] && !is_string(@$params['user_home'])) {
+        if (!empty($params['user_home']) && !is_string($params['user_home'])) {
             throw new \Files\Exception\InvalidParameterException('$user_home must be of type string; received ' . gettype(@$params['user_home']));
         }
 
-        if (@$params['username'] && !is_string(@$params['username'])) {
+        if (!empty($params['username']) && !is_string($params['username'])) {
             throw new \Files\Exception\InvalidParameterException('$username must be of type string; received ' . gettype(@$params['username']));
         }
 
-        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 

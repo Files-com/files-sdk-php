@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class RemoteServerConfigurationFile
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,87 +56,87 @@ class RemoteServerConfigurationFile
     // int64 # The remote server ID of the agent
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
     // string # The permission set for the agent ['read_write', 'read_only', 'write_only']
     public function getPermissionSet()
     {
-        return @$this->attributes['permission_set'];
+        return isset($this->attributes['permission_set']) ? $this->attributes['permission_set'] : null;
     }
     // string # The private key for the agent
     public function getPrivateKey()
     {
-        return @$this->attributes['private_key'];
+        return isset($this->attributes['private_key']) ? $this->attributes['private_key'] : null;
     }
     // string # Files.com subdomain site name
     public function getSubdomain()
     {
-        return @$this->attributes['subdomain'];
+        return isset($this->attributes['subdomain']) ? $this->attributes['subdomain'] : null;
     }
     // string # The root directory for the agent
     public function getRoot()
     {
-        return @$this->attributes['root'];
+        return isset($this->attributes['root']) ? $this->attributes['root'] : null;
     }
     // string # Optional customer-facing name for this Agent installation
     public function getNodeName()
     {
-        return @$this->attributes['node_name'];
+        return isset($this->attributes['node_name']) ? $this->attributes['node_name'] : null;
     }
     // boolean # Follow symlinks when traversing directories
     public function getFollowLinks()
     {
-        return @$this->attributes['follow_links'];
+        return isset($this->attributes['follow_links']) ? $this->attributes['follow_links'] : null;
     }
     // string # Preferred network protocol ['udp', 'tcp'] (default udp)
     public function getPreferProtocol()
     {
-        return @$this->attributes['prefer_protocol'];
+        return isset($this->attributes['prefer_protocol']) ? $this->attributes['prefer_protocol'] : null;
     }
     // string # DNS lookup method ['auto','doh','system'] (default auto)
     public function getDns()
     {
-        return @$this->attributes['dns'];
+        return isset($this->attributes['dns']) ? $this->attributes['dns'] : null;
     }
     // boolean # Proxy all outbound traffic through files.com proxy server
     public function getProxyAllOutbound()
     {
-        return @$this->attributes['proxy_all_outbound'];
+        return isset($this->attributes['proxy_all_outbound']) ? $this->attributes['proxy_all_outbound'] : null;
     }
     // string # Custom site endpoint URL
     public function getEndpointOverride()
     {
-        return @$this->attributes['endpoint_override'];
+        return isset($this->attributes['endpoint_override']) ? $this->attributes['endpoint_override'] : null;
     }
     // string # Log file name and location
     public function getLogFile()
     {
-        return @$this->attributes['log_file'];
+        return isset($this->attributes['log_file']) ? $this->attributes['log_file'] : null;
     }
     // string # Log level for the agent logs ['debug', 'info', 'warn', 'error', 'fatal'] (default info)
     public function getLogLevel()
     {
-        return @$this->attributes['log_level'];
+        return isset($this->attributes['log_level']) ? $this->attributes['log_level'] : null;
     }
     // int64 # Log route for agent logs. (default 5)
     public function getLogRotateNum()
     {
-        return @$this->attributes['log_rotate_num'];
+        return isset($this->attributes['log_rotate_num']) ? $this->attributes['log_rotate_num'] : null;
     }
     // int64 # Log route size in MB for agent logs. (default 20)
     public function getLogRotateSize()
     {
-        return @$this->attributes['log_rotate_size'];
+        return isset($this->attributes['log_rotate_size']) ? $this->attributes['log_rotate_size'] : null;
     }
     // int64 # Maximum number of concurrent jobs (default 500)
     public function getOverrideMaxConcurrentJobs()
     {
-        return @$this->attributes['override_max_concurrent_jobs'];
+        return isset($this->attributes['override_max_concurrent_jobs']) ? $this->attributes['override_max_concurrent_jobs'] : null;
     }
     // int64 # Graceful shutdown timeout in seconds (default 15)
     public function getGracefulShutdownTimeout()
     {
-        return @$this->attributes['graceful_shutdown_timeout'];
+        return isset($this->attributes['graceful_shutdown_timeout']) ? $this->attributes['graceful_shutdown_timeout'] : null;
     }
     // string # File transfer (upload/download) rate limit
     //  `<limit>-<period>`, with the given periods:
@@ -153,11 +151,11 @@ class RemoteServerConfigurationFile
     // * 2000 requests/day: '2000-D'
     public function getTransferRateLimit()
     {
-        return @$this->attributes['transfer_rate_limit'];
+        return isset($this->attributes['transfer_rate_limit']) ? $this->attributes['transfer_rate_limit'] : null;
     }
     // string # Auto update policy ['manual_trigger', 'critical_only', 'always', 'never'] (default always)
     public function getAutoUpdatePolicy()
     {
-        return @$this->attributes['auto_update_policy'];
+        return isset($this->attributes['auto_update_policy']) ? $this->attributes['auto_update_policy'] : null;
     }
 }

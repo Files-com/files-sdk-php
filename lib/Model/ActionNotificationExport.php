@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class ActionNotificationExport
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class ActionNotificationExport
     // int64 # History Export ID
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
     public function setId($value)
@@ -68,7 +66,7 @@ class ActionNotificationExport
     // int64 # Workspace whose logs are exported. Set to `0` for the default workspace. A null value means a site-wide export.
     public function getWorkspaceId()
     {
-        return @$this->attributes['workspace_id'];
+        return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
 
     public function setWorkspaceId($value)
@@ -78,7 +76,7 @@ class ActionNotificationExport
     // string # Version of the underlying records for the export.
     public function getExportVersion()
     {
-        return @$this->attributes['export_version'];
+        return isset($this->attributes['export_version']) ? $this->attributes['export_version'] : null;
     }
 
     public function setExportVersion($value)
@@ -88,7 +86,7 @@ class ActionNotificationExport
     // date-time # Start date/time of export range.
     public function getStartAt()
     {
-        return @$this->attributes['start_at'];
+        return isset($this->attributes['start_at']) ? $this->attributes['start_at'] : null;
     }
 
     public function setStartAt($value)
@@ -98,7 +96,7 @@ class ActionNotificationExport
     // date-time # End date/time of export range.
     public function getEndAt()
     {
-        return @$this->attributes['end_at'];
+        return isset($this->attributes['end_at']) ? $this->attributes['end_at'] : null;
     }
 
     public function setEndAt($value)
@@ -108,7 +106,7 @@ class ActionNotificationExport
     // string # Status of export.  Valid values: `building`, `ready`, or `failed`
     public function getStatus()
     {
-        return @$this->attributes['status'];
+        return isset($this->attributes['status']) ? $this->attributes['status'] : null;
     }
 
     public function setStatus($value)
@@ -118,7 +116,7 @@ class ActionNotificationExport
     // string # Return notifications that were triggered by actions on this specific path.
     public function getQueryPath()
     {
-        return @$this->attributes['query_path'];
+        return isset($this->attributes['query_path']) ? $this->attributes['query_path'] : null;
     }
 
     public function setQueryPath($value)
@@ -128,7 +126,7 @@ class ActionNotificationExport
     // string # Return notifications that were triggered by actions in this folder.
     public function getQueryFolder()
     {
-        return @$this->attributes['query_folder'];
+        return isset($this->attributes['query_folder']) ? $this->attributes['query_folder'] : null;
     }
 
     public function setQueryFolder($value)
@@ -138,7 +136,7 @@ class ActionNotificationExport
     // string # Error message associated with the request, if any.
     public function getQueryMessage()
     {
-        return @$this->attributes['query_message'];
+        return isset($this->attributes['query_message']) ? $this->attributes['query_message'] : null;
     }
 
     public function setQueryMessage($value)
@@ -148,7 +146,7 @@ class ActionNotificationExport
     // string # The HTTP request method used by the webhook.
     public function getQueryRequestMethod()
     {
-        return @$this->attributes['query_request_method'];
+        return isset($this->attributes['query_request_method']) ? $this->attributes['query_request_method'] : null;
     }
 
     public function setQueryRequestMethod($value)
@@ -158,7 +156,7 @@ class ActionNotificationExport
     // string # The target webhook URL.
     public function getQueryRequestUrl()
     {
-        return @$this->attributes['query_request_url'];
+        return isset($this->attributes['query_request_url']) ? $this->attributes['query_request_url'] : null;
     }
 
     public function setQueryRequestUrl($value)
@@ -168,7 +166,7 @@ class ActionNotificationExport
     // string # The HTTP status returned from the server in response to the webhook request.
     public function getQueryStatus()
     {
-        return @$this->attributes['query_status'];
+        return isset($this->attributes['query_status']) ? $this->attributes['query_status'] : null;
     }
 
     public function setQueryStatus($value)
@@ -178,7 +176,7 @@ class ActionNotificationExport
     // boolean # true if the webhook request succeeded (i.e. returned a 200 or 204 response status). false otherwise.
     public function getQuerySuccess()
     {
-        return @$this->attributes['query_success'];
+        return isset($this->attributes['query_success']) ? $this->attributes['query_success'] : null;
     }
 
     public function setQuerySuccess($value)
@@ -188,7 +186,7 @@ class ActionNotificationExport
     // string # If `status` is `ready`, this will be a URL where all the results can be downloaded at once as a CSV.
     public function getResultsUrl()
     {
-        return @$this->attributes['results_url'];
+        return isset($this->attributes['results_url']) ? $this->attributes['results_url'] : null;
     }
 
     public function setResultsUrl($value)
@@ -198,7 +196,7 @@ class ActionNotificationExport
     // int64 # User ID.  Provide a value of `0` to operate the current session's user.
     public function getUserId()
     {
-        return @$this->attributes['user_id'];
+        return isset($this->attributes['user_id']) ? $this->attributes['user_id'] : null;
     }
 
     public function setUserId($value)
@@ -228,11 +226,11 @@ class ActionNotificationExport
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -259,43 +257,43 @@ class ActionNotificationExport
     //   query_folder - string - Return notifications that were triggered by actions in this folder.
     public static function create($params = [], $options = [])
     {
-        if (@$params['user_id'] && !is_int(@$params['user_id'])) {
+        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
-        if (@$params['start_at'] && !is_string(@$params['start_at'])) {
+        if (!empty($params['start_at']) && !is_string($params['start_at'])) {
             throw new \Files\Exception\InvalidParameterException('$start_at must be of type string; received ' . gettype(@$params['start_at']));
         }
 
-        if (@$params['end_at'] && !is_string(@$params['end_at'])) {
+        if (!empty($params['end_at']) && !is_string($params['end_at'])) {
             throw new \Files\Exception\InvalidParameterException('$end_at must be of type string; received ' . gettype(@$params['end_at']));
         }
 
-        if (@$params['query_message'] && !is_string(@$params['query_message'])) {
+        if (!empty($params['query_message']) && !is_string($params['query_message'])) {
             throw new \Files\Exception\InvalidParameterException('$query_message must be of type string; received ' . gettype(@$params['query_message']));
         }
 
-        if (@$params['query_request_method'] && !is_string(@$params['query_request_method'])) {
+        if (!empty($params['query_request_method']) && !is_string($params['query_request_method'])) {
             throw new \Files\Exception\InvalidParameterException('$query_request_method must be of type string; received ' . gettype(@$params['query_request_method']));
         }
 
-        if (@$params['query_request_url'] && !is_string(@$params['query_request_url'])) {
+        if (!empty($params['query_request_url']) && !is_string($params['query_request_url'])) {
             throw new \Files\Exception\InvalidParameterException('$query_request_url must be of type string; received ' . gettype(@$params['query_request_url']));
         }
 
-        if (@$params['query_status'] && !is_string(@$params['query_status'])) {
+        if (!empty($params['query_status']) && !is_string($params['query_status'])) {
             throw new \Files\Exception\InvalidParameterException('$query_status must be of type string; received ' . gettype(@$params['query_status']));
         }
 
-        if (@$params['query_path'] && !is_string(@$params['query_path'])) {
+        if (!empty($params['query_path']) && !is_string($params['query_path'])) {
             throw new \Files\Exception\InvalidParameterException('$query_path must be of type string; received ' . gettype(@$params['query_path']));
         }
 
-        if (@$params['query_folder'] && !is_string(@$params['query_folder'])) {
+        if (!empty($params['query_folder']) && !is_string($params['query_folder'])) {
             throw new \Files\Exception\InvalidParameterException('$query_folder must be of type string; received ' . gettype(@$params['query_folder']));
         }
 

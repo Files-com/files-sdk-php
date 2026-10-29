@@ -29,6 +29,7 @@ exists()
 run_php_vers()
 {
   echo "======= RUNNING UNIT TESTS FOR: $1 ======="
+  "$1" -r 'echo "PHP_VERSION=" . PHP_VERSION . PHP_EOL;' || exit 1
   cd "${DIR}/" || exit 1
   rm -rf vendor
   rm composer.lock # Remove the lock in the base folder so we can update deps for different PHP versions

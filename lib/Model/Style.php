@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class Style
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class Style
     // int64 # Style ID
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
     public function setId($value)
@@ -68,7 +66,7 @@ class Style
     // string # Folder path. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
     public function getPath()
     {
-        return @$this->attributes['path'];
+        return isset($this->attributes['path']) ? $this->attributes['path'] : null;
     }
 
     public function setPath($value)
@@ -78,7 +76,7 @@ class Style
     // Image # Logo
     public function getLogo()
     {
-        return @$this->attributes['logo'];
+        return isset($this->attributes['logo']) ? $this->attributes['logo'] : null;
     }
 
     public function setLogo($value)
@@ -88,7 +86,7 @@ class Style
     // string # URL to open when a public visitor clicks the logo
     public function getLogoClickHref()
     {
-        return @$this->attributes['logo_click_href'];
+        return isset($this->attributes['logo_click_href']) ? $this->attributes['logo_click_href'] : null;
     }
 
     public function setLogoClickHref($value)
@@ -98,7 +96,7 @@ class Style
     // Image # Logo thumbnail
     public function getThumbnail()
     {
-        return @$this->attributes['thumbnail'];
+        return isset($this->attributes['thumbnail']) ? $this->attributes['thumbnail'] : null;
     }
 
     public function setThumbnail($value)
@@ -108,7 +106,7 @@ class Style
     // file # Logo for custom branding. Required when creating a new style.
     public function getFile()
     {
-        return @$this->attributes['file'];
+        return isset($this->attributes['file']) ? $this->attributes['file'] : null;
     }
 
     public function setFile($value)
@@ -125,7 +123,7 @@ class Style
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['path']) {
+        if (empty($params['path'])) {
             if (@$this->path) {
                 $params['path'] = $this->path;
             } else {
@@ -133,11 +131,11 @@ class Style
             }
         }
 
-        if (@$params['path'] && !is_string(@$params['path'])) {
+        if (!empty($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (@$params['logo_click_href'] && !is_string(@$params['logo_click_href'])) {
+        if (!empty($params['logo_click_href']) && !is_string($params['logo_click_href'])) {
             throw new \Files\Exception\InvalidParameterException('$logo_click_href must be of type string; received ' . gettype(@$params['logo_click_href']));
         }
 
@@ -151,7 +149,7 @@ class Style
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['path']) {
+        if (empty($params['path'])) {
             if (@$this->path) {
                 $params['path'] = $this->path;
             } else {
@@ -159,7 +157,7 @@ class Style
             }
         }
 
-        if (@$params['path'] && !is_string(@$params['path'])) {
+        if (!empty($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
@@ -190,11 +188,11 @@ class Style
 
         $params['path'] = $path;
 
-        if (!@$params['path']) {
+        if (empty($params['path'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: path');
         }
 
-        if (@$params['path'] && !is_string(@$params['path'])) {
+        if (!empty($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 

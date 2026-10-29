@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class Auto
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,6 +56,6 @@ class Auto
     // object
     public function getDynamic()
     {
-        return @$this->attributes['dynamic'];
+        return isset($this->attributes['dynamic']) ? $this->attributes['dynamic'] : null;
     }
 }

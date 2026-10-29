@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class SyncRun
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,117 +56,117 @@ class SyncRun
     // int64 # SyncRun ID
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
     // string # Log or summary body for this run
     public function getBody()
     {
-        return @$this->attributes['body'];
+        return isset($this->attributes['body']) ? $this->attributes['body'] : null;
     }
     // int64 # Total bytes synced in this run
     public function getBytesSynced()
     {
-        return @$this->attributes['bytes_synced'];
+        return isset($this->attributes['bytes_synced']) ? $this->attributes['bytes_synced'] : null;
     }
     // int64 # Number of files compared
     public function getComparedFiles()
     {
-        return @$this->attributes['compared_files'];
+        return isset($this->attributes['compared_files']) ? $this->attributes['compared_files'] : null;
     }
     // int64 # Number of folders compared
     public function getComparedFolders()
     {
-        return @$this->attributes['compared_folders'];
+        return isset($this->attributes['compared_folders']) ? $this->attributes['compared_folders'] : null;
     }
     // date-time # When this run was completed
     public function getCompletedAt()
     {
-        return @$this->attributes['completed_at'];
+        return isset($this->attributes['completed_at']) ? $this->attributes['completed_at'] : null;
     }
     // date-time # When this run was created
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
     // string # Destination remote server type, if any
     public function getDestRemoteServerType()
     {
-        return @$this->attributes['dest_remote_server_type'];
+        return isset($this->attributes['dest_remote_server_type']) ? $this->attributes['dest_remote_server_type'] : null;
     }
     // boolean # Whether this run was a dry run (no actual changes made)
     public function getDryRun()
     {
-        return @$this->attributes['dry_run'];
+        return isset($this->attributes['dry_run']) ? $this->attributes['dry_run'] : null;
     }
     // int64 # Number of files that errored
     public function getErroredFiles()
     {
-        return @$this->attributes['errored_files'];
+        return isset($this->attributes['errored_files']) ? $this->attributes['errored_files'] : null;
     }
     // int64 # Estimated bytes count for this run
     public function getEstimatedBytesCount()
     {
-        return @$this->attributes['estimated_bytes_count'];
+        return isset($this->attributes['estimated_bytes_count']) ? $this->attributes['estimated_bytes_count'] : null;
     }
     // array(string) # Array of errors encountered during the run
     public function getEventErrors()
     {
-        return @$this->attributes['event_errors'];
+        return isset($this->attributes['event_errors']) ? $this->attributes['event_errors'] : null;
     }
     // string # Link to external log file.
     public function getLogUrl()
     {
-        return @$this->attributes['log_url'];
+        return isset($this->attributes['log_url']) ? $this->attributes['log_url'] : null;
     }
     // double # Total runtime in seconds
     public function getRuntime()
     {
-        return @$this->attributes['runtime'];
+        return isset($this->attributes['runtime']) ? $this->attributes['runtime'] : null;
     }
     // int64 # Site ID
     public function getSiteId()
     {
-        return @$this->attributes['site_id'];
+        return isset($this->attributes['site_id']) ? $this->attributes['site_id'] : null;
     }
     // int64 # Workspace ID
     public function getWorkspaceId()
     {
-        return @$this->attributes['workspace_id'];
+        return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
     // string # Source remote server type, if any
     public function getSrcRemoteServerType()
     {
-        return @$this->attributes['src_remote_server_type'];
+        return isset($this->attributes['src_remote_server_type']) ? $this->attributes['src_remote_server_type'] : null;
     }
     // string # Status of the sync run (success, failure, partial_failure, in_progress, skipped)
     public function getStatus()
     {
-        return @$this->attributes['status'];
+        return isset($this->attributes['status']) ? $this->attributes['status'] : null;
     }
     // int64 # Number of files successfully synced
     public function getSuccessfulFiles()
     {
-        return @$this->attributes['successful_files'];
+        return isset($this->attributes['successful_files']) ? $this->attributes['successful_files'] : null;
     }
     // int64 # ID of the Sync this run belongs to
     public function getSyncId()
     {
-        return @$this->attributes['sync_id'];
+        return isset($this->attributes['sync_id']) ? $this->attributes['sync_id'] : null;
     }
     // string # Name of the Sync this run belongs to
     public function getSyncName()
     {
-        return @$this->attributes['sync_name'];
+        return isset($this->attributes['sync_name']) ? $this->attributes['sync_name'] : null;
     }
     // date-time # When this run was last updated
     public function getUpdatedAt()
     {
-        return @$this->attributes['updated_at'];
+        return isset($this->attributes['updated_at']) ? $this->attributes['updated_at'] : null;
     }
     // array(object) # Array of in-progress file transfers with progress data. Only present when the sync run status is in_progress.
     public function getLiveTransfers()
     {
-        return @$this->attributes['live_transfers'];
+        return isset($this->attributes['live_transfers']) ? $this->attributes['live_transfers'] : null;
     }
 
     // Parameters:
@@ -183,15 +181,15 @@ class SyncRun
     //   filter_lteq - object - If set, return records where the specified field is less than or equal the supplied value. Valid fields are `created_at`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['user_id'] && !is_int(@$params['user_id'])) {
+        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -216,11 +214,11 @@ class SyncRun
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class SyncRunLiveTransfer
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,36 +56,36 @@ class SyncRunLiveTransfer
     // string # The file path being transferred. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
     public function getPath()
     {
-        return @$this->attributes['path'];
+        return isset($this->attributes['path']) ? $this->attributes['path'] : null;
     }
     // string # Status of this individual transfer
     public function getStatus()
     {
-        return @$this->attributes['status'];
+        return isset($this->attributes['status']) ? $this->attributes['status'] : null;
     }
     // int64 # Bytes transferred so far
     public function getBytesCopied()
     {
-        return @$this->attributes['bytes_copied'];
+        return isset($this->attributes['bytes_copied']) ? $this->attributes['bytes_copied'] : null;
     }
     // int64 # Total bytes of the file being transferred
     public function getBytesTotal()
     {
-        return @$this->attributes['bytes_total'];
+        return isset($this->attributes['bytes_total']) ? $this->attributes['bytes_total'] : null;
     }
     // double # Transfer progress from 0.0 to 1.0
     public function getPercentage()
     {
-        return @$this->attributes['percentage'];
+        return isset($this->attributes['percentage']) ? $this->attributes['percentage'] : null;
     }
     // string # Estimated time remaining (human-readable)
     public function getEta()
     {
-        return @$this->attributes['eta'];
+        return isset($this->attributes['eta']) ? $this->attributes['eta'] : null;
     }
     // string # When this individual transfer started
     public function getStartedAt()
     {
-        return @$this->attributes['started_at'];
+        return isset($this->attributes['started_at']) ? $this->attributes['started_at'] : null;
     }
 }

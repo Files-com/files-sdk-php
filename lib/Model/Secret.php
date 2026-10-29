@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class Secret
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class Secret
     // int64 # Secret ID.
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
     public function setId($value)
@@ -68,7 +66,7 @@ class Secret
     // int64 # Workspace ID. 0 means the default workspace.
     public function getWorkspaceId()
     {
-        return @$this->attributes['workspace_id'];
+        return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
 
     public function setWorkspaceId($value)
@@ -78,7 +76,7 @@ class Secret
     // string # Secret name.
     public function getName()
     {
-        return @$this->attributes['name'];
+        return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
 
     public function setName($value)
@@ -88,7 +86,7 @@ class Secret
     // string # Internal description for your reference.
     public function getDescription()
     {
-        return @$this->attributes['description'];
+        return isset($this->attributes['description']) ? $this->attributes['description'] : null;
     }
 
     public function setDescription($value)
@@ -98,7 +96,7 @@ class Secret
     // string # Secret type.
     public function getSecretType()
     {
-        return @$this->attributes['secret_type'];
+        return isset($this->attributes['secret_type']) ? $this->attributes['secret_type'] : null;
     }
 
     public function setSecretType($value)
@@ -108,7 +106,7 @@ class Secret
     // object # Non-secret metadata for the Secret type.
     public function getMetadata()
     {
-        return @$this->attributes['metadata'];
+        return isset($this->attributes['metadata']) ? $this->attributes['metadata'] : null;
     }
 
     public function setMetadata($value)
@@ -118,7 +116,7 @@ class Secret
     // array(string) # Names of configured secret value fields. Secret values are never returned.
     public function getValueFieldNames()
     {
-        return @$this->attributes['value_field_names'];
+        return isset($this->attributes['value_field_names']) ? $this->attributes['value_field_names'] : null;
     }
 
     public function setValueFieldNames($value)
@@ -128,12 +126,12 @@ class Secret
     // date-time # Secret create date/time.
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
     // date-time # Secret update date/time.
     public function getUpdatedAt()
     {
-        return @$this->attributes['updated_at'];
+        return isset($this->attributes['updated_at']) ? $this->attributes['updated_at'] : null;
     }
 
     // Parameters:
@@ -147,7 +145,7 @@ class Secret
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -155,19 +153,19 @@ class Secret
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['description'] && !is_string(@$params['description'])) {
+        if (!empty($params['description']) && !is_string($params['description'])) {
             throw new \Files\Exception\InvalidParameterException('$description must be of type string; received ' . gettype(@$params['description']));
         }
 
-        if (@$params['secret_type'] && !is_string(@$params['secret_type'])) {
+        if (!empty($params['secret_type']) && !is_string($params['secret_type'])) {
             throw new \Files\Exception\InvalidParameterException('$secret_type must be of type string; received ' . gettype(@$params['secret_type']));
         }
 
@@ -181,7 +179,7 @@ class Secret
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -189,7 +187,7 @@ class Secret
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -225,11 +223,11 @@ class Secret
     //   filter_prefix - object - If set, return records where the specified field is prefixed by the supplied value. Valid fields are `name`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -254,11 +252,11 @@ class Secret
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -279,27 +277,27 @@ class Secret
     //   workspace_id - int64 - Workspace ID. 0 means the default workspace.
     public static function create($params = [], $options = [])
     {
-        if (!@$params['name']) {
+        if (empty($params['name'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: name');
         }
 
-        if (!@$params['secret_type']) {
+        if (empty($params['secret_type'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: secret_type');
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['description'] && !is_string(@$params['description'])) {
+        if (!empty($params['description']) && !is_string($params['description'])) {
             throw new \Files\Exception\InvalidParameterException('$description must be of type string; received ' . gettype(@$params['description']));
         }
 
-        if (@$params['secret_type'] && !is_string(@$params['secret_type'])) {
+        if (!empty($params['secret_type']) && !is_string($params['secret_type'])) {
             throw new \Files\Exception\InvalidParameterException('$secret_type must be of type string; received ' . gettype(@$params['secret_type']));
         }
 
-        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class EventRecord
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,77 +56,77 @@ class EventRecord
     // int64 # Event Record ID
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
     // int64 # Workspace ID. 0 means the default workspace or site-wide.
     public function getWorkspaceId()
     {
-        return @$this->attributes['workspace_id'];
+        return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
     // string # Stable event UUID.
     public function getEventUuid()
     {
-        return @$this->attributes['event_uuid'];
+        return isset($this->attributes['event_uuid']) ? $this->attributes['event_uuid'] : null;
     }
     // string # Versioned event type string. Valid values: `automation_run.canceled.v1`, `automation_run.failure.v1`, `automation_run.failure_will_retry.v1`, `automation_run.partial_failure.v1`, `automation_run.partial_failure_will_retry.v1`, `automation_run.skipped.v1`, `automation_run.success.v1`, `expectation_evaluation.invalid.v1`, `expectation_evaluation.late.v1`, `expectation_evaluation.missing.v1`, `expectation_evaluation.success.v1`, `expectation_incident.acknowledged.v1`, `expectation_incident.open.v1`, `expectation_incident.resolved.v1`, `expectation_incident.snoozed.v1`, `external_event.client_log.failure.v1`, `external_event.client_log.partial_failure.v1`, `external_event.client_log.skipped.v1`, `external_event.client_log.success.v1`, `pending_work_event.failure.v1`, `pending_work_event.partial_failure.v1`, `pending_work_event.skipped.v1`, `pending_work_event.success.v1`, `siem_http_destination_event.failure.v1`, `siem_http_destination_event.partial_failure.v1`, `siem_http_destination_event.skipped.v1`, `siem_http_destination_event.success.v1`, `sso_event.ldap_login.failure.v1`, `sso_event.ldap_login.partial_failure.v1`, `sso_event.ldap_login.skipped.v1`, `sso_event.ldap_login.success.v1`, `sso_event.ldap_sync.failure.v1`, `sso_event.ldap_sync.partial_failure.v1`, `sso_event.ldap_sync.skipped.v1`, `sso_event.ldap_sync.success.v1`, `sso_event.saml_login.failure.v1`, `sso_event.saml_login.partial_failure.v1`, `sso_event.saml_login.skipped.v1`, `sso_event.saml_login.success.v1`, `sync_run.failure.v1`, `sync_run.partial_failure.v1`, `sync_run.skipped.v1`, `sync_run.success.v1`, `user_security_event.lockout.v1`
     public function getEventType()
     {
-        return @$this->attributes['event_type'];
+        return isset($this->attributes['event_type']) ? $this->attributes['event_type'] : null;
     }
     // string # Event severity.
     public function getSeverity()
     {
-        return @$this->attributes['severity'];
+        return isset($this->attributes['severity']) ? $this->attributes['severity'] : null;
     }
     // string # Source record type.
     public function getSourceType()
     {
-        return @$this->attributes['source_type'];
+        return isset($this->attributes['source_type']) ? $this->attributes['source_type'] : null;
     }
     // int64 # Source record ID.
     public function getSourceId()
     {
-        return @$this->attributes['source_id'];
+        return isset($this->attributes['source_id']) ? $this->attributes['source_id'] : null;
     }
     // date-time # Event occurrence date/time.
     public function getOccurredAt()
     {
-        return @$this->attributes['occurred_at'];
+        return isset($this->attributes['occurred_at']) ? $this->attributes['occurred_at'] : null;
     }
     // string # Human-readable event title.
     public function getHumanTitle()
     {
-        return @$this->attributes['human_title'];
+        return isset($this->attributes['human_title']) ? $this->attributes['human_title'] : null;
     }
     // string # Human-readable event summary.
     public function getHumanSummary()
     {
-        return @$this->attributes['human_summary'];
+        return isset($this->attributes['human_summary']) ? $this->attributes['human_summary'] : null;
     }
     // array(object) # Human-readable event detail fields.
     public function getHumanFields()
     {
-        return @$this->attributes['human_fields'];
+        return isset($this->attributes['human_fields']) ? $this->attributes['human_fields'] : null;
     }
     // object # Actor associated with the event.
     public function getActor()
     {
-        return @$this->attributes['actor'];
+        return isset($this->attributes['actor']) ? $this->attributes['actor'] : null;
     }
     // array(object) # Resources associated with the event.
     public function getResources()
     {
-        return @$this->attributes['resources'];
+        return isset($this->attributes['resources']) ? $this->attributes['resources'] : null;
     }
     // object # Event payload.
     public function getPayload()
     {
-        return @$this->attributes['payload'];
+        return isset($this->attributes['payload']) ? $this->attributes['payload'] : null;
     }
     // date-time # Event Record create date/time.
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
 
     // Parameters:
@@ -143,11 +141,11 @@ class EventRecord
     //   filter_lteq - object - If set, return records where the specified field is less than or equal the supplied value. Valid fields are `created_at`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -172,11 +170,11 @@ class EventRecord
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 

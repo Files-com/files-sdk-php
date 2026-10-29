@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class Sync
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class Sync
     // int64 # Sync ID
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
     public function setId($value)
@@ -68,7 +66,7 @@ class Sync
     // string # Name for this sync job
     public function getName()
     {
-        return @$this->attributes['name'];
+        return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
 
     public function setName($value)
@@ -78,7 +76,7 @@ class Sync
     // string # Description for this sync job
     public function getDescription()
     {
-        return @$this->attributes['description'];
+        return isset($this->attributes['description']) ? $this->attributes['description'] : null;
     }
 
     public function setDescription($value)
@@ -88,7 +86,7 @@ class Sync
     // int64 # Site ID this sync belongs to
     public function getSiteId()
     {
-        return @$this->attributes['site_id'];
+        return isset($this->attributes['site_id']) ? $this->attributes['site_id'] : null;
     }
 
     public function setSiteId($value)
@@ -98,7 +96,7 @@ class Sync
     // int64 # Workspace ID this sync belongs to
     public function getWorkspaceId()
     {
-        return @$this->attributes['workspace_id'];
+        return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
 
     public function setWorkspaceId($value)
@@ -108,7 +106,7 @@ class Sync
     // int64 # User who created or owns this sync
     public function getUserId()
     {
-        return @$this->attributes['user_id'];
+        return isset($this->attributes['user_id']) ? $this->attributes['user_id'] : null;
     }
 
     public function setUserId($value)
@@ -118,7 +116,7 @@ class Sync
     // string # Absolute source path for the sync
     public function getSrcPath()
     {
-        return @$this->attributes['src_path'];
+        return isset($this->attributes['src_path']) ? $this->attributes['src_path'] : null;
     }
 
     public function setSrcPath($value)
@@ -128,7 +126,7 @@ class Sync
     // string # Absolute destination path for the sync
     public function getDestPath()
     {
-        return @$this->attributes['dest_path'];
+        return isset($this->attributes['dest_path']) ? $this->attributes['dest_path'] : null;
     }
 
     public function setDestPath($value)
@@ -138,7 +136,7 @@ class Sync
     // int64 # Remote server ID for the source (if remote)
     public function getSrcRemoteServerId()
     {
-        return @$this->attributes['src_remote_server_id'];
+        return isset($this->attributes['src_remote_server_id']) ? $this->attributes['src_remote_server_id'] : null;
     }
 
     public function setSrcRemoteServerId($value)
@@ -148,7 +146,7 @@ class Sync
     // int64 # Remote server ID for the destination (if remote)
     public function getDestRemoteServerId()
     {
-        return @$this->attributes['dest_remote_server_id'];
+        return isset($this->attributes['dest_remote_server_id']) ? $this->attributes['dest_remote_server_id'] : null;
     }
 
     public function setDestRemoteServerId($value)
@@ -158,7 +156,7 @@ class Sync
     // int64 # Source site ID if syncing from a child or partner site
     public function getSrcSiteId()
     {
-        return @$this->attributes['src_site_id'];
+        return isset($this->attributes['src_site_id']) ? $this->attributes['src_site_id'] : null;
     }
 
     public function setSrcSiteId($value)
@@ -168,7 +166,7 @@ class Sync
     // int64 # Destination site ID if syncing to a child or partner site
     public function getDestSiteId()
     {
-        return @$this->attributes['dest_site_id'];
+        return isset($this->attributes['dest_site_id']) ? $this->attributes['dest_site_id'] : null;
     }
 
     public function setDestSiteId($value)
@@ -178,7 +176,7 @@ class Sync
     // boolean # Is this a two-way sync?
     public function getTwoWay()
     {
-        return @$this->attributes['two_way'];
+        return isset($this->attributes['two_way']) ? $this->attributes['two_way'] : null;
     }
 
     public function setTwoWay($value)
@@ -188,7 +186,7 @@ class Sync
     // boolean # Keep files after copying?
     public function getKeepAfterCopy()
     {
-        return @$this->attributes['keep_after_copy'];
+        return isset($this->attributes['keep_after_copy']) ? $this->attributes['keep_after_copy'] : null;
     }
 
     public function setKeepAfterCopy($value)
@@ -198,7 +196,7 @@ class Sync
     // boolean # Delete empty folders after sync?
     public function getDeleteEmptyFolders()
     {
-        return @$this->attributes['delete_empty_folders'];
+        return isset($this->attributes['delete_empty_folders']) ? $this->attributes['delete_empty_folders'] : null;
     }
 
     public function setDeleteEmptyFolders($value)
@@ -208,7 +206,7 @@ class Sync
     // boolean # Is this sync disabled?
     public function getDisabled()
     {
-        return @$this->attributes['disabled'];
+        return isset($this->attributes['disabled']) ? $this->attributes['disabled'] : null;
     }
 
     public function setDisabled($value)
@@ -218,7 +216,7 @@ class Sync
     // string # Trigger type: daily, custom_schedule, or manual
     public function getTrigger()
     {
-        return @$this->attributes['trigger'];
+        return isset($this->attributes['trigger']) ? $this->attributes['trigger'] : null;
     }
 
     public function setTrigger($value)
@@ -228,7 +226,7 @@ class Sync
     // string # Some MFT services request an empty file (known as a trigger file) to signal the sync is complete and they can begin further processing. If trigger_file is set, a zero-byte file will be sent at the end of the sync.
     public function getTriggerFile()
     {
-        return @$this->attributes['trigger_file'];
+        return isset($this->attributes['trigger_file']) ? $this->attributes['trigger_file'] : null;
     }
 
     public function setTriggerFile($value)
@@ -238,7 +236,7 @@ class Sync
     // boolean # If true, the trigger file will be sent at the end of a successful sync even when no files were transferred.
     public function getAlwaysWriteTriggerFile()
     {
-        return @$this->attributes['always_write_trigger_file'];
+        return isset($this->attributes['always_write_trigger_file']) ? $this->attributes['always_write_trigger_file'] : null;
     }
 
     public function setAlwaysWriteTriggerFile($value)
@@ -248,7 +246,7 @@ class Sync
     // array(string) # Array of glob patterns to include
     public function getIncludePatterns()
     {
-        return @$this->attributes['include_patterns'];
+        return isset($this->attributes['include_patterns']) ? $this->attributes['include_patterns'] : null;
     }
 
     public function setIncludePatterns($value)
@@ -258,7 +256,7 @@ class Sync
     // array(string) # Array of glob patterns to exclude
     public function getExcludePatterns()
     {
-        return @$this->attributes['exclude_patterns'];
+        return isset($this->attributes['exclude_patterns']) ? $this->attributes['exclude_patterns'] : null;
     }
 
     public function setExcludePatterns($value)
@@ -268,17 +266,17 @@ class Sync
     // date-time # When this sync was created
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
     // date-time # When this sync was last updated
     public function getUpdatedAt()
     {
-        return @$this->attributes['updated_at'];
+        return isset($this->attributes['updated_at']) ? $this->attributes['updated_at'] : null;
     }
     // int64 # Frequency in minutes between syncs. If set, this value must be greater than or equal to the `remote_sync_interval` value for the site's plan. If left blank, the plan's `remote_sync_interval` will be used. This setting is only used if `trigger` is empty.
     public function getSyncIntervalMinutes()
     {
-        return @$this->attributes['sync_interval_minutes'];
+        return isset($this->attributes['sync_interval_minutes']) ? $this->attributes['sync_interval_minutes'] : null;
     }
 
     public function setSyncIntervalMinutes($value)
@@ -288,7 +286,7 @@ class Sync
     // string # If trigger is `daily`, this specifies how often to run this sync.  One of: `day`, `week`, `week_end`, `month`, `month_end`, `quarter`, `quarter_end`, `year`, `year_end`
     public function getInterval()
     {
-        return @$this->attributes['interval'];
+        return isset($this->attributes['interval']) ? $this->attributes['interval'] : null;
     }
 
     public function setInterval($value)
@@ -298,7 +296,7 @@ class Sync
     // int64 # If trigger type is `daily`, this specifies a day number to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
     public function getRecurringDay()
     {
-        return @$this->attributes['recurring_day'];
+        return isset($this->attributes['recurring_day']) ? $this->attributes['recurring_day'] : null;
     }
 
     public function setRecurringDay($value)
@@ -308,7 +306,7 @@ class Sync
     // array(int64) # If trigger type is `daily`, this specifies one or more day numbers to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
     public function getRecurringDays()
     {
-        return @$this->attributes['recurring_days'];
+        return isset($this->attributes['recurring_days']) ? $this->attributes['recurring_days'] : null;
     }
 
     public function setRecurringDays($value)
@@ -318,7 +316,7 @@ class Sync
     // int64 # If trigger is `custom_schedule`, the reusable Schedule used instead of the sync's schedule fields.
     public function getScheduleId()
     {
-        return @$this->attributes['schedule_id'];
+        return isset($this->attributes['schedule_id']) ? $this->attributes['schedule_id'] : null;
     }
 
     public function setScheduleId($value)
@@ -328,7 +326,7 @@ class Sync
     // array(int64) # If trigger is `custom_schedule`, Custom schedule description for when the sync should be run. 0-based days of the week. 0 is Sunday, 1 is Monday, etc.
     public function getScheduleDaysOfWeek()
     {
-        return @$this->attributes['schedule_days_of_week'];
+        return isset($this->attributes['schedule_days_of_week']) ? $this->attributes['schedule_days_of_week'] : null;
     }
 
     public function setScheduleDaysOfWeek($value)
@@ -338,7 +336,7 @@ class Sync
     // array(string) # Times of day to run in HH:MM format. For `custom_schedule`, run at these times on specified days of week. For `daily`, run at these times on the scheduled interval date.
     public function getScheduleTimesOfDay()
     {
-        return @$this->attributes['schedule_times_of_day'];
+        return isset($this->attributes['schedule_times_of_day']) ? $this->attributes['schedule_times_of_day'] : null;
     }
 
     public function setScheduleTimesOfDay($value)
@@ -348,7 +346,7 @@ class Sync
     // string # Time zone for the schedule. If not set, times are interpreted as UTC.
     public function getScheduleTimeZone()
     {
-        return @$this->attributes['schedule_time_zone'];
+        return isset($this->attributes['schedule_time_zone']) ? $this->attributes['schedule_time_zone'] : null;
     }
 
     public function setScheduleTimeZone($value)
@@ -358,7 +356,7 @@ class Sync
     // string # Skip the sync if there is a formal, observed holiday for this region.
     public function getHolidayRegion()
     {
-        return @$this->attributes['holiday_region'];
+        return isset($this->attributes['holiday_region']) ? $this->attributes['holiday_region'] : null;
     }
 
     public function setHolidayRegion($value)
@@ -368,7 +366,7 @@ class Sync
     // SyncRun # The latest run of this sync
     public function getLatestSyncRun()
     {
-        return @$this->attributes['latest_sync_run'];
+        return isset($this->attributes['latest_sync_run']) ? $this->attributes['latest_sync_run'] : null;
     }
 
     public function setLatestSyncRun($value)
@@ -383,7 +381,7 @@ class Sync
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -391,7 +389,7 @@ class Sync
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -406,7 +404,7 @@ class Sync
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -414,7 +412,7 @@ class Sync
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -452,7 +450,7 @@ class Sync
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -460,83 +458,83 @@ class Sync
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (@$params['description'] && !is_string(@$params['description'])) {
+        if (!empty($params['description']) && !is_string($params['description'])) {
             throw new \Files\Exception\InvalidParameterException('$description must be of type string; received ' . gettype(@$params['description']));
         }
 
-        if (@$params['dest_path'] && !is_string(@$params['dest_path'])) {
+        if (!empty($params['dest_path']) && !is_string($params['dest_path'])) {
             throw new \Files\Exception\InvalidParameterException('$dest_path must be of type string; received ' . gettype(@$params['dest_path']));
         }
 
-        if (@$params['dest_remote_server_id'] && !is_int(@$params['dest_remote_server_id'])) {
+        if (!empty($params['dest_remote_server_id']) && !is_int($params['dest_remote_server_id'])) {
             throw new \Files\Exception\InvalidParameterException('$dest_remote_server_id must be of type int; received ' . gettype(@$params['dest_remote_server_id']));
         }
 
-        if (@$params['exclude_patterns'] && !is_array(@$params['exclude_patterns'])) {
+        if (!empty($params['exclude_patterns']) && !is_array($params['exclude_patterns'])) {
             throw new \Files\Exception\InvalidParameterException('$exclude_patterns must be of type array; received ' . gettype(@$params['exclude_patterns']));
         }
 
-        if (@$params['holiday_region'] && !is_string(@$params['holiday_region'])) {
+        if (!empty($params['holiday_region']) && !is_string($params['holiday_region'])) {
             throw new \Files\Exception\InvalidParameterException('$holiday_region must be of type string; received ' . gettype(@$params['holiday_region']));
         }
 
-        if (@$params['include_patterns'] && !is_array(@$params['include_patterns'])) {
+        if (!empty($params['include_patterns']) && !is_array($params['include_patterns'])) {
             throw new \Files\Exception\InvalidParameterException('$include_patterns must be of type array; received ' . gettype(@$params['include_patterns']));
         }
 
-        if (@$params['interval'] && !is_string(@$params['interval'])) {
+        if (!empty($params['interval']) && !is_string($params['interval'])) {
             throw new \Files\Exception\InvalidParameterException('$interval must be of type string; received ' . gettype(@$params['interval']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['recurring_day'] && !is_int(@$params['recurring_day'])) {
+        if (!empty($params['recurring_day']) && !is_int($params['recurring_day'])) {
             throw new \Files\Exception\InvalidParameterException('$recurring_day must be of type int; received ' . gettype(@$params['recurring_day']));
         }
 
-        if (@$params['recurring_days'] && !is_array(@$params['recurring_days'])) {
+        if (!empty($params['recurring_days']) && !is_array($params['recurring_days'])) {
             throw new \Files\Exception\InvalidParameterException('$recurring_days must be of type array; received ' . gettype(@$params['recurring_days']));
         }
 
-        if (@$params['schedule_id'] && !is_int(@$params['schedule_id'])) {
+        if (!empty($params['schedule_id']) && !is_int($params['schedule_id'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_id must be of type int; received ' . gettype(@$params['schedule_id']));
         }
 
-        if (@$params['schedule_days_of_week'] && !is_array(@$params['schedule_days_of_week'])) {
+        if (!empty($params['schedule_days_of_week']) && !is_array($params['schedule_days_of_week'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_days_of_week must be of type array; received ' . gettype(@$params['schedule_days_of_week']));
         }
 
-        if (@$params['schedule_time_zone'] && !is_string(@$params['schedule_time_zone'])) {
+        if (!empty($params['schedule_time_zone']) && !is_string($params['schedule_time_zone'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_time_zone must be of type string; received ' . gettype(@$params['schedule_time_zone']));
         }
 
-        if (@$params['schedule_times_of_day'] && !is_array(@$params['schedule_times_of_day'])) {
+        if (!empty($params['schedule_times_of_day']) && !is_array($params['schedule_times_of_day'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_times_of_day must be of type array; received ' . gettype(@$params['schedule_times_of_day']));
         }
 
-        if (@$params['src_path'] && !is_string(@$params['src_path'])) {
+        if (!empty($params['src_path']) && !is_string($params['src_path'])) {
             throw new \Files\Exception\InvalidParameterException('$src_path must be of type string; received ' . gettype(@$params['src_path']));
         }
 
-        if (@$params['src_remote_server_id'] && !is_int(@$params['src_remote_server_id'])) {
+        if (!empty($params['src_remote_server_id']) && !is_int($params['src_remote_server_id'])) {
             throw new \Files\Exception\InvalidParameterException('$src_remote_server_id must be of type int; received ' . gettype(@$params['src_remote_server_id']));
         }
 
-        if (@$params['sync_interval_minutes'] && !is_int(@$params['sync_interval_minutes'])) {
+        if (!empty($params['sync_interval_minutes']) && !is_int($params['sync_interval_minutes'])) {
             throw new \Files\Exception\InvalidParameterException('$sync_interval_minutes must be of type int; received ' . gettype(@$params['sync_interval_minutes']));
         }
 
-        if (@$params['trigger'] && !is_string(@$params['trigger'])) {
+        if (!empty($params['trigger']) && !is_string($params['trigger'])) {
             throw new \Files\Exception\InvalidParameterException('$trigger must be of type string; received ' . gettype(@$params['trigger']));
         }
 
-        if (@$params['trigger_file'] && !is_string(@$params['trigger_file'])) {
+        if (!empty($params['trigger_file']) && !is_string($params['trigger_file'])) {
             throw new \Files\Exception\InvalidParameterException('$trigger_file must be of type string; received ' . gettype(@$params['trigger_file']));
         }
 
@@ -550,7 +548,7 @@ class Sync
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -558,7 +556,7 @@ class Sync
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -593,11 +591,11 @@ class Sync
     //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `workspace_id`, `disabled`, `src_remote_server_id` or `dest_remote_server_id`. Valid field combinations are `[ workspace_id, disabled ]`, `[ workspace_id, src_remote_server_id ]`, `[ workspace_id, dest_remote_server_id ]`, `[ disabled, src_remote_server_id ]`, `[ disabled, dest_remote_server_id ]`, `[ workspace_id, disabled, src_remote_server_id ]` or `[ workspace_id, disabled, dest_remote_server_id ]`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -622,11 +620,11 @@ class Sync
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -666,83 +664,83 @@ class Sync
     //   workspace_id - int64 - Workspace ID this sync belongs to
     public static function create($params = [], $options = [])
     {
-        if (@$params['description'] && !is_string(@$params['description'])) {
+        if (!empty($params['description']) && !is_string($params['description'])) {
             throw new \Files\Exception\InvalidParameterException('$description must be of type string; received ' . gettype(@$params['description']));
         }
 
-        if (@$params['dest_path'] && !is_string(@$params['dest_path'])) {
+        if (!empty($params['dest_path']) && !is_string($params['dest_path'])) {
             throw new \Files\Exception\InvalidParameterException('$dest_path must be of type string; received ' . gettype(@$params['dest_path']));
         }
 
-        if (@$params['dest_remote_server_id'] && !is_int(@$params['dest_remote_server_id'])) {
+        if (!empty($params['dest_remote_server_id']) && !is_int($params['dest_remote_server_id'])) {
             throw new \Files\Exception\InvalidParameterException('$dest_remote_server_id must be of type int; received ' . gettype(@$params['dest_remote_server_id']));
         }
 
-        if (@$params['exclude_patterns'] && !is_array(@$params['exclude_patterns'])) {
+        if (!empty($params['exclude_patterns']) && !is_array($params['exclude_patterns'])) {
             throw new \Files\Exception\InvalidParameterException('$exclude_patterns must be of type array; received ' . gettype(@$params['exclude_patterns']));
         }
 
-        if (@$params['holiday_region'] && !is_string(@$params['holiday_region'])) {
+        if (!empty($params['holiday_region']) && !is_string($params['holiday_region'])) {
             throw new \Files\Exception\InvalidParameterException('$holiday_region must be of type string; received ' . gettype(@$params['holiday_region']));
         }
 
-        if (@$params['include_patterns'] && !is_array(@$params['include_patterns'])) {
+        if (!empty($params['include_patterns']) && !is_array($params['include_patterns'])) {
             throw new \Files\Exception\InvalidParameterException('$include_patterns must be of type array; received ' . gettype(@$params['include_patterns']));
         }
 
-        if (@$params['interval'] && !is_string(@$params['interval'])) {
+        if (!empty($params['interval']) && !is_string($params['interval'])) {
             throw new \Files\Exception\InvalidParameterException('$interval must be of type string; received ' . gettype(@$params['interval']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['recurring_day'] && !is_int(@$params['recurring_day'])) {
+        if (!empty($params['recurring_day']) && !is_int($params['recurring_day'])) {
             throw new \Files\Exception\InvalidParameterException('$recurring_day must be of type int; received ' . gettype(@$params['recurring_day']));
         }
 
-        if (@$params['recurring_days'] && !is_array(@$params['recurring_days'])) {
+        if (!empty($params['recurring_days']) && !is_array($params['recurring_days'])) {
             throw new \Files\Exception\InvalidParameterException('$recurring_days must be of type array; received ' . gettype(@$params['recurring_days']));
         }
 
-        if (@$params['schedule_id'] && !is_int(@$params['schedule_id'])) {
+        if (!empty($params['schedule_id']) && !is_int($params['schedule_id'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_id must be of type int; received ' . gettype(@$params['schedule_id']));
         }
 
-        if (@$params['schedule_days_of_week'] && !is_array(@$params['schedule_days_of_week'])) {
+        if (!empty($params['schedule_days_of_week']) && !is_array($params['schedule_days_of_week'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_days_of_week must be of type array; received ' . gettype(@$params['schedule_days_of_week']));
         }
 
-        if (@$params['schedule_time_zone'] && !is_string(@$params['schedule_time_zone'])) {
+        if (!empty($params['schedule_time_zone']) && !is_string($params['schedule_time_zone'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_time_zone must be of type string; received ' . gettype(@$params['schedule_time_zone']));
         }
 
-        if (@$params['schedule_times_of_day'] && !is_array(@$params['schedule_times_of_day'])) {
+        if (!empty($params['schedule_times_of_day']) && !is_array($params['schedule_times_of_day'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_times_of_day must be of type array; received ' . gettype(@$params['schedule_times_of_day']));
         }
 
-        if (@$params['src_path'] && !is_string(@$params['src_path'])) {
+        if (!empty($params['src_path']) && !is_string($params['src_path'])) {
             throw new \Files\Exception\InvalidParameterException('$src_path must be of type string; received ' . gettype(@$params['src_path']));
         }
 
-        if (@$params['src_remote_server_id'] && !is_int(@$params['src_remote_server_id'])) {
+        if (!empty($params['src_remote_server_id']) && !is_int($params['src_remote_server_id'])) {
             throw new \Files\Exception\InvalidParameterException('$src_remote_server_id must be of type int; received ' . gettype(@$params['src_remote_server_id']));
         }
 
-        if (@$params['sync_interval_minutes'] && !is_int(@$params['sync_interval_minutes'])) {
+        if (!empty($params['sync_interval_minutes']) && !is_int($params['sync_interval_minutes'])) {
             throw new \Files\Exception\InvalidParameterException('$sync_interval_minutes must be of type int; received ' . gettype(@$params['sync_interval_minutes']));
         }
 
-        if (@$params['trigger'] && !is_string(@$params['trigger'])) {
+        if (!empty($params['trigger']) && !is_string($params['trigger'])) {
             throw new \Files\Exception\InvalidParameterException('$trigger must be of type string; received ' . gettype(@$params['trigger']));
         }
 
-        if (@$params['trigger_file'] && !is_string(@$params['trigger_file'])) {
+        if (!empty($params['trigger_file']) && !is_string($params['trigger_file'])) {
             throw new \Files\Exception\InvalidParameterException('$trigger_file must be of type string; received ' . gettype(@$params['trigger_file']));
         }
 
-        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 

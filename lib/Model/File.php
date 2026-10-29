@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class File
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -605,7 +603,7 @@ class File
     // string # File/Folder path. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
     public function getPath()
     {
-        return @$this->attributes['path'];
+        return isset($this->attributes['path']) ? $this->attributes['path'] : null;
     }
 
     public function setPath($value)
@@ -615,7 +613,7 @@ class File
     // int64 # User ID of the User who created the file/folder
     public function getCreatedById()
     {
-        return @$this->attributes['created_by_id'];
+        return isset($this->attributes['created_by_id']) ? $this->attributes['created_by_id'] : null;
     }
 
     public function setCreatedById($value)
@@ -625,7 +623,7 @@ class File
     // int64 # ID of the API key that created the file/folder
     public function getCreatedByApiKeyId()
     {
-        return @$this->attributes['created_by_api_key_id'];
+        return isset($this->attributes['created_by_api_key_id']) ? $this->attributes['created_by_api_key_id'] : null;
     }
 
     public function setCreatedByApiKeyId($value)
@@ -635,7 +633,7 @@ class File
     // int64 # ID of the AS2 Incoming Message that created the file/folder
     public function getCreatedByAs2IncomingMessageId()
     {
-        return @$this->attributes['created_by_as2_incoming_message_id'];
+        return isset($this->attributes['created_by_as2_incoming_message_id']) ? $this->attributes['created_by_as2_incoming_message_id'] : null;
     }
 
     public function setCreatedByAs2IncomingMessageId($value)
@@ -645,7 +643,7 @@ class File
     // int64 # ID of the Automation that created the file/folder
     public function getCreatedByAutomationId()
     {
-        return @$this->attributes['created_by_automation_id'];
+        return isset($this->attributes['created_by_automation_id']) ? $this->attributes['created_by_automation_id'] : null;
     }
 
     public function setCreatedByAutomationId($value)
@@ -655,7 +653,7 @@ class File
     // int64 # ID of the Bundle Registration that created the file/folder
     public function getCreatedByBundleRegistrationId()
     {
-        return @$this->attributes['created_by_bundle_registration_id'];
+        return isset($this->attributes['created_by_bundle_registration_id']) ? $this->attributes['created_by_bundle_registration_id'] : null;
     }
 
     public function setCreatedByBundleRegistrationId($value)
@@ -665,7 +663,7 @@ class File
     // int64 # ID of the Inbox that created the file/folder
     public function getCreatedByInboxId()
     {
-        return @$this->attributes['created_by_inbox_id'];
+        return isset($this->attributes['created_by_inbox_id']) ? $this->attributes['created_by_inbox_id'] : null;
     }
 
     public function setCreatedByInboxId($value)
@@ -675,7 +673,7 @@ class File
     // int64 # ID of the Remote Server that created the file/folder
     public function getCreatedByRemoteServerId()
     {
-        return @$this->attributes['created_by_remote_server_id'];
+        return isset($this->attributes['created_by_remote_server_id']) ? $this->attributes['created_by_remote_server_id'] : null;
     }
 
     public function setCreatedByRemoteServerId($value)
@@ -685,7 +683,7 @@ class File
     // int64 # ID of the Sync that created the file/folder
     public function getCreatedBySyncId()
     {
-        return @$this->attributes['created_by_sync_id'];
+        return isset($this->attributes['created_by_sync_id']) ? $this->attributes['created_by_sync_id'] : null;
     }
 
     public function setCreatedBySyncId($value)
@@ -695,7 +693,7 @@ class File
     // object # Custom metadata map of keys and values. Limited to 32 keys, 256 characters per key and 1024 characters per value.
     public function getCustomMetadata()
     {
-        return @$this->attributes['custom_metadata'];
+        return isset($this->attributes['custom_metadata']) ? $this->attributes['custom_metadata'] : null;
     }
 
     public function setCustomMetadata($value)
@@ -705,7 +703,7 @@ class File
     // string # File/Folder display name
     public function getDisplayName()
     {
-        return @$this->attributes['display_name'];
+        return isset($this->attributes['display_name']) ? $this->attributes['display_name'] : null;
     }
 
     public function setDisplayName($value)
@@ -715,7 +713,7 @@ class File
     // string # Type: `directory` or `file`.
     public function getType()
     {
-        return @$this->attributes['type'];
+        return isset($this->attributes['type']) ? $this->attributes['type'] : null;
     }
 
     public function setType($value)
@@ -725,7 +723,7 @@ class File
     // int64 # File/Folder size
     public function getSize()
     {
-        return @$this->attributes['size'];
+        return isset($this->attributes['size']) ? $this->attributes['size'] : null;
     }
 
     public function setSize($value)
@@ -735,12 +733,12 @@ class File
     // date-time # File created date/time
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
     // int64 # User ID of the User who last modified the file/folder
     public function getLastModifiedById()
     {
-        return @$this->attributes['last_modified_by_id'];
+        return isset($this->attributes['last_modified_by_id']) ? $this->attributes['last_modified_by_id'] : null;
     }
 
     public function setLastModifiedById($value)
@@ -750,7 +748,7 @@ class File
     // int64 # ID of the API key that last modified the file/folder
     public function getLastModifiedByApiKeyId()
     {
-        return @$this->attributes['last_modified_by_api_key_id'];
+        return isset($this->attributes['last_modified_by_api_key_id']) ? $this->attributes['last_modified_by_api_key_id'] : null;
     }
 
     public function setLastModifiedByApiKeyId($value)
@@ -760,7 +758,7 @@ class File
     // int64 # ID of the Automation that last modified the file/folder
     public function getLastModifiedByAutomationId()
     {
-        return @$this->attributes['last_modified_by_automation_id'];
+        return isset($this->attributes['last_modified_by_automation_id']) ? $this->attributes['last_modified_by_automation_id'] : null;
     }
 
     public function setLastModifiedByAutomationId($value)
@@ -770,7 +768,7 @@ class File
     // int64 # ID of the Bundle Registration that last modified the file/folder
     public function getLastModifiedByBundleRegistrationId()
     {
-        return @$this->attributes['last_modified_by_bundle_registration_id'];
+        return isset($this->attributes['last_modified_by_bundle_registration_id']) ? $this->attributes['last_modified_by_bundle_registration_id'] : null;
     }
 
     public function setLastModifiedByBundleRegistrationId($value)
@@ -780,7 +778,7 @@ class File
     // int64 # ID of the Remote Server that last modified the file/folder
     public function getLastModifiedByRemoteServerId()
     {
-        return @$this->attributes['last_modified_by_remote_server_id'];
+        return isset($this->attributes['last_modified_by_remote_server_id']) ? $this->attributes['last_modified_by_remote_server_id'] : null;
     }
 
     public function setLastModifiedByRemoteServerId($value)
@@ -790,7 +788,7 @@ class File
     // int64 # ID of the Sync that last modified the file/folder
     public function getLastModifiedBySyncId()
     {
-        return @$this->attributes['last_modified_by_sync_id'];
+        return isset($this->attributes['last_modified_by_sync_id']) ? $this->attributes['last_modified_by_sync_id'] : null;
     }
 
     public function setLastModifiedBySyncId($value)
@@ -800,7 +798,7 @@ class File
     // date-time # File last modified date/time, according to the server.  This is the timestamp of the last Files.com operation of the file, regardless of what modified timestamp was sent.
     public function getMtime()
     {
-        return @$this->attributes['mtime'];
+        return isset($this->attributes['mtime']) ? $this->attributes['mtime'] : null;
     }
 
     public function setMtime($value)
@@ -810,7 +808,7 @@ class File
     // date-time # File last modified date/time, according to the client who set it.  Files.com allows desktop, FTP, SFTP, and WebDAV clients to set modified at times.  This allows Desktop<->Cloud syncing to preserve modified at times.
     public function getProvidedMtime()
     {
-        return @$this->attributes['provided_mtime'];
+        return isset($this->attributes['provided_mtime']) ? $this->attributes['provided_mtime'] : null;
     }
 
     public function setProvidedMtime($value)
@@ -820,7 +818,7 @@ class File
     // string # File CRC32 checksum. This is sometimes delayed, so if you get a blank response, wait and try again.
     public function getCrc32()
     {
-        return @$this->attributes['crc32'];
+        return isset($this->attributes['crc32']) ? $this->attributes['crc32'] : null;
     }
 
     public function setCrc32($value)
@@ -830,7 +828,7 @@ class File
     // string # File MD5 checksum. This is sometimes delayed, so if you get a blank response, wait and try again.
     public function getMd5()
     {
-        return @$this->attributes['md5'];
+        return isset($this->attributes['md5']) ? $this->attributes['md5'] : null;
     }
 
     public function setMd5($value)
@@ -840,7 +838,7 @@ class File
     // string # File SHA1 checksum. This is sometimes delayed, so if you get a blank response, wait and try again.
     public function getSha1()
     {
-        return @$this->attributes['sha1'];
+        return isset($this->attributes['sha1']) ? $this->attributes['sha1'] : null;
     }
 
     public function setSha1($value)
@@ -850,7 +848,7 @@ class File
     // string # File SHA256 checksum. This is sometimes delayed, so if you get a blank response, wait and try again.
     public function getSha256()
     {
-        return @$this->attributes['sha256'];
+        return isset($this->attributes['sha256']) ? $this->attributes['sha256'] : null;
     }
 
     public function setSha256($value)
@@ -860,7 +858,7 @@ class File
     // string # MIME Type.  This is determined by the filename extension and is not stored separately internally.
     public function getMimeType()
     {
-        return @$this->attributes['mime_type'];
+        return isset($this->attributes['mime_type']) ? $this->attributes['mime_type'] : null;
     }
 
     public function setMimeType($value)
@@ -870,7 +868,7 @@ class File
     // string # Region location
     public function getRegion()
     {
-        return @$this->attributes['region'];
+        return isset($this->attributes['region']) ? $this->attributes['region'] : null;
     }
 
     public function setRegion($value)
@@ -880,7 +878,7 @@ class File
     // string # A short string representing the current user's permissions.  Can be `r` (Read),`w` (Write),`d` (Delete), `l` (List) or any combination
     public function getPermissions()
     {
-        return @$this->attributes['permissions'];
+        return isset($this->attributes['permissions']) ? $this->attributes['permissions'] : null;
     }
 
     public function setPermissions($value)
@@ -890,7 +888,7 @@ class File
     // boolean # Are subfolders locked and unable to be modified?
     public function getSubfoldersLocked()
     {
-        return @$this->attributes['subfolders_locked'];
+        return isset($this->attributes['subfolders_locked']) ? $this->attributes['subfolders_locked'] : null;
     }
 
     public function setSubfoldersLocked($value)
@@ -900,7 +898,7 @@ class File
     // boolean # Is this folder locked and unable to be modified?
     public function getIsLocked()
     {
-        return @$this->attributes['is_locked'];
+        return isset($this->attributes['is_locked']) ? $this->attributes['is_locked'] : null;
     }
 
     public function setIsLocked($value)
@@ -910,7 +908,7 @@ class File
     // string # Link to download file. Provided only in response to a download request.
     public function getDownloadUri()
     {
-        return @$this->attributes['download_uri'];
+        return isset($this->attributes['download_uri']) ? $this->attributes['download_uri'] : null;
     }
 
     public function setDownloadUri($value)
@@ -920,7 +918,7 @@ class File
     // DirectConnectionInfo # Optional direct connection information for direct Agent transfer attempts
     public function getDirectConnectionInfo()
     {
-        return @$this->attributes['direct_connection_info'];
+        return isset($this->attributes['direct_connection_info']) ? $this->attributes['direct_connection_info'] : null;
     }
 
     public function setDirectConnectionInfo($value)
@@ -930,7 +928,7 @@ class File
     // string # Bookmark/priority color of file/folder
     public function getPriorityColor()
     {
-        return @$this->attributes['priority_color'];
+        return isset($this->attributes['priority_color']) ? $this->attributes['priority_color'] : null;
     }
 
     public function setPriorityColor($value)
@@ -940,7 +938,7 @@ class File
     // int64 # File preview ID
     public function getPreviewId()
     {
-        return @$this->attributes['preview_id'];
+        return isset($this->attributes['preview_id']) ? $this->attributes['preview_id'] : null;
     }
 
     public function setPreviewId($value)
@@ -950,7 +948,7 @@ class File
     // Preview # File preview
     public function getPreview()
     {
-        return @$this->attributes['preview'];
+        return isset($this->attributes['preview']) ? $this->attributes['preview'] : null;
     }
 
     public function setPreview($value)
@@ -960,7 +958,7 @@ class File
     // string # The action to perform.  Can be `append`, `attachment`, `end`, `upload`, `put`, or may not exist
     public function getAction()
     {
-        return @$this->attributes['action'];
+        return isset($this->attributes['action']) ? $this->attributes['action'] : null;
     }
 
     public function setAction($value)
@@ -970,7 +968,7 @@ class File
     // int64 # Length of file.
     public function getLength()
     {
-        return @$this->attributes['length'];
+        return isset($this->attributes['length']) ? $this->attributes['length'] : null;
     }
 
     public function setLength($value)
@@ -980,7 +978,7 @@ class File
     // boolean # Create parent directories if they do not exist?
     public function getMkdirParents()
     {
-        return @$this->attributes['mkdir_parents'];
+        return isset($this->attributes['mkdir_parents']) ? $this->attributes['mkdir_parents'] : null;
     }
 
     public function setMkdirParents($value)
@@ -990,7 +988,7 @@ class File
     // int64 # Part if uploading a part.
     public function getPart()
     {
-        return @$this->attributes['part'];
+        return isset($this->attributes['part']) ? $this->attributes['part'] : null;
     }
 
     public function setPart($value)
@@ -1000,7 +998,7 @@ class File
     // int64 # How many parts to fetch?
     public function getParts()
     {
-        return @$this->attributes['parts'];
+        return isset($this->attributes['parts']) ? $this->attributes['parts'] : null;
     }
 
     public function setParts($value)
@@ -1010,7 +1008,7 @@ class File
     // string #
     public function getRef()
     {
-        return @$this->attributes['ref'];
+        return isset($this->attributes['ref']) ? $this->attributes['ref'] : null;
     }
 
     public function setRef($value)
@@ -1020,7 +1018,7 @@ class File
     // int64 # File byte offset to restart from.
     public function getRestart()
     {
-        return @$this->attributes['restart'];
+        return isset($this->attributes['restart']) ? $this->attributes['restart'] : null;
     }
 
     public function setRestart($value)
@@ -1030,7 +1028,7 @@ class File
     // boolean # If copying a folder, also copy supported behaviors, email notification subscriptions, and per-folder branding to the destination folder tree?
     public function getCopyBehaviors()
     {
-        return @$this->attributes['copy_behaviors'];
+        return isset($this->attributes['copy_behaviors']) ? $this->attributes['copy_behaviors'] : null;
     }
 
     public function setCopyBehaviors($value)
@@ -1040,7 +1038,7 @@ class File
     // string # If copying folder, copy just the structure?
     public function getStructure()
     {
-        return @$this->attributes['structure'];
+        return isset($this->attributes['structure']) ? $this->attributes['structure'] : null;
     }
 
     public function setStructure($value)
@@ -1050,7 +1048,7 @@ class File
     // boolean # Allow file rename instead of overwrite?
     public function getWithRename()
     {
-        return @$this->attributes['with_rename'];
+        return isset($this->attributes['with_rename']) ? $this->attributes['with_rename'] : null;
     }
 
     public function setWithRename($value)
@@ -1060,7 +1058,7 @@ class File
     // boolean # If true, and the path refers to a destination not stored on Files.com (such as a remote server mount), the upload will be uploaded first to Files.com before being sent to the remote server mount. This can allow clients to upload using parallel parts to a remote server destination that does not offer parallel parts support natively.
     public function getBufferedUpload()
     {
-        return @$this->attributes['buffered_upload'];
+        return isset($this->attributes['buffered_upload']) ? $this->attributes['buffered_upload'] : null;
     }
 
     public function setBufferedUpload($value)
@@ -1070,7 +1068,7 @@ class File
     // boolean # Include optional direct connection information for a direct Agent transfer attempt?
     public function getWithDirectConnectionInfo()
     {
-        return @$this->attributes['with_direct_connection_info'];
+        return isset($this->attributes['with_direct_connection_info']) ? $this->attributes['with_direct_connection_info'] : null;
     }
 
     public function setWithDirectConnectionInfo($value)
@@ -1092,7 +1090,7 @@ class File
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['path']) {
+        if (empty($params['path'])) {
             if (@$this->path) {
                 $params['path'] = $this->path;
             } else {
@@ -1100,15 +1098,15 @@ class File
             }
         }
 
-        if (@$params['path'] && !is_string(@$params['path'])) {
+        if (!empty($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (@$params['action'] && !is_string(@$params['action'])) {
+        if (!empty($params['action']) && !is_string($params['action'])) {
             throw new \Files\Exception\InvalidParameterException('$action must be of type string; received ' . gettype(@$params['action']));
         }
 
-        if (@$params['preview_size'] && !is_string(@$params['preview_size'])) {
+        if (!empty($params['preview_size']) && !is_string($params['preview_size'])) {
             throw new \Files\Exception\InvalidParameterException('$preview_size must be of type string; received ' . gettype(@$params['preview_size']));
         }
 
@@ -1126,7 +1124,7 @@ class File
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['path']) {
+        if (empty($params['path'])) {
             if (@$this->path) {
                 $params['path'] = $this->path;
             } else {
@@ -1134,15 +1132,15 @@ class File
             }
         }
 
-        if (@$params['path'] && !is_string(@$params['path'])) {
+        if (!empty($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (@$params['provided_mtime'] && !is_string(@$params['provided_mtime'])) {
+        if (!empty($params['provided_mtime']) && !is_string($params['provided_mtime'])) {
             throw new \Files\Exception\InvalidParameterException('$provided_mtime must be of type string; received ' . gettype(@$params['provided_mtime']));
         }
 
-        if (@$params['priority_color'] && !is_string(@$params['priority_color'])) {
+        if (!empty($params['priority_color']) && !is_string($params['priority_color'])) {
             throw new \Files\Exception\InvalidParameterException('$priority_color must be of type string; received ' . gettype(@$params['priority_color']));
         }
 
@@ -1158,7 +1156,7 @@ class File
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['path']) {
+        if (empty($params['path'])) {
             if (@$this->path) {
                 $params['path'] = $this->path;
             } else {
@@ -1166,7 +1164,7 @@ class File
             }
         }
 
-        if (@$params['path'] && !is_string(@$params['path'])) {
+        if (!empty($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
@@ -1187,7 +1185,7 @@ class File
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['path']) {
+        if (empty($params['path'])) {
             if (@$this->path) {
                 $params['path'] = $this->path;
             } else {
@@ -1195,7 +1193,7 @@ class File
             }
         }
 
-        if (@$params['path'] && !is_string(@$params['path'])) {
+        if (!empty($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
@@ -1219,7 +1217,7 @@ class File
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['path']) {
+        if (empty($params['path'])) {
             if (@$this->path) {
                 $params['path'] = $this->path;
             } else {
@@ -1227,7 +1225,7 @@ class File
             }
         }
 
-        if (@$params['path'] && !is_string(@$params['path'])) {
+        if (!empty($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
@@ -1248,7 +1246,7 @@ class File
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['path']) {
+        if (empty($params['path'])) {
             if (@$this->path) {
                 $params['path'] = $this->path;
             } else {
@@ -1256,7 +1254,7 @@ class File
             }
         }
 
-        if (!@$params['destination']) {
+        if (empty($params['destination'])) {
             if (@$this->destination) {
                 $params['destination'] = $this->destination;
             } else {
@@ -1264,11 +1262,11 @@ class File
             }
         }
 
-        if (@$params['path'] && !is_string(@$params['path'])) {
+        if (!empty($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (@$params['destination'] && !is_string(@$params['destination'])) {
+        if (!empty($params['destination']) && !is_string($params['destination'])) {
             throw new \Files\Exception\InvalidParameterException('$destination must be of type string; received ' . gettype(@$params['destination']));
         }
 
@@ -1287,7 +1285,7 @@ class File
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['path']) {
+        if (empty($params['path'])) {
             if (@$this->path) {
                 $params['path'] = $this->path;
             } else {
@@ -1295,7 +1293,7 @@ class File
             }
         }
 
-        if (!@$params['destination']) {
+        if (empty($params['destination'])) {
             if (@$this->destination) {
                 $params['destination'] = $this->destination;
             } else {
@@ -1303,11 +1301,11 @@ class File
             }
         }
 
-        if (@$params['path'] && !is_string(@$params['path'])) {
+        if (!empty($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (@$params['destination'] && !is_string(@$params['destination'])) {
+        if (!empty($params['destination']) && !is_string($params['destination'])) {
             throw new \Files\Exception\InvalidParameterException('$destination must be of type string; received ' . gettype(@$params['destination']));
         }
 
@@ -1331,7 +1329,7 @@ class File
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['path']) {
+        if (empty($params['path'])) {
             if (@$this->path) {
                 $params['path'] = $this->path;
             } else {
@@ -1339,7 +1337,7 @@ class File
             }
         }
 
-        if (!@$params['destination']) {
+        if (empty($params['destination'])) {
             if (@$this->destination) {
                 $params['destination'] = $this->destination;
             } else {
@@ -1347,7 +1345,7 @@ class File
             }
         }
 
-        if (!@$params['transform_type']) {
+        if (empty($params['transform_type'])) {
             if (@$this->transform_type) {
                 $params['transform_type'] = $this->transform_type;
             } else {
@@ -1355,7 +1353,7 @@ class File
             }
         }
 
-        if (!@$params['target_format']) {
+        if (empty($params['target_format'])) {
             if (@$this->target_format) {
                 $params['target_format'] = $this->target_format;
             } else {
@@ -1363,31 +1361,31 @@ class File
             }
         }
 
-        if (@$params['path'] && !is_string(@$params['path'])) {
+        if (!empty($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (@$params['destination'] && !is_string(@$params['destination'])) {
+        if (!empty($params['destination']) && !is_string($params['destination'])) {
             throw new \Files\Exception\InvalidParameterException('$destination must be of type string; received ' . gettype(@$params['destination']));
         }
 
-        if (@$params['transform_type'] && !is_string(@$params['transform_type'])) {
+        if (!empty($params['transform_type']) && !is_string($params['transform_type'])) {
             throw new \Files\Exception\InvalidParameterException('$transform_type must be of type string; received ' . gettype(@$params['transform_type']));
         }
 
-        if (@$params['target_format'] && !is_string(@$params['target_format'])) {
+        if (!empty($params['target_format']) && !is_string($params['target_format'])) {
             throw new \Files\Exception\InvalidParameterException('$target_format must be of type string; received ' . gettype(@$params['target_format']));
         }
 
-        if (@$params['script'] && !is_string(@$params['script'])) {
+        if (!empty($params['script']) && !is_string($params['script'])) {
             throw new \Files\Exception\InvalidParameterException('$script must be of type string; received ' . gettype(@$params['script']));
         }
 
-        if (@$params['width'] && !is_int(@$params['width'])) {
+        if (!empty($params['width']) && !is_int($params['width'])) {
             throw new \Files\Exception\InvalidParameterException('$width must be of type int; received ' . gettype(@$params['width']));
         }
 
-        if (@$params['height'] && !is_int(@$params['height'])) {
+        if (!empty($params['height']) && !is_int($params['height'])) {
             throw new \Files\Exception\InvalidParameterException('$height must be of type int; received ' . gettype(@$params['height']));
         }
 
@@ -1410,7 +1408,7 @@ class File
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['path']) {
+        if (empty($params['path'])) {
             if (@$this->path) {
                 $params['path'] = $this->path;
             } else {
@@ -1418,7 +1416,7 @@ class File
             }
         }
 
-        if (!@$params['destination']) {
+        if (empty($params['destination'])) {
             if (@$this->destination) {
                 $params['destination'] = $this->destination;
             } else {
@@ -1426,19 +1424,19 @@ class File
             }
         }
 
-        if (@$params['path'] && !is_string(@$params['path'])) {
+        if (!empty($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (@$params['destination'] && !is_string(@$params['destination'])) {
+        if (!empty($params['destination']) && !is_string($params['destination'])) {
             throw new \Files\Exception\InvalidParameterException('$destination must be of type string; received ' . gettype(@$params['destination']));
         }
 
-        if (@$params['gpg_key_ids'] && !is_array(@$params['gpg_key_ids'])) {
+        if (!empty($params['gpg_key_ids']) && !is_array($params['gpg_key_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$gpg_key_ids must be of type array; received ' . gettype(@$params['gpg_key_ids']));
         }
 
-        if (@$params['gpg_key_partner_id'] && !is_int(@$params['gpg_key_partner_id'])) {
+        if (!empty($params['gpg_key_partner_id']) && !is_int($params['gpg_key_partner_id'])) {
             throw new \Files\Exception\InvalidParameterException('$gpg_key_partner_id must be of type int; received ' . gettype(@$params['gpg_key_partner_id']));
         }
 
@@ -1461,7 +1459,7 @@ class File
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['path']) {
+        if (empty($params['path'])) {
             if (@$this->path) {
                 $params['path'] = $this->path;
             } else {
@@ -1469,7 +1467,7 @@ class File
             }
         }
 
-        if (!@$params['destination']) {
+        if (empty($params['destination'])) {
             if (@$this->destination) {
                 $params['destination'] = $this->destination;
             } else {
@@ -1477,23 +1475,23 @@ class File
             }
         }
 
-        if (@$params['path'] && !is_string(@$params['path'])) {
+        if (!empty($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (@$params['destination'] && !is_string(@$params['destination'])) {
+        if (!empty($params['destination']) && !is_string($params['destination'])) {
             throw new \Files\Exception\InvalidParameterException('$destination must be of type string; received ' . gettype(@$params['destination']));
         }
 
-        if (@$params['gpg_key_ids'] && !is_array(@$params['gpg_key_ids'])) {
+        if (!empty($params['gpg_key_ids']) && !is_array($params['gpg_key_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$gpg_key_ids must be of type array; received ' . gettype(@$params['gpg_key_ids']));
         }
 
-        if (@$params['gpg_key_partner_id'] && !is_int(@$params['gpg_key_partner_id'])) {
+        if (!empty($params['gpg_key_partner_id']) && !is_int($params['gpg_key_partner_id'])) {
             throw new \Files\Exception\InvalidParameterException('$gpg_key_partner_id must be of type int; received ' . gettype(@$params['gpg_key_partner_id']));
         }
 
-        if (@$params['signing_key_id'] && !is_int(@$params['signing_key_id'])) {
+        if (!empty($params['signing_key_id']) && !is_int($params['signing_key_id'])) {
             throw new \Files\Exception\InvalidParameterException('$signing_key_id must be of type int; received ' . gettype(@$params['signing_key_id']));
         }
 
@@ -1513,7 +1511,7 @@ class File
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['path']) {
+        if (empty($params['path'])) {
             if (@$this->path) {
                 $params['path'] = $this->path;
             } else {
@@ -1521,7 +1519,7 @@ class File
             }
         }
 
-        if (!@$params['destination']) {
+        if (empty($params['destination'])) {
             if (@$this->destination) {
                 $params['destination'] = $this->destination;
             } else {
@@ -1529,15 +1527,15 @@ class File
             }
         }
 
-        if (@$params['path'] && !is_string(@$params['path'])) {
+        if (!empty($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (@$params['destination'] && !is_string(@$params['destination'])) {
+        if (!empty($params['destination']) && !is_string($params['destination'])) {
             throw new \Files\Exception\InvalidParameterException('$destination must be of type string; received ' . gettype(@$params['destination']));
         }
 
-        if (@$params['filename'] && !is_string(@$params['filename'])) {
+        if (!empty($params['filename']) && !is_string($params['filename'])) {
             throw new \Files\Exception\InvalidParameterException('$filename must be of type string; received ' . gettype(@$params['filename']));
         }
 
@@ -1563,7 +1561,7 @@ class File
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['path']) {
+        if (empty($params['path'])) {
             if (@$this->path) {
                 $params['path'] = $this->path;
             } else {
@@ -1571,27 +1569,27 @@ class File
             }
         }
 
-        if (@$params['path'] && !is_string(@$params['path'])) {
+        if (!empty($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (@$params['part'] && !is_int(@$params['part'])) {
+        if (!empty($params['part']) && !is_int($params['part'])) {
             throw new \Files\Exception\InvalidParameterException('$part must be of type int; received ' . gettype(@$params['part']));
         }
 
-        if (@$params['parts'] && !is_int(@$params['parts'])) {
+        if (!empty($params['parts']) && !is_int($params['parts'])) {
             throw new \Files\Exception\InvalidParameterException('$parts must be of type int; received ' . gettype(@$params['parts']));
         }
 
-        if (@$params['ref'] && !is_string(@$params['ref'])) {
+        if (!empty($params['ref']) && !is_string($params['ref'])) {
             throw new \Files\Exception\InvalidParameterException('$ref must be of type string; received ' . gettype(@$params['ref']));
         }
 
-        if (@$params['restart'] && !is_int(@$params['restart'])) {
+        if (!empty($params['restart']) && !is_int($params['restart'])) {
             throw new \Files\Exception\InvalidParameterException('$restart must be of type int; received ' . gettype(@$params['restart']));
         }
 
-        if (@$params['size'] && !is_int(@$params['size'])) {
+        if (!empty($params['size']) && !is_int($params['size'])) {
             throw new \Files\Exception\InvalidParameterException('$size must be of type int; received ' . gettype(@$params['size']));
         }
 
@@ -1640,47 +1638,47 @@ class File
 
         $params['path'] = $path;
 
-        if (!@$params['path']) {
+        if (empty($params['path'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: path');
         }
 
-        if (@$params['path'] && !is_string(@$params['path'])) {
+        if (!empty($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (@$params['action'] && !is_string(@$params['action'])) {
+        if (!empty($params['action']) && !is_string($params['action'])) {
             throw new \Files\Exception\InvalidParameterException('$action must be of type string; received ' . gettype(@$params['action']));
         }
 
-        if (@$params['length'] && !is_int(@$params['length'])) {
+        if (!empty($params['length']) && !is_int($params['length'])) {
             throw new \Files\Exception\InvalidParameterException('$length must be of type int; received ' . gettype(@$params['length']));
         }
 
-        if (@$params['part'] && !is_int(@$params['part'])) {
+        if (!empty($params['part']) && !is_int($params['part'])) {
             throw new \Files\Exception\InvalidParameterException('$part must be of type int; received ' . gettype(@$params['part']));
         }
 
-        if (@$params['parts'] && !is_int(@$params['parts'])) {
+        if (!empty($params['parts']) && !is_int($params['parts'])) {
             throw new \Files\Exception\InvalidParameterException('$parts must be of type int; received ' . gettype(@$params['parts']));
         }
 
-        if (@$params['provided_mtime'] && !is_string(@$params['provided_mtime'])) {
+        if (!empty($params['provided_mtime']) && !is_string($params['provided_mtime'])) {
             throw new \Files\Exception\InvalidParameterException('$provided_mtime must be of type string; received ' . gettype(@$params['provided_mtime']));
         }
 
-        if (@$params['ref'] && !is_string(@$params['ref'])) {
+        if (!empty($params['ref']) && !is_string($params['ref'])) {
             throw new \Files\Exception\InvalidParameterException('$ref must be of type string; received ' . gettype(@$params['ref']));
         }
 
-        if (@$params['restart'] && !is_int(@$params['restart'])) {
+        if (!empty($params['restart']) && !is_int($params['restart'])) {
             throw new \Files\Exception\InvalidParameterException('$restart must be of type int; received ' . gettype(@$params['restart']));
         }
 
-        if (@$params['size'] && !is_int(@$params['size'])) {
+        if (!empty($params['size']) && !is_int($params['size'])) {
             throw new \Files\Exception\InvalidParameterException('$size must be of type int; received ' . gettype(@$params['size']));
         }
 
-        if (@$params['structure'] && !is_string(@$params['structure'])) {
+        if (!empty($params['structure']) && !is_string($params['structure'])) {
             throw new \Files\Exception\InvalidParameterException('$structure must be of type string; received ' . gettype(@$params['structure']));
         }
 
@@ -1702,15 +1700,15 @@ class File
 
         $params['path'] = $path;
 
-        if (!@$params['path']) {
+        if (empty($params['path'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: path');
         }
 
-        if (@$params['path'] && !is_string(@$params['path'])) {
+        if (!empty($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (@$params['preview_size'] && !is_string(@$params['preview_size'])) {
+        if (!empty($params['preview_size']) && !is_string($params['preview_size'])) {
             throw new \Files\Exception\InvalidParameterException('$preview_size must be of type string; received ' . gettype(@$params['preview_size']));
         }
 
@@ -1729,19 +1727,19 @@ class File
     //   overwrite - boolean - Overwrite existing file in the destination?
     public static function zip($params = [], $options = [])
     {
-        if (!@$params['paths']) {
+        if (empty($params['paths'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: paths');
         }
 
-        if (!@$params['destination']) {
+        if (empty($params['destination'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: destination');
         }
 
-        if (@$params['paths'] && !is_array(@$params['paths'])) {
+        if (!empty($params['paths']) && !is_array($params['paths'])) {
             throw new \Files\Exception\InvalidParameterException('$paths must be of type array; received ' . gettype(@$params['paths']));
         }
 
-        if (@$params['destination'] && !is_string(@$params['destination'])) {
+        if (!empty($params['destination']) && !is_string($params['destination'])) {
             throw new \Files\Exception\InvalidParameterException('$destination must be of type string; received ' . gettype(@$params['destination']));
         }
 

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class PaymentLineItem
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,21 +56,21 @@ class PaymentLineItem
     // decimal # Payment line item amount
     public function getAmount()
     {
-        return @$this->attributes['amount'];
+        return isset($this->attributes['amount']) ? $this->attributes['amount'] : null;
     }
     // date-time # Payment line item created at date/time
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
     // int64 # Invoice ID
     public function getInvoiceId()
     {
-        return @$this->attributes['invoice_id'];
+        return isset($this->attributes['invoice_id']) ? $this->attributes['invoice_id'] : null;
     }
     // int64 # Payment ID
     public function getPaymentId()
     {
-        return @$this->attributes['payment_id'];
+        return isset($this->attributes['payment_id']) ? $this->attributes['payment_id'] : null;
     }
 }

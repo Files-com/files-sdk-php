@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class Notification
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class Notification
     // int64 # Notification ID
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
     public function setId($value)
@@ -68,7 +66,7 @@ class Notification
     // string # Folder path to notify on. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
     public function getPath()
     {
-        return @$this->attributes['path'];
+        return isset($this->attributes['path']) ? $this->attributes['path'] : null;
     }
 
     public function setPath($value)
@@ -78,7 +76,7 @@ class Notification
     // int64 # ID of Group to receive notifications
     public function getGroupId()
     {
-        return @$this->attributes['group_id'];
+        return isset($this->attributes['group_id']) ? $this->attributes['group_id'] : null;
     }
 
     public function setGroupId($value)
@@ -88,7 +86,7 @@ class Notification
     // string # Group name, if a Group ID is set
     public function getGroupName()
     {
-        return @$this->attributes['group_name'];
+        return isset($this->attributes['group_name']) ? $this->attributes['group_name'] : null;
     }
 
     public function setGroupName($value)
@@ -98,7 +96,7 @@ class Notification
     // array(int64) # Group IDs when the notification requires multiple groups
     public function getGroupIds()
     {
-        return @$this->attributes['group_ids'];
+        return isset($this->attributes['group_ids']) ? $this->attributes['group_ids'] : null;
     }
 
     public function setGroupIds($value)
@@ -108,7 +106,7 @@ class Notification
     // array(string) # Group names when the notification requires multiple groups
     public function getGroupNames()
     {
-        return @$this->attributes['group_names'];
+        return isset($this->attributes['group_names']) ? $this->attributes['group_names'] : null;
     }
 
     public function setGroupNames($value)
@@ -118,7 +116,7 @@ class Notification
     // array(int64) # If set, will only notify on actions made by a member of one of the specified groups
     public function getTriggeringGroupIds()
     {
-        return @$this->attributes['triggering_group_ids'];
+        return isset($this->attributes['triggering_group_ids']) ? $this->attributes['triggering_group_ids'] : null;
     }
 
     public function setTriggeringGroupIds($value)
@@ -128,7 +126,7 @@ class Notification
     // array(int64) # If set, will only notify on actions made one of the specified users
     public function getTriggeringUserIds()
     {
-        return @$this->attributes['triggering_user_ids'];
+        return isset($this->attributes['triggering_user_ids']) ? $this->attributes['triggering_user_ids'] : null;
     }
 
     public function setTriggeringUserIds($value)
@@ -138,7 +136,7 @@ class Notification
     // boolean # Notify when actions are performed by a share recipient?
     public function getTriggerByShareRecipients()
     {
-        return @$this->attributes['trigger_by_share_recipients'];
+        return isset($this->attributes['trigger_by_share_recipients']) ? $this->attributes['trigger_by_share_recipients'] : null;
     }
 
     public function setTriggerByShareRecipients($value)
@@ -148,7 +146,7 @@ class Notification
     // boolean # If true, will send notifications about a user's own activity to that user.  If false, only activity performed by other users (or anonymous users) will be sent in notifications.
     public function getNotifyUserActions()
     {
-        return @$this->attributes['notify_user_actions'];
+        return isset($this->attributes['notify_user_actions']) ? $this->attributes['notify_user_actions'] : null;
     }
 
     public function setNotifyUserActions($value)
@@ -158,7 +156,7 @@ class Notification
     // boolean # Trigger on files copied to this path?
     public function getNotifyOnCopy()
     {
-        return @$this->attributes['notify_on_copy'];
+        return isset($this->attributes['notify_on_copy']) ? $this->attributes['notify_on_copy'] : null;
     }
 
     public function setNotifyOnCopy($value)
@@ -168,7 +166,7 @@ class Notification
     // boolean # Trigger on files deleted in this path?
     public function getNotifyOnDelete()
     {
-        return @$this->attributes['notify_on_delete'];
+        return isset($this->attributes['notify_on_delete']) ? $this->attributes['notify_on_delete'] : null;
     }
 
     public function setNotifyOnDelete($value)
@@ -178,7 +176,7 @@ class Notification
     // boolean # Trigger on files downloaded in this path?
     public function getNotifyOnDownload()
     {
-        return @$this->attributes['notify_on_download'];
+        return isset($this->attributes['notify_on_download']) ? $this->attributes['notify_on_download'] : null;
     }
 
     public function setNotifyOnDownload($value)
@@ -188,7 +186,7 @@ class Notification
     // boolean # Trigger on files moved to this path?
     public function getNotifyOnMove()
     {
-        return @$this->attributes['notify_on_move'];
+        return isset($this->attributes['notify_on_move']) ? $this->attributes['notify_on_move'] : null;
     }
 
     public function setNotifyOnMove($value)
@@ -198,7 +196,7 @@ class Notification
     // boolean # Trigger on files created/uploaded/updated/changed in this path?
     public function getNotifyOnUpload()
     {
-        return @$this->attributes['notify_on_upload'];
+        return isset($this->attributes['notify_on_upload']) ? $this->attributes['notify_on_upload'] : null;
     }
 
     public function setNotifyOnUpload($value)
@@ -208,7 +206,7 @@ class Notification
     // boolean # Apply notification recursively?  This will enable notifications for each subfolder.
     public function getRecursive()
     {
-        return @$this->attributes['recursive'];
+        return isset($this->attributes['recursive']) ? $this->attributes['recursive'] : null;
     }
 
     public function setRecursive($value)
@@ -218,7 +216,7 @@ class Notification
     // string # The time interval that notifications are aggregated to
     public function getSendInterval()
     {
-        return @$this->attributes['send_interval'];
+        return isset($this->attributes['send_interval']) ? $this->attributes['send_interval'] : null;
     }
 
     public function setSendInterval($value)
@@ -228,7 +226,7 @@ class Notification
     // string # Custom subject line to use for notification emails
     public function getSubject()
     {
-        return @$this->attributes['subject'];
+        return isset($this->attributes['subject']) ? $this->attributes['subject'] : null;
     }
 
     public function setSubject($value)
@@ -238,7 +236,7 @@ class Notification
     // string # Custom message to include in notification emails
     public function getMessage()
     {
-        return @$this->attributes['message'];
+        return isset($this->attributes['message']) ? $this->attributes['message'] : null;
     }
 
     public function setMessage($value)
@@ -248,7 +246,7 @@ class Notification
     // array(string) # Array of filenames (possibly with wildcards) to scope trigger
     public function getTriggeringFilenames()
     {
-        return @$this->attributes['triggering_filenames'];
+        return isset($this->attributes['triggering_filenames']) ? $this->attributes['triggering_filenames'] : null;
     }
 
     public function setTriggeringFilenames($value)
@@ -258,7 +256,7 @@ class Notification
     // int64 # Workspace ID. `0` means the default workspace.
     public function getWorkspaceId()
     {
-        return @$this->attributes['workspace_id'];
+        return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
 
     public function setWorkspaceId($value)
@@ -268,7 +266,7 @@ class Notification
     // boolean # Is the user unsubscribed from this notification?
     public function getUnsubscribed()
     {
-        return @$this->attributes['unsubscribed'];
+        return isset($this->attributes['unsubscribed']) ? $this->attributes['unsubscribed'] : null;
     }
 
     public function setUnsubscribed($value)
@@ -278,7 +276,7 @@ class Notification
     // string # The reason that the user unsubscribed
     public function getUnsubscribedReason()
     {
-        return @$this->attributes['unsubscribed_reason'];
+        return isset($this->attributes['unsubscribed_reason']) ? $this->attributes['unsubscribed_reason'] : null;
     }
 
     public function setUnsubscribedReason($value)
@@ -288,7 +286,7 @@ class Notification
     // int64 # Notification user ID
     public function getUserId()
     {
-        return @$this->attributes['user_id'];
+        return isset($this->attributes['user_id']) ? $this->attributes['user_id'] : null;
     }
 
     public function setUserId($value)
@@ -298,7 +296,7 @@ class Notification
     // string # Notification username
     public function getUsername()
     {
-        return @$this->attributes['username'];
+        return isset($this->attributes['username']) ? $this->attributes['username'] : null;
     }
 
     public function setUsername($value)
@@ -308,7 +306,7 @@ class Notification
     // boolean # If true, it means that the recipient at this user's email address has manually unsubscribed from all emails, or had their email "hard bounce", which means that we are unable to send mail to this user's current email address. Notifications will resume if the user changes their email address.
     public function getSuppressedEmail()
     {
-        return @$this->attributes['suppressed_email'];
+        return isset($this->attributes['suppressed_email']) ? $this->attributes['suppressed_email'] : null;
     }
 
     public function setSuppressedEmail($value)
@@ -338,7 +336,7 @@ class Notification
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -346,35 +344,35 @@ class Notification
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (@$params['send_interval'] && !is_string(@$params['send_interval'])) {
+        if (!empty($params['send_interval']) && !is_string($params['send_interval'])) {
             throw new \Files\Exception\InvalidParameterException('$send_interval must be of type string; received ' . gettype(@$params['send_interval']));
         }
 
-        if (@$params['subject'] && !is_string(@$params['subject'])) {
+        if (!empty($params['subject']) && !is_string($params['subject'])) {
             throw new \Files\Exception\InvalidParameterException('$subject must be of type string; received ' . gettype(@$params['subject']));
         }
 
-        if (@$params['message'] && !is_string(@$params['message'])) {
+        if (!empty($params['message']) && !is_string($params['message'])) {
             throw new \Files\Exception\InvalidParameterException('$message must be of type string; received ' . gettype(@$params['message']));
         }
 
-        if (@$params['triggering_filenames'] && !is_array(@$params['triggering_filenames'])) {
+        if (!empty($params['triggering_filenames']) && !is_array($params['triggering_filenames'])) {
             throw new \Files\Exception\InvalidParameterException('$triggering_filenames must be of type array; received ' . gettype(@$params['triggering_filenames']));
         }
 
-        if (@$params['triggering_group_ids'] && !is_array(@$params['triggering_group_ids'])) {
+        if (!empty($params['triggering_group_ids']) && !is_array($params['triggering_group_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$triggering_group_ids must be of type array; received ' . gettype(@$params['triggering_group_ids']));
         }
 
-        if (@$params['triggering_user_ids'] && !is_array(@$params['triggering_user_ids'])) {
+        if (!empty($params['triggering_user_ids']) && !is_array($params['triggering_user_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$triggering_user_ids must be of type array; received ' . gettype(@$params['triggering_user_ids']));
         }
 
-        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
@@ -388,7 +386,7 @@ class Notification
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -396,7 +394,7 @@ class Notification
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -435,19 +433,19 @@ class Notification
     //   group_id - string
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
-        if (@$params['path'] && !is_string(@$params['path'])) {
+        if (!empty($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (@$params['group_id'] && !is_string(@$params['group_id'])) {
+        if (!empty($params['group_id']) && !is_string($params['group_id'])) {
             throw new \Files\Exception\InvalidParameterException('$group_id must be of type string; received ' . gettype(@$params['group_id']));
         }
 
@@ -472,11 +470,11 @@ class Notification
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -512,51 +510,51 @@ class Notification
     //   username - string - The username of the user to notify.  Provide `user_id`, `username` or `group_id`.
     public static function create($params = [], $options = [])
     {
-        if (@$params['user_id'] && !is_int(@$params['user_id'])) {
+        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (@$params['send_interval'] && !is_string(@$params['send_interval'])) {
+        if (!empty($params['send_interval']) && !is_string($params['send_interval'])) {
             throw new \Files\Exception\InvalidParameterException('$send_interval must be of type string; received ' . gettype(@$params['send_interval']));
         }
 
-        if (@$params['subject'] && !is_string(@$params['subject'])) {
+        if (!empty($params['subject']) && !is_string($params['subject'])) {
             throw new \Files\Exception\InvalidParameterException('$subject must be of type string; received ' . gettype(@$params['subject']));
         }
 
-        if (@$params['message'] && !is_string(@$params['message'])) {
+        if (!empty($params['message']) && !is_string($params['message'])) {
             throw new \Files\Exception\InvalidParameterException('$message must be of type string; received ' . gettype(@$params['message']));
         }
 
-        if (@$params['triggering_filenames'] && !is_array(@$params['triggering_filenames'])) {
+        if (!empty($params['triggering_filenames']) && !is_array($params['triggering_filenames'])) {
             throw new \Files\Exception\InvalidParameterException('$triggering_filenames must be of type array; received ' . gettype(@$params['triggering_filenames']));
         }
 
-        if (@$params['triggering_group_ids'] && !is_array(@$params['triggering_group_ids'])) {
+        if (!empty($params['triggering_group_ids']) && !is_array($params['triggering_group_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$triggering_group_ids must be of type array; received ' . gettype(@$params['triggering_group_ids']));
         }
 
-        if (@$params['triggering_user_ids'] && !is_array(@$params['triggering_user_ids'])) {
+        if (!empty($params['triggering_user_ids']) && !is_array($params['triggering_user_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$triggering_user_ids must be of type array; received ' . gettype(@$params['triggering_user_ids']));
         }
 
-        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
-        if (@$params['group_id'] && !is_int(@$params['group_id'])) {
+        if (!empty($params['group_id']) && !is_int($params['group_id'])) {
             throw new \Files\Exception\InvalidParameterException('$group_id must be of type int; received ' . gettype(@$params['group_id']));
         }
 
-        if (@$params['group_ids'] && !is_string(@$params['group_ids'])) {
+        if (!empty($params['group_ids']) && !is_string($params['group_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$group_ids must be of type string; received ' . gettype(@$params['group_ids']));
         }
 
-        if (@$params['path'] && !is_string(@$params['path'])) {
+        if (!empty($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (@$params['username'] && !is_string(@$params['username'])) {
+        if (!empty($params['username']) && !is_string($params['username'])) {
             throw new \Files\Exception\InvalidParameterException('$username must be of type string; received ' . gettype(@$params['username']));
         }
 

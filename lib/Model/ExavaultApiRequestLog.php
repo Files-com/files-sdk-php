@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class ExavaultApiRequestLog
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,62 +56,62 @@ class ExavaultApiRequestLog
     // date-time # Start Time of Action. Deprecrated: Use created_at.
     public function getTimestamp()
     {
-        return @$this->attributes['timestamp'];
+        return isset($this->attributes['timestamp']) ? $this->attributes['timestamp'] : null;
     }
     // string # Name of API Endpoint
     public function getEndpoint()
     {
-        return @$this->attributes['endpoint'];
+        return isset($this->attributes['endpoint']) ? $this->attributes['endpoint'] : null;
     }
     // double # Exavault API Version
     public function getVersion()
     {
-        return @$this->attributes['version'];
+        return isset($this->attributes['version']) ? $this->attributes['version'] : null;
     }
     // string # IP of requesting client
     public function getRequestIp()
     {
-        return @$this->attributes['request_ip'];
+        return isset($this->attributes['request_ip']) ? $this->attributes['request_ip'] : null;
     }
     // string # HTTP Method
     public function getRequestMethod()
     {
-        return @$this->attributes['request_method'];
+        return isset($this->attributes['request_method']) ? $this->attributes['request_method'] : null;
     }
     // string # Error type, if applicable
     public function getErrorType()
     {
-        return @$this->attributes['error_type'];
+        return isset($this->attributes['error_type']) ? $this->attributes['error_type'] : null;
     }
     // string # Error message, if applicable
     public function getErrorMessage()
     {
-        return @$this->attributes['error_message'];
+        return isset($this->attributes['error_message']) ? $this->attributes['error_message'] : null;
     }
     // string # User-Agent
     public function getUserAgent()
     {
-        return @$this->attributes['user_agent'];
+        return isset($this->attributes['user_agent']) ? $this->attributes['user_agent'] : null;
     }
     // int64 # HTTP Response Code
     public function getResponseCode()
     {
-        return @$this->attributes['response_code'];
+        return isset($this->attributes['response_code']) ? $this->attributes['response_code'] : null;
     }
     // boolean # `false` if HTTP Response Code is 4xx or 5xx
     public function getSuccess()
     {
-        return @$this->attributes['success'];
+        return isset($this->attributes['success']) ? $this->attributes['success'] : null;
     }
     // int64 # Duration (in milliseconds)
     public function getDurationMs()
     {
-        return @$this->attributes['duration_ms'];
+        return isset($this->attributes['duration_ms']) ? $this->attributes['duration_ms'] : null;
     }
     // date-time # Start Time of Action
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
 
     // Parameters:
@@ -127,11 +125,11 @@ class ExavaultApiRequestLog
     //   filter_lteq - object - If set, return records where the specified field is less than or equal the supplied value. Valid fields are `created_at`. Valid field combinations are `[ request_ip ]`, `[ request_method ]`, `[ success ]`, `[ created_at ]`, `[ request_ip, request_method ]`, `[ request_ip, success ]`, `[ request_ip, created_at ]`, `[ request_method, success ]`, `[ request_method, created_at ]`, `[ success, created_at ]`, `[ request_ip, request_method, success ]`, `[ request_ip, request_method, created_at ]`, `[ request_ip, success, created_at ]`, `[ request_method, success, created_at ]` or `[ request_ip, request_method, success, created_at ]`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 

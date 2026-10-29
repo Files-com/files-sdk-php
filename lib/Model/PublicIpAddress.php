@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class PublicIpAddress
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,21 +56,21 @@ class PublicIpAddress
     // string # The public IP address.
     public function getIpAddress()
     {
-        return @$this->attributes['ip_address'];
+        return isset($this->attributes['ip_address']) ? $this->attributes['ip_address'] : null;
     }
     // string # The name of the frontend server.
     public function getServerName()
     {
-        return @$this->attributes['server_name'];
+        return isset($this->attributes['server_name']) ? $this->attributes['server_name'] : null;
     }
     // boolean
     public function getFtpEnabled()
     {
-        return @$this->attributes['ftp_enabled'];
+        return isset($this->attributes['ftp_enabled']) ? $this->attributes['ftp_enabled'] : null;
     }
     // boolean
     public function getSftpEnabled()
     {
-        return @$this->attributes['sftp_enabled'];
+        return isset($this->attributes['sftp_enabled']) ? $this->attributes['sftp_enabled'] : null;
     }
 }

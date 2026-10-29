@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class SettingsChange
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,37 +56,37 @@ class SettingsChange
     // int64 # The API key id responsible for this change.
     public function getApiKeyId()
     {
-        return @$this->attributes['api_key_id'];
+        return isset($this->attributes['api_key_id']) ? $this->attributes['api_key_id'] : null;
     }
     // array(string) # Markdown-formatted change messages.
     public function getChanges()
     {
-        return @$this->attributes['changes'];
+        return isset($this->attributes['changes']) ? $this->attributes['changes'] : null;
     }
     // date-time # The time this change was made.
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
     // int64 # The user id responsible for this change.
     public function getUserId()
     {
-        return @$this->attributes['user_id'];
+        return isset($this->attributes['user_id']) ? $this->attributes['user_id'] : null;
     }
     // boolean # true if this change was performed by Files.com support.
     public function getUserIsFilesSupport()
     {
-        return @$this->attributes['user_is_files_support'];
+        return isset($this->attributes['user_is_files_support']) ? $this->attributes['user_is_files_support'] : null;
     }
     // boolean # true if this change was performed by a user on a parent site.
     public function getUserIsFromParentSite()
     {
-        return @$this->attributes['user_is_from_parent_site'];
+        return isset($this->attributes['user_is_from_parent_site']) ? $this->attributes['user_is_from_parent_site'] : null;
     }
     // string # The username of the user responsible for this change.
     public function getUsername()
     {
-        return @$this->attributes['username'];
+        return isset($this->attributes['username']) ? $this->attributes['username'] : null;
     }
 
     // Parameters:
@@ -98,11 +96,11 @@ class SettingsChange
     //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `api_key_id` and `user_id`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 

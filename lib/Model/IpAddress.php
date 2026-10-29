@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class IpAddress
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,22 +56,22 @@ class IpAddress
     // string # Unique label for list; used by Zapier and other integrations.
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
     // string # The object that this public IP address list is associated with.
     public function getAssociatedWith()
     {
-        return @$this->attributes['associated_with'];
+        return isset($this->attributes['associated_with']) ? $this->attributes['associated_with'] : null;
     }
     // int64 # Group ID
     public function getGroupId()
     {
-        return @$this->attributes['group_id'];
+        return isset($this->attributes['group_id']) ? $this->attributes['group_id'] : null;
     }
     // array(string) # A list of IP addresses.
     public function getIpAddresses()
     {
-        return @$this->attributes['ip_addresses'];
+        return isset($this->attributes['ip_addresses']) ? $this->attributes['ip_addresses'] : null;
     }
 
     // Parameters:
@@ -81,11 +79,11 @@ class IpAddress
     //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -105,11 +103,11 @@ class IpAddress
     //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
     public static function getSmartfileReserved($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -129,11 +127,11 @@ class IpAddress
     //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
     public static function getExavaultReserved($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -153,11 +151,11 @@ class IpAddress
     //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
     public static function getReserved($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 

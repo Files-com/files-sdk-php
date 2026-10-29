@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class AutomationAuthoringSchema
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,21 +56,21 @@ class AutomationAuthoringSchema
     // object # JSON Schema for active Automation v2 graph definitions.
     public function getDefinitionSchema()
     {
-        return @$this->attributes['definition_schema'];
+        return isset($this->attributes['definition_schema']) ? $this->attributes['definition_schema'] : null;
     }
     // array(object) # Typed error families accepted by Automation v2 on_error rules.
     public function getErrorFamilies()
     {
-        return @$this->attributes['error_families'];
+        return isset($this->attributes['error_families']) ? $this->attributes['error_families'] : null;
     }
     // array(object) # Active Automation v2 node authoring metadata.
     public function getNodes()
     {
-        return @$this->attributes['nodes'];
+        return isset($this->attributes['nodes']) ? $this->attributes['nodes'] : null;
     }
     // string # Stable public URL for the Automation v2 graph definition JSON Schema.
     public function getSchemaUrl()
     {
-        return @$this->attributes['schema_url'];
+        return isset($this->attributes['schema_url']) ? $this->attributes['schema_url'] : null;
     }
 }

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class EventTarget
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class EventTarget
     // int64 # Event Target ID
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
     public function setId($value)
@@ -68,7 +66,7 @@ class EventTarget
     // string # Event Target name.
     public function getName()
     {
-        return @$this->attributes['name'];
+        return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
 
     public function setName($value)
@@ -78,7 +76,7 @@ class EventTarget
     // string # Event Target type.
     public function getTargetType()
     {
-        return @$this->attributes['target_type'];
+        return isset($this->attributes['target_type']) ? $this->attributes['target_type'] : null;
     }
 
     public function setTargetType($value)
@@ -88,7 +86,7 @@ class EventTarget
     // int64 # Workspace ID. 0 means the default workspace or site-wide.
     public function getWorkspaceId()
     {
-        return @$this->attributes['workspace_id'];
+        return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
 
     public function setWorkspaceId($value)
@@ -98,7 +96,7 @@ class EventTarget
     // boolean # If true, this default-workspace target can receive events from all workspaces.
     public function getApplyToAllWorkspaces()
     {
-        return @$this->attributes['apply_to_all_workspaces'];
+        return isset($this->attributes['apply_to_all_workspaces']) ? $this->attributes['apply_to_all_workspaces'] : null;
     }
 
     public function setApplyToAllWorkspaces($value)
@@ -108,7 +106,7 @@ class EventTarget
     // boolean # Whether this Event Target can receive events.
     public function getEnabled()
     {
-        return @$this->attributes['enabled'];
+        return isset($this->attributes['enabled']) ? $this->attributes['enabled'] : null;
     }
 
     public function setEnabled($value)
@@ -118,7 +116,7 @@ class EventTarget
     // object # Event Target configuration. Fields depend on target_type.
     public function getConfig()
     {
-        return @$this->attributes['config'];
+        return isset($this->attributes['config']) ? $this->attributes['config'] : null;
     }
 
     public function setConfig($value)
@@ -128,7 +126,7 @@ class EventTarget
     // object # Event Target delivery policy. Email and folder targets support batch_interval in seconds, between 600 and 86400. Slack and Teams support delivery_mode (immediate or subfolder_summary), summary_path (empty string means root), and summary_delay (15–300 seconds, default 60). The summary applies to matching file activity under summary_path; other matching events retain immediate delivery.
     public function getDeliveryPolicy()
     {
-        return @$this->attributes['delivery_policy'];
+        return isset($this->attributes['delivery_policy']) ? $this->attributes['delivery_policy'] : null;
     }
 
     public function setDeliveryPolicy($value)
@@ -138,12 +136,12 @@ class EventTarget
     // date-time # Event Target create date/time.
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
     // date-time # Event Target update date/time.
     public function getUpdatedAt()
     {
-        return @$this->attributes['updated_at'];
+        return isset($this->attributes['updated_at']) ? $this->attributes['updated_at'] : null;
     }
 
     // Parameters:
@@ -159,7 +157,7 @@ class EventTarget
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -167,15 +165,15 @@ class EventTarget
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
@@ -189,7 +187,7 @@ class EventTarget
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -197,7 +195,7 @@ class EventTarget
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -232,11 +230,11 @@ class EventTarget
     //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `enabled`, `target_type` or `workspace_id`. Valid field combinations are `[ enabled, target_type ]`, `[ workspace_id, enabled ]` or `[ workspace_id, enabled, target_type ]`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -261,11 +259,11 @@ class EventTarget
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -288,27 +286,27 @@ class EventTarget
     //   target_type (required) - string - Event Target type.
     public static function create($params = [], $options = [])
     {
-        if (!@$params['name']) {
+        if (empty($params['name'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: name');
         }
 
-        if (!@$params['config']) {
+        if (empty($params['config'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: config');
         }
 
-        if (!@$params['target_type']) {
+        if (empty($params['target_type'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: target_type');
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
-        if (@$params['target_type'] && !is_string(@$params['target_type'])) {
+        if (!empty($params['target_type']) && !is_string($params['target_type'])) {
             throw new \Files\Exception\InvalidParameterException('$target_type must be of type string; received ' . gettype(@$params['target_type']));
         }
 

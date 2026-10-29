@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class ApiKey
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class ApiKey
     // int64 # API Key ID
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
     public function setId($value)
@@ -68,7 +66,7 @@ class ApiKey
     // string # Unique label that describes this API key.  Useful for external systems where you may have API keys from multiple accounts and want a human-readable label for each key.
     public function getDescriptiveLabel()
     {
-        return @$this->attributes['descriptive_label'];
+        return isset($this->attributes['descriptive_label']) ? $this->attributes['descriptive_label'] : null;
     }
 
     public function setDescriptiveLabel($value)
@@ -78,7 +76,7 @@ class ApiKey
     // string # User-supplied description of API key.
     public function getDescription()
     {
-        return @$this->attributes['description'];
+        return isset($this->attributes['description']) ? $this->attributes['description'] : null;
     }
 
     public function setDescription($value)
@@ -88,12 +86,12 @@ class ApiKey
     // date-time # Time which API Key was created
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
     // date-time # API Key expiration date
     public function getExpiresAt()
     {
-        return @$this->attributes['expires_at'];
+        return isset($this->attributes['expires_at']) ? $this->attributes['expires_at'] : null;
     }
 
     public function setExpiresAt($value)
@@ -103,7 +101,7 @@ class ApiKey
     // string # API Key actual key string
     public function getKey()
     {
-        return @$this->attributes['key'];
+        return isset($this->attributes['key']) ? $this->attributes['key'] : null;
     }
 
     public function setKey($value)
@@ -113,7 +111,7 @@ class ApiKey
     // boolean # If `true`, this API key will be usable with AWS-compatible endpoints, such as our Inbound S3-compatible endpoint.
     public function getAwsStyleCredentials()
     {
-        return @$this->attributes['aws_style_credentials'];
+        return isset($this->attributes['aws_style_credentials']) ? $this->attributes['aws_style_credentials'] : null;
     }
 
     public function setAwsStyleCredentials($value)
@@ -123,7 +121,7 @@ class ApiKey
     // string # AWS Access Key ID to use with AWS-compatible endpoints, such as our Inbound S3-compatible endpoint.
     public function getAwsAccessKeyId()
     {
-        return @$this->attributes['aws_access_key_id'];
+        return isset($this->attributes['aws_access_key_id']) ? $this->attributes['aws_access_key_id'] : null;
     }
 
     public function setAwsAccessKeyId($value)
@@ -133,7 +131,7 @@ class ApiKey
     // string # AWS Secret Key to use with AWS-compatible endpoints, such as our Inbound S3-compatible endpoint.
     public function getAwsSecretKey()
     {
-        return @$this->attributes['aws_secret_key'];
+        return isset($this->attributes['aws_secret_key']) ? $this->attributes['aws_secret_key'] : null;
     }
 
     public function setAwsSecretKey($value)
@@ -143,7 +141,7 @@ class ApiKey
     // date-time # API Key last used - note this value is only updated once per 3 hour period, so the 'actual' time of last use may be up to 3 hours later than this timestamp.
     public function getLastUseAt()
     {
-        return @$this->attributes['last_use_at'];
+        return isset($this->attributes['last_use_at']) ? $this->attributes['last_use_at'] : null;
     }
 
     public function setLastUseAt($value)
@@ -153,7 +151,7 @@ class ApiKey
     // string # Internal name for the API Key.  For your use.
     public function getName()
     {
-        return @$this->attributes['name'];
+        return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
 
     public function setName($value)
@@ -163,7 +161,7 @@ class ApiKey
     // string # Permissions for this API Key. Keys with the `desktop_app` permission set only have the ability to do the functions provided in our Desktop App (File and Share Link operations). Keys with the `mobile_app` permission set can only perform the functions provided by our Mobile App (File and Share Link operations). Keys with the `office_integration` permission set are auto generated, and automatically expire, to allow users to interact with office integration platforms. Keys with the `files_only` permission set can use only the files, folders, and file_actions endpoints, excluding the GPG Encrypt and GPG Decrypt file actions, where they perform file operations as a full-access file user in the key's workspace scope, along with `GET /file_migrations/{id}` and `GET /api_key`. On the migration lookup, any key with a `path` can read only migrations it started. Without a `path`, user-owned keys retain user-scoped access; site-wide Workspace-bound keys can read only migrations whose source and destination are both in their Workspace. Every `files_only` key is Workspace-bound, including Workspace `0`, as is a full-access key in a named Workspace. A full-access site-wide key in the default Workspace retains Site-wide migration access. Migrations outside the caller's visibility return `not-found`. Keys with `files_only` cannot use site admin, workspace admin, folder admin, group admin, partner admin, or billing privileges from the owning user. Both GPG file actions and every other endpoint deny them with `not-authorized/api-key-only-for-file-operations`. Folder-configured GPG encryption and decryption still apply to files uploaded with a `files_only` key.
     public function getPermissionSet()
     {
-        return @$this->attributes['permission_set'];
+        return isset($this->attributes['permission_set']) ? $this->attributes['permission_set'] : null;
     }
 
     public function setPermissionSet($value)
@@ -173,7 +171,7 @@ class ApiKey
     // string # If this API key represents a Desktop app, what platform was it created on?
     public function getPlatform()
     {
-        return @$this->attributes['platform'];
+        return isset($this->attributes['platform']) ? $this->attributes['platform'] : null;
     }
 
     public function setPlatform($value)
@@ -183,7 +181,7 @@ class ApiKey
     // int64 # Site ID
     public function getSiteId()
     {
-        return @$this->attributes['site_id'];
+        return isset($this->attributes['site_id']) ? $this->attributes['site_id'] : null;
     }
 
     public function setSiteId($value)
@@ -193,7 +191,7 @@ class ApiKey
     // string # Site Name
     public function getSiteName()
     {
-        return @$this->attributes['site_name'];
+        return isset($this->attributes['site_name']) ? $this->attributes['site_name'] : null;
     }
 
     public function setSiteName($value)
@@ -203,7 +201,7 @@ class ApiKey
     // string # URL for API host.
     public function getUrl()
     {
-        return @$this->attributes['url'];
+        return isset($this->attributes['url']) ? $this->attributes['url'] : null;
     }
 
     public function setUrl($value)
@@ -213,7 +211,7 @@ class ApiKey
     // int64 # User ID for the owner of this API Key.  May be blank for Site-wide API Keys.
     public function getUserId()
     {
-        return @$this->attributes['user_id'];
+        return isset($this->attributes['user_id']) ? $this->attributes['user_id'] : null;
     }
 
     public function setUserId($value)
@@ -223,7 +221,7 @@ class ApiKey
     // int64 # Workspace ID for this API Key. `0` means the default workspace.
     public function getWorkspaceId()
     {
-        return @$this->attributes['workspace_id'];
+        return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
 
     public function setWorkspaceId($value)
@@ -233,7 +231,7 @@ class ApiKey
     // string # Restricts the file and folder operations made with this key, meaning the files, folders, and file_actions endpoints, to the specified folder and its descendants, including copy and move destinations. For `GET /file_migrations/{id}`, a key with a path can read only migrations it started. Does not grant access beyond the owning user's permissions. Optional for `files_only` keys and required for `office_integration` keys, which need a path the owning user can read. Keys with any other permission set cannot have a path.
     public function getPath()
     {
-        return @$this->attributes['path'];
+        return isset($this->attributes['path']) ? $this->attributes['path'] : null;
     }
 
     public function setPath($value)
@@ -251,7 +249,7 @@ class ApiKey
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -259,19 +257,19 @@ class ApiKey
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (@$params['description'] && !is_string(@$params['description'])) {
+        if (!empty($params['description']) && !is_string($params['description'])) {
             throw new \Files\Exception\InvalidParameterException('$description must be of type string; received ' . gettype(@$params['description']));
         }
 
-        if (@$params['expires_at'] && !is_string(@$params['expires_at'])) {
+        if (!empty($params['expires_at']) && !is_string($params['expires_at'])) {
             throw new \Files\Exception\InvalidParameterException('$expires_at must be of type string; received ' . gettype(@$params['expires_at']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
@@ -285,7 +283,7 @@ class ApiKey
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -293,7 +291,7 @@ class ApiKey
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -333,15 +331,15 @@ class ApiKey
     //   filter_lteq - object - If set, return records where the specified field is less than or equal the supplied value. Valid fields are `expires_at`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['user_id'] && !is_int(@$params['user_id'])) {
+        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -373,11 +371,11 @@ class ApiKey
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -401,35 +399,35 @@ class ApiKey
     //   workspace_id - int64 - Workspace ID for this API Key. `0` means the default workspace.
     public static function create($params = [], $options = [])
     {
-        if (!@$params['name']) {
+        if (empty($params['name'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: name');
         }
 
-        if (@$params['user_id'] && !is_int(@$params['user_id'])) {
+        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (@$params['description'] && !is_string(@$params['description'])) {
+        if (!empty($params['description']) && !is_string($params['description'])) {
             throw new \Files\Exception\InvalidParameterException('$description must be of type string; received ' . gettype(@$params['description']));
         }
 
-        if (@$params['expires_at'] && !is_string(@$params['expires_at'])) {
+        if (!empty($params['expires_at']) && !is_string($params['expires_at'])) {
             throw new \Files\Exception\InvalidParameterException('$expires_at must be of type string; received ' . gettype(@$params['expires_at']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['path'] && !is_string(@$params['path'])) {
+        if (!empty($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (@$params['permission_set'] && !is_string(@$params['permission_set'])) {
+        if (!empty($params['permission_set']) && !is_string($params['permission_set'])) {
             throw new \Files\Exception\InvalidParameterException('$permission_set must be of type string; received ' . gettype(@$params['permission_set']));
         }
 
-        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
@@ -444,15 +442,15 @@ class ApiKey
     //   permission_set - string - Permissions for this API Key. Keys with the `desktop_app` permission set only have the ability to do the functions provided in our Desktop App (File and Share Link operations). Keys with the `mobile_app` permission set can only perform the functions provided by our Mobile App (File and Share Link operations). Keys with the `office_integration` permission set are auto generated, and automatically expire, to allow users to interact with office integration platforms. Keys with the `files_only` permission set can use only the files, folders, and file_actions endpoints, excluding the GPG Encrypt and GPG Decrypt file actions, where they perform file operations as a full-access file user in the key's workspace scope, along with `GET /file_migrations/{id}` and `GET /api_key`. On the migration lookup, any key with a `path` can read only migrations it started. Without a `path`, user-owned keys retain user-scoped access; site-wide Workspace-bound keys can read only migrations whose source and destination are both in their Workspace. Every `files_only` key is Workspace-bound, including Workspace `0`, as is a full-access key in a named Workspace. A full-access site-wide key in the default Workspace retains Site-wide migration access. Migrations outside the caller's visibility return `not-found`. Keys with `files_only` cannot use site admin, workspace admin, folder admin, group admin, partner admin, or billing privileges from the owning user. Both GPG file actions and every other endpoint deny them with `not-authorized/api-key-only-for-file-operations`. Folder-configured GPG encryption and decryption still apply to files uploaded with a `files_only` key.
     public static function updateCurrent($params = [], $options = [])
     {
-        if (@$params['expires_at'] && !is_string(@$params['expires_at'])) {
+        if (!empty($params['expires_at']) && !is_string($params['expires_at'])) {
             throw new \Files\Exception\InvalidParameterException('$expires_at must be of type string; received ' . gettype(@$params['expires_at']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['permission_set'] && !is_string(@$params['permission_set'])) {
+        if (!empty($params['permission_set']) && !is_string($params['permission_set'])) {
             throw new \Files\Exception\InvalidParameterException('$permission_set must be of type string; received ' . gettype(@$params['permission_set']));
         }
 

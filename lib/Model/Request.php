@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class Request
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class Request
     // int64 # Request ID
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
     public function setId($value)
@@ -68,7 +66,7 @@ class Request
     // string # Folder path. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
     public function getPath()
     {
-        return @$this->attributes['path'];
+        return isset($this->attributes['path']) ? $this->attributes['path'] : null;
     }
 
     public function setPath($value)
@@ -78,7 +76,7 @@ class Request
     // string # Source filename, if applicable
     public function getSource()
     {
-        return @$this->attributes['source'];
+        return isset($this->attributes['source']) ? $this->attributes['source'] : null;
     }
 
     public function setSource($value)
@@ -88,7 +86,7 @@ class Request
     // string # Destination filename
     public function getDestination()
     {
-        return @$this->attributes['destination'];
+        return isset($this->attributes['destination']) ? $this->attributes['destination'] : null;
     }
 
     public function setDestination($value)
@@ -98,7 +96,7 @@ class Request
     // int64 # ID of automation that created request
     public function getAutomationId()
     {
-        return @$this->attributes['automation_id'];
+        return isset($this->attributes['automation_id']) ? $this->attributes['automation_id'] : null;
     }
 
     public function setAutomationId($value)
@@ -108,7 +106,7 @@ class Request
     // string # User making the request (if applicable)
     public function getUserDisplayName()
     {
-        return @$this->attributes['user_display_name'];
+        return isset($this->attributes['user_display_name']) ? $this->attributes['user_display_name'] : null;
     }
 
     public function setUserDisplayName($value)
@@ -118,7 +116,7 @@ class Request
     // string # A list of user IDs to request the file from. If sent as a string, it should be comma-delimited.
     public function getUserIds()
     {
-        return @$this->attributes['user_ids'];
+        return isset($this->attributes['user_ids']) ? $this->attributes['user_ids'] : null;
     }
 
     public function setUserIds($value)
@@ -128,7 +126,7 @@ class Request
     // string # A list of group IDs to request the file from. If sent as a string, it should be comma-delimited.
     public function getGroupIds()
     {
-        return @$this->attributes['group_ids'];
+        return isset($this->attributes['group_ids']) ? $this->attributes['group_ids'] : null;
     }
 
     public function setGroupIds($value)
@@ -142,7 +140,7 @@ class Request
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -150,7 +148,7 @@ class Request
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -184,15 +182,15 @@ class Request
     //   path - string - Path to show requests for.  If omitted, shows all paths. Send `/` to represent the root directory.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
-        if (@$params['path'] && !is_string(@$params['path'])) {
+        if (!empty($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
@@ -221,19 +219,19 @@ class Request
 
         $params['path'] = $path;
 
-        if (!@$params['path']) {
+        if (empty($params['path'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: path');
         }
 
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
-        if (@$params['path'] && !is_string(@$params['path'])) {
+        if (!empty($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
@@ -255,27 +253,27 @@ class Request
     //   group_ids - string - A list of group IDs to request the file from. If sent as a string, it should be comma-delimited.
     public static function create($params = [], $options = [])
     {
-        if (!@$params['path']) {
+        if (empty($params['path'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: path');
         }
 
-        if (!@$params['destination']) {
+        if (empty($params['destination'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: destination');
         }
 
-        if (@$params['path'] && !is_string(@$params['path'])) {
+        if (!empty($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (@$params['destination'] && !is_string(@$params['destination'])) {
+        if (!empty($params['destination']) && !is_string($params['destination'])) {
             throw new \Files\Exception\InvalidParameterException('$destination must be of type string; received ' . gettype(@$params['destination']));
         }
 
-        if (@$params['user_ids'] && !is_string(@$params['user_ids'])) {
+        if (!empty($params['user_ids']) && !is_string($params['user_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$user_ids must be of type string; received ' . gettype(@$params['user_ids']));
         }
 
-        if (@$params['group_ids'] && !is_string(@$params['group_ids'])) {
+        if (!empty($params['group_ids']) && !is_string($params['group_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$group_ids must be of type string; received ' . gettype(@$params['group_ids']));
         }
 

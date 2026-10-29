@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class As2Partner
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class As2Partner
     // int64 # ID of the AS2 Partner.
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
     public function setId($value)
@@ -68,7 +66,7 @@ class As2Partner
     // int64 # ID of the Workspace associated with this AS2 Partner.
     public function getWorkspaceId()
     {
-        return @$this->attributes['workspace_id'];
+        return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
 
     public function setWorkspaceId($value)
@@ -78,7 +76,7 @@ class As2Partner
     // int64 # ID of the AS2 Station associated with this partner.
     public function getAs2StationId()
     {
-        return @$this->attributes['as2_station_id'];
+        return isset($this->attributes['as2_station_id']) ? $this->attributes['as2_station_id'] : null;
     }
 
     public function setAs2StationId($value)
@@ -88,7 +86,7 @@ class As2Partner
     // string # The partner's formal AS2 name.
     public function getName()
     {
-        return @$this->attributes['name'];
+        return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
 
     public function setName($value)
@@ -98,7 +96,7 @@ class As2Partner
     // string # Public URI where we will send the AS2 messages (via HTTP/HTTPS).
     public function getUri()
     {
-        return @$this->attributes['uri'];
+        return isset($this->attributes['uri']) ? $this->attributes['uri'] : null;
     }
 
     public function setUri($value)
@@ -108,7 +106,7 @@ class As2Partner
     // string # Should we require that the remote HTTP server have a valid SSL Certificate for HTTPS? (This only applies to Outgoing AS2 message from Files.com to a Partner.)
     public function getServerCertificate()
     {
-        return @$this->attributes['server_certificate'];
+        return isset($this->attributes['server_certificate']) ? $this->attributes['server_certificate'] : null;
     }
 
     public function setServerCertificate($value)
@@ -118,7 +116,7 @@ class As2Partner
     // string # Username to send to server for HTTP Authentication.
     public function getHttpAuthUsername()
     {
-        return @$this->attributes['http_auth_username'];
+        return isset($this->attributes['http_auth_username']) ? $this->attributes['http_auth_username'] : null;
     }
 
     public function setHttpAuthUsername($value)
@@ -128,7 +126,7 @@ class As2Partner
     // object # Additional HTTP Headers for outgoing message sent to this partner.
     public function getAdditionalHttpHeaders()
     {
-        return @$this->attributes['additional_http_headers'];
+        return isset($this->attributes['additional_http_headers']) ? $this->attributes['additional_http_headers'] : null;
     }
 
     public function setAdditionalHttpHeaders($value)
@@ -138,7 +136,7 @@ class As2Partner
     // string # Default mime type of the file attached to the encrypted message
     public function getDefaultMimeType()
     {
-        return @$this->attributes['default_mime_type'];
+        return isset($this->attributes['default_mime_type']) ? $this->attributes['default_mime_type'] : null;
     }
 
     public function setDefaultMimeType($value)
@@ -148,7 +146,7 @@ class As2Partner
     // string # How should Files.com evaluate message transfer success based on a partner's MDN response?  This setting does not affect MDN storage; all MDNs received from a partner are always stored. `none`: MDN is stored for informational purposes only, a successful HTTPS transfer is a successful AS2 transfer. `weak`: Inspect the MDN for MIC and Disposition only. `normal`: `weak` plus validate MDN signature matches body, `strict`: `normal` but do not allow signatures from self-signed or incorrectly purposed certificates. `auto`: Automatically set the correct value for this setting based on next mdn received.
     public function getMdnValidationLevel()
     {
-        return @$this->attributes['mdn_validation_level'];
+        return isset($this->attributes['mdn_validation_level']) ? $this->attributes['mdn_validation_level'] : null;
     }
 
     public function setMdnValidationLevel($value)
@@ -158,7 +156,7 @@ class As2Partner
     // string # Should Files.com require signatures on incoming AS2 messages?  `normal`: require that incoming messages are signed with a valid matching signature. `none`: Unsigned incoming messages are allowed. `auto`: A one-time starting state. The next message received is always accepted and switches this to `normal` if it carries a valid signature, or `none` if it does not.
     public function getSignatureValidationLevel()
     {
-        return @$this->attributes['signature_validation_level'];
+        return isset($this->attributes['signature_validation_level']) ? $this->attributes['signature_validation_level'] : null;
     }
 
     public function setSignatureValidationLevel($value)
@@ -168,7 +166,7 @@ class As2Partner
     // boolean # If `true`, we will use your site's dedicated IPs for all outbound connections to this AS2 Partner.
     public function getEnableDedicatedIps()
     {
-        return @$this->attributes['enable_dedicated_ips'];
+        return isset($this->attributes['enable_dedicated_ips']) ? $this->attributes['enable_dedicated_ips'] : null;
     }
 
     public function setEnableDedicatedIps($value)
@@ -178,7 +176,7 @@ class As2Partner
     // string # Serial of public certificate used for message security in hex format.
     public function getHexPublicCertificateSerial()
     {
-        return @$this->attributes['hex_public_certificate_serial'];
+        return isset($this->attributes['hex_public_certificate_serial']) ? $this->attributes['hex_public_certificate_serial'] : null;
     }
 
     public function setHexPublicCertificateSerial($value)
@@ -188,7 +186,7 @@ class As2Partner
     // string # Public certificate used for message security.
     public function getPublicCertificate()
     {
-        return @$this->attributes['public_certificate'];
+        return isset($this->attributes['public_certificate']) ? $this->attributes['public_certificate'] : null;
     }
 
     public function setPublicCertificate($value)
@@ -198,7 +196,7 @@ class As2Partner
     // string # MD5 hash of public certificate used for message security.
     public function getPublicCertificateMd5()
     {
-        return @$this->attributes['public_certificate_md5'];
+        return isset($this->attributes['public_certificate_md5']) ? $this->attributes['public_certificate_md5'] : null;
     }
 
     public function setPublicCertificateMd5($value)
@@ -208,7 +206,7 @@ class As2Partner
     // string # Subject of public certificate used for message security.
     public function getPublicCertificateSubject()
     {
-        return @$this->attributes['public_certificate_subject'];
+        return isset($this->attributes['public_certificate_subject']) ? $this->attributes['public_certificate_subject'] : null;
     }
 
     public function setPublicCertificateSubject($value)
@@ -218,7 +216,7 @@ class As2Partner
     // string # Issuer of public certificate used for message security.
     public function getPublicCertificateIssuer()
     {
-        return @$this->attributes['public_certificate_issuer'];
+        return isset($this->attributes['public_certificate_issuer']) ? $this->attributes['public_certificate_issuer'] : null;
     }
 
     public function setPublicCertificateIssuer($value)
@@ -228,7 +226,7 @@ class As2Partner
     // string # Serial of public certificate used for message security.
     public function getPublicCertificateSerial()
     {
-        return @$this->attributes['public_certificate_serial'];
+        return isset($this->attributes['public_certificate_serial']) ? $this->attributes['public_certificate_serial'] : null;
     }
 
     public function setPublicCertificateSerial($value)
@@ -238,7 +236,7 @@ class As2Partner
     // string # Not before value of public certificate used for message security.
     public function getPublicCertificateNotBefore()
     {
-        return @$this->attributes['public_certificate_not_before'];
+        return isset($this->attributes['public_certificate_not_before']) ? $this->attributes['public_certificate_not_before'] : null;
     }
 
     public function setPublicCertificateNotBefore($value)
@@ -248,7 +246,7 @@ class As2Partner
     // string # Not after value of public certificate used for message security.
     public function getPublicCertificateNotAfter()
     {
-        return @$this->attributes['public_certificate_not_after'];
+        return isset($this->attributes['public_certificate_not_after']) ? $this->attributes['public_certificate_not_after'] : null;
     }
 
     public function setPublicCertificateNotAfter($value)
@@ -258,7 +256,7 @@ class As2Partner
     // string # Password to send to server for HTTP Authentication.
     public function getHttpAuthPassword()
     {
-        return @$this->attributes['http_auth_password'];
+        return isset($this->attributes['http_auth_password']) ? $this->attributes['http_auth_password'] : null;
     }
 
     public function setHttpAuthPassword($value)
@@ -268,7 +266,7 @@ class As2Partner
     // string # Base64-encoded PKCS#12 (.pfx or .p12) file containing the partner's public certificate. Provide this instead of public_certificate. Any private key in the file is discarded. A public-only file must contain exactly one certificate.
     public function getPkcs12()
     {
-        return @$this->attributes['pkcs12'];
+        return isset($this->attributes['pkcs12']) ? $this->attributes['pkcs12'] : null;
     }
 
     public function setPkcs12($value)
@@ -278,7 +276,7 @@ class As2Partner
     // string # Password for pkcs12. The file and password are used only for import; the extracted public certificate is stored as PEM.
     public function getPkcs12Password()
     {
-        return @$this->attributes['pkcs12_password'];
+        return isset($this->attributes['pkcs12_password']) ? $this->attributes['pkcs12_password'] : null;
     }
 
     public function setPkcs12Password($value)
@@ -306,7 +304,7 @@ class As2Partner
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -314,51 +312,51 @@ class As2Partner
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (@$params['http_auth_username'] && !is_string(@$params['http_auth_username'])) {
+        if (!empty($params['http_auth_username']) && !is_string($params['http_auth_username'])) {
             throw new \Files\Exception\InvalidParameterException('$http_auth_username must be of type string; received ' . gettype(@$params['http_auth_username']));
         }
 
-        if (@$params['http_auth_password'] && !is_string(@$params['http_auth_password'])) {
+        if (!empty($params['http_auth_password']) && !is_string($params['http_auth_password'])) {
             throw new \Files\Exception\InvalidParameterException('$http_auth_password must be of type string; received ' . gettype(@$params['http_auth_password']));
         }
 
-        if (@$params['mdn_validation_level'] && !is_string(@$params['mdn_validation_level'])) {
+        if (!empty($params['mdn_validation_level']) && !is_string($params['mdn_validation_level'])) {
             throw new \Files\Exception\InvalidParameterException('$mdn_validation_level must be of type string; received ' . gettype(@$params['mdn_validation_level']));
         }
 
-        if (@$params['signature_validation_level'] && !is_string(@$params['signature_validation_level'])) {
+        if (!empty($params['signature_validation_level']) && !is_string($params['signature_validation_level'])) {
             throw new \Files\Exception\InvalidParameterException('$signature_validation_level must be of type string; received ' . gettype(@$params['signature_validation_level']));
         }
 
-        if (@$params['server_certificate'] && !is_string(@$params['server_certificate'])) {
+        if (!empty($params['server_certificate']) && !is_string($params['server_certificate'])) {
             throw new \Files\Exception\InvalidParameterException('$server_certificate must be of type string; received ' . gettype(@$params['server_certificate']));
         }
 
-        if (@$params['default_mime_type'] && !is_string(@$params['default_mime_type'])) {
+        if (!empty($params['default_mime_type']) && !is_string($params['default_mime_type'])) {
             throw new \Files\Exception\InvalidParameterException('$default_mime_type must be of type string; received ' . gettype(@$params['default_mime_type']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['uri'] && !is_string(@$params['uri'])) {
+        if (!empty($params['uri']) && !is_string($params['uri'])) {
             throw new \Files\Exception\InvalidParameterException('$uri must be of type string; received ' . gettype(@$params['uri']));
         }
 
-        if (@$params['public_certificate'] && !is_string(@$params['public_certificate'])) {
+        if (!empty($params['public_certificate']) && !is_string($params['public_certificate'])) {
             throw new \Files\Exception\InvalidParameterException('$public_certificate must be of type string; received ' . gettype(@$params['public_certificate']));
         }
 
-        if (@$params['pkcs12'] && !is_string(@$params['pkcs12'])) {
+        if (!empty($params['pkcs12']) && !is_string($params['pkcs12'])) {
             throw new \Files\Exception\InvalidParameterException('$pkcs12 must be of type string; received ' . gettype(@$params['pkcs12']));
         }
 
-        if (@$params['pkcs12_password'] && !is_string(@$params['pkcs12_password'])) {
+        if (!empty($params['pkcs12_password']) && !is_string($params['pkcs12_password'])) {
             throw new \Files\Exception\InvalidParameterException('$pkcs12_password must be of type string; received ' . gettype(@$params['pkcs12_password']));
         }
 
@@ -372,7 +370,7 @@ class As2Partner
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -380,7 +378,7 @@ class As2Partner
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -415,11 +413,11 @@ class As2Partner
     //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `as2_station_id` and `workspace_id`. Valid field combinations are `[ workspace_id, as2_station_id ]`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -444,11 +442,11 @@ class As2Partner
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -478,63 +476,63 @@ class As2Partner
     //   pkcs12_password - string - Password for pkcs12. The file and password are used only for import; the extracted public certificate is stored as PEM.
     public static function create($params = [], $options = [])
     {
-        if (!@$params['as2_station_id']) {
+        if (empty($params['as2_station_id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: as2_station_id');
         }
 
-        if (!@$params['name']) {
+        if (empty($params['name'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: name');
         }
 
-        if (!@$params['uri']) {
+        if (empty($params['uri'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: uri');
         }
 
-        if (@$params['http_auth_username'] && !is_string(@$params['http_auth_username'])) {
+        if (!empty($params['http_auth_username']) && !is_string($params['http_auth_username'])) {
             throw new \Files\Exception\InvalidParameterException('$http_auth_username must be of type string; received ' . gettype(@$params['http_auth_username']));
         }
 
-        if (@$params['http_auth_password'] && !is_string(@$params['http_auth_password'])) {
+        if (!empty($params['http_auth_password']) && !is_string($params['http_auth_password'])) {
             throw new \Files\Exception\InvalidParameterException('$http_auth_password must be of type string; received ' . gettype(@$params['http_auth_password']));
         }
 
-        if (@$params['mdn_validation_level'] && !is_string(@$params['mdn_validation_level'])) {
+        if (!empty($params['mdn_validation_level']) && !is_string($params['mdn_validation_level'])) {
             throw new \Files\Exception\InvalidParameterException('$mdn_validation_level must be of type string; received ' . gettype(@$params['mdn_validation_level']));
         }
 
-        if (@$params['signature_validation_level'] && !is_string(@$params['signature_validation_level'])) {
+        if (!empty($params['signature_validation_level']) && !is_string($params['signature_validation_level'])) {
             throw new \Files\Exception\InvalidParameterException('$signature_validation_level must be of type string; received ' . gettype(@$params['signature_validation_level']));
         }
 
-        if (@$params['server_certificate'] && !is_string(@$params['server_certificate'])) {
+        if (!empty($params['server_certificate']) && !is_string($params['server_certificate'])) {
             throw new \Files\Exception\InvalidParameterException('$server_certificate must be of type string; received ' . gettype(@$params['server_certificate']));
         }
 
-        if (@$params['default_mime_type'] && !is_string(@$params['default_mime_type'])) {
+        if (!empty($params['default_mime_type']) && !is_string($params['default_mime_type'])) {
             throw new \Files\Exception\InvalidParameterException('$default_mime_type must be of type string; received ' . gettype(@$params['default_mime_type']));
         }
 
-        if (@$params['as2_station_id'] && !is_int(@$params['as2_station_id'])) {
+        if (!empty($params['as2_station_id']) && !is_int($params['as2_station_id'])) {
             throw new \Files\Exception\InvalidParameterException('$as2_station_id must be of type int; received ' . gettype(@$params['as2_station_id']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['uri'] && !is_string(@$params['uri'])) {
+        if (!empty($params['uri']) && !is_string($params['uri'])) {
             throw new \Files\Exception\InvalidParameterException('$uri must be of type string; received ' . gettype(@$params['uri']));
         }
 
-        if (@$params['public_certificate'] && !is_string(@$params['public_certificate'])) {
+        if (!empty($params['public_certificate']) && !is_string($params['public_certificate'])) {
             throw new \Files\Exception\InvalidParameterException('$public_certificate must be of type string; received ' . gettype(@$params['public_certificate']));
         }
 
-        if (@$params['pkcs12'] && !is_string(@$params['pkcs12'])) {
+        if (!empty($params['pkcs12']) && !is_string($params['pkcs12'])) {
             throw new \Files\Exception\InvalidParameterException('$pkcs12 must be of type string; received ' . gettype(@$params['pkcs12']));
         }
 
-        if (@$params['pkcs12_password'] && !is_string(@$params['pkcs12_password'])) {
+        if (!empty($params['pkcs12_password']) && !is_string($params['pkcs12_password'])) {
             throw new \Files\Exception\InvalidParameterException('$pkcs12_password must be of type string; received ' . gettype(@$params['pkcs12_password']));
         }
 

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class AccountLineItem
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,66 +56,66 @@ class AccountLineItem
     // int64 # Line item Id
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
     // decimal # Line item amount
     public function getAmount()
     {
-        return @$this->attributes['amount'];
+        return isset($this->attributes['amount']) ? $this->attributes['amount'] : null;
     }
     // decimal # Line item balance
     public function getBalance()
     {
-        return @$this->attributes['balance'];
+        return isset($this->attributes['balance']) ? $this->attributes['balance'] : null;
     }
     // date-time # Line item created at
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
     // string # Line item currency
     public function getCurrency()
     {
-        return @$this->attributes['currency'];
+        return isset($this->attributes['currency']) ? $this->attributes['currency'] : null;
     }
     // string # Line item download uri
     public function getDownloadUri()
     {
-        return @$this->attributes['download_uri'];
+        return isset($this->attributes['download_uri']) ? $this->attributes['download_uri'] : null;
     }
     // array(object) # Associated invoice line items
     public function getInvoiceLineItems()
     {
-        return @$this->attributes['invoice_line_items'];
+        return isset($this->attributes['invoice_line_items']) ? $this->attributes['invoice_line_items'] : null;
     }
     // string # Line item payment method
     public function getMethod()
     {
-        return @$this->attributes['method'];
+        return isset($this->attributes['method']) ? $this->attributes['method'] : null;
     }
     // array(object) # Associated payment line items
     public function getPaymentLineItems()
     {
-        return @$this->attributes['payment_line_items'];
+        return isset($this->attributes['payment_line_items']) ? $this->attributes['payment_line_items'] : null;
     }
     // date-time # Date/time payment was reversed if applicable
     public function getPaymentReversedAt()
     {
-        return @$this->attributes['payment_reversed_at'];
+        return isset($this->attributes['payment_reversed_at']) ? $this->attributes['payment_reversed_at'] : null;
     }
     // string # Type of payment if applicable
     public function getPaymentType()
     {
-        return @$this->attributes['payment_type'];
+        return isset($this->attributes['payment_type']) ? $this->attributes['payment_type'] : null;
     }
     // string # Site name this line item is for
     public function getSiteName()
     {
-        return @$this->attributes['site_name'];
+        return isset($this->attributes['site_name']) ? $this->attributes['site_name'] : null;
     }
     // string # Type of line item, either payment or invoice
     public function getType()
     {
-        return @$this->attributes['type'];
+        return isset($this->attributes['type']) ? $this->attributes['type'] : null;
     }
 }

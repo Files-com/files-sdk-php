@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class ExternalEvent
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class ExternalEvent
     // int64 # Event ID
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
     public function setId($value)
@@ -68,7 +66,7 @@ class ExternalEvent
     // string # Type of event being recorded.
     public function getEventType()
     {
-        return @$this->attributes['event_type'];
+        return isset($this->attributes['event_type']) ? $this->attributes['event_type'] : null;
     }
 
     public function setEventType($value)
@@ -78,7 +76,7 @@ class ExternalEvent
     // string # Status of event.
     public function getStatus()
     {
-        return @$this->attributes['status'];
+        return isset($this->attributes['status']) ? $this->attributes['status'] : null;
     }
 
     public function setStatus($value)
@@ -88,7 +86,7 @@ class ExternalEvent
     // string # Event body
     public function getBody()
     {
-        return @$this->attributes['body'];
+        return isset($this->attributes['body']) ? $this->attributes['body'] : null;
     }
 
     public function setBody($value)
@@ -98,12 +96,12 @@ class ExternalEvent
     // date-time # External event create date/time
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
     // string # Link to log file.
     public function getBodyUrl()
     {
-        return @$this->attributes['body_url'];
+        return isset($this->attributes['body_url']) ? $this->attributes['body_url'] : null;
     }
 
     public function setBodyUrl($value)
@@ -134,11 +132,11 @@ class ExternalEvent
     //   filter_lteq - object - If set, return records where the specified field is less than or equal the supplied value. Valid fields are `created_at`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -163,11 +161,11 @@ class ExternalEvent
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -185,19 +183,19 @@ class ExternalEvent
     //   body (required) - string - Event body
     public static function create($params = [], $options = [])
     {
-        if (!@$params['status']) {
+        if (empty($params['status'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: status');
         }
 
-        if (!@$params['body']) {
+        if (empty($params['body'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: body');
         }
 
-        if (@$params['status'] && !is_string(@$params['status'])) {
+        if (!empty($params['status']) && !is_string($params['status'])) {
             throw new \Files\Exception\InvalidParameterException('$status must be of type string; received ' . gettype(@$params['status']));
         }
 
-        if (@$params['body'] && !is_string(@$params['body'])) {
+        if (!empty($params['body']) && !is_string($params['body'])) {
             throw new \Files\Exception\InvalidParameterException('$body must be of type string; received ' . gettype(@$params['body']));
         }
 

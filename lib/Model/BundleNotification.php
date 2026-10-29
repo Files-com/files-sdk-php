@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class BundleNotification
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class BundleNotification
     // int64 # Bundle ID to notify on
     public function getBundleId()
     {
-        return @$this->attributes['bundle_id'];
+        return isset($this->attributes['bundle_id']) ? $this->attributes['bundle_id'] : null;
     }
 
     public function setBundleId($value)
@@ -68,7 +66,7 @@ class BundleNotification
     // int64 # Bundle Notification ID
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
     public function setId($value)
@@ -78,7 +76,7 @@ class BundleNotification
     // boolean # Triggers bundle notification when a registration action occurs for it.
     public function getNotifyOnRegistration()
     {
-        return @$this->attributes['notify_on_registration'];
+        return isset($this->attributes['notify_on_registration']) ? $this->attributes['notify_on_registration'] : null;
     }
 
     public function setNotifyOnRegistration($value)
@@ -88,7 +86,7 @@ class BundleNotification
     // boolean # Triggers bundle notification when a upload action occurs for it.
     public function getNotifyOnUpload()
     {
-        return @$this->attributes['notify_on_upload'];
+        return isset($this->attributes['notify_on_upload']) ? $this->attributes['notify_on_upload'] : null;
     }
 
     public function setNotifyOnUpload($value)
@@ -98,7 +96,7 @@ class BundleNotification
     // boolean # Is the current user the user to notify?
     public function getNotifyCurrentUser()
     {
-        return @$this->attributes['notify_current_user'];
+        return isset($this->attributes['notify_current_user']) ? $this->attributes['notify_current_user'] : null;
     }
 
     public function setNotifyCurrentUser($value)
@@ -108,7 +106,7 @@ class BundleNotification
     // int64 # The id of the user to notify.
     public function getNotifyUserId()
     {
-        return @$this->attributes['notify_user_id'];
+        return isset($this->attributes['notify_user_id']) ? $this->attributes['notify_user_id'] : null;
     }
 
     public function setNotifyUserId($value)
@@ -118,7 +116,7 @@ class BundleNotification
     // int64 # Workspace ID. `0` means the default workspace.
     public function getWorkspaceId()
     {
-        return @$this->attributes['workspace_id'];
+        return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
 
     public function setWorkspaceId($value)
@@ -128,7 +126,7 @@ class BundleNotification
     // int64 # User ID.  Provide a value of `0` to operate the current session's user.
     public function getUserId()
     {
-        return @$this->attributes['user_id'];
+        return isset($this->attributes['user_id']) ? $this->attributes['user_id'] : null;
     }
 
     public function setUserId($value)
@@ -145,7 +143,7 @@ class BundleNotification
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -153,7 +151,7 @@ class BundleNotification
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -167,7 +165,7 @@ class BundleNotification
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -175,7 +173,7 @@ class BundleNotification
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -212,19 +210,19 @@ class BundleNotification
     //   bundle_id - int64 - Bundle ID
     public static function all($params = [], $options = [])
     {
-        if (@$params['user_id'] && !is_int(@$params['user_id'])) {
+        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
-        if (@$params['bundle_id'] && !is_int(@$params['bundle_id'])) {
+        if (!empty($params['bundle_id']) && !is_int($params['bundle_id'])) {
             throw new \Files\Exception\InvalidParameterException('$bundle_id must be of type int; received ' . gettype(@$params['bundle_id']));
         }
 
@@ -249,11 +247,11 @@ class BundleNotification
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -274,19 +272,19 @@ class BundleNotification
     //   notify_on_upload - boolean - Triggers bundle notification when a upload action occurs for it.
     public static function create($params = [], $options = [])
     {
-        if (!@$params['bundle_id']) {
+        if (empty($params['bundle_id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: bundle_id');
         }
 
-        if (@$params['user_id'] && !is_int(@$params['user_id'])) {
+        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (@$params['bundle_id'] && !is_int(@$params['bundle_id'])) {
+        if (!empty($params['bundle_id']) && !is_int($params['bundle_id'])) {
             throw new \Files\Exception\InvalidParameterException('$bundle_id must be of type int; received ' . gettype(@$params['bundle_id']));
         }
 
-        if (@$params['notify_user_id'] && !is_int(@$params['notify_user_id'])) {
+        if (!empty($params['notify_user_id']) && !is_int($params['notify_user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$notify_user_id must be of type int; received ' . gettype(@$params['notify_user_id']));
         }
 

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class GroupUser
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class GroupUser
     // string # Group name
     public function getGroupName()
     {
-        return @$this->attributes['group_name'];
+        return isset($this->attributes['group_name']) ? $this->attributes['group_name'] : null;
     }
 
     public function setGroupName($value)
@@ -68,7 +66,7 @@ class GroupUser
     // int64 # Group ID
     public function getGroupId()
     {
-        return @$this->attributes['group_id'];
+        return isset($this->attributes['group_id']) ? $this->attributes['group_id'] : null;
     }
 
     public function setGroupId($value)
@@ -78,7 +76,7 @@ class GroupUser
     // int64 # User ID
     public function getUserId()
     {
-        return @$this->attributes['user_id'];
+        return isset($this->attributes['user_id']) ? $this->attributes['user_id'] : null;
     }
 
     public function setUserId($value)
@@ -88,7 +86,7 @@ class GroupUser
     // boolean # Is this user an administrator of this group?
     public function getAdmin()
     {
-        return @$this->attributes['admin'];
+        return isset($this->attributes['admin']) ? $this->attributes['admin'] : null;
     }
 
     public function setAdmin($value)
@@ -98,7 +96,7 @@ class GroupUser
     // string # Username of the user
     public function getUsername()
     {
-        return @$this->attributes['username'];
+        return isset($this->attributes['username']) ? $this->attributes['username'] : null;
     }
 
     public function setUsername($value)
@@ -108,7 +106,7 @@ class GroupUser
     // int64 # Group User ID.
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
     public function setId($value)
@@ -126,7 +124,7 @@ class GroupUser
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -134,7 +132,7 @@ class GroupUser
             }
         }
 
-        if (!@$params['group_id']) {
+        if (empty($params['group_id'])) {
             if (@$this->group_id) {
                 $params['group_id'] = $this->group_id;
             } else {
@@ -142,7 +140,7 @@ class GroupUser
             }
         }
 
-        if (!@$params['user_id']) {
+        if (empty($params['user_id'])) {
             if (@$this->user_id) {
                 $params['user_id'] = $this->user_id;
             } else {
@@ -150,15 +148,15 @@ class GroupUser
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (@$params['group_id'] && !is_int(@$params['group_id'])) {
+        if (!empty($params['group_id']) && !is_int($params['group_id'])) {
             throw new \Files\Exception\InvalidParameterException('$group_id must be of type int; received ' . gettype(@$params['group_id']));
         }
 
-        if (@$params['user_id'] && !is_int(@$params['user_id'])) {
+        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
@@ -175,7 +173,7 @@ class GroupUser
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -183,7 +181,7 @@ class GroupUser
             }
         }
 
-        if (!@$params['group_id']) {
+        if (empty($params['group_id'])) {
             if (@$this->group_id) {
                 $params['group_id'] = $this->group_id;
             } else {
@@ -191,7 +189,7 @@ class GroupUser
             }
         }
 
-        if (!@$params['user_id']) {
+        if (empty($params['user_id'])) {
             if (@$this->user_id) {
                 $params['user_id'] = $this->user_id;
             } else {
@@ -199,15 +197,15 @@ class GroupUser
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (@$params['group_id'] && !is_int(@$params['group_id'])) {
+        if (!empty($params['group_id']) && !is_int($params['group_id'])) {
             throw new \Files\Exception\InvalidParameterException('$group_id must be of type int; received ' . gettype(@$params['group_id']));
         }
 
-        if (@$params['user_id'] && !is_int(@$params['user_id'])) {
+        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
@@ -242,19 +240,19 @@ class GroupUser
     //   user_id - int64 - User ID.  If provided, will return group_users of this user.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
-        if (@$params['group_id'] && !is_int(@$params['group_id'])) {
+        if (!empty($params['group_id']) && !is_int($params['group_id'])) {
             throw new \Files\Exception\InvalidParameterException('$group_id must be of type int; received ' . gettype(@$params['group_id']));
         }
 
-        if (@$params['user_id'] && !is_int(@$params['user_id'])) {
+        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
@@ -275,19 +273,19 @@ class GroupUser
     //   admin - boolean - Is the user a group administrator?
     public static function create($params = [], $options = [])
     {
-        if (!@$params['group_id']) {
+        if (empty($params['group_id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: group_id');
         }
 
-        if (!@$params['user_id']) {
+        if (empty($params['user_id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: user_id');
         }
 
-        if (@$params['group_id'] && !is_int(@$params['group_id'])) {
+        if (!empty($params['group_id']) && !is_int($params['group_id'])) {
             throw new \Files\Exception\InvalidParameterException('$group_id must be of type int; received ' . gettype(@$params['group_id']));
         }
 
-        if (@$params['user_id'] && !is_int(@$params['user_id'])) {
+        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 

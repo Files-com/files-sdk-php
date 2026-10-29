@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class Folder
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class Folder
     // string # File/Folder path. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
     public function getPath()
     {
-        return @$this->attributes['path'];
+        return isset($this->attributes['path']) ? $this->attributes['path'] : null;
     }
 
     public function setPath($value)
@@ -68,7 +66,7 @@ class Folder
     // int64 # User ID of the User who created the file/folder
     public function getCreatedById()
     {
-        return @$this->attributes['created_by_id'];
+        return isset($this->attributes['created_by_id']) ? $this->attributes['created_by_id'] : null;
     }
 
     public function setCreatedById($value)
@@ -78,7 +76,7 @@ class Folder
     // int64 # ID of the API key that created the file/folder
     public function getCreatedByApiKeyId()
     {
-        return @$this->attributes['created_by_api_key_id'];
+        return isset($this->attributes['created_by_api_key_id']) ? $this->attributes['created_by_api_key_id'] : null;
     }
 
     public function setCreatedByApiKeyId($value)
@@ -88,7 +86,7 @@ class Folder
     // int64 # ID of the AS2 Incoming Message that created the file/folder
     public function getCreatedByAs2IncomingMessageId()
     {
-        return @$this->attributes['created_by_as2_incoming_message_id'];
+        return isset($this->attributes['created_by_as2_incoming_message_id']) ? $this->attributes['created_by_as2_incoming_message_id'] : null;
     }
 
     public function setCreatedByAs2IncomingMessageId($value)
@@ -98,7 +96,7 @@ class Folder
     // int64 # ID of the Automation that created the file/folder
     public function getCreatedByAutomationId()
     {
-        return @$this->attributes['created_by_automation_id'];
+        return isset($this->attributes['created_by_automation_id']) ? $this->attributes['created_by_automation_id'] : null;
     }
 
     public function setCreatedByAutomationId($value)
@@ -108,7 +106,7 @@ class Folder
     // int64 # ID of the Bundle Registration that created the file/folder
     public function getCreatedByBundleRegistrationId()
     {
-        return @$this->attributes['created_by_bundle_registration_id'];
+        return isset($this->attributes['created_by_bundle_registration_id']) ? $this->attributes['created_by_bundle_registration_id'] : null;
     }
 
     public function setCreatedByBundleRegistrationId($value)
@@ -118,7 +116,7 @@ class Folder
     // int64 # ID of the Inbox that created the file/folder
     public function getCreatedByInboxId()
     {
-        return @$this->attributes['created_by_inbox_id'];
+        return isset($this->attributes['created_by_inbox_id']) ? $this->attributes['created_by_inbox_id'] : null;
     }
 
     public function setCreatedByInboxId($value)
@@ -128,7 +126,7 @@ class Folder
     // int64 # ID of the Remote Server that created the file/folder
     public function getCreatedByRemoteServerId()
     {
-        return @$this->attributes['created_by_remote_server_id'];
+        return isset($this->attributes['created_by_remote_server_id']) ? $this->attributes['created_by_remote_server_id'] : null;
     }
 
     public function setCreatedByRemoteServerId($value)
@@ -138,7 +136,7 @@ class Folder
     // int64 # ID of the Sync that created the file/folder
     public function getCreatedBySyncId()
     {
-        return @$this->attributes['created_by_sync_id'];
+        return isset($this->attributes['created_by_sync_id']) ? $this->attributes['created_by_sync_id'] : null;
     }
 
     public function setCreatedBySyncId($value)
@@ -148,7 +146,7 @@ class Folder
     // object # Custom metadata map of keys and values. Limited to 32 keys, 256 characters per key and 1024 characters per value.
     public function getCustomMetadata()
     {
-        return @$this->attributes['custom_metadata'];
+        return isset($this->attributes['custom_metadata']) ? $this->attributes['custom_metadata'] : null;
     }
 
     public function setCustomMetadata($value)
@@ -158,7 +156,7 @@ class Folder
     // string # File/Folder display name
     public function getDisplayName()
     {
-        return @$this->attributes['display_name'];
+        return isset($this->attributes['display_name']) ? $this->attributes['display_name'] : null;
     }
 
     public function setDisplayName($value)
@@ -168,7 +166,7 @@ class Folder
     // string # Type: `directory` or `file`.
     public function getType()
     {
-        return @$this->attributes['type'];
+        return isset($this->attributes['type']) ? $this->attributes['type'] : null;
     }
 
     public function setType($value)
@@ -178,7 +176,7 @@ class Folder
     // int64 # File/Folder size
     public function getSize()
     {
-        return @$this->attributes['size'];
+        return isset($this->attributes['size']) ? $this->attributes['size'] : null;
     }
 
     public function setSize($value)
@@ -188,12 +186,12 @@ class Folder
     // date-time # File created date/time
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
     // int64 # User ID of the User who last modified the file/folder
     public function getLastModifiedById()
     {
-        return @$this->attributes['last_modified_by_id'];
+        return isset($this->attributes['last_modified_by_id']) ? $this->attributes['last_modified_by_id'] : null;
     }
 
     public function setLastModifiedById($value)
@@ -203,7 +201,7 @@ class Folder
     // int64 # ID of the API key that last modified the file/folder
     public function getLastModifiedByApiKeyId()
     {
-        return @$this->attributes['last_modified_by_api_key_id'];
+        return isset($this->attributes['last_modified_by_api_key_id']) ? $this->attributes['last_modified_by_api_key_id'] : null;
     }
 
     public function setLastModifiedByApiKeyId($value)
@@ -213,7 +211,7 @@ class Folder
     // int64 # ID of the Automation that last modified the file/folder
     public function getLastModifiedByAutomationId()
     {
-        return @$this->attributes['last_modified_by_automation_id'];
+        return isset($this->attributes['last_modified_by_automation_id']) ? $this->attributes['last_modified_by_automation_id'] : null;
     }
 
     public function setLastModifiedByAutomationId($value)
@@ -223,7 +221,7 @@ class Folder
     // int64 # ID of the Bundle Registration that last modified the file/folder
     public function getLastModifiedByBundleRegistrationId()
     {
-        return @$this->attributes['last_modified_by_bundle_registration_id'];
+        return isset($this->attributes['last_modified_by_bundle_registration_id']) ? $this->attributes['last_modified_by_bundle_registration_id'] : null;
     }
 
     public function setLastModifiedByBundleRegistrationId($value)
@@ -233,7 +231,7 @@ class Folder
     // int64 # ID of the Remote Server that last modified the file/folder
     public function getLastModifiedByRemoteServerId()
     {
-        return @$this->attributes['last_modified_by_remote_server_id'];
+        return isset($this->attributes['last_modified_by_remote_server_id']) ? $this->attributes['last_modified_by_remote_server_id'] : null;
     }
 
     public function setLastModifiedByRemoteServerId($value)
@@ -243,7 +241,7 @@ class Folder
     // int64 # ID of the Sync that last modified the file/folder
     public function getLastModifiedBySyncId()
     {
-        return @$this->attributes['last_modified_by_sync_id'];
+        return isset($this->attributes['last_modified_by_sync_id']) ? $this->attributes['last_modified_by_sync_id'] : null;
     }
 
     public function setLastModifiedBySyncId($value)
@@ -253,7 +251,7 @@ class Folder
     // date-time # File last modified date/time, according to the server.  This is the timestamp of the last Files.com operation of the file, regardless of what modified timestamp was sent.
     public function getMtime()
     {
-        return @$this->attributes['mtime'];
+        return isset($this->attributes['mtime']) ? $this->attributes['mtime'] : null;
     }
 
     public function setMtime($value)
@@ -263,7 +261,7 @@ class Folder
     // date-time # File last modified date/time, according to the client who set it.  Files.com allows desktop, FTP, SFTP, and WebDAV clients to set modified at times.  This allows Desktop<->Cloud syncing to preserve modified at times.
     public function getProvidedMtime()
     {
-        return @$this->attributes['provided_mtime'];
+        return isset($this->attributes['provided_mtime']) ? $this->attributes['provided_mtime'] : null;
     }
 
     public function setProvidedMtime($value)
@@ -273,7 +271,7 @@ class Folder
     // string # File CRC32 checksum. This is sometimes delayed, so if you get a blank response, wait and try again.
     public function getCrc32()
     {
-        return @$this->attributes['crc32'];
+        return isset($this->attributes['crc32']) ? $this->attributes['crc32'] : null;
     }
 
     public function setCrc32($value)
@@ -283,7 +281,7 @@ class Folder
     // string # File MD5 checksum. This is sometimes delayed, so if you get a blank response, wait and try again.
     public function getMd5()
     {
-        return @$this->attributes['md5'];
+        return isset($this->attributes['md5']) ? $this->attributes['md5'] : null;
     }
 
     public function setMd5($value)
@@ -293,7 +291,7 @@ class Folder
     // string # File SHA1 checksum. This is sometimes delayed, so if you get a blank response, wait and try again.
     public function getSha1()
     {
-        return @$this->attributes['sha1'];
+        return isset($this->attributes['sha1']) ? $this->attributes['sha1'] : null;
     }
 
     public function setSha1($value)
@@ -303,7 +301,7 @@ class Folder
     // string # File SHA256 checksum. This is sometimes delayed, so if you get a blank response, wait and try again.
     public function getSha256()
     {
-        return @$this->attributes['sha256'];
+        return isset($this->attributes['sha256']) ? $this->attributes['sha256'] : null;
     }
 
     public function setSha256($value)
@@ -313,7 +311,7 @@ class Folder
     // string # MIME Type.  This is determined by the filename extension and is not stored separately internally.
     public function getMimeType()
     {
-        return @$this->attributes['mime_type'];
+        return isset($this->attributes['mime_type']) ? $this->attributes['mime_type'] : null;
     }
 
     public function setMimeType($value)
@@ -323,7 +321,7 @@ class Folder
     // string # Region location
     public function getRegion()
     {
-        return @$this->attributes['region'];
+        return isset($this->attributes['region']) ? $this->attributes['region'] : null;
     }
 
     public function setRegion($value)
@@ -333,7 +331,7 @@ class Folder
     // string # A short string representing the current user's permissions.  Can be `r` (Read),`w` (Write),`d` (Delete), `l` (List) or any combination
     public function getPermissions()
     {
-        return @$this->attributes['permissions'];
+        return isset($this->attributes['permissions']) ? $this->attributes['permissions'] : null;
     }
 
     public function setPermissions($value)
@@ -343,7 +341,7 @@ class Folder
     // boolean # Are subfolders locked and unable to be modified?
     public function getSubfoldersLocked()
     {
-        return @$this->attributes['subfolders_locked'];
+        return isset($this->attributes['subfolders_locked']) ? $this->attributes['subfolders_locked'] : null;
     }
 
     public function setSubfoldersLocked($value)
@@ -353,7 +351,7 @@ class Folder
     // boolean # Is this folder locked and unable to be modified?
     public function getIsLocked()
     {
-        return @$this->attributes['is_locked'];
+        return isset($this->attributes['is_locked']) ? $this->attributes['is_locked'] : null;
     }
 
     public function setIsLocked($value)
@@ -363,7 +361,7 @@ class Folder
     // string # Link to download file. Provided only in response to a download request.
     public function getDownloadUri()
     {
-        return @$this->attributes['download_uri'];
+        return isset($this->attributes['download_uri']) ? $this->attributes['download_uri'] : null;
     }
 
     public function setDownloadUri($value)
@@ -373,7 +371,7 @@ class Folder
     // DirectConnectionInfo # Optional direct connection information for direct Agent transfer attempts
     public function getDirectConnectionInfo()
     {
-        return @$this->attributes['direct_connection_info'];
+        return isset($this->attributes['direct_connection_info']) ? $this->attributes['direct_connection_info'] : null;
     }
 
     public function setDirectConnectionInfo($value)
@@ -383,7 +381,7 @@ class Folder
     // string # Bookmark/priority color of file/folder
     public function getPriorityColor()
     {
-        return @$this->attributes['priority_color'];
+        return isset($this->attributes['priority_color']) ? $this->attributes['priority_color'] : null;
     }
 
     public function setPriorityColor($value)
@@ -393,7 +391,7 @@ class Folder
     // int64 # File preview ID
     public function getPreviewId()
     {
-        return @$this->attributes['preview_id'];
+        return isset($this->attributes['preview_id']) ? $this->attributes['preview_id'] : null;
     }
 
     public function setPreviewId($value)
@@ -403,7 +401,7 @@ class Folder
     // Preview # File preview
     public function getPreview()
     {
-        return @$this->attributes['preview'];
+        return isset($this->attributes['preview']) ? $this->attributes['preview'] : null;
     }
 
     public function setPreview($value)
@@ -413,7 +411,7 @@ class Folder
     // boolean # Create parent directories if they do not exist?
     public function getMkdirParents()
     {
-        return @$this->attributes['mkdir_parents'];
+        return isset($this->attributes['mkdir_parents']) ? $this->attributes['mkdir_parents'] : null;
     }
 
     public function setMkdirParents($value)
@@ -450,39 +448,39 @@ class Folder
 
         $params['path'] = $path;
 
-        if (!@$params['path']) {
+        if (empty($params['path'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: path');
         }
 
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
-        if (@$params['path'] && !is_string(@$params['path'])) {
+        if (!empty($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (@$params['preview_size'] && !is_string(@$params['preview_size'])) {
+        if (!empty($params['preview_size']) && !is_string($params['preview_size'])) {
             throw new \Files\Exception\InvalidParameterException('$preview_size must be of type string; received ' . gettype(@$params['preview_size']));
         }
 
-        if (@$params['search'] && !is_string(@$params['search'])) {
+        if (!empty($params['search']) && !is_string($params['search'])) {
             throw new \Files\Exception\InvalidParameterException('$search must be of type string; received ' . gettype(@$params['search']));
         }
 
-        if (@$params['search_custom_metadata_key'] && !is_string(@$params['search_custom_metadata_key'])) {
+        if (!empty($params['search_custom_metadata_key']) && !is_string($params['search_custom_metadata_key'])) {
             throw new \Files\Exception\InvalidParameterException('$search_custom_metadata_key must be of type string; received ' . gettype(@$params['search_custom_metadata_key']));
         }
 
-        if (@$params['type'] && !is_string(@$params['type'])) {
+        if (!empty($params['type']) && !is_string($params['type'])) {
             throw new \Files\Exception\InvalidParameterException('$type must be of type string; received ' . gettype(@$params['type']));
         }
 
-        if (@$params['modified_at_datetime'] && !is_string(@$params['modified_at_datetime'])) {
+        if (!empty($params['modified_at_datetime']) && !is_string($params['modified_at_datetime'])) {
             throw new \Files\Exception\InvalidParameterException('$modified_at_datetime must be of type string; received ' . gettype(@$params['modified_at_datetime']));
         }
 
@@ -509,15 +507,15 @@ class Folder
 
         $params['path'] = $path;
 
-        if (!@$params['path']) {
+        if (empty($params['path'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: path');
         }
 
-        if (@$params['path'] && !is_string(@$params['path'])) {
+        if (!empty($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (@$params['provided_mtime'] && !is_string(@$params['provided_mtime'])) {
+        if (!empty($params['provided_mtime']) && !is_string($params['provided_mtime'])) {
             throw new \Files\Exception\InvalidParameterException('$provided_mtime must be of type string; received ' . gettype(@$params['provided_mtime']));
         }
 

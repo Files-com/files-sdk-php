@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class RemoteBandwidthSnapshot
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,27 +56,27 @@ class RemoteBandwidthSnapshot
     // int64 # Site bandwidth ID
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
     // int64 # Site sync bandwidth report bytes received
     public function getSyncBytesReceived()
     {
-        return @$this->attributes['sync_bytes_received'];
+        return isset($this->attributes['sync_bytes_received']) ? $this->attributes['sync_bytes_received'] : null;
     }
     // int64 # Site sync bandwidth report bytes sent
     public function getSyncBytesSent()
     {
-        return @$this->attributes['sync_bytes_sent'];
+        return isset($this->attributes['sync_bytes_sent']) ? $this->attributes['sync_bytes_sent'] : null;
     }
     // date-time # Time the site bandwidth report was logged
     public function getLoggedAt()
     {
-        return @$this->attributes['logged_at'];
+        return isset($this->attributes['logged_at']) ? $this->attributes['logged_at'] : null;
     }
     // int64 # ID of related Remote Server
     public function getRemoteServerId()
     {
-        return @$this->attributes['remote_server_id'];
+        return isset($this->attributes['remote_server_id']) ? $this->attributes['remote_server_id'] : null;
     }
 
     // Parameters:
@@ -92,11 +90,11 @@ class RemoteBandwidthSnapshot
     //   filter_lteq - object - If set, return records where the specified field is less than or equal the supplied value. Valid fields are `logged_at`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 

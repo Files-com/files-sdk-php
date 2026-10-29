@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class As2OutgoingMessage
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,162 +56,162 @@ class As2OutgoingMessage
     // int64 # Id of the AS2 Partner.
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
     // int64 # ID of the Workspace associated with this AS2 Outgoing Message.
     public function getWorkspaceId()
     {
-        return @$this->attributes['workspace_id'];
+        return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
     // int64 # Id of the AS2 Partner associated with this message.
     public function getAs2PartnerId()
     {
-        return @$this->attributes['as2_partner_id'];
+        return isset($this->attributes['as2_partner_id']) ? $this->attributes['as2_partner_id'] : null;
     }
     // int64 # Id of the AS2 Station associated with this message.
     public function getAs2StationId()
     {
-        return @$this->attributes['as2_station_id'];
+        return isset($this->attributes['as2_station_id']) ? $this->attributes['as2_station_id'] : null;
     }
     // string # UUID assigned to this message.
     public function getUuid()
     {
-        return @$this->attributes['uuid'];
+        return isset($this->attributes['uuid']) ? $this->attributes['uuid'] : null;
     }
     // object # HTTP Headers sent with this message.
     public function getHttpHeaders()
     {
-        return @$this->attributes['http_headers'];
+        return isset($this->attributes['http_headers']) ? $this->attributes['http_headers'] : null;
     }
     // string # Result of processing.
     public function getProcessingResult()
     {
-        return @$this->attributes['processing_result'];
+        return isset($this->attributes['processing_result']) ? $this->attributes['processing_result'] : null;
     }
     // string # Result of processing description.
     public function getProcessingResultDescription()
     {
-        return @$this->attributes['processing_result_description'];
+        return isset($this->attributes['processing_result_description']) ? $this->attributes['processing_result_description'] : null;
     }
     // string # AS2 Message Integrity Check SHA1
     public function getMic()
     {
-        return @$this->attributes['mic'];
+        return isset($this->attributes['mic']) ? $this->attributes['mic'] : null;
     }
     // string # AS2 Message Integrity Check SHA256
     public function getMicSha256()
     {
-        return @$this->attributes['mic_sha_256'];
+        return isset($this->attributes['mic_sha_256']) ? $this->attributes['mic_sha_256'] : null;
     }
     // string # AS2 TO
     public function getAs2To()
     {
-        return @$this->attributes['as2_to'];
+        return isset($this->attributes['as2_to']) ? $this->attributes['as2_to'] : null;
     }
     // string # AS2 FROM
     public function getAs2From()
     {
-        return @$this->attributes['as2_from'];
+        return isset($this->attributes['as2_from']) ? $this->attributes['as2_from'] : null;
     }
     // string # AS2 Subject
     public function getAs2Subject()
     {
-        return @$this->attributes['as2_subject'];
+        return isset($this->attributes['as2_subject']) ? $this->attributes['as2_subject'] : null;
     }
     // string # Date Header
     public function getDate()
     {
-        return @$this->attributes['date'];
+        return isset($this->attributes['date']) ? $this->attributes['date'] : null;
     }
     // string # AS2 Message Id
     public function getMessageId()
     {
-        return @$this->attributes['message_id'];
+        return isset($this->attributes['message_id']) ? $this->attributes['message_id'] : null;
     }
     // string # Encrypted Payload Body Size
     public function getBodySize()
     {
-        return @$this->attributes['body_size'];
+        return isset($this->attributes['body_size']) ? $this->attributes['body_size'] : null;
     }
     // string # Filename of the file being sent.
     public function getAttachmentFilename()
     {
-        return @$this->attributes['attachment_filename'];
+        return isset($this->attributes['attachment_filename']) ? $this->attributes['attachment_filename'] : null;
     }
     // date-time # Message creation date/time
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
     // string # HTTP Response Code received for this message
     public function getHttpResponseCode()
     {
-        return @$this->attributes['http_response_code'];
+        return isset($this->attributes['http_response_code']) ? $this->attributes['http_response_code'] : null;
     }
     // object # HTTP Headers received for this message.
     public function getHttpResponseHeaders()
     {
-        return @$this->attributes['http_response_headers'];
+        return isset($this->attributes['http_response_headers']) ? $this->attributes['http_response_headers'] : null;
     }
     // double # HTTP transmission duration in seceonds
     public function getHttpTransmissionDuration()
     {
-        return @$this->attributes['http_transmission_duration'];
+        return isset($this->attributes['http_transmission_duration']) ? $this->attributes['http_transmission_duration'] : null;
     }
     // boolean # Did the partner give a response body?
     public function getMdnReceived()
     {
-        return @$this->attributes['mdn_received'];
+        return isset($this->attributes['mdn_received']) ? $this->attributes['mdn_received'] : null;
     }
     // boolean # Is the response in MDN format?
     public function getMdnValid()
     {
-        return @$this->attributes['mdn_valid'];
+        return isset($this->attributes['mdn_valid']) ? $this->attributes['mdn_valid'] : null;
     }
     // boolean # MDN signature verified?
     public function getMdnSignatureVerified()
     {
-        return @$this->attributes['mdn_signature_verified'];
+        return isset($this->attributes['mdn_signature_verified']) ? $this->attributes['mdn_signature_verified'] : null;
     }
     // boolean # MDN message id matched?
     public function getMdnMessageIdMatched()
     {
-        return @$this->attributes['mdn_message_id_matched'];
+        return isset($this->attributes['mdn_message_id_matched']) ? $this->attributes['mdn_message_id_matched'] : null;
     }
     // boolean # MDN MIC matched?
     public function getMdnMicMatched()
     {
-        return @$this->attributes['mdn_mic_matched'];
+        return isset($this->attributes['mdn_mic_matched']) ? $this->attributes['mdn_mic_matched'] : null;
     }
     // boolean # MDN disposition indicate a successful processing?
     public function getMdnProcessingSuccess()
     {
-        return @$this->attributes['mdn_processing_success'];
+        return isset($this->attributes['mdn_processing_success']) ? $this->attributes['mdn_processing_success'] : null;
     }
     // string # URL to download the original file contents
     public function getRawUri()
     {
-        return @$this->attributes['raw_uri'];
+        return isset($this->attributes['raw_uri']) ? $this->attributes['raw_uri'] : null;
     }
     // string # URL to download the file contents encoded as smime
     public function getSmimeUri()
     {
-        return @$this->attributes['smime_uri'];
+        return isset($this->attributes['smime_uri']) ? $this->attributes['smime_uri'] : null;
     }
     // string # URL to download the file contents as smime with signature
     public function getSmimeSignedUri()
     {
-        return @$this->attributes['smime_signed_uri'];
+        return isset($this->attributes['smime_signed_uri']) ? $this->attributes['smime_signed_uri'] : null;
     }
     // string # URL to download the encrypted signed smime that is to sent as AS2 body
     public function getEncryptedUri()
     {
-        return @$this->attributes['encrypted_uri'];
+        return isset($this->attributes['encrypted_uri']) ? $this->attributes['encrypted_uri'] : null;
     }
     // string # URL to download the http response body
     public function getMdnResponseUri()
     {
-        return @$this->attributes['mdn_response_uri'];
+        return isset($this->attributes['mdn_response_uri']) ? $this->attributes['mdn_response_uri'] : null;
     }
 
     // Parameters:
@@ -227,11 +225,11 @@ class As2OutgoingMessage
     //   filter_lteq - object - If set, return records where the specified field is less than or equal the supplied value. Valid fields are `created_at`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 

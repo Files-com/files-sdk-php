@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class ExpectationIncident
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,77 +56,77 @@ class ExpectationIncident
     // int64 # Expectation Incident ID
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
     // int64 # Workspace ID. `0` means the default workspace.
     public function getWorkspaceId()
     {
-        return @$this->attributes['workspace_id'];
+        return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
     // int64 # Expectation ID.
     public function getExpectationId()
     {
-        return @$this->attributes['expectation_id'];
+        return isset($this->attributes['expectation_id']) ? $this->attributes['expectation_id'] : null;
     }
     // string # Incident status.
     public function getStatus()
     {
-        return @$this->attributes['status'];
+        return isset($this->attributes['status']) ? $this->attributes['status'] : null;
     }
     // date-time # When the incident was opened.
     public function getOpenedAt()
     {
-        return @$this->attributes['opened_at'];
+        return isset($this->attributes['opened_at']) ? $this->attributes['opened_at'] : null;
     }
     // date-time # When the most recent failing evaluation contributing to the incident occurred.
     public function getLastFailedAt()
     {
-        return @$this->attributes['last_failed_at'];
+        return isset($this->attributes['last_failed_at']) ? $this->attributes['last_failed_at'] : null;
     }
     // date-time # When the incident was acknowledged.
     public function getAcknowledgedAt()
     {
-        return @$this->attributes['acknowledged_at'];
+        return isset($this->attributes['acknowledged_at']) ? $this->attributes['acknowledged_at'] : null;
     }
     // date-time # When the current snooze expires.
     public function getSnoozedUntil()
     {
-        return @$this->attributes['snoozed_until'];
+        return isset($this->attributes['snoozed_until']) ? $this->attributes['snoozed_until'] : null;
     }
     // date-time # When the incident was resolved.
     public function getResolvedAt()
     {
-        return @$this->attributes['resolved_at'];
+        return isset($this->attributes['resolved_at']) ? $this->attributes['resolved_at'] : null;
     }
     // int64 # Evaluation that first opened the incident.
     public function getOpenedByEvaluationId()
     {
-        return @$this->attributes['opened_by_evaluation_id'];
+        return isset($this->attributes['opened_by_evaluation_id']) ? $this->attributes['opened_by_evaluation_id'] : null;
     }
     // int64 # Most recent evaluation linked to the incident.
     public function getLastEvaluationId()
     {
-        return @$this->attributes['last_evaluation_id'];
+        return isset($this->attributes['last_evaluation_id']) ? $this->attributes['last_evaluation_id'] : null;
     }
     // int64 # Evaluation that resolved the incident.
     public function getResolvedByEvaluationId()
     {
-        return @$this->attributes['resolved_by_evaluation_id'];
+        return isset($this->attributes['resolved_by_evaluation_id']) ? $this->attributes['resolved_by_evaluation_id'] : null;
     }
     // object # Compact incident summary payload.
     public function getSummary()
     {
-        return @$this->attributes['summary'];
+        return isset($this->attributes['summary']) ? $this->attributes['summary'] : null;
     }
     // date-time # Creation time.
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
     // date-time # Last update time.
     public function getUpdatedAt()
     {
-        return @$this->attributes['updated_at'];
+        return isset($this->attributes['updated_at']) ? $this->attributes['updated_at'] : null;
     }
 
     // Resolve an expectation incident
@@ -138,7 +136,7 @@ class ExpectationIncident
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -146,7 +144,7 @@ class ExpectationIncident
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -164,7 +162,7 @@ class ExpectationIncident
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -172,7 +170,7 @@ class ExpectationIncident
             }
         }
 
-        if (!@$params['snoozed_until']) {
+        if (empty($params['snoozed_until'])) {
             if (@$this->snoozed_until) {
                 $params['snoozed_until'] = $this->snoozed_until;
             } else {
@@ -180,11 +178,11 @@ class ExpectationIncident
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (@$params['snoozed_until'] && !is_string(@$params['snoozed_until'])) {
+        if (!empty($params['snoozed_until']) && !is_string($params['snoozed_until'])) {
             throw new \Files\Exception\InvalidParameterException('$snoozed_until must be of type string; received ' . gettype(@$params['snoozed_until']));
         }
 
@@ -199,7 +197,7 @@ class ExpectationIncident
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -207,7 +205,7 @@ class ExpectationIncident
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -222,11 +220,11 @@ class ExpectationIncident
     //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `expectation_id` and `workspace_id`. Valid field combinations are `[ workspace_id, expectation_id ]`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -251,11 +249,11 @@ class ExpectationIncident
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 

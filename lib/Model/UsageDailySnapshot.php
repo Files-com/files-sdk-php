@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class UsageDailySnapshot
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,62 +56,62 @@ class UsageDailySnapshot
     // int64 # ID of the usage record
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
     // date # The date of this usage record
     public function getDate()
     {
-        return @$this->attributes['date'];
+        return isset($this->attributes['date']) ? $this->attributes['date'] : null;
     }
     // boolean # True if the API usage fields `read_api_usage` and `write_api_usage` can be relied upon.  If this is false, we suggest hiding that value from any UI.
     public function getApiUsageAvailable()
     {
-        return @$this->attributes['api_usage_available'];
+        return isset($this->attributes['api_usage_available']) ? $this->attributes['api_usage_available'] : null;
     }
     // int64 # Read API Calls used on this day. Note: only updated for days before the current day.
     public function getReadApiUsage()
     {
-        return @$this->attributes['read_api_usage'];
+        return isset($this->attributes['read_api_usage']) ? $this->attributes['read_api_usage'] : null;
     }
     // int64 # Write API Calls used on this day. Note: only updated for days before the current day.
     public function getWriteApiUsage()
     {
-        return @$this->attributes['write_api_usage'];
+        return isset($this->attributes['write_api_usage']) ? $this->attributes['write_api_usage'] : null;
     }
     // int64 # Transformation and AI credits used on this day. Note: only updated for days before the current day.
     public function getTransformationCreditsUsage()
     {
-        return @$this->attributes['transformation_credits_usage'];
+        return isset($this->attributes['transformation_credits_usage']) ? $this->attributes['transformation_credits_usage'] : null;
     }
     // int64 # Number of billable users as of this day.
     public function getUserCount()
     {
-        return @$this->attributes['user_count'];
+        return isset($this->attributes['user_count']) ? $this->attributes['user_count'] : null;
     }
     // int64 # GB of Files Native Storage used on this day.
     public function getCurrentStorage()
     {
-        return @$this->attributes['current_storage'];
+        return isset($this->attributes['current_storage']) ? $this->attributes['current_storage'] : null;
     }
     // int64 # GB of Files Native Storage used on this day for files that have been deleted and are stored as backups.
     public function getDeletedFilesStorage()
     {
-        return @$this->attributes['deleted_files_storage'];
+        return isset($this->attributes['deleted_files_storage']) ? $this->attributes['deleted_files_storage'] : null;
     }
     // int64 # GB of Files Native Storage used on this day for files that have been permanently deleted but were uploaded less than 30 days ago, and are still billable.
     public function getDeletedFilesCountedInMinimum()
     {
-        return @$this->attributes['deleted_files_counted_in_minimum'];
+        return isset($this->attributes['deleted_files_counted_in_minimum']) ? $this->attributes['deleted_files_counted_in_minimum'] : null;
     }
     // int64 # GB of Files Native Storage used for the root folder.  Included here because this value will not be part of `usage_by_top_level_dir`
     public function getRootStorage()
     {
-        return @$this->attributes['root_storage'];
+        return isset($this->attributes['root_storage']) ? $this->attributes['root_storage'] : null;
     }
     // array(object) # Usage broken down by each top-level folder
     public function getUsageByTopLevelDir()
     {
-        return @$this->attributes['usage_by_top_level_dir'];
+        return isset($this->attributes['usage_by_top_level_dir']) ? $this->attributes['usage_by_top_level_dir'] : null;
     }
 
     // Parameters:
@@ -127,11 +125,11 @@ class UsageDailySnapshot
     //   filter_lteq - object - If set, return records where the specified field is less than or equal the supplied value. Valid fields are `date`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 

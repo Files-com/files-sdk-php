@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class UserLifecycleRule
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class UserLifecycleRule
     // int64 # User Lifecycle Rule ID
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
     public function setId($value)
@@ -68,7 +66,7 @@ class UserLifecycleRule
     // string # User authentication method for which the rule will apply. Use `all_non_sso` to target every non-SSO authentication method with one rule.
     public function getAuthenticationMethod()
     {
-        return @$this->attributes['authentication_method'];
+        return isset($this->attributes['authentication_method']) ? $this->attributes['authentication_method'] : null;
     }
 
     public function setAuthenticationMethod($value)
@@ -78,7 +76,7 @@ class UserLifecycleRule
     // array(int64) # Array of Group IDs to which the rule applies. If empty or not set, the rule applies to all users.
     public function getGroupIds()
     {
-        return @$this->attributes['group_ids'];
+        return isset($this->attributes['group_ids']) ? $this->attributes['group_ids'] : null;
     }
 
     public function setGroupIds($value)
@@ -88,7 +86,7 @@ class UserLifecycleRule
     // string # Action to take on inactive users (disable or delete)
     public function getAction()
     {
-        return @$this->attributes['action'];
+        return isset($this->attributes['action']) ? $this->attributes['action'] : null;
     }
 
     public function setAction($value)
@@ -98,7 +96,7 @@ class UserLifecycleRule
     // int64 # Number of days of inactivity before the rule applies
     public function getInactivityDays()
     {
-        return @$this->attributes['inactivity_days'];
+        return isset($this->attributes['inactivity_days']) ? $this->attributes['inactivity_days'] : null;
     }
 
     public function setInactivityDays($value)
@@ -108,7 +106,7 @@ class UserLifecycleRule
     // boolean # If true, the rule will apply to folder admins.
     public function getIncludeFolderAdmins()
     {
-        return @$this->attributes['include_folder_admins'];
+        return isset($this->attributes['include_folder_admins']) ? $this->attributes['include_folder_admins'] : null;
     }
 
     public function setIncludeFolderAdmins($value)
@@ -118,7 +116,7 @@ class UserLifecycleRule
     // boolean # If true, the rule includes Site Administrators, who always belong to the Default Workspace. Can only be enabled when `workspace_id` is `0`.
     public function getIncludeSiteAdmins()
     {
-        return @$this->attributes['include_site_admins'];
+        return isset($this->attributes['include_site_admins']) ? $this->attributes['include_site_admins'] : null;
     }
 
     public function setIncludeSiteAdmins($value)
@@ -128,7 +126,7 @@ class UserLifecycleRule
     // boolean # If true, a Default Workspace rule also applies to users in all Custom Workspaces. Can only be enabled when `workspace_id` is `0`.
     public function getApplyToAllWorkspaces()
     {
-        return @$this->attributes['apply_to_all_workspaces'];
+        return isset($this->attributes['apply_to_all_workspaces']) ? $this->attributes['apply_to_all_workspaces'] : null;
     }
 
     public function setApplyToAllWorkspaces($value)
@@ -138,7 +136,7 @@ class UserLifecycleRule
     // string # User Lifecycle Rule name
     public function getName()
     {
-        return @$this->attributes['name'];
+        return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
 
     public function setName($value)
@@ -148,7 +146,7 @@ class UserLifecycleRule
     // boolean # If true, users will be emailed before the rule disables or deletes them.
     public function getNotifyUsers()
     {
-        return @$this->attributes['notify_users'];
+        return isset($this->attributes['notify_users']) ? $this->attributes['notify_users'] : null;
     }
 
     public function setNotifyUsers($value)
@@ -158,7 +156,7 @@ class UserLifecycleRule
     // string # If provided, only users belonging to Partners with this tag at the Partner level will be affected by the rule. Tags must only contain lowercase letters, numbers, and hyphens.
     public function getPartnerTag()
     {
-        return @$this->attributes['partner_tag'];
+        return isset($this->attributes['partner_tag']) ? $this->attributes['partner_tag'] : null;
     }
 
     public function setPartnerTag($value)
@@ -168,7 +166,7 @@ class UserLifecycleRule
     // int64 # Site ID
     public function getSiteId()
     {
-        return @$this->attributes['site_id'];
+        return isset($this->attributes['site_id']) ? $this->attributes['site_id'] : null;
     }
 
     public function setSiteId($value)
@@ -178,7 +176,7 @@ class UserLifecycleRule
     // int64 # Workspace whose users the rule applies to. `0` means the Default Workspace. A Custom Workspace rule applies only to users who belong to that Workspace, regardless of access granted to other users.
     public function getWorkspaceId()
     {
-        return @$this->attributes['workspace_id'];
+        return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
 
     public function setWorkspaceId($value)
@@ -188,7 +186,7 @@ class UserLifecycleRule
     // string # State of the users to apply the rule to (inactive or disabled)
     public function getUserState()
     {
-        return @$this->attributes['user_state'];
+        return isset($this->attributes['user_state']) ? $this->attributes['user_state'] : null;
     }
 
     public function setUserState($value)
@@ -198,7 +196,7 @@ class UserLifecycleRule
     // string # If provided, only users with this tag will be affected by the rule. Tags must only contain lowercase letters, numbers, and hyphens.
     public function getUserTag()
     {
-        return @$this->attributes['user_tag'];
+        return isset($this->attributes['user_tag']) ? $this->attributes['user_tag'] : null;
     }
 
     public function setUserTag($value)
@@ -226,7 +224,7 @@ class UserLifecycleRule
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -234,43 +232,43 @@ class UserLifecycleRule
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (@$params['action'] && !is_string(@$params['action'])) {
+        if (!empty($params['action']) && !is_string($params['action'])) {
             throw new \Files\Exception\InvalidParameterException('$action must be of type string; received ' . gettype(@$params['action']));
         }
 
-        if (@$params['authentication_method'] && !is_string(@$params['authentication_method'])) {
+        if (!empty($params['authentication_method']) && !is_string($params['authentication_method'])) {
             throw new \Files\Exception\InvalidParameterException('$authentication_method must be of type string; received ' . gettype(@$params['authentication_method']));
         }
 
-        if (@$params['group_ids'] && !is_array(@$params['group_ids'])) {
+        if (!empty($params['group_ids']) && !is_array($params['group_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$group_ids must be of type array; received ' . gettype(@$params['group_ids']));
         }
 
-        if (@$params['inactivity_days'] && !is_int(@$params['inactivity_days'])) {
+        if (!empty($params['inactivity_days']) && !is_int($params['inactivity_days'])) {
             throw new \Files\Exception\InvalidParameterException('$inactivity_days must be of type int; received ' . gettype(@$params['inactivity_days']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['partner_tag'] && !is_string(@$params['partner_tag'])) {
+        if (!empty($params['partner_tag']) && !is_string($params['partner_tag'])) {
             throw new \Files\Exception\InvalidParameterException('$partner_tag must be of type string; received ' . gettype(@$params['partner_tag']));
         }
 
-        if (@$params['user_state'] && !is_string(@$params['user_state'])) {
+        if (!empty($params['user_state']) && !is_string($params['user_state'])) {
             throw new \Files\Exception\InvalidParameterException('$user_state must be of type string; received ' . gettype(@$params['user_state']));
         }
 
-        if (@$params['user_tag'] && !is_string(@$params['user_tag'])) {
+        if (!empty($params['user_tag']) && !is_string($params['user_tag'])) {
             throw new \Files\Exception\InvalidParameterException('$user_tag must be of type string; received ' . gettype(@$params['user_tag']));
         }
 
-        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
@@ -284,7 +282,7 @@ class UserLifecycleRule
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -292,7 +290,7 @@ class UserLifecycleRule
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -327,11 +325,11 @@ class UserLifecycleRule
     //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `workspace_id`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -356,11 +354,11 @@ class UserLifecycleRule
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -389,39 +387,39 @@ class UserLifecycleRule
     //   workspace_id - int64 - Workspace whose users the rule applies to. `0` means the Default Workspace. A Custom Workspace rule applies only to users who belong to that Workspace, regardless of access granted to other users.
     public static function create($params = [], $options = [])
     {
-        if (@$params['action'] && !is_string(@$params['action'])) {
+        if (!empty($params['action']) && !is_string($params['action'])) {
             throw new \Files\Exception\InvalidParameterException('$action must be of type string; received ' . gettype(@$params['action']));
         }
 
-        if (@$params['authentication_method'] && !is_string(@$params['authentication_method'])) {
+        if (!empty($params['authentication_method']) && !is_string($params['authentication_method'])) {
             throw new \Files\Exception\InvalidParameterException('$authentication_method must be of type string; received ' . gettype(@$params['authentication_method']));
         }
 
-        if (@$params['group_ids'] && !is_array(@$params['group_ids'])) {
+        if (!empty($params['group_ids']) && !is_array($params['group_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$group_ids must be of type array; received ' . gettype(@$params['group_ids']));
         }
 
-        if (@$params['inactivity_days'] && !is_int(@$params['inactivity_days'])) {
+        if (!empty($params['inactivity_days']) && !is_int($params['inactivity_days'])) {
             throw new \Files\Exception\InvalidParameterException('$inactivity_days must be of type int; received ' . gettype(@$params['inactivity_days']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['partner_tag'] && !is_string(@$params['partner_tag'])) {
+        if (!empty($params['partner_tag']) && !is_string($params['partner_tag'])) {
             throw new \Files\Exception\InvalidParameterException('$partner_tag must be of type string; received ' . gettype(@$params['partner_tag']));
         }
 
-        if (@$params['user_state'] && !is_string(@$params['user_state'])) {
+        if (!empty($params['user_state']) && !is_string($params['user_state'])) {
             throw new \Files\Exception\InvalidParameterException('$user_state must be of type string; received ' . gettype(@$params['user_state']));
         }
 
-        if (@$params['user_tag'] && !is_string(@$params['user_tag'])) {
+        if (!empty($params['user_tag']) && !is_string($params['user_tag'])) {
             throw new \Files\Exception\InvalidParameterException('$user_tag must be of type string; received ' . gettype(@$params['user_tag']));
         }
 
-        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 

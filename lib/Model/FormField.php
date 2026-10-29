@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class FormField
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,41 +56,41 @@ class FormField
     // int64 # Form field id
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
     // string # Label to be displayed
     public function getLabel()
     {
-        return @$this->attributes['label'];
+        return isset($this->attributes['label']) ? $this->attributes['label'] : null;
     }
     // boolean # Is this a required field?
     public function getRequired()
     {
-        return @$this->attributes['required'];
+        return isset($this->attributes['required']) ? $this->attributes['required'] : null;
     }
     // string # Help text to be displayed
     public function getHelpText()
     {
-        return @$this->attributes['help_text'];
+        return isset($this->attributes['help_text']) ? $this->attributes['help_text'] : null;
     }
     // string # Type of Field
     public function getFieldType()
     {
-        return @$this->attributes['field_type'];
+        return isset($this->attributes['field_type']) ? $this->attributes['field_type'] : null;
     }
     // array(string) # Options to display for radio and dropdown
     public function getOptionsForSelect()
     {
-        return @$this->attributes['options_for_select'];
+        return isset($this->attributes['options_for_select']) ? $this->attributes['options_for_select'] : null;
     }
     // string # Default option for radio and dropdown
     public function getDefaultOption()
     {
-        return @$this->attributes['default_option'];
+        return isset($this->attributes['default_option']) ? $this->attributes['default_option'] : null;
     }
     // int64 # Form field set id
     public function getFormFieldSetId()
     {
-        return @$this->attributes['form_field_set_id'];
+        return isset($this->attributes['form_field_set_id']) ? $this->attributes['form_field_set_id'] : null;
     }
 }

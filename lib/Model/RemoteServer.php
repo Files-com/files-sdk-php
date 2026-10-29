@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class RemoteServer
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class RemoteServer
     // int64 # Remote Server ID
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
     public function setId($value)
@@ -68,7 +66,7 @@ class RemoteServer
     // boolean # If true, this Remote Server is disabled. Updating it clears this flag, except for retired Agent v1 records, which remain disabled.
     public function getDisabled()
     {
-        return @$this->attributes['disabled'];
+        return isset($this->attributes['disabled']) ? $this->attributes['disabled'] : null;
     }
 
     public function setDisabled($value)
@@ -78,7 +76,7 @@ class RemoteServer
     // string # Type of authentication method to use
     public function getAuthenticationMethod()
     {
-        return @$this->attributes['authentication_method'];
+        return isset($this->attributes['authentication_method']) ? $this->attributes['authentication_method'] : null;
     }
 
     public function setAuthenticationMethod($value)
@@ -88,7 +86,7 @@ class RemoteServer
     // string # Hostname or IP address. For Agent Remote Servers, the Agent reports the hostname it connects from at each registration, replacing the stored value. This field is not included in the generated Agent configuration file. Setting it on Create or Update does not change the running Agent.
     public function getHostname()
     {
-        return @$this->attributes['hostname'];
+        return isset($this->attributes['hostname']) ? $this->attributes['hostname'] : null;
     }
 
     public function setHostname($value)
@@ -98,7 +96,7 @@ class RemoteServer
     // string # Initial home folder on remote server
     public function getRemoteHomePath()
     {
-        return @$this->attributes['remote_home_path'];
+        return isset($this->attributes['remote_home_path']) ? $this->attributes['remote_home_path'] : null;
     }
 
     public function setRemoteHomePath($value)
@@ -108,7 +106,7 @@ class RemoteServer
     // string # Upload staging path.  Applies to SFTP only.  If a path is provided here, files will first be uploaded to this path on the remote folder and the moved into the final correct path via an SFTP move command.  This is required by some remote MFT systems to emulate atomic uploads, which are otherwise not supoprted by SFTP.
     public function getUploadStagingPath()
     {
-        return @$this->attributes['upload_staging_path'];
+        return isset($this->attributes['upload_staging_path']) ? $this->attributes['upload_staging_path'] : null;
     }
 
     public function setUploadStagingPath($value)
@@ -118,7 +116,7 @@ class RemoteServer
     // boolean # Allow relative paths in SFTP. If true, paths will not be forced to be absolute, allowing operations relative to the user's home directory.
     public function getAllowRelativePaths()
     {
-        return @$this->attributes['allow_relative_paths'];
+        return isset($this->attributes['allow_relative_paths']) ? $this->attributes['allow_relative_paths'] : null;
     }
 
     public function setAllowRelativePaths($value)
@@ -128,7 +126,7 @@ class RemoteServer
     // string # Internal name for your reference
     public function getName()
     {
-        return @$this->attributes['name'];
+        return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
 
     public function setName($value)
@@ -138,7 +136,7 @@ class RemoteServer
     // string # Internal description for your reference
     public function getDescription()
     {
-        return @$this->attributes['description'];
+        return isset($this->attributes['description']) ? $this->attributes['description'] : null;
     }
 
     public function setDescription($value)
@@ -148,7 +146,7 @@ class RemoteServer
     // int64 # Port for remote server. For Agent Remote Servers, the Agent reports its downstream proxy port at each registration, replacing the stored value. This field is not included in the generated Agent configuration file. Setting it on Create or Update does not change the running Agent.
     public function getPort()
     {
-        return @$this->attributes['port'];
+        return isset($this->attributes['port']) ? $this->attributes['port'] : null;
     }
 
     public function setPort($value)
@@ -158,7 +156,7 @@ class RemoteServer
     // string # If set to always, uploads to this server will be uploaded first to Files.com before being sent to the remote server. This can improve performance in certain access patterns, such as high-latency connections.  It will cause data to be temporarily stored in Files.com. If set to auto, we will perform this optimization if we believe it to be a benefit in a given situation.
     public function getBufferUploads()
     {
-        return @$this->attributes['buffer_uploads'];
+        return isset($this->attributes['buffer_uploads']) ? $this->attributes['buffer_uploads'] : null;
     }
 
     public function setBufferUploads($value)
@@ -168,7 +166,7 @@ class RemoteServer
     // int64 # Max number of parallel connections.  Ignored for S3 connections (we will parallelize these as much as possible).
     public function getMaxConnections()
     {
-        return @$this->attributes['max_connections'];
+        return isset($this->attributes['max_connections']) ? $this->attributes['max_connections'] : null;
     }
 
     public function setMaxConnections($value)
@@ -178,7 +176,7 @@ class RemoteServer
     // boolean # If true, we will ensure that all communications with this remote server are made through the primary region of the site.  This setting can also be overridden by a site-wide setting which will force it to true.
     public function getPinToSiteRegion()
     {
-        return @$this->attributes['pin_to_site_region'];
+        return isset($this->attributes['pin_to_site_region']) ? $this->attributes['pin_to_site_region'] : null;
     }
 
     public function setPinToSiteRegion($value)
@@ -188,7 +186,7 @@ class RemoteServer
     // string # If set, all communications with this remote server are made through the provided region.
     public function getPinnedRegion()
     {
-        return @$this->attributes['pinned_region'];
+        return isset($this->attributes['pinned_region']) ? $this->attributes['pinned_region'] : null;
     }
 
     public function setPinnedRegion($value)
@@ -198,7 +196,7 @@ class RemoteServer
     // int64 # ID of Remote Server Credential, if applicable.
     public function getRemoteServerCredentialId()
     {
-        return @$this->attributes['remote_server_credential_id'];
+        return isset($this->attributes['remote_server_credential_id']) ? $this->attributes['remote_server_credential_id'] : null;
     }
 
     public function setRemoteServerCredentialId($value)
@@ -208,7 +206,7 @@ class RemoteServer
     // string # S3 bucket name
     public function getS3Bucket()
     {
-        return @$this->attributes['s3_bucket'];
+        return isset($this->attributes['s3_bucket']) ? $this->attributes['s3_bucket'] : null;
     }
 
     public function setS3Bucket($value)
@@ -218,7 +216,7 @@ class RemoteServer
     // string # S3 region
     public function getS3Region()
     {
-        return @$this->attributes['s3_region'];
+        return isset($this->attributes['s3_region']) ? $this->attributes['s3_region'] : null;
     }
 
     public function setS3Region($value)
@@ -228,7 +226,7 @@ class RemoteServer
     // string # ARN of the AWS KMS key that encrypts files written to the bucket (SSE-KMS). Leave blank unless your bucket requires a specific key.
     public function getS3KmsKeyId()
     {
-        return @$this->attributes['s3_kms_key_id'];
+        return isset($this->attributes['s3_kms_key_id']) ? $this->attributes['s3_kms_key_id'] : null;
     }
 
     public function setS3KmsKeyId($value)
@@ -238,7 +236,7 @@ class RemoteServer
     // string # AWS Access Key.
     public function getAwsAccessKey()
     {
-        return @$this->attributes['aws_access_key'];
+        return isset($this->attributes['aws_access_key']) ? $this->attributes['aws_access_key'] : null;
     }
 
     public function setAwsAccessKey($value)
@@ -248,7 +246,7 @@ class RemoteServer
     // string # AWS IAM Role ARN for AssumeRole authentication.
     public function getS3AssumeRoleArn()
     {
-        return @$this->attributes['s3_assume_role_arn'];
+        return isset($this->attributes['s3_assume_role_arn']) ? $this->attributes['s3_assume_role_arn'] : null;
     }
 
     public function setS3AssumeRoleArn($value)
@@ -258,7 +256,7 @@ class RemoteServer
     // int64 # Session duration in seconds for AssumeRole authentication (900-43200).
     public function getS3AssumeRoleDurationSeconds()
     {
-        return @$this->attributes['s3_assume_role_duration_seconds'];
+        return isset($this->attributes['s3_assume_role_duration_seconds']) ? $this->attributes['s3_assume_role_duration_seconds'] : null;
     }
 
     public function setS3AssumeRoleDurationSeconds($value)
@@ -268,7 +266,7 @@ class RemoteServer
     // string # External ID for AssumeRole authentication.
     public function getS3AssumeRoleExternalId()
     {
-        return @$this->attributes['s3_assume_role_external_id'];
+        return isset($this->attributes['s3_assume_role_external_id']) ? $this->attributes['s3_assume_role_external_id'] : null;
     }
 
     public function setS3AssumeRoleExternalId($value)
@@ -278,7 +276,7 @@ class RemoteServer
     // string # Remote server certificate
     public function getServerCertificate()
     {
-        return @$this->attributes['server_certificate'];
+        return isset($this->attributes['server_certificate']) ? $this->attributes['server_certificate'] : null;
     }
 
     public function setServerCertificate($value)
@@ -288,7 +286,7 @@ class RemoteServer
     // string # Pinned SSH host key or OpenSSH host certificate for SFTP. If omitted, Files.com detects and stores a host key, preferring plain keys over certificates. With `server_certificate=require_match` (the default), the server must present the exact pinned key or certificate and prove it holds the matching private key. A pinned certificate is compared in full, so renewal can require updating `server_host_key` even when its underlying key is unchanged. Files.com does not check certificate CA signatures, principals, or validity periods. Certificate expiration alone does not end the pin. Update `server_host_key` to replace the pin.
     public function getServerHostKey()
     {
-        return @$this->attributes['server_host_key'];
+        return isset($this->attributes['server_host_key']) ? $this->attributes['server_host_key'] : null;
     }
 
     public function setServerHostKey($value)
@@ -298,7 +296,7 @@ class RemoteServer
     // string # Remote server type.
     public function getServerType()
     {
-        return @$this->attributes['server_type'];
+        return isset($this->attributes['server_type']) ? $this->attributes['server_type'] : null;
     }
 
     public function setServerType($value)
@@ -308,7 +306,7 @@ class RemoteServer
     // int64 # Workspace ID (0 for default workspace)
     public function getWorkspaceId()
     {
-        return @$this->attributes['workspace_id'];
+        return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
 
     public function setWorkspaceId($value)
@@ -318,7 +316,7 @@ class RemoteServer
     // string # Should we require SSL?
     public function getSsl()
     {
-        return @$this->attributes['ssl'];
+        return isset($this->attributes['ssl']) ? $this->attributes['ssl'] : null;
     }
 
     public function setSsl($value)
@@ -328,7 +326,7 @@ class RemoteServer
     // string # Remote server username.
     public function getUsername()
     {
-        return @$this->attributes['username'];
+        return isset($this->attributes['username']) ? $this->attributes['username'] : null;
     }
 
     public function setUsername($value)
@@ -338,7 +336,7 @@ class RemoteServer
     // string # Google Cloud Storage: Bucket Name
     public function getGoogleCloudStorageBucket()
     {
-        return @$this->attributes['google_cloud_storage_bucket'];
+        return isset($this->attributes['google_cloud_storage_bucket']) ? $this->attributes['google_cloud_storage_bucket'] : null;
     }
 
     public function setGoogleCloudStorageBucket($value)
@@ -348,7 +346,7 @@ class RemoteServer
     // string # Google Cloud Storage: Authentication method. Can be json, hmac, or oauth.
     public function getGoogleCloudStorageAuthenticationMethod()
     {
-        return @$this->attributes['google_cloud_storage_authentication_method'];
+        return isset($this->attributes['google_cloud_storage_authentication_method']) ? $this->attributes['google_cloud_storage_authentication_method'] : null;
     }
 
     public function setGoogleCloudStorageAuthenticationMethod($value)
@@ -358,7 +356,7 @@ class RemoteServer
     // string # Google Cloud Storage: OAuth scope. Can be https://www.googleapis.com/auth/devstorage.read_only or https://www.googleapis.com/auth/devstorage.read_write.
     public function getGoogleCloudStorageOauthScope()
     {
-        return @$this->attributes['google_cloud_storage_oauth_scope'];
+        return isset($this->attributes['google_cloud_storage_oauth_scope']) ? $this->attributes['google_cloud_storage_oauth_scope'] : null;
     }
 
     public function setGoogleCloudStorageOauthScope($value)
@@ -368,7 +366,7 @@ class RemoteServer
     // string # Google Cloud Storage: Project ID
     public function getGoogleCloudStorageProjectId()
     {
-        return @$this->attributes['google_cloud_storage_project_id'];
+        return isset($this->attributes['google_cloud_storage_project_id']) ? $this->attributes['google_cloud_storage_project_id'] : null;
     }
 
     public function setGoogleCloudStorageProjectId($value)
@@ -378,7 +376,7 @@ class RemoteServer
     // string # Google Cloud Storage: S3-compatible Access Key.
     public function getGoogleCloudStorageS3CompatibleAccessKey()
     {
-        return @$this->attributes['google_cloud_storage_s3_compatible_access_key'];
+        return isset($this->attributes['google_cloud_storage_s3_compatible_access_key']) ? $this->attributes['google_cloud_storage_s3_compatible_access_key'] : null;
     }
 
     public function setGoogleCloudStorageS3CompatibleAccessKey($value)
@@ -388,7 +386,7 @@ class RemoteServer
     // string # Backblaze B2 Cloud Storage: S3 Endpoint
     public function getBackblazeB2S3Endpoint()
     {
-        return @$this->attributes['backblaze_b2_s3_endpoint'];
+        return isset($this->attributes['backblaze_b2_s3_endpoint']) ? $this->attributes['backblaze_b2_s3_endpoint'] : null;
     }
 
     public function setBackblazeB2S3Endpoint($value)
@@ -398,7 +396,7 @@ class RemoteServer
     // string # Backblaze B2 Cloud Storage: Bucket name
     public function getBackblazeB2Bucket()
     {
-        return @$this->attributes['backblaze_b2_bucket'];
+        return isset($this->attributes['backblaze_b2_bucket']) ? $this->attributes['backblaze_b2_bucket'] : null;
     }
 
     public function setBackblazeB2Bucket($value)
@@ -408,7 +406,7 @@ class RemoteServer
     // string # Wasabi: Bucket name
     public function getWasabiBucket()
     {
-        return @$this->attributes['wasabi_bucket'];
+        return isset($this->attributes['wasabi_bucket']) ? $this->attributes['wasabi_bucket'] : null;
     }
 
     public function setWasabiBucket($value)
@@ -418,7 +416,7 @@ class RemoteServer
     // string # Wasabi: Region
     public function getWasabiRegion()
     {
-        return @$this->attributes['wasabi_region'];
+        return isset($this->attributes['wasabi_region']) ? $this->attributes['wasabi_region'] : null;
     }
 
     public function setWasabiRegion($value)
@@ -428,7 +426,7 @@ class RemoteServer
     // string # Wasabi: Access Key.
     public function getWasabiAccessKey()
     {
-        return @$this->attributes['wasabi_access_key'];
+        return isset($this->attributes['wasabi_access_key']) ? $this->attributes['wasabi_access_key'] : null;
     }
 
     public function setWasabiAccessKey($value)
@@ -438,7 +436,7 @@ class RemoteServer
     // string # Either `in_setup` or `complete`
     public function getAuthStatus()
     {
-        return @$this->attributes['auth_status'];
+        return isset($this->attributes['auth_status']) ? $this->attributes['auth_status'] : null;
     }
 
     public function setAuthStatus($value)
@@ -448,7 +446,7 @@ class RemoteServer
     // string # Describes the authorized account
     public function getAuthAccountName()
     {
-        return @$this->attributes['auth_account_name'];
+        return isset($this->attributes['auth_account_name']) ? $this->attributes['auth_account_name'] : null;
     }
 
     public function setAuthAccountName($value)
@@ -458,7 +456,7 @@ class RemoteServer
     // string # OneDrive: Either personal or business_other account types
     public function getOneDriveAccountType()
     {
-        return @$this->attributes['one_drive_account_type'];
+        return isset($this->attributes['one_drive_account_type']) ? $this->attributes['one_drive_account_type'] : null;
     }
 
     public function setOneDriveAccountType($value)
@@ -468,7 +466,7 @@ class RemoteServer
     // string # SharePoint: Microsoft Entra tenant ID for app-only authentication.
     public function getSharepointTenantId()
     {
-        return @$this->attributes['sharepoint_tenant_id'];
+        return isset($this->attributes['sharepoint_tenant_id']) ? $this->attributes['sharepoint_tenant_id'] : null;
     }
 
     public function setSharepointTenantId($value)
@@ -478,7 +476,7 @@ class RemoteServer
     // string # SharePoint: Microsoft Entra application client ID for app-only authentication.
     public function getSharepointClientId()
     {
-        return @$this->attributes['sharepoint_client_id'];
+        return isset($this->attributes['sharepoint_client_id']) ? $this->attributes['sharepoint_client_id'] : null;
     }
 
     public function setSharepointClientId($value)
@@ -488,7 +486,7 @@ class RemoteServer
     // boolean # SharePoint: If true, this remote server uses Microsoft Entra app-only authentication.
     public function getSharepointAppAuthentication()
     {
-        return @$this->attributes['sharepoint_app_authentication'];
+        return isset($this->attributes['sharepoint_app_authentication']) ? $this->attributes['sharepoint_app_authentication'] : null;
     }
 
     public function setSharepointAppAuthentication($value)
@@ -498,7 +496,7 @@ class RemoteServer
     // string # SharePoint: App-only credential type. Either secret or certificate.
     public function getSharepointAppCredentialType()
     {
-        return @$this->attributes['sharepoint_app_credential_type'];
+        return isset($this->attributes['sharepoint_app_credential_type']) ? $this->attributes['sharepoint_app_credential_type'] : null;
     }
 
     public function setSharepointAppCredentialType($value)
@@ -508,7 +506,7 @@ class RemoteServer
     // string # SharePoint: Site URL to scope app-only authentication to a single site. Leave blank to browse all sites.
     public function getSharepointSiteUrl()
     {
-        return @$this->attributes['sharepoint_site_url'];
+        return isset($this->attributes['sharepoint_site_url']) ? $this->attributes['sharepoint_site_url'] : null;
     }
 
     public function setSharepointSiteUrl($value)
@@ -518,7 +516,7 @@ class RemoteServer
     // string # Azure Blob Storage: Account name
     public function getAzureBlobStorageAccount()
     {
-        return @$this->attributes['azure_blob_storage_account'];
+        return isset($this->attributes['azure_blob_storage_account']) ? $this->attributes['azure_blob_storage_account'] : null;
     }
 
     public function setAzureBlobStorageAccount($value)
@@ -528,7 +526,7 @@ class RemoteServer
     // string # Azure Blob Storage: Container name
     public function getAzureBlobStorageContainer()
     {
-        return @$this->attributes['azure_blob_storage_container'];
+        return isset($this->attributes['azure_blob_storage_container']) ? $this->attributes['azure_blob_storage_container'] : null;
     }
 
     public function setAzureBlobStorageContainer($value)
@@ -538,7 +536,7 @@ class RemoteServer
     // boolean # Azure Blob Storage: Does the storage account has hierarchical namespace feature enabled?
     public function getAzureBlobStorageHierarchicalNamespace()
     {
-        return @$this->attributes['azure_blob_storage_hierarchical_namespace'];
+        return isset($this->attributes['azure_blob_storage_hierarchical_namespace']) ? $this->attributes['azure_blob_storage_hierarchical_namespace'] : null;
     }
 
     public function setAzureBlobStorageHierarchicalNamespace($value)
@@ -548,7 +546,7 @@ class RemoteServer
     // string # Azure Blob Storage: Custom DNS suffix
     public function getAzureBlobStorageDnsSuffix()
     {
-        return @$this->attributes['azure_blob_storage_dns_suffix'];
+        return isset($this->attributes['azure_blob_storage_dns_suffix']) ? $this->attributes['azure_blob_storage_dns_suffix'] : null;
     }
 
     public function setAzureBlobStorageDnsSuffix($value)
@@ -558,7 +556,7 @@ class RemoteServer
     // string # Azure Files: Storage Account name
     public function getAzureFilesStorageAccount()
     {
-        return @$this->attributes['azure_files_storage_account'];
+        return isset($this->attributes['azure_files_storage_account']) ? $this->attributes['azure_files_storage_account'] : null;
     }
 
     public function setAzureFilesStorageAccount($value)
@@ -568,7 +566,7 @@ class RemoteServer
     // string # Azure Files:  Storage Share name
     public function getAzureFilesStorageShareName()
     {
-        return @$this->attributes['azure_files_storage_share_name'];
+        return isset($this->attributes['azure_files_storage_share_name']) ? $this->attributes['azure_files_storage_share_name'] : null;
     }
 
     public function setAzureFilesStorageShareName($value)
@@ -578,7 +576,7 @@ class RemoteServer
     // string # Azure Files: Custom DNS suffix
     public function getAzureFilesStorageDnsSuffix()
     {
-        return @$this->attributes['azure_files_storage_dns_suffix'];
+        return isset($this->attributes['azure_files_storage_dns_suffix']) ? $this->attributes['azure_files_storage_dns_suffix'] : null;
     }
 
     public function setAzureFilesStorageDnsSuffix($value)
@@ -588,7 +586,7 @@ class RemoteServer
     // string # S3-compatible: Bucket name
     public function getS3CompatibleBucket()
     {
-        return @$this->attributes['s3_compatible_bucket'];
+        return isset($this->attributes['s3_compatible_bucket']) ? $this->attributes['s3_compatible_bucket'] : null;
     }
 
     public function setS3CompatibleBucket($value)
@@ -598,7 +596,7 @@ class RemoteServer
     // string # S3-compatible: endpoint
     public function getS3CompatibleEndpoint()
     {
-        return @$this->attributes['s3_compatible_endpoint'];
+        return isset($this->attributes['s3_compatible_endpoint']) ? $this->attributes['s3_compatible_endpoint'] : null;
     }
 
     public function setS3CompatibleEndpoint($value)
@@ -608,7 +606,7 @@ class RemoteServer
     // string # S3-compatible: region
     public function getS3CompatibleRegion()
     {
-        return @$this->attributes['s3_compatible_region'];
+        return isset($this->attributes['s3_compatible_region']) ? $this->attributes['s3_compatible_region'] : null;
     }
 
     public function setS3CompatibleRegion($value)
@@ -618,7 +616,7 @@ class RemoteServer
     // boolean # S3-compatible: If true, use virtual-hosted-style URLs instead of path-style URLs
     public function getS3CompatibleVirtualHostedStyle()
     {
-        return @$this->attributes['s3_compatible_virtual_hosted_style'];
+        return isset($this->attributes['s3_compatible_virtual_hosted_style']) ? $this->attributes['s3_compatible_virtual_hosted_style'] : null;
     }
 
     public function setS3CompatibleVirtualHostedStyle($value)
@@ -628,7 +626,7 @@ class RemoteServer
     // string # S3-compatible: Access Key
     public function getS3CompatibleAccessKey()
     {
-        return @$this->attributes['s3_compatible_access_key'];
+        return isset($this->attributes['s3_compatible_access_key']) ? $this->attributes['s3_compatible_access_key'] : null;
     }
 
     public function setS3CompatibleAccessKey($value)
@@ -638,7 +636,7 @@ class RemoteServer
     // boolean # `true` if remote server only accepts connections from dedicated IPs
     public function getEnableDedicatedIps()
     {
-        return @$this->attributes['enable_dedicated_ips'];
+        return isset($this->attributes['enable_dedicated_ips']) ? $this->attributes['enable_dedicated_ips'] : null;
     }
 
     public function setEnableDedicatedIps($value)
@@ -648,7 +646,7 @@ class RemoteServer
     // int64 # Custom Domain ID whose dedicated IP addresses are selected when this Remote Server uses dedicated IPs. Must be available to this Remote Server's workspace. Requires enable_dedicated_ips and cannot be combined with an outbound Agent. Set to null to use the site's default dedicated IPs.
     public function getCustomDomainId()
     {
-        return @$this->attributes['custom_domain_id'];
+        return isset($this->attributes['custom_domain_id']) ? $this->attributes['custom_domain_id'] : null;
     }
 
     public function setCustomDomainId($value)
@@ -658,7 +656,7 @@ class RemoteServer
     // array(string) # Current eligible public IP addresses for the selected Custom Domain. Any address in this list may originate a connection. Empty when no domain is selected or its configuration is unavailable. Only included in responses for a single Remote Server.
     public function getOutboundIpAddresses()
     {
-        return @$this->attributes['outbound_ip_addresses'];
+        return isset($this->attributes['outbound_ip_addresses']) ? $this->attributes['outbound_ip_addresses'] : null;
     }
 
     public function setOutboundIpAddresses($value)
@@ -668,7 +666,7 @@ class RemoteServer
     // string # Agent file permissions: `read_only`, `write_only`, or `read_write`. Files.com writes this value as `permission_set` in the configuration file generated for this Remote Server. Setting it on Create or Update changes the generated file, not a running Agent. The Agent enforces the permissions in its local configuration file, controlled by the host's system administrator, and reports them at registration, replacing the stored value.
     public function getFilesAgentPermissionSet()
     {
-        return @$this->attributes['files_agent_permission_set'];
+        return isset($this->attributes['files_agent_permission_set']) ? $this->attributes['files_agent_permission_set'] : null;
     }
 
     public function setFilesAgentPermissionSet($value)
@@ -678,7 +676,7 @@ class RemoteServer
     // string # Agent local root path. Files.com writes this value as `root` in the configuration file generated for this Remote Server. Setting it on Create or Update changes the generated file, not a running Agent. The Agent enforces the root in its local configuration file, controlled by the host's system administrator, and reports it at registration, replacing the stored value.
     public function getFilesAgentRoot()
     {
-        return @$this->attributes['files_agent_root'];
+        return isset($this->attributes['files_agent_root']) ? $this->attributes['files_agent_root'] : null;
     }
 
     public function setFilesAgentRoot($value)
@@ -688,7 +686,7 @@ class RemoteServer
     // string # Files.com Agent version reported by the Agent at each registration, replacing the stored value. This field is not included in the generated Agent configuration file. Setting it on Create or Update does not update the running Agent.
     public function getFilesAgentVersion()
     {
-        return @$this->attributes['files_agent_version'];
+        return isset($this->attributes['files_agent_version']) ? $this->attributes['files_agent_version'] : null;
     }
 
     public function setFilesAgentVersion($value)
@@ -698,7 +696,7 @@ class RemoteServer
     // boolean # If true, the Files Agent is up to date.
     public function getFilesAgentUpToDate()
     {
-        return @$this->attributes['files_agent_up_to_date'];
+        return isset($this->attributes['files_agent_up_to_date']) ? $this->attributes['files_agent_up_to_date'] : null;
     }
 
     public function setFilesAgentUpToDate($value)
@@ -708,7 +706,7 @@ class RemoteServer
     // string # Latest available Files Agent version
     public function getFilesAgentLatestVersion()
     {
-        return @$this->attributes['files_agent_latest_version'];
+        return isset($this->attributes['files_agent_latest_version']) ? $this->attributes['files_agent_latest_version'] : null;
     }
 
     public function setFilesAgentLatestVersion($value)
@@ -718,7 +716,7 @@ class RemoteServer
     // boolean # Files Agent supports receiving push updates
     public function getFilesAgentSupportsPushUpdates()
     {
-        return @$this->attributes['files_agent_supports_push_updates'];
+        return isset($this->attributes['files_agent_supports_push_updates']) ? $this->attributes['files_agent_supports_push_updates'] : null;
     }
 
     public function setFilesAgentSupportsPushUpdates($value)
@@ -728,7 +726,7 @@ class RemoteServer
     // boolean # Whether the Files Agent Proxy recently validated a direct transfer connection. `true` means a direct connection was recently validated (actual availability can vary by client network), `false` means direct transfers are enabled but not currently available, and `null` means direct transfers are disabled or unsupported. Only provided for a connected Files Agent when showing a single Remote Server.
     public function getDirectTransferAvailable()
     {
-        return @$this->attributes['direct_transfer_available'];
+        return isset($this->attributes['direct_transfer_available']) ? $this->attributes['direct_transfer_available'] : null;
     }
 
     public function setDirectTransferAvailable($value)
@@ -738,7 +736,7 @@ class RemoteServer
     // int64 # Route traffic to outbound on a files-agent
     public function getOutboundAgentId()
     {
-        return @$this->attributes['outbound_agent_id'];
+        return isset($this->attributes['outbound_agent_id']) ? $this->attributes['outbound_agent_id'] : null;
     }
 
     public function setOutboundAgentId($value)
@@ -748,7 +746,7 @@ class RemoteServer
     // string # Filebase: Bucket name
     public function getFilebaseBucket()
     {
-        return @$this->attributes['filebase_bucket'];
+        return isset($this->attributes['filebase_bucket']) ? $this->attributes['filebase_bucket'] : null;
     }
 
     public function setFilebaseBucket($value)
@@ -758,7 +756,7 @@ class RemoteServer
     // string # Filebase: Access Key.
     public function getFilebaseAccessKey()
     {
-        return @$this->attributes['filebase_access_key'];
+        return isset($this->attributes['filebase_access_key']) ? $this->attributes['filebase_access_key'] : null;
     }
 
     public function setFilebaseAccessKey($value)
@@ -768,7 +766,7 @@ class RemoteServer
     // string # Files.com direct link: paired API key prefix.
     public function getFilesApiKeyPrefix()
     {
-        return @$this->attributes['files_api_key_prefix'];
+        return isset($this->attributes['files_api_key_prefix']) ? $this->attributes['files_api_key_prefix'] : null;
     }
 
     public function setFilesApiKeyPrefix($value)
@@ -778,7 +776,7 @@ class RemoteServer
     // string # Cloudflare: Bucket name
     public function getCloudflareBucket()
     {
-        return @$this->attributes['cloudflare_bucket'];
+        return isset($this->attributes['cloudflare_bucket']) ? $this->attributes['cloudflare_bucket'] : null;
     }
 
     public function setCloudflareBucket($value)
@@ -788,7 +786,7 @@ class RemoteServer
     // string # Cloudflare: Access Key.
     public function getCloudflareAccessKey()
     {
-        return @$this->attributes['cloudflare_access_key'];
+        return isset($this->attributes['cloudflare_access_key']) ? $this->attributes['cloudflare_access_key'] : null;
     }
 
     public function setCloudflareAccessKey($value)
@@ -798,7 +796,7 @@ class RemoteServer
     // string # Cloudflare: endpoint
     public function getCloudflareEndpoint()
     {
-        return @$this->attributes['cloudflare_endpoint'];
+        return isset($this->attributes['cloudflare_endpoint']) ? $this->attributes['cloudflare_endpoint'] : null;
     }
 
     public function setCloudflareEndpoint($value)
@@ -808,7 +806,7 @@ class RemoteServer
     // boolean # Dropbox: If true, list Team folders in root?
     public function getDropboxTeams()
     {
-        return @$this->attributes['dropbox_teams'];
+        return isset($this->attributes['dropbox_teams']) ? $this->attributes['dropbox_teams'] : null;
     }
 
     public function setDropboxTeams($value)
@@ -818,7 +816,7 @@ class RemoteServer
     // string # Linode: Bucket name
     public function getLinodeBucket()
     {
-        return @$this->attributes['linode_bucket'];
+        return isset($this->attributes['linode_bucket']) ? $this->attributes['linode_bucket'] : null;
     }
 
     public function setLinodeBucket($value)
@@ -828,7 +826,7 @@ class RemoteServer
     // string # Linode: Access Key
     public function getLinodeAccessKey()
     {
-        return @$this->attributes['linode_access_key'];
+        return isset($this->attributes['linode_access_key']) ? $this->attributes['linode_access_key'] : null;
     }
 
     public function setLinodeAccessKey($value)
@@ -838,7 +836,7 @@ class RemoteServer
     // string # Linode: region
     public function getLinodeRegion()
     {
-        return @$this->attributes['linode_region'];
+        return isset($this->attributes['linode_region']) ? $this->attributes['linode_region'] : null;
     }
 
     public function setLinodeRegion($value)
@@ -848,7 +846,7 @@ class RemoteServer
     // boolean # If true, this remote server supports file versioning. This value is determined automatically by Files.com.
     public function getSupportsVersioning()
     {
-        return @$this->attributes['supports_versioning'];
+        return isset($this->attributes['supports_versioning']) ? $this->attributes['supports_versioning'] : null;
     }
 
     public function setSupportsVersioning($value)
@@ -858,7 +856,7 @@ class RemoteServer
     // int64 # User ID.  Provide a value of `0` to operate the current session's user.
     public function getUserId()
     {
-        return @$this->attributes['user_id'];
+        return isset($this->attributes['user_id']) ? $this->attributes['user_id'] : null;
     }
 
     public function setUserId($value)
@@ -868,7 +866,7 @@ class RemoteServer
     // string # Password, if needed.
     public function getPassword()
     {
-        return @$this->attributes['password'];
+        return isset($this->attributes['password']) ? $this->attributes['password'] : null;
     }
 
     public function setPassword($value)
@@ -878,7 +876,7 @@ class RemoteServer
     // string # Private key, if needed.
     public function getPrivateKey()
     {
-        return @$this->attributes['private_key'];
+        return isset($this->attributes['private_key']) ? $this->attributes['private_key'] : null;
     }
 
     public function setPrivateKey($value)
@@ -888,7 +886,7 @@ class RemoteServer
     // string # Passphrase for private key if needed.
     public function getPrivateKeyPassphrase()
     {
-        return @$this->attributes['private_key_passphrase'];
+        return isset($this->attributes['private_key_passphrase']) ? $this->attributes['private_key_passphrase'] : null;
     }
 
     public function setPrivateKeyPassphrase($value)
@@ -898,7 +896,7 @@ class RemoteServer
     // boolean # Reset authenticated account?
     public function getResetAuthentication()
     {
-        return @$this->attributes['reset_authentication'];
+        return isset($this->attributes['reset_authentication']) ? $this->attributes['reset_authentication'] : null;
     }
 
     public function setResetAuthentication($value)
@@ -908,7 +906,7 @@ class RemoteServer
     // string # SharePoint: PEM-encoded certificate and unencrypted private key for app-only authentication.
     public function getSharepointClientCertificate()
     {
-        return @$this->attributes['sharepoint_client_certificate'];
+        return isset($this->attributes['sharepoint_client_certificate']) ? $this->attributes['sharepoint_client_certificate'] : null;
     }
 
     public function setSharepointClientCertificate($value)
@@ -918,7 +916,7 @@ class RemoteServer
     // string # SharePoint: Microsoft Entra application client secret for app-only authentication.
     public function getSharepointClientSecret()
     {
-        return @$this->attributes['sharepoint_client_secret'];
+        return isset($this->attributes['sharepoint_client_secret']) ? $this->attributes['sharepoint_client_secret'] : null;
     }
 
     public function setSharepointClientSecret($value)
@@ -928,7 +926,7 @@ class RemoteServer
     // string # SSL client certificate.
     public function getSslCertificate()
     {
-        return @$this->attributes['ssl_certificate'];
+        return isset($this->attributes['ssl_certificate']) ? $this->attributes['ssl_certificate'] : null;
     }
 
     public function setSslCertificate($value)
@@ -938,7 +936,7 @@ class RemoteServer
     // string # AWS: secret key.
     public function getAwsSecretKey()
     {
-        return @$this->attributes['aws_secret_key'];
+        return isset($this->attributes['aws_secret_key']) ? $this->attributes['aws_secret_key'] : null;
     }
 
     public function setAwsSecretKey($value)
@@ -948,7 +946,7 @@ class RemoteServer
     // string # Azure Blob Storage: Access Key
     public function getAzureBlobStorageAccessKey()
     {
-        return @$this->attributes['azure_blob_storage_access_key'];
+        return isset($this->attributes['azure_blob_storage_access_key']) ? $this->attributes['azure_blob_storage_access_key'] : null;
     }
 
     public function setAzureBlobStorageAccessKey($value)
@@ -958,7 +956,7 @@ class RemoteServer
     // string # Azure Blob Storage: Shared Access Signature (SAS) token
     public function getAzureBlobStorageSasToken()
     {
-        return @$this->attributes['azure_blob_storage_sas_token'];
+        return isset($this->attributes['azure_blob_storage_sas_token']) ? $this->attributes['azure_blob_storage_sas_token'] : null;
     }
 
     public function setAzureBlobStorageSasToken($value)
@@ -968,7 +966,7 @@ class RemoteServer
     // string # Azure File Storage: Access Key
     public function getAzureFilesStorageAccessKey()
     {
-        return @$this->attributes['azure_files_storage_access_key'];
+        return isset($this->attributes['azure_files_storage_access_key']) ? $this->attributes['azure_files_storage_access_key'] : null;
     }
 
     public function setAzureFilesStorageAccessKey($value)
@@ -978,7 +976,7 @@ class RemoteServer
     // string # Azure File Storage: Shared Access Signature (SAS) token
     public function getAzureFilesStorageSasToken()
     {
-        return @$this->attributes['azure_files_storage_sas_token'];
+        return isset($this->attributes['azure_files_storage_sas_token']) ? $this->attributes['azure_files_storage_sas_token'] : null;
     }
 
     public function setAzureFilesStorageSasToken($value)
@@ -988,7 +986,7 @@ class RemoteServer
     // string # Backblaze B2 Cloud Storage: applicationKey
     public function getBackblazeB2ApplicationKey()
     {
-        return @$this->attributes['backblaze_b2_application_key'];
+        return isset($this->attributes['backblaze_b2_application_key']) ? $this->attributes['backblaze_b2_application_key'] : null;
     }
 
     public function setBackblazeB2ApplicationKey($value)
@@ -998,7 +996,7 @@ class RemoteServer
     // string # Backblaze B2 Cloud Storage: keyID
     public function getBackblazeB2KeyId()
     {
-        return @$this->attributes['backblaze_b2_key_id'];
+        return isset($this->attributes['backblaze_b2_key_id']) ? $this->attributes['backblaze_b2_key_id'] : null;
     }
 
     public function setBackblazeB2KeyId($value)
@@ -1008,7 +1006,7 @@ class RemoteServer
     // string # Cloudflare: Secret Key
     public function getCloudflareSecretKey()
     {
-        return @$this->attributes['cloudflare_secret_key'];
+        return isset($this->attributes['cloudflare_secret_key']) ? $this->attributes['cloudflare_secret_key'] : null;
     }
 
     public function setCloudflareSecretKey($value)
@@ -1018,7 +1016,7 @@ class RemoteServer
     // string # Filebase: Secret Key
     public function getFilebaseSecretKey()
     {
-        return @$this->attributes['filebase_secret_key'];
+        return isset($this->attributes['filebase_secret_key']) ? $this->attributes['filebase_secret_key'] : null;
     }
 
     public function setFilebaseSecretKey($value)
@@ -1028,7 +1026,7 @@ class RemoteServer
     // string # Google Cloud Storage: JSON file that contains the private key. To generate see https://cloud.google.com/storage/docs/json_api/v1/how-tos/authorizing#APIKey
     public function getGoogleCloudStorageCredentialsJson()
     {
-        return @$this->attributes['google_cloud_storage_credentials_json'];
+        return isset($this->attributes['google_cloud_storage_credentials_json']) ? $this->attributes['google_cloud_storage_credentials_json'] : null;
     }
 
     public function setGoogleCloudStorageCredentialsJson($value)
@@ -1038,7 +1036,7 @@ class RemoteServer
     // string # Google Cloud Storage: S3-compatible secret key
     public function getGoogleCloudStorageS3CompatibleSecretKey()
     {
-        return @$this->attributes['google_cloud_storage_s3_compatible_secret_key'];
+        return isset($this->attributes['google_cloud_storage_s3_compatible_secret_key']) ? $this->attributes['google_cloud_storage_s3_compatible_secret_key'] : null;
     }
 
     public function setGoogleCloudStorageS3CompatibleSecretKey($value)
@@ -1048,7 +1046,7 @@ class RemoteServer
     // string # Linode: Secret Key
     public function getLinodeSecretKey()
     {
-        return @$this->attributes['linode_secret_key'];
+        return isset($this->attributes['linode_secret_key']) ? $this->attributes['linode_secret_key'] : null;
     }
 
     public function setLinodeSecretKey($value)
@@ -1058,7 +1056,7 @@ class RemoteServer
     // string # S3-compatible: Secret Key
     public function getS3CompatibleSecretKey()
     {
-        return @$this->attributes['s3_compatible_secret_key'];
+        return isset($this->attributes['s3_compatible_secret_key']) ? $this->attributes['s3_compatible_secret_key'] : null;
     }
 
     public function setS3CompatibleSecretKey($value)
@@ -1068,7 +1066,7 @@ class RemoteServer
     // string # Wasabi: Secret Key
     public function getWasabiSecretKey()
     {
-        return @$this->attributes['wasabi_secret_key'];
+        return isset($this->attributes['wasabi_secret_key']) ? $this->attributes['wasabi_secret_key'] : null;
     }
 
     public function setWasabiSecretKey($value)
@@ -1078,7 +1076,7 @@ class RemoteServer
     // string # Files.com direct link: API key used once to pair the remote server.
     public function getFilesApiKey()
     {
-        return @$this->attributes['files_api_key'];
+        return isset($this->attributes['files_api_key']) ? $this->attributes['files_api_key'] : null;
     }
 
     public function setFilesApiKey($value)
@@ -1093,7 +1091,7 @@ class RemoteServer
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -1101,7 +1099,7 @@ class RemoteServer
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -1116,7 +1114,7 @@ class RemoteServer
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -1124,7 +1122,7 @@ class RemoteServer
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -1223,7 +1221,7 @@ class RemoteServer
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -1231,315 +1229,315 @@ class RemoteServer
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (@$params['password'] && !is_string(@$params['password'])) {
+        if (!empty($params['password']) && !is_string($params['password'])) {
             throw new \Files\Exception\InvalidParameterException('$password must be of type string; received ' . gettype(@$params['password']));
         }
 
-        if (@$params['private_key'] && !is_string(@$params['private_key'])) {
+        if (!empty($params['private_key']) && !is_string($params['private_key'])) {
             throw new \Files\Exception\InvalidParameterException('$private_key must be of type string; received ' . gettype(@$params['private_key']));
         }
 
-        if (@$params['private_key_passphrase'] && !is_string(@$params['private_key_passphrase'])) {
+        if (!empty($params['private_key_passphrase']) && !is_string($params['private_key_passphrase'])) {
             throw new \Files\Exception\InvalidParameterException('$private_key_passphrase must be of type string; received ' . gettype(@$params['private_key_passphrase']));
         }
 
-        if (@$params['sharepoint_client_certificate'] && !is_string(@$params['sharepoint_client_certificate'])) {
+        if (!empty($params['sharepoint_client_certificate']) && !is_string($params['sharepoint_client_certificate'])) {
             throw new \Files\Exception\InvalidParameterException('$sharepoint_client_certificate must be of type string; received ' . gettype(@$params['sharepoint_client_certificate']));
         }
 
-        if (@$params['sharepoint_client_secret'] && !is_string(@$params['sharepoint_client_secret'])) {
+        if (!empty($params['sharepoint_client_secret']) && !is_string($params['sharepoint_client_secret'])) {
             throw new \Files\Exception\InvalidParameterException('$sharepoint_client_secret must be of type string; received ' . gettype(@$params['sharepoint_client_secret']));
         }
 
-        if (@$params['ssl_certificate'] && !is_string(@$params['ssl_certificate'])) {
+        if (!empty($params['ssl_certificate']) && !is_string($params['ssl_certificate'])) {
             throw new \Files\Exception\InvalidParameterException('$ssl_certificate must be of type string; received ' . gettype(@$params['ssl_certificate']));
         }
 
-        if (@$params['aws_secret_key'] && !is_string(@$params['aws_secret_key'])) {
+        if (!empty($params['aws_secret_key']) && !is_string($params['aws_secret_key'])) {
             throw new \Files\Exception\InvalidParameterException('$aws_secret_key must be of type string; received ' . gettype(@$params['aws_secret_key']));
         }
 
-        if (@$params['azure_blob_storage_access_key'] && !is_string(@$params['azure_blob_storage_access_key'])) {
+        if (!empty($params['azure_blob_storage_access_key']) && !is_string($params['azure_blob_storage_access_key'])) {
             throw new \Files\Exception\InvalidParameterException('$azure_blob_storage_access_key must be of type string; received ' . gettype(@$params['azure_blob_storage_access_key']));
         }
 
-        if (@$params['azure_blob_storage_sas_token'] && !is_string(@$params['azure_blob_storage_sas_token'])) {
+        if (!empty($params['azure_blob_storage_sas_token']) && !is_string($params['azure_blob_storage_sas_token'])) {
             throw new \Files\Exception\InvalidParameterException('$azure_blob_storage_sas_token must be of type string; received ' . gettype(@$params['azure_blob_storage_sas_token']));
         }
 
-        if (@$params['azure_files_storage_access_key'] && !is_string(@$params['azure_files_storage_access_key'])) {
+        if (!empty($params['azure_files_storage_access_key']) && !is_string($params['azure_files_storage_access_key'])) {
             throw new \Files\Exception\InvalidParameterException('$azure_files_storage_access_key must be of type string; received ' . gettype(@$params['azure_files_storage_access_key']));
         }
 
-        if (@$params['azure_files_storage_sas_token'] && !is_string(@$params['azure_files_storage_sas_token'])) {
+        if (!empty($params['azure_files_storage_sas_token']) && !is_string($params['azure_files_storage_sas_token'])) {
             throw new \Files\Exception\InvalidParameterException('$azure_files_storage_sas_token must be of type string; received ' . gettype(@$params['azure_files_storage_sas_token']));
         }
 
-        if (@$params['backblaze_b2_application_key'] && !is_string(@$params['backblaze_b2_application_key'])) {
+        if (!empty($params['backblaze_b2_application_key']) && !is_string($params['backblaze_b2_application_key'])) {
             throw new \Files\Exception\InvalidParameterException('$backblaze_b2_application_key must be of type string; received ' . gettype(@$params['backblaze_b2_application_key']));
         }
 
-        if (@$params['backblaze_b2_key_id'] && !is_string(@$params['backblaze_b2_key_id'])) {
+        if (!empty($params['backblaze_b2_key_id']) && !is_string($params['backblaze_b2_key_id'])) {
             throw new \Files\Exception\InvalidParameterException('$backblaze_b2_key_id must be of type string; received ' . gettype(@$params['backblaze_b2_key_id']));
         }
 
-        if (@$params['cloudflare_secret_key'] && !is_string(@$params['cloudflare_secret_key'])) {
+        if (!empty($params['cloudflare_secret_key']) && !is_string($params['cloudflare_secret_key'])) {
             throw new \Files\Exception\InvalidParameterException('$cloudflare_secret_key must be of type string; received ' . gettype(@$params['cloudflare_secret_key']));
         }
 
-        if (@$params['filebase_secret_key'] && !is_string(@$params['filebase_secret_key'])) {
+        if (!empty($params['filebase_secret_key']) && !is_string($params['filebase_secret_key'])) {
             throw new \Files\Exception\InvalidParameterException('$filebase_secret_key must be of type string; received ' . gettype(@$params['filebase_secret_key']));
         }
 
-        if (@$params['google_cloud_storage_credentials_json'] && !is_string(@$params['google_cloud_storage_credentials_json'])) {
+        if (!empty($params['google_cloud_storage_credentials_json']) && !is_string($params['google_cloud_storage_credentials_json'])) {
             throw new \Files\Exception\InvalidParameterException('$google_cloud_storage_credentials_json must be of type string; received ' . gettype(@$params['google_cloud_storage_credentials_json']));
         }
 
-        if (@$params['google_cloud_storage_s3_compatible_secret_key'] && !is_string(@$params['google_cloud_storage_s3_compatible_secret_key'])) {
+        if (!empty($params['google_cloud_storage_s3_compatible_secret_key']) && !is_string($params['google_cloud_storage_s3_compatible_secret_key'])) {
             throw new \Files\Exception\InvalidParameterException('$google_cloud_storage_s3_compatible_secret_key must be of type string; received ' . gettype(@$params['google_cloud_storage_s3_compatible_secret_key']));
         }
 
-        if (@$params['linode_secret_key'] && !is_string(@$params['linode_secret_key'])) {
+        if (!empty($params['linode_secret_key']) && !is_string($params['linode_secret_key'])) {
             throw new \Files\Exception\InvalidParameterException('$linode_secret_key must be of type string; received ' . gettype(@$params['linode_secret_key']));
         }
 
-        if (@$params['s3_compatible_secret_key'] && !is_string(@$params['s3_compatible_secret_key'])) {
+        if (!empty($params['s3_compatible_secret_key']) && !is_string($params['s3_compatible_secret_key'])) {
             throw new \Files\Exception\InvalidParameterException('$s3_compatible_secret_key must be of type string; received ' . gettype(@$params['s3_compatible_secret_key']));
         }
 
-        if (@$params['wasabi_secret_key'] && !is_string(@$params['wasabi_secret_key'])) {
+        if (!empty($params['wasabi_secret_key']) && !is_string($params['wasabi_secret_key'])) {
             throw new \Files\Exception\InvalidParameterException('$wasabi_secret_key must be of type string; received ' . gettype(@$params['wasabi_secret_key']));
         }
 
-        if (@$params['aws_access_key'] && !is_string(@$params['aws_access_key'])) {
+        if (!empty($params['aws_access_key']) && !is_string($params['aws_access_key'])) {
             throw new \Files\Exception\InvalidParameterException('$aws_access_key must be of type string; received ' . gettype(@$params['aws_access_key']));
         }
 
-        if (@$params['azure_blob_storage_account'] && !is_string(@$params['azure_blob_storage_account'])) {
+        if (!empty($params['azure_blob_storage_account']) && !is_string($params['azure_blob_storage_account'])) {
             throw new \Files\Exception\InvalidParameterException('$azure_blob_storage_account must be of type string; received ' . gettype(@$params['azure_blob_storage_account']));
         }
 
-        if (@$params['azure_blob_storage_container'] && !is_string(@$params['azure_blob_storage_container'])) {
+        if (!empty($params['azure_blob_storage_container']) && !is_string($params['azure_blob_storage_container'])) {
             throw new \Files\Exception\InvalidParameterException('$azure_blob_storage_container must be of type string; received ' . gettype(@$params['azure_blob_storage_container']));
         }
 
-        if (@$params['azure_blob_storage_dns_suffix'] && !is_string(@$params['azure_blob_storage_dns_suffix'])) {
+        if (!empty($params['azure_blob_storage_dns_suffix']) && !is_string($params['azure_blob_storage_dns_suffix'])) {
             throw new \Files\Exception\InvalidParameterException('$azure_blob_storage_dns_suffix must be of type string; received ' . gettype(@$params['azure_blob_storage_dns_suffix']));
         }
 
-        if (@$params['azure_files_storage_account'] && !is_string(@$params['azure_files_storage_account'])) {
+        if (!empty($params['azure_files_storage_account']) && !is_string($params['azure_files_storage_account'])) {
             throw new \Files\Exception\InvalidParameterException('$azure_files_storage_account must be of type string; received ' . gettype(@$params['azure_files_storage_account']));
         }
 
-        if (@$params['azure_files_storage_dns_suffix'] && !is_string(@$params['azure_files_storage_dns_suffix'])) {
+        if (!empty($params['azure_files_storage_dns_suffix']) && !is_string($params['azure_files_storage_dns_suffix'])) {
             throw new \Files\Exception\InvalidParameterException('$azure_files_storage_dns_suffix must be of type string; received ' . gettype(@$params['azure_files_storage_dns_suffix']));
         }
 
-        if (@$params['azure_files_storage_share_name'] && !is_string(@$params['azure_files_storage_share_name'])) {
+        if (!empty($params['azure_files_storage_share_name']) && !is_string($params['azure_files_storage_share_name'])) {
             throw new \Files\Exception\InvalidParameterException('$azure_files_storage_share_name must be of type string; received ' . gettype(@$params['azure_files_storage_share_name']));
         }
 
-        if (@$params['backblaze_b2_bucket'] && !is_string(@$params['backblaze_b2_bucket'])) {
+        if (!empty($params['backblaze_b2_bucket']) && !is_string($params['backblaze_b2_bucket'])) {
             throw new \Files\Exception\InvalidParameterException('$backblaze_b2_bucket must be of type string; received ' . gettype(@$params['backblaze_b2_bucket']));
         }
 
-        if (@$params['backblaze_b2_s3_endpoint'] && !is_string(@$params['backblaze_b2_s3_endpoint'])) {
+        if (!empty($params['backblaze_b2_s3_endpoint']) && !is_string($params['backblaze_b2_s3_endpoint'])) {
             throw new \Files\Exception\InvalidParameterException('$backblaze_b2_s3_endpoint must be of type string; received ' . gettype(@$params['backblaze_b2_s3_endpoint']));
         }
 
-        if (@$params['buffer_uploads'] && !is_string(@$params['buffer_uploads'])) {
+        if (!empty($params['buffer_uploads']) && !is_string($params['buffer_uploads'])) {
             throw new \Files\Exception\InvalidParameterException('$buffer_uploads must be of type string; received ' . gettype(@$params['buffer_uploads']));
         }
 
-        if (@$params['cloudflare_access_key'] && !is_string(@$params['cloudflare_access_key'])) {
+        if (!empty($params['cloudflare_access_key']) && !is_string($params['cloudflare_access_key'])) {
             throw new \Files\Exception\InvalidParameterException('$cloudflare_access_key must be of type string; received ' . gettype(@$params['cloudflare_access_key']));
         }
 
-        if (@$params['cloudflare_bucket'] && !is_string(@$params['cloudflare_bucket'])) {
+        if (!empty($params['cloudflare_bucket']) && !is_string($params['cloudflare_bucket'])) {
             throw new \Files\Exception\InvalidParameterException('$cloudflare_bucket must be of type string; received ' . gettype(@$params['cloudflare_bucket']));
         }
 
-        if (@$params['cloudflare_endpoint'] && !is_string(@$params['cloudflare_endpoint'])) {
+        if (!empty($params['cloudflare_endpoint']) && !is_string($params['cloudflare_endpoint'])) {
             throw new \Files\Exception\InvalidParameterException('$cloudflare_endpoint must be of type string; received ' . gettype(@$params['cloudflare_endpoint']));
         }
 
-        if (@$params['description'] && !is_string(@$params['description'])) {
+        if (!empty($params['description']) && !is_string($params['description'])) {
             throw new \Files\Exception\InvalidParameterException('$description must be of type string; received ' . gettype(@$params['description']));
         }
 
-        if (@$params['filebase_access_key'] && !is_string(@$params['filebase_access_key'])) {
+        if (!empty($params['filebase_access_key']) && !is_string($params['filebase_access_key'])) {
             throw new \Files\Exception\InvalidParameterException('$filebase_access_key must be of type string; received ' . gettype(@$params['filebase_access_key']));
         }
 
-        if (@$params['filebase_bucket'] && !is_string(@$params['filebase_bucket'])) {
+        if (!empty($params['filebase_bucket']) && !is_string($params['filebase_bucket'])) {
             throw new \Files\Exception\InvalidParameterException('$filebase_bucket must be of type string; received ' . gettype(@$params['filebase_bucket']));
         }
 
-        if (@$params['files_api_key'] && !is_string(@$params['files_api_key'])) {
+        if (!empty($params['files_api_key']) && !is_string($params['files_api_key'])) {
             throw new \Files\Exception\InvalidParameterException('$files_api_key must be of type string; received ' . gettype(@$params['files_api_key']));
         }
 
-        if (@$params['files_agent_permission_set'] && !is_string(@$params['files_agent_permission_set'])) {
+        if (!empty($params['files_agent_permission_set']) && !is_string($params['files_agent_permission_set'])) {
             throw new \Files\Exception\InvalidParameterException('$files_agent_permission_set must be of type string; received ' . gettype(@$params['files_agent_permission_set']));
         }
 
-        if (@$params['files_agent_root'] && !is_string(@$params['files_agent_root'])) {
+        if (!empty($params['files_agent_root']) && !is_string($params['files_agent_root'])) {
             throw new \Files\Exception\InvalidParameterException('$files_agent_root must be of type string; received ' . gettype(@$params['files_agent_root']));
         }
 
-        if (@$params['files_agent_version'] && !is_string(@$params['files_agent_version'])) {
+        if (!empty($params['files_agent_version']) && !is_string($params['files_agent_version'])) {
             throw new \Files\Exception\InvalidParameterException('$files_agent_version must be of type string; received ' . gettype(@$params['files_agent_version']));
         }
 
-        if (@$params['outbound_agent_id'] && !is_int(@$params['outbound_agent_id'])) {
+        if (!empty($params['outbound_agent_id']) && !is_int($params['outbound_agent_id'])) {
             throw new \Files\Exception\InvalidParameterException('$outbound_agent_id must be of type int; received ' . gettype(@$params['outbound_agent_id']));
         }
 
-        if (@$params['custom_domain_id'] && !is_int(@$params['custom_domain_id'])) {
+        if (!empty($params['custom_domain_id']) && !is_int($params['custom_domain_id'])) {
             throw new \Files\Exception\InvalidParameterException('$custom_domain_id must be of type int; received ' . gettype(@$params['custom_domain_id']));
         }
 
-        if (@$params['google_cloud_storage_authentication_method'] && !is_string(@$params['google_cloud_storage_authentication_method'])) {
+        if (!empty($params['google_cloud_storage_authentication_method']) && !is_string($params['google_cloud_storage_authentication_method'])) {
             throw new \Files\Exception\InvalidParameterException('$google_cloud_storage_authentication_method must be of type string; received ' . gettype(@$params['google_cloud_storage_authentication_method']));
         }
 
-        if (@$params['google_cloud_storage_bucket'] && !is_string(@$params['google_cloud_storage_bucket'])) {
+        if (!empty($params['google_cloud_storage_bucket']) && !is_string($params['google_cloud_storage_bucket'])) {
             throw new \Files\Exception\InvalidParameterException('$google_cloud_storage_bucket must be of type string; received ' . gettype(@$params['google_cloud_storage_bucket']));
         }
 
-        if (@$params['google_cloud_storage_oauth_scope'] && !is_string(@$params['google_cloud_storage_oauth_scope'])) {
+        if (!empty($params['google_cloud_storage_oauth_scope']) && !is_string($params['google_cloud_storage_oauth_scope'])) {
             throw new \Files\Exception\InvalidParameterException('$google_cloud_storage_oauth_scope must be of type string; received ' . gettype(@$params['google_cloud_storage_oauth_scope']));
         }
 
-        if (@$params['google_cloud_storage_project_id'] && !is_string(@$params['google_cloud_storage_project_id'])) {
+        if (!empty($params['google_cloud_storage_project_id']) && !is_string($params['google_cloud_storage_project_id'])) {
             throw new \Files\Exception\InvalidParameterException('$google_cloud_storage_project_id must be of type string; received ' . gettype(@$params['google_cloud_storage_project_id']));
         }
 
-        if (@$params['google_cloud_storage_s3_compatible_access_key'] && !is_string(@$params['google_cloud_storage_s3_compatible_access_key'])) {
+        if (!empty($params['google_cloud_storage_s3_compatible_access_key']) && !is_string($params['google_cloud_storage_s3_compatible_access_key'])) {
             throw new \Files\Exception\InvalidParameterException('$google_cloud_storage_s3_compatible_access_key must be of type string; received ' . gettype(@$params['google_cloud_storage_s3_compatible_access_key']));
         }
 
-        if (@$params['hostname'] && !is_string(@$params['hostname'])) {
+        if (!empty($params['hostname']) && !is_string($params['hostname'])) {
             throw new \Files\Exception\InvalidParameterException('$hostname must be of type string; received ' . gettype(@$params['hostname']));
         }
 
-        if (@$params['linode_access_key'] && !is_string(@$params['linode_access_key'])) {
+        if (!empty($params['linode_access_key']) && !is_string($params['linode_access_key'])) {
             throw new \Files\Exception\InvalidParameterException('$linode_access_key must be of type string; received ' . gettype(@$params['linode_access_key']));
         }
 
-        if (@$params['linode_bucket'] && !is_string(@$params['linode_bucket'])) {
+        if (!empty($params['linode_bucket']) && !is_string($params['linode_bucket'])) {
             throw new \Files\Exception\InvalidParameterException('$linode_bucket must be of type string; received ' . gettype(@$params['linode_bucket']));
         }
 
-        if (@$params['linode_region'] && !is_string(@$params['linode_region'])) {
+        if (!empty($params['linode_region']) && !is_string($params['linode_region'])) {
             throw new \Files\Exception\InvalidParameterException('$linode_region must be of type string; received ' . gettype(@$params['linode_region']));
         }
 
-        if (@$params['max_connections'] && !is_int(@$params['max_connections'])) {
+        if (!empty($params['max_connections']) && !is_int($params['max_connections'])) {
             throw new \Files\Exception\InvalidParameterException('$max_connections must be of type int; received ' . gettype(@$params['max_connections']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['one_drive_account_type'] && !is_string(@$params['one_drive_account_type'])) {
+        if (!empty($params['one_drive_account_type']) && !is_string($params['one_drive_account_type'])) {
             throw new \Files\Exception\InvalidParameterException('$one_drive_account_type must be of type string; received ' . gettype(@$params['one_drive_account_type']));
         }
 
-        if (@$params['port'] && !is_int(@$params['port'])) {
+        if (!empty($params['port']) && !is_int($params['port'])) {
             throw new \Files\Exception\InvalidParameterException('$port must be of type int; received ' . gettype(@$params['port']));
         }
 
-        if (@$params['upload_staging_path'] && !is_string(@$params['upload_staging_path'])) {
+        if (!empty($params['upload_staging_path']) && !is_string($params['upload_staging_path'])) {
             throw new \Files\Exception\InvalidParameterException('$upload_staging_path must be of type string; received ' . gettype(@$params['upload_staging_path']));
         }
 
-        if (@$params['remote_server_credential_id'] && !is_int(@$params['remote_server_credential_id'])) {
+        if (!empty($params['remote_server_credential_id']) && !is_int($params['remote_server_credential_id'])) {
             throw new \Files\Exception\InvalidParameterException('$remote_server_credential_id must be of type int; received ' . gettype(@$params['remote_server_credential_id']));
         }
 
-        if (@$params['s3_assume_role_arn'] && !is_string(@$params['s3_assume_role_arn'])) {
+        if (!empty($params['s3_assume_role_arn']) && !is_string($params['s3_assume_role_arn'])) {
             throw new \Files\Exception\InvalidParameterException('$s3_assume_role_arn must be of type string; received ' . gettype(@$params['s3_assume_role_arn']));
         }
 
-        if (@$params['s3_assume_role_duration_seconds'] && !is_int(@$params['s3_assume_role_duration_seconds'])) {
+        if (!empty($params['s3_assume_role_duration_seconds']) && !is_int($params['s3_assume_role_duration_seconds'])) {
             throw new \Files\Exception\InvalidParameterException('$s3_assume_role_duration_seconds must be of type int; received ' . gettype(@$params['s3_assume_role_duration_seconds']));
         }
 
-        if (@$params['s3_bucket'] && !is_string(@$params['s3_bucket'])) {
+        if (!empty($params['s3_bucket']) && !is_string($params['s3_bucket'])) {
             throw new \Files\Exception\InvalidParameterException('$s3_bucket must be of type string; received ' . gettype(@$params['s3_bucket']));
         }
 
-        if (@$params['s3_compatible_access_key'] && !is_string(@$params['s3_compatible_access_key'])) {
+        if (!empty($params['s3_compatible_access_key']) && !is_string($params['s3_compatible_access_key'])) {
             throw new \Files\Exception\InvalidParameterException('$s3_compatible_access_key must be of type string; received ' . gettype(@$params['s3_compatible_access_key']));
         }
 
-        if (@$params['s3_compatible_bucket'] && !is_string(@$params['s3_compatible_bucket'])) {
+        if (!empty($params['s3_compatible_bucket']) && !is_string($params['s3_compatible_bucket'])) {
             throw new \Files\Exception\InvalidParameterException('$s3_compatible_bucket must be of type string; received ' . gettype(@$params['s3_compatible_bucket']));
         }
 
-        if (@$params['s3_compatible_endpoint'] && !is_string(@$params['s3_compatible_endpoint'])) {
+        if (!empty($params['s3_compatible_endpoint']) && !is_string($params['s3_compatible_endpoint'])) {
             throw new \Files\Exception\InvalidParameterException('$s3_compatible_endpoint must be of type string; received ' . gettype(@$params['s3_compatible_endpoint']));
         }
 
-        if (@$params['s3_compatible_region'] && !is_string(@$params['s3_compatible_region'])) {
+        if (!empty($params['s3_compatible_region']) && !is_string($params['s3_compatible_region'])) {
             throw new \Files\Exception\InvalidParameterException('$s3_compatible_region must be of type string; received ' . gettype(@$params['s3_compatible_region']));
         }
 
-        if (@$params['s3_kms_key_id'] && !is_string(@$params['s3_kms_key_id'])) {
+        if (!empty($params['s3_kms_key_id']) && !is_string($params['s3_kms_key_id'])) {
             throw new \Files\Exception\InvalidParameterException('$s3_kms_key_id must be of type string; received ' . gettype(@$params['s3_kms_key_id']));
         }
 
-        if (@$params['s3_region'] && !is_string(@$params['s3_region'])) {
+        if (!empty($params['s3_region']) && !is_string($params['s3_region'])) {
             throw new \Files\Exception\InvalidParameterException('$s3_region must be of type string; received ' . gettype(@$params['s3_region']));
         }
 
-        if (@$params['server_certificate'] && !is_string(@$params['server_certificate'])) {
+        if (!empty($params['server_certificate']) && !is_string($params['server_certificate'])) {
             throw new \Files\Exception\InvalidParameterException('$server_certificate must be of type string; received ' . gettype(@$params['server_certificate']));
         }
 
-        if (@$params['server_host_key'] && !is_string(@$params['server_host_key'])) {
+        if (!empty($params['server_host_key']) && !is_string($params['server_host_key'])) {
             throw new \Files\Exception\InvalidParameterException('$server_host_key must be of type string; received ' . gettype(@$params['server_host_key']));
         }
 
-        if (@$params['server_type'] && !is_string(@$params['server_type'])) {
+        if (!empty($params['server_type']) && !is_string($params['server_type'])) {
             throw new \Files\Exception\InvalidParameterException('$server_type must be of type string; received ' . gettype(@$params['server_type']));
         }
 
-        if (@$params['sharepoint_client_id'] && !is_string(@$params['sharepoint_client_id'])) {
+        if (!empty($params['sharepoint_client_id']) && !is_string($params['sharepoint_client_id'])) {
             throw new \Files\Exception\InvalidParameterException('$sharepoint_client_id must be of type string; received ' . gettype(@$params['sharepoint_client_id']));
         }
 
-        if (@$params['sharepoint_site_url'] && !is_string(@$params['sharepoint_site_url'])) {
+        if (!empty($params['sharepoint_site_url']) && !is_string($params['sharepoint_site_url'])) {
             throw new \Files\Exception\InvalidParameterException('$sharepoint_site_url must be of type string; received ' . gettype(@$params['sharepoint_site_url']));
         }
 
-        if (@$params['sharepoint_tenant_id'] && !is_string(@$params['sharepoint_tenant_id'])) {
+        if (!empty($params['sharepoint_tenant_id']) && !is_string($params['sharepoint_tenant_id'])) {
             throw new \Files\Exception\InvalidParameterException('$sharepoint_tenant_id must be of type string; received ' . gettype(@$params['sharepoint_tenant_id']));
         }
 
-        if (@$params['ssl'] && !is_string(@$params['ssl'])) {
+        if (!empty($params['ssl']) && !is_string($params['ssl'])) {
             throw new \Files\Exception\InvalidParameterException('$ssl must be of type string; received ' . gettype(@$params['ssl']));
         }
 
-        if (@$params['username'] && !is_string(@$params['username'])) {
+        if (!empty($params['username']) && !is_string($params['username'])) {
             throw new \Files\Exception\InvalidParameterException('$username must be of type string; received ' . gettype(@$params['username']));
         }
 
-        if (@$params['wasabi_access_key'] && !is_string(@$params['wasabi_access_key'])) {
+        if (!empty($params['wasabi_access_key']) && !is_string($params['wasabi_access_key'])) {
             throw new \Files\Exception\InvalidParameterException('$wasabi_access_key must be of type string; received ' . gettype(@$params['wasabi_access_key']));
         }
 
-        if (@$params['wasabi_bucket'] && !is_string(@$params['wasabi_bucket'])) {
+        if (!empty($params['wasabi_bucket']) && !is_string($params['wasabi_bucket'])) {
             throw new \Files\Exception\InvalidParameterException('$wasabi_bucket must be of type string; received ' . gettype(@$params['wasabi_bucket']));
         }
 
-        if (@$params['wasabi_region'] && !is_string(@$params['wasabi_region'])) {
+        if (!empty($params['wasabi_region']) && !is_string($params['wasabi_region'])) {
             throw new \Files\Exception\InvalidParameterException('$wasabi_region must be of type string; received ' . gettype(@$params['wasabi_region']));
         }
 
@@ -1553,7 +1551,7 @@ class RemoteServer
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -1561,7 +1559,7 @@ class RemoteServer
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -1598,15 +1596,15 @@ class RemoteServer
     //   filter_prefix - object - If set, return records where the specified field is prefixed by the supplied value. Valid fields are `name`, `backblaze_b2_bucket`, `google_cloud_storage_bucket`, `wasabi_bucket`, `s3_bucket`, `azure_blob_storage_container`, `azure_files_storage_share_name`, `s3_compatible_bucket`, `filebase_bucket`, `cloudflare_bucket` or `linode_bucket`. Valid field combinations are `[ backblaze_b2_bucket, name ]`, `[ google_cloud_storage_bucket, name ]`, `[ wasabi_bucket, name ]`, `[ s3_bucket, name ]`, `[ azure_blob_storage_container, name ]`, `[ azure_files_storage_share_name, name ]`, `[ s3_compatible_bucket, name ]`, `[ filebase_bucket, name ]`, `[ cloudflare_bucket, name ]` or `[ linode_bucket, name ]`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['user_id'] && !is_int(@$params['user_id'])) {
+        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -1631,11 +1629,11 @@ class RemoteServer
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -1658,11 +1656,11 @@ class RemoteServer
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -1760,319 +1758,319 @@ class RemoteServer
     //   workspace_id - int64 - Workspace ID (0 for default workspace)
     public static function create($params = [], $options = [])
     {
-        if (@$params['user_id'] && !is_int(@$params['user_id'])) {
+        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (@$params['password'] && !is_string(@$params['password'])) {
+        if (!empty($params['password']) && !is_string($params['password'])) {
             throw new \Files\Exception\InvalidParameterException('$password must be of type string; received ' . gettype(@$params['password']));
         }
 
-        if (@$params['private_key'] && !is_string(@$params['private_key'])) {
+        if (!empty($params['private_key']) && !is_string($params['private_key'])) {
             throw new \Files\Exception\InvalidParameterException('$private_key must be of type string; received ' . gettype(@$params['private_key']));
         }
 
-        if (@$params['private_key_passphrase'] && !is_string(@$params['private_key_passphrase'])) {
+        if (!empty($params['private_key_passphrase']) && !is_string($params['private_key_passphrase'])) {
             throw new \Files\Exception\InvalidParameterException('$private_key_passphrase must be of type string; received ' . gettype(@$params['private_key_passphrase']));
         }
 
-        if (@$params['sharepoint_client_certificate'] && !is_string(@$params['sharepoint_client_certificate'])) {
+        if (!empty($params['sharepoint_client_certificate']) && !is_string($params['sharepoint_client_certificate'])) {
             throw new \Files\Exception\InvalidParameterException('$sharepoint_client_certificate must be of type string; received ' . gettype(@$params['sharepoint_client_certificate']));
         }
 
-        if (@$params['sharepoint_client_secret'] && !is_string(@$params['sharepoint_client_secret'])) {
+        if (!empty($params['sharepoint_client_secret']) && !is_string($params['sharepoint_client_secret'])) {
             throw new \Files\Exception\InvalidParameterException('$sharepoint_client_secret must be of type string; received ' . gettype(@$params['sharepoint_client_secret']));
         }
 
-        if (@$params['ssl_certificate'] && !is_string(@$params['ssl_certificate'])) {
+        if (!empty($params['ssl_certificate']) && !is_string($params['ssl_certificate'])) {
             throw new \Files\Exception\InvalidParameterException('$ssl_certificate must be of type string; received ' . gettype(@$params['ssl_certificate']));
         }
 
-        if (@$params['aws_secret_key'] && !is_string(@$params['aws_secret_key'])) {
+        if (!empty($params['aws_secret_key']) && !is_string($params['aws_secret_key'])) {
             throw new \Files\Exception\InvalidParameterException('$aws_secret_key must be of type string; received ' . gettype(@$params['aws_secret_key']));
         }
 
-        if (@$params['azure_blob_storage_access_key'] && !is_string(@$params['azure_blob_storage_access_key'])) {
+        if (!empty($params['azure_blob_storage_access_key']) && !is_string($params['azure_blob_storage_access_key'])) {
             throw new \Files\Exception\InvalidParameterException('$azure_blob_storage_access_key must be of type string; received ' . gettype(@$params['azure_blob_storage_access_key']));
         }
 
-        if (@$params['azure_blob_storage_sas_token'] && !is_string(@$params['azure_blob_storage_sas_token'])) {
+        if (!empty($params['azure_blob_storage_sas_token']) && !is_string($params['azure_blob_storage_sas_token'])) {
             throw new \Files\Exception\InvalidParameterException('$azure_blob_storage_sas_token must be of type string; received ' . gettype(@$params['azure_blob_storage_sas_token']));
         }
 
-        if (@$params['azure_files_storage_access_key'] && !is_string(@$params['azure_files_storage_access_key'])) {
+        if (!empty($params['azure_files_storage_access_key']) && !is_string($params['azure_files_storage_access_key'])) {
             throw new \Files\Exception\InvalidParameterException('$azure_files_storage_access_key must be of type string; received ' . gettype(@$params['azure_files_storage_access_key']));
         }
 
-        if (@$params['azure_files_storage_sas_token'] && !is_string(@$params['azure_files_storage_sas_token'])) {
+        if (!empty($params['azure_files_storage_sas_token']) && !is_string($params['azure_files_storage_sas_token'])) {
             throw new \Files\Exception\InvalidParameterException('$azure_files_storage_sas_token must be of type string; received ' . gettype(@$params['azure_files_storage_sas_token']));
         }
 
-        if (@$params['backblaze_b2_application_key'] && !is_string(@$params['backblaze_b2_application_key'])) {
+        if (!empty($params['backblaze_b2_application_key']) && !is_string($params['backblaze_b2_application_key'])) {
             throw new \Files\Exception\InvalidParameterException('$backblaze_b2_application_key must be of type string; received ' . gettype(@$params['backblaze_b2_application_key']));
         }
 
-        if (@$params['backblaze_b2_key_id'] && !is_string(@$params['backblaze_b2_key_id'])) {
+        if (!empty($params['backblaze_b2_key_id']) && !is_string($params['backblaze_b2_key_id'])) {
             throw new \Files\Exception\InvalidParameterException('$backblaze_b2_key_id must be of type string; received ' . gettype(@$params['backblaze_b2_key_id']));
         }
 
-        if (@$params['cloudflare_secret_key'] && !is_string(@$params['cloudflare_secret_key'])) {
+        if (!empty($params['cloudflare_secret_key']) && !is_string($params['cloudflare_secret_key'])) {
             throw new \Files\Exception\InvalidParameterException('$cloudflare_secret_key must be of type string; received ' . gettype(@$params['cloudflare_secret_key']));
         }
 
-        if (@$params['filebase_secret_key'] && !is_string(@$params['filebase_secret_key'])) {
+        if (!empty($params['filebase_secret_key']) && !is_string($params['filebase_secret_key'])) {
             throw new \Files\Exception\InvalidParameterException('$filebase_secret_key must be of type string; received ' . gettype(@$params['filebase_secret_key']));
         }
 
-        if (@$params['google_cloud_storage_credentials_json'] && !is_string(@$params['google_cloud_storage_credentials_json'])) {
+        if (!empty($params['google_cloud_storage_credentials_json']) && !is_string($params['google_cloud_storage_credentials_json'])) {
             throw new \Files\Exception\InvalidParameterException('$google_cloud_storage_credentials_json must be of type string; received ' . gettype(@$params['google_cloud_storage_credentials_json']));
         }
 
-        if (@$params['google_cloud_storage_s3_compatible_secret_key'] && !is_string(@$params['google_cloud_storage_s3_compatible_secret_key'])) {
+        if (!empty($params['google_cloud_storage_s3_compatible_secret_key']) && !is_string($params['google_cloud_storage_s3_compatible_secret_key'])) {
             throw new \Files\Exception\InvalidParameterException('$google_cloud_storage_s3_compatible_secret_key must be of type string; received ' . gettype(@$params['google_cloud_storage_s3_compatible_secret_key']));
         }
 
-        if (@$params['linode_secret_key'] && !is_string(@$params['linode_secret_key'])) {
+        if (!empty($params['linode_secret_key']) && !is_string($params['linode_secret_key'])) {
             throw new \Files\Exception\InvalidParameterException('$linode_secret_key must be of type string; received ' . gettype(@$params['linode_secret_key']));
         }
 
-        if (@$params['s3_compatible_secret_key'] && !is_string(@$params['s3_compatible_secret_key'])) {
+        if (!empty($params['s3_compatible_secret_key']) && !is_string($params['s3_compatible_secret_key'])) {
             throw new \Files\Exception\InvalidParameterException('$s3_compatible_secret_key must be of type string; received ' . gettype(@$params['s3_compatible_secret_key']));
         }
 
-        if (@$params['wasabi_secret_key'] && !is_string(@$params['wasabi_secret_key'])) {
+        if (!empty($params['wasabi_secret_key']) && !is_string($params['wasabi_secret_key'])) {
             throw new \Files\Exception\InvalidParameterException('$wasabi_secret_key must be of type string; received ' . gettype(@$params['wasabi_secret_key']));
         }
 
-        if (@$params['aws_access_key'] && !is_string(@$params['aws_access_key'])) {
+        if (!empty($params['aws_access_key']) && !is_string($params['aws_access_key'])) {
             throw new \Files\Exception\InvalidParameterException('$aws_access_key must be of type string; received ' . gettype(@$params['aws_access_key']));
         }
 
-        if (@$params['azure_blob_storage_account'] && !is_string(@$params['azure_blob_storage_account'])) {
+        if (!empty($params['azure_blob_storage_account']) && !is_string($params['azure_blob_storage_account'])) {
             throw new \Files\Exception\InvalidParameterException('$azure_blob_storage_account must be of type string; received ' . gettype(@$params['azure_blob_storage_account']));
         }
 
-        if (@$params['azure_blob_storage_container'] && !is_string(@$params['azure_blob_storage_container'])) {
+        if (!empty($params['azure_blob_storage_container']) && !is_string($params['azure_blob_storage_container'])) {
             throw new \Files\Exception\InvalidParameterException('$azure_blob_storage_container must be of type string; received ' . gettype(@$params['azure_blob_storage_container']));
         }
 
-        if (@$params['azure_blob_storage_dns_suffix'] && !is_string(@$params['azure_blob_storage_dns_suffix'])) {
+        if (!empty($params['azure_blob_storage_dns_suffix']) && !is_string($params['azure_blob_storage_dns_suffix'])) {
             throw new \Files\Exception\InvalidParameterException('$azure_blob_storage_dns_suffix must be of type string; received ' . gettype(@$params['azure_blob_storage_dns_suffix']));
         }
 
-        if (@$params['azure_files_storage_account'] && !is_string(@$params['azure_files_storage_account'])) {
+        if (!empty($params['azure_files_storage_account']) && !is_string($params['azure_files_storage_account'])) {
             throw new \Files\Exception\InvalidParameterException('$azure_files_storage_account must be of type string; received ' . gettype(@$params['azure_files_storage_account']));
         }
 
-        if (@$params['azure_files_storage_dns_suffix'] && !is_string(@$params['azure_files_storage_dns_suffix'])) {
+        if (!empty($params['azure_files_storage_dns_suffix']) && !is_string($params['azure_files_storage_dns_suffix'])) {
             throw new \Files\Exception\InvalidParameterException('$azure_files_storage_dns_suffix must be of type string; received ' . gettype(@$params['azure_files_storage_dns_suffix']));
         }
 
-        if (@$params['azure_files_storage_share_name'] && !is_string(@$params['azure_files_storage_share_name'])) {
+        if (!empty($params['azure_files_storage_share_name']) && !is_string($params['azure_files_storage_share_name'])) {
             throw new \Files\Exception\InvalidParameterException('$azure_files_storage_share_name must be of type string; received ' . gettype(@$params['azure_files_storage_share_name']));
         }
 
-        if (@$params['backblaze_b2_bucket'] && !is_string(@$params['backblaze_b2_bucket'])) {
+        if (!empty($params['backblaze_b2_bucket']) && !is_string($params['backblaze_b2_bucket'])) {
             throw new \Files\Exception\InvalidParameterException('$backblaze_b2_bucket must be of type string; received ' . gettype(@$params['backblaze_b2_bucket']));
         }
 
-        if (@$params['backblaze_b2_s3_endpoint'] && !is_string(@$params['backblaze_b2_s3_endpoint'])) {
+        if (!empty($params['backblaze_b2_s3_endpoint']) && !is_string($params['backblaze_b2_s3_endpoint'])) {
             throw new \Files\Exception\InvalidParameterException('$backblaze_b2_s3_endpoint must be of type string; received ' . gettype(@$params['backblaze_b2_s3_endpoint']));
         }
 
-        if (@$params['buffer_uploads'] && !is_string(@$params['buffer_uploads'])) {
+        if (!empty($params['buffer_uploads']) && !is_string($params['buffer_uploads'])) {
             throw new \Files\Exception\InvalidParameterException('$buffer_uploads must be of type string; received ' . gettype(@$params['buffer_uploads']));
         }
 
-        if (@$params['cloudflare_access_key'] && !is_string(@$params['cloudflare_access_key'])) {
+        if (!empty($params['cloudflare_access_key']) && !is_string($params['cloudflare_access_key'])) {
             throw new \Files\Exception\InvalidParameterException('$cloudflare_access_key must be of type string; received ' . gettype(@$params['cloudflare_access_key']));
         }
 
-        if (@$params['cloudflare_bucket'] && !is_string(@$params['cloudflare_bucket'])) {
+        if (!empty($params['cloudflare_bucket']) && !is_string($params['cloudflare_bucket'])) {
             throw new \Files\Exception\InvalidParameterException('$cloudflare_bucket must be of type string; received ' . gettype(@$params['cloudflare_bucket']));
         }
 
-        if (@$params['cloudflare_endpoint'] && !is_string(@$params['cloudflare_endpoint'])) {
+        if (!empty($params['cloudflare_endpoint']) && !is_string($params['cloudflare_endpoint'])) {
             throw new \Files\Exception\InvalidParameterException('$cloudflare_endpoint must be of type string; received ' . gettype(@$params['cloudflare_endpoint']));
         }
 
-        if (@$params['description'] && !is_string(@$params['description'])) {
+        if (!empty($params['description']) && !is_string($params['description'])) {
             throw new \Files\Exception\InvalidParameterException('$description must be of type string; received ' . gettype(@$params['description']));
         }
 
-        if (@$params['filebase_access_key'] && !is_string(@$params['filebase_access_key'])) {
+        if (!empty($params['filebase_access_key']) && !is_string($params['filebase_access_key'])) {
             throw new \Files\Exception\InvalidParameterException('$filebase_access_key must be of type string; received ' . gettype(@$params['filebase_access_key']));
         }
 
-        if (@$params['filebase_bucket'] && !is_string(@$params['filebase_bucket'])) {
+        if (!empty($params['filebase_bucket']) && !is_string($params['filebase_bucket'])) {
             throw new \Files\Exception\InvalidParameterException('$filebase_bucket must be of type string; received ' . gettype(@$params['filebase_bucket']));
         }
 
-        if (@$params['files_api_key'] && !is_string(@$params['files_api_key'])) {
+        if (!empty($params['files_api_key']) && !is_string($params['files_api_key'])) {
             throw new \Files\Exception\InvalidParameterException('$files_api_key must be of type string; received ' . gettype(@$params['files_api_key']));
         }
 
-        if (@$params['files_agent_permission_set'] && !is_string(@$params['files_agent_permission_set'])) {
+        if (!empty($params['files_agent_permission_set']) && !is_string($params['files_agent_permission_set'])) {
             throw new \Files\Exception\InvalidParameterException('$files_agent_permission_set must be of type string; received ' . gettype(@$params['files_agent_permission_set']));
         }
 
-        if (@$params['files_agent_root'] && !is_string(@$params['files_agent_root'])) {
+        if (!empty($params['files_agent_root']) && !is_string($params['files_agent_root'])) {
             throw new \Files\Exception\InvalidParameterException('$files_agent_root must be of type string; received ' . gettype(@$params['files_agent_root']));
         }
 
-        if (@$params['files_agent_version'] && !is_string(@$params['files_agent_version'])) {
+        if (!empty($params['files_agent_version']) && !is_string($params['files_agent_version'])) {
             throw new \Files\Exception\InvalidParameterException('$files_agent_version must be of type string; received ' . gettype(@$params['files_agent_version']));
         }
 
-        if (@$params['outbound_agent_id'] && !is_int(@$params['outbound_agent_id'])) {
+        if (!empty($params['outbound_agent_id']) && !is_int($params['outbound_agent_id'])) {
             throw new \Files\Exception\InvalidParameterException('$outbound_agent_id must be of type int; received ' . gettype(@$params['outbound_agent_id']));
         }
 
-        if (@$params['custom_domain_id'] && !is_int(@$params['custom_domain_id'])) {
+        if (!empty($params['custom_domain_id']) && !is_int($params['custom_domain_id'])) {
             throw new \Files\Exception\InvalidParameterException('$custom_domain_id must be of type int; received ' . gettype(@$params['custom_domain_id']));
         }
 
-        if (@$params['google_cloud_storage_authentication_method'] && !is_string(@$params['google_cloud_storage_authentication_method'])) {
+        if (!empty($params['google_cloud_storage_authentication_method']) && !is_string($params['google_cloud_storage_authentication_method'])) {
             throw new \Files\Exception\InvalidParameterException('$google_cloud_storage_authentication_method must be of type string; received ' . gettype(@$params['google_cloud_storage_authentication_method']));
         }
 
-        if (@$params['google_cloud_storage_bucket'] && !is_string(@$params['google_cloud_storage_bucket'])) {
+        if (!empty($params['google_cloud_storage_bucket']) && !is_string($params['google_cloud_storage_bucket'])) {
             throw new \Files\Exception\InvalidParameterException('$google_cloud_storage_bucket must be of type string; received ' . gettype(@$params['google_cloud_storage_bucket']));
         }
 
-        if (@$params['google_cloud_storage_oauth_scope'] && !is_string(@$params['google_cloud_storage_oauth_scope'])) {
+        if (!empty($params['google_cloud_storage_oauth_scope']) && !is_string($params['google_cloud_storage_oauth_scope'])) {
             throw new \Files\Exception\InvalidParameterException('$google_cloud_storage_oauth_scope must be of type string; received ' . gettype(@$params['google_cloud_storage_oauth_scope']));
         }
 
-        if (@$params['google_cloud_storage_project_id'] && !is_string(@$params['google_cloud_storage_project_id'])) {
+        if (!empty($params['google_cloud_storage_project_id']) && !is_string($params['google_cloud_storage_project_id'])) {
             throw new \Files\Exception\InvalidParameterException('$google_cloud_storage_project_id must be of type string; received ' . gettype(@$params['google_cloud_storage_project_id']));
         }
 
-        if (@$params['google_cloud_storage_s3_compatible_access_key'] && !is_string(@$params['google_cloud_storage_s3_compatible_access_key'])) {
+        if (!empty($params['google_cloud_storage_s3_compatible_access_key']) && !is_string($params['google_cloud_storage_s3_compatible_access_key'])) {
             throw new \Files\Exception\InvalidParameterException('$google_cloud_storage_s3_compatible_access_key must be of type string; received ' . gettype(@$params['google_cloud_storage_s3_compatible_access_key']));
         }
 
-        if (@$params['hostname'] && !is_string(@$params['hostname'])) {
+        if (!empty($params['hostname']) && !is_string($params['hostname'])) {
             throw new \Files\Exception\InvalidParameterException('$hostname must be of type string; received ' . gettype(@$params['hostname']));
         }
 
-        if (@$params['linode_access_key'] && !is_string(@$params['linode_access_key'])) {
+        if (!empty($params['linode_access_key']) && !is_string($params['linode_access_key'])) {
             throw new \Files\Exception\InvalidParameterException('$linode_access_key must be of type string; received ' . gettype(@$params['linode_access_key']));
         }
 
-        if (@$params['linode_bucket'] && !is_string(@$params['linode_bucket'])) {
+        if (!empty($params['linode_bucket']) && !is_string($params['linode_bucket'])) {
             throw new \Files\Exception\InvalidParameterException('$linode_bucket must be of type string; received ' . gettype(@$params['linode_bucket']));
         }
 
-        if (@$params['linode_region'] && !is_string(@$params['linode_region'])) {
+        if (!empty($params['linode_region']) && !is_string($params['linode_region'])) {
             throw new \Files\Exception\InvalidParameterException('$linode_region must be of type string; received ' . gettype(@$params['linode_region']));
         }
 
-        if (@$params['max_connections'] && !is_int(@$params['max_connections'])) {
+        if (!empty($params['max_connections']) && !is_int($params['max_connections'])) {
             throw new \Files\Exception\InvalidParameterException('$max_connections must be of type int; received ' . gettype(@$params['max_connections']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['one_drive_account_type'] && !is_string(@$params['one_drive_account_type'])) {
+        if (!empty($params['one_drive_account_type']) && !is_string($params['one_drive_account_type'])) {
             throw new \Files\Exception\InvalidParameterException('$one_drive_account_type must be of type string; received ' . gettype(@$params['one_drive_account_type']));
         }
 
-        if (@$params['port'] && !is_int(@$params['port'])) {
+        if (!empty($params['port']) && !is_int($params['port'])) {
             throw new \Files\Exception\InvalidParameterException('$port must be of type int; received ' . gettype(@$params['port']));
         }
 
-        if (@$params['upload_staging_path'] && !is_string(@$params['upload_staging_path'])) {
+        if (!empty($params['upload_staging_path']) && !is_string($params['upload_staging_path'])) {
             throw new \Files\Exception\InvalidParameterException('$upload_staging_path must be of type string; received ' . gettype(@$params['upload_staging_path']));
         }
 
-        if (@$params['remote_server_credential_id'] && !is_int(@$params['remote_server_credential_id'])) {
+        if (!empty($params['remote_server_credential_id']) && !is_int($params['remote_server_credential_id'])) {
             throw new \Files\Exception\InvalidParameterException('$remote_server_credential_id must be of type int; received ' . gettype(@$params['remote_server_credential_id']));
         }
 
-        if (@$params['s3_assume_role_arn'] && !is_string(@$params['s3_assume_role_arn'])) {
+        if (!empty($params['s3_assume_role_arn']) && !is_string($params['s3_assume_role_arn'])) {
             throw new \Files\Exception\InvalidParameterException('$s3_assume_role_arn must be of type string; received ' . gettype(@$params['s3_assume_role_arn']));
         }
 
-        if (@$params['s3_assume_role_duration_seconds'] && !is_int(@$params['s3_assume_role_duration_seconds'])) {
+        if (!empty($params['s3_assume_role_duration_seconds']) && !is_int($params['s3_assume_role_duration_seconds'])) {
             throw new \Files\Exception\InvalidParameterException('$s3_assume_role_duration_seconds must be of type int; received ' . gettype(@$params['s3_assume_role_duration_seconds']));
         }
 
-        if (@$params['s3_bucket'] && !is_string(@$params['s3_bucket'])) {
+        if (!empty($params['s3_bucket']) && !is_string($params['s3_bucket'])) {
             throw new \Files\Exception\InvalidParameterException('$s3_bucket must be of type string; received ' . gettype(@$params['s3_bucket']));
         }
 
-        if (@$params['s3_compatible_access_key'] && !is_string(@$params['s3_compatible_access_key'])) {
+        if (!empty($params['s3_compatible_access_key']) && !is_string($params['s3_compatible_access_key'])) {
             throw new \Files\Exception\InvalidParameterException('$s3_compatible_access_key must be of type string; received ' . gettype(@$params['s3_compatible_access_key']));
         }
 
-        if (@$params['s3_compatible_bucket'] && !is_string(@$params['s3_compatible_bucket'])) {
+        if (!empty($params['s3_compatible_bucket']) && !is_string($params['s3_compatible_bucket'])) {
             throw new \Files\Exception\InvalidParameterException('$s3_compatible_bucket must be of type string; received ' . gettype(@$params['s3_compatible_bucket']));
         }
 
-        if (@$params['s3_compatible_endpoint'] && !is_string(@$params['s3_compatible_endpoint'])) {
+        if (!empty($params['s3_compatible_endpoint']) && !is_string($params['s3_compatible_endpoint'])) {
             throw new \Files\Exception\InvalidParameterException('$s3_compatible_endpoint must be of type string; received ' . gettype(@$params['s3_compatible_endpoint']));
         }
 
-        if (@$params['s3_compatible_region'] && !is_string(@$params['s3_compatible_region'])) {
+        if (!empty($params['s3_compatible_region']) && !is_string($params['s3_compatible_region'])) {
             throw new \Files\Exception\InvalidParameterException('$s3_compatible_region must be of type string; received ' . gettype(@$params['s3_compatible_region']));
         }
 
-        if (@$params['s3_kms_key_id'] && !is_string(@$params['s3_kms_key_id'])) {
+        if (!empty($params['s3_kms_key_id']) && !is_string($params['s3_kms_key_id'])) {
             throw new \Files\Exception\InvalidParameterException('$s3_kms_key_id must be of type string; received ' . gettype(@$params['s3_kms_key_id']));
         }
 
-        if (@$params['s3_region'] && !is_string(@$params['s3_region'])) {
+        if (!empty($params['s3_region']) && !is_string($params['s3_region'])) {
             throw new \Files\Exception\InvalidParameterException('$s3_region must be of type string; received ' . gettype(@$params['s3_region']));
         }
 
-        if (@$params['server_certificate'] && !is_string(@$params['server_certificate'])) {
+        if (!empty($params['server_certificate']) && !is_string($params['server_certificate'])) {
             throw new \Files\Exception\InvalidParameterException('$server_certificate must be of type string; received ' . gettype(@$params['server_certificate']));
         }
 
-        if (@$params['server_host_key'] && !is_string(@$params['server_host_key'])) {
+        if (!empty($params['server_host_key']) && !is_string($params['server_host_key'])) {
             throw new \Files\Exception\InvalidParameterException('$server_host_key must be of type string; received ' . gettype(@$params['server_host_key']));
         }
 
-        if (@$params['server_type'] && !is_string(@$params['server_type'])) {
+        if (!empty($params['server_type']) && !is_string($params['server_type'])) {
             throw new \Files\Exception\InvalidParameterException('$server_type must be of type string; received ' . gettype(@$params['server_type']));
         }
 
-        if (@$params['sharepoint_client_id'] && !is_string(@$params['sharepoint_client_id'])) {
+        if (!empty($params['sharepoint_client_id']) && !is_string($params['sharepoint_client_id'])) {
             throw new \Files\Exception\InvalidParameterException('$sharepoint_client_id must be of type string; received ' . gettype(@$params['sharepoint_client_id']));
         }
 
-        if (@$params['sharepoint_site_url'] && !is_string(@$params['sharepoint_site_url'])) {
+        if (!empty($params['sharepoint_site_url']) && !is_string($params['sharepoint_site_url'])) {
             throw new \Files\Exception\InvalidParameterException('$sharepoint_site_url must be of type string; received ' . gettype(@$params['sharepoint_site_url']));
         }
 
-        if (@$params['sharepoint_tenant_id'] && !is_string(@$params['sharepoint_tenant_id'])) {
+        if (!empty($params['sharepoint_tenant_id']) && !is_string($params['sharepoint_tenant_id'])) {
             throw new \Files\Exception\InvalidParameterException('$sharepoint_tenant_id must be of type string; received ' . gettype(@$params['sharepoint_tenant_id']));
         }
 
-        if (@$params['ssl'] && !is_string(@$params['ssl'])) {
+        if (!empty($params['ssl']) && !is_string($params['ssl'])) {
             throw new \Files\Exception\InvalidParameterException('$ssl must be of type string; received ' . gettype(@$params['ssl']));
         }
 
-        if (@$params['username'] && !is_string(@$params['username'])) {
+        if (!empty($params['username']) && !is_string($params['username'])) {
             throw new \Files\Exception\InvalidParameterException('$username must be of type string; received ' . gettype(@$params['username']));
         }
 
-        if (@$params['wasabi_access_key'] && !is_string(@$params['wasabi_access_key'])) {
+        if (!empty($params['wasabi_access_key']) && !is_string($params['wasabi_access_key'])) {
             throw new \Files\Exception\InvalidParameterException('$wasabi_access_key must be of type string; received ' . gettype(@$params['wasabi_access_key']));
         }
 
-        if (@$params['wasabi_bucket'] && !is_string(@$params['wasabi_bucket'])) {
+        if (!empty($params['wasabi_bucket']) && !is_string($params['wasabi_bucket'])) {
             throw new \Files\Exception\InvalidParameterException('$wasabi_bucket must be of type string; received ' . gettype(@$params['wasabi_bucket']));
         }
 
-        if (@$params['wasabi_region'] && !is_string(@$params['wasabi_region'])) {
+        if (!empty($params['wasabi_region']) && !is_string($params['wasabi_region'])) {
             throw new \Files\Exception\InvalidParameterException('$wasabi_region must be of type string; received ' . gettype(@$params['wasabi_region']));
         }
 
-        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 

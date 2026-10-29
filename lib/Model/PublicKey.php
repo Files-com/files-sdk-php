@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class PublicKey
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class PublicKey
     // int64 # Public key ID
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
     public function setId($value)
@@ -68,7 +66,7 @@ class PublicKey
     // int64 # Workspace ID (0 for default workspace).
     public function getWorkspaceId()
     {
-        return @$this->attributes['workspace_id'];
+        return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
 
     public function setWorkspaceId($value)
@@ -78,7 +76,7 @@ class PublicKey
     // string # Public key title
     public function getTitle()
     {
-        return @$this->attributes['title'];
+        return isset($this->attributes['title']) ? $this->attributes['title'] : null;
     }
 
     public function setTitle($value)
@@ -88,12 +86,12 @@ class PublicKey
     // date-time # Public key created at date/time
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
     // date-time # Public key expiration date/time
     public function getExpiresAt()
     {
-        return @$this->attributes['expires_at'];
+        return isset($this->attributes['expires_at']) ? $this->attributes['expires_at'] : null;
     }
 
     public function setExpiresAt($value)
@@ -103,7 +101,7 @@ class PublicKey
     // boolean # Is this public key expired?
     public function getExpired()
     {
-        return @$this->attributes['expired'];
+        return isset($this->attributes['expired']) ? $this->attributes['expired'] : null;
     }
 
     public function setExpired($value)
@@ -113,7 +111,7 @@ class PublicKey
     // string # Public key fingerprint (MD5)
     public function getFingerprint()
     {
-        return @$this->attributes['fingerprint'];
+        return isset($this->attributes['fingerprint']) ? $this->attributes['fingerprint'] : null;
     }
 
     public function setFingerprint($value)
@@ -123,7 +121,7 @@ class PublicKey
     // string # Public key fingerprint (SHA256)
     public function getFingerprintSha256()
     {
-        return @$this->attributes['fingerprint_sha256'];
+        return isset($this->attributes['fingerprint_sha256']) ? $this->attributes['fingerprint_sha256'] : null;
     }
 
     public function setFingerprintSha256($value)
@@ -133,7 +131,7 @@ class PublicKey
     // string # Only returned when generating keys. Can be invalid, not_generated, generating, complete
     public function getStatus()
     {
-        return @$this->attributes['status'];
+        return isset($this->attributes['status']) ? $this->attributes['status'] : null;
     }
 
     public function setStatus($value)
@@ -143,7 +141,7 @@ class PublicKey
     // date-time # Key's most recent login time via SFTP
     public function getLastLoginAt()
     {
-        return @$this->attributes['last_login_at'];
+        return isset($this->attributes['last_login_at']) ? $this->attributes['last_login_at'] : null;
     }
 
     public function setLastLoginAt($value)
@@ -153,7 +151,7 @@ class PublicKey
     // string # Only returned when generating keys. Private key generated for the user.
     public function getGeneratedPrivateKey()
     {
-        return @$this->attributes['generated_private_key'];
+        return isset($this->attributes['generated_private_key']) ? $this->attributes['generated_private_key'] : null;
     }
 
     public function setGeneratedPrivateKey($value)
@@ -163,7 +161,7 @@ class PublicKey
     // string # Only returned when generating keys. Public key generated for the user.
     public function getGeneratedPublicKey()
     {
-        return @$this->attributes['generated_public_key'];
+        return isset($this->attributes['generated_public_key']) ? $this->attributes['generated_public_key'] : null;
     }
 
     public function setGeneratedPublicKey($value)
@@ -173,7 +171,7 @@ class PublicKey
     // string # Username of the user this public key is associated with
     public function getUsername()
     {
-        return @$this->attributes['username'];
+        return isset($this->attributes['username']) ? $this->attributes['username'] : null;
     }
 
     public function setUsername($value)
@@ -183,7 +181,7 @@ class PublicKey
     // int64 # User ID this public key is associated with
     public function getUserId()
     {
-        return @$this->attributes['user_id'];
+        return isset($this->attributes['user_id']) ? $this->attributes['user_id'] : null;
     }
 
     public function setUserId($value)
@@ -193,7 +191,7 @@ class PublicKey
     // string # Actual contents of SSH key.
     public function getPublicKey()
     {
-        return @$this->attributes['public_key'];
+        return isset($this->attributes['public_key']) ? $this->attributes['public_key'] : null;
     }
 
     public function setPublicKey($value)
@@ -203,7 +201,7 @@ class PublicKey
     // boolean # If true, generate a new SSH key pair. Can not be used with `public_key`
     public function getGenerateKeypair()
     {
-        return @$this->attributes['generate_keypair'];
+        return isset($this->attributes['generate_keypair']) ? $this->attributes['generate_keypair'] : null;
     }
 
     public function setGenerateKeypair($value)
@@ -213,7 +211,7 @@ class PublicKey
     // string # Password for the private key. Used for the generation of the key. Will be ignored if `generate_keypair` is false.
     public function getGeneratePrivateKeyPassword()
     {
-        return @$this->attributes['generate_private_key_password'];
+        return isset($this->attributes['generate_private_key_password']) ? $this->attributes['generate_private_key_password'] : null;
     }
 
     public function setGeneratePrivateKeyPassword($value)
@@ -223,7 +221,7 @@ class PublicKey
     // string # Type of key to generate.  One of rsa, dsa, ecdsa, ed25519. Used for the generation of the key. Will be ignored if `generate_keypair` is false.
     public function getGenerateAlgorithm()
     {
-        return @$this->attributes['generate_algorithm'];
+        return isset($this->attributes['generate_algorithm']) ? $this->attributes['generate_algorithm'] : null;
     }
 
     public function setGenerateAlgorithm($value)
@@ -233,7 +231,7 @@ class PublicKey
     // int64 # Length of key to generate. If algorithm is ecdsa, this is the signature size. Used for the generation of the key. Will be ignored if `generate_keypair` is false.
     public function getGenerateLength()
     {
-        return @$this->attributes['generate_length'];
+        return isset($this->attributes['generate_length']) ? $this->attributes['generate_length'] : null;
     }
 
     public function setGenerateLength($value)
@@ -249,7 +247,7 @@ class PublicKey
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -257,7 +255,7 @@ class PublicKey
             }
         }
 
-        if (!@$params['title']) {
+        if (empty($params['title'])) {
             if (@$this->title) {
                 $params['title'] = $this->title;
             } else {
@@ -265,11 +263,11 @@ class PublicKey
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (@$params['title'] && !is_string(@$params['title'])) {
+        if (!empty($params['title']) && !is_string($params['title'])) {
             throw new \Files\Exception\InvalidParameterException('$title must be of type string; received ' . gettype(@$params['title']));
         }
 
@@ -283,7 +281,7 @@ class PublicKey
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -291,7 +289,7 @@ class PublicKey
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -331,15 +329,15 @@ class PublicKey
     //   filter_lteq - object - If set, return records where the specified field is less than or equal the supplied value. Valid fields are `created_at`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['user_id'] && !is_int(@$params['user_id'])) {
+        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -364,11 +362,11 @@ class PublicKey
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -391,31 +389,31 @@ class PublicKey
     //   generate_length - int64 - Length of key to generate. If algorithm is ecdsa, this is the signature size. Used for the generation of the key. Will be ignored if `generate_keypair` is false.
     public static function create($params = [], $options = [])
     {
-        if (!@$params['title']) {
+        if (empty($params['title'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: title');
         }
 
-        if (@$params['user_id'] && !is_int(@$params['user_id'])) {
+        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (@$params['title'] && !is_string(@$params['title'])) {
+        if (!empty($params['title']) && !is_string($params['title'])) {
             throw new \Files\Exception\InvalidParameterException('$title must be of type string; received ' . gettype(@$params['title']));
         }
 
-        if (@$params['public_key'] && !is_string(@$params['public_key'])) {
+        if (!empty($params['public_key']) && !is_string($params['public_key'])) {
             throw new \Files\Exception\InvalidParameterException('$public_key must be of type string; received ' . gettype(@$params['public_key']));
         }
 
-        if (@$params['generate_private_key_password'] && !is_string(@$params['generate_private_key_password'])) {
+        if (!empty($params['generate_private_key_password']) && !is_string($params['generate_private_key_password'])) {
             throw new \Files\Exception\InvalidParameterException('$generate_private_key_password must be of type string; received ' . gettype(@$params['generate_private_key_password']));
         }
 
-        if (@$params['generate_algorithm'] && !is_string(@$params['generate_algorithm'])) {
+        if (!empty($params['generate_algorithm']) && !is_string($params['generate_algorithm'])) {
             throw new \Files\Exception\InvalidParameterException('$generate_algorithm must be of type string; received ' . gettype(@$params['generate_algorithm']));
         }
 
-        if (@$params['generate_length'] && !is_int(@$params['generate_length'])) {
+        if (!empty($params['generate_length']) && !is_int($params['generate_length'])) {
             throw new \Files\Exception\InvalidParameterException('$generate_length must be of type int; received ' . gettype(@$params['generate_length']));
         }
 

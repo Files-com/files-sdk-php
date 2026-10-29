@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class AutomationExecutionNode
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,71 +56,71 @@ class AutomationExecutionNode
     // string # Node ID from the pinned Automation definition.
     public function getNodeId()
     {
-        return @$this->attributes['node_id'];
+        return isset($this->attributes['node_id']) ? $this->attributes['node_id'] : null;
     }
     // string # Node type.
     public function getNodeType()
     {
-        return @$this->attributes['node_type'];
+        return isset($this->attributes['node_type']) ? $this->attributes['node_type'] : null;
     }
     // string # Node status.
     public function getStatus()
     {
-        return @$this->attributes['status'];
+        return isset($this->attributes['status']) ? $this->attributes['status'] : null;
     }
     // string # Current node execution stage.
     public function getRunStage()
     {
-        return @$this->attributes['run_stage'];
+        return isset($this->attributes['run_stage']) ? $this->attributes['run_stage'] : null;
     }
     // boolean # Whether this node reused persisted output from an earlier run.
     public function getReused()
     {
-        return @$this->attributes['reused'];
+        return isset($this->attributes['reused']) ? $this->attributes['reused'] : null;
     }
     // int64 # Count of successful operations in this node.
     public function getSuccessfulOperations()
     {
-        return @$this->attributes['successful_operations'];
+        return isset($this->attributes['successful_operations']) ? $this->attributes['successful_operations'] : null;
     }
     // int64 # Count of failed operations in this node.
     public function getFailedOperations()
     {
-        return @$this->attributes['failed_operations'];
+        return isset($this->attributes['failed_operations']) ? $this->attributes['failed_operations'] : null;
     }
     // date-time # When this node started.
     public function getStartedAt()
     {
-        return @$this->attributes['started_at'];
+        return isset($this->attributes['started_at']) ? $this->attributes['started_at'] : null;
     }
     // date-time # When this node completed.
     public function getCompletedAt()
     {
-        return @$this->attributes['completed_at'];
+        return isset($this->attributes['completed_at']) ? $this->attributes['completed_at'] : null;
     }
     // int64 # Node runtime in milliseconds.
     public function getDurationMs()
     {
-        return @$this->attributes['duration_ms'];
+        return isset($this->attributes['duration_ms']) ? $this->attributes['duration_ms'] : null;
     }
     // array(object) # Ordered inbound edge references.
     public function getInputs()
     {
-        return @$this->attributes['inputs'];
+        return isset($this->attributes['inputs']) ? $this->attributes['inputs'] : null;
     }
     // object # Output counts, item kinds, and typed-error summaries by outlet.
     public function getOutputs()
     {
-        return @$this->attributes['outputs'];
+        return isset($this->attributes['outputs']) ? $this->attributes['outputs'] : null;
     }
     // object # Materialized input items currently available, grouped by inlet.
     public function getInputItems()
     {
-        return @$this->attributes['input_items'];
+        return isset($this->attributes['input_items']) ? $this->attributes['input_items'] : null;
     }
     // object # Materialized output items grouped by outlet.
     public function getOutputItems()
     {
-        return @$this->attributes['output_items'];
+        return isset($this->attributes['output_items']) ? $this->attributes['output_items'] : null;
     }
 }

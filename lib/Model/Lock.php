@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class Lock
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class Lock
     // string # Path. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
     public function getPath()
     {
-        return @$this->attributes['path'];
+        return isset($this->attributes['path']) ? $this->attributes['path'] : null;
     }
 
     public function setPath($value)
@@ -68,7 +66,7 @@ class Lock
     // int64 # Lock timeout in seconds
     public function getTimeout()
     {
-        return @$this->attributes['timeout'];
+        return isset($this->attributes['timeout']) ? $this->attributes['timeout'] : null;
     }
 
     public function setTimeout($value)
@@ -78,7 +76,7 @@ class Lock
     // string
     public function getDepth()
     {
-        return @$this->attributes['depth'];
+        return isset($this->attributes['depth']) ? $this->attributes['depth'] : null;
     }
 
     public function setDepth($value)
@@ -88,7 +86,7 @@ class Lock
     // boolean # Does lock apply to subfolders?
     public function getRecursive()
     {
-        return @$this->attributes['recursive'];
+        return isset($this->attributes['recursive']) ? $this->attributes['recursive'] : null;
     }
 
     public function setRecursive($value)
@@ -98,7 +96,7 @@ class Lock
     // string # Arbitrary descriptive label for the lock. Does not change the lock creator or permissions.
     public function getOwner()
     {
-        return @$this->attributes['owner'];
+        return isset($this->attributes['owner']) ? $this->attributes['owner'] : null;
     }
 
     public function setOwner($value)
@@ -108,7 +106,7 @@ class Lock
     // string
     public function getScope()
     {
-        return @$this->attributes['scope'];
+        return isset($this->attributes['scope']) ? $this->attributes['scope'] : null;
     }
 
     public function setScope($value)
@@ -118,7 +116,7 @@ class Lock
     // boolean # Is lock exclusive?
     public function getExclusive()
     {
-        return @$this->attributes['exclusive'];
+        return isset($this->attributes['exclusive']) ? $this->attributes['exclusive'] : null;
     }
 
     public function setExclusive($value)
@@ -128,7 +126,7 @@ class Lock
     // string # Lock token.  Use to release lock.
     public function getToken()
     {
-        return @$this->attributes['token'];
+        return isset($this->attributes['token']) ? $this->attributes['token'] : null;
     }
 
     public function setToken($value)
@@ -138,7 +136,7 @@ class Lock
     // string
     public function getType()
     {
-        return @$this->attributes['type'];
+        return isset($this->attributes['type']) ? $this->attributes['type'] : null;
     }
 
     public function setType($value)
@@ -148,7 +146,7 @@ class Lock
     // boolean # Can lock be modified by users other than its creator?
     public function getAllowAccessByAnyUser()
     {
-        return @$this->attributes['allow_access_by_any_user'];
+        return isset($this->attributes['allow_access_by_any_user']) ? $this->attributes['allow_access_by_any_user'] : null;
     }
 
     public function setAllowAccessByAnyUser($value)
@@ -158,7 +156,7 @@ class Lock
     // int64 # Lock creator user ID
     public function getUserId()
     {
-        return @$this->attributes['user_id'];
+        return isset($this->attributes['user_id']) ? $this->attributes['user_id'] : null;
     }
 
     public function setUserId($value)
@@ -168,7 +166,7 @@ class Lock
     // string # Lock creator username
     public function getUsername()
     {
-        return @$this->attributes['username'];
+        return isset($this->attributes['username']) ? $this->attributes['username'] : null;
     }
 
     public function setUsername($value)
@@ -178,7 +176,7 @@ class Lock
     // string # Require this existing, unexpired token before refreshing or replacing a lock. Set token to the same value to refresh, or a different value to replace.
     public function getExpectedToken()
     {
-        return @$this->attributes['expected_token'];
+        return isset($this->attributes['expected_token']) ? $this->attributes['expected_token'] : null;
     }
 
     public function setExpectedToken($value)
@@ -194,7 +192,7 @@ class Lock
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['path']) {
+        if (empty($params['path'])) {
             if (@$this->path) {
                 $params['path'] = $this->path;
             } else {
@@ -202,7 +200,7 @@ class Lock
             }
         }
 
-        if (!@$params['token']) {
+        if (empty($params['token'])) {
             if (@$this->token) {
                 $params['token'] = $this->token;
             } else {
@@ -210,11 +208,11 @@ class Lock
             }
         }
 
-        if (@$params['path'] && !is_string(@$params['path'])) {
+        if (!empty($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (@$params['token'] && !is_string(@$params['token'])) {
+        if (!empty($params['token']) && !is_string($params['token'])) {
             throw new \Files\Exception\InvalidParameterException('$token must be of type string; received ' . gettype(@$params['token']));
         }
 
@@ -249,19 +247,19 @@ class Lock
 
         $params['path'] = $path;
 
-        if (!@$params['path']) {
+        if (empty($params['path'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: path');
         }
 
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
-        if (@$params['path'] && !is_string(@$params['path'])) {
+        if (!empty($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
@@ -293,27 +291,27 @@ class Lock
 
         $params['path'] = $path;
 
-        if (!@$params['path']) {
+        if (empty($params['path'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: path');
         }
 
-        if (@$params['path'] && !is_string(@$params['path'])) {
+        if (!empty($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (@$params['token'] && !is_string(@$params['token'])) {
+        if (!empty($params['token']) && !is_string($params['token'])) {
             throw new \Files\Exception\InvalidParameterException('$token must be of type string; received ' . gettype(@$params['token']));
         }
 
-        if (@$params['expected_token'] && !is_string(@$params['expected_token'])) {
+        if (!empty($params['expected_token']) && !is_string($params['expected_token'])) {
             throw new \Files\Exception\InvalidParameterException('$expected_token must be of type string; received ' . gettype(@$params['expected_token']));
         }
 
-        if (@$params['owner'] && !is_string(@$params['owner'])) {
+        if (!empty($params['owner']) && !is_string($params['owner'])) {
             throw new \Files\Exception\InvalidParameterException('$owner must be of type string; received ' . gettype(@$params['owner']));
         }
 
-        if (@$params['timeout'] && !is_int(@$params['timeout'])) {
+        if (!empty($params['timeout']) && !is_int($params['timeout'])) {
             throw new \Files\Exception\InvalidParameterException('$timeout must be of type int; received ' . gettype(@$params['timeout']));
         }
 

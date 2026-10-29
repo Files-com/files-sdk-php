@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class AgentPushUpdate
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,31 +56,31 @@ class AgentPushUpdate
     // string # Pushed agent version
     public function getVersion()
     {
-        return @$this->attributes['version'];
+        return isset($this->attributes['version']) ? $this->attributes['version'] : null;
     }
     // string # Update accepted or reason
     public function getMessage()
     {
-        return @$this->attributes['message'];
+        return isset($this->attributes['message']) ? $this->attributes['message'] : null;
     }
     // string # Installed agent version
     public function getCurrentVersion()
     {
-        return @$this->attributes['current_version'];
+        return isset($this->attributes['current_version']) ? $this->attributes['current_version'] : null;
     }
     // string # Pending agent version or null
     public function getPendingVersion()
     {
-        return @$this->attributes['pending_version'];
+        return isset($this->attributes['pending_version']) ? $this->attributes['pending_version'] : null;
     }
     // string # Last error message or null
     public function getLastError()
     {
-        return @$this->attributes['last_error'];
+        return isset($this->attributes['last_error']) ? $this->attributes['last_error'] : null;
     }
     // string # Error code
     public function getError()
     {
-        return @$this->attributes['error'];
+        return isset($this->attributes['error']) ? $this->attributes['error'] : null;
     }
 }

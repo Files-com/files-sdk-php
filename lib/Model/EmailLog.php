@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class EmailLog
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,52 +56,52 @@ class EmailLog
     // date-time # Start Time of Action. Deprecrated: Use created_at.
     public function getTimestamp()
     {
-        return @$this->attributes['timestamp'];
+        return isset($this->attributes['timestamp']) ? $this->attributes['timestamp'] : null;
     }
     // string # Log Message
     public function getMessage()
     {
-        return @$this->attributes['message'];
+        return isset($this->attributes['message']) ? $this->attributes['message'] : null;
     }
     // string # Status of E-Mail delivery
     public function getStatus()
     {
-        return @$this->attributes['status'];
+        return isset($this->attributes['status']) ? $this->attributes['status'] : null;
     }
     // string # Subject line of E-Mail
     public function getSubject()
     {
-        return @$this->attributes['subject'];
+        return isset($this->attributes['subject']) ? $this->attributes['subject'] : null;
     }
     // string # To field of E-Mail
     public function getTo()
     {
-        return @$this->attributes['to'];
+        return isset($this->attributes['to']) ? $this->attributes['to'] : null;
     }
     // string # CC field of E-Mail
     public function getCc()
     {
-        return @$this->attributes['cc'];
+        return isset($this->attributes['cc']) ? $this->attributes['cc'] : null;
     }
     // string # How was the email delivered?  `customer_smtp` or `files.com`
     public function getDeliveryMethod()
     {
-        return @$this->attributes['delivery_method'];
+        return isset($this->attributes['delivery_method']) ? $this->attributes['delivery_method'] : null;
     }
     // string # Customer SMTP Hostname used.
     public function getSmtpHostname()
     {
-        return @$this->attributes['smtp_hostname'];
+        return isset($this->attributes['smtp_hostname']) ? $this->attributes['smtp_hostname'] : null;
     }
     // string # Customer SMTP IP address as resolved for use (useful for troubleshooting DNS issues with customer SMTP).
     public function getSmtpIp()
     {
-        return @$this->attributes['smtp_ip'];
+        return isset($this->attributes['smtp_ip']) ? $this->attributes['smtp_ip'] : null;
     }
     // date-time # Start Time of Action
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
 
     // Parameters:
@@ -116,11 +114,11 @@ class EmailLog
     //   filter_lteq - object - If set, return records where the specified field is less than or equal the supplied value. Valid fields are `created_at`. Valid field combinations are `[ status ]`, `[ created_at ]` or `[ status, created_at ]`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 

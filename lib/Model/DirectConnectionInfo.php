@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class DirectConnectionInfo
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,26 +56,26 @@ class DirectConnectionInfo
     // int64 # Direct connection information schema version.
     public function getVersion()
     {
-        return @$this->attributes['version'];
+        return isset($this->attributes['version']) ? $this->attributes['version'] : null;
     }
     // string # TLS server name (SNI and Host header) for the Agent's direct transfer listener.
     public function getServerName()
     {
-        return @$this->attributes['server_name'];
+        return isset($this->attributes['server_name']) ? $this->attributes['server_name'] : null;
     }
     // array(string) # Validated ip:port candidates that may be dialed over TCP+TLS for this transfer.
     public function getAddresses()
     {
-        return @$this->attributes['addresses'];
+        return isset($this->attributes['addresses']) ? $this->attributes['addresses'] : null;
     }
     // string # Signed HTTPS URI for direct Agent transfer traffic.
     public function getDirectUri()
     {
-        return @$this->attributes['direct_uri'];
+        return isset($this->attributes['direct_uri']) ? $this->attributes['direct_uri'] : null;
     }
     // string # PEM-encoded CA certificate used to verify the Agent's direct transfer TLS certificate.
     public function getCaPem()
     {
-        return @$this->attributes['ca_pem'];
+        return isset($this->attributes['ca_pem']) ? $this->attributes['ca_pem'] : null;
     }
 }

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class UsageByTopLevelDir
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,16 +56,16 @@ class UsageByTopLevelDir
     // string # Directory name
     public function getDir()
     {
-        return @$this->attributes['dir'];
+        return isset($this->attributes['dir']) ? $this->attributes['dir'] : null;
     }
     // int64 # Usage
     public function getSize()
     {
-        return @$this->attributes['size'];
+        return isset($this->attributes['size']) ? $this->attributes['size'] : null;
     }
     // int64 # File count
     public function getCount()
     {
-        return @$this->attributes['count'];
+        return isset($this->attributes['count']) ? $this->attributes['count'] : null;
     }
 }

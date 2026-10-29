@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class PartnerChannelTemplate
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class PartnerChannelTemplate
     // int64 # The unique ID of the Partner Channel Template.
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
     public function setId($value)
@@ -68,7 +66,7 @@ class PartnerChannelTemplate
     // int64 # ID of the Workspace associated with this Partner Channel Template.
     public function getWorkspaceId()
     {
-        return @$this->attributes['workspace_id'];
+        return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
 
     public function setWorkspaceId($value)
@@ -78,7 +76,7 @@ class PartnerChannelTemplate
     // string # Channel directions. `two_way` enables both directions, `to_partner` enables outgoing downloads, and `from_partner` enables incoming uploads.
     public function getDirection()
     {
-        return @$this->attributes['direction'];
+        return isset($this->attributes['direction']) ? $this->attributes['direction'] : null;
     }
 
     public function setDirection($value)
@@ -88,7 +86,7 @@ class PartnerChannelTemplate
     // boolean # Use the Channel folder directly for a one-way exchange. Defaults to false. Cannot be changed after creation. Folder name overrides must be blank when enabled, and the Template must remain one-way.
     public function getUseChannelRoot()
     {
-        return @$this->attributes['use_channel_root'];
+        return isset($this->attributes['use_channel_root']) ? $this->attributes['use_channel_root'] : null;
     }
 
     public function setUseChannelRoot($value)
@@ -98,7 +96,7 @@ class PartnerChannelTemplate
     // string # The name of the Partner Channel Template.
     public function getName()
     {
-        return @$this->attributes['name'];
+        return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
 
     public function setName($value)
@@ -108,7 +106,7 @@ class PartnerChannelTemplate
     // string # Channel path relative to the Partner root folder. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
     public function getPath()
     {
-        return @$this->attributes['path'];
+        return isset($this->attributes['path']) ? $this->attributes['path'] : null;
     }
 
     public function setPath($value)
@@ -118,7 +116,7 @@ class PartnerChannelTemplate
     // string # Optional Channel-level to-Partner folder name override.
     public function getToPartnerFolderName()
     {
-        return @$this->attributes['to_partner_folder_name'];
+        return isset($this->attributes['to_partner_folder_name']) ? $this->attributes['to_partner_folder_name'] : null;
     }
 
     public function setToPartnerFolderName($value)
@@ -128,7 +126,7 @@ class PartnerChannelTemplate
     // string # Optional Channel-level from-Partner folder name override.
     public function getFromPartnerFolderName()
     {
-        return @$this->attributes['from_partner_folder_name'];
+        return isset($this->attributes['from_partner_folder_name']) ? $this->attributes['from_partner_folder_name'] : null;
     }
 
     public function setFromPartnerFolderName($value)
@@ -138,7 +136,7 @@ class PartnerChannelTemplate
     // string # Optional route path pattern for files uploaded by the Partner. Supports {{partner_name}}.
     public function getFromPartnerRoutePathPattern()
     {
-        return @$this->attributes['from_partner_route_path_pattern'];
+        return isset($this->attributes['from_partner_route_path_pattern']) ? $this->attributes['from_partner_route_path_pattern'] : null;
     }
 
     public function setFromPartnerRoutePathPattern($value)
@@ -148,7 +146,7 @@ class PartnerChannelTemplate
     // string # Optional route path pattern for files delivered to the Partner. Supports {{partner_name}}.
     public function getToPartnerRoutePathPattern()
     {
-        return @$this->attributes['to_partner_route_path_pattern'];
+        return isset($this->attributes['to_partner_route_path_pattern']) ? $this->attributes['to_partner_route_path_pattern'] : null;
     }
 
     public function setToPartnerRoutePathPattern($value)
@@ -158,7 +156,7 @@ class PartnerChannelTemplate
     // array(string) # Managed folder paths inside the to-Partner folder.
     public function getToPartnerManagedFolderPaths()
     {
-        return @$this->attributes['to_partner_managed_folder_paths'];
+        return isset($this->attributes['to_partner_managed_folder_paths']) ? $this->attributes['to_partner_managed_folder_paths'] : null;
     }
 
     public function setToPartnerManagedFolderPaths($value)
@@ -168,7 +166,7 @@ class PartnerChannelTemplate
     // array(string) # Managed folder paths inside the from-Partner folder.
     public function getFromPartnerManagedFolderPaths()
     {
-        return @$this->attributes['from_partner_managed_folder_paths'];
+        return isset($this->attributes['from_partner_managed_folder_paths']) ? $this->attributes['from_partner_managed_folder_paths'] : null;
     }
 
     public function setFromPartnerManagedFolderPaths($value)
@@ -178,7 +176,7 @@ class PartnerChannelTemplate
     // string # Resolved to-Partner subfolder name. Null when the direction is disabled or uses the Channel folder directly.
     public function getEffectiveToPartnerFolderName()
     {
-        return @$this->attributes['effective_to_partner_folder_name'];
+        return isset($this->attributes['effective_to_partner_folder_name']) ? $this->attributes['effective_to_partner_folder_name'] : null;
     }
 
     public function setEffectiveToPartnerFolderName($value)
@@ -188,7 +186,7 @@ class PartnerChannelTemplate
     // string # Resolved from-Partner subfolder name. Null when the direction is disabled or uses the Channel folder directly.
     public function getEffectiveFromPartnerFolderName()
     {
-        return @$this->attributes['effective_from_partner_folder_name'];
+        return isset($this->attributes['effective_from_partner_folder_name']) ? $this->attributes['effective_from_partner_folder_name'] : null;
     }
 
     public function setEffectiveFromPartnerFolderName($value)
@@ -213,7 +211,7 @@ class PartnerChannelTemplate
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -221,43 +219,43 @@ class PartnerChannelTemplate
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (@$params['direction'] && !is_string(@$params['direction'])) {
+        if (!empty($params['direction']) && !is_string($params['direction'])) {
             throw new \Files\Exception\InvalidParameterException('$direction must be of type string; received ' . gettype(@$params['direction']));
         }
 
-        if (@$params['from_partner_folder_name'] && !is_string(@$params['from_partner_folder_name'])) {
+        if (!empty($params['from_partner_folder_name']) && !is_string($params['from_partner_folder_name'])) {
             throw new \Files\Exception\InvalidParameterException('$from_partner_folder_name must be of type string; received ' . gettype(@$params['from_partner_folder_name']));
         }
 
-        if (@$params['from_partner_managed_folder_paths'] && !is_array(@$params['from_partner_managed_folder_paths'])) {
+        if (!empty($params['from_partner_managed_folder_paths']) && !is_array($params['from_partner_managed_folder_paths'])) {
             throw new \Files\Exception\InvalidParameterException('$from_partner_managed_folder_paths must be of type array; received ' . gettype(@$params['from_partner_managed_folder_paths']));
         }
 
-        if (@$params['from_partner_route_path_pattern'] && !is_string(@$params['from_partner_route_path_pattern'])) {
+        if (!empty($params['from_partner_route_path_pattern']) && !is_string($params['from_partner_route_path_pattern'])) {
             throw new \Files\Exception\InvalidParameterException('$from_partner_route_path_pattern must be of type string; received ' . gettype(@$params['from_partner_route_path_pattern']));
         }
 
-        if (@$params['to_partner_folder_name'] && !is_string(@$params['to_partner_folder_name'])) {
+        if (!empty($params['to_partner_folder_name']) && !is_string($params['to_partner_folder_name'])) {
             throw new \Files\Exception\InvalidParameterException('$to_partner_folder_name must be of type string; received ' . gettype(@$params['to_partner_folder_name']));
         }
 
-        if (@$params['to_partner_managed_folder_paths'] && !is_array(@$params['to_partner_managed_folder_paths'])) {
+        if (!empty($params['to_partner_managed_folder_paths']) && !is_array($params['to_partner_managed_folder_paths'])) {
             throw new \Files\Exception\InvalidParameterException('$to_partner_managed_folder_paths must be of type array; received ' . gettype(@$params['to_partner_managed_folder_paths']));
         }
 
-        if (@$params['to_partner_route_path_pattern'] && !is_string(@$params['to_partner_route_path_pattern'])) {
+        if (!empty($params['to_partner_route_path_pattern']) && !is_string($params['to_partner_route_path_pattern'])) {
             throw new \Files\Exception\InvalidParameterException('$to_partner_route_path_pattern must be of type string; received ' . gettype(@$params['to_partner_route_path_pattern']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['path'] && !is_string(@$params['path'])) {
+        if (!empty($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
@@ -271,7 +269,7 @@ class PartnerChannelTemplate
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -279,7 +277,7 @@ class PartnerChannelTemplate
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -314,11 +312,11 @@ class PartnerChannelTemplate
     //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `workspace_id`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -343,11 +341,11 @@ class PartnerChannelTemplate
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -374,51 +372,51 @@ class PartnerChannelTemplate
     //   workspace_id - int64 - ID of the Workspace associated with this Partner Channel Template.
     public static function create($params = [], $options = [])
     {
-        if (!@$params['name']) {
+        if (empty($params['name'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: name');
         }
 
-        if (!@$params['path']) {
+        if (empty($params['path'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: path');
         }
 
-        if (@$params['direction'] && !is_string(@$params['direction'])) {
+        if (!empty($params['direction']) && !is_string($params['direction'])) {
             throw new \Files\Exception\InvalidParameterException('$direction must be of type string; received ' . gettype(@$params['direction']));
         }
 
-        if (@$params['from_partner_folder_name'] && !is_string(@$params['from_partner_folder_name'])) {
+        if (!empty($params['from_partner_folder_name']) && !is_string($params['from_partner_folder_name'])) {
             throw new \Files\Exception\InvalidParameterException('$from_partner_folder_name must be of type string; received ' . gettype(@$params['from_partner_folder_name']));
         }
 
-        if (@$params['from_partner_managed_folder_paths'] && !is_array(@$params['from_partner_managed_folder_paths'])) {
+        if (!empty($params['from_partner_managed_folder_paths']) && !is_array($params['from_partner_managed_folder_paths'])) {
             throw new \Files\Exception\InvalidParameterException('$from_partner_managed_folder_paths must be of type array; received ' . gettype(@$params['from_partner_managed_folder_paths']));
         }
 
-        if (@$params['from_partner_route_path_pattern'] && !is_string(@$params['from_partner_route_path_pattern'])) {
+        if (!empty($params['from_partner_route_path_pattern']) && !is_string($params['from_partner_route_path_pattern'])) {
             throw new \Files\Exception\InvalidParameterException('$from_partner_route_path_pattern must be of type string; received ' . gettype(@$params['from_partner_route_path_pattern']));
         }
 
-        if (@$params['to_partner_folder_name'] && !is_string(@$params['to_partner_folder_name'])) {
+        if (!empty($params['to_partner_folder_name']) && !is_string($params['to_partner_folder_name'])) {
             throw new \Files\Exception\InvalidParameterException('$to_partner_folder_name must be of type string; received ' . gettype(@$params['to_partner_folder_name']));
         }
 
-        if (@$params['to_partner_managed_folder_paths'] && !is_array(@$params['to_partner_managed_folder_paths'])) {
+        if (!empty($params['to_partner_managed_folder_paths']) && !is_array($params['to_partner_managed_folder_paths'])) {
             throw new \Files\Exception\InvalidParameterException('$to_partner_managed_folder_paths must be of type array; received ' . gettype(@$params['to_partner_managed_folder_paths']));
         }
 
-        if (@$params['to_partner_route_path_pattern'] && !is_string(@$params['to_partner_route_path_pattern'])) {
+        if (!empty($params['to_partner_route_path_pattern']) && !is_string($params['to_partner_route_path_pattern'])) {
             throw new \Files\Exception\InvalidParameterException('$to_partner_route_path_pattern must be of type string; received ' . gettype(@$params['to_partner_route_path_pattern']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['path'] && !is_string(@$params['path'])) {
+        if (!empty($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 

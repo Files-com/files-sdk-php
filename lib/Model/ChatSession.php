@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class ChatSession
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,42 +56,42 @@ class ChatSession
     // string # Chat Session ID.
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
     // string # Short AI-generated chat title.
     public function getTitle()
     {
-        return @$this->attributes['title'];
+        return isset($this->attributes['title']) ? $this->attributes['title'] : null;
     }
     // int64 # User ID.
     public function getUserId()
     {
-        return @$this->attributes['user_id'];
+        return isset($this->attributes['user_id']) ? $this->attributes['user_id'] : null;
     }
     // int64 # AI Task ID. Present when the conversation was started by an AI Task.
     public function getAiTaskId()
     {
-        return @$this->attributes['ai_task_id'];
+        return isset($this->attributes['ai_task_id']) ? $this->attributes['ai_task_id'] : null;
     }
     // int64 # Workspace ID. `0` means the default workspace.
     public function getWorkspaceId()
     {
-        return @$this->attributes['workspace_id'];
+        return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
     // date-time # Most recent chat activity date/time.
     public function getLastActiveAt()
     {
-        return @$this->attributes['last_active_at'];
+        return isset($this->attributes['last_active_at']) ? $this->attributes['last_active_at'] : null;
     }
     // date-time # Chat session creation date/time.
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
     // array(object) # Visible conversation messages in this chat session. For performance reasons, this is not provided when listing chat sessions.
     public function getMessages()
     {
-        return @$this->attributes['messages'];
+        return isset($this->attributes['messages']) ? $this->attributes['messages'] : null;
     }
 
     // Parameters:
@@ -103,11 +101,11 @@ class ChatSession
     //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `ai_task_id`, `user_id` or `workspace_id`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -132,11 +130,11 @@ class ChatSession
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_string(@$params['id'])) {
+        if (!empty($params['id']) && !is_string($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type string; received ' . gettype(@$params['id']));
         }
 

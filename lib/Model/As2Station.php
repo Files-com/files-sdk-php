@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class As2Station
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class As2Station
     // int64 # Id of the AS2 Station.
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
     public function setId($value)
@@ -68,7 +66,7 @@ class As2Station
     // int64 # ID of the Workspace associated with this AS2 Station.
     public function getWorkspaceId()
     {
-        return @$this->attributes['workspace_id'];
+        return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
 
     public function setWorkspaceId($value)
@@ -78,7 +76,7 @@ class As2Station
     // string # The station's formal AS2 name.
     public function getName()
     {
-        return @$this->attributes['name'];
+        return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
 
     public function setName($value)
@@ -88,7 +86,7 @@ class As2Station
     // string # Public URI for sending AS2 message to.
     public function getUri()
     {
-        return @$this->attributes['uri'];
+        return isset($this->attributes['uri']) ? $this->attributes['uri'] : null;
     }
 
     public function setUri($value)
@@ -98,7 +96,7 @@ class As2Station
     // string # The station's AS2 domain name.
     public function getDomain()
     {
-        return @$this->attributes['domain'];
+        return isset($this->attributes['domain']) ? $this->attributes['domain'] : null;
     }
 
     public function setDomain($value)
@@ -108,7 +106,7 @@ class As2Station
     // string # Serial of public certificate used for message security in hex format.
     public function getHexPublicCertificateSerial()
     {
-        return @$this->attributes['hex_public_certificate_serial'];
+        return isset($this->attributes['hex_public_certificate_serial']) ? $this->attributes['hex_public_certificate_serial'] : null;
     }
 
     public function setHexPublicCertificateSerial($value)
@@ -118,7 +116,7 @@ class As2Station
     // string # MD5 hash of public certificate used for message security.
     public function getPublicCertificateMd5()
     {
-        return @$this->attributes['public_certificate_md5'];
+        return isset($this->attributes['public_certificate_md5']) ? $this->attributes['public_certificate_md5'] : null;
     }
 
     public function setPublicCertificateMd5($value)
@@ -128,7 +126,7 @@ class As2Station
     // string # Public certificate used for message security.
     public function getPublicCertificate()
     {
-        return @$this->attributes['public_certificate'];
+        return isset($this->attributes['public_certificate']) ? $this->attributes['public_certificate'] : null;
     }
 
     public function setPublicCertificate($value)
@@ -138,7 +136,7 @@ class As2Station
     // string # MD5 hash of private key used for message security.
     public function getPrivateKeyMd5()
     {
-        return @$this->attributes['private_key_md5'];
+        return isset($this->attributes['private_key_md5']) ? $this->attributes['private_key_md5'] : null;
     }
 
     public function setPrivateKeyMd5($value)
@@ -148,7 +146,7 @@ class As2Station
     // string # Subject of public certificate used for message security.
     public function getPublicCertificateSubject()
     {
-        return @$this->attributes['public_certificate_subject'];
+        return isset($this->attributes['public_certificate_subject']) ? $this->attributes['public_certificate_subject'] : null;
     }
 
     public function setPublicCertificateSubject($value)
@@ -158,7 +156,7 @@ class As2Station
     // string # Issuer of public certificate used for message security.
     public function getPublicCertificateIssuer()
     {
-        return @$this->attributes['public_certificate_issuer'];
+        return isset($this->attributes['public_certificate_issuer']) ? $this->attributes['public_certificate_issuer'] : null;
     }
 
     public function setPublicCertificateIssuer($value)
@@ -168,7 +166,7 @@ class As2Station
     // string # Serial of public certificate used for message security.
     public function getPublicCertificateSerial()
     {
-        return @$this->attributes['public_certificate_serial'];
+        return isset($this->attributes['public_certificate_serial']) ? $this->attributes['public_certificate_serial'] : null;
     }
 
     public function setPublicCertificateSerial($value)
@@ -178,7 +176,7 @@ class As2Station
     // string # Not before value of public certificate used for message security.
     public function getPublicCertificateNotBefore()
     {
-        return @$this->attributes['public_certificate_not_before'];
+        return isset($this->attributes['public_certificate_not_before']) ? $this->attributes['public_certificate_not_before'] : null;
     }
 
     public function setPublicCertificateNotBefore($value)
@@ -188,7 +186,7 @@ class As2Station
     // string # Not after value of public certificate used for message security.
     public function getPublicCertificateNotAfter()
     {
-        return @$this->attributes['public_certificate_not_after'];
+        return isset($this->attributes['public_certificate_not_after']) ? $this->attributes['public_certificate_not_after'] : null;
     }
 
     public function setPublicCertificateNotAfter($value)
@@ -198,7 +196,7 @@ class As2Station
     // string # MD5 hash of private key password used for message security.
     public function getPrivateKeyPasswordMd5()
     {
-        return @$this->attributes['private_key_password_md5'];
+        return isset($this->attributes['private_key_password_md5']) ? $this->attributes['private_key_password_md5'] : null;
     }
 
     public function setPrivateKeyPasswordMd5($value)
@@ -208,7 +206,7 @@ class As2Station
     // string # PEM-encoded private key matching public_certificate.
     public function getPrivateKey()
     {
-        return @$this->attributes['private_key'];
+        return isset($this->attributes['private_key']) ? $this->attributes['private_key'] : null;
     }
 
     public function setPrivateKey($value)
@@ -218,7 +216,7 @@ class As2Station
     // string # Password for the PEM-encoded private key.
     public function getPrivateKeyPassword()
     {
-        return @$this->attributes['private_key_password'];
+        return isset($this->attributes['private_key_password']) ? $this->attributes['private_key_password'] : null;
     }
 
     public function setPrivateKeyPassword($value)
@@ -228,7 +226,7 @@ class As2Station
     // string # Base64-encoded PKCS#12 (.pfx or .p12) file containing the identity's certificate and private key. Provide this instead of public_certificate and private_key.
     public function getPkcs12()
     {
-        return @$this->attributes['pkcs12'];
+        return isset($this->attributes['pkcs12']) ? $this->attributes['pkcs12'] : null;
     }
 
     public function setPkcs12($value)
@@ -238,7 +236,7 @@ class As2Station
     // string # Password for pkcs12. The file and password are used only for import; the extracted certificate and private key are stored as PEM.
     public function getPkcs12Password()
     {
-        return @$this->attributes['pkcs12_password'];
+        return isset($this->attributes['pkcs12_password']) ? $this->attributes['pkcs12_password'] : null;
     }
 
     public function setPkcs12Password($value)
@@ -259,7 +257,7 @@ class As2Station
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -267,31 +265,31 @@ class As2Station
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['public_certificate'] && !is_string(@$params['public_certificate'])) {
+        if (!empty($params['public_certificate']) && !is_string($params['public_certificate'])) {
             throw new \Files\Exception\InvalidParameterException('$public_certificate must be of type string; received ' . gettype(@$params['public_certificate']));
         }
 
-        if (@$params['private_key'] && !is_string(@$params['private_key'])) {
+        if (!empty($params['private_key']) && !is_string($params['private_key'])) {
             throw new \Files\Exception\InvalidParameterException('$private_key must be of type string; received ' . gettype(@$params['private_key']));
         }
 
-        if (@$params['private_key_password'] && !is_string(@$params['private_key_password'])) {
+        if (!empty($params['private_key_password']) && !is_string($params['private_key_password'])) {
             throw new \Files\Exception\InvalidParameterException('$private_key_password must be of type string; received ' . gettype(@$params['private_key_password']));
         }
 
-        if (@$params['pkcs12'] && !is_string(@$params['pkcs12'])) {
+        if (!empty($params['pkcs12']) && !is_string($params['pkcs12'])) {
             throw new \Files\Exception\InvalidParameterException('$pkcs12 must be of type string; received ' . gettype(@$params['pkcs12']));
         }
 
-        if (@$params['pkcs12_password'] && !is_string(@$params['pkcs12_password'])) {
+        if (!empty($params['pkcs12_password']) && !is_string($params['pkcs12_password'])) {
             throw new \Files\Exception\InvalidParameterException('$pkcs12_password must be of type string; received ' . gettype(@$params['pkcs12_password']));
         }
 
@@ -305,7 +303,7 @@ class As2Station
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -313,7 +311,7 @@ class As2Station
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -348,11 +346,11 @@ class As2Station
     //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `workspace_id`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -377,11 +375,11 @@ class As2Station
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -404,35 +402,35 @@ class As2Station
     //   pkcs12_password - string - Password for pkcs12. The file and password are used only for import; the extracted certificate and private key are stored as PEM.
     public static function create($params = [], $options = [])
     {
-        if (!@$params['name']) {
+        if (empty($params['name'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: name');
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
-        if (@$params['public_certificate'] && !is_string(@$params['public_certificate'])) {
+        if (!empty($params['public_certificate']) && !is_string($params['public_certificate'])) {
             throw new \Files\Exception\InvalidParameterException('$public_certificate must be of type string; received ' . gettype(@$params['public_certificate']));
         }
 
-        if (@$params['private_key'] && !is_string(@$params['private_key'])) {
+        if (!empty($params['private_key']) && !is_string($params['private_key'])) {
             throw new \Files\Exception\InvalidParameterException('$private_key must be of type string; received ' . gettype(@$params['private_key']));
         }
 
-        if (@$params['private_key_password'] && !is_string(@$params['private_key_password'])) {
+        if (!empty($params['private_key_password']) && !is_string($params['private_key_password'])) {
             throw new \Files\Exception\InvalidParameterException('$private_key_password must be of type string; received ' . gettype(@$params['private_key_password']));
         }
 
-        if (@$params['pkcs12'] && !is_string(@$params['pkcs12'])) {
+        if (!empty($params['pkcs12']) && !is_string($params['pkcs12'])) {
             throw new \Files\Exception\InvalidParameterException('$pkcs12 must be of type string; received ' . gettype(@$params['pkcs12']));
         }
 
-        if (@$params['pkcs12_password'] && !is_string(@$params['pkcs12_password'])) {
+        if (!empty($params['pkcs12_password']) && !is_string($params['pkcs12_password'])) {
             throw new \Files\Exception\InvalidParameterException('$pkcs12_password must be of type string; received ' . gettype(@$params['pkcs12_password']));
         }
 

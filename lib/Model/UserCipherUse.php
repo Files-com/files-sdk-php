@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class UserCipherUse
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,42 +56,42 @@ class UserCipherUse
     // int64 # UserCipherUse ID
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
     // int64 # ID of the user who performed this access
     public function getUserId()
     {
-        return @$this->attributes['user_id'];
+        return isset($this->attributes['user_id']) ? $this->attributes['user_id'] : null;
     }
     // string # Username of the user who performed this access
     public function getUsername()
     {
-        return @$this->attributes['username'];
+        return isset($this->attributes['username']) ? $this->attributes['username'] : null;
     }
     // string # The protocol and cipher employed
     public function getProtocolCipher()
     {
-        return @$this->attributes['protocol_cipher'];
+        return isset($this->attributes['protocol_cipher']) ? $this->attributes['protocol_cipher'] : null;
     }
     // date-time # The earliest recorded use of this combination of interface and protocol and cipher (for this user)
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
     // boolean # Is this cipher considered insecure?
     public function getInsecure()
     {
-        return @$this->attributes['insecure'];
+        return isset($this->attributes['insecure']) ? $this->attributes['insecure'] : null;
     }
     // string # The interface accessed
     public function getInterface()
     {
-        return @$this->attributes['interface'];
+        return isset($this->attributes['interface']) ? $this->attributes['interface'] : null;
     }
     // date-time # The most recent use of this combination of interface and protocol and cipher (for this user)
     public function getUpdatedAt()
     {
-        return @$this->attributes['updated_at'];
+        return isset($this->attributes['updated_at']) ? $this->attributes['updated_at'] : null;
     }
 
     // Parameters:
@@ -108,15 +106,15 @@ class UserCipherUse
     //   filter_lteq - object - If set, return records where the specified field is less than or equal the supplied value. Valid fields are `updated_at`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['user_id'] && !is_int(@$params['user_id'])) {
+        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class ScimLog
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,42 +56,42 @@ class ScimLog
     // int64 # The unique ID of this SCIM request.
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
     // string # The date and time when this SCIM request occurred.
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
     // string # The path portion of the URL requested.
     public function getRequestPath()
     {
-        return @$this->attributes['request_path'];
+        return isset($this->attributes['request_path']) ? $this->attributes['request_path'] : null;
     }
     // string # The HTTP method used for this request.
     public function getRequestMethod()
     {
-        return @$this->attributes['request_method'];
+        return isset($this->attributes['request_method']) ? $this->attributes['request_method'] : null;
     }
     // string # The HTTP response code returned for this request.
     public function getHttpResponseCode()
     {
-        return @$this->attributes['http_response_code'];
+        return isset($this->attributes['http_response_code']) ? $this->attributes['http_response_code'] : null;
     }
     // string # The User-Agent header sent with the request.
     public function getUserAgent()
     {
-        return @$this->attributes['user_agent'];
+        return isset($this->attributes['user_agent']) ? $this->attributes['user_agent'] : null;
     }
     // string # The JSON payload sent with the request.
     public function getRequestJson()
     {
-        return @$this->attributes['request_json'];
+        return isset($this->attributes['request_json']) ? $this->attributes['request_json'] : null;
     }
     // string # The JSON payload returned in the response.
     public function getResponseJson()
     {
-        return @$this->attributes['response_json'];
+        return isset($this->attributes['response_json']) ? $this->attributes['response_json'] : null;
     }
 
     // Parameters:
@@ -102,11 +100,11 @@ class ScimLog
     //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `created_at`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -131,11 +129,11 @@ class ScimLog
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class Status
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,36 +56,36 @@ class Status
     // int64 # Status HTTP code
     public function getCode()
     {
-        return @$this->attributes['code'];
+        return isset($this->attributes['code']) ? $this->attributes['code'] : null;
     }
     // string # Error message
     public function getMessage()
     {
-        return @$this->attributes['message'];
+        return isset($this->attributes['message']) ? $this->attributes['message'] : null;
     }
     // string # Status message
     public function getStatus()
     {
-        return @$this->attributes['status'];
+        return isset($this->attributes['status']) ? $this->attributes['status'] : null;
     }
     // Auto # Additional data
     public function getData()
     {
-        return @$this->attributes['data'];
+        return isset($this->attributes['data']) ? $this->attributes['data'] : null;
     }
     // array(object) # A list of api errors
     public function getErrors()
     {
-        return @$this->attributes['errors'];
+        return isset($this->attributes['errors']) ? $this->attributes['errors'] : null;
     }
     // int64 # Required Clickwrap id
     public function getClickwrapId()
     {
-        return @$this->attributes['clickwrap_id'];
+        return isset($this->attributes['clickwrap_id']) ? $this->attributes['clickwrap_id'] : null;
     }
     // string # Required Clickwrap body
     public function getClickwrapBody()
     {
-        return @$this->attributes['clickwrap_body'];
+        return isset($this->attributes['clickwrap_body']) ? $this->attributes['clickwrap_body'] : null;
     }
 }

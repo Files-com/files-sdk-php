@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class BandwidthSnapshot
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,47 +56,47 @@ class BandwidthSnapshot
     // int64 # Site bandwidth ID
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
     // int64 # Site bandwidth report bytes received
     public function getBytesReceived()
     {
-        return @$this->attributes['bytes_received'];
+        return isset($this->attributes['bytes_received']) ? $this->attributes['bytes_received'] : null;
     }
     // int64 # Site bandwidth report bytes sent
     public function getBytesSent()
     {
-        return @$this->attributes['bytes_sent'];
+        return isset($this->attributes['bytes_sent']) ? $this->attributes['bytes_sent'] : null;
     }
     // int64 # Site sync bandwidth report bytes received
     public function getSyncBytesReceived()
     {
-        return @$this->attributes['sync_bytes_received'];
+        return isset($this->attributes['sync_bytes_received']) ? $this->attributes['sync_bytes_received'] : null;
     }
     // int64 # Site sync bandwidth report bytes sent
     public function getSyncBytesSent()
     {
-        return @$this->attributes['sync_bytes_sent'];
+        return isset($this->attributes['sync_bytes_sent']) ? $this->attributes['sync_bytes_sent'] : null;
     }
     // int64 # Site bandwidth report get requests
     public function getRequestsGet()
     {
-        return @$this->attributes['requests_get'];
+        return isset($this->attributes['requests_get']) ? $this->attributes['requests_get'] : null;
     }
     // int64 # Site bandwidth report put requests
     public function getRequestsPut()
     {
-        return @$this->attributes['requests_put'];
+        return isset($this->attributes['requests_put']) ? $this->attributes['requests_put'] : null;
     }
     // int64 # Site bandwidth report other requests
     public function getRequestsOther()
     {
-        return @$this->attributes['requests_other'];
+        return isset($this->attributes['requests_other']) ? $this->attributes['requests_other'] : null;
     }
     // date-time # Time the site bandwidth report was logged
     public function getLoggedAt()
     {
-        return @$this->attributes['logged_at'];
+        return isset($this->attributes['logged_at']) ? $this->attributes['logged_at'] : null;
     }
 
     // Parameters:
@@ -112,11 +110,11 @@ class BandwidthSnapshot
     //   filter_lteq - object - If set, return records where the specified field is less than or equal the supplied value. Valid fields are `logged_at`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 

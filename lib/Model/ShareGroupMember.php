@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class ShareGroupMember
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,16 +56,16 @@ class ShareGroupMember
     // string # Name of the share group member
     public function getName()
     {
-        return @$this->attributes['name'];
+        return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
     // string # Company of the share group member
     public function getCompany()
     {
-        return @$this->attributes['company'];
+        return isset($this->attributes['company']) ? $this->attributes['company'] : null;
     }
     // string # Email of the share group member
     public function getEmail()
     {
-        return @$this->attributes['email'];
+        return isset($this->attributes['email']) ? $this->attributes['email'] : null;
     }
 }

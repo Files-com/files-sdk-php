@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class ActionNotificationExportResult
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,52 +56,52 @@ class ActionNotificationExportResult
     // int64 # Notification ID
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
     // int64 # When the notification was sent.
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
     // int64 # HTTP status code returned in the webhook response.
     public function getStatus()
     {
-        return @$this->attributes['status'];
+        return isset($this->attributes['status']) ? $this->attributes['status'] : null;
     }
     // string # A message indicating the overall status of the webhook notification.
     public function getMessage()
     {
-        return @$this->attributes['message'];
+        return isset($this->attributes['message']) ? $this->attributes['message'] : null;
     }
     // boolean # `true` if the webhook succeeded by receiving a 200 or 204 response.
     public function getSuccess()
     {
-        return @$this->attributes['success'];
+        return isset($this->attributes['success']) ? $this->attributes['success'] : null;
     }
     // string # A JSON-encoded string with headers that were sent with the webhook.
     public function getRequestHeaders()
     {
-        return @$this->attributes['request_headers'];
+        return isset($this->attributes['request_headers']) ? $this->attributes['request_headers'] : null;
     }
     // string # The HTTP verb used to perform the webhook.
     public function getRequestMethod()
     {
-        return @$this->attributes['request_method'];
+        return isset($this->attributes['request_method']) ? $this->attributes['request_method'] : null;
     }
     // string # The webhook request URL.
     public function getRequestUrl()
     {
-        return @$this->attributes['request_url'];
+        return isset($this->attributes['request_url']) ? $this->attributes['request_url'] : null;
     }
     // string # The path to the actual file that triggered this notification. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
     public function getPath()
     {
-        return @$this->attributes['path'];
+        return isset($this->attributes['path']) ? $this->attributes['path'] : null;
     }
     // string # The folder associated with the triggering action for this notification.
     public function getFolder()
     {
-        return @$this->attributes['folder'];
+        return isset($this->attributes['folder']) ? $this->attributes['folder'] : null;
     }
 
     // Parameters:
@@ -113,23 +111,23 @@ class ActionNotificationExportResult
     //   action_notification_export_id (required) - int64 - ID of the associated action notification export.
     public static function all($params = [], $options = [])
     {
-        if (!@$params['action_notification_export_id']) {
+        if (empty($params['action_notification_export_id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: action_notification_export_id');
         }
 
-        if (@$params['user_id'] && !is_int(@$params['user_id'])) {
+        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
-        if (@$params['action_notification_export_id'] && !is_int(@$params['action_notification_export_id'])) {
+        if (!empty($params['action_notification_export_id']) && !is_int($params['action_notification_export_id'])) {
             throw new \Files\Exception\InvalidParameterException('$action_notification_export_id must be of type int; received ' . gettype(@$params['action_notification_export_id']));
         }
 

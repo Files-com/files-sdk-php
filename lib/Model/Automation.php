@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class Automation
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class Automation
     // int64 # Automation ID
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
     public function setId($value)
@@ -68,7 +66,7 @@ class Automation
     // int64 # Workspace ID
     public function getWorkspaceId()
     {
-        return @$this->attributes['workspace_id'];
+        return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
 
     public function setWorkspaceId($value)
@@ -78,7 +76,7 @@ class Automation
     // boolean # Ordinarily, we will allow automation runs to run in parallel for non-scheduled automations. If this flag is `true` we will force automation runs to be serialized (run one at a time, one after another). This can resolve some issues with race conditions on remote systems at the cost of some performance.
     public function getAlwaysSerializeJobs()
     {
-        return @$this->attributes['always_serialize_jobs'];
+        return isset($this->attributes['always_serialize_jobs']) ? $this->attributes['always_serialize_jobs'] : null;
     }
 
     public function setAlwaysSerializeJobs($value)
@@ -88,7 +86,7 @@ class Automation
     // boolean # Ordinarily, files with identical size in the source and destination will be skipped from copy operations to prevent wasted transfer.  If this flag is `true` we will overwrite the destination file always.  Note that this may cause large amounts of wasted transfer usage.  This setting has no effect unless `overwrite_files` is also set to `true`.
     public function getAlwaysOverwriteSizeMatchingFiles()
     {
-        return @$this->attributes['always_overwrite_size_matching_files'];
+        return isset($this->attributes['always_overwrite_size_matching_files']) ? $this->attributes['always_overwrite_size_matching_files'] : null;
     }
 
     public function setAlwaysOverwriteSizeMatchingFiles($value)
@@ -98,7 +96,7 @@ class Automation
     // string # Automation type
     public function getAutomation()
     {
-        return @$this->attributes['automation'];
+        return isset($this->attributes['automation']) ? $this->attributes['automation'] : null;
     }
 
     public function setAutomation($value)
@@ -108,7 +106,7 @@ class Automation
     // boolean # Indicates if the automation has been deleted.
     public function getDeleted()
     {
-        return @$this->attributes['deleted'];
+        return isset($this->attributes['deleted']) ? $this->attributes['deleted'] : null;
     }
 
     public function setDeleted($value)
@@ -118,7 +116,7 @@ class Automation
     // string # Description for the this Automation.
     public function getDescription()
     {
-        return @$this->attributes['description'];
+        return isset($this->attributes['description']) ? $this->attributes['description'] : null;
     }
 
     public function setDescription($value)
@@ -128,7 +126,7 @@ class Automation
     // object # Automation v2 graph definition.
     public function getDefinition()
     {
-        return @$this->attributes['definition'];
+        return isset($this->attributes['definition']) ? $this->attributes['definition'] : null;
     }
 
     public function setDefinition($value)
@@ -138,7 +136,7 @@ class Automation
     // string # If set, this string in the destination path will be replaced with the value in `destination_replace_to`.
     public function getDestinationReplaceFrom()
     {
-        return @$this->attributes['destination_replace_from'];
+        return isset($this->attributes['destination_replace_from']) ? $this->attributes['destination_replace_from'] : null;
     }
 
     public function setDestinationReplaceFrom($value)
@@ -148,7 +146,7 @@ class Automation
     // string # If set, this string will replace the value `destination_replace_from` in the destination filename. You can use special patterns here.
     public function getDestinationReplaceTo()
     {
-        return @$this->attributes['destination_replace_to'];
+        return isset($this->attributes['destination_replace_to']) ? $this->attributes['destination_replace_to'] : null;
     }
 
     public function setDestinationReplaceTo($value)
@@ -158,7 +156,7 @@ class Automation
     // array(string) # Destination Paths
     public function getDestinations()
     {
-        return @$this->attributes['destinations'];
+        return isset($this->attributes['destinations']) ? $this->attributes['destinations'] : null;
     }
 
     public function setDestinations($value)
@@ -168,7 +166,7 @@ class Automation
     // boolean # If true, this automation will not run.
     public function getDisabled()
     {
-        return @$this->attributes['disabled'];
+        return isset($this->attributes['disabled']) ? $this->attributes['disabled'] : null;
     }
 
     public function setDisabled($value)
@@ -178,7 +176,7 @@ class Automation
     // string # If set, this glob pattern will exclude files from the automation. Supports globs, except on remote mounts.
     public function getExcludePattern()
     {
-        return @$this->attributes['exclude_pattern'];
+        return isset($this->attributes['exclude_pattern']) ? $this->attributes['exclude_pattern'] : null;
     }
 
     public function setExcludePattern($value)
@@ -188,7 +186,7 @@ class Automation
     // array(object) # List of URLs to be imported and names to be used.
     public function getImportUrls()
     {
-        return @$this->attributes['import_urls'];
+        return isset($this->attributes['import_urls']) ? $this->attributes['import_urls'] : null;
     }
 
     public function setImportUrls($value)
@@ -198,7 +196,7 @@ class Automation
     // string # If trigger is `email`, this is the address that triggers the Automation.
     public function getInboundEmailAddress()
     {
-        return @$this->attributes['inbound_email_address'];
+        return isset($this->attributes['inbound_email_address']) ? $this->attributes['inbound_email_address'] : null;
     }
 
     public function setInboundEmailAddress($value)
@@ -208,7 +206,7 @@ class Automation
     // boolean # Normally copy and move automations that use globs will implicitly preserve the source folder structure in the destination.  If this flag is `true`, the source folder structure will be flattened in the destination.  This is useful for copying or moving files from multiple folders into a single destination folder.
     public function getFlattenDestinationStructure()
     {
-        return @$this->attributes['flatten_destination_structure'];
+        return isset($this->attributes['flatten_destination_structure']) ? $this->attributes['flatten_destination_structure'] : null;
     }
 
     public function setFlattenDestinationStructure($value)
@@ -218,7 +216,7 @@ class Automation
     // array(int64) # IDs of Groups for the Automation (i.e. who to Request File from)
     public function getGroupIds()
     {
-        return @$this->attributes['group_ids'];
+        return isset($this->attributes['group_ids']) ? $this->attributes['group_ids'] : null;
     }
 
     public function setGroupIds($value)
@@ -228,7 +226,7 @@ class Automation
     // boolean # If true, the Lock Folders behavior will be disregarded for automated actions.
     public function getIgnoreLockedFolders()
     {
-        return @$this->attributes['ignore_locked_folders'];
+        return isset($this->attributes['ignore_locked_folders']) ? $this->attributes['ignore_locked_folders'] : null;
     }
 
     public function setIgnoreLockedFolders($value)
@@ -238,7 +236,7 @@ class Automation
     // string # If trigger is `daily`, this specifies how often to run this automation.  One of: `day`, `week`, `week_end`, `month`, `month_end`, `quarter`, `quarter_end`, `year`, `year_end`
     public function getInterval()
     {
-        return @$this->attributes['interval'];
+        return isset($this->attributes['interval']) ? $this->attributes['interval'] : null;
     }
 
     public function setInterval($value)
@@ -248,7 +246,7 @@ class Automation
     // date-time # Time when automation was last modified. Does not change for name or description updates.
     public function getLastModifiedAt()
     {
-        return @$this->attributes['last_modified_at'];
+        return isset($this->attributes['last_modified_at']) ? $this->attributes['last_modified_at'] : null;
     }
 
     public function setLastModifiedAt($value)
@@ -258,7 +256,7 @@ class Automation
     // boolean # If `true`, use the legacy behavior for this automation, where it can operate on folders in addition to just files.  This behavior no longer works and should not be used.
     public function getLegacyFolderMatching()
     {
-        return @$this->attributes['legacy_folder_matching'];
+        return isset($this->attributes['legacy_folder_matching']) ? $this->attributes['legacy_folder_matching'] : null;
     }
 
     public function setLegacyFolderMatching($value)
@@ -268,7 +266,7 @@ class Automation
     // string # Name for this automation.
     public function getName()
     {
-        return @$this->attributes['name'];
+        return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
 
     public function setName($value)
@@ -278,7 +276,7 @@ class Automation
     // boolean # If true, existing files will be overwritten with new files on Move/Copy automations.  Note: by default files will not be overwritten on Copy automations if they appear to be the same file size as the newly incoming file.  Use the `always_overwrite_size_matching_files` option in conjunction with `overwrite_files` to override this behavior and overwrite files no matter what.
     public function getOverwriteFiles()
     {
-        return @$this->attributes['overwrite_files'];
+        return isset($this->attributes['overwrite_files']) ? $this->attributes['overwrite_files'] : null;
     }
 
     public function setOverwriteFiles($value)
@@ -288,7 +286,7 @@ class Automation
     // string # Path on which this Automation runs.  Supports globs, except on remote mounts. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
     public function getPath()
     {
-        return @$this->attributes['path'];
+        return isset($this->attributes['path']) ? $this->attributes['path'] : null;
     }
 
     public function setPath($value)
@@ -298,7 +296,7 @@ class Automation
     // string # Timezone to use when rendering timestamps in paths.
     public function getPathTimeZone()
     {
-        return @$this->attributes['path_time_zone'];
+        return isset($this->attributes['path_time_zone']) ? $this->attributes['path_time_zone'] : null;
     }
 
     public function setPathTimeZone($value)
@@ -308,7 +306,7 @@ class Automation
     // int64 # Current Automation v2 definition version.
     public function getVersion()
     {
-        return @$this->attributes['version'];
+        return isset($this->attributes['version']) ? $this->attributes['version'] : null;
     }
 
     public function setVersion($value)
@@ -318,7 +316,7 @@ class Automation
     // int64 # If trigger type is `daily`, this specifies a day number to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
     public function getRecurringDay()
     {
-        return @$this->attributes['recurring_day'];
+        return isset($this->attributes['recurring_day']) ? $this->attributes['recurring_day'] : null;
     }
 
     public function setRecurringDay($value)
@@ -328,7 +326,7 @@ class Automation
     // array(int64) # If trigger type is `daily`, this specifies one or more day numbers to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
     public function getRecurringDays()
     {
-        return @$this->attributes['recurring_days'];
+        return isset($this->attributes['recurring_days']) ? $this->attributes['recurring_days'] : null;
     }
 
     public function setRecurringDays($value)
@@ -338,7 +336,7 @@ class Automation
     // int64 # If trigger is `custom_schedule`, the reusable Schedule used instead of the automation's schedule fields.
     public function getScheduleId()
     {
-        return @$this->attributes['schedule_id'];
+        return isset($this->attributes['schedule_id']) ? $this->attributes['schedule_id'] : null;
     }
 
     public function setScheduleId($value)
@@ -348,7 +346,7 @@ class Automation
     // int64 # If the Automation fails, retry at this interval (in minutes).  Acceptable values are 5 through 1440 (one day).  Set to null to disable.
     public function getRetryOnFailureIntervalInMinutes()
     {
-        return @$this->attributes['retry_on_failure_interval_in_minutes'];
+        return isset($this->attributes['retry_on_failure_interval_in_minutes']) ? $this->attributes['retry_on_failure_interval_in_minutes'] : null;
     }
 
     public function setRetryOnFailureIntervalInMinutes($value)
@@ -358,7 +356,7 @@ class Automation
     // int64 # If the Automation fails, retry at most this many times.  Maximum allowed value: 10.  Set to null to disable.
     public function getRetryOnFailureNumberOfAttempts()
     {
-        return @$this->attributes['retry_on_failure_number_of_attempts'];
+        return isset($this->attributes['retry_on_failure_number_of_attempts']) ? $this->attributes['retry_on_failure_number_of_attempts'] : null;
     }
 
     public function setRetryOnFailureNumberOfAttempts($value)
@@ -368,7 +366,7 @@ class Automation
     // object # If trigger is `custom_schedule`, Custom schedule description for when the automation should be run in json format.
     public function getSchedule()
     {
-        return @$this->attributes['schedule'];
+        return isset($this->attributes['schedule']) ? $this->attributes['schedule'] : null;
     }
 
     public function setSchedule($value)
@@ -378,7 +376,7 @@ class Automation
     // string # If trigger is `custom_schedule` or `daily` with times, Human readable schedule description for when the automation should be run.
     public function getHumanReadableSchedule()
     {
-        return @$this->attributes['human_readable_schedule'];
+        return isset($this->attributes['human_readable_schedule']) ? $this->attributes['human_readable_schedule'] : null;
     }
 
     public function setHumanReadableSchedule($value)
@@ -388,7 +386,7 @@ class Automation
     // array(int64) # If trigger is `custom_schedule`, Custom schedule description for when the automation should be run. 0 is Sunday, 1 is Monday, etc.
     public function getScheduleDaysOfWeek()
     {
-        return @$this->attributes['schedule_days_of_week'];
+        return isset($this->attributes['schedule_days_of_week']) ? $this->attributes['schedule_days_of_week'] : null;
     }
 
     public function setScheduleDaysOfWeek($value)
@@ -398,7 +396,7 @@ class Automation
     // array(string) # Times of day to run in HH:MM format (24-hour). For `custom_schedule`, run at these times on specified days of week. For `daily`, run at these times on the scheduled interval date.
     public function getScheduleTimesOfDay()
     {
-        return @$this->attributes['schedule_times_of_day'];
+        return isset($this->attributes['schedule_times_of_day']) ? $this->attributes['schedule_times_of_day'] : null;
     }
 
     public function setScheduleTimesOfDay($value)
@@ -408,7 +406,7 @@ class Automation
     // string # Time zone for the schedule. If not set, times are interpreted as UTC.
     public function getScheduleTimeZone()
     {
-        return @$this->attributes['schedule_time_zone'];
+        return isset($this->attributes['schedule_time_zone']) ? $this->attributes['schedule_time_zone'] : null;
     }
 
     public function setScheduleTimeZone($value)
@@ -418,7 +416,7 @@ class Automation
     // string # Source path/glob.  See Automation docs for exact description, but this is used to filter for files in the `path` to find files to operate on. Supports globs, except on remote mounts.
     public function getSource()
     {
-        return @$this->attributes['source'];
+        return isset($this->attributes['source']) ? $this->attributes['source'] : null;
     }
 
     public function setSource($value)
@@ -428,7 +426,7 @@ class Automation
     // array(int64) # IDs of Syncs to run by this Automation.
     public function getSyncIds()
     {
-        return @$this->attributes['sync_ids'];
+        return isset($this->attributes['sync_ids']) ? $this->attributes['sync_ids'] : null;
     }
 
     public function setSyncIds($value)
@@ -438,7 +436,7 @@ class Automation
     // array(string) # If trigger is `action`, this is the list of action types on which to trigger the automation. Valid actions are create, copy, move, archived_delete, update, read, destroy
     public function getTriggerActions()
     {
-        return @$this->attributes['trigger_actions'];
+        return isset($this->attributes['trigger_actions']) ? $this->attributes['trigger_actions'] : null;
     }
 
     public function setTriggerActions($value)
@@ -448,7 +446,7 @@ class Automation
     // string # How this automation is triggered to run.
     public function getTrigger()
     {
-        return @$this->attributes['trigger'];
+        return isset($this->attributes['trigger']) ? $this->attributes['trigger'] : null;
     }
 
     public function setTrigger($value)
@@ -458,7 +456,7 @@ class Automation
     // int64 # User ID of the Automation's creator.
     public function getUserId()
     {
-        return @$this->attributes['user_id'];
+        return isset($this->attributes['user_id']) ? $this->attributes['user_id'] : null;
     }
 
     public function setUserId($value)
@@ -468,7 +466,7 @@ class Automation
     // array(int64) # IDs of Users for the Automation (i.e. who to Request File from)
     public function getUserIds()
     {
-        return @$this->attributes['user_ids'];
+        return isset($this->attributes['user_ids']) ? $this->attributes['user_ids'] : null;
     }
 
     public function setUserIds($value)
@@ -478,7 +476,7 @@ class Automation
     // object # A Hash of attributes specific to the automation type.
     public function getValue()
     {
-        return @$this->attributes['value'];
+        return isset($this->attributes['value']) ? $this->attributes['value'] : null;
     }
 
     public function setValue($value)
@@ -488,7 +486,7 @@ class Automation
     // string # If trigger is `webhook`, this is the URL of the webhook to trigger the Automation.
     public function getWebhookUrl()
     {
-        return @$this->attributes['webhook_url'];
+        return isset($this->attributes['webhook_url']) ? $this->attributes['webhook_url'] : null;
     }
 
     public function setWebhookUrl($value)
@@ -498,7 +496,7 @@ class Automation
     // string # Skip the automation if there is a formal, observed holiday for this region.
     public function getHolidayRegion()
     {
-        return @$this->attributes['holiday_region'];
+        return isset($this->attributes['holiday_region']) ? $this->attributes['holiday_region'] : null;
     }
 
     public function setHolidayRegion($value)
@@ -513,7 +511,7 @@ class Automation
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -521,7 +519,7 @@ class Automation
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -539,7 +537,7 @@ class Automation
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -547,11 +545,11 @@ class Automation
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (@$params['items'] && !is_array(@$params['items'])) {
+        if (!empty($params['items']) && !is_array($params['items'])) {
             throw new \Files\Exception\InvalidParameterException('$items must be of type array; received ' . gettype(@$params['items']));
         }
 
@@ -601,7 +599,7 @@ class Automation
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -609,111 +607,111 @@ class Automation
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (@$params['source'] && !is_string(@$params['source'])) {
+        if (!empty($params['source']) && !is_string($params['source'])) {
             throw new \Files\Exception\InvalidParameterException('$source must be of type string; received ' . gettype(@$params['source']));
         }
 
-        if (@$params['destinations'] && !is_array(@$params['destinations'])) {
+        if (!empty($params['destinations']) && !is_array($params['destinations'])) {
             throw new \Files\Exception\InvalidParameterException('$destinations must be of type array; received ' . gettype(@$params['destinations']));
         }
 
-        if (@$params['destination_replace_from'] && !is_string(@$params['destination_replace_from'])) {
+        if (!empty($params['destination_replace_from']) && !is_string($params['destination_replace_from'])) {
             throw new \Files\Exception\InvalidParameterException('$destination_replace_from must be of type string; received ' . gettype(@$params['destination_replace_from']));
         }
 
-        if (@$params['destination_replace_to'] && !is_string(@$params['destination_replace_to'])) {
+        if (!empty($params['destination_replace_to']) && !is_string($params['destination_replace_to'])) {
             throw new \Files\Exception\InvalidParameterException('$destination_replace_to must be of type string; received ' . gettype(@$params['destination_replace_to']));
         }
 
-        if (@$params['interval'] && !is_string(@$params['interval'])) {
+        if (!empty($params['interval']) && !is_string($params['interval'])) {
             throw new \Files\Exception\InvalidParameterException('$interval must be of type string; received ' . gettype(@$params['interval']));
         }
 
-        if (@$params['path'] && !is_string(@$params['path'])) {
+        if (!empty($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (@$params['sync_ids'] && !is_string(@$params['sync_ids'])) {
+        if (!empty($params['sync_ids']) && !is_string($params['sync_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$sync_ids must be of type string; received ' . gettype(@$params['sync_ids']));
         }
 
-        if (@$params['user_ids'] && !is_string(@$params['user_ids'])) {
+        if (!empty($params['user_ids']) && !is_string($params['user_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$user_ids must be of type string; received ' . gettype(@$params['user_ids']));
         }
 
-        if (@$params['group_ids'] && !is_string(@$params['group_ids'])) {
+        if (!empty($params['group_ids']) && !is_string($params['group_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$group_ids must be of type string; received ' . gettype(@$params['group_ids']));
         }
 
-        if (@$params['schedule_id'] && !is_int(@$params['schedule_id'])) {
+        if (!empty($params['schedule_id']) && !is_int($params['schedule_id'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_id must be of type int; received ' . gettype(@$params['schedule_id']));
         }
 
-        if (@$params['schedule_days_of_week'] && !is_array(@$params['schedule_days_of_week'])) {
+        if (!empty($params['schedule_days_of_week']) && !is_array($params['schedule_days_of_week'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_days_of_week must be of type array; received ' . gettype(@$params['schedule_days_of_week']));
         }
 
-        if (@$params['schedule_times_of_day'] && !is_array(@$params['schedule_times_of_day'])) {
+        if (!empty($params['schedule_times_of_day']) && !is_array($params['schedule_times_of_day'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_times_of_day must be of type array; received ' . gettype(@$params['schedule_times_of_day']));
         }
 
-        if (@$params['schedule_time_zone'] && !is_string(@$params['schedule_time_zone'])) {
+        if (!empty($params['schedule_time_zone']) && !is_string($params['schedule_time_zone'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_time_zone must be of type string; received ' . gettype(@$params['schedule_time_zone']));
         }
 
-        if (@$params['holiday_region'] && !is_string(@$params['holiday_region'])) {
+        if (!empty($params['holiday_region']) && !is_string($params['holiday_region'])) {
             throw new \Files\Exception\InvalidParameterException('$holiday_region must be of type string; received ' . gettype(@$params['holiday_region']));
         }
 
-        if (@$params['description'] && !is_string(@$params['description'])) {
+        if (!empty($params['description']) && !is_string($params['description'])) {
             throw new \Files\Exception\InvalidParameterException('$description must be of type string; received ' . gettype(@$params['description']));
         }
 
-        if (@$params['exclude_pattern'] && !is_string(@$params['exclude_pattern'])) {
+        if (!empty($params['exclude_pattern']) && !is_string($params['exclude_pattern'])) {
             throw new \Files\Exception\InvalidParameterException('$exclude_pattern must be of type string; received ' . gettype(@$params['exclude_pattern']));
         }
 
-        if (@$params['import_urls'] && !is_array(@$params['import_urls'])) {
+        if (!empty($params['import_urls']) && !is_array($params['import_urls'])) {
             throw new \Files\Exception\InvalidParameterException('$import_urls must be of type array; received ' . gettype(@$params['import_urls']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['path_time_zone'] && !is_string(@$params['path_time_zone'])) {
+        if (!empty($params['path_time_zone']) && !is_string($params['path_time_zone'])) {
             throw new \Files\Exception\InvalidParameterException('$path_time_zone must be of type string; received ' . gettype(@$params['path_time_zone']));
         }
 
-        if (@$params['retry_on_failure_interval_in_minutes'] && !is_int(@$params['retry_on_failure_interval_in_minutes'])) {
+        if (!empty($params['retry_on_failure_interval_in_minutes']) && !is_int($params['retry_on_failure_interval_in_minutes'])) {
             throw new \Files\Exception\InvalidParameterException('$retry_on_failure_interval_in_minutes must be of type int; received ' . gettype(@$params['retry_on_failure_interval_in_minutes']));
         }
 
-        if (@$params['retry_on_failure_number_of_attempts'] && !is_int(@$params['retry_on_failure_number_of_attempts'])) {
+        if (!empty($params['retry_on_failure_number_of_attempts']) && !is_int($params['retry_on_failure_number_of_attempts'])) {
             throw new \Files\Exception\InvalidParameterException('$retry_on_failure_number_of_attempts must be of type int; received ' . gettype(@$params['retry_on_failure_number_of_attempts']));
         }
 
-        if (@$params['trigger'] && !is_string(@$params['trigger'])) {
+        if (!empty($params['trigger']) && !is_string($params['trigger'])) {
             throw new \Files\Exception\InvalidParameterException('$trigger must be of type string; received ' . gettype(@$params['trigger']));
         }
 
-        if (@$params['trigger_actions'] && !is_array(@$params['trigger_actions'])) {
+        if (!empty($params['trigger_actions']) && !is_array($params['trigger_actions'])) {
             throw new \Files\Exception\InvalidParameterException('$trigger_actions must be of type array; received ' . gettype(@$params['trigger_actions']));
         }
 
-        if (@$params['recurring_day'] && !is_int(@$params['recurring_day'])) {
+        if (!empty($params['recurring_day']) && !is_int($params['recurring_day'])) {
             throw new \Files\Exception\InvalidParameterException('$recurring_day must be of type int; received ' . gettype(@$params['recurring_day']));
         }
 
-        if (@$params['recurring_days'] && !is_array(@$params['recurring_days'])) {
+        if (!empty($params['recurring_days']) && !is_array($params['recurring_days'])) {
             throw new \Files\Exception\InvalidParameterException('$recurring_days must be of type array; received ' . gettype(@$params['recurring_days']));
         }
 
-        if (@$params['automation'] && !is_string(@$params['automation'])) {
+        if (!empty($params['automation']) && !is_string($params['automation'])) {
             throw new \Files\Exception\InvalidParameterException('$automation must be of type string; received ' . gettype(@$params['automation']));
         }
 
@@ -727,7 +725,7 @@ class Automation
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -735,7 +733,7 @@ class Automation
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -774,11 +772,11 @@ class Automation
     //   filter_lteq - object - If set, return records where the specified field is less than or equal the supplied value. Valid fields are `last_modified_at`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -803,11 +801,11 @@ class Automation
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -866,115 +864,115 @@ class Automation
     //   workspace_id - int64 - Workspace ID
     public static function create($params = [], $options = [])
     {
-        if (!@$params['automation']) {
+        if (empty($params['automation'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: automation');
         }
 
-        if (@$params['source'] && !is_string(@$params['source'])) {
+        if (!empty($params['source']) && !is_string($params['source'])) {
             throw new \Files\Exception\InvalidParameterException('$source must be of type string; received ' . gettype(@$params['source']));
         }
 
-        if (@$params['destinations'] && !is_array(@$params['destinations'])) {
+        if (!empty($params['destinations']) && !is_array($params['destinations'])) {
             throw new \Files\Exception\InvalidParameterException('$destinations must be of type array; received ' . gettype(@$params['destinations']));
         }
 
-        if (@$params['destination_replace_from'] && !is_string(@$params['destination_replace_from'])) {
+        if (!empty($params['destination_replace_from']) && !is_string($params['destination_replace_from'])) {
             throw new \Files\Exception\InvalidParameterException('$destination_replace_from must be of type string; received ' . gettype(@$params['destination_replace_from']));
         }
 
-        if (@$params['destination_replace_to'] && !is_string(@$params['destination_replace_to'])) {
+        if (!empty($params['destination_replace_to']) && !is_string($params['destination_replace_to'])) {
             throw new \Files\Exception\InvalidParameterException('$destination_replace_to must be of type string; received ' . gettype(@$params['destination_replace_to']));
         }
 
-        if (@$params['interval'] && !is_string(@$params['interval'])) {
+        if (!empty($params['interval']) && !is_string($params['interval'])) {
             throw new \Files\Exception\InvalidParameterException('$interval must be of type string; received ' . gettype(@$params['interval']));
         }
 
-        if (@$params['path'] && !is_string(@$params['path'])) {
+        if (!empty($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (@$params['sync_ids'] && !is_string(@$params['sync_ids'])) {
+        if (!empty($params['sync_ids']) && !is_string($params['sync_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$sync_ids must be of type string; received ' . gettype(@$params['sync_ids']));
         }
 
-        if (@$params['user_ids'] && !is_string(@$params['user_ids'])) {
+        if (!empty($params['user_ids']) && !is_string($params['user_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$user_ids must be of type string; received ' . gettype(@$params['user_ids']));
         }
 
-        if (@$params['group_ids'] && !is_string(@$params['group_ids'])) {
+        if (!empty($params['group_ids']) && !is_string($params['group_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$group_ids must be of type string; received ' . gettype(@$params['group_ids']));
         }
 
-        if (@$params['schedule_id'] && !is_int(@$params['schedule_id'])) {
+        if (!empty($params['schedule_id']) && !is_int($params['schedule_id'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_id must be of type int; received ' . gettype(@$params['schedule_id']));
         }
 
-        if (@$params['schedule_days_of_week'] && !is_array(@$params['schedule_days_of_week'])) {
+        if (!empty($params['schedule_days_of_week']) && !is_array($params['schedule_days_of_week'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_days_of_week must be of type array; received ' . gettype(@$params['schedule_days_of_week']));
         }
 
-        if (@$params['schedule_times_of_day'] && !is_array(@$params['schedule_times_of_day'])) {
+        if (!empty($params['schedule_times_of_day']) && !is_array($params['schedule_times_of_day'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_times_of_day must be of type array; received ' . gettype(@$params['schedule_times_of_day']));
         }
 
-        if (@$params['schedule_time_zone'] && !is_string(@$params['schedule_time_zone'])) {
+        if (!empty($params['schedule_time_zone']) && !is_string($params['schedule_time_zone'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_time_zone must be of type string; received ' . gettype(@$params['schedule_time_zone']));
         }
 
-        if (@$params['holiday_region'] && !is_string(@$params['holiday_region'])) {
+        if (!empty($params['holiday_region']) && !is_string($params['holiday_region'])) {
             throw new \Files\Exception\InvalidParameterException('$holiday_region must be of type string; received ' . gettype(@$params['holiday_region']));
         }
 
-        if (@$params['description'] && !is_string(@$params['description'])) {
+        if (!empty($params['description']) && !is_string($params['description'])) {
             throw new \Files\Exception\InvalidParameterException('$description must be of type string; received ' . gettype(@$params['description']));
         }
 
-        if (@$params['exclude_pattern'] && !is_string(@$params['exclude_pattern'])) {
+        if (!empty($params['exclude_pattern']) && !is_string($params['exclude_pattern'])) {
             throw new \Files\Exception\InvalidParameterException('$exclude_pattern must be of type string; received ' . gettype(@$params['exclude_pattern']));
         }
 
-        if (@$params['import_urls'] && !is_array(@$params['import_urls'])) {
+        if (!empty($params['import_urls']) && !is_array($params['import_urls'])) {
             throw new \Files\Exception\InvalidParameterException('$import_urls must be of type array; received ' . gettype(@$params['import_urls']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['path_time_zone'] && !is_string(@$params['path_time_zone'])) {
+        if (!empty($params['path_time_zone']) && !is_string($params['path_time_zone'])) {
             throw new \Files\Exception\InvalidParameterException('$path_time_zone must be of type string; received ' . gettype(@$params['path_time_zone']));
         }
 
-        if (@$params['retry_on_failure_interval_in_minutes'] && !is_int(@$params['retry_on_failure_interval_in_minutes'])) {
+        if (!empty($params['retry_on_failure_interval_in_minutes']) && !is_int($params['retry_on_failure_interval_in_minutes'])) {
             throw new \Files\Exception\InvalidParameterException('$retry_on_failure_interval_in_minutes must be of type int; received ' . gettype(@$params['retry_on_failure_interval_in_minutes']));
         }
 
-        if (@$params['retry_on_failure_number_of_attempts'] && !is_int(@$params['retry_on_failure_number_of_attempts'])) {
+        if (!empty($params['retry_on_failure_number_of_attempts']) && !is_int($params['retry_on_failure_number_of_attempts'])) {
             throw new \Files\Exception\InvalidParameterException('$retry_on_failure_number_of_attempts must be of type int; received ' . gettype(@$params['retry_on_failure_number_of_attempts']));
         }
 
-        if (@$params['trigger'] && !is_string(@$params['trigger'])) {
+        if (!empty($params['trigger']) && !is_string($params['trigger'])) {
             throw new \Files\Exception\InvalidParameterException('$trigger must be of type string; received ' . gettype(@$params['trigger']));
         }
 
-        if (@$params['trigger_actions'] && !is_array(@$params['trigger_actions'])) {
+        if (!empty($params['trigger_actions']) && !is_array($params['trigger_actions'])) {
             throw new \Files\Exception\InvalidParameterException('$trigger_actions must be of type array; received ' . gettype(@$params['trigger_actions']));
         }
 
-        if (@$params['recurring_day'] && !is_int(@$params['recurring_day'])) {
+        if (!empty($params['recurring_day']) && !is_int($params['recurring_day'])) {
             throw new \Files\Exception\InvalidParameterException('$recurring_day must be of type int; received ' . gettype(@$params['recurring_day']));
         }
 
-        if (@$params['recurring_days'] && !is_array(@$params['recurring_days'])) {
+        if (!empty($params['recurring_days']) && !is_array($params['recurring_days'])) {
             throw new \Files\Exception\InvalidParameterException('$recurring_days must be of type array; received ' . gettype(@$params['recurring_days']));
         }
 
-        if (@$params['automation'] && !is_string(@$params['automation'])) {
+        if (!empty($params['automation']) && !is_string($params['automation'])) {
             throw new \Files\Exception\InvalidParameterException('$automation must be of type string; received ' . gettype(@$params['automation']));
         }
 
-        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 

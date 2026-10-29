@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class AiAssistantPersonality
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class AiAssistantPersonality
     // int64 # AI Assistant Personality ID.
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
     public function setId($value)
@@ -68,7 +66,7 @@ class AiAssistantPersonality
     // int64 # Workspace ID. `0` means the default workspace.
     public function getWorkspaceId()
     {
-        return @$this->attributes['workspace_id'];
+        return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
 
     public function setWorkspaceId($value)
@@ -78,7 +76,7 @@ class AiAssistantPersonality
     // string # AI Assistant Personality name.
     public function getName()
     {
-        return @$this->attributes['name'];
+        return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
 
     public function setName($value)
@@ -88,7 +86,7 @@ class AiAssistantPersonality
     // string # System prompt injected into the in-app AI Assistant.
     public function getSystemPrompt()
     {
-        return @$this->attributes['system_prompt'];
+        return isset($this->attributes['system_prompt']) ? $this->attributes['system_prompt'] : null;
     }
 
     public function setSystemPrompt($value)
@@ -98,7 +96,7 @@ class AiAssistantPersonality
     // boolean # Whether this personality is the default personality for the Workspace.
     public function getUseByDefault()
     {
-        return @$this->attributes['use_by_default'];
+        return isset($this->attributes['use_by_default']) ? $this->attributes['use_by_default'] : null;
     }
 
     public function setUseByDefault($value)
@@ -108,7 +106,7 @@ class AiAssistantPersonality
     // boolean # If true, this default-workspace personality can apply to users in all workspaces.
     public function getApplyToAllWorkspaces()
     {
-        return @$this->attributes['apply_to_all_workspaces'];
+        return isset($this->attributes['apply_to_all_workspaces']) ? $this->attributes['apply_to_all_workspaces'] : null;
     }
 
     public function setApplyToAllWorkspaces($value)
@@ -118,12 +116,12 @@ class AiAssistantPersonality
     // date-time # Creation time.
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
     // date-time # Last update time.
     public function getUpdatedAt()
     {
-        return @$this->attributes['updated_at'];
+        return isset($this->attributes['updated_at']) ? $this->attributes['updated_at'] : null;
     }
 
     // Parameters:
@@ -138,7 +136,7 @@ class AiAssistantPersonality
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -146,19 +144,19 @@ class AiAssistantPersonality
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['system_prompt'] && !is_string(@$params['system_prompt'])) {
+        if (!empty($params['system_prompt']) && !is_string($params['system_prompt'])) {
             throw new \Files\Exception\InvalidParameterException('$system_prompt must be of type string; received ' . gettype(@$params['system_prompt']));
         }
 
-        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
@@ -172,7 +170,7 @@ class AiAssistantPersonality
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -180,7 +178,7 @@ class AiAssistantPersonality
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -215,11 +213,11 @@ class AiAssistantPersonality
     //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `workspace_id`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -244,11 +242,11 @@ class AiAssistantPersonality
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -269,23 +267,23 @@ class AiAssistantPersonality
     //   workspace_id - int64 - Workspace ID. `0` means the default workspace.
     public static function create($params = [], $options = [])
     {
-        if (!@$params['name']) {
+        if (empty($params['name'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: name');
         }
 
-        if (!@$params['system_prompt']) {
+        if (empty($params['system_prompt'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: system_prompt');
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['system_prompt'] && !is_string(@$params['system_prompt'])) {
+        if (!empty($params['system_prompt']) && !is_string($params['system_prompt'])) {
             throw new \Files\Exception\InvalidParameterException('$system_prompt must be of type string; received ' . gettype(@$params['system_prompt']));
         }
 
-        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 

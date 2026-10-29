@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class PublicHostingRequestLog
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,57 +56,57 @@ class PublicHostingRequestLog
     // date-time # Start Time of Action. Deprecrated: Use created_at.
     public function getTimestamp()
     {
-        return @$this->attributes['timestamp'];
+        return isset($this->attributes['timestamp']) ? $this->attributes['timestamp'] : null;
     }
     // string # IP Address of Public Hosting Client.
     public function getRemoteIp()
     {
-        return @$this->attributes['remote_ip'];
+        return isset($this->attributes['remote_ip']) ? $this->attributes['remote_ip'] : null;
     }
     // string # IP Address of Public Hosting Server.
     public function getServerIp()
     {
-        return @$this->attributes['server_ip'];
+        return isset($this->attributes['server_ip']) ? $this->attributes['server_ip'] : null;
     }
     // string # HTTP Request Hostname.
     public function getHostname()
     {
-        return @$this->attributes['hostname'];
+        return isset($this->attributes['hostname']) ? $this->attributes['hostname'] : null;
     }
     // string # HTTP Request Path. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
     public function getPath()
     {
-        return @$this->attributes['path'];
+        return isset($this->attributes['path']) ? $this->attributes['path'] : null;
     }
     // int64 # HTTP Response Code.
     public function getResponseCode()
     {
-        return @$this->attributes['responseCode'];
+        return isset($this->attributes['responseCode']) ? $this->attributes['responseCode'] : null;
     }
     // boolean # Whether SFTP Action was successful.
     public function getSuccess()
     {
-        return @$this->attributes['success'];
+        return isset($this->attributes['success']) ? $this->attributes['success'] : null;
     }
     // int64 # Duration (in milliseconds).
     public function getDurationMs()
     {
-        return @$this->attributes['duration_ms'];
+        return isset($this->attributes['duration_ms']) ? $this->attributes['duration_ms'] : null;
     }
     // date-time # Start Time of Action.
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
     // int64 # The number of bytes transferred for file downloads.
     public function getBytesTransferred()
     {
-        return @$this->attributes['bytes_transferred'];
+        return isset($this->attributes['bytes_transferred']) ? $this->attributes['bytes_transferred'] : null;
     }
     // string # Method of the HTTP call.
     public function getHttpMethod()
     {
-        return @$this->attributes['http_method'];
+        return isset($this->attributes['http_method']) ? $this->attributes['http_method'] : null;
     }
 
     // Parameters:
@@ -122,11 +120,11 @@ class PublicHostingRequestLog
     //   filter_lteq - object - If set, return records where the specified field is less than or equal the supplied value. Valid fields are `created_at`. Valid field combinations are `[ path ]`, `[ remote_ip ]`, `[ success ]`, `[ created_at ]`, `[ path, remote_ip ]`, `[ path, success ]`, `[ path, created_at ]`, `[ remote_ip, success ]`, `[ remote_ip, created_at ]`, `[ success, created_at ]`, `[ path, remote_ip, success ]`, `[ path, remote_ip, created_at ]`, `[ path, success, created_at ]`, `[ remote_ip, success, created_at ]` or `[ path, remote_ip, success, created_at ]`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 

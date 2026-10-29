@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class History
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,72 +56,72 @@ class History
     // int64 # Action ID
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
     // string # Path. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
     public function getPath()
     {
-        return @$this->attributes['path'];
+        return isset($this->attributes['path']) ? $this->attributes['path'] : null;
     }
     // date-time # Action occurrence date/time
     public function getWhen()
     {
-        return @$this->attributes['when'];
+        return isset($this->attributes['when']) ? $this->attributes['when'] : null;
     }
     // string # The destination path for this action, if applicable
     public function getDestination()
     {
-        return @$this->attributes['destination'];
+        return isset($this->attributes['destination']) ? $this->attributes['destination'] : null;
     }
     // string # Friendly displayed output
     public function getDisplay()
     {
-        return @$this->attributes['display'];
+        return isset($this->attributes['display']) ? $this->attributes['display'] : null;
     }
     // string # IP Address that performed this action
     public function getIp()
     {
-        return @$this->attributes['ip'];
+        return isset($this->attributes['ip']) ? $this->attributes['ip'] : null;
     }
     // string # The source path for this action, if applicable
     public function getSource()
     {
-        return @$this->attributes['source'];
+        return isset($this->attributes['source']) ? $this->attributes['source'] : null;
     }
     // object # Targets
     public function getTargets()
     {
-        return @$this->attributes['targets'];
+        return isset($this->attributes['targets']) ? $this->attributes['targets'] : null;
     }
     // int64 # User ID
     public function getUserId()
     {
-        return @$this->attributes['user_id'];
+        return isset($this->attributes['user_id']) ? $this->attributes['user_id'] : null;
     }
     // string # Username
     public function getUsername()
     {
-        return @$this->attributes['username'];
+        return isset($this->attributes['username']) ? $this->attributes['username'] : null;
     }
     // boolean # true if this change was performed by a user on a parent site.
     public function getUserIsFromParentSite()
     {
-        return @$this->attributes['user_is_from_parent_site'];
+        return isset($this->attributes['user_is_from_parent_site']) ? $this->attributes['user_is_from_parent_site'] : null;
     }
     // string # Type of action
     public function getAction()
     {
-        return @$this->attributes['action'];
+        return isset($this->attributes['action']) ? $this->attributes['action'] : null;
     }
     // string # Failure type.  If action was a user login or session failure, why did it fail?
     public function getFailureType()
     {
-        return @$this->attributes['failure_type'];
+        return isset($this->attributes['failure_type']) ? $this->attributes['failure_type'] : null;
     }
     // string # Interface on which this action occurred.
     public function getInterface()
     {
-        return @$this->attributes['interface'];
+        return isset($this->attributes['interface']) ? $this->attributes['interface'] : null;
     }
 
     // Parameters:
@@ -142,31 +140,31 @@ class History
 
         $params['path'] = $path;
 
-        if (!@$params['path']) {
+        if (empty($params['path'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: path');
         }
 
-        if (@$params['start_at'] && !is_string(@$params['start_at'])) {
+        if (!empty($params['start_at']) && !is_string($params['start_at'])) {
             throw new \Files\Exception\InvalidParameterException('$start_at must be of type string; received ' . gettype(@$params['start_at']));
         }
 
-        if (@$params['end_at'] && !is_string(@$params['end_at'])) {
+        if (!empty($params['end_at']) && !is_string($params['end_at'])) {
             throw new \Files\Exception\InvalidParameterException('$end_at must be of type string; received ' . gettype(@$params['end_at']));
         }
 
-        if (@$params['display'] && !is_string(@$params['display'])) {
+        if (!empty($params['display']) && !is_string($params['display'])) {
             throw new \Files\Exception\InvalidParameterException('$display must be of type string; received ' . gettype(@$params['display']));
         }
 
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
-        if (@$params['path'] && !is_string(@$params['path'])) {
+        if (!empty($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
@@ -197,31 +195,31 @@ class History
 
         $params['path'] = $path;
 
-        if (!@$params['path']) {
+        if (empty($params['path'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: path');
         }
 
-        if (@$params['start_at'] && !is_string(@$params['start_at'])) {
+        if (!empty($params['start_at']) && !is_string($params['start_at'])) {
             throw new \Files\Exception\InvalidParameterException('$start_at must be of type string; received ' . gettype(@$params['start_at']));
         }
 
-        if (@$params['end_at'] && !is_string(@$params['end_at'])) {
+        if (!empty($params['end_at']) && !is_string($params['end_at'])) {
             throw new \Files\Exception\InvalidParameterException('$end_at must be of type string; received ' . gettype(@$params['end_at']));
         }
 
-        if (@$params['display'] && !is_string(@$params['display'])) {
+        if (!empty($params['display']) && !is_string($params['display'])) {
             throw new \Files\Exception\InvalidParameterException('$display must be of type string; received ' . gettype(@$params['display']));
         }
 
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
-        if (@$params['path'] && !is_string(@$params['path'])) {
+        if (!empty($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
@@ -252,31 +250,31 @@ class History
 
         $params['user_id'] = $user_id;
 
-        if (!@$params['user_id']) {
+        if (empty($params['user_id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: user_id');
         }
 
-        if (@$params['start_at'] && !is_string(@$params['start_at'])) {
+        if (!empty($params['start_at']) && !is_string($params['start_at'])) {
             throw new \Files\Exception\InvalidParameterException('$start_at must be of type string; received ' . gettype(@$params['start_at']));
         }
 
-        if (@$params['end_at'] && !is_string(@$params['end_at'])) {
+        if (!empty($params['end_at']) && !is_string($params['end_at'])) {
             throw new \Files\Exception\InvalidParameterException('$end_at must be of type string; received ' . gettype(@$params['end_at']));
         }
 
-        if (@$params['display'] && !is_string(@$params['display'])) {
+        if (!empty($params['display']) && !is_string($params['display'])) {
             throw new \Files\Exception\InvalidParameterException('$display must be of type string; received ' . gettype(@$params['display']));
         }
 
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
-        if (@$params['user_id'] && !is_int(@$params['user_id'])) {
+        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
@@ -300,23 +298,23 @@ class History
     //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `created_at`.
     public static function listLogins($params = [], $options = [])
     {
-        if (@$params['start_at'] && !is_string(@$params['start_at'])) {
+        if (!empty($params['start_at']) && !is_string($params['start_at'])) {
             throw new \Files\Exception\InvalidParameterException('$start_at must be of type string; received ' . gettype(@$params['start_at']));
         }
 
-        if (@$params['end_at'] && !is_string(@$params['end_at'])) {
+        if (!empty($params['end_at']) && !is_string($params['end_at'])) {
             throw new \Files\Exception\InvalidParameterException('$end_at must be of type string; received ' . gettype(@$params['end_at']));
         }
 
-        if (@$params['display'] && !is_string(@$params['display'])) {
+        if (!empty($params['display']) && !is_string($params['display'])) {
             throw new \Files\Exception\InvalidParameterException('$display must be of type string; received ' . gettype(@$params['display']));
         }
 
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -342,23 +340,23 @@ class History
     //   filter_prefix - object - If set, return records where the specified field is prefixed by the supplied value. Valid fields are `path`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['start_at'] && !is_string(@$params['start_at'])) {
+        if (!empty($params['start_at']) && !is_string($params['start_at'])) {
             throw new \Files\Exception\InvalidParameterException('$start_at must be of type string; received ' . gettype(@$params['start_at']));
         }
 
-        if (@$params['end_at'] && !is_string(@$params['end_at'])) {
+        if (!empty($params['end_at']) && !is_string($params['end_at'])) {
             throw new \Files\Exception\InvalidParameterException('$end_at must be of type string; received ' . gettype(@$params['end_at']));
         }
 
-        if (@$params['display'] && !is_string(@$params['display'])) {
+        if (!empty($params['display']) && !is_string($params['display'])) {
             throw new \Files\Exception\InvalidParameterException('$display must be of type string; received ' . gettype(@$params['display']));
         }
 
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class UserRequest
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class UserRequest
     // int64 # ID
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
     public function setId($value)
@@ -68,7 +66,7 @@ class UserRequest
     // string # User's full name
     public function getName()
     {
-        return @$this->attributes['name'];
+        return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
 
     public function setName($value)
@@ -78,7 +76,7 @@ class UserRequest
     // email # User email address
     public function getEmail()
     {
-        return @$this->attributes['email'];
+        return isset($this->attributes['email']) ? $this->attributes['email'] : null;
     }
 
     public function setEmail($value)
@@ -88,7 +86,7 @@ class UserRequest
     // string # Details of the user's request
     public function getDetails()
     {
-        return @$this->attributes['details'];
+        return isset($this->attributes['details']) ? $this->attributes['details'] : null;
     }
 
     public function setDetails($value)
@@ -98,7 +96,7 @@ class UserRequest
     // string # User's company name
     public function getCompany()
     {
-        return @$this->attributes['company'];
+        return isset($this->attributes['company']) ? $this->attributes['company'] : null;
     }
 
     public function setCompany($value)
@@ -112,7 +110,7 @@ class UserRequest
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -120,7 +118,7 @@ class UserRequest
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -151,11 +149,11 @@ class UserRequest
     //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -180,11 +178,11 @@ class UserRequest
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -204,31 +202,31 @@ class UserRequest
     //   company - string - Company of the user requested
     public static function create($params = [], $options = [])
     {
-        if (!@$params['name']) {
+        if (empty($params['name'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: name');
         }
 
-        if (!@$params['email']) {
+        if (empty($params['email'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: email');
         }
 
-        if (!@$params['details']) {
+        if (empty($params['details'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: details');
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['email'] && !is_string(@$params['email'])) {
+        if (!empty($params['email']) && !is_string($params['email'])) {
             throw new \Files\Exception\InvalidParameterException('$email must be of type string; received ' . gettype(@$params['email']));
         }
 
-        if (@$params['details'] && !is_string(@$params['details'])) {
+        if (!empty($params['details']) && !is_string($params['details'])) {
             throw new \Files\Exception\InvalidParameterException('$details must be of type string; received ' . gettype(@$params['details']));
         }
 
-        if (@$params['company'] && !is_string(@$params['company'])) {
+        if (!empty($params['company']) && !is_string($params['company'])) {
             throw new \Files\Exception\InvalidParameterException('$company must be of type string; received ' . gettype(@$params['company']));
         }
 

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class AgentNodeConnection
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,16 +56,16 @@ class AgentNodeConnection
     // string # How the Agent process uses this proxy connection
     public function getMode()
     {
-        return @$this->attributes['mode'];
+        return isset($this->attributes['mode']) ? $this->attributes['mode'] : null;
     }
     // string # Whether this connection was observed recently and has not disconnected
     public function getStatus()
     {
-        return @$this->attributes['status'];
+        return isset($this->attributes['status']) ? $this->attributes['status'] : null;
     }
     // date-time # Most recent successful observation for this connection
     public function getLastSeenAt()
     {
-        return @$this->attributes['last_seen_at'];
+        return isset($this->attributes['last_seen_at']) ? $this->attributes['last_seen_at'] : null;
     }
 }

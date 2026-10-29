@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class Partner
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class Partner
     // boolean # Allow Partner Admins to change Two-Factor Authentication requirements for Partner Users.
     public function getAllowBypassing2faPolicies()
     {
-        return @$this->attributes['allow_bypassing_2fa_policies'];
+        return isset($this->attributes['allow_bypassing_2fa_policies']) ? $this->attributes['allow_bypassing_2fa_policies'] : null;
     }
 
     public function setAllowBypassing2faPolicies($value)
@@ -68,7 +66,7 @@ class Partner
     // string # A list of allowed IPs for this Partner. Newline delimited. Partner User IP access is allowed when the IP matches the Partner, User, or Site allowed IP lists.
     public function getAllowedIps()
     {
-        return @$this->attributes['allowed_ips'];
+        return isset($this->attributes['allowed_ips']) ? $this->attributes['allowed_ips'] : null;
     }
 
     public function setAllowedIps($value)
@@ -78,7 +76,7 @@ class Partner
     // boolean # Allow Partner Admins to change or reset credentials for users belonging to this Partner.
     public function getAllowCredentialChanges()
     {
-        return @$this->attributes['allow_credential_changes'];
+        return isset($this->attributes['allow_credential_changes']) ? $this->attributes['allow_credential_changes'] : null;
     }
 
     public function setAllowCredentialChanges($value)
@@ -88,7 +86,7 @@ class Partner
     // boolean # Allow Partner Admins to provide GPG keys.
     public function getAllowProvidingGpgKeys()
     {
-        return @$this->attributes['allow_providing_gpg_keys'];
+        return isset($this->attributes['allow_providing_gpg_keys']) ? $this->attributes['allow_providing_gpg_keys'] : null;
     }
 
     public function setAllowProvidingGpgKeys($value)
@@ -98,7 +96,7 @@ class Partner
     // boolean # Allow Partner Admins to create users.
     public function getAllowUserCreation()
     {
-        return @$this->attributes['allow_user_creation'];
+        return isset($this->attributes['allow_user_creation']) ? $this->attributes['allow_user_creation'] : null;
     }
 
     public function setAllowUserCreation($value)
@@ -108,7 +106,7 @@ class Partner
     // boolean # When `true`, emails sent to Partner users are copied to the responsible User or Group.
     public function getCcEmailsToResponsibleParty()
     {
-        return @$this->attributes['cc_emails_to_responsible_party'];
+        return isset($this->attributes['cc_emails_to_responsible_party']) ? $this->attributes['cc_emails_to_responsible_party'] : null;
     }
 
     public function setCcEmailsToResponsibleParty($value)
@@ -118,7 +116,7 @@ class Partner
     // array(object) # Approved Connected Sites relationships for this Partner, in both directions. Empty when this Partner has no connections. Read-only.
     public function getConnections()
     {
-        return @$this->attributes['connections'];
+        return isset($this->attributes['connections']) ? $this->attributes['connections'] : null;
     }
 
     public function setConnections($value)
@@ -128,7 +126,7 @@ class Partner
     // int64 # The unique ID of the Partner.
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
     public function setId($value)
@@ -138,7 +136,7 @@ class Partner
     // int64 # AI Assistant Personality ID assigned to this Partner, if any. Users in the Partner inherit it unless a direct per-user assignment overrides it.
     public function getAiAssistantPersonalityId()
     {
-        return @$this->attributes['ai_assistant_personality_id'];
+        return isset($this->attributes['ai_assistant_personality_id']) ? $this->attributes['ai_assistant_personality_id'] : null;
     }
 
     public function setAiAssistantPersonalityId($value)
@@ -148,7 +146,7 @@ class Partner
     // int64 # ID of the Workspace associated with this Partner.
     public function getWorkspaceId()
     {
-        return @$this->attributes['workspace_id'];
+        return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
 
     public function setWorkspaceId($value)
@@ -158,7 +156,7 @@ class Partner
     // string # The name of the Partner.
     public function getName()
     {
-        return @$this->attributes['name'];
+        return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
 
     public function setName($value)
@@ -168,7 +166,7 @@ class Partner
     // string # Notes about this Partner.
     public function getNotes()
     {
-        return @$this->attributes['notes'];
+        return isset($this->attributes['notes']) ? $this->attributes['notes'] : null;
     }
 
     public function setNotes($value)
@@ -178,7 +176,7 @@ class Partner
     // array(int64) # Array of User IDs that are Partner Admins for this Partner.
     public function getPartnerAdminIds()
     {
-        return @$this->attributes['partner_admin_ids'];
+        return isset($this->attributes['partner_admin_ids']) ? $this->attributes['partner_admin_ids'] : null;
     }
 
     public function setPartnerAdminIds($value)
@@ -188,7 +186,7 @@ class Partner
     // int64 # ID of the Partner Channel Template assigned to this Partner.
     public function getPartnerChannelTemplateId()
     {
-        return @$this->attributes['partner_channel_template_id'];
+        return isset($this->attributes['partner_channel_template_id']) ? $this->attributes['partner_channel_template_id'] : null;
     }
 
     public function setPartnerChannelTemplateId($value)
@@ -198,7 +196,7 @@ class Partner
     // string # This site's role for this Partner in Connected Sites relationships. `host` is a Partner this site configured. `guest` is a Partner created by approving another site's connection request; it has no root folder and cannot hold users, permissions, or Partner Channels, or host a connection. `host_and_guest` is a configured Partner that is also the guest side of a connection. Promote a `guest` Partner by setting this to `host_and_guest` together with a `root_folder`.
     public function getPartnershipRole()
     {
-        return @$this->attributes['partnership_role'];
+        return isset($this->attributes['partnership_role']) ? $this->attributes['partnership_role'] : null;
     }
 
     public function setPartnershipRole($value)
@@ -208,7 +206,7 @@ class Partner
     // int64 # ID of the Group responsible for this Partner.
     public function getResponsibleGroupId()
     {
-        return @$this->attributes['responsible_group_id'];
+        return isset($this->attributes['responsible_group_id']) ? $this->attributes['responsible_group_id'] : null;
     }
 
     public function setResponsibleGroupId($value)
@@ -218,7 +216,7 @@ class Partner
     // int64 # ID of the User responsible for this Partner.
     public function getResponsibleUserId()
     {
-        return @$this->attributes['responsible_user_id'];
+        return isset($this->attributes['responsible_user_id']) ? $this->attributes['responsible_user_id'] : null;
     }
 
     public function setResponsibleUserId($value)
@@ -228,7 +226,7 @@ class Partner
     // string # The root folder path for this Partner.
     public function getRootFolder()
     {
-        return @$this->attributes['root_folder'];
+        return isset($this->attributes['root_folder']) ? $this->attributes['root_folder'] : null;
     }
 
     public function setRootFolder($value)
@@ -238,7 +236,7 @@ class Partner
     // boolean # Show Partner users a simplified home page built from this Partner's Channels.
     public function getShowPartnerChannelHomePage()
     {
-        return @$this->attributes['show_partner_channel_home_page'];
+        return isset($this->attributes['show_partner_channel_home_page']) ? $this->attributes['show_partner_channel_home_page'] : null;
     }
 
     public function setShowPartnerChannelHomePage($value)
@@ -248,7 +246,7 @@ class Partner
     // string # Comma-separated list of Tags for this Partner. Tags are used for other features, such as UserLifecycleRules, which can target specific tags.  Tags must only contain lowercase letters, numbers, and hyphens.
     public function getTags()
     {
-        return @$this->attributes['tags'];
+        return isset($this->attributes['tags']) ? $this->attributes['tags'] : null;
     }
 
     public function setTags($value)
@@ -258,7 +256,7 @@ class Partner
     // array(int64) # Array of User IDs that belong to this Partner.
     public function getUserIds()
     {
-        return @$this->attributes['user_ids'];
+        return isset($this->attributes['user_ids']) ? $this->attributes['user_ids'] : null;
     }
 
     public function setUserIds($value)
@@ -289,7 +287,7 @@ class Partner
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -297,47 +295,47 @@ class Partner
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (@$params['ai_assistant_personality_id'] && !is_int(@$params['ai_assistant_personality_id'])) {
+        if (!empty($params['ai_assistant_personality_id']) && !is_int($params['ai_assistant_personality_id'])) {
             throw new \Files\Exception\InvalidParameterException('$ai_assistant_personality_id must be of type int; received ' . gettype(@$params['ai_assistant_personality_id']));
         }
 
-        if (@$params['allowed_ips'] && !is_string(@$params['allowed_ips'])) {
+        if (!empty($params['allowed_ips']) && !is_string($params['allowed_ips'])) {
             throw new \Files\Exception\InvalidParameterException('$allowed_ips must be of type string; received ' . gettype(@$params['allowed_ips']));
         }
 
-        if (@$params['notes'] && !is_string(@$params['notes'])) {
+        if (!empty($params['notes']) && !is_string($params['notes'])) {
             throw new \Files\Exception\InvalidParameterException('$notes must be of type string; received ' . gettype(@$params['notes']));
         }
 
-        if (@$params['partner_channel_template_id'] && !is_int(@$params['partner_channel_template_id'])) {
+        if (!empty($params['partner_channel_template_id']) && !is_int($params['partner_channel_template_id'])) {
             throw new \Files\Exception\InvalidParameterException('$partner_channel_template_id must be of type int; received ' . gettype(@$params['partner_channel_template_id']));
         }
 
-        if (@$params['responsible_group_id'] && !is_int(@$params['responsible_group_id'])) {
+        if (!empty($params['responsible_group_id']) && !is_int($params['responsible_group_id'])) {
             throw new \Files\Exception\InvalidParameterException('$responsible_group_id must be of type int; received ' . gettype(@$params['responsible_group_id']));
         }
 
-        if (@$params['responsible_user_id'] && !is_int(@$params['responsible_user_id'])) {
+        if (!empty($params['responsible_user_id']) && !is_int($params['responsible_user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$responsible_user_id must be of type int; received ' . gettype(@$params['responsible_user_id']));
         }
 
-        if (@$params['tags'] && !is_string(@$params['tags'])) {
+        if (!empty($params['tags']) && !is_string($params['tags'])) {
             throw new \Files\Exception\InvalidParameterException('$tags must be of type string; received ' . gettype(@$params['tags']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['partnership_role'] && !is_string(@$params['partnership_role'])) {
+        if (!empty($params['partnership_role']) && !is_string($params['partnership_role'])) {
             throw new \Files\Exception\InvalidParameterException('$partnership_role must be of type string; received ' . gettype(@$params['partnership_role']));
         }
 
-        if (@$params['root_folder'] && !is_string(@$params['root_folder'])) {
+        if (!empty($params['root_folder']) && !is_string($params['root_folder'])) {
             throw new \Files\Exception\InvalidParameterException('$root_folder must be of type string; received ' . gettype(@$params['root_folder']));
         }
 
@@ -351,7 +349,7 @@ class Partner
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -359,7 +357,7 @@ class Partner
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -394,11 +392,11 @@ class Partner
     //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `workspace_id`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -423,11 +421,11 @@ class Partner
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -459,51 +457,51 @@ class Partner
     //   workspace_id - int64 - ID of the Workspace associated with this Partner.
     public static function create($params = [], $options = [])
     {
-        if (!@$params['name']) {
+        if (empty($params['name'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: name');
         }
 
-        if (!@$params['root_folder']) {
+        if (empty($params['root_folder'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: root_folder');
         }
 
-        if (@$params['ai_assistant_personality_id'] && !is_int(@$params['ai_assistant_personality_id'])) {
+        if (!empty($params['ai_assistant_personality_id']) && !is_int($params['ai_assistant_personality_id'])) {
             throw new \Files\Exception\InvalidParameterException('$ai_assistant_personality_id must be of type int; received ' . gettype(@$params['ai_assistant_personality_id']));
         }
 
-        if (@$params['allowed_ips'] && !is_string(@$params['allowed_ips'])) {
+        if (!empty($params['allowed_ips']) && !is_string($params['allowed_ips'])) {
             throw new \Files\Exception\InvalidParameterException('$allowed_ips must be of type string; received ' . gettype(@$params['allowed_ips']));
         }
 
-        if (@$params['notes'] && !is_string(@$params['notes'])) {
+        if (!empty($params['notes']) && !is_string($params['notes'])) {
             throw new \Files\Exception\InvalidParameterException('$notes must be of type string; received ' . gettype(@$params['notes']));
         }
 
-        if (@$params['partner_channel_template_id'] && !is_int(@$params['partner_channel_template_id'])) {
+        if (!empty($params['partner_channel_template_id']) && !is_int($params['partner_channel_template_id'])) {
             throw new \Files\Exception\InvalidParameterException('$partner_channel_template_id must be of type int; received ' . gettype(@$params['partner_channel_template_id']));
         }
 
-        if (@$params['responsible_group_id'] && !is_int(@$params['responsible_group_id'])) {
+        if (!empty($params['responsible_group_id']) && !is_int($params['responsible_group_id'])) {
             throw new \Files\Exception\InvalidParameterException('$responsible_group_id must be of type int; received ' . gettype(@$params['responsible_group_id']));
         }
 
-        if (@$params['responsible_user_id'] && !is_int(@$params['responsible_user_id'])) {
+        if (!empty($params['responsible_user_id']) && !is_int($params['responsible_user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$responsible_user_id must be of type int; received ' . gettype(@$params['responsible_user_id']));
         }
 
-        if (@$params['tags'] && !is_string(@$params['tags'])) {
+        if (!empty($params['tags']) && !is_string($params['tags'])) {
             throw new \Files\Exception\InvalidParameterException('$tags must be of type string; received ' . gettype(@$params['tags']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['root_folder'] && !is_string(@$params['root_folder'])) {
+        if (!empty($params['root_folder']) && !is_string($params['root_folder'])) {
             throw new \Files\Exception\InvalidParameterException('$root_folder must be of type string; received ' . gettype(@$params['root_folder']));
         }
 
-        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 

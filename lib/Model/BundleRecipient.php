@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class BundleRecipient
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class BundleRecipient
     // string # The recipient's company.
     public function getCompany()
     {
-        return @$this->attributes['company'];
+        return isset($this->attributes['company']) ? $this->attributes['company'] : null;
     }
 
     public function setCompany($value)
@@ -68,7 +66,7 @@ class BundleRecipient
     // string # The recipient's name.
     public function getName()
     {
-        return @$this->attributes['name'];
+        return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
 
     public function setName($value)
@@ -78,7 +76,7 @@ class BundleRecipient
     // string # A note sent to the recipient with the bundle.
     public function getNote()
     {
-        return @$this->attributes['note'];
+        return isset($this->attributes['note']) ? $this->attributes['note'] : null;
     }
 
     public function setNote($value)
@@ -88,7 +86,7 @@ class BundleRecipient
     // string # The recipient's email address.
     public function getRecipient()
     {
-        return @$this->attributes['recipient'];
+        return isset($this->attributes['recipient']) ? $this->attributes['recipient'] : null;
     }
 
     public function setRecipient($value)
@@ -98,7 +96,7 @@ class BundleRecipient
     // date-time # When the Bundle was shared with this recipient.
     public function getSentAt()
     {
-        return @$this->attributes['sent_at'];
+        return isset($this->attributes['sent_at']) ? $this->attributes['sent_at'] : null;
     }
 
     public function setSentAt($value)
@@ -108,7 +106,7 @@ class BundleRecipient
     // int64 # Workspace ID. `0` means the default workspace.
     public function getWorkspaceId()
     {
-        return @$this->attributes['workspace_id'];
+        return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
 
     public function setWorkspaceId($value)
@@ -118,7 +116,7 @@ class BundleRecipient
     // int64 # User ID.  Provide a value of `0` to operate the current session's user.
     public function getUserId()
     {
-        return @$this->attributes['user_id'];
+        return isset($this->attributes['user_id']) ? $this->attributes['user_id'] : null;
     }
 
     public function setUserId($value)
@@ -128,7 +126,7 @@ class BundleRecipient
     // int64 # Bundle to share.
     public function getBundleId()
     {
-        return @$this->attributes['bundle_id'];
+        return isset($this->attributes['bundle_id']) ? $this->attributes['bundle_id'] : null;
     }
 
     public function setBundleId($value)
@@ -138,7 +136,7 @@ class BundleRecipient
     // boolean # Set to true to share the link with the recipient upon creation.
     public function getShareAfterCreate()
     {
-        return @$this->attributes['share_after_create'];
+        return isset($this->attributes['share_after_create']) ? $this->attributes['share_after_create'] : null;
     }
 
     public function setShareAfterCreate($value)
@@ -167,23 +165,23 @@ class BundleRecipient
     //   bundle_id (required) - int64 - List recipients for the bundle with this ID.
     public static function all($params = [], $options = [])
     {
-        if (!@$params['bundle_id']) {
+        if (empty($params['bundle_id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: bundle_id');
         }
 
-        if (@$params['user_id'] && !is_int(@$params['user_id'])) {
+        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
-        if (@$params['bundle_id'] && !is_int(@$params['bundle_id'])) {
+        if (!empty($params['bundle_id']) && !is_int($params['bundle_id'])) {
             throw new \Files\Exception\InvalidParameterException('$bundle_id must be of type int; received ' . gettype(@$params['bundle_id']));
         }
 
@@ -208,35 +206,35 @@ class BundleRecipient
     //   share_after_create - boolean - Set to true to share the link with the recipient upon creation.
     public static function create($params = [], $options = [])
     {
-        if (!@$params['bundle_id']) {
+        if (empty($params['bundle_id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: bundle_id');
         }
 
-        if (!@$params['recipient']) {
+        if (empty($params['recipient'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: recipient');
         }
 
-        if (@$params['user_id'] && !is_int(@$params['user_id'])) {
+        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (@$params['bundle_id'] && !is_int(@$params['bundle_id'])) {
+        if (!empty($params['bundle_id']) && !is_int($params['bundle_id'])) {
             throw new \Files\Exception\InvalidParameterException('$bundle_id must be of type int; received ' . gettype(@$params['bundle_id']));
         }
 
-        if (@$params['recipient'] && !is_string(@$params['recipient'])) {
+        if (!empty($params['recipient']) && !is_string($params['recipient'])) {
             throw new \Files\Exception\InvalidParameterException('$recipient must be of type string; received ' . gettype(@$params['recipient']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['company'] && !is_string(@$params['company'])) {
+        if (!empty($params['company']) && !is_string($params['company'])) {
             throw new \Files\Exception\InvalidParameterException('$company must be of type string; received ' . gettype(@$params['company']));
         }
 
-        if (@$params['note'] && !is_string(@$params['note'])) {
+        if (!empty($params['note']) && !is_string($params['note'])) {
             throw new \Files\Exception\InvalidParameterException('$note must be of type string; received ' . gettype(@$params['note']));
         }
 

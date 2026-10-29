@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class CustomDomain
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class CustomDomain
     // int64 # Custom Domain ID.
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
     public function setId($value)
@@ -68,7 +66,7 @@ class CustomDomain
     // int64 # Workspace ID (0 for the default workspace).
     public function getWorkspaceId()
     {
-        return @$this->attributes['workspace_id'];
+        return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
 
     public function setWorkspaceId($value)
@@ -78,7 +76,7 @@ class CustomDomain
     // boolean # Allow all workspaces to use this default-workspace Custom Domain.
     public function getAvailableToAllWorkspaces()
     {
-        return @$this->attributes['available_to_all_workspaces'];
+        return isset($this->attributes['available_to_all_workspaces']) ? $this->attributes['available_to_all_workspaces'] : null;
     }
 
     public function setAvailableToAllWorkspaces($value)
@@ -88,7 +86,7 @@ class CustomDomain
     // array(string) # Eligible public IP addresses for Remote Server outbound connections. Empty when this Custom Domain is not eligible for outbound selection.
     public function getOutboundIpAddresses()
     {
-        return @$this->attributes['outbound_ip_addresses'];
+        return isset($this->attributes['outbound_ip_addresses']) ? $this->attributes['outbound_ip_addresses'] : null;
     }
 
     public function setOutboundIpAddresses($value)
@@ -98,7 +96,7 @@ class CustomDomain
     // string # Customer-owned domain name.
     public function getDomain()
     {
-        return @$this->attributes['domain'];
+        return isset($this->attributes['domain']) ? $this->attributes['domain'] : null;
     }
 
     public function setDomain($value)
@@ -108,7 +106,7 @@ class CustomDomain
     // string # Where this custom domain routes. Can be `site_alias`, `public_hosting`, `s3_endpoint`, or `unassigned` (not routing traffic). Set to `unassigned` automatically when a bound `public_hosting` folder behavior is deleted, and can be set manually via the API for any reason.
     public function getDestination()
     {
-        return @$this->attributes['destination'];
+        return isset($this->attributes['destination']) ? $this->attributes['destination'] : null;
     }
 
     public function setDestination($value)
@@ -118,7 +116,7 @@ class CustomDomain
     // string # Current DNS verification status.
     public function getDnsStatus()
     {
-        return @$this->attributes['dns_status'];
+        return isset($this->attributes['dns_status']) ? $this->attributes['dns_status'] : null;
     }
 
     public function setDnsStatus($value)
@@ -128,7 +126,7 @@ class CustomDomain
     // int64 # Current SSL certificate ID.
     public function getSslCertificateId()
     {
-        return @$this->attributes['ssl_certificate_id'];
+        return isset($this->attributes['ssl_certificate_id']) ? $this->attributes['ssl_certificate_id'] : null;
     }
 
     public function setSslCertificateId($value)
@@ -138,7 +136,7 @@ class CustomDomain
     // boolean # Is this domain's SSL certificate automatically managed and renewed by Files.com?
     public function getBrickManaged()
     {
-        return @$this->attributes['brick_managed'];
+        return isset($this->attributes['brick_managed']) ? $this->attributes['brick_managed'] : null;
     }
 
     public function setBrickManaged($value)
@@ -148,7 +146,7 @@ class CustomDomain
     // int64 # Public Hosting behavior ID when this domain routes to a specific Public Hosting behavior.  Preserved as historical context when `destination` becomes `unassigned`.
     public function getFolderBehaviorId()
     {
-        return @$this->attributes['folder_behavior_id'];
+        return isset($this->attributes['folder_behavior_id']) ? $this->attributes['folder_behavior_id'] : null;
     }
 
     public function setFolderBehaviorId($value)
@@ -158,7 +156,7 @@ class CustomDomain
     // array(string) # Dedicated public IP addresses allocated to this Custom Domain.
     public function getIpAddresses()
     {
-        return @$this->attributes['ip_addresses'];
+        return isset($this->attributes['ip_addresses']) ? $this->attributes['ip_addresses'] : null;
     }
 
     public function setIpAddresses($value)
@@ -168,12 +166,12 @@ class CustomDomain
     // date-time # When this Custom Domain was created.
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
     // date-time # When this Custom Domain was last updated.
     public function getUpdatedAt()
     {
-        return @$this->attributes['updated_at'];
+        return isset($this->attributes['updated_at']) ? $this->attributes['updated_at'] : null;
     }
 
     // Parameters:
@@ -189,7 +187,7 @@ class CustomDomain
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -197,27 +195,27 @@ class CustomDomain
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
-        if (@$params['destination'] && !is_string(@$params['destination'])) {
+        if (!empty($params['destination']) && !is_string($params['destination'])) {
             throw new \Files\Exception\InvalidParameterException('$destination must be of type string; received ' . gettype(@$params['destination']));
         }
 
-        if (@$params['folder_behavior_id'] && !is_int(@$params['folder_behavior_id'])) {
+        if (!empty($params['folder_behavior_id']) && !is_int($params['folder_behavior_id'])) {
             throw new \Files\Exception\InvalidParameterException('$folder_behavior_id must be of type int; received ' . gettype(@$params['folder_behavior_id']));
         }
 
-        if (@$params['ssl_certificate_id'] && !is_int(@$params['ssl_certificate_id'])) {
+        if (!empty($params['ssl_certificate_id']) && !is_int($params['ssl_certificate_id'])) {
             throw new \Files\Exception\InvalidParameterException('$ssl_certificate_id must be of type int; received ' . gettype(@$params['ssl_certificate_id']));
         }
 
-        if (@$params['domain'] && !is_string(@$params['domain'])) {
+        if (!empty($params['domain']) && !is_string($params['domain'])) {
             throw new \Files\Exception\InvalidParameterException('$domain must be of type string; received ' . gettype(@$params['domain']));
         }
 
@@ -231,7 +229,7 @@ class CustomDomain
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -239,7 +237,7 @@ class CustomDomain
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -274,11 +272,11 @@ class CustomDomain
     //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `workspace_id`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -303,11 +301,11 @@ class CustomDomain
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -331,19 +329,19 @@ class CustomDomain
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (!@$params['count']) {
+        if (empty($params['count'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: count');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (@$params['count'] && !is_int(@$params['count'])) {
+        if (!empty($params['count']) && !is_int($params['count'])) {
             throw new \Files\Exception\InvalidParameterException('$count must be of type int; received ' . gettype(@$params['count']));
         }
 
@@ -361,27 +359,27 @@ class CustomDomain
     //   domain (required) - string - Customer-owned domain name.
     public static function create($params = [], $options = [])
     {
-        if (!@$params['domain']) {
+        if (empty($params['domain'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: domain');
         }
 
-        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
-        if (@$params['destination'] && !is_string(@$params['destination'])) {
+        if (!empty($params['destination']) && !is_string($params['destination'])) {
             throw new \Files\Exception\InvalidParameterException('$destination must be of type string; received ' . gettype(@$params['destination']));
         }
 
-        if (@$params['folder_behavior_id'] && !is_int(@$params['folder_behavior_id'])) {
+        if (!empty($params['folder_behavior_id']) && !is_int($params['folder_behavior_id'])) {
             throw new \Files\Exception\InvalidParameterException('$folder_behavior_id must be of type int; received ' . gettype(@$params['folder_behavior_id']));
         }
 
-        if (@$params['ssl_certificate_id'] && !is_int(@$params['ssl_certificate_id'])) {
+        if (!empty($params['ssl_certificate_id']) && !is_int($params['ssl_certificate_id'])) {
             throw new \Files\Exception\InvalidParameterException('$ssl_certificate_id must be of type int; received ' . gettype(@$params['ssl_certificate_id']));
         }
 
-        if (@$params['domain'] && !is_string(@$params['domain'])) {
+        if (!empty($params['domain']) && !is_string($params['domain'])) {
             throw new \Files\Exception\InvalidParameterException('$domain must be of type string; received ' . gettype(@$params['domain']));
         }
 

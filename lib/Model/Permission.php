@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class Permission
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class Permission
     // int64 # Permission ID
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
     public function setId($value)
@@ -68,7 +66,7 @@ class Permission
     // string # Folder path. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
     public function getPath()
     {
-        return @$this->attributes['path'];
+        return isset($this->attributes['path']) ? $this->attributes['path'] : null;
     }
 
     public function setPath($value)
@@ -78,7 +76,7 @@ class Permission
     // int64 # User ID
     public function getUserId()
     {
-        return @$this->attributes['user_id'];
+        return isset($this->attributes['user_id']) ? $this->attributes['user_id'] : null;
     }
 
     public function setUserId($value)
@@ -88,7 +86,7 @@ class Permission
     // string # Username (if applicable)
     public function getUsername()
     {
-        return @$this->attributes['username'];
+        return isset($this->attributes['username']) ? $this->attributes['username'] : null;
     }
 
     public function setUsername($value)
@@ -98,7 +96,7 @@ class Permission
     // int64 # Group ID
     public function getGroupId()
     {
-        return @$this->attributes['group_id'];
+        return isset($this->attributes['group_id']) ? $this->attributes['group_id'] : null;
     }
 
     public function setGroupId($value)
@@ -108,7 +106,7 @@ class Permission
     // string # Group name (if applicable)
     public function getGroupName()
     {
-        return @$this->attributes['group_name'];
+        return isset($this->attributes['group_name']) ? $this->attributes['group_name'] : null;
     }
 
     public function setGroupName($value)
@@ -118,7 +116,7 @@ class Permission
     // array(int64) # Group IDs when this Permission requires membership in every listed group.
     public function getGroupIds()
     {
-        return @$this->attributes['group_ids'];
+        return isset($this->attributes['group_ids']) ? $this->attributes['group_ids'] : null;
     }
 
     public function setGroupIds($value)
@@ -128,7 +126,7 @@ class Permission
     // array(string) # Group names when this permission requires multiple groups
     public function getGroupNames()
     {
-        return @$this->attributes['group_names'];
+        return isset($this->attributes['group_names']) ? $this->attributes['group_names'] : null;
     }
 
     public function setGroupNames($value)
@@ -138,7 +136,7 @@ class Permission
     // int64 # Partner ID (if applicable)
     public function getPartnerId()
     {
-        return @$this->attributes['partner_id'];
+        return isset($this->attributes['partner_id']) ? $this->attributes['partner_id'] : null;
     }
 
     public function setPartnerId($value)
@@ -148,7 +146,7 @@ class Permission
     // string # Partner name (if applicable)
     public function getPartnerName()
     {
-        return @$this->attributes['partner_name'];
+        return isset($this->attributes['partner_name']) ? $this->attributes['partner_name'] : null;
     }
 
     public function setPartnerName($value)
@@ -158,7 +156,7 @@ class Permission
     // string # Permission type.  See the table referenced in the documentation for an explanation of each permission.
     public function getPermission()
     {
-        return @$this->attributes['permission'];
+        return isset($this->attributes['permission']) ? $this->attributes['permission'] : null;
     }
 
     public function setPermission($value)
@@ -168,7 +166,7 @@ class Permission
     // boolean # Whether this Permission applies to subfolders. Must be true for `admin` Permissions.
     public function getRecursive()
     {
-        return @$this->attributes['recursive'];
+        return isset($this->attributes['recursive']) ? $this->attributes['recursive'] : null;
     }
 
     public function setRecursive($value)
@@ -178,7 +176,7 @@ class Permission
     // int64 # Site ID
     public function getSiteId()
     {
-        return @$this->attributes['site_id'];
+        return isset($this->attributes['site_id']) ? $this->attributes['site_id'] : null;
     }
 
     public function setSiteId($value)
@@ -192,7 +190,7 @@ class Permission
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -200,7 +198,7 @@ class Permission
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -239,27 +237,27 @@ class Permission
     //   user_id - string
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
-        if (@$params['path'] && !is_string(@$params['path'])) {
+        if (!empty($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (@$params['group_id'] && !is_string(@$params['group_id'])) {
+        if (!empty($params['group_id']) && !is_string($params['group_id'])) {
             throw new \Files\Exception\InvalidParameterException('$group_id must be of type string; received ' . gettype(@$params['group_id']));
         }
 
-        if (@$params['partner_id'] && !is_string(@$params['partner_id'])) {
+        if (!empty($params['partner_id']) && !is_string($params['partner_id'])) {
             throw new \Files\Exception\InvalidParameterException('$partner_id must be of type string; received ' . gettype(@$params['partner_id']));
         }
 
-        if (@$params['user_id'] && !is_string(@$params['user_id'])) {
+        if (!empty($params['user_id']) && !is_string($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type string; received ' . gettype(@$params['user_id']));
         }
 
@@ -287,43 +285,43 @@ class Permission
     //   site_id - int64 - Site ID. If not provided, will default to current site. Used when creating a permission for a child site.
     public static function create($params = [], $options = [])
     {
-        if (!@$params['path']) {
+        if (empty($params['path'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: path');
         }
 
-        if (@$params['path'] && !is_string(@$params['path'])) {
+        if (!empty($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (@$params['group_id'] && !is_int(@$params['group_id'])) {
+        if (!empty($params['group_id']) && !is_int($params['group_id'])) {
             throw new \Files\Exception\InvalidParameterException('$group_id must be of type int; received ' . gettype(@$params['group_id']));
         }
 
-        if (@$params['group_ids'] && !is_string(@$params['group_ids'])) {
+        if (!empty($params['group_ids']) && !is_string($params['group_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$group_ids must be of type string; received ' . gettype(@$params['group_ids']));
         }
 
-        if (@$params['permission'] && !is_string(@$params['permission'])) {
+        if (!empty($params['permission']) && !is_string($params['permission'])) {
             throw new \Files\Exception\InvalidParameterException('$permission must be of type string; received ' . gettype(@$params['permission']));
         }
 
-        if (@$params['partner_id'] && !is_int(@$params['partner_id'])) {
+        if (!empty($params['partner_id']) && !is_int($params['partner_id'])) {
             throw new \Files\Exception\InvalidParameterException('$partner_id must be of type int; received ' . gettype(@$params['partner_id']));
         }
 
-        if (@$params['user_id'] && !is_int(@$params['user_id'])) {
+        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (@$params['username'] && !is_string(@$params['username'])) {
+        if (!empty($params['username']) && !is_string($params['username'])) {
             throw new \Files\Exception\InvalidParameterException('$username must be of type string; received ' . gettype(@$params['username']));
         }
 
-        if (@$params['group_name'] && !is_string(@$params['group_name'])) {
+        if (!empty($params['group_name']) && !is_string($params['group_name'])) {
             throw new \Files\Exception\InvalidParameterException('$group_name must be of type string; received ' . gettype(@$params['group_name']));
         }
 
-        if (@$params['site_id'] && !is_int(@$params['site_id'])) {
+        if (!empty($params['site_id']) && !is_int($params['site_id'])) {
             throw new \Files\Exception\InvalidParameterException('$site_id must be of type int; received ' . gettype(@$params['site_id']));
         }
 

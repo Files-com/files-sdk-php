@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class WebDavActionLog
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,92 +56,92 @@ class WebDavActionLog
     // date-time # Start Time of Action. Deprecrated: Use created_at.
     public function getTimestamp()
     {
-        return @$this->attributes['timestamp'];
+        return isset($this->attributes['timestamp']) ? $this->attributes['timestamp'] : null;
     }
     // string # IP Address of WebDAV Client
     public function getRemoteIp()
     {
-        return @$this->attributes['remote_ip'];
+        return isset($this->attributes['remote_ip']) ? $this->attributes['remote_ip'] : null;
     }
     // string # IP Address of WebDAV Server
     public function getServerIp()
     {
-        return @$this->attributes['server_ip'];
+        return isset($this->attributes['server_ip']) ? $this->attributes['server_ip'] : null;
     }
     // string # Username
     public function getUsername()
     {
-        return @$this->attributes['username'];
+        return isset($this->attributes['username']) ? $this->attributes['username'] : null;
     }
     // string # Authentication Ciphers
     public function getAuthCiphers()
     {
-        return @$this->attributes['auth_ciphers'];
+        return isset($this->attributes['auth_ciphers']) ? $this->attributes['auth_ciphers'] : null;
     }
     // string # Action Type
     public function getActionType()
     {
-        return @$this->attributes['action_type'];
+        return isset($this->attributes['action_type']) ? $this->attributes['action_type'] : null;
     }
     // string # Path as sent by the Client (may not match Files.com path due to user root folders for WebDAV). This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
     public function getPath()
     {
-        return @$this->attributes['path'];
+        return isset($this->attributes['path']) ? $this->attributes['path'] : null;
     }
     // string # Path on Files.com
     public function getTruePath()
     {
-        return @$this->attributes['true_path'];
+        return isset($this->attributes['true_path']) ? $this->attributes['true_path'] : null;
     }
     // string # Name of File
     public function getName()
     {
-        return @$this->attributes['name'];
+        return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
     // string # Method of the HTTP call.
     public function getHttpMethod()
     {
-        return @$this->attributes['http_method'];
+        return isset($this->attributes['http_method']) ? $this->attributes['http_method'] : null;
     }
     // string # Path of the HTTP call.
     public function getHttpPath()
     {
-        return @$this->attributes['http_path'];
+        return isset($this->attributes['http_path']) ? $this->attributes['http_path'] : null;
     }
     // int64 # HTTP Response Code returned to the WebDAV Client.
     public function getHttpResponseCode()
     {
-        return @$this->attributes['http_response_code'];
+        return isset($this->attributes['http_response_code']) ? $this->attributes['http_response_code'] : null;
     }
     // int64 # Size of File That was Uploaded or Downloaded.
     public function getSize()
     {
-        return @$this->attributes['size'];
+        return isset($this->attributes['size']) ? $this->attributes['size'] : null;
     }
     // int64 # Number of entries returned when listing files and folders
     public function getEntriesReturned()
     {
-        return @$this->attributes['entries_returned'];
+        return isset($this->attributes['entries_returned']) ? $this->attributes['entries_returned'] : null;
     }
     // boolean # Whether WebDAV Action was successful.
     public function getSuccess()
     {
-        return @$this->attributes['success'];
+        return isset($this->attributes['success']) ? $this->attributes['success'] : null;
     }
     // string # WebDAV Action status.
     public function getStatus()
     {
-        return @$this->attributes['status'];
+        return isset($this->attributes['status']) ? $this->attributes['status'] : null;
     }
     // int64 # Duration (in milliseconds)
     public function getDurationMs()
     {
-        return @$this->attributes['duration_ms'];
+        return isset($this->attributes['duration_ms']) ? $this->attributes['duration_ms'] : null;
     }
     // date-time # Start Time of Action
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
 
     // Parameters:
@@ -157,11 +155,11 @@ class WebDavActionLog
     //   filter_lteq - object - If set, return records where the specified field is less than or equal the supplied value. Valid fields are `created_at`. Valid field combinations are `[ path ]`, `[ true_path ]`, `[ remote_ip ]`, `[ success ]`, `[ status ]`, `[ action_type ]`, `[ username ]`, `[ created_at ]`, `[ path, true_path ]`, `[ path, remote_ip ]`, `[ path, success ]`, `[ path, status ]`, `[ path, action_type ]`, `[ path, username ]`, `[ path, created_at ]`, `[ true_path, remote_ip ]`, `[ true_path, success ]`, `[ true_path, status ]`, `[ true_path, action_type ]`, `[ true_path, username ]`, `[ true_path, created_at ]`, `[ remote_ip, success ]`, `[ remote_ip, status ]`, `[ remote_ip, action_type ]`, `[ remote_ip, username ]`, `[ remote_ip, created_at ]`, `[ success, status ]`, `[ success, action_type ]`, `[ success, username ]`, `[ success, created_at ]`, `[ status, action_type ]`, `[ status, username ]`, `[ status, created_at ]`, `[ action_type, username ]`, `[ action_type, created_at ]`, `[ username, created_at ]`, `[ path, true_path, remote_ip ]`, `[ path, true_path, success ]`, `[ path, true_path, status ]`, `[ path, true_path, action_type ]`, `[ path, true_path, username ]`, `[ path, true_path, created_at ]`, `[ path, remote_ip, success ]`, `[ path, remote_ip, status ]`, `[ path, remote_ip, action_type ]`, `[ path, remote_ip, username ]`, `[ path, remote_ip, created_at ]`, `[ path, success, status ]`, `[ path, success, action_type ]`, `[ path, success, username ]`, `[ path, success, created_at ]`, `[ path, status, action_type ]`, `[ path, status, username ]`, `[ path, status, created_at ]`, `[ path, action_type, username ]`, `[ path, action_type, created_at ]`, `[ path, username, created_at ]`, `[ true_path, remote_ip, success ]`, `[ true_path, remote_ip, status ]`, `[ true_path, remote_ip, action_type ]`, `[ true_path, remote_ip, username ]`, `[ true_path, remote_ip, created_at ]`, `[ true_path, success, status ]`, `[ true_path, success, action_type ]`, `[ true_path, success, username ]`, `[ true_path, success, created_at ]`, `[ true_path, status, action_type ]`, `[ true_path, status, username ]`, `[ true_path, status, created_at ]`, `[ true_path, action_type, username ]`, `[ true_path, action_type, created_at ]`, `[ true_path, username, created_at ]`, `[ remote_ip, success, status ]`, `[ remote_ip, success, action_type ]`, `[ remote_ip, success, username ]`, `[ remote_ip, success, created_at ]`, `[ remote_ip, status, action_type ]`, `[ remote_ip, status, username ]`, `[ remote_ip, status, created_at ]`, `[ remote_ip, action_type, username ]`, `[ remote_ip, action_type, created_at ]`, `[ remote_ip, username, created_at ]`, `[ success, status, action_type ]`, `[ success, status, username ]`, `[ success, status, created_at ]`, `[ success, action_type, username ]`, `[ success, action_type, created_at ]`, `[ success, username, created_at ]`, `[ status, action_type, username ]`, `[ status, action_type, created_at ]`, `[ status, username, created_at ]`, `[ action_type, username, created_at ]`, `[ path, true_path, remote_ip, success ]`, `[ path, true_path, remote_ip, status ]`, `[ path, true_path, remote_ip, action_type ]`, `[ path, true_path, remote_ip, username ]`, `[ path, true_path, remote_ip, created_at ]`, `[ path, true_path, success, status ]`, `[ path, true_path, success, action_type ]`, `[ path, true_path, success, username ]`, `[ path, true_path, success, created_at ]`, `[ path, true_path, status, action_type ]`, `[ path, true_path, status, username ]`, `[ path, true_path, status, created_at ]`, `[ path, true_path, action_type, username ]`, `[ path, true_path, action_type, created_at ]`, `[ path, true_path, username, created_at ]`, `[ path, remote_ip, success, status ]`, `[ path, remote_ip, success, action_type ]`, `[ path, remote_ip, success, username ]`, `[ path, remote_ip, success, created_at ]`, `[ path, remote_ip, status, action_type ]`, `[ path, remote_ip, status, username ]`, `[ path, remote_ip, status, created_at ]`, `[ path, remote_ip, action_type, username ]`, `[ path, remote_ip, action_type, created_at ]`, `[ path, remote_ip, username, created_at ]`, `[ path, success, status, action_type ]`, `[ path, success, status, username ]`, `[ path, success, status, created_at ]`, `[ path, success, action_type, username ]`, `[ path, success, action_type, created_at ]`, `[ path, success, username, created_at ]`, `[ path, status, action_type, username ]`, `[ path, status, action_type, created_at ]`, `[ path, status, username, created_at ]`, `[ path, action_type, username, created_at ]`, `[ true_path, remote_ip, success, status ]`, `[ true_path, remote_ip, success, action_type ]`, `[ true_path, remote_ip, success, username ]`, `[ true_path, remote_ip, success, created_at ]`, `[ true_path, remote_ip, status, action_type ]`, `[ true_path, remote_ip, status, username ]`, `[ true_path, remote_ip, status, created_at ]`, `[ true_path, remote_ip, action_type, username ]`, `[ true_path, remote_ip, action_type, created_at ]`, `[ true_path, remote_ip, username, created_at ]`, `[ true_path, success, status, action_type ]`, `[ true_path, success, status, username ]`, `[ true_path, success, status, created_at ]`, `[ true_path, success, action_type, username ]`, `[ true_path, success, action_type, created_at ]`, `[ true_path, success, username, created_at ]`, `[ true_path, status, action_type, username ]`, `[ true_path, status, action_type, created_at ]`, `[ true_path, status, username, created_at ]`, `[ true_path, action_type, username, created_at ]`, `[ remote_ip, success, status, action_type ]`, `[ remote_ip, success, status, username ]`, `[ remote_ip, success, status, created_at ]`, `[ remote_ip, success, action_type, username ]`, `[ remote_ip, success, action_type, created_at ]`, `[ remote_ip, success, username, created_at ]`, `[ remote_ip, status, action_type, username ]`, `[ remote_ip, status, action_type, created_at ]`, `[ remote_ip, status, username, created_at ]`, `[ remote_ip, action_type, username, created_at ]`, `[ success, status, action_type, username ]`, `[ success, status, action_type, created_at ]`, `[ success, status, username, created_at ]`, `[ success, action_type, username, created_at ]`, `[ status, action_type, username, created_at ]`, `[ path, true_path, remote_ip, success, status ]`, `[ path, true_path, remote_ip, success, action_type ]`, `[ path, true_path, remote_ip, success, username ]`, `[ path, true_path, remote_ip, success, created_at ]`, `[ path, true_path, remote_ip, status, action_type ]`, `[ path, true_path, remote_ip, status, username ]`, `[ path, true_path, remote_ip, status, created_at ]`, `[ path, true_path, remote_ip, action_type, username ]`, `[ path, true_path, remote_ip, action_type, created_at ]`, `[ path, true_path, remote_ip, username, created_at ]`, `[ path, true_path, success, status, action_type ]`, `[ path, true_path, success, status, username ]`, `[ path, true_path, success, status, created_at ]`, `[ path, true_path, success, action_type, username ]`, `[ path, true_path, success, action_type, created_at ]`, `[ path, true_path, success, username, created_at ]`, `[ path, true_path, status, action_type, username ]`, `[ path, true_path, status, action_type, created_at ]`, `[ path, true_path, status, username, created_at ]`, `[ path, true_path, action_type, username, created_at ]`, `[ path, remote_ip, success, status, action_type ]`, `[ path, remote_ip, success, status, username ]`, `[ path, remote_ip, success, status, created_at ]`, `[ path, remote_ip, success, action_type, username ]`, `[ path, remote_ip, success, action_type, created_at ]`, `[ path, remote_ip, success, username, created_at ]`, `[ path, remote_ip, status, action_type, username ]`, `[ path, remote_ip, status, action_type, created_at ]`, `[ path, remote_ip, status, username, created_at ]`, `[ path, remote_ip, action_type, username, created_at ]`, `[ path, success, status, action_type, username ]`, `[ path, success, status, action_type, created_at ]`, `[ path, success, status, username, created_at ]`, `[ path, success, action_type, username, created_at ]`, `[ path, status, action_type, username, created_at ]`, `[ true_path, remote_ip, success, status, action_type ]`, `[ true_path, remote_ip, success, status, username ]`, `[ true_path, remote_ip, success, status, created_at ]`, `[ true_path, remote_ip, success, action_type, username ]`, `[ true_path, remote_ip, success, action_type, created_at ]`, `[ true_path, remote_ip, success, username, created_at ]`, `[ true_path, remote_ip, status, action_type, username ]`, `[ true_path, remote_ip, status, action_type, created_at ]`, `[ true_path, remote_ip, status, username, created_at ]`, `[ true_path, remote_ip, action_type, username, created_at ]`, `[ true_path, success, status, action_type, username ]`, `[ true_path, success, status, action_type, created_at ]`, `[ true_path, success, status, username, created_at ]`, `[ true_path, success, action_type, username, created_at ]`, `[ true_path, status, action_type, username, created_at ]`, `[ remote_ip, success, status, action_type, username ]`, `[ remote_ip, success, status, action_type, created_at ]`, `[ remote_ip, success, status, username, created_at ]`, `[ remote_ip, success, action_type, username, created_at ]`, `[ remote_ip, status, action_type, username, created_at ]`, `[ success, status, action_type, username, created_at ]`, `[ path, true_path, remote_ip, success, status, action_type ]`, `[ path, true_path, remote_ip, success, status, username ]`, `[ path, true_path, remote_ip, success, status, created_at ]`, `[ path, true_path, remote_ip, success, action_type, username ]`, `[ path, true_path, remote_ip, success, action_type, created_at ]`, `[ path, true_path, remote_ip, success, username, created_at ]`, `[ path, true_path, remote_ip, status, action_type, username ]`, `[ path, true_path, remote_ip, status, action_type, created_at ]`, `[ path, true_path, remote_ip, status, username, created_at ]`, `[ path, true_path, remote_ip, action_type, username, created_at ]`, `[ path, true_path, success, status, action_type, username ]`, `[ path, true_path, success, status, action_type, created_at ]`, `[ path, true_path, success, status, username, created_at ]`, `[ path, true_path, success, action_type, username, created_at ]`, `[ path, true_path, status, action_type, username, created_at ]`, `[ path, remote_ip, success, status, action_type, username ]`, `[ path, remote_ip, success, status, action_type, created_at ]`, `[ path, remote_ip, success, status, username, created_at ]`, `[ path, remote_ip, success, action_type, username, created_at ]`, `[ path, remote_ip, status, action_type, username, created_at ]`, `[ path, success, status, action_type, username, created_at ]`, `[ true_path, remote_ip, success, status, action_type, username ]`, `[ true_path, remote_ip, success, status, action_type, created_at ]`, `[ true_path, remote_ip, success, status, username, created_at ]`, `[ true_path, remote_ip, success, action_type, username, created_at ]`, `[ true_path, remote_ip, status, action_type, username, created_at ]`, `[ true_path, success, status, action_type, username, created_at ]`, `[ remote_ip, success, status, action_type, username, created_at ]`, `[ path, true_path, remote_ip, success, status, action_type, username ]`, `[ path, true_path, remote_ip, success, status, action_type, created_at ]`, `[ path, true_path, remote_ip, success, status, username, created_at ]`, `[ path, true_path, remote_ip, success, action_type, username, created_at ]`, `[ path, true_path, remote_ip, status, action_type, username, created_at ]`, `[ path, true_path, success, status, action_type, username, created_at ]`, `[ path, remote_ip, success, status, action_type, username, created_at ]`, `[ true_path, remote_ip, success, status, action_type, username, created_at ]` or `[ path, true_path, remote_ip, success, status, action_type, username, created_at ]`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 

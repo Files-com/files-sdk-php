@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class Bundle
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class Bundle
     // string # Bundle code.  This code forms the end part of the Public URL.
     public function getCode()
     {
-        return @$this->attributes['code'];
+        return isset($this->attributes['code']) ? $this->attributes['code'] : null;
     }
 
     public function setCode($value)
@@ -68,7 +66,7 @@ class Bundle
     // string # Page link and button color
     public function getColorLeft()
     {
-        return @$this->attributes['color_left'];
+        return isset($this->attributes['color_left']) ? $this->attributes['color_left'] : null;
     }
 
     public function setColorLeft($value)
@@ -78,7 +76,7 @@ class Bundle
     // string # Top bar link color
     public function getColorLink()
     {
-        return @$this->attributes['color_link'];
+        return isset($this->attributes['color_link']) ? $this->attributes['color_link'] : null;
     }
 
     public function setColorLink($value)
@@ -88,7 +86,7 @@ class Bundle
     // string # Page link and button color
     public function getColorText()
     {
-        return @$this->attributes['color_text'];
+        return isset($this->attributes['color_text']) ? $this->attributes['color_text'] : null;
     }
 
     public function setColorText($value)
@@ -98,7 +96,7 @@ class Bundle
     // string # Top bar background color
     public function getColorTop()
     {
-        return @$this->attributes['color_top'];
+        return isset($this->attributes['color_top']) ? $this->attributes['color_top'] : null;
     }
 
     public function setColorTop($value)
@@ -108,7 +106,7 @@ class Bundle
     // string # Top bar text color
     public function getColorTopText()
     {
-        return @$this->attributes['color_top_text'];
+        return isset($this->attributes['color_top_text']) ? $this->attributes['color_top_text'] : null;
     }
 
     public function setColorTopText($value)
@@ -118,7 +116,7 @@ class Bundle
     // string # Public URL of Share Link
     public function getUrl()
     {
-        return @$this->attributes['url'];
+        return isset($this->attributes['url']) ? $this->attributes['url'] : null;
     }
 
     public function setUrl($value)
@@ -128,7 +126,7 @@ class Bundle
     // string # Public description
     public function getDescription()
     {
-        return @$this->attributes['description'];
+        return isset($this->attributes['description']) ? $this->attributes['description'] : null;
     }
 
     public function setDescription($value)
@@ -138,7 +136,7 @@ class Bundle
     // date-time # Explicit Bundle expiration date/time. If not set, the site-wide expiration setting may apply.
     public function getExpiresAt()
     {
-        return @$this->attributes['expires_at'];
+        return isset($this->attributes['expires_at']) ? $this->attributes['expires_at'] : null;
     }
 
     public function setExpiresAt($value)
@@ -148,7 +146,7 @@ class Bundle
     // boolean # Is this bundle password protected?
     public function getPasswordProtected()
     {
-        return @$this->attributes['password_protected'];
+        return isset($this->attributes['password_protected']) ? $this->attributes['password_protected'] : null;
     }
 
     public function setPasswordProtected($value)
@@ -158,7 +156,7 @@ class Bundle
     // string # Permissions that apply to Folders in this Share Link.
     public function getPermissions()
     {
-        return @$this->attributes['permissions'];
+        return isset($this->attributes['permissions']) ? $this->attributes['permissions'] : null;
     }
 
     public function setPermissions($value)
@@ -168,7 +166,7 @@ class Bundle
     // boolean
     public function getPreviewOnly()
     {
-        return @$this->attributes['preview_only'];
+        return isset($this->attributes['preview_only']) ? $this->attributes['preview_only'] : null;
     }
 
     public function setPreviewOnly($value)
@@ -178,7 +176,7 @@ class Bundle
     // boolean # Show a registration page that captures the downloader's name and email address?
     public function getRequireRegistration()
     {
-        return @$this->attributes['require_registration'];
+        return isset($this->attributes['require_registration']) ? $this->attributes['require_registration'] : null;
     }
 
     public function setRequireRegistration($value)
@@ -188,7 +186,7 @@ class Bundle
     // boolean # Only allow access to recipients who have explicitly received the share via an email sent through the Files.com UI?
     public function getRequireShareRecipient()
     {
-        return @$this->attributes['require_share_recipient'];
+        return isset($this->attributes['require_share_recipient']) ? $this->attributes['require_share_recipient'] : null;
     }
 
     public function setRequireShareRecipient($value)
@@ -198,7 +196,7 @@ class Bundle
     // boolean # If true, we will hide the 'Remember Me' box on the Bundle registration page, requiring that the user logout and log back in every time they visit the page.
     public function getRequireLogout()
     {
-        return @$this->attributes['require_logout'];
+        return isset($this->attributes['require_logout']) ? $this->attributes['require_logout'] : null;
     }
 
     public function setRequireLogout($value)
@@ -208,7 +206,7 @@ class Bundle
     // string # Legal text that must be agreed to prior to accessing Bundle.
     public function getClickwrapBody()
     {
-        return @$this->attributes['clickwrap_body'];
+        return isset($this->attributes['clickwrap_body']) ? $this->attributes['clickwrap_body'] : null;
     }
 
     public function setClickwrapBody($value)
@@ -218,7 +216,7 @@ class Bundle
     // FormFieldSet # Custom Form to use
     public function getFormFieldSet()
     {
-        return @$this->attributes['form_field_set'];
+        return isset($this->attributes['form_field_set']) ? $this->attributes['form_field_set'] : null;
     }
 
     public function setFormFieldSet($value)
@@ -228,7 +226,7 @@ class Bundle
     // boolean # BundleRegistrations can be saved without providing name?
     public function getSkipName()
     {
-        return @$this->attributes['skip_name'];
+        return isset($this->attributes['skip_name']) ? $this->attributes['skip_name'] : null;
     }
 
     public function setSkipName($value)
@@ -238,7 +236,7 @@ class Bundle
     // boolean # BundleRegistrations can be saved without providing email?
     public function getSkipEmail()
     {
-        return @$this->attributes['skip_email'];
+        return isset($this->attributes['skip_email']) ? $this->attributes['skip_email'] : null;
     }
 
     public function setSkipEmail($value)
@@ -248,7 +246,7 @@ class Bundle
     // date-time # Date when share will start to be accessible. If `nil` access granted right after create.
     public function getStartAccessOnDate()
     {
-        return @$this->attributes['start_access_on_date'];
+        return isset($this->attributes['start_access_on_date']) ? $this->attributes['start_access_on_date'] : null;
     }
 
     public function setStartAccessOnDate($value)
@@ -258,7 +256,7 @@ class Bundle
     // boolean # BundleRegistrations can be saved without providing company?
     public function getSkipCompany()
     {
-        return @$this->attributes['skip_company'];
+        return isset($this->attributes['skip_company']) ? $this->attributes['skip_company'] : null;
     }
 
     public function setSkipCompany($value)
@@ -268,7 +266,7 @@ class Bundle
     // int64 # Bundle ID
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
     public function setId($value)
@@ -278,7 +276,7 @@ class Bundle
     // boolean # If true, this Share Link bypasses site-wide expiration rules. Only site admins may set this.
     public function getBypassesSiteExpirationRules()
     {
-        return @$this->attributes['bypasses_site_expiration_rules'];
+        return isset($this->attributes['bypasses_site_expiration_rules']) ? $this->attributes['bypasses_site_expiration_rules'] : null;
     }
 
     public function setBypassesSiteExpirationRules($value)
@@ -288,12 +286,12 @@ class Bundle
     // date-time # Bundle created at date/time
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
     // boolean # Indicates if the bundle has been deleted.
     public function getDeleted()
     {
-        return @$this->attributes['deleted'];
+        return isset($this->attributes['deleted']) ? $this->attributes['deleted'] : null;
     }
 
     public function setDeleted($value)
@@ -303,7 +301,7 @@ class Bundle
     // date-time # Bundle deleted at date/time
     public function getDeletedAt()
     {
-        return @$this->attributes['deleted_at'];
+        return isset($this->attributes['deleted_at']) ? $this->attributes['deleted_at'] : null;
     }
 
     public function setDeletedAt($value)
@@ -313,7 +311,7 @@ class Bundle
     // boolean # Do not create subfolders for files uploaded to this share. Note: there are subtle security pitfalls with allowing anonymous uploads from multiple users to live in the same folder. We strongly discourage use of this option unless absolutely required.
     public function getDontSeparateSubmissionsByFolder()
     {
-        return @$this->attributes['dont_separate_submissions_by_folder'];
+        return isset($this->attributes['dont_separate_submissions_by_folder']) ? $this->attributes['dont_separate_submissions_by_folder'] : null;
     }
 
     public function setDontSeparateSubmissionsByFolder($value)
@@ -323,7 +321,7 @@ class Bundle
     // date-time # Read-only expiration date/time, using the explicit expiration or the site-wide setting when applicable. Null when the Share Link does not expire.
     public function getEffectiveExpiresAt()
     {
-        return @$this->attributes['effective_expires_at'];
+        return isset($this->attributes['effective_expires_at']) ? $this->attributes['effective_expires_at'] : null;
     }
 
     public function setEffectiveExpiresAt($value)
@@ -333,7 +331,7 @@ class Bundle
     // int64 # Maximum number of times bundle can be accessed
     public function getMaxUses()
     {
-        return @$this->attributes['max_uses'];
+        return isset($this->attributes['max_uses']) ? $this->attributes['max_uses'] : null;
     }
 
     public function setMaxUses($value)
@@ -343,7 +341,7 @@ class Bundle
     // string # Internal name for identifying this Share Link.
     public function getInternalName()
     {
-        return @$this->attributes['internal_name'];
+        return isset($this->attributes['internal_name']) ? $this->attributes['internal_name'] : null;
     }
 
     public function setInternalName($value)
@@ -353,7 +351,7 @@ class Bundle
     // string # Bundle internal note
     public function getNote()
     {
-        return @$this->attributes['note'];
+        return isset($this->attributes['note']) ? $this->attributes['note'] : null;
     }
 
     public function setNote($value)
@@ -363,7 +361,7 @@ class Bundle
     // string # Template for creating submission subfolders. Can use the uploader's name, email address, ip, company, `strftime` directives, and any custom form data.
     public function getPathTemplate()
     {
-        return @$this->attributes['path_template'];
+        return isset($this->attributes['path_template']) ? $this->attributes['path_template'] : null;
     }
 
     public function setPathTemplate($value)
@@ -373,7 +371,7 @@ class Bundle
     // string # Timezone to use when rendering timestamps in path templates.
     public function getPathTemplateTimeZone()
     {
-        return @$this->attributes['path_template_time_zone'];
+        return isset($this->attributes['path_template_time_zone']) ? $this->attributes['path_template_time_zone'] : null;
     }
 
     public function setPathTemplateTimeZone($value)
@@ -383,7 +381,7 @@ class Bundle
     // boolean # Send delivery receipt to the uploader. Note: For writable share only
     public function getSendEmailReceiptToUploader()
     {
-        return @$this->attributes['send_email_receipt_to_uploader'];
+        return isset($this->attributes['send_email_receipt_to_uploader']) ? $this->attributes['send_email_receipt_to_uploader'] : null;
     }
 
     public function setSendEmailReceiptToUploader($value)
@@ -393,7 +391,7 @@ class Bundle
     // int64 # ID of the snapshot containing this bundle's contents.
     public function getSnapshotId()
     {
-        return @$this->attributes['snapshot_id'];
+        return isset($this->attributes['snapshot_id']) ? $this->attributes['snapshot_id'] : null;
     }
 
     public function setSnapshotId($value)
@@ -403,7 +401,7 @@ class Bundle
     // int64 # Bundle creator user ID
     public function getUserId()
     {
-        return @$this->attributes['user_id'];
+        return isset($this->attributes['user_id']) ? $this->attributes['user_id'] : null;
     }
 
     public function setUserId($value)
@@ -413,7 +411,7 @@ class Bundle
     // string # Bundle creator username
     public function getUsername()
     {
-        return @$this->attributes['username'];
+        return isset($this->attributes['username']) ? $this->attributes['username'] : null;
     }
 
     public function setUsername($value)
@@ -423,7 +421,7 @@ class Bundle
     // int64 # Owning group ID. If set, members of this group can view, edit, and share this Share Link.
     public function getGroupId()
     {
-        return @$this->attributes['group_id'];
+        return isset($this->attributes['group_id']) ? $this->attributes['group_id'] : null;
     }
 
     public function setGroupId($value)
@@ -433,7 +431,7 @@ class Bundle
     // int64 # ID of the clickwrap to use with this bundle.
     public function getClickwrapId()
     {
-        return @$this->attributes['clickwrap_id'];
+        return isset($this->attributes['clickwrap_id']) ? $this->attributes['clickwrap_id'] : null;
     }
 
     public function setClickwrapId($value)
@@ -443,7 +441,7 @@ class Bundle
     // int64 # ID of the associated inbox, if available.
     public function getInboxId()
     {
-        return @$this->attributes['inbox_id'];
+        return isset($this->attributes['inbox_id']) ? $this->attributes['inbox_id'] : null;
     }
 
     public function setInboxId($value)
@@ -453,7 +451,7 @@ class Bundle
     // Image # Preview watermark image applied to all bundle items.
     public function getWatermarkAttachment()
     {
-        return @$this->attributes['watermark_attachment'];
+        return isset($this->attributes['watermark_attachment']) ? $this->attributes['watermark_attachment'] : null;
     }
 
     public function setWatermarkAttachment($value)
@@ -463,7 +461,7 @@ class Bundle
     // object # Preview watermark settings applied to all bundle items. Uses the same keys as Behavior.value
     public function getWatermarkValue()
     {
-        return @$this->attributes['watermark_value'];
+        return isset($this->attributes['watermark_value']) ? $this->attributes['watermark_value'] : null;
     }
 
     public function setWatermarkValue($value)
@@ -473,7 +471,7 @@ class Bundle
     // boolean # If true, require_share_recipient bundles will send a one-time password to the recipient when they register. Cannot be enabled if the bundle has a password set.
     public function getSendOneTimePasswordToRecipientAtRegistration()
     {
-        return @$this->attributes['send_one_time_password_to_recipient_at_registration'];
+        return isset($this->attributes['send_one_time_password_to_recipient_at_registration']) ? $this->attributes['send_one_time_password_to_recipient_at_registration'] : null;
     }
 
     public function setSendOneTimePasswordToRecipientAtRegistration($value)
@@ -483,7 +481,7 @@ class Bundle
     // int64 # Workspace ID. `0` means the default workspace.
     public function getWorkspaceId()
     {
-        return @$this->attributes['workspace_id'];
+        return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
 
     public function setWorkspaceId($value)
@@ -493,7 +491,7 @@ class Bundle
     // boolean # Does this bundle have an associated inbox?
     public function getHasInbox()
     {
-        return @$this->attributes['has_inbox'];
+        return isset($this->attributes['has_inbox']) ? $this->attributes['has_inbox'] : null;
     }
 
     public function setHasInbox($value)
@@ -503,7 +501,7 @@ class Bundle
     // boolean # Should folder uploads be prevented?
     public function getDontAllowFoldersInUploads()
     {
-        return @$this->attributes['dont_allow_folders_in_uploads'];
+        return isset($this->attributes['dont_allow_folders_in_uploads']) ? $this->attributes['dont_allow_folders_in_uploads'] : null;
     }
 
     public function setDontAllowFoldersInUploads($value)
@@ -513,7 +511,7 @@ class Bundle
     // array(object) # Upload slots requested by the associated Inbox. Each slot contains a name used as its label and destination subfolder name.
     public function getRequestedUploadSlots()
     {
-        return @$this->attributes['requested_upload_slots'];
+        return isset($this->attributes['requested_upload_slots']) ? $this->attributes['requested_upload_slots'] : null;
     }
 
     public function setRequestedUploadSlots($value)
@@ -523,7 +521,7 @@ class Bundle
     // array(string) # A list of paths in this bundle.  For performance reasons, this is not provided when listing bundles.
     public function getPaths()
     {
-        return @$this->attributes['paths'];
+        return isset($this->attributes['paths']) ? $this->attributes['paths'] : null;
     }
 
     public function setPaths($value)
@@ -533,7 +531,7 @@ class Bundle
     // array(object) # A list of bundlepaths in this bundle.  For performance reasons, this is not provided when listing bundles.
     public function getBundlepaths()
     {
-        return @$this->attributes['bundlepaths'];
+        return isset($this->attributes['bundlepaths']) ? $this->attributes['bundlepaths'] : null;
     }
 
     public function setBundlepaths($value)
@@ -543,7 +541,7 @@ class Bundle
     // string # Password for this bundle.
     public function getPassword()
     {
-        return @$this->attributes['password'];
+        return isset($this->attributes['password']) ? $this->attributes['password'] : null;
     }
 
     public function setPassword($value)
@@ -553,7 +551,7 @@ class Bundle
     // int64 # Id of Form Field Set to use with this bundle
     public function getFormFieldSetId()
     {
-        return @$this->attributes['form_field_set_id'];
+        return isset($this->attributes['form_field_set_id']) ? $this->attributes['form_field_set_id'] : null;
     }
 
     public function setFormFieldSetId($value)
@@ -563,7 +561,7 @@ class Bundle
     // boolean # If true, create a snapshot of this bundle's contents.
     public function getCreateSnapshot()
     {
-        return @$this->attributes['create_snapshot'];
+        return isset($this->attributes['create_snapshot']) ? $this->attributes['create_snapshot'] : null;
     }
 
     public function setCreateSnapshot($value)
@@ -573,7 +571,7 @@ class Bundle
     // boolean # If true, finalize the snapshot of this bundle's contents. Note that `create_snapshot` must also be true.
     public function getFinalizeSnapshot()
     {
-        return @$this->attributes['finalize_snapshot'];
+        return isset($this->attributes['finalize_snapshot']) ? $this->attributes['finalize_snapshot'] : null;
     }
 
     public function setFinalizeSnapshot($value)
@@ -583,7 +581,7 @@ class Bundle
     // file # Preview watermark image applied to all bundle items.
     public function getWatermarkAttachmentFile()
     {
-        return @$this->attributes['watermark_attachment_file'];
+        return isset($this->attributes['watermark_attachment_file']) ? $this->attributes['watermark_attachment_file'] : null;
     }
 
     public function setWatermarkAttachmentFile($value)
@@ -593,7 +591,7 @@ class Bundle
     // boolean # If true, will delete the file stored in watermark_attachment
     public function getWatermarkAttachmentDelete()
     {
-        return @$this->attributes['watermark_attachment_delete'];
+        return isset($this->attributes['watermark_attachment_delete']) ? $this->attributes['watermark_attachment_delete'] : null;
     }
 
     public function setWatermarkAttachmentDelete($value)
@@ -613,7 +611,7 @@ class Bundle
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -621,19 +619,19 @@ class Bundle
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (@$params['to'] && !is_array(@$params['to'])) {
+        if (!empty($params['to']) && !is_array($params['to'])) {
             throw new \Files\Exception\InvalidParameterException('$to must be of type array; received ' . gettype(@$params['to']));
         }
 
-        if (@$params['note'] && !is_string(@$params['note'])) {
+        if (!empty($params['note']) && !is_string($params['note'])) {
             throw new \Files\Exception\InvalidParameterException('$note must be of type string; received ' . gettype(@$params['note']));
         }
 
-        if (@$params['recipients'] && !is_array(@$params['recipients'])) {
+        if (!empty($params['recipients']) && !is_array($params['recipients'])) {
             throw new \Files\Exception\InvalidParameterException('$recipients must be of type array; received ' . gettype(@$params['recipients']));
         }
 
@@ -680,7 +678,7 @@ class Bundle
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -688,79 +686,79 @@ class Bundle
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (@$params['paths'] && !is_array(@$params['paths'])) {
+        if (!empty($params['paths']) && !is_array($params['paths'])) {
             throw new \Files\Exception\InvalidParameterException('$paths must be of type array; received ' . gettype(@$params['paths']));
         }
 
-        if (@$params['password'] && !is_string(@$params['password'])) {
+        if (!empty($params['password']) && !is_string($params['password'])) {
             throw new \Files\Exception\InvalidParameterException('$password must be of type string; received ' . gettype(@$params['password']));
         }
 
-        if (@$params['form_field_set_id'] && !is_int(@$params['form_field_set_id'])) {
+        if (!empty($params['form_field_set_id']) && !is_int($params['form_field_set_id'])) {
             throw new \Files\Exception\InvalidParameterException('$form_field_set_id must be of type int; received ' . gettype(@$params['form_field_set_id']));
         }
 
-        if (@$params['clickwrap_id'] && !is_int(@$params['clickwrap_id'])) {
+        if (!empty($params['clickwrap_id']) && !is_int($params['clickwrap_id'])) {
             throw new \Files\Exception\InvalidParameterException('$clickwrap_id must be of type int; received ' . gettype(@$params['clickwrap_id']));
         }
 
-        if (@$params['code'] && !is_string(@$params['code'])) {
+        if (!empty($params['code']) && !is_string($params['code'])) {
             throw new \Files\Exception\InvalidParameterException('$code must be of type string; received ' . gettype(@$params['code']));
         }
 
-        if (@$params['description'] && !is_string(@$params['description'])) {
+        if (!empty($params['description']) && !is_string($params['description'])) {
             throw new \Files\Exception\InvalidParameterException('$description must be of type string; received ' . gettype(@$params['description']));
         }
 
-        if (@$params['expires_at'] && !is_string(@$params['expires_at'])) {
+        if (!empty($params['expires_at']) && !is_string($params['expires_at'])) {
             throw new \Files\Exception\InvalidParameterException('$expires_at must be of type string; received ' . gettype(@$params['expires_at']));
         }
 
-        if (@$params['inbox_id'] && !is_int(@$params['inbox_id'])) {
+        if (!empty($params['inbox_id']) && !is_int($params['inbox_id'])) {
             throw new \Files\Exception\InvalidParameterException('$inbox_id must be of type int; received ' . gettype(@$params['inbox_id']));
         }
 
-        if (@$params['max_uses'] && !is_int(@$params['max_uses'])) {
+        if (!empty($params['max_uses']) && !is_int($params['max_uses'])) {
             throw new \Files\Exception\InvalidParameterException('$max_uses must be of type int; received ' . gettype(@$params['max_uses']));
         }
 
-        if (@$params['group_id'] && !is_int(@$params['group_id'])) {
+        if (!empty($params['group_id']) && !is_int($params['group_id'])) {
             throw new \Files\Exception\InvalidParameterException('$group_id must be of type int; received ' . gettype(@$params['group_id']));
         }
 
-        if (@$params['internal_name'] && !is_string(@$params['internal_name'])) {
+        if (!empty($params['internal_name']) && !is_string($params['internal_name'])) {
             throw new \Files\Exception\InvalidParameterException('$internal_name must be of type string; received ' . gettype(@$params['internal_name']));
         }
 
-        if (@$params['note'] && !is_string(@$params['note'])) {
+        if (!empty($params['note']) && !is_string($params['note'])) {
             throw new \Files\Exception\InvalidParameterException('$note must be of type string; received ' . gettype(@$params['note']));
         }
 
-        if (@$params['path_template'] && !is_string(@$params['path_template'])) {
+        if (!empty($params['path_template']) && !is_string($params['path_template'])) {
             throw new \Files\Exception\InvalidParameterException('$path_template must be of type string; received ' . gettype(@$params['path_template']));
         }
 
-        if (@$params['path_template_time_zone'] && !is_string(@$params['path_template_time_zone'])) {
+        if (!empty($params['path_template_time_zone']) && !is_string($params['path_template_time_zone'])) {
             throw new \Files\Exception\InvalidParameterException('$path_template_time_zone must be of type string; received ' . gettype(@$params['path_template_time_zone']));
         }
 
-        if (@$params['permissions'] && !is_string(@$params['permissions'])) {
+        if (!empty($params['permissions']) && !is_string($params['permissions'])) {
             throw new \Files\Exception\InvalidParameterException('$permissions must be of type string; received ' . gettype(@$params['permissions']));
         }
 
-        if (@$params['start_access_on_date'] && !is_string(@$params['start_access_on_date'])) {
+        if (!empty($params['start_access_on_date']) && !is_string($params['start_access_on_date'])) {
             throw new \Files\Exception\InvalidParameterException('$start_access_on_date must be of type string; received ' . gettype(@$params['start_access_on_date']));
         }
 
-        if (@$params['user_id'] && !is_int(@$params['user_id'])) {
+        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
@@ -774,7 +772,7 @@ class Bundle
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -782,7 +780,7 @@ class Bundle
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -824,15 +822,15 @@ class Bundle
     //   deleted - boolean - If true, only list deleted Share Links.
     public static function all($params = [], $options = [])
     {
-        if (@$params['user_id'] && !is_int(@$params['user_id'])) {
+        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -858,11 +856,11 @@ class Bundle
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -910,83 +908,83 @@ class Bundle
     //   watermark_value - object - Preview watermark settings applied to all bundle items. Uses the same keys as Behavior.value
     public static function create($params = [], $options = [])
     {
-        if (!@$params['paths']) {
+        if (empty($params['paths'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: paths');
         }
 
-        if (@$params['user_id'] && !is_int(@$params['user_id'])) {
+        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (@$params['paths'] && !is_array(@$params['paths'])) {
+        if (!empty($params['paths']) && !is_array($params['paths'])) {
             throw new \Files\Exception\InvalidParameterException('$paths must be of type array; received ' . gettype(@$params['paths']));
         }
 
-        if (@$params['password'] && !is_string(@$params['password'])) {
+        if (!empty($params['password']) && !is_string($params['password'])) {
             throw new \Files\Exception\InvalidParameterException('$password must be of type string; received ' . gettype(@$params['password']));
         }
 
-        if (@$params['form_field_set_id'] && !is_int(@$params['form_field_set_id'])) {
+        if (!empty($params['form_field_set_id']) && !is_int($params['form_field_set_id'])) {
             throw new \Files\Exception\InvalidParameterException('$form_field_set_id must be of type int; received ' . gettype(@$params['form_field_set_id']));
         }
 
-        if (@$params['expires_at'] && !is_string(@$params['expires_at'])) {
+        if (!empty($params['expires_at']) && !is_string($params['expires_at'])) {
             throw new \Files\Exception\InvalidParameterException('$expires_at must be of type string; received ' . gettype(@$params['expires_at']));
         }
 
-        if (@$params['max_uses'] && !is_int(@$params['max_uses'])) {
+        if (!empty($params['max_uses']) && !is_int($params['max_uses'])) {
             throw new \Files\Exception\InvalidParameterException('$max_uses must be of type int; received ' . gettype(@$params['max_uses']));
         }
 
-        if (@$params['group_id'] && !is_int(@$params['group_id'])) {
+        if (!empty($params['group_id']) && !is_int($params['group_id'])) {
             throw new \Files\Exception\InvalidParameterException('$group_id must be of type int; received ' . gettype(@$params['group_id']));
         }
 
-        if (@$params['internal_name'] && !is_string(@$params['internal_name'])) {
+        if (!empty($params['internal_name']) && !is_string($params['internal_name'])) {
             throw new \Files\Exception\InvalidParameterException('$internal_name must be of type string; received ' . gettype(@$params['internal_name']));
         }
 
-        if (@$params['description'] && !is_string(@$params['description'])) {
+        if (!empty($params['description']) && !is_string($params['description'])) {
             throw new \Files\Exception\InvalidParameterException('$description must be of type string; received ' . gettype(@$params['description']));
         }
 
-        if (@$params['note'] && !is_string(@$params['note'])) {
+        if (!empty($params['note']) && !is_string($params['note'])) {
             throw new \Files\Exception\InvalidParameterException('$note must be of type string; received ' . gettype(@$params['note']));
         }
 
-        if (@$params['code'] && !is_string(@$params['code'])) {
+        if (!empty($params['code']) && !is_string($params['code'])) {
             throw new \Files\Exception\InvalidParameterException('$code must be of type string; received ' . gettype(@$params['code']));
         }
 
-        if (@$params['path_template'] && !is_string(@$params['path_template'])) {
+        if (!empty($params['path_template']) && !is_string($params['path_template'])) {
             throw new \Files\Exception\InvalidParameterException('$path_template must be of type string; received ' . gettype(@$params['path_template']));
         }
 
-        if (@$params['path_template_time_zone'] && !is_string(@$params['path_template_time_zone'])) {
+        if (!empty($params['path_template_time_zone']) && !is_string($params['path_template_time_zone'])) {
             throw new \Files\Exception\InvalidParameterException('$path_template_time_zone must be of type string; received ' . gettype(@$params['path_template_time_zone']));
         }
 
-        if (@$params['permissions'] && !is_string(@$params['permissions'])) {
+        if (!empty($params['permissions']) && !is_string($params['permissions'])) {
             throw new \Files\Exception\InvalidParameterException('$permissions must be of type string; received ' . gettype(@$params['permissions']));
         }
 
-        if (@$params['clickwrap_id'] && !is_int(@$params['clickwrap_id'])) {
+        if (!empty($params['clickwrap_id']) && !is_int($params['clickwrap_id'])) {
             throw new \Files\Exception\InvalidParameterException('$clickwrap_id must be of type int; received ' . gettype(@$params['clickwrap_id']));
         }
 
-        if (@$params['inbox_id'] && !is_int(@$params['inbox_id'])) {
+        if (!empty($params['inbox_id']) && !is_int($params['inbox_id'])) {
             throw new \Files\Exception\InvalidParameterException('$inbox_id must be of type int; received ' . gettype(@$params['inbox_id']));
         }
 
-        if (@$params['start_access_on_date'] && !is_string(@$params['start_access_on_date'])) {
+        if (!empty($params['start_access_on_date']) && !is_string($params['start_access_on_date'])) {
             throw new \Files\Exception\InvalidParameterException('$start_access_on_date must be of type string; received ' . gettype(@$params['start_access_on_date']));
         }
 
-        if (@$params['snapshot_id'] && !is_int(@$params['snapshot_id'])) {
+        if (!empty($params['snapshot_id']) && !is_int($params['snapshot_id'])) {
             throw new \Files\Exception\InvalidParameterException('$snapshot_id must be of type int; received ' . gettype(@$params['snapshot_id']));
         }
 
-        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 

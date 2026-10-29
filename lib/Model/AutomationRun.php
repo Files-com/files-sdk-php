@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class AutomationRun
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,117 +56,117 @@ class AutomationRun
     // int64 # ID.
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
     // int64 # ID of the associated Automation.
     public function getAutomationId()
     {
-        return @$this->attributes['automation_id'];
+        return isset($this->attributes['automation_id']) ? $this->attributes['automation_id'] : null;
     }
     // int64 # ID of the immutable Automation version pinned by this run.
     public function getAutomationVersionId()
     {
-        return @$this->attributes['automation_version_id'];
+        return isset($this->attributes['automation_version_id']) ? $this->attributes['automation_version_id'] : null;
     }
     // int64 # Pinned Automation v2 definition version.
     public function getVersion()
     {
-        return @$this->attributes['version'];
+        return isset($this->attributes['version']) ? $this->attributes['version'] : null;
     }
     // int64 # Workspace ID.
     public function getWorkspaceId()
     {
-        return @$this->attributes['workspace_id'];
+        return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
     // date-time # Date/time at which cancellation was requested.
     public function getCancelRequestedAt()
     {
-        return @$this->attributes['cancel_requested_at'];
+        return isset($this->attributes['cancel_requested_at']) ? $this->attributes['cancel_requested_at'] : null;
     }
     // date-time # Automation run completion/failure date/time.
     public function getCompletedAt()
     {
-        return @$this->attributes['completed_at'];
+        return isset($this->attributes['completed_at']) ? $this->attributes['completed_at'] : null;
     }
     // date-time # Automation run start date/time.
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
     // date-time # If set, this automation will be retried at this date/time due to `failure` or `partial_failure`.
     public function getRetryAt()
     {
-        return @$this->attributes['retry_at'];
+        return isset($this->attributes['retry_at']) ? $this->attributes['retry_at'] : null;
     }
     // date-time # If set, this Automation run was retried due to `failure` or `partial_failure`.
     public function getRetriedAt()
     {
-        return @$this->attributes['retried_at'];
+        return isset($this->attributes['retried_at']) ? $this->attributes['retried_at'] : null;
     }
     // int64 # ID of the run that is or will be retrying this run.
     public function getRetriedInRunId()
     {
-        return @$this->attributes['retried_in_run_id'];
+        return isset($this->attributes['retried_in_run_id']) ? $this->attributes['retried_in_run_id'] : null;
     }
     // int64 # ID of the original run that this run is retrying.
     public function getRetryOfRunId()
     {
-        return @$this->attributes['retry_of_run_id'];
+        return isset($this->attributes['retry_of_run_id']) ? $this->attributes['retry_of_run_id'] : null;
     }
     // int64 # ID of the run whose persisted node outputs this run reused.
     public function getRerunOfRunId()
     {
-        return @$this->attributes['rerun_of_run_id'];
+        return isset($this->attributes['rerun_of_run_id']) ? $this->attributes['rerun_of_run_id'] : null;
     }
     // string # Node at which this run resumed execution.
     public function getRerunFromNodeId()
     {
-        return @$this->attributes['rerun_from_node_id'];
+        return isset($this->attributes['rerun_from_node_id']) ? $this->attributes['rerun_from_node_id'] : null;
     }
     // double # Automation run runtime.
     public function getRuntime()
     {
-        return @$this->attributes['runtime'];
+        return isset($this->attributes['runtime']) ? $this->attributes['runtime'] : null;
     }
     // string # The status of the AutomationRun. One of `queued`, `running`, `success`, `partial_failure`, `failure`, `skipped`, or `canceled`.
     public function getStatus()
     {
-        return @$this->attributes['status'];
+        return isset($this->attributes['status']) ? $this->attributes['status'] : null;
     }
     // int64 # Count of successful operations.
     public function getSuccessfulOperations()
     {
-        return @$this->attributes['successful_operations'];
+        return isset($this->attributes['successful_operations']) ? $this->attributes['successful_operations'] : null;
     }
     // int64 # Count of failed operations.
     public function getFailedOperations()
     {
-        return @$this->attributes['failed_operations'];
+        return isset($this->attributes['failed_operations']) ? $this->attributes['failed_operations'] : null;
     }
     // object # Automation definition snapshot pinned by this run. For performance reasons, this is not provided when listing Automation runs.
     public function getDefinition()
     {
-        return @$this->attributes['definition'];
+        return isset($this->attributes['definition']) ? $this->attributes['definition'] : null;
     }
     // object # Status and execution stage for each node in this run. For performance reasons, this is not provided when listing Automation runs.
     public function getNodeStates()
     {
-        return @$this->attributes['node_states'];
+        return isset($this->attributes['node_states']) ? $this->attributes['node_states'] : null;
     }
     // array(object) # Execution status, timing, and bounded output summaries for each node. For performance reasons, this is not provided when listing Automation runs.
     public function getExecutionNodes()
     {
-        return @$this->attributes['execution_nodes'];
+        return isset($this->attributes['execution_nodes']) ? $this->attributes['execution_nodes'] : null;
     }
     // string # Link to the run journal artifact.
     public function getJournalUrl()
     {
-        return @$this->attributes['journal_url'];
+        return isset($this->attributes['journal_url']) ? $this->attributes['journal_url'] : null;
     }
     // string # Link to status messages log file.
     public function getStatusMessagesUrl()
     {
-        return @$this->attributes['status_messages_url'];
+        return isset($this->attributes['status_messages_url']) ? $this->attributes['status_messages_url'] : null;
     }
 
     // Cancel Automation Run
@@ -178,7 +176,7 @@ class AutomationRun
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -186,7 +184,7 @@ class AutomationRun
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -204,7 +202,7 @@ class AutomationRun
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -212,7 +210,7 @@ class AutomationRun
             }
         }
 
-        if (!@$params['node_id']) {
+        if (empty($params['node_id'])) {
             if (@$this->node_id) {
                 $params['node_id'] = $this->node_id;
             } else {
@@ -220,11 +218,11 @@ class AutomationRun
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (@$params['node_id'] && !is_string(@$params['node_id'])) {
+        if (!empty($params['node_id']) && !is_string($params['node_id'])) {
             throw new \Files\Exception\InvalidParameterException('$node_id must be of type string; received ' . gettype(@$params['node_id']));
         }
 
@@ -241,23 +239,23 @@ class AutomationRun
     //   automation_id (required) - int64 - ID of the associated Automation.
     public static function all($params = [], $options = [])
     {
-        if (!@$params['automation_id']) {
+        if (empty($params['automation_id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: automation_id');
         }
 
-        if (@$params['user_id'] && !is_int(@$params['user_id'])) {
+        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
-        if (@$params['automation_id'] && !is_int(@$params['automation_id'])) {
+        if (!empty($params['automation_id']) && !is_int($params['automation_id'])) {
             throw new \Files\Exception\InvalidParameterException('$automation_id must be of type int; received ' . gettype(@$params['automation_id']));
         }
 
@@ -282,11 +280,11 @@ class AutomationRun
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -310,19 +308,19 @@ class AutomationRun
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (!@$params['node_id']) {
+        if (empty($params['node_id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: node_id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (@$params['node_id'] && !is_string(@$params['node_id'])) {
+        if (!empty($params['node_id']) && !is_string($params['node_id'])) {
             throw new \Files\Exception\InvalidParameterException('$node_id must be of type string; received ' . gettype(@$params['node_id']));
         }
 

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class SsoEvent
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,72 +56,72 @@ class SsoEvent
     // int64 # Event ID
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
     // string # Type of SSO event being recorded.
     public function getEventType()
     {
-        return @$this->attributes['event_type'];
+        return isset($this->attributes['event_type']) ? $this->attributes['event_type'] : null;
     }
     // string # Status of event.
     public function getStatus()
     {
-        return @$this->attributes['status'];
+        return isset($this->attributes['status']) ? $this->attributes['status'] : null;
     }
     // string # Event body.
     public function getBody()
     {
-        return @$this->attributes['body'];
+        return isset($this->attributes['body']) ? $this->attributes['body'] : null;
     }
     // array(string) # Event errors.
     public function getEventErrors()
     {
-        return @$this->attributes['event_errors'];
+        return isset($this->attributes['event_errors']) ? $this->attributes['event_errors'] : null;
     }
     // date-time # Event create date/time.
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
     // string # Link to log file.
     public function getBodyUrl()
     {
-        return @$this->attributes['body_url'];
+        return isset($this->attributes['body_url']) ? $this->attributes['body_url'] : null;
     }
     // int64 # User ID.
     public function getUserId()
     {
-        return @$this->attributes['user_id'];
+        return isset($this->attributes['user_id']) ? $this->attributes['user_id'] : null;
     }
     // string # Username on Files.com for the SSO login attempt.
     public function getUsername()
     {
-        return @$this->attributes['username'];
+        return isset($this->attributes['username']) ? $this->attributes['username'] : null;
     }
     // string # Identity Provider UID for the SSO login attempt.
     public function getIdpUid()
     {
-        return @$this->attributes['idp_uid'];
+        return isset($this->attributes['idp_uid']) ? $this->attributes['idp_uid'] : null;
     }
     // string # SSO provider for the SSO login attempt.
     public function getProvider()
     {
-        return @$this->attributes['provider'];
+        return isset($this->attributes['provider']) ? $this->attributes['provider'] : null;
     }
     // string # SSO provider label for the SSO login attempt.
     public function getProviderLabel()
     {
-        return @$this->attributes['provider_label'];
+        return isset($this->attributes['provider_label']) ? $this->attributes['provider_label'] : null;
     }
     // string # IP address for the SSO login attempt.
     public function getIp()
     {
-        return @$this->attributes['ip'];
+        return isset($this->attributes['ip']) ? $this->attributes['ip'] : null;
     }
     // string # Region for the SSO login attempt.
     public function getRegion()
     {
-        return @$this->attributes['region'];
+        return isset($this->attributes['region']) ? $this->attributes['region'] : null;
     }
 
     // Parameters:
@@ -138,11 +136,11 @@ class SsoEvent
     //   filter_lteq - object - If set, return records where the specified field is less than or equal the supplied value. Valid fields are `created_at`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -167,11 +165,11 @@ class SsoEvent
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 

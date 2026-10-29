@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class SftpActionLog
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,122 +56,122 @@ class SftpActionLog
     // date-time # Start Time of Action. Deprecrated: Use created_at.
     public function getTimestamp()
     {
-        return @$this->attributes['timestamp'];
+        return isset($this->attributes['timestamp']) ? $this->attributes['timestamp'] : null;
     }
     // string # IP Address of SFTP Client
     public function getRemoteIp()
     {
-        return @$this->attributes['remote_ip'];
+        return isset($this->attributes['remote_ip']) ? $this->attributes['remote_ip'] : null;
     }
     // string # IP Address of SFTP Server
     public function getServerIp()
     {
-        return @$this->attributes['server_ip'];
+        return isset($this->attributes['server_ip']) ? $this->attributes['server_ip'] : null;
     }
     // string # Username
     public function getUsername()
     {
-        return @$this->attributes['username'];
+        return isset($this->attributes['username']) ? $this->attributes['username'] : null;
     }
     // string # Name of the SFTP Client provided at initial connection
     public function getSshClientIdentification()
     {
-        return @$this->attributes['ssh_client_identification'];
+        return isset($this->attributes['ssh_client_identification']) ? $this->attributes['ssh_client_identification'] : null;
     }
     // string # Unique ID of the Session
     public function getSessionUuid()
     {
-        return @$this->attributes['session_uuid'];
+        return isset($this->attributes['session_uuid']) ? $this->attributes['session_uuid'] : null;
     }
     // int64 # SFTP Sequence ID
     public function getSeqId()
     {
-        return @$this->attributes['seq_id'];
+        return isset($this->attributes['seq_id']) ? $this->attributes['seq_id'] : null;
     }
     // string # Authentication Method
     public function getAuthMethod()
     {
-        return @$this->attributes['auth_method'];
+        return isset($this->attributes['auth_method']) ? $this->attributes['auth_method'] : null;
     }
     // string # Authentication Ciphers
     public function getAuthCiphers()
     {
-        return @$this->attributes['auth_ciphers'];
+        return isset($this->attributes['auth_ciphers']) ? $this->attributes['auth_ciphers'] : null;
     }
     // string # Action Type
     public function getActionType()
     {
-        return @$this->attributes['action_type'];
+        return isset($this->attributes['action_type']) ? $this->attributes['action_type'] : null;
     }
     // string # Path as sent by the Client (may not match Files.com path due to user root folders for SFTP). This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
     public function getPath()
     {
-        return @$this->attributes['path'];
+        return isset($this->attributes['path']) ? $this->attributes['path'] : null;
     }
     // string # Path on Files.com
     public function getTruePath()
     {
-        return @$this->attributes['true_path'];
+        return isset($this->attributes['true_path']) ? $this->attributes['true_path'] : null;
     }
     // string # Name of File
     public function getName()
     {
-        return @$this->attributes['name'];
+        return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
     // string # SFTP Response Code Returned to the Client.
     public function getSftpResponseCode()
     {
-        return @$this->attributes['sftp_response_code'];
+        return isset($this->attributes['sftp_response_code']) ? $this->attributes['sftp_response_code'] : null;
     }
     // string # SFTP Response Message Returned to the Client.
     public function getSftpResponseMessage()
     {
-        return @$this->attributes['sftp_response_message'];
+        return isset($this->attributes['sftp_response_message']) ? $this->attributes['sftp_response_message'] : null;
     }
     // string # MD5 Hash of the file. Not always available.
     public function getMd5()
     {
-        return @$this->attributes['md5'];
+        return isset($this->attributes['md5']) ? $this->attributes['md5'] : null;
     }
     // int64 # Size of File That was Uploaded or Downloaded.
     public function getSize()
     {
-        return @$this->attributes['size'];
+        return isset($this->attributes['size']) ? $this->attributes['size'] : null;
     }
     // int64 # Data Length in Bytes. Present for actions that transfer data.
     public function getDataLength()
     {
-        return @$this->attributes['data_length'];
+        return isset($this->attributes['data_length']) ? $this->attributes['data_length'] : null;
     }
     // int64 # The number of bytes transferred for uploads and downloads.
     public function getBytesTransferred()
     {
-        return @$this->attributes['bytes_transferred'];
+        return isset($this->attributes['bytes_transferred']) ? $this->attributes['bytes_transferred'] : null;
     }
     // int64 # Number of entries returned when listing files and folders
     public function getEntriesReturned()
     {
-        return @$this->attributes['entries_returned'];
+        return isset($this->attributes['entries_returned']) ? $this->attributes['entries_returned'] : null;
     }
     // boolean # Whether SFTP Action was successful.
     public function getSuccess()
     {
-        return @$this->attributes['success'];
+        return isset($this->attributes['success']) ? $this->attributes['success'] : null;
     }
     // string # SFTP Action status.
     public function getStatus()
     {
-        return @$this->attributes['status'];
+        return isset($this->attributes['status']) ? $this->attributes['status'] : null;
     }
     // int64 # Duration (in milliseconds)
     public function getDurationMs()
     {
-        return @$this->attributes['duration_ms'];
+        return isset($this->attributes['duration_ms']) ? $this->attributes['duration_ms'] : null;
     }
     // date-time # Start Time of Action
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
 
     // Parameters:
@@ -187,11 +185,11 @@ class SftpActionLog
     //   filter_lteq - object - If set, return records where the specified field is less than or equal the supplied value. Valid fields are `created_at`. Valid field combinations are `[ path ]`, `[ true_path ]`, `[ remote_ip ]`, `[ session_uuid ]`, `[ success ]`, `[ status ]`, `[ action_type ]`, `[ username ]`, `[ created_at ]`, `[ path, true_path ]`, `[ path, remote_ip ]`, `[ path, session_uuid ]`, `[ path, success ]`, `[ path, status ]`, `[ path, action_type ]`, `[ path, username ]`, `[ path, created_at ]`, `[ true_path, remote_ip ]`, `[ true_path, session_uuid ]`, `[ true_path, success ]`, `[ true_path, status ]`, `[ true_path, action_type ]`, `[ true_path, username ]`, `[ true_path, created_at ]`, `[ remote_ip, session_uuid ]`, `[ remote_ip, success ]`, `[ remote_ip, status ]`, `[ remote_ip, action_type ]`, `[ remote_ip, username ]`, `[ remote_ip, created_at ]`, `[ session_uuid, success ]`, `[ session_uuid, status ]`, `[ session_uuid, action_type ]`, `[ session_uuid, username ]`, `[ session_uuid, created_at ]`, `[ success, status ]`, `[ success, action_type ]`, `[ success, username ]`, `[ success, created_at ]`, `[ status, action_type ]`, `[ status, username ]`, `[ status, created_at ]`, `[ action_type, username ]`, `[ action_type, created_at ]`, `[ username, created_at ]`, `[ path, true_path, remote_ip ]`, `[ path, true_path, session_uuid ]`, `[ path, true_path, success ]`, `[ path, true_path, status ]`, `[ path, true_path, action_type ]`, `[ path, true_path, username ]`, `[ path, true_path, created_at ]`, `[ path, remote_ip, session_uuid ]`, `[ path, remote_ip, success ]`, `[ path, remote_ip, status ]`, `[ path, remote_ip, action_type ]`, `[ path, remote_ip, username ]`, `[ path, remote_ip, created_at ]`, `[ path, session_uuid, success ]`, `[ path, session_uuid, status ]`, `[ path, session_uuid, action_type ]`, `[ path, session_uuid, username ]`, `[ path, session_uuid, created_at ]`, `[ path, success, status ]`, `[ path, success, action_type ]`, `[ path, success, username ]`, `[ path, success, created_at ]`, `[ path, status, action_type ]`, `[ path, status, username ]`, `[ path, status, created_at ]`, `[ path, action_type, username ]`, `[ path, action_type, created_at ]`, `[ path, username, created_at ]`, `[ true_path, remote_ip, session_uuid ]`, `[ true_path, remote_ip, success ]`, `[ true_path, remote_ip, status ]`, `[ true_path, remote_ip, action_type ]`, `[ true_path, remote_ip, username ]`, `[ true_path, remote_ip, created_at ]`, `[ true_path, session_uuid, success ]`, `[ true_path, session_uuid, status ]`, `[ true_path, session_uuid, action_type ]`, `[ true_path, session_uuid, username ]`, `[ true_path, session_uuid, created_at ]`, `[ true_path, success, status ]`, `[ true_path, success, action_type ]`, `[ true_path, success, username ]`, `[ true_path, success, created_at ]`, `[ true_path, status, action_type ]`, `[ true_path, status, username ]`, `[ true_path, status, created_at ]`, `[ true_path, action_type, username ]`, `[ true_path, action_type, created_at ]`, `[ true_path, username, created_at ]`, `[ remote_ip, session_uuid, success ]`, `[ remote_ip, session_uuid, status ]`, `[ remote_ip, session_uuid, action_type ]`, `[ remote_ip, session_uuid, username ]`, `[ remote_ip, session_uuid, created_at ]`, `[ remote_ip, success, status ]`, `[ remote_ip, success, action_type ]`, `[ remote_ip, success, username ]`, `[ remote_ip, success, created_at ]`, `[ remote_ip, status, action_type ]`, `[ remote_ip, status, username ]`, `[ remote_ip, status, created_at ]`, `[ remote_ip, action_type, username ]`, `[ remote_ip, action_type, created_at ]`, `[ remote_ip, username, created_at ]`, `[ session_uuid, success, status ]`, `[ session_uuid, success, action_type ]`, `[ session_uuid, success, username ]`, `[ session_uuid, success, created_at ]`, `[ session_uuid, status, action_type ]`, `[ session_uuid, status, username ]`, `[ session_uuid, status, created_at ]`, `[ session_uuid, action_type, username ]`, `[ session_uuid, action_type, created_at ]`, `[ session_uuid, username, created_at ]`, `[ success, status, action_type ]`, `[ success, status, username ]`, `[ success, status, created_at ]`, `[ success, action_type, username ]`, `[ success, action_type, created_at ]`, `[ success, username, created_at ]`, `[ status, action_type, username ]`, `[ status, action_type, created_at ]`, `[ status, username, created_at ]`, `[ action_type, username, created_at ]`, `[ path, true_path, remote_ip, session_uuid ]`, `[ path, true_path, remote_ip, success ]`, `[ path, true_path, remote_ip, status ]`, `[ path, true_path, remote_ip, action_type ]`, `[ path, true_path, remote_ip, username ]`, `[ path, true_path, remote_ip, created_at ]`, `[ path, true_path, session_uuid, success ]`, `[ path, true_path, session_uuid, status ]`, `[ path, true_path, session_uuid, action_type ]`, `[ path, true_path, session_uuid, username ]`, `[ path, true_path, session_uuid, created_at ]`, `[ path, true_path, success, status ]`, `[ path, true_path, success, action_type ]`, `[ path, true_path, success, username ]`, `[ path, true_path, success, created_at ]`, `[ path, true_path, status, action_type ]`, `[ path, true_path, status, username ]`, `[ path, true_path, status, created_at ]`, `[ path, true_path, action_type, username ]`, `[ path, true_path, action_type, created_at ]`, `[ path, true_path, username, created_at ]`, `[ path, remote_ip, session_uuid, success ]`, `[ path, remote_ip, session_uuid, status ]`, `[ path, remote_ip, session_uuid, action_type ]`, `[ path, remote_ip, session_uuid, username ]`, `[ path, remote_ip, session_uuid, created_at ]`, `[ path, remote_ip, success, status ]`, `[ path, remote_ip, success, action_type ]`, `[ path, remote_ip, success, username ]`, `[ path, remote_ip, success, created_at ]`, `[ path, remote_ip, status, action_type ]`, `[ path, remote_ip, status, username ]`, `[ path, remote_ip, status, created_at ]`, `[ path, remote_ip, action_type, username ]`, `[ path, remote_ip, action_type, created_at ]`, `[ path, remote_ip, username, created_at ]`, `[ path, session_uuid, success, status ]`, `[ path, session_uuid, success, action_type ]`, `[ path, session_uuid, success, username ]`, `[ path, session_uuid, success, created_at ]`, `[ path, session_uuid, status, action_type ]`, `[ path, session_uuid, status, username ]`, `[ path, session_uuid, status, created_at ]`, `[ path, session_uuid, action_type, username ]`, `[ path, session_uuid, action_type, created_at ]`, `[ path, session_uuid, username, created_at ]`, `[ path, success, status, action_type ]`, `[ path, success, status, username ]`, `[ path, success, status, created_at ]`, `[ path, success, action_type, username ]`, `[ path, success, action_type, created_at ]`, `[ path, success, username, created_at ]`, `[ path, status, action_type, username ]`, `[ path, status, action_type, created_at ]`, `[ path, status, username, created_at ]`, `[ path, action_type, username, created_at ]`, `[ true_path, remote_ip, session_uuid, success ]`, `[ true_path, remote_ip, session_uuid, status ]`, `[ true_path, remote_ip, session_uuid, action_type ]`, `[ true_path, remote_ip, session_uuid, username ]`, `[ true_path, remote_ip, session_uuid, created_at ]`, `[ true_path, remote_ip, success, status ]`, `[ true_path, remote_ip, success, action_type ]`, `[ true_path, remote_ip, success, username ]`, `[ true_path, remote_ip, success, created_at ]`, `[ true_path, remote_ip, status, action_type ]`, `[ true_path, remote_ip, status, username ]`, `[ true_path, remote_ip, status, created_at ]`, `[ true_path, remote_ip, action_type, username ]`, `[ true_path, remote_ip, action_type, created_at ]`, `[ true_path, remote_ip, username, created_at ]`, `[ true_path, session_uuid, success, status ]`, `[ true_path, session_uuid, success, action_type ]`, `[ true_path, session_uuid, success, username ]`, `[ true_path, session_uuid, success, created_at ]`, `[ true_path, session_uuid, status, action_type ]`, `[ true_path, session_uuid, status, username ]`, `[ true_path, session_uuid, status, created_at ]`, `[ true_path, session_uuid, action_type, username ]`, `[ true_path, session_uuid, action_type, created_at ]`, `[ true_path, session_uuid, username, created_at ]`, `[ true_path, success, status, action_type ]`, `[ true_path, success, status, username ]`, `[ true_path, success, status, created_at ]`, `[ true_path, success, action_type, username ]`, `[ true_path, success, action_type, created_at ]`, `[ true_path, success, username, created_at ]`, `[ true_path, status, action_type, username ]`, `[ true_path, status, action_type, created_at ]`, `[ true_path, status, username, created_at ]`, `[ true_path, action_type, username, created_at ]`, `[ remote_ip, session_uuid, success, status ]`, `[ remote_ip, session_uuid, success, action_type ]`, `[ remote_ip, session_uuid, success, username ]`, `[ remote_ip, session_uuid, success, created_at ]`, `[ remote_ip, session_uuid, status, action_type ]`, `[ remote_ip, session_uuid, status, username ]`, `[ remote_ip, session_uuid, status, created_at ]`, `[ remote_ip, session_uuid, action_type, username ]`, `[ remote_ip, session_uuid, action_type, created_at ]`, `[ remote_ip, session_uuid, username, created_at ]`, `[ remote_ip, success, status, action_type ]`, `[ remote_ip, success, status, username ]`, `[ remote_ip, success, status, created_at ]`, `[ remote_ip, success, action_type, username ]`, `[ remote_ip, success, action_type, created_at ]`, `[ remote_ip, success, username, created_at ]`, `[ remote_ip, status, action_type, username ]`, `[ remote_ip, status, action_type, created_at ]`, `[ remote_ip, status, username, created_at ]`, `[ remote_ip, action_type, username, created_at ]`, `[ session_uuid, success, status, action_type ]`, `[ session_uuid, success, status, username ]`, `[ session_uuid, success, status, created_at ]`, `[ session_uuid, success, action_type, username ]`, `[ session_uuid, success, action_type, created_at ]`, `[ session_uuid, success, username, created_at ]`, `[ session_uuid, status, action_type, username ]`, `[ session_uuid, status, action_type, created_at ]`, `[ session_uuid, status, username, created_at ]`, `[ session_uuid, action_type, username, created_at ]`, `[ success, status, action_type, username ]`, `[ success, status, action_type, created_at ]`, `[ success, status, username, created_at ]`, `[ success, action_type, username, created_at ]`, `[ status, action_type, username, created_at ]`, `[ path, true_path, remote_ip, session_uuid, success ]`, `[ path, true_path, remote_ip, session_uuid, status ]`, `[ path, true_path, remote_ip, session_uuid, action_type ]`, `[ path, true_path, remote_ip, session_uuid, username ]`, `[ path, true_path, remote_ip, session_uuid, created_at ]`, `[ path, true_path, remote_ip, success, status ]`, `[ path, true_path, remote_ip, success, action_type ]`, `[ path, true_path, remote_ip, success, username ]`, `[ path, true_path, remote_ip, success, created_at ]`, `[ path, true_path, remote_ip, status, action_type ]`, `[ path, true_path, remote_ip, status, username ]`, `[ path, true_path, remote_ip, status, created_at ]`, `[ path, true_path, remote_ip, action_type, username ]`, `[ path, true_path, remote_ip, action_type, created_at ]`, `[ path, true_path, remote_ip, username, created_at ]`, `[ path, true_path, session_uuid, success, status ]`, `[ path, true_path, session_uuid, success, action_type ]`, `[ path, true_path, session_uuid, success, username ]`, `[ path, true_path, session_uuid, success, created_at ]`, `[ path, true_path, session_uuid, status, action_type ]`, `[ path, true_path, session_uuid, status, username ]`, `[ path, true_path, session_uuid, status, created_at ]`, `[ path, true_path, session_uuid, action_type, username ]`, `[ path, true_path, session_uuid, action_type, created_at ]`, `[ path, true_path, session_uuid, username, created_at ]`, `[ path, true_path, success, status, action_type ]`, `[ path, true_path, success, status, username ]`, `[ path, true_path, success, status, created_at ]`, `[ path, true_path, success, action_type, username ]`, `[ path, true_path, success, action_type, created_at ]`, `[ path, true_path, success, username, created_at ]`, `[ path, true_path, status, action_type, username ]`, `[ path, true_path, status, action_type, created_at ]`, `[ path, true_path, status, username, created_at ]`, `[ path, true_path, action_type, username, created_at ]`, `[ path, remote_ip, session_uuid, success, status ]`, `[ path, remote_ip, session_uuid, success, action_type ]`, `[ path, remote_ip, session_uuid, success, username ]`, `[ path, remote_ip, session_uuid, success, created_at ]`, `[ path, remote_ip, session_uuid, status, action_type ]`, `[ path, remote_ip, session_uuid, status, username ]`, `[ path, remote_ip, session_uuid, status, created_at ]`, `[ path, remote_ip, session_uuid, action_type, username ]`, `[ path, remote_ip, session_uuid, action_type, created_at ]`, `[ path, remote_ip, session_uuid, username, created_at ]`, `[ path, remote_ip, success, status, action_type ]`, `[ path, remote_ip, success, status, username ]`, `[ path, remote_ip, success, status, created_at ]`, `[ path, remote_ip, success, action_type, username ]`, `[ path, remote_ip, success, action_type, created_at ]`, `[ path, remote_ip, success, username, created_at ]`, `[ path, remote_ip, status, action_type, username ]`, `[ path, remote_ip, status, action_type, created_at ]`, `[ path, remote_ip, status, username, created_at ]`, `[ path, remote_ip, action_type, username, created_at ]`, `[ path, session_uuid, success, status, action_type ]`, `[ path, session_uuid, success, status, username ]`, `[ path, session_uuid, success, status, created_at ]`, `[ path, session_uuid, success, action_type, username ]`, `[ path, session_uuid, success, action_type, created_at ]`, `[ path, session_uuid, success, username, created_at ]`, `[ path, session_uuid, status, action_type, username ]`, `[ path, session_uuid, status, action_type, created_at ]`, `[ path, session_uuid, status, username, created_at ]`, `[ path, session_uuid, action_type, username, created_at ]`, `[ path, success, status, action_type, username ]`, `[ path, success, status, action_type, created_at ]`, `[ path, success, status, username, created_at ]`, `[ path, success, action_type, username, created_at ]`, `[ path, status, action_type, username, created_at ]`, `[ true_path, remote_ip, session_uuid, success, status ]`, `[ true_path, remote_ip, session_uuid, success, action_type ]`, `[ true_path, remote_ip, session_uuid, success, username ]`, `[ true_path, remote_ip, session_uuid, success, created_at ]`, `[ true_path, remote_ip, session_uuid, status, action_type ]`, `[ true_path, remote_ip, session_uuid, status, username ]`, `[ true_path, remote_ip, session_uuid, status, created_at ]`, `[ true_path, remote_ip, session_uuid, action_type, username ]`, `[ true_path, remote_ip, session_uuid, action_type, created_at ]`, `[ true_path, remote_ip, session_uuid, username, created_at ]`, `[ true_path, remote_ip, success, status, action_type ]`, `[ true_path, remote_ip, success, status, username ]`, `[ true_path, remote_ip, success, status, created_at ]`, `[ true_path, remote_ip, success, action_type, username ]`, `[ true_path, remote_ip, success, action_type, created_at ]`, `[ true_path, remote_ip, success, username, created_at ]`, `[ true_path, remote_ip, status, action_type, username ]`, `[ true_path, remote_ip, status, action_type, created_at ]`, `[ true_path, remote_ip, status, username, created_at ]`, `[ true_path, remote_ip, action_type, username, created_at ]`, `[ true_path, session_uuid, success, status, action_type ]`, `[ true_path, session_uuid, success, status, username ]`, `[ true_path, session_uuid, success, status, created_at ]`, `[ true_path, session_uuid, success, action_type, username ]`, `[ true_path, session_uuid, success, action_type, created_at ]`, `[ true_path, session_uuid, success, username, created_at ]`, `[ true_path, session_uuid, status, action_type, username ]`, `[ true_path, session_uuid, status, action_type, created_at ]`, `[ true_path, session_uuid, status, username, created_at ]`, `[ true_path, session_uuid, action_type, username, created_at ]`, `[ true_path, success, status, action_type, username ]`, `[ true_path, success, status, action_type, created_at ]`, `[ true_path, success, status, username, created_at ]`, `[ true_path, success, action_type, username, created_at ]`, `[ true_path, status, action_type, username, created_at ]`, `[ remote_ip, session_uuid, success, status, action_type ]`, `[ remote_ip, session_uuid, success, status, username ]`, `[ remote_ip, session_uuid, success, status, created_at ]`, `[ remote_ip, session_uuid, success, action_type, username ]`, `[ remote_ip, session_uuid, success, action_type, created_at ]`, `[ remote_ip, session_uuid, success, username, created_at ]`, `[ remote_ip, session_uuid, status, action_type, username ]`, `[ remote_ip, session_uuid, status, action_type, created_at ]`, `[ remote_ip, session_uuid, status, username, created_at ]`, `[ remote_ip, session_uuid, action_type, username, created_at ]`, `[ remote_ip, success, status, action_type, username ]`, `[ remote_ip, success, status, action_type, created_at ]`, `[ remote_ip, success, status, username, created_at ]`, `[ remote_ip, success, action_type, username, created_at ]`, `[ remote_ip, status, action_type, username, created_at ]`, `[ session_uuid, success, status, action_type, username ]`, `[ session_uuid, success, status, action_type, created_at ]`, `[ session_uuid, success, status, username, created_at ]`, `[ session_uuid, success, action_type, username, created_at ]`, `[ session_uuid, status, action_type, username, created_at ]`, `[ success, status, action_type, username, created_at ]`, `[ path, true_path, remote_ip, session_uuid, success, status ]`, `[ path, true_path, remote_ip, session_uuid, success, action_type ]`, `[ path, true_path, remote_ip, session_uuid, success, username ]`, `[ path, true_path, remote_ip, session_uuid, success, created_at ]`, `[ path, true_path, remote_ip, session_uuid, status, action_type ]`, `[ path, true_path, remote_ip, session_uuid, status, username ]`, `[ path, true_path, remote_ip, session_uuid, status, created_at ]`, `[ path, true_path, remote_ip, session_uuid, action_type, username ]`, `[ path, true_path, remote_ip, session_uuid, action_type, created_at ]`, `[ path, true_path, remote_ip, session_uuid, username, created_at ]`, `[ path, true_path, remote_ip, success, status, action_type ]`, `[ path, true_path, remote_ip, success, status, username ]`, `[ path, true_path, remote_ip, success, status, created_at ]`, `[ path, true_path, remote_ip, success, action_type, username ]`, `[ path, true_path, remote_ip, success, action_type, created_at ]`, `[ path, true_path, remote_ip, success, username, created_at ]`, `[ path, true_path, remote_ip, status, action_type, username ]`, `[ path, true_path, remote_ip, status, action_type, created_at ]`, `[ path, true_path, remote_ip, status, username, created_at ]`, `[ path, true_path, remote_ip, action_type, username, created_at ]`, `[ path, true_path, session_uuid, success, status, action_type ]`, `[ path, true_path, session_uuid, success, status, username ]`, `[ path, true_path, session_uuid, success, status, created_at ]`, `[ path, true_path, session_uuid, success, action_type, username ]`, `[ path, true_path, session_uuid, success, action_type, created_at ]`, `[ path, true_path, session_uuid, success, username, created_at ]`, `[ path, true_path, session_uuid, status, action_type, username ]`, `[ path, true_path, session_uuid, status, action_type, created_at ]`, `[ path, true_path, session_uuid, status, username, created_at ]`, `[ path, true_path, session_uuid, action_type, username, created_at ]`, `[ path, true_path, success, status, action_type, username ]`, `[ path, true_path, success, status, action_type, created_at ]`, `[ path, true_path, success, status, username, created_at ]`, `[ path, true_path, success, action_type, username, created_at ]`, `[ path, true_path, status, action_type, username, created_at ]`, `[ path, remote_ip, session_uuid, success, status, action_type ]`, `[ path, remote_ip, session_uuid, success, status, username ]`, `[ path, remote_ip, session_uuid, success, status, created_at ]`, `[ path, remote_ip, session_uuid, success, action_type, username ]`, `[ path, remote_ip, session_uuid, success, action_type, created_at ]`, `[ path, remote_ip, session_uuid, success, username, created_at ]`, `[ path, remote_ip, session_uuid, status, action_type, username ]`, `[ path, remote_ip, session_uuid, status, action_type, created_at ]`, `[ path, remote_ip, session_uuid, status, username, created_at ]`, `[ path, remote_ip, session_uuid, action_type, username, created_at ]`, `[ path, remote_ip, success, status, action_type, username ]`, `[ path, remote_ip, success, status, action_type, created_at ]`, `[ path, remote_ip, success, status, username, created_at ]`, `[ path, remote_ip, success, action_type, username, created_at ]`, `[ path, remote_ip, status, action_type, username, created_at ]`, `[ path, session_uuid, success, status, action_type, username ]`, `[ path, session_uuid, success, status, action_type, created_at ]`, `[ path, session_uuid, success, status, username, created_at ]`, `[ path, session_uuid, success, action_type, username, created_at ]`, `[ path, session_uuid, status, action_type, username, created_at ]`, `[ path, success, status, action_type, username, created_at ]`, `[ true_path, remote_ip, session_uuid, success, status, action_type ]`, `[ true_path, remote_ip, session_uuid, success, status, username ]`, `[ true_path, remote_ip, session_uuid, success, status, created_at ]`, `[ true_path, remote_ip, session_uuid, success, action_type, username ]`, `[ true_path, remote_ip, session_uuid, success, action_type, created_at ]`, `[ true_path, remote_ip, session_uuid, success, username, created_at ]`, `[ true_path, remote_ip, session_uuid, status, action_type, username ]`, `[ true_path, remote_ip, session_uuid, status, action_type, created_at ]`, `[ true_path, remote_ip, session_uuid, status, username, created_at ]`, `[ true_path, remote_ip, session_uuid, action_type, username, created_at ]`, `[ true_path, remote_ip, success, status, action_type, username ]`, `[ true_path, remote_ip, success, status, action_type, created_at ]`, `[ true_path, remote_ip, success, status, username, created_at ]`, `[ true_path, remote_ip, success, action_type, username, created_at ]`, `[ true_path, remote_ip, status, action_type, username, created_at ]`, `[ true_path, session_uuid, success, status, action_type, username ]`, `[ true_path, session_uuid, success, status, action_type, created_at ]`, `[ true_path, session_uuid, success, status, username, created_at ]`, `[ true_path, session_uuid, success, action_type, username, created_at ]`, `[ true_path, session_uuid, status, action_type, username, created_at ]`, `[ true_path, success, status, action_type, username, created_at ]`, `[ remote_ip, session_uuid, success, status, action_type, username ]`, `[ remote_ip, session_uuid, success, status, action_type, created_at ]`, `[ remote_ip, session_uuid, success, status, username, created_at ]`, `[ remote_ip, session_uuid, success, action_type, username, created_at ]`, `[ remote_ip, session_uuid, status, action_type, username, created_at ]`, `[ remote_ip, success, status, action_type, username, created_at ]`, `[ session_uuid, success, status, action_type, username, created_at ]`, `[ path, true_path, remote_ip, session_uuid, success, status, action_type ]`, `[ path, true_path, remote_ip, session_uuid, success, status, username ]`, `[ path, true_path, remote_ip, session_uuid, success, status, created_at ]`, `[ path, true_path, remote_ip, session_uuid, success, action_type, username ]`, `[ path, true_path, remote_ip, session_uuid, success, action_type, created_at ]`, `[ path, true_path, remote_ip, session_uuid, success, username, created_at ]`, `[ path, true_path, remote_ip, session_uuid, status, action_type, username ]`, `[ path, true_path, remote_ip, session_uuid, status, action_type, created_at ]`, `[ path, true_path, remote_ip, session_uuid, status, username, created_at ]`, `[ path, true_path, remote_ip, session_uuid, action_type, username, created_at ]`, `[ path, true_path, remote_ip, success, status, action_type, username ]`, `[ path, true_path, remote_ip, success, status, action_type, created_at ]`, `[ path, true_path, remote_ip, success, status, username, created_at ]`, `[ path, true_path, remote_ip, success, action_type, username, created_at ]`, `[ path, true_path, remote_ip, status, action_type, username, created_at ]`, `[ path, true_path, session_uuid, success, status, action_type, username ]`, `[ path, true_path, session_uuid, success, status, action_type, created_at ]`, `[ path, true_path, session_uuid, success, status, username, created_at ]`, `[ path, true_path, session_uuid, success, action_type, username, created_at ]`, `[ path, true_path, session_uuid, status, action_type, username, created_at ]`, `[ path, true_path, success, status, action_type, username, created_at ]`, `[ path, remote_ip, session_uuid, success, status, action_type, username ]`, `[ path, remote_ip, session_uuid, success, status, action_type, created_at ]`, `[ path, remote_ip, session_uuid, success, status, username, created_at ]`, `[ path, remote_ip, session_uuid, success, action_type, username, created_at ]`, `[ path, remote_ip, session_uuid, status, action_type, username, created_at ]`, `[ path, remote_ip, success, status, action_type, username, created_at ]`, `[ path, session_uuid, success, status, action_type, username, created_at ]`, `[ true_path, remote_ip, session_uuid, success, status, action_type, username ]`, `[ true_path, remote_ip, session_uuid, success, status, action_type, created_at ]`, `[ true_path, remote_ip, session_uuid, success, status, username, created_at ]`, `[ true_path, remote_ip, session_uuid, success, action_type, username, created_at ]`, `[ true_path, remote_ip, session_uuid, status, action_type, username, created_at ]`, `[ true_path, remote_ip, success, status, action_type, username, created_at ]`, `[ true_path, session_uuid, success, status, action_type, username, created_at ]`, `[ remote_ip, session_uuid, success, status, action_type, username, created_at ]`, `[ path, true_path, remote_ip, session_uuid, success, status, action_type, username ]`, `[ path, true_path, remote_ip, session_uuid, success, status, action_type, created_at ]`, `[ path, true_path, remote_ip, session_uuid, success, status, username, created_at ]`, `[ path, true_path, remote_ip, session_uuid, success, action_type, username, created_at ]`, `[ path, true_path, remote_ip, session_uuid, status, action_type, username, created_at ]`, `[ path, true_path, remote_ip, success, status, action_type, username, created_at ]`, `[ path, true_path, session_uuid, success, status, action_type, username, created_at ]`, `[ path, remote_ip, session_uuid, success, status, action_type, username, created_at ]`, `[ true_path, remote_ip, session_uuid, success, status, action_type, username, created_at ]` or `[ path, true_path, remote_ip, session_uuid, success, status, action_type, username, created_at ]`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class Errors
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,11 +56,11 @@ class Errors
     // array(string) # A list of fields where errors occur
     public function getFields()
     {
-        return @$this->attributes['fields'];
+        return isset($this->attributes['fields']) ? $this->attributes['fields'] : null;
     }
     // array(string) # A list of error messages
     public function getMessages()
     {
-        return @$this->attributes['messages'];
+        return isset($this->attributes['messages']) ? $this->attributes['messages'] : null;
     }
 }

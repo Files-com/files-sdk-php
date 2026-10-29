@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class Group
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class Group
     // int64 # Group ID
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
     public function setId($value)
@@ -68,7 +66,7 @@ class Group
     // string # Group name
     public function getName()
     {
-        return @$this->attributes['name'];
+        return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
 
     public function setName($value)
@@ -78,7 +76,7 @@ class Group
     // string # A list of allowed IPs if applicable.  Newline delimited
     public function getAllowedIps()
     {
-        return @$this->attributes['allowed_ips'];
+        return isset($this->attributes['allowed_ips']) ? $this->attributes['allowed_ips'] : null;
     }
 
     public function setAllowedIps($value)
@@ -88,7 +86,7 @@ class Group
     // string # Comma-delimited list of user IDs who are group administrators (separated by commas)
     public function getAdminIds()
     {
-        return @$this->attributes['admin_ids'];
+        return isset($this->attributes['admin_ids']) ? $this->attributes['admin_ids'] : null;
     }
 
     public function setAdminIds($value)
@@ -98,7 +96,7 @@ class Group
     // string # Notes about this group
     public function getNotes()
     {
-        return @$this->attributes['notes'];
+        return isset($this->attributes['notes']) ? $this->attributes['notes'] : null;
     }
 
     public function setNotes($value)
@@ -108,7 +106,7 @@ class Group
     // string # Comma-delimited list of user IDs who belong to this group (separated by commas)
     public function getUserIds()
     {
-        return @$this->attributes['user_ids'];
+        return isset($this->attributes['user_ids']) ? $this->attributes['user_ids'] : null;
     }
 
     public function setUserIds($value)
@@ -118,7 +116,7 @@ class Group
     // string # Comma-delimited list of usernames who belong to this group (separated by commas)
     public function getUsernames()
     {
-        return @$this->attributes['usernames'];
+        return isset($this->attributes['usernames']) ? $this->attributes['usernames'] : null;
     }
 
     public function setUsernames($value)
@@ -128,7 +126,7 @@ class Group
     // int64 # AI Assistant Personality ID assigned to this Group, if any. Users in the Group inherit it unless a direct per-user or Partner assignment overrides it.
     public function getAiAssistantPersonalityId()
     {
-        return @$this->attributes['ai_assistant_personality_id'];
+        return isset($this->attributes['ai_assistant_personality_id']) ? $this->attributes['ai_assistant_personality_id'] : null;
     }
 
     public function setAiAssistantPersonalityId($value)
@@ -138,7 +136,7 @@ class Group
     // boolean # If true, users in this group can use FTP to login.  This will override a false value of `ftp_permission` on the user level.
     public function getFtpPermission()
     {
-        return @$this->attributes['ftp_permission'];
+        return isset($this->attributes['ftp_permission']) ? $this->attributes['ftp_permission'] : null;
     }
 
     public function setFtpPermission($value)
@@ -148,7 +146,7 @@ class Group
     // boolean # If true, users in this group can use SFTP to login.  This will override a false value of `sftp_permission` on the user level.
     public function getSftpPermission()
     {
-        return @$this->attributes['sftp_permission'];
+        return isset($this->attributes['sftp_permission']) ? $this->attributes['sftp_permission'] : null;
     }
 
     public function setSftpPermission($value)
@@ -158,7 +156,7 @@ class Group
     // boolean # If true, users in this group can use WebDAV to login.  This will override a false value of `dav_permission` on the user level.
     public function getDavPermission()
     {
-        return @$this->attributes['dav_permission'];
+        return isset($this->attributes['dav_permission']) ? $this->attributes['dav_permission'] : null;
     }
 
     public function setDavPermission($value)
@@ -168,7 +166,7 @@ class Group
     // boolean # If true, users in this group can use the REST API to login.  This will override a false value of `restapi_permission` on the user level.
     public function getRestapiPermission()
     {
-        return @$this->attributes['restapi_permission'];
+        return isset($this->attributes['restapi_permission']) ? $this->attributes['restapi_permission'] : null;
     }
 
     public function setRestapiPermission($value)
@@ -178,7 +176,7 @@ class Group
     // boolean # If true, users in this group can access the S3-compatible endpoint. This will override a false value of `s3_compatible_endpoint_permission` on the user level. Defaults to false.
     public function getS3CompatibleEndpointPermission()
     {
-        return @$this->attributes['s3_compatible_endpoint_permission'];
+        return isset($this->attributes['s3_compatible_endpoint_permission']) ? $this->attributes['s3_compatible_endpoint_permission'] : null;
     }
 
     public function setS3CompatibleEndpointPermission($value)
@@ -188,7 +186,7 @@ class Group
     // int64 # Desktop Configuration Profile ID assigned to this Group, if any. Users in the Group inherit it unless a direct per-user assignment overrides it.
     public function getDesktopConfigurationProfileId()
     {
-        return @$this->attributes['desktop_configuration_profile_id'];
+        return isset($this->attributes['desktop_configuration_profile_id']) ? $this->attributes['desktop_configuration_profile_id'] : null;
     }
 
     public function setDesktopConfigurationProfileId($value)
@@ -198,7 +196,7 @@ class Group
     // int64 # Integration Centric Profile ID assigned to this Group, if any. Users in the Group inherit it unless a direct per-user assignment overrides it.
     public function getIntegrationCentricProfileId()
     {
-        return @$this->attributes['integration_centric_profile_id'];
+        return isset($this->attributes['integration_centric_profile_id']) ? $this->attributes['integration_centric_profile_id'] : null;
     }
 
     public function setIntegrationCentricProfileId($value)
@@ -208,7 +206,7 @@ class Group
     // int64 # Site ID
     public function getSiteId()
     {
-        return @$this->attributes['site_id'];
+        return isset($this->attributes['site_id']) ? $this->attributes['site_id'] : null;
     }
 
     public function setSiteId($value)
@@ -218,7 +216,7 @@ class Group
     // int64 # Workspace ID
     public function getWorkspaceId()
     {
-        return @$this->attributes['workspace_id'];
+        return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
 
     public function setWorkspaceId($value)
@@ -246,7 +244,7 @@ class Group
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -254,39 +252,39 @@ class Group
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (@$params['notes'] && !is_string(@$params['notes'])) {
+        if (!empty($params['notes']) && !is_string($params['notes'])) {
             throw new \Files\Exception\InvalidParameterException('$notes must be of type string; received ' . gettype(@$params['notes']));
         }
 
-        if (@$params['user_ids'] && !is_string(@$params['user_ids'])) {
+        if (!empty($params['user_ids']) && !is_string($params['user_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$user_ids must be of type string; received ' . gettype(@$params['user_ids']));
         }
 
-        if (@$params['admin_ids'] && !is_string(@$params['admin_ids'])) {
+        if (!empty($params['admin_ids']) && !is_string($params['admin_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$admin_ids must be of type string; received ' . gettype(@$params['admin_ids']));
         }
 
-        if (@$params['ai_assistant_personality_id'] && !is_int(@$params['ai_assistant_personality_id'])) {
+        if (!empty($params['ai_assistant_personality_id']) && !is_int($params['ai_assistant_personality_id'])) {
             throw new \Files\Exception\InvalidParameterException('$ai_assistant_personality_id must be of type int; received ' . gettype(@$params['ai_assistant_personality_id']));
         }
 
-        if (@$params['desktop_configuration_profile_id'] && !is_int(@$params['desktop_configuration_profile_id'])) {
+        if (!empty($params['desktop_configuration_profile_id']) && !is_int($params['desktop_configuration_profile_id'])) {
             throw new \Files\Exception\InvalidParameterException('$desktop_configuration_profile_id must be of type int; received ' . gettype(@$params['desktop_configuration_profile_id']));
         }
 
-        if (@$params['integration_centric_profile_id'] && !is_int(@$params['integration_centric_profile_id'])) {
+        if (!empty($params['integration_centric_profile_id']) && !is_int($params['integration_centric_profile_id'])) {
             throw new \Files\Exception\InvalidParameterException('$integration_centric_profile_id must be of type int; received ' . gettype(@$params['integration_centric_profile_id']));
         }
 
-        if (@$params['allowed_ips'] && !is_string(@$params['allowed_ips'])) {
+        if (!empty($params['allowed_ips']) && !is_string($params['allowed_ips'])) {
             throw new \Files\Exception\InvalidParameterException('$allowed_ips must be of type string; received ' . gettype(@$params['allowed_ips']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
@@ -300,7 +298,7 @@ class Group
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -308,7 +306,7 @@ class Group
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -347,15 +345,15 @@ class Group
     //   include_default_workspace_groups - boolean - When scoped to a Custom Workspace, include Default Workspace groups that have permissions in that Workspace. Available to Site Administrators, and to Workspace Administrators and Folder Admins in that Workspace when the site shares its Default Workspace directory with Workspaces.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
-        if (@$params['ids'] && !is_string(@$params['ids'])) {
+        if (!empty($params['ids']) && !is_string($params['ids'])) {
             throw new \Files\Exception\InvalidParameterException('$ids must be of type string; received ' . gettype(@$params['ids']));
         }
 
@@ -380,11 +378,11 @@ class Group
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -414,43 +412,43 @@ class Group
     //   workspace_id - int64 - Workspace ID
     public static function create($params = [], $options = [])
     {
-        if (!@$params['name']) {
+        if (empty($params['name'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: name');
         }
 
-        if (@$params['notes'] && !is_string(@$params['notes'])) {
+        if (!empty($params['notes']) && !is_string($params['notes'])) {
             throw new \Files\Exception\InvalidParameterException('$notes must be of type string; received ' . gettype(@$params['notes']));
         }
 
-        if (@$params['user_ids'] && !is_string(@$params['user_ids'])) {
+        if (!empty($params['user_ids']) && !is_string($params['user_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$user_ids must be of type string; received ' . gettype(@$params['user_ids']));
         }
 
-        if (@$params['admin_ids'] && !is_string(@$params['admin_ids'])) {
+        if (!empty($params['admin_ids']) && !is_string($params['admin_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$admin_ids must be of type string; received ' . gettype(@$params['admin_ids']));
         }
 
-        if (@$params['ai_assistant_personality_id'] && !is_int(@$params['ai_assistant_personality_id'])) {
+        if (!empty($params['ai_assistant_personality_id']) && !is_int($params['ai_assistant_personality_id'])) {
             throw new \Files\Exception\InvalidParameterException('$ai_assistant_personality_id must be of type int; received ' . gettype(@$params['ai_assistant_personality_id']));
         }
 
-        if (@$params['desktop_configuration_profile_id'] && !is_int(@$params['desktop_configuration_profile_id'])) {
+        if (!empty($params['desktop_configuration_profile_id']) && !is_int($params['desktop_configuration_profile_id'])) {
             throw new \Files\Exception\InvalidParameterException('$desktop_configuration_profile_id must be of type int; received ' . gettype(@$params['desktop_configuration_profile_id']));
         }
 
-        if (@$params['integration_centric_profile_id'] && !is_int(@$params['integration_centric_profile_id'])) {
+        if (!empty($params['integration_centric_profile_id']) && !is_int($params['integration_centric_profile_id'])) {
             throw new \Files\Exception\InvalidParameterException('$integration_centric_profile_id must be of type int; received ' . gettype(@$params['integration_centric_profile_id']));
         }
 
-        if (@$params['allowed_ips'] && !is_string(@$params['allowed_ips'])) {
+        if (!empty($params['allowed_ips']) && !is_string($params['allowed_ips'])) {
             throw new \Files\Exception\InvalidParameterException('$allowed_ips must be of type string; received ' . gettype(@$params['allowed_ips']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 

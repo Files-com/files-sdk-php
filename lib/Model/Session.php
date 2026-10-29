@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class Session
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class Session
     // string # Session ID
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
     public function setId($value)
@@ -68,7 +66,7 @@ class Session
     // string # Session language
     public function getLanguage()
     {
-        return @$this->attributes['language'];
+        return isset($this->attributes['language']) ? $this->attributes['language'] : null;
     }
 
     public function setLanguage($value)
@@ -78,7 +76,7 @@ class Session
     // boolean # Is this session read only?
     public function getReadOnly()
     {
-        return @$this->attributes['read_only'];
+        return isset($this->attributes['read_only']) ? $this->attributes['read_only'] : null;
     }
 
     public function setReadOnly($value)
@@ -88,7 +86,7 @@ class Session
     // boolean # Are insecure SFTP ciphers allowed for this user? (If this is set to true, the site administrator has signaled that it is ok to use less secure SSH ciphers for this user.)
     public function getSftpInsecureCiphers()
     {
-        return @$this->attributes['sftp_insecure_ciphers'];
+        return isset($this->attributes['sftp_insecure_ciphers']) ? $this->attributes['sftp_insecure_ciphers'] : null;
     }
 
     public function setSftpInsecureCiphers($value)
@@ -98,7 +96,7 @@ class Session
     // string # Username to sign in as
     public function getUsername()
     {
-        return @$this->attributes['username'];
+        return isset($this->attributes['username']) ? $this->attributes['username'] : null;
     }
 
     public function setUsername($value)
@@ -108,7 +106,7 @@ class Session
     // string # Password for sign in
     public function getPassword()
     {
-        return @$this->attributes['password'];
+        return isset($this->attributes['password']) ? $this->attributes['password'] : null;
     }
 
     public function setPassword($value)
@@ -118,7 +116,7 @@ class Session
     // string # If this user has a 2FA device, provide its OTP or code here.
     public function getOtp()
     {
-        return @$this->attributes['otp'];
+        return isset($this->attributes['otp']) ? $this->attributes['otp'] : null;
     }
 
     public function setOtp($value)
@@ -128,7 +126,7 @@ class Session
     // string # Identifier for a partially-completed login
     public function getPartialSessionId()
     {
-        return @$this->attributes['partial_session_id'];
+        return isset($this->attributes['partial_session_id']) ? $this->attributes['partial_session_id'] : null;
     }
 
     public function setPartialSessionId($value)
@@ -155,19 +153,19 @@ class Session
     //   partial_session_id - string - Identifier for a partially-completed login
     public static function create($params = [], $options = [])
     {
-        if (@$params['username'] && !is_string(@$params['username'])) {
+        if (!empty($params['username']) && !is_string($params['username'])) {
             throw new \Files\Exception\InvalidParameterException('$username must be of type string; received ' . gettype(@$params['username']));
         }
 
-        if (@$params['password'] && !is_string(@$params['password'])) {
+        if (!empty($params['password']) && !is_string($params['password'])) {
             throw new \Files\Exception\InvalidParameterException('$password must be of type string; received ' . gettype(@$params['password']));
         }
 
-        if (@$params['otp'] && !is_string(@$params['otp'])) {
+        if (!empty($params['otp']) && !is_string($params['otp'])) {
             throw new \Files\Exception\InvalidParameterException('$otp must be of type string; received ' . gettype(@$params['otp']));
         }
 
-        if (@$params['partial_session_id'] && !is_string(@$params['partial_session_id'])) {
+        if (!empty($params['partial_session_id']) && !is_string($params['partial_session_id'])) {
             throw new \Files\Exception\InvalidParameterException('$partial_session_id must be of type string; received ' . gettype(@$params['partial_session_id']));
         }
 

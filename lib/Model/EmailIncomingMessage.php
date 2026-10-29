@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class EmailIncomingMessage
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,47 +56,47 @@ class EmailIncomingMessage
     // int64 # Id of the Email Incoming Message
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
     // int64 # Id of the Inbox associated with this message
     public function getInboxId()
     {
-        return @$this->attributes['inbox_id'];
+        return isset($this->attributes['inbox_id']) ? $this->attributes['inbox_id'] : null;
     }
     // string # Sender of the email
     public function getSender()
     {
-        return @$this->attributes['sender'];
+        return isset($this->attributes['sender']) ? $this->attributes['sender'] : null;
     }
     // string # Sender name
     public function getSenderName()
     {
-        return @$this->attributes['sender_name'];
+        return isset($this->attributes['sender_name']) ? $this->attributes['sender_name'] : null;
     }
     // string # Status of the message
     public function getStatus()
     {
-        return @$this->attributes['status'];
+        return isset($this->attributes['status']) ? $this->attributes['status'] : null;
     }
     // string # Body of the email
     public function getBody()
     {
-        return @$this->attributes['body'];
+        return isset($this->attributes['body']) ? $this->attributes['body'] : null;
     }
     // string # Message describing the failure
     public function getMessage()
     {
-        return @$this->attributes['message'];
+        return isset($this->attributes['message']) ? $this->attributes['message'] : null;
     }
     // date-time # Message creation date/time
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
     // string # Title of the Inbox associated with this message
     public function getInboxTitle()
     {
-        return @$this->attributes['inbox_title'];
+        return isset($this->attributes['inbox_title']) ? $this->attributes['inbox_title'] : null;
     }
 
     // Parameters:
@@ -113,11 +111,11 @@ class EmailIncomingMessage
     //   filter_lteq - object - If set, return records where the specified field is less than or equal the supplied value. Valid fields are `created_at`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 

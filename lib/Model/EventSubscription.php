@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class EventSubscription
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class EventSubscription
     // int64 # Event Subscription ID
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
     public function setId($value)
@@ -68,7 +66,7 @@ class EventSubscription
     // int64 # Event Channel ID
     public function getEventChannelId()
     {
-        return @$this->attributes['event_channel_id'];
+        return isset($this->attributes['event_channel_id']) ? $this->attributes['event_channel_id'] : null;
     }
 
     public function setEventChannelId($value)
@@ -78,7 +76,7 @@ class EventSubscription
     // int64 # Workspace ID. 0 means the default workspace or site-wide.
     public function getWorkspaceId()
     {
-        return @$this->attributes['workspace_id'];
+        return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
 
     public function setWorkspaceId($value)
@@ -88,7 +86,7 @@ class EventSubscription
     // boolean # If true, this default-workspace subscription applies to events from all workspaces.
     public function getApplyToAllWorkspaces()
     {
-        return @$this->attributes['apply_to_all_workspaces'];
+        return isset($this->attributes['apply_to_all_workspaces']) ? $this->attributes['apply_to_all_workspaces'] : null;
     }
 
     public function setApplyToAllWorkspaces($value)
@@ -98,7 +96,7 @@ class EventSubscription
     // string # Event Subscription name.
     public function getName()
     {
-        return @$this->attributes['name'];
+        return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
 
     public function setName($value)
@@ -108,7 +106,7 @@ class EventSubscription
     // string # Custom subject line to use for notification emails.
     public function getSubject()
     {
-        return @$this->attributes['subject'];
+        return isset($this->attributes['subject']) ? $this->attributes['subject'] : null;
     }
 
     public function setSubject($value)
@@ -118,7 +116,7 @@ class EventSubscription
     // string # Custom message to include in notification emails.
     public function getMessage()
     {
-        return @$this->attributes['message'];
+        return isset($this->attributes['message']) ? $this->attributes['message'] : null;
     }
 
     public function setMessage($value)
@@ -128,7 +126,7 @@ class EventSubscription
     // boolean # If true, notification email bodies contain only the custom message, omitting event details and the review button. Requires a custom message, defaults to false, and does not affect non-email targets.
     public function getMessageOnly()
     {
-        return @$this->attributes['message_only'];
+        return isset($this->attributes['message_only']) ? $this->attributes['message_only'] : null;
     }
 
     public function setMessageOnly($value)
@@ -138,7 +136,7 @@ class EventSubscription
     // boolean # Whether this Event Subscription can dispatch events.
     public function getEnabled()
     {
-        return @$this->attributes['enabled'];
+        return isset($this->attributes['enabled']) ? $this->attributes['enabled'] : null;
     }
 
     public function setEnabled($value)
@@ -148,7 +146,7 @@ class EventSubscription
     // array(string) # Event type strings matched by this subscription. Blank means all event types. Valid values: `automation_run.canceled.v1`, `automation_run.failure.v1`, `automation_run.failure_will_retry.v1`, `automation_run.partial_failure.v1`, `automation_run.partial_failure_will_retry.v1`, `automation_run.skipped.v1`, `automation_run.success.v1`, `expectation_evaluation.invalid.v1`, `expectation_evaluation.late.v1`, `expectation_evaluation.missing.v1`, `expectation_evaluation.success.v1`, `expectation_incident.acknowledged.v1`, `expectation_incident.open.v1`, `expectation_incident.resolved.v1`, `expectation_incident.snoozed.v1`, `external_event.client_log.failure.v1`, `external_event.client_log.partial_failure.v1`, `external_event.client_log.skipped.v1`, `external_event.client_log.success.v1`, `pending_work_event.failure.v1`, `pending_work_event.partial_failure.v1`, `pending_work_event.skipped.v1`, `pending_work_event.success.v1`, `siem_http_destination_event.failure.v1`, `siem_http_destination_event.partial_failure.v1`, `siem_http_destination_event.skipped.v1`, `siem_http_destination_event.success.v1`, `sso_event.ldap_login.failure.v1`, `sso_event.ldap_login.partial_failure.v1`, `sso_event.ldap_login.skipped.v1`, `sso_event.ldap_login.success.v1`, `sso_event.ldap_sync.failure.v1`, `sso_event.ldap_sync.partial_failure.v1`, `sso_event.ldap_sync.skipped.v1`, `sso_event.ldap_sync.success.v1`, `sso_event.saml_login.failure.v1`, `sso_event.saml_login.partial_failure.v1`, `sso_event.saml_login.skipped.v1`, `sso_event.saml_login.success.v1`, `sync_run.failure.v1`, `sync_run.partial_failure.v1`, `sync_run.skipped.v1`, `sync_run.success.v1`, `user_security_event.lockout.v1`
     public function getEventTypes()
     {
-        return @$this->attributes['event_types'];
+        return isset($this->attributes['event_types']) ? $this->attributes['event_types'] : null;
     }
 
     public function setEventTypes($value)
@@ -158,7 +156,7 @@ class EventSubscription
     // object # Conditions on event fields that an event must meet to be delivered, keyed by dot-notation field path. All conditions must match.
     public function getFilter()
     {
-        return @$this->attributes['filter'];
+        return isset($this->attributes['filter']) ? $this->attributes['filter'] : null;
     }
 
     public function setFilter($value)
@@ -168,7 +166,7 @@ class EventSubscription
     // object # Event Subscription delivery policy. Overrides retry settings from each Event Target's delivery policy.
     public function getDeliveryPolicy()
     {
-        return @$this->attributes['delivery_policy'];
+        return isset($this->attributes['delivery_policy']) ? $this->attributes['delivery_policy'] : null;
     }
 
     public function setDeliveryPolicy($value)
@@ -178,7 +176,7 @@ class EventSubscription
     // array(int64) # Event Target IDs this subscription sends to.
     public function getEventTargetIds()
     {
-        return @$this->attributes['event_target_ids'];
+        return isset($this->attributes['event_target_ids']) ? $this->attributes['event_target_ids'] : null;
     }
 
     public function setEventTargetIds($value)
@@ -188,12 +186,12 @@ class EventSubscription
     // date-time # Event Subscription create date/time.
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
     // date-time # Event Subscription update date/time.
     public function getUpdatedAt()
     {
-        return @$this->attributes['updated_at'];
+        return isset($this->attributes['updated_at']) ? $this->attributes['updated_at'] : null;
     }
 
     // Parameters:
@@ -215,7 +213,7 @@ class EventSubscription
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -223,35 +221,35 @@ class EventSubscription
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (@$params['event_channel_id'] && !is_int(@$params['event_channel_id'])) {
+        if (!empty($params['event_channel_id']) && !is_int($params['event_channel_id'])) {
             throw new \Files\Exception\InvalidParameterException('$event_channel_id must be of type int; received ' . gettype(@$params['event_channel_id']));
         }
 
-        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['subject'] && !is_string(@$params['subject'])) {
+        if (!empty($params['subject']) && !is_string($params['subject'])) {
             throw new \Files\Exception\InvalidParameterException('$subject must be of type string; received ' . gettype(@$params['subject']));
         }
 
-        if (@$params['message'] && !is_string(@$params['message'])) {
+        if (!empty($params['message']) && !is_string($params['message'])) {
             throw new \Files\Exception\InvalidParameterException('$message must be of type string; received ' . gettype(@$params['message']));
         }
 
-        if (@$params['event_types'] && !is_array(@$params['event_types'])) {
+        if (!empty($params['event_types']) && !is_array($params['event_types'])) {
             throw new \Files\Exception\InvalidParameterException('$event_types must be of type array; received ' . gettype(@$params['event_types']));
         }
 
-        if (@$params['event_target_ids'] && !is_array(@$params['event_target_ids'])) {
+        if (!empty($params['event_target_ids']) && !is_array($params['event_target_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$event_target_ids must be of type array; received ' . gettype(@$params['event_target_ids']));
         }
 
@@ -265,7 +263,7 @@ class EventSubscription
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -273,7 +271,7 @@ class EventSubscription
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -308,11 +306,11 @@ class EventSubscription
     //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `enabled`, `event_channel_id` or `workspace_id`. Valid field combinations are `[ enabled, event_channel_id ]`, `[ workspace_id, enabled ]`, `[ workspace_id, event_channel_id ]` or `[ workspace_id, enabled, event_channel_id ]`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -337,11 +335,11 @@ class EventSubscription
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -369,35 +367,35 @@ class EventSubscription
     //   event_target_ids - array(int64) - Event Target IDs this subscription sends to.
     public static function create($params = [], $options = [])
     {
-        if (!@$params['name']) {
+        if (empty($params['name'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: name');
         }
 
-        if (@$params['event_channel_id'] && !is_int(@$params['event_channel_id'])) {
+        if (!empty($params['event_channel_id']) && !is_int($params['event_channel_id'])) {
             throw new \Files\Exception\InvalidParameterException('$event_channel_id must be of type int; received ' . gettype(@$params['event_channel_id']));
         }
 
-        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['subject'] && !is_string(@$params['subject'])) {
+        if (!empty($params['subject']) && !is_string($params['subject'])) {
             throw new \Files\Exception\InvalidParameterException('$subject must be of type string; received ' . gettype(@$params['subject']));
         }
 
-        if (@$params['message'] && !is_string(@$params['message'])) {
+        if (!empty($params['message']) && !is_string($params['message'])) {
             throw new \Files\Exception\InvalidParameterException('$message must be of type string; received ' . gettype(@$params['message']));
         }
 
-        if (@$params['event_types'] && !is_array(@$params['event_types'])) {
+        if (!empty($params['event_types']) && !is_array($params['event_types'])) {
             throw new \Files\Exception\InvalidParameterException('$event_types must be of type array; received ' . gettype(@$params['event_types']));
         }
 
-        if (@$params['event_target_ids'] && !is_array(@$params['event_target_ids'])) {
+        if (!empty($params['event_target_ids']) && !is_array($params['event_target_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$event_target_ids must be of type array; received ' . gettype(@$params['event_target_ids']));
         }
 

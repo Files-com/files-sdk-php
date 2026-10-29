@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class RemoteMountBackend
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class RemoteMountBackend
     // string # Path to the canary file used for health checks.
     public function getCanaryFilePath()
     {
-        return @$this->attributes['canary_file_path'];
+        return isset($this->attributes['canary_file_path']) ? $this->attributes['canary_file_path'] : null;
     }
 
     public function setCanaryFilePath($value)
@@ -68,7 +66,7 @@ class RemoteMountBackend
     // boolean # True if this backend is enabled.
     public function getEnabled()
     {
-        return @$this->attributes['enabled'];
+        return isset($this->attributes['enabled']) ? $this->attributes['enabled'] : null;
     }
 
     public function setEnabled($value)
@@ -78,7 +76,7 @@ class RemoteMountBackend
     // int64 # Number of consecutive failures before considering the backend unhealthy.
     public function getFall()
     {
-        return @$this->attributes['fall'];
+        return isset($this->attributes['fall']) ? $this->attributes['fall'] : null;
     }
 
     public function setFall($value)
@@ -88,7 +86,7 @@ class RemoteMountBackend
     // boolean # True if health checks are enabled for this backend.
     public function getHealthCheckEnabled()
     {
-        return @$this->attributes['health_check_enabled'];
+        return isset($this->attributes['health_check_enabled']) ? $this->attributes['health_check_enabled'] : null;
     }
 
     public function setHealthCheckEnabled($value)
@@ -98,7 +96,7 @@ class RemoteMountBackend
     // array(object) # Array of recent health check results.
     public function getHealthCheckResults()
     {
-        return @$this->attributes['health_check_results'];
+        return isset($this->attributes['health_check_results']) ? $this->attributes['health_check_results'] : null;
     }
 
     public function setHealthCheckResults($value)
@@ -108,7 +106,7 @@ class RemoteMountBackend
     // string # Type of health check to perform.
     public function getHealthCheckType()
     {
-        return @$this->attributes['health_check_type'];
+        return isset($this->attributes['health_check_type']) ? $this->attributes['health_check_type'] : null;
     }
 
     public function setHealthCheckType($value)
@@ -118,7 +116,7 @@ class RemoteMountBackend
     // int64 # Unique identifier for this backend.
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
     public function setId($value)
@@ -128,7 +126,7 @@ class RemoteMountBackend
     // int64 # Interval in seconds between health checks.
     public function getInterval()
     {
-        return @$this->attributes['interval'];
+        return isset($this->attributes['interval']) ? $this->attributes['interval'] : null;
     }
 
     public function setInterval($value)
@@ -138,7 +136,7 @@ class RemoteMountBackend
     // decimal # Minimum free CPU percentage required for this backend to be considered healthy.
     public function getMinFreeCpu()
     {
-        return @$this->attributes['min_free_cpu'];
+        return isset($this->attributes['min_free_cpu']) ? $this->attributes['min_free_cpu'] : null;
     }
 
     public function setMinFreeCpu($value)
@@ -148,7 +146,7 @@ class RemoteMountBackend
     // decimal # Minimum free memory percentage required for this backend to be considered healthy.
     public function getMinFreeMem()
     {
-        return @$this->attributes['min_free_mem'];
+        return isset($this->attributes['min_free_mem']) ? $this->attributes['min_free_mem'] : null;
     }
 
     public function setMinFreeMem($value)
@@ -158,7 +156,7 @@ class RemoteMountBackend
     // int64 # Priority of this backend.
     public function getPriority()
     {
-        return @$this->attributes['priority'];
+        return isset($this->attributes['priority']) ? $this->attributes['priority'] : null;
     }
 
     public function setPriority($value)
@@ -168,7 +166,7 @@ class RemoteMountBackend
     // string # Path on the remote server to treat as the root of this mount.
     public function getRemotePath()
     {
-        return @$this->attributes['remote_path'];
+        return isset($this->attributes['remote_path']) ? $this->attributes['remote_path'] : null;
     }
 
     public function setRemotePath($value)
@@ -178,7 +176,7 @@ class RemoteMountBackend
     // int64 # The remote server that this backend is associated with.
     public function getRemoteServerId()
     {
-        return @$this->attributes['remote_server_id'];
+        return isset($this->attributes['remote_server_id']) ? $this->attributes['remote_server_id'] : null;
     }
 
     public function setRemoteServerId($value)
@@ -188,7 +186,7 @@ class RemoteMountBackend
     // int64 # The mount ID of the Remote Server Mount that this backend is associated with.
     public function getRemoteServerMountId()
     {
-        return @$this->attributes['remote_server_mount_id'];
+        return isset($this->attributes['remote_server_mount_id']) ? $this->attributes['remote_server_mount_id'] : null;
     }
 
     public function setRemoteServerMountId($value)
@@ -198,7 +196,7 @@ class RemoteMountBackend
     // int64 # Number of consecutive successes before considering the backend healthy.
     public function getRise()
     {
-        return @$this->attributes['rise'];
+        return isset($this->attributes['rise']) ? $this->attributes['rise'] : null;
     }
 
     public function setRise($value)
@@ -208,7 +206,7 @@ class RemoteMountBackend
     // string # Status of this backend.
     public function getStatus()
     {
-        return @$this->attributes['status'];
+        return isset($this->attributes['status']) ? $this->attributes['status'] : null;
     }
 
     public function setStatus($value)
@@ -218,7 +216,7 @@ class RemoteMountBackend
     // boolean # True if this backend is undergoing maintenance.
     public function getUndergoingMaintenance()
     {
-        return @$this->attributes['undergoing_maintenance'];
+        return isset($this->attributes['undergoing_maintenance']) ? $this->attributes['undergoing_maintenance'] : null;
     }
 
     public function setUndergoingMaintenance($value)
@@ -233,7 +231,7 @@ class RemoteMountBackend
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -241,7 +239,7 @@ class RemoteMountBackend
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -268,7 +266,7 @@ class RemoteMountBackend
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -276,39 +274,39 @@ class RemoteMountBackend
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (@$params['fall'] && !is_int(@$params['fall'])) {
+        if (!empty($params['fall']) && !is_int($params['fall'])) {
             throw new \Files\Exception\InvalidParameterException('$fall must be of type int; received ' . gettype(@$params['fall']));
         }
 
-        if (@$params['health_check_type'] && !is_string(@$params['health_check_type'])) {
+        if (!empty($params['health_check_type']) && !is_string($params['health_check_type'])) {
             throw new \Files\Exception\InvalidParameterException('$health_check_type must be of type string; received ' . gettype(@$params['health_check_type']));
         }
 
-        if (@$params['interval'] && !is_int(@$params['interval'])) {
+        if (!empty($params['interval']) && !is_int($params['interval'])) {
             throw new \Files\Exception\InvalidParameterException('$interval must be of type int; received ' . gettype(@$params['interval']));
         }
 
-        if (@$params['priority'] && !is_int(@$params['priority'])) {
+        if (!empty($params['priority']) && !is_int($params['priority'])) {
             throw new \Files\Exception\InvalidParameterException('$priority must be of type int; received ' . gettype(@$params['priority']));
         }
 
-        if (@$params['remote_path'] && !is_string(@$params['remote_path'])) {
+        if (!empty($params['remote_path']) && !is_string($params['remote_path'])) {
             throw new \Files\Exception\InvalidParameterException('$remote_path must be of type string; received ' . gettype(@$params['remote_path']));
         }
 
-        if (@$params['rise'] && !is_int(@$params['rise'])) {
+        if (!empty($params['rise']) && !is_int($params['rise'])) {
             throw new \Files\Exception\InvalidParameterException('$rise must be of type int; received ' . gettype(@$params['rise']));
         }
 
-        if (@$params['canary_file_path'] && !is_string(@$params['canary_file_path'])) {
+        if (!empty($params['canary_file_path']) && !is_string($params['canary_file_path'])) {
             throw new \Files\Exception\InvalidParameterException('$canary_file_path must be of type string; received ' . gettype(@$params['canary_file_path']));
         }
 
-        if (@$params['remote_server_id'] && !is_int(@$params['remote_server_id'])) {
+        if (!empty($params['remote_server_id']) && !is_int($params['remote_server_id'])) {
             throw new \Files\Exception\InvalidParameterException('$remote_server_id must be of type int; received ' . gettype(@$params['remote_server_id']));
         }
 
@@ -322,7 +320,7 @@ class RemoteMountBackend
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -330,7 +328,7 @@ class RemoteMountBackend
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -364,11 +362,11 @@ class RemoteMountBackend
     //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `remote_server_mount_id`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -393,11 +391,11 @@ class RemoteMountBackend
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -426,51 +424,51 @@ class RemoteMountBackend
     //   remote_server_id (required) - int64 - The remote server that this backend is associated with.
     public static function create($params = [], $options = [])
     {
-        if (!@$params['canary_file_path']) {
+        if (empty($params['canary_file_path'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: canary_file_path');
         }
 
-        if (!@$params['remote_server_mount_id']) {
+        if (empty($params['remote_server_mount_id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: remote_server_mount_id');
         }
 
-        if (!@$params['remote_server_id']) {
+        if (empty($params['remote_server_id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: remote_server_id');
         }
 
-        if (@$params['fall'] && !is_int(@$params['fall'])) {
+        if (!empty($params['fall']) && !is_int($params['fall'])) {
             throw new \Files\Exception\InvalidParameterException('$fall must be of type int; received ' . gettype(@$params['fall']));
         }
 
-        if (@$params['health_check_type'] && !is_string(@$params['health_check_type'])) {
+        if (!empty($params['health_check_type']) && !is_string($params['health_check_type'])) {
             throw new \Files\Exception\InvalidParameterException('$health_check_type must be of type string; received ' . gettype(@$params['health_check_type']));
         }
 
-        if (@$params['interval'] && !is_int(@$params['interval'])) {
+        if (!empty($params['interval']) && !is_int($params['interval'])) {
             throw new \Files\Exception\InvalidParameterException('$interval must be of type int; received ' . gettype(@$params['interval']));
         }
 
-        if (@$params['priority'] && !is_int(@$params['priority'])) {
+        if (!empty($params['priority']) && !is_int($params['priority'])) {
             throw new \Files\Exception\InvalidParameterException('$priority must be of type int; received ' . gettype(@$params['priority']));
         }
 
-        if (@$params['remote_path'] && !is_string(@$params['remote_path'])) {
+        if (!empty($params['remote_path']) && !is_string($params['remote_path'])) {
             throw new \Files\Exception\InvalidParameterException('$remote_path must be of type string; received ' . gettype(@$params['remote_path']));
         }
 
-        if (@$params['rise'] && !is_int(@$params['rise'])) {
+        if (!empty($params['rise']) && !is_int($params['rise'])) {
             throw new \Files\Exception\InvalidParameterException('$rise must be of type int; received ' . gettype(@$params['rise']));
         }
 
-        if (@$params['canary_file_path'] && !is_string(@$params['canary_file_path'])) {
+        if (!empty($params['canary_file_path']) && !is_string($params['canary_file_path'])) {
             throw new \Files\Exception\InvalidParameterException('$canary_file_path must be of type string; received ' . gettype(@$params['canary_file_path']));
         }
 
-        if (@$params['remote_server_mount_id'] && !is_int(@$params['remote_server_mount_id'])) {
+        if (!empty($params['remote_server_mount_id']) && !is_int($params['remote_server_mount_id'])) {
             throw new \Files\Exception\InvalidParameterException('$remote_server_mount_id must be of type int; received ' . gettype(@$params['remote_server_mount_id']));
         }
 
-        if (@$params['remote_server_id'] && !is_int(@$params['remote_server_id'])) {
+        if (!empty($params['remote_server_id']) && !is_int($params['remote_server_id'])) {
             throw new \Files\Exception\InvalidParameterException('$remote_server_id must be of type int; received ' . gettype(@$params['remote_server_id']));
         }
 

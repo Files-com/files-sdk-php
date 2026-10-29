@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class Expectation
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class Expectation
     // int64 # Expectation ID
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
     public function setId($value)
@@ -68,7 +66,7 @@ class Expectation
     // int64 # Workspace ID. `0` means the default workspace.
     public function getWorkspaceId()
     {
-        return @$this->attributes['workspace_id'];
+        return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
 
     public function setWorkspaceId($value)
@@ -78,7 +76,7 @@ class Expectation
     // string # Expectation name.
     public function getName()
     {
-        return @$this->attributes['name'];
+        return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
 
     public function setName($value)
@@ -88,7 +86,7 @@ class Expectation
     // string # Expectation description.
     public function getDescription()
     {
-        return @$this->attributes['description'];
+        return isset($this->attributes['description']) ? $this->attributes['description'] : null;
     }
 
     public function setDescription($value)
@@ -98,7 +96,7 @@ class Expectation
     // string # Path scope for the expectation. Supports workspace-relative presentation. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
     public function getPath()
     {
-        return @$this->attributes['path'];
+        return isset($this->attributes['path']) ? $this->attributes['path'] : null;
     }
 
     public function setPath($value)
@@ -108,7 +106,7 @@ class Expectation
     // string # Source glob used to select candidate files.
     public function getSource()
     {
-        return @$this->attributes['source'];
+        return isset($this->attributes['source']) ? $this->attributes['source'] : null;
     }
 
     public function setSource($value)
@@ -118,7 +116,7 @@ class Expectation
     // string # Optional source exclusion glob.
     public function getExcludePattern()
     {
-        return @$this->attributes['exclude_pattern'];
+        return isset($this->attributes['exclude_pattern']) ? $this->attributes['exclude_pattern'] : null;
     }
 
     public function setExcludePattern($value)
@@ -128,7 +126,7 @@ class Expectation
     // boolean # If true, the expectation is disabled.
     public function getDisabled()
     {
-        return @$this->attributes['disabled'];
+        return isset($this->attributes['disabled']) ? $this->attributes['disabled'] : null;
     }
 
     public function setDisabled($value)
@@ -138,7 +136,7 @@ class Expectation
     // int64 # Criteria schema version for this expectation.
     public function getExpectationsVersion()
     {
-        return @$this->attributes['expectations_version'];
+        return isset($this->attributes['expectations_version']) ? $this->attributes['expectations_version'] : null;
     }
 
     public function setExpectationsVersion($value)
@@ -148,7 +146,7 @@ class Expectation
     // string # How this expectation opens windows.
     public function getTrigger()
     {
-        return @$this->attributes['trigger'];
+        return isset($this->attributes['trigger']) ? $this->attributes['trigger'] : null;
     }
 
     public function setTrigger($value)
@@ -158,7 +156,7 @@ class Expectation
     // string # If trigger is `daily`, this specifies how often to run the expectation.
     public function getInterval()
     {
-        return @$this->attributes['interval'];
+        return isset($this->attributes['interval']) ? $this->attributes['interval'] : null;
     }
 
     public function setInterval($value)
@@ -168,7 +166,7 @@ class Expectation
     // int64 # If trigger is `daily`, this selects the day number inside the chosen interval.
     public function getRecurringDay()
     {
-        return @$this->attributes['recurring_day'];
+        return isset($this->attributes['recurring_day']) ? $this->attributes['recurring_day'] : null;
     }
 
     public function setRecurringDay($value)
@@ -178,7 +176,7 @@ class Expectation
     // array(int64) # If trigger is `daily`, this selects one or more day numbers inside a `week`, `month`, `quarter`, or `year` interval.
     public function getRecurringDays()
     {
-        return @$this->attributes['recurring_days'];
+        return isset($this->attributes['recurring_days']) ? $this->attributes['recurring_days'] : null;
     }
 
     public function setRecurringDays($value)
@@ -188,7 +186,7 @@ class Expectation
     // int64 # If trigger is `custom_schedule`, the reusable Schedule used instead of the Expectation's schedule fields.
     public function getScheduleId()
     {
-        return @$this->attributes['schedule_id'];
+        return isset($this->attributes['schedule_id']) ? $this->attributes['schedule_id'] : null;
     }
 
     public function setScheduleId($value)
@@ -198,7 +196,7 @@ class Expectation
     // array(int64) # If trigger is `custom_schedule`, the 0-based weekdays used by the schedule.
     public function getScheduleDaysOfWeek()
     {
-        return @$this->attributes['schedule_days_of_week'];
+        return isset($this->attributes['schedule_days_of_week']) ? $this->attributes['schedule_days_of_week'] : null;
     }
 
     public function setScheduleDaysOfWeek($value)
@@ -208,7 +206,7 @@ class Expectation
     // array(string) # Times of day in HH:MM format for the Expectation schedule.
     public function getScheduleTimesOfDay()
     {
-        return @$this->attributes['schedule_times_of_day'];
+        return isset($this->attributes['schedule_times_of_day']) ? $this->attributes['schedule_times_of_day'] : null;
     }
 
     public function setScheduleTimesOfDay($value)
@@ -218,7 +216,7 @@ class Expectation
     // string # Time zone used by the Expectation schedule.
     public function getScheduleTimeZone()
     {
-        return @$this->attributes['schedule_time_zone'];
+        return isset($this->attributes['schedule_time_zone']) ? $this->attributes['schedule_time_zone'] : null;
     }
 
     public function setScheduleTimeZone($value)
@@ -228,7 +226,7 @@ class Expectation
     // string # Optional holiday region used by the Expectation schedule.
     public function getHolidayRegion()
     {
-        return @$this->attributes['holiday_region'];
+        return isset($this->attributes['holiday_region']) ? $this->attributes['holiday_region'] : null;
     }
 
     public function setHolidayRegion($value)
@@ -238,7 +236,7 @@ class Expectation
     // int64 # How many seconds before the due boundary the window starts.
     public function getLookbackInterval()
     {
-        return @$this->attributes['lookback_interval'];
+        return isset($this->attributes['lookback_interval']) ? $this->attributes['lookback_interval'] : null;
     }
 
     public function setLookbackInterval($value)
@@ -248,7 +246,7 @@ class Expectation
     // int64 # How many seconds a schedule-driven window may remain eligible to close as late.
     public function getLateAcceptanceInterval()
     {
-        return @$this->attributes['late_acceptance_interval'];
+        return isset($this->attributes['late_acceptance_interval']) ? $this->attributes['late_acceptance_interval'] : null;
     }
 
     public function setLateAcceptanceInterval($value)
@@ -258,7 +256,7 @@ class Expectation
     // int64 # How many quiet seconds are required before final closure.
     public function getInactivityInterval()
     {
-        return @$this->attributes['inactivity_interval'];
+        return isset($this->attributes['inactivity_interval']) ? $this->attributes['inactivity_interval'] : null;
     }
 
     public function setInactivityInterval($value)
@@ -268,7 +266,7 @@ class Expectation
     // int64 # Hard-stop duration in seconds for unscheduled expectations.
     public function getMaxOpenInterval()
     {
-        return @$this->attributes['max_open_interval'];
+        return isset($this->attributes['max_open_interval']) ? $this->attributes['max_open_interval'] : null;
     }
 
     public function setMaxOpenInterval($value)
@@ -278,7 +276,7 @@ class Expectation
     // object # Versioned success criteria definition for the expectation. Criteria v2 supports optional FTS content validation.
     public function getCriteria()
     {
-        return @$this->attributes['criteria'];
+        return isset($this->attributes['criteria']) ? $this->attributes['criteria'] : null;
     }
 
     public function setCriteria($value)
@@ -288,7 +286,7 @@ class Expectation
     // date-time # Last time this expectation was evaluated.
     public function getLastEvaluatedAt()
     {
-        return @$this->attributes['last_evaluated_at'];
+        return isset($this->attributes['last_evaluated_at']) ? $this->attributes['last_evaluated_at'] : null;
     }
 
     public function setLastEvaluatedAt($value)
@@ -298,7 +296,7 @@ class Expectation
     // date-time # Last time this expectation closed successfully.
     public function getLastSuccessAt()
     {
-        return @$this->attributes['last_success_at'];
+        return isset($this->attributes['last_success_at']) ? $this->attributes['last_success_at'] : null;
     }
 
     public function setLastSuccessAt($value)
@@ -308,7 +306,7 @@ class Expectation
     // date-time # Last time this expectation closed with a failure result.
     public function getLastFailureAt()
     {
-        return @$this->attributes['last_failure_at'];
+        return isset($this->attributes['last_failure_at']) ? $this->attributes['last_failure_at'] : null;
     }
 
     public function setLastFailureAt($value)
@@ -318,7 +316,7 @@ class Expectation
     // string # Most recent terminal result for this expectation.
     public function getLastResult()
     {
-        return @$this->attributes['last_result'];
+        return isset($this->attributes['last_result']) ? $this->attributes['last_result'] : null;
     }
 
     public function setLastResult($value)
@@ -328,12 +326,12 @@ class Expectation
     // date-time # Creation time.
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
     // date-time # Last update time.
     public function getUpdatedAt()
     {
-        return @$this->attributes['updated_at'];
+        return isset($this->attributes['updated_at']) ? $this->attributes['updated_at'] : null;
     }
 
     // Manually open an Expectation window
@@ -343,7 +341,7 @@ class Expectation
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -351,7 +349,7 @@ class Expectation
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -387,7 +385,7 @@ class Expectation
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -395,83 +393,83 @@ class Expectation
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['description'] && !is_string(@$params['description'])) {
+        if (!empty($params['description']) && !is_string($params['description'])) {
             throw new \Files\Exception\InvalidParameterException('$description must be of type string; received ' . gettype(@$params['description']));
         }
 
-        if (@$params['path'] && !is_string(@$params['path'])) {
+        if (!empty($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (@$params['source'] && !is_string(@$params['source'])) {
+        if (!empty($params['source']) && !is_string($params['source'])) {
             throw new \Files\Exception\InvalidParameterException('$source must be of type string; received ' . gettype(@$params['source']));
         }
 
-        if (@$params['exclude_pattern'] && !is_string(@$params['exclude_pattern'])) {
+        if (!empty($params['exclude_pattern']) && !is_string($params['exclude_pattern'])) {
             throw new \Files\Exception\InvalidParameterException('$exclude_pattern must be of type string; received ' . gettype(@$params['exclude_pattern']));
         }
 
-        if (@$params['trigger'] && !is_string(@$params['trigger'])) {
+        if (!empty($params['trigger']) && !is_string($params['trigger'])) {
             throw new \Files\Exception\InvalidParameterException('$trigger must be of type string; received ' . gettype(@$params['trigger']));
         }
 
-        if (@$params['interval'] && !is_string(@$params['interval'])) {
+        if (!empty($params['interval']) && !is_string($params['interval'])) {
             throw new \Files\Exception\InvalidParameterException('$interval must be of type string; received ' . gettype(@$params['interval']));
         }
 
-        if (@$params['recurring_day'] && !is_int(@$params['recurring_day'])) {
+        if (!empty($params['recurring_day']) && !is_int($params['recurring_day'])) {
             throw new \Files\Exception\InvalidParameterException('$recurring_day must be of type int; received ' . gettype(@$params['recurring_day']));
         }
 
-        if (@$params['recurring_days'] && !is_array(@$params['recurring_days'])) {
+        if (!empty($params['recurring_days']) && !is_array($params['recurring_days'])) {
             throw new \Files\Exception\InvalidParameterException('$recurring_days must be of type array; received ' . gettype(@$params['recurring_days']));
         }
 
-        if (@$params['schedule_id'] && !is_int(@$params['schedule_id'])) {
+        if (!empty($params['schedule_id']) && !is_int($params['schedule_id'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_id must be of type int; received ' . gettype(@$params['schedule_id']));
         }
 
-        if (@$params['schedule_days_of_week'] && !is_array(@$params['schedule_days_of_week'])) {
+        if (!empty($params['schedule_days_of_week']) && !is_array($params['schedule_days_of_week'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_days_of_week must be of type array; received ' . gettype(@$params['schedule_days_of_week']));
         }
 
-        if (@$params['schedule_times_of_day'] && !is_array(@$params['schedule_times_of_day'])) {
+        if (!empty($params['schedule_times_of_day']) && !is_array($params['schedule_times_of_day'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_times_of_day must be of type array; received ' . gettype(@$params['schedule_times_of_day']));
         }
 
-        if (@$params['schedule_time_zone'] && !is_string(@$params['schedule_time_zone'])) {
+        if (!empty($params['schedule_time_zone']) && !is_string($params['schedule_time_zone'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_time_zone must be of type string; received ' . gettype(@$params['schedule_time_zone']));
         }
 
-        if (@$params['holiday_region'] && !is_string(@$params['holiday_region'])) {
+        if (!empty($params['holiday_region']) && !is_string($params['holiday_region'])) {
             throw new \Files\Exception\InvalidParameterException('$holiday_region must be of type string; received ' . gettype(@$params['holiday_region']));
         }
 
-        if (@$params['lookback_interval'] && !is_int(@$params['lookback_interval'])) {
+        if (!empty($params['lookback_interval']) && !is_int($params['lookback_interval'])) {
             throw new \Files\Exception\InvalidParameterException('$lookback_interval must be of type int; received ' . gettype(@$params['lookback_interval']));
         }
 
-        if (@$params['late_acceptance_interval'] && !is_int(@$params['late_acceptance_interval'])) {
+        if (!empty($params['late_acceptance_interval']) && !is_int($params['late_acceptance_interval'])) {
             throw new \Files\Exception\InvalidParameterException('$late_acceptance_interval must be of type int; received ' . gettype(@$params['late_acceptance_interval']));
         }
 
-        if (@$params['inactivity_interval'] && !is_int(@$params['inactivity_interval'])) {
+        if (!empty($params['inactivity_interval']) && !is_int($params['inactivity_interval'])) {
             throw new \Files\Exception\InvalidParameterException('$inactivity_interval must be of type int; received ' . gettype(@$params['inactivity_interval']));
         }
 
-        if (@$params['max_open_interval'] && !is_int(@$params['max_open_interval'])) {
+        if (!empty($params['max_open_interval']) && !is_int($params['max_open_interval'])) {
             throw new \Files\Exception\InvalidParameterException('$max_open_interval must be of type int; received ' . gettype(@$params['max_open_interval']));
         }
 
-        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
@@ -485,7 +483,7 @@ class Expectation
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -493,7 +491,7 @@ class Expectation
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -528,11 +526,11 @@ class Expectation
     //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `disabled` and `workspace_id`. Valid field combinations are `[ workspace_id, disabled ]`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -557,11 +555,11 @@ class Expectation
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -598,79 +596,79 @@ class Expectation
     //   workspace_id - int64 - Workspace ID. `0` means the default workspace.
     public static function create($params = [], $options = [])
     {
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['description'] && !is_string(@$params['description'])) {
+        if (!empty($params['description']) && !is_string($params['description'])) {
             throw new \Files\Exception\InvalidParameterException('$description must be of type string; received ' . gettype(@$params['description']));
         }
 
-        if (@$params['path'] && !is_string(@$params['path'])) {
+        if (!empty($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (@$params['source'] && !is_string(@$params['source'])) {
+        if (!empty($params['source']) && !is_string($params['source'])) {
             throw new \Files\Exception\InvalidParameterException('$source must be of type string; received ' . gettype(@$params['source']));
         }
 
-        if (@$params['exclude_pattern'] && !is_string(@$params['exclude_pattern'])) {
+        if (!empty($params['exclude_pattern']) && !is_string($params['exclude_pattern'])) {
             throw new \Files\Exception\InvalidParameterException('$exclude_pattern must be of type string; received ' . gettype(@$params['exclude_pattern']));
         }
 
-        if (@$params['trigger'] && !is_string(@$params['trigger'])) {
+        if (!empty($params['trigger']) && !is_string($params['trigger'])) {
             throw new \Files\Exception\InvalidParameterException('$trigger must be of type string; received ' . gettype(@$params['trigger']));
         }
 
-        if (@$params['interval'] && !is_string(@$params['interval'])) {
+        if (!empty($params['interval']) && !is_string($params['interval'])) {
             throw new \Files\Exception\InvalidParameterException('$interval must be of type string; received ' . gettype(@$params['interval']));
         }
 
-        if (@$params['recurring_day'] && !is_int(@$params['recurring_day'])) {
+        if (!empty($params['recurring_day']) && !is_int($params['recurring_day'])) {
             throw new \Files\Exception\InvalidParameterException('$recurring_day must be of type int; received ' . gettype(@$params['recurring_day']));
         }
 
-        if (@$params['recurring_days'] && !is_array(@$params['recurring_days'])) {
+        if (!empty($params['recurring_days']) && !is_array($params['recurring_days'])) {
             throw new \Files\Exception\InvalidParameterException('$recurring_days must be of type array; received ' . gettype(@$params['recurring_days']));
         }
 
-        if (@$params['schedule_id'] && !is_int(@$params['schedule_id'])) {
+        if (!empty($params['schedule_id']) && !is_int($params['schedule_id'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_id must be of type int; received ' . gettype(@$params['schedule_id']));
         }
 
-        if (@$params['schedule_days_of_week'] && !is_array(@$params['schedule_days_of_week'])) {
+        if (!empty($params['schedule_days_of_week']) && !is_array($params['schedule_days_of_week'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_days_of_week must be of type array; received ' . gettype(@$params['schedule_days_of_week']));
         }
 
-        if (@$params['schedule_times_of_day'] && !is_array(@$params['schedule_times_of_day'])) {
+        if (!empty($params['schedule_times_of_day']) && !is_array($params['schedule_times_of_day'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_times_of_day must be of type array; received ' . gettype(@$params['schedule_times_of_day']));
         }
 
-        if (@$params['schedule_time_zone'] && !is_string(@$params['schedule_time_zone'])) {
+        if (!empty($params['schedule_time_zone']) && !is_string($params['schedule_time_zone'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_time_zone must be of type string; received ' . gettype(@$params['schedule_time_zone']));
         }
 
-        if (@$params['holiday_region'] && !is_string(@$params['holiday_region'])) {
+        if (!empty($params['holiday_region']) && !is_string($params['holiday_region'])) {
             throw new \Files\Exception\InvalidParameterException('$holiday_region must be of type string; received ' . gettype(@$params['holiday_region']));
         }
 
-        if (@$params['lookback_interval'] && !is_int(@$params['lookback_interval'])) {
+        if (!empty($params['lookback_interval']) && !is_int($params['lookback_interval'])) {
             throw new \Files\Exception\InvalidParameterException('$lookback_interval must be of type int; received ' . gettype(@$params['lookback_interval']));
         }
 
-        if (@$params['late_acceptance_interval'] && !is_int(@$params['late_acceptance_interval'])) {
+        if (!empty($params['late_acceptance_interval']) && !is_int($params['late_acceptance_interval'])) {
             throw new \Files\Exception\InvalidParameterException('$late_acceptance_interval must be of type int; received ' . gettype(@$params['late_acceptance_interval']));
         }
 
-        if (@$params['inactivity_interval'] && !is_int(@$params['inactivity_interval'])) {
+        if (!empty($params['inactivity_interval']) && !is_int($params['inactivity_interval'])) {
             throw new \Files\Exception\InvalidParameterException('$inactivity_interval must be of type int; received ' . gettype(@$params['inactivity_interval']));
         }
 
-        if (@$params['max_open_interval'] && !is_int(@$params['max_open_interval'])) {
+        if (!empty($params['max_open_interval']) && !is_int($params['max_open_interval'])) {
             throw new \Files\Exception\InvalidParameterException('$max_open_interval must be of type int; received ' . gettype(@$params['max_open_interval']));
         }
 
-        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 

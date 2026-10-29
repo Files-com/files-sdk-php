@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class Snapshot
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class Snapshot
     // int64 # The snapshot's unique ID.
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
     public function setId($value)
@@ -68,7 +66,7 @@ class Snapshot
     // date-time # When the snapshot expires.
     public function getExpiresAt()
     {
-        return @$this->attributes['expires_at'];
+        return isset($this->attributes['expires_at']) ? $this->attributes['expires_at'] : null;
     }
 
     public function setExpiresAt($value)
@@ -78,7 +76,7 @@ class Snapshot
     // date-time # When the snapshot was finalized.
     public function getFinalizedAt()
     {
-        return @$this->attributes['finalized_at'];
+        return isset($this->attributes['finalized_at']) ? $this->attributes['finalized_at'] : null;
     }
 
     public function setFinalizedAt($value)
@@ -88,7 +86,7 @@ class Snapshot
     // string # A name for the snapshot.
     public function getName()
     {
-        return @$this->attributes['name'];
+        return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
 
     public function setName($value)
@@ -98,7 +96,7 @@ class Snapshot
     // int64 # The user that created this snapshot, if applicable.
     public function getUserId()
     {
-        return @$this->attributes['user_id'];
+        return isset($this->attributes['user_id']) ? $this->attributes['user_id'] : null;
     }
 
     public function setUserId($value)
@@ -108,7 +106,7 @@ class Snapshot
     // int64 # The bundle using this snapshot, if applicable.
     public function getBundleId()
     {
-        return @$this->attributes['bundle_id'];
+        return isset($this->attributes['bundle_id']) ? $this->attributes['bundle_id'] : null;
     }
 
     public function setBundleId($value)
@@ -118,7 +116,7 @@ class Snapshot
     // int64 # Workspace ID. `0` means the default workspace.
     public function getWorkspaceId()
     {
-        return @$this->attributes['workspace_id'];
+        return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
 
     public function setWorkspaceId($value)
@@ -128,7 +126,7 @@ class Snapshot
     // array(string) # An array of paths to add to the snapshot.
     public function getPaths()
     {
-        return @$this->attributes['paths'];
+        return isset($this->attributes['paths']) ? $this->attributes['paths'] : null;
     }
 
     public function setPaths($value)
@@ -143,7 +141,7 @@ class Snapshot
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -151,7 +149,7 @@ class Snapshot
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -169,7 +167,7 @@ class Snapshot
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -177,19 +175,19 @@ class Snapshot
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (@$params['expires_at'] && !is_string(@$params['expires_at'])) {
+        if (!empty($params['expires_at']) && !is_string($params['expires_at'])) {
             throw new \Files\Exception\InvalidParameterException('$expires_at must be of type string; received ' . gettype(@$params['expires_at']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['paths'] && !is_array(@$params['paths'])) {
+        if (!empty($params['paths']) && !is_array($params['paths'])) {
             throw new \Files\Exception\InvalidParameterException('$paths must be of type array; received ' . gettype(@$params['paths']));
         }
 
@@ -203,7 +201,7 @@ class Snapshot
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -211,7 +209,7 @@ class Snapshot
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -244,11 +242,11 @@ class Snapshot
     //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -273,11 +271,11 @@ class Snapshot
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -297,19 +295,19 @@ class Snapshot
     //   workspace_id - int64 - Workspace ID. `0` means the default workspace.
     public static function create($params = [], $options = [])
     {
-        if (@$params['expires_at'] && !is_string(@$params['expires_at'])) {
+        if (!empty($params['expires_at']) && !is_string($params['expires_at'])) {
             throw new \Files\Exception\InvalidParameterException('$expires_at must be of type string; received ' . gettype(@$params['expires_at']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['paths'] && !is_array(@$params['paths'])) {
+        if (!empty($params['paths']) && !is_array($params['paths'])) {
             throw new \Files\Exception\InvalidParameterException('$paths must be of type array; received ' . gettype(@$params['paths']));
         }
 
-        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 

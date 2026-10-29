@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class ApiRequestLog
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,107 +56,107 @@ class ApiRequestLog
     // date-time # Start Time of Action. Deprecrated: Use created_at.
     public function getTimestamp()
     {
-        return @$this->attributes['timestamp'];
+        return isset($this->attributes['timestamp']) ? $this->attributes['timestamp'] : null;
     }
     // int64 # API Key ID, if applicable
     public function getApiKeyId()
     {
-        return @$this->attributes['api_key_id'];
+        return isset($this->attributes['api_key_id']) ? $this->attributes['api_key_id'] : null;
     }
     // string # API Key Prefix, if applicable
     public function getApiKeyPrefix()
     {
-        return @$this->attributes['api_key_prefix'];
+        return isset($this->attributes['api_key_prefix']) ? $this->attributes['api_key_prefix'] : null;
     }
     // int64 # User ID
     public function getUserId()
     {
-        return @$this->attributes['user_id'];
+        return isset($this->attributes['user_id']) ? $this->attributes['user_id'] : null;
     }
     // string # Username
     public function getUsername()
     {
-        return @$this->attributes['username'];
+        return isset($this->attributes['username']) ? $this->attributes['username'] : null;
     }
     // boolean # true if this change was performed by a user on a parent site.
     public function getUserIsFromParentSite()
     {
-        return @$this->attributes['user_is_from_parent_site'];
+        return isset($this->attributes['user_is_from_parent_site']) ? $this->attributes['user_is_from_parent_site'] : null;
     }
     // string # API Interface
     public function getInterface()
     {
-        return @$this->attributes['interface'];
+        return isset($this->attributes['interface']) ? $this->attributes['interface'] : null;
     }
     // string # HTTP Method
     public function getRequestMethod()
     {
-        return @$this->attributes['request_method'];
+        return isset($this->attributes['request_method']) ? $this->attributes['request_method'] : null;
     }
     // string # Request path
     public function getRequestPath()
     {
-        return @$this->attributes['request_path'];
+        return isset($this->attributes['request_path']) ? $this->attributes['request_path'] : null;
     }
     // string # IP of requesting client
     public function getRequestIp()
     {
-        return @$this->attributes['request_ip'];
+        return isset($this->attributes['request_ip']) ? $this->attributes['request_ip'] : null;
     }
     // string # Hostname the request was sent to
     public function getRequestHost()
     {
-        return @$this->attributes['request_host'];
+        return isset($this->attributes['request_host']) ? $this->attributes['request_host'] : null;
     }
     // string # Unique Id of the Request
     public function getRequestId()
     {
-        return @$this->attributes['request_id'];
+        return isset($this->attributes['request_id']) ? $this->attributes['request_id'] : null;
     }
     // string # Name of API Endpoint
     public function getApiName()
     {
-        return @$this->attributes['api_name'];
+        return isset($this->attributes['api_name']) ? $this->attributes['api_name'] : null;
     }
     // string # User-Agent
     public function getUserAgent()
     {
-        return @$this->attributes['user_agent'];
+        return isset($this->attributes['user_agent']) ? $this->attributes['user_agent'] : null;
     }
     // string # Error type, if applicable
     public function getErrorType()
     {
-        return @$this->attributes['error_type'];
+        return isset($this->attributes['error_type']) ? $this->attributes['error_type'] : null;
     }
     // string # Error message, if applicable
     public function getErrorMessage()
     {
-        return @$this->attributes['error_message'];
+        return isset($this->attributes['error_message']) ? $this->attributes['error_message'] : null;
     }
     // int64 # HTTP Response Code
     public function getResponseCode()
     {
-        return @$this->attributes['response_code'];
+        return isset($this->attributes['response_code']) ? $this->attributes['response_code'] : null;
     }
     // boolean # `false` if HTTP Response Code is 4xx or 5xx
     public function getSuccess()
     {
-        return @$this->attributes['success'];
+        return isset($this->attributes['success']) ? $this->attributes['success'] : null;
     }
     // int64 # Duration (in milliseconds)
     public function getDurationMs()
     {
-        return @$this->attributes['duration_ms'];
+        return isset($this->attributes['duration_ms']) ? $this->attributes['duration_ms'] : null;
     }
     // int64 # User ID of Site Admin user impersonating this user via a Read-Only session.
     public function getImpersonatorUserId()
     {
-        return @$this->attributes['impersonator_user_id'];
+        return isset($this->attributes['impersonator_user_id']) ? $this->attributes['impersonator_user_id'] : null;
     }
     // date-time # Start Time of Action
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
 
     // Parameters:
@@ -172,11 +170,11 @@ class ApiRequestLog
     //   filter_lteq - object - If set, return records where the specified field is less than or equal the supplied value. Valid fields are `created_at`. Valid field combinations are `[ api_key_id ]`, `[ interface ]`, `[ request_id ]`, `[ request_ip ]`, `[ request_method ]`, `[ success ]`, `[ user_id ]`, `[ created_at ]`, `[ api_key_id, interface ]`, `[ api_key_id, request_id ]`, `[ api_key_id, request_ip ]`, `[ api_key_id, request_method ]`, `[ api_key_id, success ]`, `[ api_key_id, user_id ]`, `[ api_key_id, created_at ]`, `[ interface, request_id ]`, `[ interface, request_ip ]`, `[ interface, request_method ]`, `[ interface, success ]`, `[ interface, user_id ]`, `[ interface, created_at ]`, `[ request_id, request_ip ]`, `[ request_id, request_method ]`, `[ request_id, success ]`, `[ request_id, user_id ]`, `[ request_id, created_at ]`, `[ request_ip, request_method ]`, `[ request_ip, success ]`, `[ request_ip, user_id ]`, `[ request_ip, created_at ]`, `[ request_method, success ]`, `[ request_method, user_id ]`, `[ request_method, created_at ]`, `[ success, user_id ]`, `[ success, created_at ]`, `[ user_id, created_at ]`, `[ api_key_id, interface, request_id ]`, `[ api_key_id, interface, request_ip ]`, `[ api_key_id, interface, request_method ]`, `[ api_key_id, interface, success ]`, `[ api_key_id, interface, user_id ]`, `[ api_key_id, interface, created_at ]`, `[ api_key_id, request_id, request_ip ]`, `[ api_key_id, request_id, request_method ]`, `[ api_key_id, request_id, success ]`, `[ api_key_id, request_id, user_id ]`, `[ api_key_id, request_id, created_at ]`, `[ api_key_id, request_ip, request_method ]`, `[ api_key_id, request_ip, success ]`, `[ api_key_id, request_ip, user_id ]`, `[ api_key_id, request_ip, created_at ]`, `[ api_key_id, request_method, success ]`, `[ api_key_id, request_method, user_id ]`, `[ api_key_id, request_method, created_at ]`, `[ api_key_id, success, user_id ]`, `[ api_key_id, success, created_at ]`, `[ api_key_id, user_id, created_at ]`, `[ interface, request_id, request_ip ]`, `[ interface, request_id, request_method ]`, `[ interface, request_id, success ]`, `[ interface, request_id, user_id ]`, `[ interface, request_id, created_at ]`, `[ interface, request_ip, request_method ]`, `[ interface, request_ip, success ]`, `[ interface, request_ip, user_id ]`, `[ interface, request_ip, created_at ]`, `[ interface, request_method, success ]`, `[ interface, request_method, user_id ]`, `[ interface, request_method, created_at ]`, `[ interface, success, user_id ]`, `[ interface, success, created_at ]`, `[ interface, user_id, created_at ]`, `[ request_id, request_ip, request_method ]`, `[ request_id, request_ip, success ]`, `[ request_id, request_ip, user_id ]`, `[ request_id, request_ip, created_at ]`, `[ request_id, request_method, success ]`, `[ request_id, request_method, user_id ]`, `[ request_id, request_method, created_at ]`, `[ request_id, success, user_id ]`, `[ request_id, success, created_at ]`, `[ request_id, user_id, created_at ]`, `[ request_ip, request_method, success ]`, `[ request_ip, request_method, user_id ]`, `[ request_ip, request_method, created_at ]`, `[ request_ip, success, user_id ]`, `[ request_ip, success, created_at ]`, `[ request_ip, user_id, created_at ]`, `[ request_method, success, user_id ]`, `[ request_method, success, created_at ]`, `[ request_method, user_id, created_at ]`, `[ success, user_id, created_at ]`, `[ api_key_id, interface, request_id, request_ip ]`, `[ api_key_id, interface, request_id, request_method ]`, `[ api_key_id, interface, request_id, success ]`, `[ api_key_id, interface, request_id, user_id ]`, `[ api_key_id, interface, request_id, created_at ]`, `[ api_key_id, interface, request_ip, request_method ]`, `[ api_key_id, interface, request_ip, success ]`, `[ api_key_id, interface, request_ip, user_id ]`, `[ api_key_id, interface, request_ip, created_at ]`, `[ api_key_id, interface, request_method, success ]`, `[ api_key_id, interface, request_method, user_id ]`, `[ api_key_id, interface, request_method, created_at ]`, `[ api_key_id, interface, success, user_id ]`, `[ api_key_id, interface, success, created_at ]`, `[ api_key_id, interface, user_id, created_at ]`, `[ api_key_id, request_id, request_ip, request_method ]`, `[ api_key_id, request_id, request_ip, success ]`, `[ api_key_id, request_id, request_ip, user_id ]`, `[ api_key_id, request_id, request_ip, created_at ]`, `[ api_key_id, request_id, request_method, success ]`, `[ api_key_id, request_id, request_method, user_id ]`, `[ api_key_id, request_id, request_method, created_at ]`, `[ api_key_id, request_id, success, user_id ]`, `[ api_key_id, request_id, success, created_at ]`, `[ api_key_id, request_id, user_id, created_at ]`, `[ api_key_id, request_ip, request_method, success ]`, `[ api_key_id, request_ip, request_method, user_id ]`, `[ api_key_id, request_ip, request_method, created_at ]`, `[ api_key_id, request_ip, success, user_id ]`, `[ api_key_id, request_ip, success, created_at ]`, `[ api_key_id, request_ip, user_id, created_at ]`, `[ api_key_id, request_method, success, user_id ]`, `[ api_key_id, request_method, success, created_at ]`, `[ api_key_id, request_method, user_id, created_at ]`, `[ api_key_id, success, user_id, created_at ]`, `[ interface, request_id, request_ip, request_method ]`, `[ interface, request_id, request_ip, success ]`, `[ interface, request_id, request_ip, user_id ]`, `[ interface, request_id, request_ip, created_at ]`, `[ interface, request_id, request_method, success ]`, `[ interface, request_id, request_method, user_id ]`, `[ interface, request_id, request_method, created_at ]`, `[ interface, request_id, success, user_id ]`, `[ interface, request_id, success, created_at ]`, `[ interface, request_id, user_id, created_at ]`, `[ interface, request_ip, request_method, success ]`, `[ interface, request_ip, request_method, user_id ]`, `[ interface, request_ip, request_method, created_at ]`, `[ interface, request_ip, success, user_id ]`, `[ interface, request_ip, success, created_at ]`, `[ interface, request_ip, user_id, created_at ]`, `[ interface, request_method, success, user_id ]`, `[ interface, request_method, success, created_at ]`, `[ interface, request_method, user_id, created_at ]`, `[ interface, success, user_id, created_at ]`, `[ request_id, request_ip, request_method, success ]`, `[ request_id, request_ip, request_method, user_id ]`, `[ request_id, request_ip, request_method, created_at ]`, `[ request_id, request_ip, success, user_id ]`, `[ request_id, request_ip, success, created_at ]`, `[ request_id, request_ip, user_id, created_at ]`, `[ request_id, request_method, success, user_id ]`, `[ request_id, request_method, success, created_at ]`, `[ request_id, request_method, user_id, created_at ]`, `[ request_id, success, user_id, created_at ]`, `[ request_ip, request_method, success, user_id ]`, `[ request_ip, request_method, success, created_at ]`, `[ request_ip, request_method, user_id, created_at ]`, `[ request_ip, success, user_id, created_at ]`, `[ request_method, success, user_id, created_at ]`, `[ api_key_id, interface, request_id, request_ip, request_method ]`, `[ api_key_id, interface, request_id, request_ip, success ]`, `[ api_key_id, interface, request_id, request_ip, user_id ]`, `[ api_key_id, interface, request_id, request_ip, created_at ]`, `[ api_key_id, interface, request_id, request_method, success ]`, `[ api_key_id, interface, request_id, request_method, user_id ]`, `[ api_key_id, interface, request_id, request_method, created_at ]`, `[ api_key_id, interface, request_id, success, user_id ]`, `[ api_key_id, interface, request_id, success, created_at ]`, `[ api_key_id, interface, request_id, user_id, created_at ]`, `[ api_key_id, interface, request_ip, request_method, success ]`, `[ api_key_id, interface, request_ip, request_method, user_id ]`, `[ api_key_id, interface, request_ip, request_method, created_at ]`, `[ api_key_id, interface, request_ip, success, user_id ]`, `[ api_key_id, interface, request_ip, success, created_at ]`, `[ api_key_id, interface, request_ip, user_id, created_at ]`, `[ api_key_id, interface, request_method, success, user_id ]`, `[ api_key_id, interface, request_method, success, created_at ]`, `[ api_key_id, interface, request_method, user_id, created_at ]`, `[ api_key_id, interface, success, user_id, created_at ]`, `[ api_key_id, request_id, request_ip, request_method, success ]`, `[ api_key_id, request_id, request_ip, request_method, user_id ]`, `[ api_key_id, request_id, request_ip, request_method, created_at ]`, `[ api_key_id, request_id, request_ip, success, user_id ]`, `[ api_key_id, request_id, request_ip, success, created_at ]`, `[ api_key_id, request_id, request_ip, user_id, created_at ]`, `[ api_key_id, request_id, request_method, success, user_id ]`, `[ api_key_id, request_id, request_method, success, created_at ]`, `[ api_key_id, request_id, request_method, user_id, created_at ]`, `[ api_key_id, request_id, success, user_id, created_at ]`, `[ api_key_id, request_ip, request_method, success, user_id ]`, `[ api_key_id, request_ip, request_method, success, created_at ]`, `[ api_key_id, request_ip, request_method, user_id, created_at ]`, `[ api_key_id, request_ip, success, user_id, created_at ]`, `[ api_key_id, request_method, success, user_id, created_at ]`, `[ interface, request_id, request_ip, request_method, success ]`, `[ interface, request_id, request_ip, request_method, user_id ]`, `[ interface, request_id, request_ip, request_method, created_at ]`, `[ interface, request_id, request_ip, success, user_id ]`, `[ interface, request_id, request_ip, success, created_at ]`, `[ interface, request_id, request_ip, user_id, created_at ]`, `[ interface, request_id, request_method, success, user_id ]`, `[ interface, request_id, request_method, success, created_at ]`, `[ interface, request_id, request_method, user_id, created_at ]`, `[ interface, request_id, success, user_id, created_at ]`, `[ interface, request_ip, request_method, success, user_id ]`, `[ interface, request_ip, request_method, success, created_at ]`, `[ interface, request_ip, request_method, user_id, created_at ]`, `[ interface, request_ip, success, user_id, created_at ]`, `[ interface, request_method, success, user_id, created_at ]`, `[ request_id, request_ip, request_method, success, user_id ]`, `[ request_id, request_ip, request_method, success, created_at ]`, `[ request_id, request_ip, request_method, user_id, created_at ]`, `[ request_id, request_ip, success, user_id, created_at ]`, `[ request_id, request_method, success, user_id, created_at ]`, `[ request_ip, request_method, success, user_id, created_at ]`, `[ api_key_id, interface, request_id, request_ip, request_method, success ]`, `[ api_key_id, interface, request_id, request_ip, request_method, user_id ]`, `[ api_key_id, interface, request_id, request_ip, request_method, created_at ]`, `[ api_key_id, interface, request_id, request_ip, success, user_id ]`, `[ api_key_id, interface, request_id, request_ip, success, created_at ]`, `[ api_key_id, interface, request_id, request_ip, user_id, created_at ]`, `[ api_key_id, interface, request_id, request_method, success, user_id ]`, `[ api_key_id, interface, request_id, request_method, success, created_at ]`, `[ api_key_id, interface, request_id, request_method, user_id, created_at ]`, `[ api_key_id, interface, request_id, success, user_id, created_at ]`, `[ api_key_id, interface, request_ip, request_method, success, user_id ]`, `[ api_key_id, interface, request_ip, request_method, success, created_at ]`, `[ api_key_id, interface, request_ip, request_method, user_id, created_at ]`, `[ api_key_id, interface, request_ip, success, user_id, created_at ]`, `[ api_key_id, interface, request_method, success, user_id, created_at ]`, `[ api_key_id, request_id, request_ip, request_method, success, user_id ]`, `[ api_key_id, request_id, request_ip, request_method, success, created_at ]`, `[ api_key_id, request_id, request_ip, request_method, user_id, created_at ]`, `[ api_key_id, request_id, request_ip, success, user_id, created_at ]`, `[ api_key_id, request_id, request_method, success, user_id, created_at ]`, `[ api_key_id, request_ip, request_method, success, user_id, created_at ]`, `[ interface, request_id, request_ip, request_method, success, user_id ]`, `[ interface, request_id, request_ip, request_method, success, created_at ]`, `[ interface, request_id, request_ip, request_method, user_id, created_at ]`, `[ interface, request_id, request_ip, success, user_id, created_at ]`, `[ interface, request_id, request_method, success, user_id, created_at ]`, `[ interface, request_ip, request_method, success, user_id, created_at ]`, `[ request_id, request_ip, request_method, success, user_id, created_at ]`, `[ api_key_id, interface, request_id, request_ip, request_method, success, user_id ]`, `[ api_key_id, interface, request_id, request_ip, request_method, success, created_at ]`, `[ api_key_id, interface, request_id, request_ip, request_method, user_id, created_at ]`, `[ api_key_id, interface, request_id, request_ip, success, user_id, created_at ]`, `[ api_key_id, interface, request_id, request_method, success, user_id, created_at ]`, `[ api_key_id, interface, request_ip, request_method, success, user_id, created_at ]`, `[ api_key_id, request_id, request_ip, request_method, success, user_id, created_at ]`, `[ interface, request_id, request_ip, request_method, success, user_id, created_at ]` or `[ api_key_id, interface, request_id, request_ip, request_method, success, user_id, created_at ]`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 

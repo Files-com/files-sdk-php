@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class PartnerSiteRequest
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class PartnerSiteRequest
     // int64 # Partner Site Request ID
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
     public function setId($value)
@@ -68,7 +66,7 @@ class PartnerSiteRequest
     // int64 # Host Partner ID
     public function getHostPartnerId()
     {
-        return @$this->attributes['host_partner_id'];
+        return isset($this->attributes['host_partner_id']) ? $this->attributes['host_partner_id'] : null;
     }
 
     public function setHostPartnerId($value)
@@ -78,7 +76,7 @@ class PartnerSiteRequest
     // string # Guest Site URL
     public function getGuestSiteUrl()
     {
-        return @$this->attributes['guest_site_url'];
+        return isset($this->attributes['guest_site_url']) ? $this->attributes['guest_site_url'] : null;
     }
 
     public function setGuestSiteUrl($value)
@@ -88,7 +86,7 @@ class PartnerSiteRequest
     // string # Request status (pending, approved, rejected)
     public function getStatus()
     {
-        return @$this->attributes['status'];
+        return isset($this->attributes['status']) ? $this->attributes['status'] : null;
     }
 
     public function setStatus($value)
@@ -98,7 +96,7 @@ class PartnerSiteRequest
     // string # Host Site Name
     public function getHostSiteName()
     {
-        return @$this->attributes['host_site_name'];
+        return isset($this->attributes['host_site_name']) ? $this->attributes['host_site_name'] : null;
     }
 
     public function setHostSiteName($value)
@@ -108,7 +106,7 @@ class PartnerSiteRequest
     // string # Pairing key used to approve this request on the Guest Site
     public function getPairingKey()
     {
-        return @$this->attributes['pairing_key'];
+        return isset($this->attributes['pairing_key']) ? $this->attributes['pairing_key'] : null;
     }
 
     public function setPairingKey($value)
@@ -118,12 +116,12 @@ class PartnerSiteRequest
     // date-time # Request creation date/time
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
     // date-time # Request last updated date/time
     public function getUpdatedAt()
     {
-        return @$this->attributes['updated_at'];
+        return isset($this->attributes['updated_at']) ? $this->attributes['updated_at'] : null;
     }
 
     public function delete($params = [])
@@ -132,7 +130,7 @@ class PartnerSiteRequest
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -140,7 +138,7 @@ class PartnerSiteRequest
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -173,11 +171,11 @@ class PartnerSiteRequest
     //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `host_partner_id`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -196,11 +194,11 @@ class PartnerSiteRequest
     //   pairing_key (required) - string - Pairing key for the partner site request
     public static function findByPairingKey($params = [], $options = [])
     {
-        if (!@$params['pairing_key']) {
+        if (empty($params['pairing_key'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: pairing_key');
         }
 
-        if (@$params['pairing_key'] && !is_string(@$params['pairing_key'])) {
+        if (!empty($params['pairing_key']) && !is_string($params['pairing_key'])) {
             throw new \Files\Exception\InvalidParameterException('$pairing_key must be of type string; received ' . gettype(@$params['pairing_key']));
         }
 
@@ -214,19 +212,19 @@ class PartnerSiteRequest
     //   guest_site_url (required) - string - Guest Site URL to link to
     public static function create($params = [], $options = [])
     {
-        if (!@$params['host_partner_id']) {
+        if (empty($params['host_partner_id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: host_partner_id');
         }
 
-        if (!@$params['guest_site_url']) {
+        if (empty($params['guest_site_url'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: guest_site_url');
         }
 
-        if (@$params['host_partner_id'] && !is_int(@$params['host_partner_id'])) {
+        if (!empty($params['host_partner_id']) && !is_int($params['host_partner_id'])) {
             throw new \Files\Exception\InvalidParameterException('$host_partner_id must be of type int; received ' . gettype(@$params['host_partner_id']));
         }
 
-        if (@$params['guest_site_url'] && !is_string(@$params['guest_site_url'])) {
+        if (!empty($params['guest_site_url']) && !is_string($params['guest_site_url'])) {
             throw new \Files\Exception\InvalidParameterException('$guest_site_url must be of type string; received ' . gettype(@$params['guest_site_url']));
         }
 
@@ -239,11 +237,11 @@ class PartnerSiteRequest
     //   pairing_key (required) - string - Pairing key for the partner site request
     public static function reject($params = [], $options = [])
     {
-        if (!@$params['pairing_key']) {
+        if (empty($params['pairing_key'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: pairing_key');
         }
 
-        if (@$params['pairing_key'] && !is_string(@$params['pairing_key'])) {
+        if (!empty($params['pairing_key']) && !is_string($params['pairing_key'])) {
             throw new \Files\Exception\InvalidParameterException('$pairing_key must be of type string; received ' . gettype(@$params['pairing_key']));
         }
 
@@ -257,15 +255,15 @@ class PartnerSiteRequest
     //   partner_id - int64 - ID of an existing Partner on this site, with the host role, that represents the requesting organization. The connection binds to that Partner and makes it host_and_guest. When omitted, a guest Partner named after the host site is created.
     public static function approve($params = [], $options = [])
     {
-        if (!@$params['pairing_key']) {
+        if (empty($params['pairing_key'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: pairing_key');
         }
 
-        if (@$params['pairing_key'] && !is_string(@$params['pairing_key'])) {
+        if (!empty($params['pairing_key']) && !is_string($params['pairing_key'])) {
             throw new \Files\Exception\InvalidParameterException('$pairing_key must be of type string; received ' . gettype(@$params['pairing_key']));
         }
 
-        if (@$params['partner_id'] && !is_int(@$params['partner_id'])) {
+        if (!empty($params['partner_id']) && !is_int($params['partner_id'])) {
             throw new \Files\Exception\InvalidParameterException('$partner_id must be of type int; received ' . gettype(@$params['partner_id']));
         }
 

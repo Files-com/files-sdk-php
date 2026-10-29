@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class Schedule
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class Schedule
     // int64 # Schedule ID.
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
     public function setId($value)
@@ -68,7 +66,7 @@ class Schedule
     // string # Schedule name.
     public function getName()
     {
-        return @$this->attributes['name'];
+        return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
 
     public function setName($value)
@@ -78,7 +76,7 @@ class Schedule
     // array(int64) # 0-based weekdays used by the Schedule. 0 is Sunday.
     public function getScheduleDaysOfWeek()
     {
-        return @$this->attributes['schedule_days_of_week'];
+        return isset($this->attributes['schedule_days_of_week']) ? $this->attributes['schedule_days_of_week'] : null;
     }
 
     public function setScheduleDaysOfWeek($value)
@@ -88,7 +86,7 @@ class Schedule
     // array(string) # Times of day in HH:MM format (24-hour).
     public function getScheduleTimesOfDay()
     {
-        return @$this->attributes['schedule_times_of_day'];
+        return isset($this->attributes['schedule_times_of_day']) ? $this->attributes['schedule_times_of_day'] : null;
     }
 
     public function setScheduleTimesOfDay($value)
@@ -98,7 +96,7 @@ class Schedule
     // string # Time zone for scheduled times. If not set, times are interpreted as UTC.
     public function getScheduleTimeZone()
     {
-        return @$this->attributes['schedule_time_zone'];
+        return isset($this->attributes['schedule_time_zone']) ? $this->attributes['schedule_time_zone'] : null;
     }
 
     public function setScheduleTimeZone($value)
@@ -108,7 +106,7 @@ class Schedule
     // string # Optional holiday region on which linked resources do not run.
     public function getHolidayRegion()
     {
-        return @$this->attributes['holiday_region'];
+        return isset($this->attributes['holiday_region']) ? $this->attributes['holiday_region'] : null;
     }
 
     public function setHolidayRegion($value)
@@ -118,7 +116,7 @@ class Schedule
     // string # Human-readable Schedule description.
     public function getHumanReadableSchedule()
     {
-        return @$this->attributes['human_readable_schedule'];
+        return isset($this->attributes['human_readable_schedule']) ? $this->attributes['human_readable_schedule'] : null;
     }
 
     public function setHumanReadableSchedule($value)
@@ -128,12 +126,12 @@ class Schedule
     // date-time # Creation time.
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
     // date-time # Last update time.
     public function getUpdatedAt()
     {
-        return @$this->attributes['updated_at'];
+        return isset($this->attributes['updated_at']) ? $this->attributes['updated_at'] : null;
     }
 
     // Parameters:
@@ -148,7 +146,7 @@ class Schedule
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -156,27 +154,27 @@ class Schedule
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['schedule_days_of_week'] && !is_array(@$params['schedule_days_of_week'])) {
+        if (!empty($params['schedule_days_of_week']) && !is_array($params['schedule_days_of_week'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_days_of_week must be of type array; received ' . gettype(@$params['schedule_days_of_week']));
         }
 
-        if (@$params['schedule_times_of_day'] && !is_array(@$params['schedule_times_of_day'])) {
+        if (!empty($params['schedule_times_of_day']) && !is_array($params['schedule_times_of_day'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_times_of_day must be of type array; received ' . gettype(@$params['schedule_times_of_day']));
         }
 
-        if (@$params['schedule_time_zone'] && !is_string(@$params['schedule_time_zone'])) {
+        if (!empty($params['schedule_time_zone']) && !is_string($params['schedule_time_zone'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_time_zone must be of type string; received ' . gettype(@$params['schedule_time_zone']));
         }
 
-        if (@$params['holiday_region'] && !is_string(@$params['holiday_region'])) {
+        if (!empty($params['holiday_region']) && !is_string($params['holiday_region'])) {
             throw new \Files\Exception\InvalidParameterException('$holiday_region must be of type string; received ' . gettype(@$params['holiday_region']));
         }
 
@@ -190,7 +188,7 @@ class Schedule
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -198,7 +196,7 @@ class Schedule
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -232,11 +230,11 @@ class Schedule
     //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `name`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -261,11 +259,11 @@ class Schedule
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -286,35 +284,35 @@ class Schedule
     //   holiday_region - string - Optional holiday region on which linked resources do not run.
     public static function create($params = [], $options = [])
     {
-        if (!@$params['name']) {
+        if (empty($params['name'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: name');
         }
 
-        if (!@$params['schedule_days_of_week']) {
+        if (empty($params['schedule_days_of_week'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: schedule_days_of_week');
         }
 
-        if (!@$params['schedule_times_of_day']) {
+        if (empty($params['schedule_times_of_day'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: schedule_times_of_day');
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['schedule_days_of_week'] && !is_array(@$params['schedule_days_of_week'])) {
+        if (!empty($params['schedule_days_of_week']) && !is_array($params['schedule_days_of_week'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_days_of_week must be of type array; received ' . gettype(@$params['schedule_days_of_week']));
         }
 
-        if (@$params['schedule_times_of_day'] && !is_array(@$params['schedule_times_of_day'])) {
+        if (!empty($params['schedule_times_of_day']) && !is_array($params['schedule_times_of_day'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_times_of_day must be of type array; received ' . gettype(@$params['schedule_times_of_day']));
         }
 
-        if (@$params['schedule_time_zone'] && !is_string(@$params['schedule_time_zone'])) {
+        if (!empty($params['schedule_time_zone']) && !is_string($params['schedule_time_zone'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_time_zone must be of type string; received ' . gettype(@$params['schedule_time_zone']));
         }
 
-        if (@$params['holiday_region'] && !is_string(@$params['holiday_region'])) {
+        if (!empty($params['holiday_region']) && !is_string($params['holiday_region'])) {
             throw new \Files\Exception\InvalidParameterException('$holiday_region must be of type string; received ' . gettype(@$params['holiday_region']));
         }
 

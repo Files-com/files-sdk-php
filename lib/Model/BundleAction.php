@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class BundleAction
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,67 +56,67 @@ class BundleAction
     // string # Type of action
     public function getAction()
     {
-        return @$this->attributes['action'];
+        return isset($this->attributes['action']) ? $this->attributes['action'] : null;
     }
     // BundleRegistration # Object that contains bundle registration information
     public function getBundleRegistration()
     {
-        return @$this->attributes['bundle_registration'];
+        return isset($this->attributes['bundle_registration']) ? $this->attributes['bundle_registration'] : null;
     }
     // date-time # Action occurrence date/time
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
     // string # The destination path for this bundle action, if applicable
     public function getDestination()
     {
-        return @$this->attributes['destination'];
+        return isset($this->attributes['destination']) ? $this->attributes['destination'] : null;
     }
     // string # Path. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
     public function getPath()
     {
-        return @$this->attributes['path'];
+        return isset($this->attributes['path']) ? $this->attributes['path'] : null;
     }
     // string # The source path for this bundle action, if applicable
     public function getSource()
     {
-        return @$this->attributes['source'];
+        return isset($this->attributes['source']) ? $this->attributes['source'] : null;
     }
     // int64 # Identifier of the associated bundle registration
     public function getBundleRegistrationId()
     {
-        return @$this->attributes['bundle_registration_id'];
+        return isset($this->attributes['bundle_registration_id']) ? $this->attributes['bundle_registration_id'] : null;
     }
     // int64 # Workspace ID. `0` means the default workspace.
     public function getWorkspaceId()
     {
-        return @$this->attributes['workspace_id'];
+        return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
     // string # Name of the registrant who performed the action
     public function getBundleRegistrationName()
     {
-        return @$this->attributes['bundle_registration_name'];
+        return isset($this->attributes['bundle_registration_name']) ? $this->attributes['bundle_registration_name'] : null;
     }
     // string # Email of the registrant
     public function getBundleRegistrationEmail()
     {
-        return @$this->attributes['bundle_registration_email'];
+        return isset($this->attributes['bundle_registration_email']) ? $this->attributes['bundle_registration_email'] : null;
     }
     // string # IP address of the registrant
     public function getBundleRegistrationIp()
     {
-        return @$this->attributes['bundle_registration_ip'];
+        return isset($this->attributes['bundle_registration_ip']) ? $this->attributes['bundle_registration_ip'] : null;
     }
     // int64 # Id of associated form field set
     public function getFormFieldSetId()
     {
-        return @$this->attributes['form_field_set_id'];
+        return isset($this->attributes['form_field_set_id']) ? $this->attributes['form_field_set_id'] : null;
     }
     // object # Data for form field set with form field ids as keys and user data as values
     public function getFormFieldData()
     {
-        return @$this->attributes['form_field_data'];
+        return isset($this->attributes['form_field_data']) ? $this->attributes['form_field_data'] : null;
     }
 
     // Parameters:
@@ -135,23 +133,23 @@ class BundleAction
     //   bundle_registration_id - int64 - Bundle Registration ID
     public static function all($params = [], $options = [])
     {
-        if (@$params['user_id'] && !is_int(@$params['user_id'])) {
+        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
-        if (@$params['bundle_id'] && !is_int(@$params['bundle_id'])) {
+        if (!empty($params['bundle_id']) && !is_int($params['bundle_id'])) {
             throw new \Files\Exception\InvalidParameterException('$bundle_id must be of type int; received ' . gettype(@$params['bundle_id']));
         }
 
-        if (@$params['bundle_registration_id'] && !is_int(@$params['bundle_registration_id'])) {
+        if (!empty($params['bundle_registration_id']) && !is_int($params['bundle_registration_id'])) {
             throw new \Files\Exception\InvalidParameterException('$bundle_registration_id must be of type int; received ' . gettype(@$params['bundle_registration_id']));
         }
 

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class FileComment
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class FileComment
     // int64 # File Comment ID
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
     public function setId($value)
@@ -68,7 +66,7 @@ class FileComment
     // string # Comment body.
     public function getBody()
     {
-        return @$this->attributes['body'];
+        return isset($this->attributes['body']) ? $this->attributes['body'] : null;
     }
 
     public function setBody($value)
@@ -78,7 +76,7 @@ class FileComment
     // array(object) # Reactions to this comment.
     public function getReactions()
     {
-        return @$this->attributes['reactions'];
+        return isset($this->attributes['reactions']) ? $this->attributes['reactions'] : null;
     }
 
     public function setReactions($value)
@@ -88,7 +86,7 @@ class FileComment
     // string # File path.
     public function getPath()
     {
-        return @$this->attributes['path'];
+        return isset($this->attributes['path']) ? $this->attributes['path'] : null;
     }
 
     public function setPath($value)
@@ -104,7 +102,7 @@ class FileComment
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -112,7 +110,7 @@ class FileComment
             }
         }
 
-        if (!@$params['body']) {
+        if (empty($params['body'])) {
             if (@$this->body) {
                 $params['body'] = $this->body;
             } else {
@@ -120,11 +118,11 @@ class FileComment
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (@$params['body'] && !is_string(@$params['body'])) {
+        if (!empty($params['body']) && !is_string($params['body'])) {
             throw new \Files\Exception\InvalidParameterException('$body must be of type string; received ' . gettype(@$params['body']));
         }
 
@@ -138,7 +136,7 @@ class FileComment
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -146,7 +144,7 @@ class FileComment
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -186,19 +184,19 @@ class FileComment
 
         $params['path'] = $path;
 
-        if (!@$params['path']) {
+        if (empty($params['path'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: path');
         }
 
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
-        if (@$params['path'] && !is_string(@$params['path'])) {
+        if (!empty($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
@@ -218,19 +216,19 @@ class FileComment
     //   path (required) - string - File path.
     public static function create($params = [], $options = [])
     {
-        if (!@$params['body']) {
+        if (empty($params['body'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: body');
         }
 
-        if (!@$params['path']) {
+        if (empty($params['path'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: path');
         }
 
-        if (@$params['body'] && !is_string(@$params['body'])) {
+        if (!empty($params['body']) && !is_string($params['body'])) {
             throw new \Files\Exception\InvalidParameterException('$body must be of type string; received ' . gettype(@$params['body']));
         }
 
-        if (@$params['path'] && !is_string(@$params['path'])) {
+        if (!empty($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 

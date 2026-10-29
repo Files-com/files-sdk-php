@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class Clickwrap
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class Clickwrap
     // int64 # Clickwrap ID
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
     public function setId($value)
@@ -68,7 +66,7 @@ class Clickwrap
     // string # Name of the Clickwrap agreement (used when selecting from multiple Clickwrap agreements.)
     public function getName()
     {
-        return @$this->attributes['name'];
+        return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
 
     public function setName($value)
@@ -78,7 +76,7 @@ class Clickwrap
     // string # Body text of Clickwrap (supports Markdown formatting).
     public function getBody()
     {
-        return @$this->attributes['body'];
+        return isset($this->attributes['body']) ? $this->attributes['body'] : null;
     }
 
     public function setBody($value)
@@ -88,7 +86,7 @@ class Clickwrap
     // string # Use this Clickwrap for Users?  Values: `none`, `require` (new user signup via email invitation only), `require_all_users_once` (show to all users at their next web login; once accepted, not shown again), `require_all_users_always` (show to all users on every web login).
     public function getUseWithUsers()
     {
-        return @$this->attributes['use_with_users'];
+        return isset($this->attributes['use_with_users']) ? $this->attributes['use_with_users'] : null;
     }
 
     public function setUseWithUsers($value)
@@ -98,7 +96,7 @@ class Clickwrap
     // string # Use this Clickwrap for Bundles?
     public function getUseWithBundles()
     {
-        return @$this->attributes['use_with_bundles'];
+        return isset($this->attributes['use_with_bundles']) ? $this->attributes['use_with_bundles'] : null;
     }
 
     public function setUseWithBundles($value)
@@ -108,7 +106,7 @@ class Clickwrap
     // string # Use this Clickwrap for Inboxes?
     public function getUseWithInboxes()
     {
-        return @$this->attributes['use_with_inboxes'];
+        return isset($this->attributes['use_with_inboxes']) ? $this->attributes['use_with_inboxes'] : null;
     }
 
     public function setUseWithInboxes($value)
@@ -128,7 +126,7 @@ class Clickwrap
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -136,27 +134,27 @@ class Clickwrap
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['body'] && !is_string(@$params['body'])) {
+        if (!empty($params['body']) && !is_string($params['body'])) {
             throw new \Files\Exception\InvalidParameterException('$body must be of type string; received ' . gettype(@$params['body']));
         }
 
-        if (@$params['use_with_bundles'] && !is_string(@$params['use_with_bundles'])) {
+        if (!empty($params['use_with_bundles']) && !is_string($params['use_with_bundles'])) {
             throw new \Files\Exception\InvalidParameterException('$use_with_bundles must be of type string; received ' . gettype(@$params['use_with_bundles']));
         }
 
-        if (@$params['use_with_inboxes'] && !is_string(@$params['use_with_inboxes'])) {
+        if (!empty($params['use_with_inboxes']) && !is_string($params['use_with_inboxes'])) {
             throw new \Files\Exception\InvalidParameterException('$use_with_inboxes must be of type string; received ' . gettype(@$params['use_with_inboxes']));
         }
 
-        if (@$params['use_with_users'] && !is_string(@$params['use_with_users'])) {
+        if (!empty($params['use_with_users']) && !is_string($params['use_with_users'])) {
             throw new \Files\Exception\InvalidParameterException('$use_with_users must be of type string; received ' . gettype(@$params['use_with_users']));
         }
 
@@ -170,7 +168,7 @@ class Clickwrap
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -178,7 +176,7 @@ class Clickwrap
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -212,11 +210,11 @@ class Clickwrap
     //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are .
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -241,11 +239,11 @@ class Clickwrap
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -266,23 +264,23 @@ class Clickwrap
     //   use_with_users - string - Use this Clickwrap for Users?  Values: `none`, `require` (new user signup via email invitation only), `require_all_users_once` (show to all users at their next web login; once accepted, not shown again), `require_all_users_always` (show to all users on every web login).
     public static function create($params = [], $options = [])
     {
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['body'] && !is_string(@$params['body'])) {
+        if (!empty($params['body']) && !is_string($params['body'])) {
             throw new \Files\Exception\InvalidParameterException('$body must be of type string; received ' . gettype(@$params['body']));
         }
 
-        if (@$params['use_with_bundles'] && !is_string(@$params['use_with_bundles'])) {
+        if (!empty($params['use_with_bundles']) && !is_string($params['use_with_bundles'])) {
             throw new \Files\Exception\InvalidParameterException('$use_with_bundles must be of type string; received ' . gettype(@$params['use_with_bundles']));
         }
 
-        if (@$params['use_with_inboxes'] && !is_string(@$params['use_with_inboxes'])) {
+        if (!empty($params['use_with_inboxes']) && !is_string($params['use_with_inboxes'])) {
             throw new \Files\Exception\InvalidParameterException('$use_with_inboxes must be of type string; received ' . gettype(@$params['use_with_inboxes']));
         }
 
-        if (@$params['use_with_users'] && !is_string(@$params['use_with_users'])) {
+        if (!empty($params['use_with_users']) && !is_string($params['use_with_users'])) {
             throw new \Files\Exception\InvalidParameterException('$use_with_users must be of type string; received ' . gettype(@$params['use_with_users']));
         }
 

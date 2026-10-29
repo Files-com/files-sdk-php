@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class PartnerConnection
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,26 +56,26 @@ class PartnerConnection
     // int64 # Relationship ID used with DELETE /partner_sites/:id to disconnect.
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
     // string # This Partner's role in this connection. A host shares local files with the connected site; a guest accesses files shared by the connected site.
     public function getRole()
     {
-        return @$this->attributes['role'];
+        return isset($this->attributes['role']) ? $this->attributes['role'] : null;
     }
     // int64 # ID of the connected site.
     public function getSiteId()
     {
-        return @$this->attributes['site_id'];
+        return isset($this->attributes['site_id']) ? $this->attributes['site_id'] : null;
     }
     // string # Name of the connected site.
     public function getSiteName()
     {
-        return @$this->attributes['site_name'];
+        return isset($this->attributes['site_name']) ? $this->attributes['site_name'] : null;
     }
     // string # File API path to the connected Host's mount on this site when role is guest. Null when role is host. File access remains subject to the caller's permissions and the Host Partner's grants.
     public function getMountPath()
     {
-        return @$this->attributes['mount_path'];
+        return isset($this->attributes['mount_path']) ? $this->attributes['mount_path'] : null;
     }
 }

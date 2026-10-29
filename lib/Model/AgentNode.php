@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class AgentNode
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,46 +56,46 @@ class AgentNode
     // string # Stable Agent installation ID
     public function getNodeId()
     {
-        return @$this->attributes['node_id'];
+        return isset($this->attributes['node_id']) ? $this->attributes['node_id'] : null;
     }
     // string # Customer-configured Agent node name
     public function getName()
     {
-        return @$this->attributes['name'];
+        return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
     // string # Hostname reported by the Agent
     public function getHostname()
     {
-        return @$this->attributes['hostname'];
+        return isset($this->attributes['hostname']) ? $this->attributes['hostname'] : null;
     }
     // string # Configured traffic preference
     public function getAvailabilityRole()
     {
-        return @$this->attributes['availability_role'];
+        return isset($this->attributes['availability_role']) ? $this->attributes['availability_role'] : null;
     }
     // string # Whether this node currently has an available Agent instance
     public function getStatus()
     {
-        return @$this->attributes['status'];
+        return isset($this->attributes['status']) ? $this->attributes['status'] : null;
     }
     // boolean # Whether this node is the current default route for new unscoped work
     public function getIsDefault()
     {
-        return @$this->attributes['is_default'];
+        return isset($this->attributes['is_default']) ? $this->attributes['is_default'] : null;
     }
     // boolean # Whether the proxy recently validated a direct connection to this Agent node. False means direct transfers are enabled but not currently available; null means disabled or unsupported.
     public function getDirectTransferAvailable()
     {
-        return @$this->attributes['direct_transfer_available'];
+        return isset($this->attributes['direct_transfer_available']) ? $this->attributes['direct_transfer_available'] : null;
     }
     // date-time # Most recent successful node observation
     public function getLastSeenAt()
     {
-        return @$this->attributes['last_seen_at'];
+        return isset($this->attributes['last_seen_at']) ? $this->attributes['last_seen_at'] : null;
     }
     // array(object) # Current Agent processes for this node
     public function getInstances()
     {
-        return @$this->attributes['instances'];
+        return isset($this->attributes['instances']) ? $this->attributes['instances'] : null;
     }
 }

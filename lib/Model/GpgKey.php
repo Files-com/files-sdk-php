@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class GpgKey
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class GpgKey
     // int64 # GPG key ID.
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
     public function setId($value)
@@ -68,7 +66,7 @@ class GpgKey
     // int64 # Workspace ID (0 for default workspace).
     public function getWorkspaceId()
     {
-        return @$this->attributes['workspace_id'];
+        return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
 
     public function setWorkspaceId($value)
@@ -78,7 +76,7 @@ class GpgKey
     // date-time # GPG key expiration date.
     public function getExpiresAt()
     {
-        return @$this->attributes['expires_at'];
+        return isset($this->attributes['expires_at']) ? $this->attributes['expires_at'] : null;
     }
 
     public function setExpiresAt($value)
@@ -88,7 +86,7 @@ class GpgKey
     // string # GPG key name.
     public function getName()
     {
-        return @$this->attributes['name'];
+        return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
 
     public function setName($value)
@@ -98,7 +96,7 @@ class GpgKey
     // int64 # Partner ID who owns this GPG Key, if applicable.
     public function getPartnerId()
     {
-        return @$this->attributes['partner_id'];
+        return isset($this->attributes['partner_id']) ? $this->attributes['partner_id'] : null;
     }
 
     public function setPartnerId($value)
@@ -108,7 +106,7 @@ class GpgKey
     // string # Name of the Partner who owns this GPG Key, if applicable.
     public function getPartnerName()
     {
-        return @$this->attributes['partner_name'];
+        return isset($this->attributes['partner_name']) ? $this->attributes['partner_name'] : null;
     }
 
     public function setPartnerName($value)
@@ -118,7 +116,7 @@ class GpgKey
     // int64 # User ID who owns this GPG Key, if applicable.
     public function getUserId()
     {
-        return @$this->attributes['user_id'];
+        return isset($this->attributes['user_id']) ? $this->attributes['user_id'] : null;
     }
 
     public function setUserId($value)
@@ -128,7 +126,7 @@ class GpgKey
     // string # MD5 hash of the GPG public key
     public function getPublicKeyMd5()
     {
-        return @$this->attributes['public_key_md5'];
+        return isset($this->attributes['public_key_md5']) ? $this->attributes['public_key_md5'] : null;
     }
 
     public function setPublicKeyMd5($value)
@@ -138,7 +136,7 @@ class GpgKey
     // string # MD5 hash of the GPG private key.
     public function getPrivateKeyMd5()
     {
-        return @$this->attributes['private_key_md5'];
+        return isset($this->attributes['private_key_md5']) ? $this->attributes['private_key_md5'] : null;
     }
 
     public function setPrivateKeyMd5($value)
@@ -148,7 +146,7 @@ class GpgKey
     // string # GPG public key
     public function getGeneratedPublicKey()
     {
-        return @$this->attributes['generated_public_key'];
+        return isset($this->attributes['generated_public_key']) ? $this->attributes['generated_public_key'] : null;
     }
 
     public function setGeneratedPublicKey($value)
@@ -158,7 +156,7 @@ class GpgKey
     // string # GPG private key.
     public function getGeneratedPrivateKey()
     {
-        return @$this->attributes['generated_private_key'];
+        return isset($this->attributes['generated_private_key']) ? $this->attributes['generated_private_key'] : null;
     }
 
     public function setGeneratedPrivateKey($value)
@@ -168,7 +166,7 @@ class GpgKey
     // string # GPG private key password. Only required for password protected keys.
     public function getPrivateKeyPasswordMd5()
     {
-        return @$this->attributes['private_key_password_md5'];
+        return isset($this->attributes['private_key_password_md5']) ? $this->attributes['private_key_password_md5'] : null;
     }
 
     public function setPrivateKeyPasswordMd5($value)
@@ -178,7 +176,7 @@ class GpgKey
     // string # The GPG public key
     public function getPublicKey()
     {
-        return @$this->attributes['public_key'];
+        return isset($this->attributes['public_key']) ? $this->attributes['public_key'] : null;
     }
 
     public function setPublicKey($value)
@@ -188,7 +186,7 @@ class GpgKey
     // string # The GPG private key
     public function getPrivateKey()
     {
-        return @$this->attributes['private_key'];
+        return isset($this->attributes['private_key']) ? $this->attributes['private_key'] : null;
     }
 
     public function setPrivateKey($value)
@@ -198,7 +196,7 @@ class GpgKey
     // string # The GPG private key password
     public function getPrivateKeyPassword()
     {
-        return @$this->attributes['private_key_password'];
+        return isset($this->attributes['private_key_password']) ? $this->attributes['private_key_password'] : null;
     }
 
     public function setPrivateKeyPassword($value)
@@ -208,7 +206,7 @@ class GpgKey
     // string # Expiration date of the key. Used for the generation of the key. Will be ignored if `generate_keypair` is false.
     public function getGenerateExpiresAt()
     {
-        return @$this->attributes['generate_expires_at'];
+        return isset($this->attributes['generate_expires_at']) ? $this->attributes['generate_expires_at'] : null;
     }
 
     public function setGenerateExpiresAt($value)
@@ -218,7 +216,7 @@ class GpgKey
     // boolean # If true, generate a new GPG key pair. Can not be used with `public_key`/`private_key`
     public function getGenerateKeypair()
     {
-        return @$this->attributes['generate_keypair'];
+        return isset($this->attributes['generate_keypair']) ? $this->attributes['generate_keypair'] : null;
     }
 
     public function setGenerateKeypair($value)
@@ -228,7 +226,7 @@ class GpgKey
     // string # Full name of the key owner. Used for the generation of the key. Will be ignored if `generate_keypair` is false.
     public function getGenerateFullName()
     {
-        return @$this->attributes['generate_full_name'];
+        return isset($this->attributes['generate_full_name']) ? $this->attributes['generate_full_name'] : null;
     }
 
     public function setGenerateFullName($value)
@@ -238,7 +236,7 @@ class GpgKey
     // string # Email address of the key owner. Used for the generation of the key. Will be ignored if `generate_keypair` is false.
     public function getGenerateEmail()
     {
-        return @$this->attributes['generate_email'];
+        return isset($this->attributes['generate_email']) ? $this->attributes['generate_email'] : null;
     }
 
     public function setGenerateEmail($value)
@@ -258,7 +256,7 @@ class GpgKey
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -266,27 +264,27 @@ class GpgKey
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (@$params['partner_id'] && !is_int(@$params['partner_id'])) {
+        if (!empty($params['partner_id']) && !is_int($params['partner_id'])) {
             throw new \Files\Exception\InvalidParameterException('$partner_id must be of type int; received ' . gettype(@$params['partner_id']));
         }
 
-        if (@$params['public_key'] && !is_string(@$params['public_key'])) {
+        if (!empty($params['public_key']) && !is_string($params['public_key'])) {
             throw new \Files\Exception\InvalidParameterException('$public_key must be of type string; received ' . gettype(@$params['public_key']));
         }
 
-        if (@$params['private_key'] && !is_string(@$params['private_key'])) {
+        if (!empty($params['private_key']) && !is_string($params['private_key'])) {
             throw new \Files\Exception\InvalidParameterException('$private_key must be of type string; received ' . gettype(@$params['private_key']));
         }
 
-        if (@$params['private_key_password'] && !is_string(@$params['private_key_password'])) {
+        if (!empty($params['private_key_password']) && !is_string($params['private_key_password'])) {
             throw new \Files\Exception\InvalidParameterException('$private_key_password must be of type string; received ' . gettype(@$params['private_key_password']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
@@ -300,7 +298,7 @@ class GpgKey
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -308,7 +306,7 @@ class GpgKey
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -348,15 +346,15 @@ class GpgKey
     //   filter_lteq - object - If set, return records where the specified field is less than or equal the supplied value. Valid fields are `expires_at`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['user_id'] && !is_int(@$params['user_id'])) {
+        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -381,11 +379,11 @@ class GpgKey
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -412,47 +410,47 @@ class GpgKey
     //   generate_email - string - Email address of the key owner. Used for the generation of the key. Will be ignored if `generate_keypair` is false.
     public static function create($params = [], $options = [])
     {
-        if (!@$params['name']) {
+        if (empty($params['name'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: name');
         }
 
-        if (@$params['user_id'] && !is_int(@$params['user_id'])) {
+        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (@$params['partner_id'] && !is_int(@$params['partner_id'])) {
+        if (!empty($params['partner_id']) && !is_int($params['partner_id'])) {
             throw new \Files\Exception\InvalidParameterException('$partner_id must be of type int; received ' . gettype(@$params['partner_id']));
         }
 
-        if (@$params['public_key'] && !is_string(@$params['public_key'])) {
+        if (!empty($params['public_key']) && !is_string($params['public_key'])) {
             throw new \Files\Exception\InvalidParameterException('$public_key must be of type string; received ' . gettype(@$params['public_key']));
         }
 
-        if (@$params['private_key'] && !is_string(@$params['private_key'])) {
+        if (!empty($params['private_key']) && !is_string($params['private_key'])) {
             throw new \Files\Exception\InvalidParameterException('$private_key must be of type string; received ' . gettype(@$params['private_key']));
         }
 
-        if (@$params['private_key_password'] && !is_string(@$params['private_key_password'])) {
+        if (!empty($params['private_key_password']) && !is_string($params['private_key_password'])) {
             throw new \Files\Exception\InvalidParameterException('$private_key_password must be of type string; received ' . gettype(@$params['private_key_password']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['workspace_id'] && !is_int(@$params['workspace_id'])) {
+        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
-        if (@$params['generate_expires_at'] && !is_string(@$params['generate_expires_at'])) {
+        if (!empty($params['generate_expires_at']) && !is_string($params['generate_expires_at'])) {
             throw new \Files\Exception\InvalidParameterException('$generate_expires_at must be of type string; received ' . gettype(@$params['generate_expires_at']));
         }
 
-        if (@$params['generate_full_name'] && !is_string(@$params['generate_full_name'])) {
+        if (!empty($params['generate_full_name']) && !is_string($params['generate_full_name'])) {
             throw new \Files\Exception\InvalidParameterException('$generate_full_name must be of type string; received ' . gettype(@$params['generate_full_name']));
         }
 
-        if (@$params['generate_email'] && !is_string(@$params['generate_email'])) {
+        if (!empty($params['generate_email']) && !is_string($params['generate_email'])) {
             throw new \Files\Exception\InvalidParameterException('$generate_email must be of type string; received ' . gettype(@$params['generate_email']));
         }
 

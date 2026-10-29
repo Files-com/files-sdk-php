@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class ScheduledExport
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class ScheduledExport
     // int64 # Scheduled Export ID
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
     public function setId($value)
@@ -68,7 +66,7 @@ class ScheduledExport
     // string # Name for this scheduled export.
     public function getName()
     {
-        return @$this->attributes['name'];
+        return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
 
     public function setName($value)
@@ -78,7 +76,7 @@ class ScheduledExport
     // string # Export report type. Valid values: folder_size_audit, group_membership_audit, permission_audit, share_link_audit
     public function getExportType()
     {
-        return @$this->attributes['export_type'];
+        return isset($this->attributes['export_type']) ? $this->attributes['export_type'] : null;
     }
 
     public function setExportType($value)
@@ -88,7 +86,7 @@ class ScheduledExport
     // string # Human-readable report name.
     public function getReportName()
     {
-        return @$this->attributes['report_name'];
+        return isset($this->attributes['report_name']) ? $this->attributes['report_name'] : null;
     }
 
     public function setReportName($value)
@@ -98,7 +96,7 @@ class ScheduledExport
     // object # Options for the report selected by export_type.
     public function getExportOptions()
     {
-        return @$this->attributes['export_options'];
+        return isset($this->attributes['export_options']) ? $this->attributes['export_options'] : null;
     }
 
     public function setExportOptions($value)
@@ -108,7 +106,7 @@ class ScheduledExport
     // int64 # Site Admin user who receives the completed export e-mail.
     public function getUserId()
     {
-        return @$this->attributes['user_id'];
+        return isset($this->attributes['user_id']) ? $this->attributes['user_id'] : null;
     }
 
     public function setUserId($value)
@@ -118,7 +116,7 @@ class ScheduledExport
     // boolean # If true, this scheduled export will not run.
     public function getDisabled()
     {
-        return @$this->attributes['disabled'];
+        return isset($this->attributes['disabled']) ? $this->attributes['disabled'] : null;
     }
 
     public function setDisabled($value)
@@ -128,7 +126,7 @@ class ScheduledExport
     // string # Schedule trigger type: `daily` or `custom_schedule`.
     public function getTrigger()
     {
-        return @$this->attributes['trigger'];
+        return isset($this->attributes['trigger']) ? $this->attributes['trigger'] : null;
     }
 
     public function setTrigger($value)
@@ -138,7 +136,7 @@ class ScheduledExport
     // string # If trigger is `daily`, this specifies how often to run the scheduled export.
     public function getInterval()
     {
-        return @$this->attributes['interval'];
+        return isset($this->attributes['interval']) ? $this->attributes['interval'] : null;
     }
 
     public function setInterval($value)
@@ -148,7 +146,7 @@ class ScheduledExport
     // int64 # If trigger is `daily`, this selects the day number inside the chosen interval.
     public function getRecurringDay()
     {
-        return @$this->attributes['recurring_day'];
+        return isset($this->attributes['recurring_day']) ? $this->attributes['recurring_day'] : null;
     }
 
     public function setRecurringDay($value)
@@ -158,7 +156,7 @@ class ScheduledExport
     // array(int64) # If trigger is `daily`, this selects one or more day numbers inside a `week`, `month`, `quarter`, or `year` interval.
     public function getRecurringDays()
     {
-        return @$this->attributes['recurring_days'];
+        return isset($this->attributes['recurring_days']) ? $this->attributes['recurring_days'] : null;
     }
 
     public function setRecurringDays($value)
@@ -168,7 +166,7 @@ class ScheduledExport
     // int64 # If trigger is `custom_schedule`, the reusable Schedule used instead of the scheduled export's schedule fields.
     public function getScheduleId()
     {
-        return @$this->attributes['schedule_id'];
+        return isset($this->attributes['schedule_id']) ? $this->attributes['schedule_id'] : null;
     }
 
     public function setScheduleId($value)
@@ -178,7 +176,7 @@ class ScheduledExport
     // array(int64) # If trigger is `custom_schedule`, the 0-based weekdays used by the schedule.
     public function getScheduleDaysOfWeek()
     {
-        return @$this->attributes['schedule_days_of_week'];
+        return isset($this->attributes['schedule_days_of_week']) ? $this->attributes['schedule_days_of_week'] : null;
     }
 
     public function setScheduleDaysOfWeek($value)
@@ -188,7 +186,7 @@ class ScheduledExport
     // array(string) # Times of day in HH:MM format for the scheduled export schedule.
     public function getScheduleTimesOfDay()
     {
-        return @$this->attributes['schedule_times_of_day'];
+        return isset($this->attributes['schedule_times_of_day']) ? $this->attributes['schedule_times_of_day'] : null;
     }
 
     public function setScheduleTimesOfDay($value)
@@ -198,7 +196,7 @@ class ScheduledExport
     // string # Time zone used by the scheduled export schedule.
     public function getScheduleTimeZone()
     {
-        return @$this->attributes['schedule_time_zone'];
+        return isset($this->attributes['schedule_time_zone']) ? $this->attributes['schedule_time_zone'] : null;
     }
 
     public function setScheduleTimeZone($value)
@@ -208,7 +206,7 @@ class ScheduledExport
     // string # Optional holiday region used by the scheduled export schedule.
     public function getHolidayRegion()
     {
-        return @$this->attributes['holiday_region'];
+        return isset($this->attributes['holiday_region']) ? $this->attributes['holiday_region'] : null;
     }
 
     public function setHolidayRegion($value)
@@ -218,7 +216,7 @@ class ScheduledExport
     // string # Human-readable schedule description.
     public function getHumanReadableSchedule()
     {
-        return @$this->attributes['human_readable_schedule'];
+        return isset($this->attributes['human_readable_schedule']) ? $this->attributes['human_readable_schedule'] : null;
     }
 
     public function setHumanReadableSchedule($value)
@@ -228,7 +226,7 @@ class ScheduledExport
     // date-time # Most recent scheduled attempt time, including attempts that failed validation.
     public function getLastRunAt()
     {
-        return @$this->attributes['last_run_at'];
+        return isset($this->attributes['last_run_at']) ? $this->attributes['last_run_at'] : null;
     }
 
     public function setLastRunAt($value)
@@ -238,7 +236,7 @@ class ScheduledExport
     // int64 # Most recent Export ID created by this schedule.
     public function getLastExportId()
     {
-        return @$this->attributes['last_export_id'];
+        return isset($this->attributes['last_export_id']) ? $this->attributes['last_export_id'] : null;
     }
 
     public function setLastExportId($value)
@@ -248,7 +246,7 @@ class ScheduledExport
     // string # Validation error from the most recent scheduled attempt. The schedule remains enabled and retries at its next scheduled time. Cleared when an export is successfully created; does not describe errors during export generation.
     public function getLastError()
     {
-        return @$this->attributes['last_error'];
+        return isset($this->attributes['last_error']) ? $this->attributes['last_error'] : null;
     }
 
     public function setLastError($value)
@@ -258,12 +256,12 @@ class ScheduledExport
     // date-time # Creation time.
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
     // date-time # Last update time.
     public function getUpdatedAt()
     {
-        return @$this->attributes['updated_at'];
+        return isset($this->attributes['updated_at']) ? $this->attributes['updated_at'] : null;
     }
 
     // Parameters:
@@ -287,7 +285,7 @@ class ScheduledExport
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -295,55 +293,55 @@ class ScheduledExport
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['export_type'] && !is_string(@$params['export_type'])) {
+        if (!empty($params['export_type']) && !is_string($params['export_type'])) {
             throw new \Files\Exception\InvalidParameterException('$export_type must be of type string; received ' . gettype(@$params['export_type']));
         }
 
-        if (@$params['user_id'] && !is_int(@$params['user_id'])) {
+        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (@$params['trigger'] && !is_string(@$params['trigger'])) {
+        if (!empty($params['trigger']) && !is_string($params['trigger'])) {
             throw new \Files\Exception\InvalidParameterException('$trigger must be of type string; received ' . gettype(@$params['trigger']));
         }
 
-        if (@$params['interval'] && !is_string(@$params['interval'])) {
+        if (!empty($params['interval']) && !is_string($params['interval'])) {
             throw new \Files\Exception\InvalidParameterException('$interval must be of type string; received ' . gettype(@$params['interval']));
         }
 
-        if (@$params['recurring_day'] && !is_int(@$params['recurring_day'])) {
+        if (!empty($params['recurring_day']) && !is_int($params['recurring_day'])) {
             throw new \Files\Exception\InvalidParameterException('$recurring_day must be of type int; received ' . gettype(@$params['recurring_day']));
         }
 
-        if (@$params['recurring_days'] && !is_array(@$params['recurring_days'])) {
+        if (!empty($params['recurring_days']) && !is_array($params['recurring_days'])) {
             throw new \Files\Exception\InvalidParameterException('$recurring_days must be of type array; received ' . gettype(@$params['recurring_days']));
         }
 
-        if (@$params['schedule_id'] && !is_int(@$params['schedule_id'])) {
+        if (!empty($params['schedule_id']) && !is_int($params['schedule_id'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_id must be of type int; received ' . gettype(@$params['schedule_id']));
         }
 
-        if (@$params['schedule_days_of_week'] && !is_array(@$params['schedule_days_of_week'])) {
+        if (!empty($params['schedule_days_of_week']) && !is_array($params['schedule_days_of_week'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_days_of_week must be of type array; received ' . gettype(@$params['schedule_days_of_week']));
         }
 
-        if (@$params['schedule_times_of_day'] && !is_array(@$params['schedule_times_of_day'])) {
+        if (!empty($params['schedule_times_of_day']) && !is_array($params['schedule_times_of_day'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_times_of_day must be of type array; received ' . gettype(@$params['schedule_times_of_day']));
         }
 
-        if (@$params['schedule_time_zone'] && !is_string(@$params['schedule_time_zone'])) {
+        if (!empty($params['schedule_time_zone']) && !is_string($params['schedule_time_zone'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_time_zone must be of type string; received ' . gettype(@$params['schedule_time_zone']));
         }
 
-        if (@$params['holiday_region'] && !is_string(@$params['holiday_region'])) {
+        if (!empty($params['holiday_region']) && !is_string($params['holiday_region'])) {
             throw new \Files\Exception\InvalidParameterException('$holiday_region must be of type string; received ' . gettype(@$params['holiday_region']));
         }
 
@@ -357,7 +355,7 @@ class ScheduledExport
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -365,7 +363,7 @@ class ScheduledExport
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -401,11 +399,11 @@ class ScheduledExport
     //   filter_prefix - object - If set, return records where the specified field is prefixed by the supplied value. Valid fields are `export_type`.
     public static function all($params = [], $options = [])
     {
-        if (@$params['cursor'] && !is_string(@$params['cursor'])) {
+        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (@$params['per_page'] && !is_int(@$params['per_page'])) {
+        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -430,11 +428,11 @@ class ScheduledExport
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -464,59 +462,59 @@ class ScheduledExport
     //   holiday_region - string - Optional holiday region used by the scheduled export schedule.
     public static function create($params = [], $options = [])
     {
-        if (!@$params['name']) {
+        if (empty($params['name'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: name');
         }
 
-        if (!@$params['export_type']) {
+        if (empty($params['export_type'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: export_type');
         }
 
-        if (@$params['name'] && !is_string(@$params['name'])) {
+        if (!empty($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (@$params['export_type'] && !is_string(@$params['export_type'])) {
+        if (!empty($params['export_type']) && !is_string($params['export_type'])) {
             throw new \Files\Exception\InvalidParameterException('$export_type must be of type string; received ' . gettype(@$params['export_type']));
         }
 
-        if (@$params['user_id'] && !is_int(@$params['user_id'])) {
+        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (@$params['trigger'] && !is_string(@$params['trigger'])) {
+        if (!empty($params['trigger']) && !is_string($params['trigger'])) {
             throw new \Files\Exception\InvalidParameterException('$trigger must be of type string; received ' . gettype(@$params['trigger']));
         }
 
-        if (@$params['interval'] && !is_string(@$params['interval'])) {
+        if (!empty($params['interval']) && !is_string($params['interval'])) {
             throw new \Files\Exception\InvalidParameterException('$interval must be of type string; received ' . gettype(@$params['interval']));
         }
 
-        if (@$params['recurring_day'] && !is_int(@$params['recurring_day'])) {
+        if (!empty($params['recurring_day']) && !is_int($params['recurring_day'])) {
             throw new \Files\Exception\InvalidParameterException('$recurring_day must be of type int; received ' . gettype(@$params['recurring_day']));
         }
 
-        if (@$params['recurring_days'] && !is_array(@$params['recurring_days'])) {
+        if (!empty($params['recurring_days']) && !is_array($params['recurring_days'])) {
             throw new \Files\Exception\InvalidParameterException('$recurring_days must be of type array; received ' . gettype(@$params['recurring_days']));
         }
 
-        if (@$params['schedule_id'] && !is_int(@$params['schedule_id'])) {
+        if (!empty($params['schedule_id']) && !is_int($params['schedule_id'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_id must be of type int; received ' . gettype(@$params['schedule_id']));
         }
 
-        if (@$params['schedule_days_of_week'] && !is_array(@$params['schedule_days_of_week'])) {
+        if (!empty($params['schedule_days_of_week']) && !is_array($params['schedule_days_of_week'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_days_of_week must be of type array; received ' . gettype(@$params['schedule_days_of_week']));
         }
 
-        if (@$params['schedule_times_of_day'] && !is_array(@$params['schedule_times_of_day'])) {
+        if (!empty($params['schedule_times_of_day']) && !is_array($params['schedule_times_of_day'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_times_of_day must be of type array; received ' . gettype(@$params['schedule_times_of_day']));
         }
 
-        if (@$params['schedule_time_zone'] && !is_string(@$params['schedule_time_zone'])) {
+        if (!empty($params['schedule_time_zone']) && !is_string($params['schedule_time_zone'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_time_zone must be of type string; received ' . gettype(@$params['schedule_time_zone']));
         }
 
-        if (@$params['holiday_region'] && !is_string(@$params['holiday_region'])) {
+        if (!empty($params['holiday_region']) && !is_string($params['holiday_region'])) {
             throw new \Files\Exception\InvalidParameterException('$holiday_region must be of type string; received ' . gettype(@$params['holiday_region']));
         }
 

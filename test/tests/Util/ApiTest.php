@@ -219,7 +219,7 @@ class ApiTest extends TestCase
         Files::setHandler($mock);
 
         try {
-            ApiKey::all();
+            ApiKey::all([], ['region_relocation' => false]);
             $this->fail('Expected exception was not thrown');
         } catch (\Files\Exception\NotAuthenticated\LockoutRegionMismatchException $error) {
             $this->assertEquals($error->getError(), 'You have connected to a URL that has different security settings than those required for your site.');

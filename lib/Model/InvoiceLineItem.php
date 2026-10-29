@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class InvoiceLineItem
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,66 +56,66 @@ class InvoiceLineItem
     // int64 # Invoice Line item Id
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
     // decimal # Invoice line item amount
     public function getAmount()
     {
-        return @$this->attributes['amount'];
+        return isset($this->attributes['amount']) ? $this->attributes['amount'] : null;
     }
     // date-time # Invoice line item created at date/time
     public function getCreatedAt()
     {
-        return @$this->attributes['created_at'];
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
     // string # Invoice line item description
     public function getDescription()
     {
-        return @$this->attributes['description'];
+        return isset($this->attributes['description']) ? $this->attributes['description'] : null;
     }
     // string # Invoice line item type
     public function getType()
     {
-        return @$this->attributes['type'];
+        return isset($this->attributes['type']) ? $this->attributes['type'] : null;
     }
     // date-time # Invoice line item service end date/time
     public function getServiceEndAt()
     {
-        return @$this->attributes['service_end_at'];
+        return isset($this->attributes['service_end_at']) ? $this->attributes['service_end_at'] : null;
     }
     // date-time # Invoice line item service start date/time
     public function getServiceStartAt()
     {
-        return @$this->attributes['service_start_at'];
+        return isset($this->attributes['service_start_at']) ? $this->attributes['service_start_at'] : null;
     }
     // string # Plan name
     public function getPlan()
     {
-        return @$this->attributes['plan'];
+        return isset($this->attributes['plan']) ? $this->attributes['plan'] : null;
     }
     // string # Site name
     public function getSite()
     {
-        return @$this->attributes['site'];
+        return isset($this->attributes['site']) ? $this->attributes['site'] : null;
     }
     // int64 # Prepaid bytes purchased for this invoice line item
     public function getPrepaidBytes()
     {
-        return @$this->attributes['prepaid_bytes'];
+        return isset($this->attributes['prepaid_bytes']) ? $this->attributes['prepaid_bytes'] : null;
     }
     // date-time # When the prepaid bytes expire
     public function getPrepaidBytesExpireAt()
     {
-        return @$this->attributes['prepaid_bytes_expire_at'];
+        return isset($this->attributes['prepaid_bytes_expire_at']) ? $this->attributes['prepaid_bytes_expire_at'] : null;
     }
     // int64 # Total prepaid bytes used for this invoice line item
     public function getPrepaidBytesUsed()
     {
-        return @$this->attributes['prepaid_bytes_used'];
+        return isset($this->attributes['prepaid_bytes_used']) ? $this->attributes['prepaid_bytes_used'] : null;
     }
     // int64 # Available prepaid bytes for this invoice line item
     public function getPrepaidBytesAvailable()
     {
-        return @$this->attributes['prepaid_bytes_available'];
+        return isset($this->attributes['prepaid_bytes_available']) ? $this->attributes['prepaid_bytes_available'] : null;
     }
 }

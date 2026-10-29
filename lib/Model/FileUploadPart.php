@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class FileUploadPart
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,86 +56,86 @@ class FileUploadPart
     // object # Content-Type and File to send
     public function getSend()
     {
-        return @$this->attributes['send'];
+        return isset($this->attributes['send']) ? $this->attributes['send'] : null;
     }
     // string # Type of upload
     public function getAction()
     {
-        return @$this->attributes['action'];
+        return isset($this->attributes['action']) ? $this->attributes['action'] : null;
     }
     // boolean # If `true`, this file exists and you may wish to ask the user for overwrite confirmation
     public function getAskAboutOverwrites()
     {
-        return @$this->attributes['ask_about_overwrites'];
+        return isset($this->attributes['ask_about_overwrites']) ? $this->attributes['ask_about_overwrites'] : null;
     }
     // int64 # Number of parts in the upload
     public function getAvailableParts()
     {
-        return @$this->attributes['available_parts'];
+        return isset($this->attributes['available_parts']) ? $this->attributes['available_parts'] : null;
     }
     // string # Date/time of when this Upload part expires and the URL cannot be used any more
     public function getExpires()
     {
-        return @$this->attributes['expires'];
+        return isset($this->attributes['expires']) ? $this->attributes['expires'] : null;
     }
     // object # Additional upload headers to provide as part of the upload
     public function getHeaders()
     {
-        return @$this->attributes['headers'];
+        return isset($this->attributes['headers']) ? $this->attributes['headers'] : null;
     }
     // string # HTTP Method to use for uploading the part, usually `PUT`
     public function getHttpMethod()
     {
-        return @$this->attributes['http_method'];
+        return isset($this->attributes['http_method']) ? $this->attributes['http_method'] : null;
     }
     // int64 # Size in bytes for this part
     public function getNextPartsize()
     {
-        return @$this->attributes['next_partsize'];
+        return isset($this->attributes['next_partsize']) ? $this->attributes['next_partsize'] : null;
     }
     // boolean # If `true`, multiple parts may be uploaded in parallel.  If `false`, be sure to only upload one part at a time, in order.
     public function getParallelParts()
     {
-        return @$this->attributes['parallel_parts'];
+        return isset($this->attributes['parallel_parts']) ? $this->attributes['parallel_parts'] : null;
     }
     // boolean # If `true`, parts may be retried. If `false`, a part cannot be retried and the upload should be restarted.
     public function getRetryParts()
     {
-        return @$this->attributes['retry_parts'];
+        return isset($this->attributes['retry_parts']) ? $this->attributes['retry_parts'] : null;
     }
     // object # Additional HTTP parameters to send with the upload
     public function getParameters()
     {
-        return @$this->attributes['parameters'];
+        return isset($this->attributes['parameters']) ? $this->attributes['parameters'] : null;
     }
     // int64 # Number of this upload part
     public function getPartNumber()
     {
-        return @$this->attributes['part_number'];
+        return isset($this->attributes['part_number']) ? $this->attributes['part_number'] : null;
     }
     // int64 # Size in bytes for the next upload part
     public function getPartsize()
     {
-        return @$this->attributes['partsize'];
+        return isset($this->attributes['partsize']) ? $this->attributes['partsize'] : null;
     }
     // string # New file path. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
     public function getPath()
     {
-        return @$this->attributes['path'];
+        return isset($this->attributes['path']) ? $this->attributes['path'] : null;
     }
     // string # Reference name for this upload part
     public function getRef()
     {
-        return @$this->attributes['ref'];
+        return isset($this->attributes['ref']) ? $this->attributes['ref'] : null;
     }
     // string # URI to upload this part to
     public function getUploadUri()
     {
-        return @$this->attributes['upload_uri'];
+        return isset($this->attributes['upload_uri']) ? $this->attributes['upload_uri'] : null;
     }
     // DirectConnectionInfo # Optional direct connection information for direct Agent transfer attempts
     public function getDirectConnectionInfo()
     {
-        return @$this->attributes['direct_connection_info'];
+        return isset($this->attributes['direct_connection_info']) ? $this->attributes['direct_connection_info'] : null;
     }
 }

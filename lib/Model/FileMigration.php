@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class FileMigration
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,52 +56,52 @@ class FileMigration
     // int64 # File migration ID
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
     // string # Source path. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
     public function getPath()
     {
-        return @$this->attributes['path'];
+        return isset($this->attributes['path']) ? $this->attributes['path'] : null;
     }
     // string # Destination path
     public function getDestPath()
     {
-        return @$this->attributes['dest_path'];
+        return isset($this->attributes['dest_path']) ? $this->attributes['dest_path'] : null;
     }
     // string # Reason for the failure, if applicable.
     public function getFailureMessage()
     {
-        return @$this->attributes['failure_message'];
+        return isset($this->attributes['failure_message']) ? $this->attributes['failure_message'] : null;
     }
     // int64 # Number of files processed
     public function getFilesMoved()
     {
-        return @$this->attributes['files_moved'];
+        return isset($this->attributes['files_moved']) ? $this->attributes['files_moved'] : null;
     }
     // int64
     public function getFilesTotal()
     {
-        return @$this->attributes['files_total'];
+        return isset($this->attributes['files_total']) ? $this->attributes['files_total'] : null;
     }
     // string # The type of operation
     public function getOperation()
     {
-        return @$this->attributes['operation'];
+        return isset($this->attributes['operation']) ? $this->attributes['operation'] : null;
     }
     // string # Region
     public function getRegion()
     {
-        return @$this->attributes['region'];
+        return isset($this->attributes['region']) ? $this->attributes['region'] : null;
     }
     // string # Status
     public function getStatus()
     {
-        return @$this->attributes['status'];
+        return isset($this->attributes['status']) ? $this->attributes['status'] : null;
     }
     // string # Link to download the log file for this migration.
     public function getLogUrl()
     {
-        return @$this->attributes['log_url'];
+        return isset($this->attributes['log_url']) ? $this->attributes['log_url'] : null;
     }
 
     // Parameters:
@@ -116,11 +114,11 @@ class FileMigration
 
         $params['id'] = $id;
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 

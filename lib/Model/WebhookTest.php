@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class WebhookTest
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class WebhookTest
     // int64 # Status HTTP code
     public function getCode()
     {
-        return @$this->attributes['code'];
+        return isset($this->attributes['code']) ? $this->attributes['code'] : null;
     }
 
     public function setCode($value)
@@ -68,7 +66,7 @@ class WebhookTest
     // string # Error message
     public function getMessage()
     {
-        return @$this->attributes['message'];
+        return isset($this->attributes['message']) ? $this->attributes['message'] : null;
     }
 
     public function setMessage($value)
@@ -78,7 +76,7 @@ class WebhookTest
     // string # Status message
     public function getStatus()
     {
-        return @$this->attributes['status'];
+        return isset($this->attributes['status']) ? $this->attributes['status'] : null;
     }
 
     public function setStatus($value)
@@ -88,7 +86,7 @@ class WebhookTest
     // Auto # Additional data
     public function getData()
     {
-        return @$this->attributes['data'];
+        return isset($this->attributes['data']) ? $this->attributes['data'] : null;
     }
 
     public function setData($value)
@@ -98,7 +96,7 @@ class WebhookTest
     // boolean # The success status of the webhook test
     public function getSuccess()
     {
-        return @$this->attributes['success'];
+        return isset($this->attributes['success']) ? $this->attributes['success'] : null;
     }
 
     public function setSuccess($value)
@@ -108,7 +106,7 @@ class WebhookTest
     // string # URL for testing the webhook.
     public function getUrl()
     {
-        return @$this->attributes['url'];
+        return isset($this->attributes['url']) ? $this->attributes['url'] : null;
     }
 
     public function setUrl($value)
@@ -118,7 +116,7 @@ class WebhookTest
     // string # HTTP method(GET or POST).
     public function getMethod()
     {
-        return @$this->attributes['method'];
+        return isset($this->attributes['method']) ? $this->attributes['method'] : null;
     }
 
     public function setMethod($value)
@@ -128,7 +126,7 @@ class WebhookTest
     // string # HTTP encoding method.  Can be JSON, XML, or RAW (form data).
     public function getEncoding()
     {
-        return @$this->attributes['encoding'];
+        return isset($this->attributes['encoding']) ? $this->attributes['encoding'] : null;
     }
 
     public function setEncoding($value)
@@ -138,7 +136,7 @@ class WebhookTest
     // object # Additional request headers.
     public function getHeaders()
     {
-        return @$this->attributes['headers'];
+        return isset($this->attributes['headers']) ? $this->attributes['headers'] : null;
     }
 
     public function setHeaders($value)
@@ -148,7 +146,7 @@ class WebhookTest
     // object # Additional body parameters.
     public function getBody()
     {
-        return @$this->attributes['body'];
+        return isset($this->attributes['body']) ? $this->attributes['body'] : null;
     }
 
     public function setBody($value)
@@ -158,7 +156,7 @@ class WebhookTest
     // string # raw body text
     public function getRawBody()
     {
-        return @$this->attributes['raw_body'];
+        return isset($this->attributes['raw_body']) ? $this->attributes['raw_body'] : null;
     }
 
     public function setRawBody($value)
@@ -168,7 +166,7 @@ class WebhookTest
     // boolean # Send the file data as the request body?
     public function getFileAsBody()
     {
-        return @$this->attributes['file_as_body'];
+        return isset($this->attributes['file_as_body']) ? $this->attributes['file_as_body'] : null;
     }
 
     public function setFileAsBody($value)
@@ -178,7 +176,7 @@ class WebhookTest
     // string # Send the file data as a named parameter in the request POST body
     public function getFileFormField()
     {
-        return @$this->attributes['file_form_field'];
+        return isset($this->attributes['file_form_field']) ? $this->attributes['file_form_field'] : null;
     }
 
     public function setFileFormField($value)
@@ -188,7 +186,7 @@ class WebhookTest
     // string # action for test body
     public function getAction()
     {
-        return @$this->attributes['action'];
+        return isset($this->attributes['action']) ? $this->attributes['action'] : null;
     }
 
     public function setAction($value)
@@ -198,7 +196,7 @@ class WebhookTest
     // boolean # Use dedicated IPs for sending the webhook?
     public function getUseDedicatedIps()
     {
-        return @$this->attributes['use_dedicated_ips'];
+        return isset($this->attributes['use_dedicated_ips']) ? $this->attributes['use_dedicated_ips'] : null;
     }
 
     public function setUseDedicatedIps($value)
@@ -231,31 +229,31 @@ class WebhookTest
     //   use_dedicated_ips - boolean - Use dedicated IPs for sending the webhook?
     public static function create($params = [], $options = [])
     {
-        if (!@$params['url']) {
+        if (empty($params['url'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: url');
         }
 
-        if (@$params['url'] && !is_string(@$params['url'])) {
+        if (!empty($params['url']) && !is_string($params['url'])) {
             throw new \Files\Exception\InvalidParameterException('$url must be of type string; received ' . gettype(@$params['url']));
         }
 
-        if (@$params['method'] && !is_string(@$params['method'])) {
+        if (!empty($params['method']) && !is_string($params['method'])) {
             throw new \Files\Exception\InvalidParameterException('$method must be of type string; received ' . gettype(@$params['method']));
         }
 
-        if (@$params['encoding'] && !is_string(@$params['encoding'])) {
+        if (!empty($params['encoding']) && !is_string($params['encoding'])) {
             throw new \Files\Exception\InvalidParameterException('$encoding must be of type string; received ' . gettype(@$params['encoding']));
         }
 
-        if (@$params['raw_body'] && !is_string(@$params['raw_body'])) {
+        if (!empty($params['raw_body']) && !is_string($params['raw_body'])) {
             throw new \Files\Exception\InvalidParameterException('$raw_body must be of type string; received ' . gettype(@$params['raw_body']));
         }
 
-        if (@$params['file_form_field'] && !is_string(@$params['file_form_field'])) {
+        if (!empty($params['file_form_field']) && !is_string($params['file_form_field'])) {
             throw new \Files\Exception\InvalidParameterException('$file_form_field must be of type string; received ' . gettype(@$params['file_form_field']));
         }
 
-        if (@$params['action'] && !is_string(@$params['action'])) {
+        if (!empty($params['action']) && !is_string($params['action'])) {
             throw new \Files\Exception\InvalidParameterException('$action must be of type string; received ' . gettype(@$params['action']));
         }
 

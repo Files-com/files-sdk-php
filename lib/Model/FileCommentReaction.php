@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Files\Model;
 
 use Files\Api;
@@ -38,7 +36,7 @@ class FileCommentReaction
 
     public function __get($name)
     {
-        return @$this->attributes[$name];
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -58,7 +56,7 @@ class FileCommentReaction
     // int64 # Reaction ID
     public function getId()
     {
-        return @$this->attributes['id'];
+        return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
     public function setId($value)
@@ -68,7 +66,7 @@ class FileCommentReaction
     // string # Emoji used in the reaction.
     public function getEmoji()
     {
-        return @$this->attributes['emoji'];
+        return isset($this->attributes['emoji']) ? $this->attributes['emoji'] : null;
     }
 
     public function setEmoji($value)
@@ -78,7 +76,7 @@ class FileCommentReaction
     // int64 # User ID.  Provide a value of `0` to operate the current session's user.
     public function getUserId()
     {
-        return @$this->attributes['user_id'];
+        return isset($this->attributes['user_id']) ? $this->attributes['user_id'] : null;
     }
 
     public function setUserId($value)
@@ -88,7 +86,7 @@ class FileCommentReaction
     // int64 # ID of file comment to attach reaction to.
     public function getFileCommentId()
     {
-        return @$this->attributes['file_comment_id'];
+        return isset($this->attributes['file_comment_id']) ? $this->attributes['file_comment_id'] : null;
     }
 
     public function setFileCommentId($value)
@@ -102,7 +100,7 @@ class FileCommentReaction
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
         }
 
-        if (!@$params['id']) {
+        if (empty($params['id'])) {
             if (@$this->id) {
                 $params['id'] = $this->id;
             } else {
@@ -110,7 +108,7 @@ class FileCommentReaction
             }
         }
 
-        if (@$params['id'] && !is_int(@$params['id'])) {
+        if (!empty($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -142,23 +140,23 @@ class FileCommentReaction
     //   emoji (required) - string - Emoji to react with.
     public static function create($params = [], $options = [])
     {
-        if (!@$params['file_comment_id']) {
+        if (empty($params['file_comment_id'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: file_comment_id');
         }
 
-        if (!@$params['emoji']) {
+        if (empty($params['emoji'])) {
             throw new \Files\Exception\MissingParameterException('Parameter missing: emoji');
         }
 
-        if (@$params['user_id'] && !is_int(@$params['user_id'])) {
+        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (@$params['file_comment_id'] && !is_int(@$params['file_comment_id'])) {
+        if (!empty($params['file_comment_id']) && !is_int($params['file_comment_id'])) {
             throw new \Files\Exception\InvalidParameterException('$file_comment_id must be of type int; received ' . gettype(@$params['file_comment_id']));
         }
 
-        if (@$params['emoji'] && !is_string(@$params['emoji'])) {
+        if (!empty($params['emoji']) && !is_string($params['emoji'])) {
             throw new \Files\Exception\InvalidParameterException('$emoji must be of type string; received ' . gettype(@$params['emoji']));
         }
 

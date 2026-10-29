@@ -80,6 +80,27 @@ class Files
         return self::$handler === null ? new CurlHandler() : self::$handler;
     }
 
+    // The configuration as it stands, for Api::sendRequest and for a transfer job to keep: the API key, site URL,
+    // endpoint prefix, session, workspace and language, the network retries and timeouts, and the handler setHandler
+    // gave, or null when none was given (getHandler then makes a new CurlHandler for each request).
+    public static function snapshot()
+    {
+        return [
+            'api_key' => self::$apiKey,
+            'base_url' => self::$baseUrl,
+            'endpoint_prefix' => self::$endpointPrefix,
+            'session_id' => self::$sessionId,
+            'workspace_id' => self::$workspaceId,
+            'language' => self::$language,
+            'handler' => self::$handler,
+            'max_network_retries' => self::$maxNetworkRetries,
+            'min_network_retry_delay' => self::$minNetworkRetryDelay,
+            'max_network_retry_delay' => self::$maxNetworkRetryDelay,
+            'connect_timeout' => self::$connectTimeout,
+            'read_timeout' => self::$readTimeout,
+        ];
+    }
+
     public static function setApiKey($apiKey)
     {
         self::$apiKey = $apiKey;

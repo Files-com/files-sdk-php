@@ -79,8 +79,9 @@ class File
         return [$first, $end];
     }
 
-    // A caller's upload options, split into the progress callback, which only the helper calls, and the rest, which the
-    // upload's API requests take as the generated methods do. No option reaches a part's storage request.
+    // A caller's upload options, split into the progress callback, which only the helper calls, transfer (the options of
+    // a Files\Transfer\TransferJob, for an adaptive upload), and the rest, which the upload's API requests take as the
+    // generated methods do. No option reaches a part's storage request.
     private static function splitUploadOptions($options)
     {
         if (!is_array($options)) {
@@ -92,8 +93,35 @@ class File
             throw new \Files\Exception\InvalidParameterException('$options[\'progress\'] must be callable; received ' . gettype($progress));
         }
 
-        unset($options['progress']);
-        return [$options, $progress];
+        $transfer = array_key_exists('transfer', $options) ? $options['transfer'] : null;
+        if ($transfer !== null && !is_array($transfer)) {
+            throw new \Files\Exception\InvalidParameterException('$options[\'transfer\'] must be an array of transfer options; received ' . gettype($transfer));
+        }
+
+        unset($options['progress'], $options['transfer']);
+        return [$options, $progress, $transfer];
+    }
+
+    // An upload helper's call with $options['transfer']: the same upload run as one Files\Transfer\TransferJob of those
+    // options, its parts sent concurrently as measured throughput allows, on 64-bit PHP with a native monotonic clock
+    // only (elsewhere a ConfigurationException, before anything is read or sent). $transfer['size'] gives the size of a
+    // stream uploadData sends. Returns nothing, as the helpers do, and throws what stopped the upload.
+    private static function uploadAdaptively($method, $destinationPath, $source, $params, $apiOptions, $progress, $transfer)
+    {
+        $options = $apiOptions;
+        if ($progress !== null) {
+            $options['progress'] = $progress;
+        }
+
+        if (array_key_exists('size', $transfer)) {
+            $options['size'] = $transfer['size'];
+            unset($transfer['size']);
+        }
+
+        $job = new \Files\Transfer\TransferJob($transfer);
+        $job->$method($destinationPath, $source, $params, $options);
+        $job->wait();
+        return null;
     }
 
     // Begins part $number of the upload to $path with File#beginUpload, one part a request: the first with the caller's
@@ -272,7 +300,8 @@ class File
     // provided_mtime defaults to the file's modification time. $options: those of the generated methods, for the
     // upload's API requests, and progress, a callable given an array of total_bytes (the file's size),
     // acknowledged_bytes, part_number and part_bytes after each part is acknowledged; anything it throws stops the
-    // upload and is thrown here. The file is closed on every path.
+    // upload and is thrown here. The file is closed on every path. With transfer, the upload runs adaptively
+    // (uploadAdaptively), and progress also gets elapsed_seconds and bytes_per_second.
     public static function uploadFile($destinationPath, $sourceFilePath, $params = [], $options = [])
     {
         if (!$destinationPath) {
@@ -288,7 +317,10 @@ class File
         }
 
         list($first, $end) = self::splitUploadParams($params);
-        list($apiOptions, $progress) = self::splitUploadOptions($options);
+        list($apiOptions, $progress, $transfer) = self::splitUploadOptions($options);
+        if ($transfer !== null) {
+            return self::uploadAdaptively('uploadFile', $destinationPath, $sourceFilePath, $params, $apiOptions, $progress, $transfer);
+        }
 
         $sourceFileHandle = fopen($sourceFilePath, 'rb');
         try {
@@ -331,7 +363,8 @@ class File
     // returns nothing; provided_mtime defaults to now, and progress gives total_bytes for a string only (null for a
     // stream). A caller's stream is closed once every part is acknowledged and progress has returned, before the upload
     // ends, so a failure of the end leaves it closed; any earlier failure leaves it open. A string's own stream is
-    // closed on every path.
+    // closed on every path. With transfer, the upload runs adaptively (uploadAdaptively), a stream's parts concurrently
+    // only when transfer gives its size.
     public static function uploadData($destinationPath, $data, $params = [], $options = [])
     {
         if (!$destinationPath) {
@@ -343,7 +376,10 @@ class File
         }
 
         list($first, $end) = self::splitUploadParams($params);
-        list($apiOptions, $progress) = self::splitUploadOptions($options);
+        list($apiOptions, $progress, $transfer) = self::splitUploadOptions($options);
+        if ($transfer !== null) {
+            return self::uploadAdaptively('uploadData', $destinationPath, $data, $params, $apiOptions, $progress, $transfer);
+        }
 
         $owned = !is_resource($data);
         if ($owned) {
@@ -438,8 +474,31 @@ class File
         return self::downloadToStream($remoteFilePath, $stream, $rangeStart);
     }
 
-    public static function downloadToFile($remoteFilePath, $destinationPath, $enableRetry = true)
+    // Downloads the file at $remoteFilePath to $destinationPath, retrying a failed download (when $enableRetry) by
+    // resuming from the bytes already written. With $options['transfer'] (the options of a Files\Transfer\TransferJob),
+    // the download runs adaptively instead: version-bound ranges fetched concurrently and verified, or a whole response
+    // restarted from its first byte, written to a staging file that replaces $destinationPath only once complete, on
+    // 64-bit PHP with a native monotonic clock only. Its other options are progress and the generated methods' options
+    // for its API request; $enableRetry false allows no retries. Returns the bytes received and the total.
+    public static function downloadToFile($remoteFilePath, $destinationPath, $enableRetry = true, $options = [])
     {
+        if ($options !== []) {
+            if (!is_array($options) || !array_key_exists('transfer', $options) || !is_array($options['transfer'])) {
+                throw new \Files\Exception\InvalidParameterException('$options apply to downloadToFile only with $options[\'transfer\'], an array of transfer options');
+            }
+
+            $transfer = $options['transfer'];
+            unset($options['transfer']);
+            if (!$enableRetry) {
+                $transfer['max_retries'] = 0;
+            }
+
+            $job = new \Files\Transfer\TransferJob($transfer);
+            $handle = $job->downloadToFile($remoteFilePath, $destinationPath, $options);
+            $job->wait();
+            return $handle->result();
+        }
+
         $retries = 0;
 
         while (true) {

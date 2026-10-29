@@ -20,7 +20,7 @@ function middlewareRemoveHeader($header)
 
 class Api
 {
-    const VERSION = "2.0.730";
+    const VERSION = "2.0.731";
 
     private static function urlOrigin($url)
     {
@@ -77,6 +77,94 @@ class Api
         $handlerStack->push(Middleware::retry($shouldRetry, $getRetryDelay));
     }
 
+    // A new handler stack for one request, and its redirects, through $handler: Files.com credentials stripped once a
+    // redirect leaves $baseUrl's origin, a retry of a request that cannot connect when $retryConnectErrors, and no
+    // Content-Length on a GET. Each request gets its own stack, so the stripping one redirect chain starts never reaches
+    // another request, even when they share $handler, as a transfer job's requests share its curl multi handle.
+    public static function requestStack($handler, $baseUrl, $verb, $retryConnectErrors = false)
+    {
+        $handlerStack = HandlerStack::create($handler);
+        $handlerStack->after(
+            'allow_redirects',
+            self::redirectAuthMiddleware($baseUrl),
+            'files_auth_redirects'
+        );
+        if ($retryConnectErrors) {
+            self::pushRetryHandler($handlerStack);
+        }
+
+        // for security, Content-Length is disallowed on GET requests
+        if (strtoupper($verb) === 'GET') {
+            $handlerStack->push(middlewareRemoveHeader('Content-Length'));
+        }
+
+        return $handlerStack;
+    }
+
+    // The request path and Guzzle options of an API request for $path (under the endpoint prefix, or an external URL),
+    // as sendRequest sends it: the headers, with the language, session, API key and workspace of $config
+    // (Files::snapshot(), or a transfer job's copy of it) unless $options gives its own, and $params as the query of a
+    // GET or the JSON body of anything else. Throws a ConfigurationException for an API request without an API key.
+    public static function prepareApiRequest($config, $path, $verb, $params = null, $options = [])
+    {
+        $options = $options ?: [];
+        $headers = array_merge(
+            $config['language']
+              ? ['Accept-Language' => $config['language']]
+              : [],
+            @$options['headers'] ?: [],
+            ['User-Agent' => "Files.com PHP SDK v" . self::VERSION]
+        );
+
+        $isExternal = preg_match('@^[a-zA-Z]+://@', $path);
+
+        if (!$isExternal) {
+            $headers['Accept'] = 'application/json';
+
+            $sessionId = @$options['session_id'] ?: $config['session_id'];
+            $workspaceId = array_key_exists('workspace_id', $options)
+              ? $options['workspace_id']
+              : $config['workspace_id'];
+
+            if ($sessionId) {
+                $headers['X-FilesAPI-Auth'] = $sessionId;
+            } else {
+                $isCreatingSession = $path === '/sessions' && strtoupper($verb) === 'POST';
+
+                // api key cannot be used when creating a session
+                if (!$isCreatingSession) {
+                    $apiKey = @$options['api_key'] ?: $config['api_key'];
+
+                    if (!$apiKey) {
+                        throw new Exception\ConfigurationException('No Files.com API key provided. Set your API key using Files::setApiKey(<API-KEY>). You can generate API keys from the Files.com web interface.');
+                    }
+
+                    $headers['X-FilesAPI-Key'] = $apiKey;
+                }
+            }
+
+            if ($workspaceId !== null && $workspaceId !== '') {
+                $headers['X-Files-Workspace-Id'] = (string) $workspaceId;
+            }
+        }
+
+        $requestPath = $path;
+
+        if ($params) {
+            $headers['Content-Type'] = 'application/json';
+
+            if (strtoupper($verb) === 'GET') {
+                $requestPath .= (parse_url($path, PHP_URL_QUERY) ? '&' : '?') . http_build_query($params, '', '&', PHP_QUERY_RFC3986);
+            } else {
+                $options['body'] = json_encode($params);
+            }
+        }
+
+        $options['headers'] = $headers;
+
+        return [$requestPath, $options];
+    }
+
     private static function sendVerbatim($path, $verb, $options, $retryConnectErrors = true)
     {
         $isExternal = preg_match('@^[a-zA-Z]+://@', $path);
@@ -92,20 +180,7 @@ class Api
 
         Logger::debug("Sending request: " . $verb . " $url");
 
-        $handlerStack = HandlerStack::create(Files::getHandler());
-        $handlerStack->after(
-            'allow_redirects',
-            self::redirectAuthMiddleware($baseUrl),
-            'files_auth_redirects'
-        );
-        if ($retryConnectErrors) {
-            self::pushRetryHandler($handlerStack);
-        }
-
-        // for security, Content-Length is disallowed on GET requests
-        if (strtoupper($verb) === 'GET') {
-            $handlerStack->push(middlewareRemoveHeader('Content-Length'));
-        }
+        $handlerStack = self::requestStack(Files::getHandler(), $baseUrl, $verb, $retryConnectErrors);
 
         $client = new Client([
             'connect_timeout' => Files::$connectTimeout,
@@ -215,60 +290,8 @@ class Api
 
     public static function sendRequest($path, $verb, $params = null, $options = [], $metadata = [])
     {
-        $options = $options ?: [];
-        $headers = array_merge(
-            Files::getLanguage()
-              ? ['Accept-Language' => Files::getLanguage()]
-              : [],
-            @$options['headers'] ?: [],
-            ['User-Agent' => "Files.com PHP SDK v" . self::VERSION]
-        );
-
+        list($requestPath, $options) = self::prepareApiRequest(Files::snapshot(), $path, $verb, $params, $options);
         $isExternal = preg_match('@^[a-zA-Z]+://@', $path);
-
-        if (!$isExternal) {
-            $headers['Accept'] = 'application/json';
-
-            $sessionId = @$options['session_id'] ?: Files::getSessionId();
-            $workspaceId = array_key_exists('workspace_id', $options)
-              ? $options['workspace_id']
-              : Files::getWorkspaceId();
-
-            if ($sessionId) {
-                $headers['X-FilesAPI-Auth'] = $sessionId;
-            } else {
-                $isCreatingSession = $path === '/sessions' && strtoupper($verb) === 'POST';
-
-                // api key cannot be used when creating a session
-                if (!$isCreatingSession) {
-                    $apiKey = @$options['api_key'] ?: Files::getApiKey();
-
-                    if (!$apiKey) {
-                        throw new Exception\ConfigurationException('No Files.com API key provided. Set your API key using Files::setApiKey(<API-KEY>). You can generate API keys from the Files.com web interface.');
-                    }
-
-                    $headers['X-FilesAPI-Key'] = $apiKey;
-                }
-            }
-
-            if ($workspaceId !== null && $workspaceId !== '') {
-                $headers['X-Files-Workspace-Id'] = (string) $workspaceId;
-            }
-        }
-
-        $requestPath = $path;
-
-        if ($params) {
-            $headers['Content-Type'] = 'application/json';
-
-            if (strtoupper($verb) === 'GET') {
-                $requestPath .= (parse_url($path, PHP_URL_QUERY) ? '&' : '?') . http_build_query($params, '', '&', PHP_QUERY_RFC3986);
-            } else {
-                $options['body'] = json_encode($params);
-            }
-        }
-
-        $options['headers'] = $headers;
 
         if (Files::$debugRequest) {
             Logger::debug('Request Options:');

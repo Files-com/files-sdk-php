@@ -1034,3 +1034,71 @@ Example of SiteConfiguration Classes moved.
 | SDK < 2.0 Class Location   | SDK >= 2.0 Class Location |
 |------------------------------|------------------|
 | `\Files\SiteConfiguration\AccountAlreadyExistsException` | `Files\Exception\SiteConfiguration\AccountAlreadyExistsException`  |
+
+## Adaptive Transfers (64-bit PHP)
+
+The upload and download helpers send one request at a time unless they are given the `transfer` option. With it, they
+run adaptively: upload parts and download ranges go concurrently, as many as measured throughput and response times
+justify, within the limits you set.
+
+Adaptive transfers need 64-bit PHP integers (`PHP_INT_SIZE` 8) and a native monotonic clock: PHP 7.3 or later (its
+`hrtime`), or, on older 64-bit PHP, the hrtime extension (PECL hrtime 0.6.0 or later, `HRTime\PerformanceCounter`).
+Anywhere else, asking for them throws a `ConfigurationException` before anything is read, sent or written; the helpers
+without the `transfer` option work as before. `\Files\Transfer\TransferJob::isSupported()` tells you which a PHP is.
+Linux and macOS clocks stop while the computer sleeps; Windows' keeps counting.
+
+```php
+// One upload or download, adaptively:
+\Files\Model\File::uploadFile('reports/a.csv', '/tmp/a.csv', [], ['transfer' => ['startup' => 'default']]);
+\Files\Model\File::uploadData('reports/b.csv', $stream, [], ['transfer' => ['size' => $bytes]]);
+$result = \Files\Model\File::downloadToFile('reports/a.csv', '/tmp/copy.csv', true, ['transfer' => []]);
+
+// Several transfers sharing one set of limits and what they learn:
+$job = new \Files\Transfer\TransferJob(['max_concurrent_requests' => 32]);
+$job->uploadFile('reports/c.csv', '/tmp/c.csv', [], ['progress' => function ($report) {
+    echo $report['acknowledged_bytes'] . ' bytes at ' . round($report['bytes_per_second']) . " bytes/s\n";
+}]);
+$job->downloadToStream('reports/d.csv', $writableStream);
+$job->wait();
+```
+
+Options of a `TransferJob` (and of the `transfer` option):
+
+* `startup`: `default` starts an upload to Amazon S3 with one part in flight and adds more only as measurements
+  justify; `aggressive` starts at the policy's start, for a link known to be fast. Both remain adaptive and share the
+  same eventual limits. Uploads only: downloads start at the policy's start.
+* `concurrency`: a fixed number of content requests in flight. `initial_target`: an explicit starting target.
+* `max_concurrent_requests` (default 64, at most 1024): every request in flight counts, API requests included.
+* `max_concurrent_files` (default 128) and `max_buffer_bytes` (default 64 MiB, or half the memory PHP reports free
+  under its `memory_limit` when that is less): a hard limit on the bytes held for parts and ranges.
+* `max_retries` (default `Files::$maxNetworkRetries`), `download_part_bytes` (default 8 MiB), `diagnostics` (a
+  callable given each concurrency decision), and `api_key`, `session_id` and `workspace_id`.
+
+A job copies the SDK's configuration when it is made; later changes do not reach it. Its requests are pooled in its own
+curl multi handle, or in the `GuzzleHttp\Handler\CurlMultiHandler` you set with `Files::setHandler`. Any other handler
+set there is used one request at a time (`statistics()['transport']` is then `serial`), and a job given `concurrency`,
+`initial_target` or Aggressive startup with such a handler is refused.
+
+Uploads: every part is acknowledged by exactly one ETag, retried with its exact bytes when it fails (never when its grant
+says `retry_parts` is false), and never sent again once acknowledged; the upload ends only after every part and every
+progress report. Where the API's first answer shows an ordinary multipart upload straight to Amazon S3, the SDK sizes
+the parts itself (8 MiB, larger when a file needs more than 10,000 parts); everywhere else the API sizes them. A stream
+without a known size is sent one part at a time.
+
+Downloads: a download is bound to the file's version (a strong ETag, sent back as `If-Match`). A range that comes back
+with other bytes than its own (fewer, more, or another range) is never accepted: it is fetched again, within
+`max_retries`, and the download fails once those are spent. A changed version (another or a weak ETag, another total,
+or a 412), a response from the web app, and a failure that a retry cannot fix fail the download at once, so versions
+never mix. Storage that does not serve
+version-bound ranges is downloaded whole, restarted from its first byte when interrupted. A response from the Files.com
+web app (`X-Files-Frontend-App`) fails the download before anything is written. A file is written to a staging file
+beside its destination, which replaces the destination only once every byte is verified; a stream is written in order,
+never twice.
+
+`wait()` throws the first failure, or the first exception a callback throws, as it was, after stopping everything in
+flight; `cancel()` makes it throw a `TransferCancelledException`. `pause()`, from a callback or between waits, stops the
+job keeping everything accepted, and `resume()` then `wait()` continue it without sending accepted bytes again. A paused
+job lives in its process: keep the job, its files and streams open and unchanged until it resumes. Nothing is saved for
+another process or after a crash.
+
+These defaults are starting choices of this SDK, not measured performance.

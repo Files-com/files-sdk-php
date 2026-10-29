@@ -826,6 +826,34 @@ try {
 }
 ```
 
+## Waiting for File Actions
+
+File operations such as copy and move can finish in the background. Their default methods return a `FileAction` as soon as the API accepts the operation. Call `waitForCompletion()` on that action when subsequent work depends on it finishing.
+
+```php
+$file = new \Files\Model\File(['path' => 'reports/source.csv']);
+$action = $file->copy(['destination' => 'reports/destination.csv']);
+$migration = $action->waitForCompletion(['timeout' => 60]);
+```
+
+The wait checks the action's File Migration immediately, then waits one second between polls while it is `pending` or `processing`. It returns the completed `FileMigration`. An action already marked `completed` without a migration returns `null`. An action without an observable completion status raises `\Files\Exception\FileActionException`.
+
+Set `interval` to change the delay between polls, in seconds. Set `timeout` to limit the polling loop, also in seconds. Omitting it waits without a polling deadline. The timeout is checked before and after each poll, and limits the delay between polls. An in-flight API request retains its configured HTTP timeouts and retries, so it can finish after the polling timeout.
+
+A `progress` callback receives each `FileMigration`. Throwing from the callback stops the wait and propagates the same exception. Stopping or timing out the wait leaves the operation running on Files.com.
+
+```php
+$migration = $action->waitForCompletion([
+    'interval' => 0.5,
+    'timeout' => 60,
+    'progress' => function ($migration) {
+        echo $migration->getFilesMoved() . " files processed\n";
+    },
+]);
+```
+
+A failed or cancelled migration raises `\Files\Exception\FileActionException` with its status and any available failure message. The exception's `getFileAction()` and `getFileMigration()` methods return the action and the latest observed migration. API request failures propagate as their existing SDK exceptions. Each poll uses the action's request options.
+
 ## Mock Server
 
 Files.com publishes a mock Files.com API server, which is useful for testing your use of the Files.com

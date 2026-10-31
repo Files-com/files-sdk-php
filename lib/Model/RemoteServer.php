@@ -303,6 +303,36 @@ class RemoteServer
     {
         return $this->attributes['server_type'] = $value;
     }
+    // boolean # Owner's preference for administrator access to this user-owned Remote Server. Null uses the Site policy's default. Only the owner may change it when the Site policy allows user choice.
+    public function getSiteAdminAccess()
+    {
+        return isset($this->attributes['site_admin_access']) ? $this->attributes['site_admin_access'] : null;
+    }
+
+    public function setSiteAdminAccess($value)
+    {
+        return $this->attributes['site_admin_access'] = $value;
+    }
+    // boolean # Whether Site and Workspace Administrators can access this Remote Server under the current Site policy.
+    public function getEffectiveSiteAdminAccess()
+    {
+        return isset($this->attributes['effective_site_admin_access']) ? $this->attributes['effective_site_admin_access'] : null;
+    }
+
+    public function setEffectiveSiteAdminAccess($value)
+    {
+        return $this->attributes['effective_site_admin_access'] = $value;
+    }
+    // int64 # ID of the user who owns this Remote Server, if any.
+    public function getUserId()
+    {
+        return isset($this->attributes['user_id']) ? $this->attributes['user_id'] : null;
+    }
+
+    public function setUserId($value)
+    {
+        return $this->attributes['user_id'] = $value;
+    }
     // int64 # Workspace ID (0 for default workspace)
     public function getWorkspaceId()
     {
@@ -853,16 +883,6 @@ class RemoteServer
     {
         return $this->attributes['supports_versioning'] = $value;
     }
-    // int64 # User ID.  Provide a value of `0` to operate the current session's user.
-    public function getUserId()
-    {
-        return isset($this->attributes['user_id']) ? $this->attributes['user_id'] : null;
-    }
-
-    public function setUserId($value)
-    {
-        return $this->attributes['user_id'] = $value;
-    }
     // string # Password, if needed.
     public function getPassword()
     {
@@ -1207,6 +1227,7 @@ class RemoteServer
     //   server_certificate - string - Remote server certificate
     //   server_host_key - string - Pinned SSH host key or OpenSSH host certificate for SFTP. If omitted, Files.com detects and stores a host key, preferring plain keys over certificates. With `server_certificate=require_match` (the default), the server must present the exact pinned key or certificate and prove it holds the matching private key. A pinned certificate is compared in full, so renewal can require updating `server_host_key` even when its underlying key is unchanged. Files.com does not check certificate CA signatures, principals, or validity periods. Certificate expiration alone does not end the pin. Update `server_host_key` to replace the pin.
     //   server_type - string - Remote server type.
+    //   site_admin_access - boolean - Owner's preference for administrator access to this user-owned Remote Server. Null uses the Site policy's default. Only the owner may change it when the Site policy allows user choice.
     //   sharepoint_client_id - string - SharePoint: Microsoft Entra application client ID for app-only authentication.
     //   sharepoint_site_url - string - SharePoint: Site URL to scope app-only authentication to a single site. Leave blank to browse all sites.
     //   sharepoint_tenant_id - string - SharePoint: Microsoft Entra tenant ID for app-only authentication.
@@ -1747,6 +1768,7 @@ class RemoteServer
     //   server_certificate - string - Remote server certificate
     //   server_host_key - string - Pinned SSH host key or OpenSSH host certificate for SFTP. If omitted, Files.com detects and stores a host key, preferring plain keys over certificates. With `server_certificate=require_match` (the default), the server must present the exact pinned key or certificate and prove it holds the matching private key. A pinned certificate is compared in full, so renewal can require updating `server_host_key` even when its underlying key is unchanged. Files.com does not check certificate CA signatures, principals, or validity periods. Certificate expiration alone does not end the pin. Update `server_host_key` to replace the pin.
     //   server_type - string - Remote server type.
+    //   site_admin_access - boolean - Owner's preference for administrator access to this user-owned Remote Server. Null uses the Site policy's default. Only the owner may change it when the Site policy allows user choice.
     //   sharepoint_client_id - string - SharePoint: Microsoft Entra application client ID for app-only authentication.
     //   sharepoint_site_url - string - SharePoint: Site URL to scope app-only authentication to a single site. Leave blank to browse all sites.
     //   sharepoint_tenant_id - string - SharePoint: Microsoft Entra tenant ID for app-only authentication.

@@ -73,7 +73,7 @@ class As2Station
     {
         return $this->attributes['workspace_id'] = $value;
     }
-    // string # The station's formal AS2 name.
+    // string # The station's formal AS2 name, unique across all Workspaces on the Site.
     public function getName()
     {
         return isset($this->attributes['name']) ? $this->attributes['name'] : null;
@@ -245,7 +245,7 @@ class As2Station
     }
 
     // Parameters:
-    //   name - string - The station's formal AS2 name.
+    //   name - string - The station's formal AS2 name, unique across all Workspaces on the Site.
     //   public_certificate - string - Public certificate used for message security.
     //   private_key - string - PEM-encoded private key matching public_certificate.
     //   private_key_password - string - Password for the PEM-encoded private key.
@@ -393,7 +393,7 @@ class As2Station
     }
 
     // Parameters:
-    //   name (required) - string - The station's formal AS2 name.
+    //   name (required) - string - The station's formal AS2 name, unique across all Workspaces on the Site.
     //   workspace_id - int64 - ID of the Workspace associated with this AS2 Station.
     //   public_certificate - string - Public certificate used for message security.
     //   private_key - string - PEM-encoded private key matching public_certificate.

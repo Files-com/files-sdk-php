@@ -323,7 +323,7 @@ class RemoteServer
     {
         return $this->attributes['effective_site_admin_access'] = $value;
     }
-    // int64 # ID of the user who owns this Remote Server, if any.
+    // int64 # ID of the Integration-Centric user who owns this personal Remote Server, if any. Connections created by Site and Workspace Administrators have no owner.
     public function getUserId()
     {
         return isset($this->attributes['user_id']) ? $this->attributes['user_id'] : null;

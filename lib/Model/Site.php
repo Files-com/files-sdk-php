@@ -578,91 +578,6 @@ class Site
     {
         return isset($this->attributes['language']) ? $this->attributes['language'] : null;
     }
-    // string # Base DN for looking up users in LDAP server
-    public function getLdapBaseDn()
-    {
-        return isset($this->attributes['ldap_base_dn']) ? $this->attributes['ldap_base_dn'] : null;
-    }
-    // string # Domain name that will be appended to usernames
-    public function getLdapDomain()
-    {
-        return isset($this->attributes['ldap_domain']) ? $this->attributes['ldap_domain'] : null;
-    }
-    // boolean # Main LDAP setting: is LDAP enabled?
-    public function getLdapEnabled()
-    {
-        return isset($this->attributes['ldap_enabled']) ? $this->attributes['ldap_enabled'] : null;
-    }
-    // string # Should we sync groups from LDAP server?
-    public function getLdapGroupAction()
-    {
-        return isset($this->attributes['ldap_group_action']) ? $this->attributes['ldap_group_action'] : null;
-    }
-    // string # Comma or newline separated list of group names (with optional wildcards) to exclude when syncing.
-    public function getLdapGroupExclusion()
-    {
-        return isset($this->attributes['ldap_group_exclusion']) ? $this->attributes['ldap_group_exclusion'] : null;
-    }
-    // string # Comma or newline separated list of group names (with optional wildcards) to include when syncing.
-    public function getLdapGroupInclusion()
-    {
-        return isset($this->attributes['ldap_group_inclusion']) ? $this->attributes['ldap_group_inclusion'] : null;
-    }
-    // string # LDAP host
-    public function getLdapHost()
-    {
-        return isset($this->attributes['ldap_host']) ? $this->attributes['ldap_host'] : null;
-    }
-    // string # LDAP backup host
-    public function getLdapHost2()
-    {
-        return isset($this->attributes['ldap_host_2']) ? $this->attributes['ldap_host_2'] : null;
-    }
-    // string # LDAP backup host
-    public function getLdapHost3()
-    {
-        return isset($this->attributes['ldap_host_3']) ? $this->attributes['ldap_host_3'] : null;
-    }
-    // int64 # LDAP port
-    public function getLdapPort()
-    {
-        return isset($this->attributes['ldap_port']) ? $this->attributes['ldap_port'] : null;
-    }
-    // boolean # Use secure LDAP?
-    public function getLdapSecure()
-    {
-        return isset($this->attributes['ldap_secure']) ? $this->attributes['ldap_secure'] : null;
-    }
-    // string # How to validate the LDAP server certificate. `require_match` validates the certificate chain and hostname; `allow_any` disables certificate validation.
-    public function getLdapServerCertificate()
-    {
-        return isset($this->attributes['ldap_server_certificate']) ? $this->attributes['ldap_server_certificate'] : null;
-    }
-    // string # LDAP type
-    public function getLdapType()
-    {
-        return isset($this->attributes['ldap_type']) ? $this->attributes['ldap_type'] : null;
-    }
-    // string # Should we sync users from LDAP server?
-    public function getLdapUserAction()
-    {
-        return isset($this->attributes['ldap_user_action']) ? $this->attributes['ldap_user_action'] : null;
-    }
-    // string # Comma or newline separated list of group names (with optional wildcards) - if provided, only users in these groups will be added or synced.
-    public function getLdapUserIncludeGroups()
-    {
-        return isset($this->attributes['ldap_user_include_groups']) ? $this->attributes['ldap_user_include_groups'] : null;
-    }
-    // string # Username for signing in to LDAP server.
-    public function getLdapUsername()
-    {
-        return isset($this->attributes['ldap_username']) ? $this->attributes['ldap_username'] : null;
-    }
-    // string # LDAP username field
-    public function getLdapUsernameField()
-    {
-        return isset($this->attributes['ldap_username_field']) ? $this->attributes['ldap_username_field'] : null;
-    }
     // string # Login help text
     public function getLoginHelpText()
     {
@@ -1260,23 +1175,6 @@ class Site
     //   smtp_username - string - SMTP server username
     //   smtp_port - int64 - SMTP server port
     //   smtp_ssl - string - Custom SMTP encryption mode: if_available (default) uses STARTTLS when offered and otherwise sends credentials and messages unencrypted. A certificate-verified STARTTLS connection automatically changes if_available to require unless smtp_ssl is managed by a parent policy. require requires STARTTLS before authentication; require_implicit uses TLS from connection start; never disables TLS. TLS verifies the server certificate against smtp_address. Encryption is never automatically downgraded.
-    //   ldap_enabled - boolean - Main LDAP setting: is LDAP enabled?
-    //   ldap_type - string - LDAP type
-    //   ldap_host - string - LDAP host
-    //   ldap_host_2 - string - LDAP backup host
-    //   ldap_host_3 - string - LDAP backup host
-    //   ldap_port - int64 - LDAP port
-    //   ldap_secure - boolean - Use secure LDAP?
-    //   ldap_server_certificate - string - How to validate the LDAP server certificate. `require_match` validates the certificate chain and hostname; `allow_any` disables certificate validation.
-    //   ldap_username - string - Username for signing in to LDAP server.
-    //   ldap_username_field - string - LDAP username field
-    //   ldap_domain - string - Domain name that will be appended to usernames
-    //   ldap_user_action - string - Should we sync users from LDAP server?
-    //   ldap_group_action - string - Should we sync groups from LDAP server?
-    //   ldap_user_include_groups - string - Comma or newline separated list of group names (with optional wildcards) - if provided, only users in these groups will be added or synced.
-    //   ldap_group_exclusion - string - Comma or newline separated list of group names (with optional wildcards) to exclude when syncing.
-    //   ldap_group_inclusion - string - Comma or newline separated list of group names (with optional wildcards) to include when syncing.
-    //   ldap_base_dn - string - Base DN for looking up users in LDAP server
     //   uploads_via_email_authentication - boolean - Require email authentication, virus, and spam checks for incoming emails to Inboxes and Incoming Email Automations in every Workspace on this site?
     //   bundle_watermark_value - object - Preview watermark settings applied to all bundle items. Uses the same keys as Behavior.value
     //   icon16_file - file
@@ -1294,8 +1192,6 @@ class Site
     //   login_page_background_image_file - file
     //   login_page_background_image_delete - boolean - If true, will delete the file stored in login_page_background_image
     //   disable_2fa_with_delay - boolean - If set to true, we will begin the process of disabling 2FA on this site.
-    //   ldap_password_change - string - New LDAP password.
-    //   ldap_password_change_confirmation - string - Confirm new LDAP password.
     //   redirect_old_subdomain - boolean - If true, and if changing the site subdomain, then create a redirect from the previous Files.com subdomain to the new Files.com subdomain.
     //   smtp_password - string - Password for SMTP server.
     public static function update($params = [], $options = [])
@@ -1530,74 +1426,6 @@ class Site
 
         if (!empty($params['smtp_ssl']) && !is_string($params['smtp_ssl'])) {
             throw new \Files\Exception\InvalidParameterException('$smtp_ssl must be of type string; received ' . gettype(@$params['smtp_ssl']));
-        }
-
-        if (!empty($params['ldap_type']) && !is_string($params['ldap_type'])) {
-            throw new \Files\Exception\InvalidParameterException('$ldap_type must be of type string; received ' . gettype(@$params['ldap_type']));
-        }
-
-        if (!empty($params['ldap_host']) && !is_string($params['ldap_host'])) {
-            throw new \Files\Exception\InvalidParameterException('$ldap_host must be of type string; received ' . gettype(@$params['ldap_host']));
-        }
-
-        if (!empty($params['ldap_host_2']) && !is_string($params['ldap_host_2'])) {
-            throw new \Files\Exception\InvalidParameterException('$ldap_host_2 must be of type string; received ' . gettype(@$params['ldap_host_2']));
-        }
-
-        if (!empty($params['ldap_host_3']) && !is_string($params['ldap_host_3'])) {
-            throw new \Files\Exception\InvalidParameterException('$ldap_host_3 must be of type string; received ' . gettype(@$params['ldap_host_3']));
-        }
-
-        if (!empty($params['ldap_port']) && !is_int($params['ldap_port'])) {
-            throw new \Files\Exception\InvalidParameterException('$ldap_port must be of type int; received ' . gettype(@$params['ldap_port']));
-        }
-
-        if (!empty($params['ldap_server_certificate']) && !is_string($params['ldap_server_certificate'])) {
-            throw new \Files\Exception\InvalidParameterException('$ldap_server_certificate must be of type string; received ' . gettype(@$params['ldap_server_certificate']));
-        }
-
-        if (!empty($params['ldap_username']) && !is_string($params['ldap_username'])) {
-            throw new \Files\Exception\InvalidParameterException('$ldap_username must be of type string; received ' . gettype(@$params['ldap_username']));
-        }
-
-        if (!empty($params['ldap_username_field']) && !is_string($params['ldap_username_field'])) {
-            throw new \Files\Exception\InvalidParameterException('$ldap_username_field must be of type string; received ' . gettype(@$params['ldap_username_field']));
-        }
-
-        if (!empty($params['ldap_domain']) && !is_string($params['ldap_domain'])) {
-            throw new \Files\Exception\InvalidParameterException('$ldap_domain must be of type string; received ' . gettype(@$params['ldap_domain']));
-        }
-
-        if (!empty($params['ldap_user_action']) && !is_string($params['ldap_user_action'])) {
-            throw new \Files\Exception\InvalidParameterException('$ldap_user_action must be of type string; received ' . gettype(@$params['ldap_user_action']));
-        }
-
-        if (!empty($params['ldap_group_action']) && !is_string($params['ldap_group_action'])) {
-            throw new \Files\Exception\InvalidParameterException('$ldap_group_action must be of type string; received ' . gettype(@$params['ldap_group_action']));
-        }
-
-        if (!empty($params['ldap_user_include_groups']) && !is_string($params['ldap_user_include_groups'])) {
-            throw new \Files\Exception\InvalidParameterException('$ldap_user_include_groups must be of type string; received ' . gettype(@$params['ldap_user_include_groups']));
-        }
-
-        if (!empty($params['ldap_group_exclusion']) && !is_string($params['ldap_group_exclusion'])) {
-            throw new \Files\Exception\InvalidParameterException('$ldap_group_exclusion must be of type string; received ' . gettype(@$params['ldap_group_exclusion']));
-        }
-
-        if (!empty($params['ldap_group_inclusion']) && !is_string($params['ldap_group_inclusion'])) {
-            throw new \Files\Exception\InvalidParameterException('$ldap_group_inclusion must be of type string; received ' . gettype(@$params['ldap_group_inclusion']));
-        }
-
-        if (!empty($params['ldap_base_dn']) && !is_string($params['ldap_base_dn'])) {
-            throw new \Files\Exception\InvalidParameterException('$ldap_base_dn must be of type string; received ' . gettype(@$params['ldap_base_dn']));
-        }
-
-        if (!empty($params['ldap_password_change']) && !is_string($params['ldap_password_change'])) {
-            throw new \Files\Exception\InvalidParameterException('$ldap_password_change must be of type string; received ' . gettype(@$params['ldap_password_change']));
-        }
-
-        if (!empty($params['ldap_password_change_confirmation']) && !is_string($params['ldap_password_change_confirmation'])) {
-            throw new \Files\Exception\InvalidParameterException('$ldap_password_change_confirmation must be of type string; received ' . gettype(@$params['ldap_password_change_confirmation']));
         }
 
         if (!empty($params['smtp_password']) && !is_string($params['smtp_password'])) {

@@ -1724,6 +1724,7 @@ class File
     // Parameters:
     //   paths (required) - array(string) - Paths to include in the ZIP.
     //   destination (required) - string - Destination file path for the ZIP.
+    //   archive_format - string - Archive format to create.
     //   overwrite - boolean - Overwrite existing file in the destination?
     public static function zip($params = [], $options = [])
     {
@@ -1741,6 +1742,10 @@ class File
 
         if (!empty($params['destination']) && !is_string($params['destination'])) {
             throw new \Files\Exception\InvalidParameterException('$destination must be of type string; received ' . gettype(@$params['destination']));
+        }
+
+        if (!empty($params['archive_format']) && !is_string($params['archive_format'])) {
+            throw new \Files\Exception\InvalidParameterException('$archive_format must be of type string; received ' . gettype(@$params['archive_format']));
         }
 
         $response = Api::sendRequest('/file_actions/zip', 'POST', $params, $options);

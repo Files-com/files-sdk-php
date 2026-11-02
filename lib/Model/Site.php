@@ -1014,6 +1014,23 @@ class Site
     }
 
     // Parameters:
+    //   end_date (required) - string - New conversion-window end date in YYYY-MM-DD format, in Eastern Time (EST/EDT). Must be a Tuesday, Wednesday, or Thursday. Can only extend the current end date, within six weeks of the originally announced end date.
+    public static function extendAutomationMigrationWindow($params = [], $options = [])
+    {
+        if (empty($params['end_date'])) {
+            throw new \Files\Exception\MissingParameterException('Parameter missing: end_date');
+        }
+
+        if (!empty($params['end_date']) && !is_string($params['end_date'])) {
+            throw new \Files\Exception\InvalidParameterException('$end_date must be of type string; received ' . gettype(@$params['end_date']));
+        }
+
+        $response = Api::sendRequest('/site/extend_automation_migration_window', 'POST', $params, $options);
+
+        return;
+    }
+
+    // Parameters:
     //   name - string - Site name
     //   subdomain - string - Site subdomain
     //   domain - string - Custom domain

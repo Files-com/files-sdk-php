@@ -103,6 +103,16 @@ class Automation
     {
         return $this->attributes['automation'] = $value;
     }
+    // int64 # ID of this v1 Automation's converted v2 copy, when present.
+    public function getConvertedAutomationId()
+    {
+        return isset($this->attributes['converted_automation_id']) ? $this->attributes['converted_automation_id'] : null;
+    }
+
+    public function setConvertedAutomationId($value)
+    {
+        return $this->attributes['converted_automation_id'] = $value;
+    }
     // boolean # Indicates if the automation has been deleted.
     public function getDeleted()
     {
@@ -272,6 +282,16 @@ class Automation
     public function setName($value)
     {
         return $this->attributes['name'] = $value;
+    }
+    // int64 # ID of the retained v1 Automation for a converted Automation. Re-enable that v1 Automation to pause this copy and revert the conversion.
+    public function getOriginalAutomationId()
+    {
+        return isset($this->attributes['original_automation_id']) ? $this->attributes['original_automation_id'] : null;
+    }
+
+    public function setOriginalAutomationId($value)
+    {
+        return $this->attributes['original_automation_id'] = $value;
     }
     // boolean # If true, existing files will be overwritten with new files on Move/Copy automations.  Note: by default files will not be overwritten on Copy automations if they appear to be the same file size as the newly incoming file.  Use the `always_overwrite_size_matching_files` option in conjunction with `overwrite_files` to override this behavior and overwrite files no matter what.
     public function getOverwriteFiles()

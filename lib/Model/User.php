@@ -818,6 +818,16 @@ class User
     {
         return $this->attributes['skip_welcome_screen'] = $value;
     }
+    // string # FTP TLS session reuse requirement: use_system_setting, always_require, or never_require
+    public function getFtpTlsSessionReuseRequired()
+    {
+        return isset($this->attributes['ftp_tls_session_reuse_required']) ? $this->attributes['ftp_tls_session_reuse_required'] : null;
+    }
+
+    public function setFtpTlsSessionReuseRequired($value)
+    {
+        return $this->attributes['ftp_tls_session_reuse_required'] = $value;
+    }
     // string # SSL required setting
     public function getSslRequired()
     {
@@ -1178,6 +1188,7 @@ class User
     //   site_admin - boolean - Is the user an administrator for this site?
     //   skip_welcome_screen - boolean - Skip Welcome page in the UI?
     //   ssl_required - string - SSL required setting
+    //   ftp_tls_session_reuse_required - string - FTP TLS session reuse requirement: use_system_setting, always_require, or never_require
     //   sso_strategy_id - int64 - SSO (Single Sign On) strategy ID for the user, if applicable.
     //   require_2fa - string - 2FA required setting. `use_system_setting` uses the site-wide setting, including SSO exemptions. `always_require` and `never_require` override the site-wide setting when user-level overrides are allowed.
     //   tags - string - Comma-separated list of Tags for this user. Tags are used for other features, such as UserLifecycleRules, which can target specific tags.  Tags must only contain lowercase letters, numbers, and hyphens.
@@ -1325,6 +1336,10 @@ class User
 
         if (!empty($params['ssl_required']) && !is_string($params['ssl_required'])) {
             throw new \Files\Exception\InvalidParameterException('$ssl_required must be of type string; received ' . gettype(@$params['ssl_required']));
+        }
+
+        if (!empty($params['ftp_tls_session_reuse_required']) && !is_string($params['ftp_tls_session_reuse_required'])) {
+            throw new \Files\Exception\InvalidParameterException('$ftp_tls_session_reuse_required must be of type string; received ' . gettype(@$params['ftp_tls_session_reuse_required']));
         }
 
         if (!empty($params['sso_strategy_id']) && !is_int($params['sso_strategy_id'])) {
@@ -1541,6 +1556,7 @@ class User
     //   site_admin - boolean - Is the user an administrator for this site?
     //   skip_welcome_screen - boolean - Skip Welcome page in the UI?
     //   ssl_required - string - SSL required setting
+    //   ftp_tls_session_reuse_required - string - FTP TLS session reuse requirement: use_system_setting, always_require, or never_require
     //   sso_strategy_id - int64 - SSO (Single Sign On) strategy ID for the user, if applicable.
     //   require_2fa - string - 2FA required setting. `use_system_setting` uses the site-wide setting, including SSO exemptions. `always_require` and `never_require` override the site-wide setting when user-level overrides are allowed.
     //   tags - string - Comma-separated list of Tags for this user. Tags are used for other features, such as UserLifecycleRules, which can target specific tags.  Tags must only contain lowercase letters, numbers, and hyphens.
@@ -1674,6 +1690,10 @@ class User
 
         if (!empty($params['ssl_required']) && !is_string($params['ssl_required'])) {
             throw new \Files\Exception\InvalidParameterException('$ssl_required must be of type string; received ' . gettype(@$params['ssl_required']));
+        }
+
+        if (!empty($params['ftp_tls_session_reuse_required']) && !is_string($params['ftp_tls_session_reuse_required'])) {
+            throw new \Files\Exception\InvalidParameterException('$ftp_tls_session_reuse_required must be of type string; received ' . gettype(@$params['ftp_tls_session_reuse_required']));
         }
 
         if (!empty($params['sso_strategy_id']) && !is_int($params['sso_strategy_id'])) {

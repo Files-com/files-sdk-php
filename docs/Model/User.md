@@ -83,6 +83,7 @@
   "workspace_id": 1,
   "default_workspace_id": 1,
   "skip_welcome_screen": true,
+  "ftp_tls_session_reuse_required": "use_system_setting",
   "ssl_required": "always_require",
   "sso_strategy_id": 1,
   "externally_managed": true,
@@ -174,6 +175,7 @@
 * `workspace_id` (int64): ID of the Workspace the user belongs to. 0 is the Default Workspace.
 * `default_workspace_id` (int64): Workspace ID the user should land in by default when more than one Workspace is available.
 * `skip_welcome_screen` (boolean): Skip Welcome page in the UI?
+* `ftp_tls_session_reuse_required` (string): FTP TLS session reuse requirement: use_system_setting, always_require, or never_require
 * `ssl_required` (string): SSL required setting
 * `sso_strategy_id` (int64): SSO (Single Sign On) strategy ID for the user, if applicable.
 * `externally_managed` (boolean): Is this user managed by a SsoStrategy?
@@ -300,6 +302,7 @@ $user->create(, [
   'site_admin' => true,
   'skip_welcome_screen' => true,
   'ssl_required' => "always_require",
+  'ftp_tls_session_reuse_required' => "use_system_setting",
   'sso_strategy_id' => 1,
   'require_2fa' => "always_require",
   'tags' => "example",
@@ -374,6 +377,7 @@ $user->create(, [
 * `site_admin` (boolean): Is the user an administrator for this site?
 * `skip_welcome_screen` (boolean): Skip Welcome page in the UI?
 * `ssl_required` (string): SSL required setting
+* `ftp_tls_session_reuse_required` (string): FTP TLS session reuse requirement: use_system_setting, always_require, or never_require
 * `sso_strategy_id` (int64): SSO (Single Sign On) strategy ID for the user, if applicable.
 * `require_2fa` (string): 2FA required setting. `use_system_setting` uses the site-wide setting, including SSO exemptions. `always_require` and `never_require` override the site-wide setting when user-level overrides are allowed.
 * `tags` (string): Comma-separated list of Tags for this user. Tags are used for other features, such as UserLifecycleRules, which can target specific tags.  Tags must only contain lowercase letters, numbers, and hyphens.
@@ -489,6 +493,7 @@ $user->update([
   'site_admin' => true,
   'skip_welcome_screen' => true,
   'ssl_required' => "always_require",
+  'ftp_tls_session_reuse_required' => "use_system_setting",
   'sso_strategy_id' => 1,
   'require_2fa' => "always_require",
   'tags' => "example",
@@ -565,6 +570,7 @@ $user->update([
 * `site_admin` (boolean): Is the user an administrator for this site?
 * `skip_welcome_screen` (boolean): Skip Welcome page in the UI?
 * `ssl_required` (string): SSL required setting
+* `ftp_tls_session_reuse_required` (string): FTP TLS session reuse requirement: use_system_setting, always_require, or never_require
 * `sso_strategy_id` (int64): SSO (Single Sign On) strategy ID for the user, if applicable.
 * `require_2fa` (string): 2FA required setting. `use_system_setting` uses the site-wide setting, including SSO exemptions. `always_require` and `never_require` override the site-wide setting when user-level overrides are allowed.
 * `tags` (string): Comma-separated list of Tags for this user. Tags are used for other features, such as UserLifecycleRules, which can target specific tags.  Tags must only contain lowercase letters, numbers, and hyphens.
@@ -660,6 +666,7 @@ $user->update([
   "workspace_id": 1,
   "default_workspace_id": 1,
   "skip_welcome_screen": true,
+  "ftp_tls_session_reuse_required": "use_system_setting",
   "ssl_required": "always_require",
   "sso_strategy_id": 1,
   "externally_managed": true,

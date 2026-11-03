@@ -8,8 +8,16 @@ use Files\Logger;
 require_once __DIR__ . '/../Files.php';
 
 /**
- * Class SftpHostKey
+ * An SFTP Host Key is a cryptographic key used to verify the identity of the server during an SFTP connection.
  *
+ * @property bool|null $active If true, use this SFTP Host Key.
+ * @property int|null $custom_domain_id Custom Domain ID. If set, this key is used only for that Custom Domain.
+ * @property int|null $id SFTP Host Key ID
+ * @property string|null $name The friendly name of this SFTP Host Key.
+ * @property string|null $key_type SSH key type
+ * @property string|null $fingerprint_md5 MD5 Fingerprint of the public key
+ * @property string|null $fingerprint_sha256 SHA256 Fingerprint of the public key
+ * @property string|null $private_key The private key data.
  * @package Files
  */
 class SftpHostKey
@@ -20,6 +28,12 @@ class SftpHostKey
         'list' => 'all',
     ];
 
+    /**
+     * Build a model from API attributes and retain its request options.
+     *
+     * @param array $attributes Initial model attributes, keyed by property name.
+     * @param array $options Request options used by this model's operations.
+     */
     public function __construct($attributes = [], $options = [])
     {
         foreach ($attributes as $key => $value) {
@@ -29,16 +43,36 @@ class SftpHostKey
         $this->options = $options;
     }
 
+    /**
+     * Set a model attribute locally; call save() to persist supported changes.
+     *
+     * @param string $name Attribute name.
+     * @param mixed $value Attribute value.
+     * @return void
+     */
     public function __set($name, $value)
     {
         $this->attributes[$name] = $value;
     }
 
+    /**
+     * Read a model attribute.
+     *
+     * @param string $name Attribute name.
+     * @return mixed The attribute value, or null when it is not set.
+     */
     public function __get($name)
     {
         return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
+    /**
+     * Dispatch a legacy static alias, including list() to all().
+     *
+     * @param string $name Alias name.
+     * @param array $arguments Arguments passed to the canonical method.
+     * @return mixed The canonical method's result, or null for an unknown alias.
+     */
     public static function __callStatic($name, $arguments)
     {
         if (in_array($name, array_keys(self::$static_mapped_functions))) {
@@ -49,96 +83,190 @@ class SftpHostKey
         }
     }
 
+    /**
+     * Whether this model has a nonempty primary key.
+     *
+     * @return bool
+     */
     public function isLoaded()
     {
         return !!@$this->attributes['id'];
     }
-    // boolean # If true, use this SFTP Host Key.
+    /**
+     * If true, use this SFTP Host Key.
+     *
+     * @return bool|null
+     */
     public function getActive()
     {
         return isset($this->attributes['active']) ? $this->attributes['active'] : null;
     }
 
+    /**
+     * If true, use this SFTP Host Key.
+     *
+     * @param bool|null $value
+     * @return bool|null The assigned value.
+     */
     public function setActive($value)
     {
         return $this->attributes['active'] = $value;
     }
-    // int64 # Custom Domain ID. If set, this key is used only for that Custom Domain.
+    /**
+     * Custom Domain ID. If set, this key is used only for that Custom Domain.
+     *
+     * @return int|null
+     */
     public function getCustomDomainId()
     {
         return isset($this->attributes['custom_domain_id']) ? $this->attributes['custom_domain_id'] : null;
     }
 
+    /**
+     * Custom Domain ID. If set, this key is used only for that Custom Domain.
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setCustomDomainId($value)
     {
         return $this->attributes['custom_domain_id'] = $value;
     }
-    // int64 # SFTP Host Key ID
+    /**
+     * SFTP Host Key ID
+     *
+     * @return int|null
+     */
     public function getId()
     {
         return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
+    /**
+     * SFTP Host Key ID
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setId($value)
     {
         return $this->attributes['id'] = $value;
     }
-    // string # The friendly name of this SFTP Host Key.
+    /**
+     * The friendly name of this SFTP Host Key.
+     *
+     * @return string|null
+     */
     public function getName()
     {
         return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
 
+    /**
+     * The friendly name of this SFTP Host Key.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setName($value)
     {
         return $this->attributes['name'] = $value;
     }
-    // string # SSH key type
+    /**
+     * SSH key type
+     *
+     * @return string|null
+     */
     public function getKeyType()
     {
         return isset($this->attributes['key_type']) ? $this->attributes['key_type'] : null;
     }
 
+    /**
+     * SSH key type
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setKeyType($value)
     {
         return $this->attributes['key_type'] = $value;
     }
-    // string # MD5 Fingerprint of the public key
+    /**
+     * MD5 Fingerprint of the public key
+     *
+     * @return string|null
+     */
     public function getFingerprintMd5()
     {
         return isset($this->attributes['fingerprint_md5']) ? $this->attributes['fingerprint_md5'] : null;
     }
 
+    /**
+     * MD5 Fingerprint of the public key
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setFingerprintMd5($value)
     {
         return $this->attributes['fingerprint_md5'] = $value;
     }
-    // string # SHA256 Fingerprint of the public key
+    /**
+     * SHA256 Fingerprint of the public key
+     *
+     * @return string|null
+     */
     public function getFingerprintSha256()
     {
         return isset($this->attributes['fingerprint_sha256']) ? $this->attributes['fingerprint_sha256'] : null;
     }
 
+    /**
+     * SHA256 Fingerprint of the public key
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setFingerprintSha256($value)
     {
         return $this->attributes['fingerprint_sha256'] = $value;
     }
-    // string # The private key data.
+    /**
+     * The private key data.
+     *
+     * @return string|null
+     */
     public function getPrivateKey()
     {
         return isset($this->attributes['private_key']) ? $this->attributes['private_key'] : null;
     }
 
+    /**
+     * The private key data.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setPrivateKey($value)
     {
         return $this->attributes['private_key'] = $value;
     }
 
-    // Parameters:
-    //   active - boolean - If true, use this SFTP Host Key.
-    //   custom_domain_id - int64 - Custom Domain ID. If set, this key is used only for that Custom Domain.
-    //   name - string - The friendly name of this SFTP Host Key.
-    //   private_key - string - The private key data.
+    /**
+     * Update SFTP Host Key
+     *
+     * PATCH /sftp_host_keys/{id}
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Sftp Host Key ID.
+     *     - `active` (bool, optional): If true, use this SFTP Host Key.
+     *     - `custom_domain_id` (int, optional): Custom Domain ID. If set, this key is used only for that Custom Domain.
+     *     - `name` (string, optional): The friendly name of this SFTP Host Key.
+     *     - `private_key` (string, optional): The private key data.
+     * @return \Files\Model\SftpHostKey
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function update($params = [])
     {
         if (!is_array($params)) {
@@ -173,6 +301,16 @@ class SftpHostKey
         return new SftpHostKey((array) (@$response->data ?: []), $this->options);
     }
 
+    /**
+     * Delete SFTP Host Key
+     *
+     * DELETE /sftp_host_keys/{id}
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Sftp Host Key ID.
+     * @return void
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function delete($params = [])
     {
         if (!is_array($params)) {
@@ -195,12 +333,30 @@ class SftpHostKey
         return;
     }
 
+    /**
+     * Delete SFTP Host Key
+     *
+     * DELETE /sftp_host_keys/{id}
+     *
+     * Alias of delete().
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Sftp Host Key ID.
+     * @return void
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function destroy($params = [])
     {
         $this->delete($params);
         return;
     }
 
+    /**
+     * Persist this model's attributes and replace them with the API response.
+     *
+     * @return bool True after the operation succeeds.
+     * @throws \Files\Exception\FilesException When saving fails or updates are unsupported.
+     */
     public function save()
     {
         if (@$this->attributes['id']) {
@@ -215,9 +371,18 @@ class SftpHostKey
     }
 
 
-    // Parameters:
-    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-    //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+    /**
+     * List SFTP Host Keys
+     *
+     * GET /sftp_host_keys
+     *
+     * @param array $params Request parameters.
+     *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+     *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\SftpHostKey[]
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function all($params = [], $options = [])
     {
         if (!empty($params['cursor']) && !is_string($params['cursor'])) {
@@ -239,8 +404,17 @@ class SftpHostKey
         return $return_array;
     }
 
-    // Parameters:
-    //   id (required) - int64 - Sftp Host Key ID.
+    /**
+     * Show SFTP Host Key
+     *
+     * GET /sftp_host_keys/{id}
+     *
+     * @param int $id Sftp Host Key ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\SftpHostKey
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function find($id, $params = [], $options = [])
     {
         if (!is_array($params)) {
@@ -261,16 +435,38 @@ class SftpHostKey
 
         return new SftpHostKey((array) (@$response->data ?: []), $options);
     }
+    /**
+     * Show SFTP Host Key
+     *
+     * GET /sftp_host_keys/{id}
+     *
+     * Alias of find().
+     *
+     * @param int $id Sftp Host Key ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\SftpHostKey
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function get($id, $params = [], $options = [])
     {
         return self::find($id, $params, $options);
     }
 
-    // Parameters:
-    //   active - boolean - If true, use this SFTP Host Key.
-    //   custom_domain_id - int64 - Custom Domain ID. If set, this key is used only for that Custom Domain.
-    //   name - string - The friendly name of this SFTP Host Key.
-    //   private_key - string - The private key data.
+    /**
+     * Create SFTP Host Key
+     *
+     * POST /sftp_host_keys
+     *
+     * @param array $params Request parameters.
+     *     - `active` (bool, optional): If true, use this SFTP Host Key.
+     *     - `custom_domain_id` (int, optional): Custom Domain ID. If set, this key is used only for that Custom Domain.
+     *     - `name` (string, optional): The friendly name of this SFTP Host Key.
+     *     - `private_key` (string, optional): The private key data.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\SftpHostKey
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function create($params = [], $options = [])
     {
         if (!empty($params['custom_domain_id']) && !is_int($params['custom_domain_id'])) {

@@ -8,8 +8,12 @@ use Files\Logger;
 require_once __DIR__ . '/../Files.php';
 
 /**
- * Class AutomationAuthoringSchema
+ * AutomationAuthoringSchema API model.
  *
+ * @property object|null $definition_schema JSON Schema for active Automation v2 graph definitions.
+ * @property object[]|null $error_families Typed error families accepted by Automation v2 on_error rules.
+ * @property object[]|null $nodes Active Automation v2 node authoring metadata.
+ * @property string|null $schema_url Stable public URL for the Automation v2 graph definition JSON Schema.
  * @package Files
  */
 class AutomationAuthoringSchema
@@ -20,6 +24,12 @@ class AutomationAuthoringSchema
         'list' => 'all',
     ];
 
+    /**
+     * Build a model from API attributes and retain its request options.
+     *
+     * @param array $attributes Initial model attributes, keyed by property name.
+     * @param array $options Request options used by this model's operations.
+     */
     public function __construct($attributes = [], $options = [])
     {
         foreach ($attributes as $key => $value) {
@@ -29,16 +39,36 @@ class AutomationAuthoringSchema
         $this->options = $options;
     }
 
+    /**
+     * Set a model attribute locally; call save() to persist supported changes.
+     *
+     * @param string $name Attribute name.
+     * @param mixed $value Attribute value.
+     * @return void
+     */
     public function __set($name, $value)
     {
         $this->attributes[$name] = $value;
     }
 
+    /**
+     * Read a model attribute.
+     *
+     * @param string $name Attribute name.
+     * @return mixed The attribute value, or null when it is not set.
+     */
     public function __get($name)
     {
         return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
+    /**
+     * Dispatch a legacy static alias, including list() to all().
+     *
+     * @param string $name Alias name.
+     * @param array $arguments Arguments passed to the canonical method.
+     * @return mixed The canonical method's result, or null for an unknown alias.
+     */
     public static function __callStatic($name, $arguments)
     {
         if (in_array($name, array_keys(self::$static_mapped_functions))) {
@@ -49,26 +79,47 @@ class AutomationAuthoringSchema
         }
     }
 
+    /**
+     * Whether this model has a nonempty primary key.
+     *
+     * @return bool
+     */
     public function isLoaded()
     {
         return !!@$this->attributes['id'];
     }
-    // object # JSON Schema for active Automation v2 graph definitions.
+    /**
+     * JSON Schema for active Automation v2 graph definitions.
+     *
+     * @return object|null
+     */
     public function getDefinitionSchema()
     {
         return isset($this->attributes['definition_schema']) ? $this->attributes['definition_schema'] : null;
     }
-    // array(object) # Typed error families accepted by Automation v2 on_error rules.
+    /**
+     * Typed error families accepted by Automation v2 on_error rules.
+     *
+     * @return object[]|null
+     */
     public function getErrorFamilies()
     {
         return isset($this->attributes['error_families']) ? $this->attributes['error_families'] : null;
     }
-    // array(object) # Active Automation v2 node authoring metadata.
+    /**
+     * Active Automation v2 node authoring metadata.
+     *
+     * @return object[]|null
+     */
     public function getNodes()
     {
         return isset($this->attributes['nodes']) ? $this->attributes['nodes'] : null;
     }
-    // string # Stable public URL for the Automation v2 graph definition JSON Schema.
+    /**
+     * Stable public URL for the Automation v2 graph definition JSON Schema.
+     *
+     * @return string|null
+     */
     public function getSchemaUrl()
     {
         return isset($this->attributes['schema_url']) ? $this->attributes['schema_url'] : null;

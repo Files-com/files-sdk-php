@@ -8,8 +8,13 @@ use Files\Logger;
 require_once __DIR__ . '/../Files.php';
 
 /**
- * Class UserSftpClientUse
+ * A UserSftpClientUse is a way to see the exact set of SFTP clients used by a given user.
  *
+ * @property int|null $id UserSftpClientUse ID
+ * @property string|null $sftp_client The SFTP client used
+ * @property string|null $created_at The earliest recorded use of this SFTP client (for this user)
+ * @property string|null $updated_at The most recent use of this SFTP client (for this user)
+ * @property int|null $user_id ID of the user who performed this access
  * @package Files
  */
 class UserSftpClientUse
@@ -20,6 +25,12 @@ class UserSftpClientUse
         'list' => 'all',
     ];
 
+    /**
+     * Build a model from API attributes and retain its request options.
+     *
+     * @param array $attributes Initial model attributes, keyed by property name.
+     * @param array $options Request options used by this model's operations.
+     */
     public function __construct($attributes = [], $options = [])
     {
         foreach ($attributes as $key => $value) {
@@ -29,16 +40,36 @@ class UserSftpClientUse
         $this->options = $options;
     }
 
+    /**
+     * Set a model attribute locally; call save() to persist supported changes.
+     *
+     * @param string $name Attribute name.
+     * @param mixed $value Attribute value.
+     * @return void
+     */
     public function __set($name, $value)
     {
         $this->attributes[$name] = $value;
     }
 
+    /**
+     * Read a model attribute.
+     *
+     * @param string $name Attribute name.
+     * @return mixed The attribute value, or null when it is not set.
+     */
     public function __get($name)
     {
         return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
+    /**
+     * Dispatch a legacy static alias, including list() to all().
+     *
+     * @param string $name Alias name.
+     * @param array $arguments Arguments passed to the canonical method.
+     * @return mixed The canonical method's result, or null for an unknown alias.
+     */
     public static function __callStatic($name, $arguments)
     {
         if (in_array($name, array_keys(self::$static_mapped_functions))) {
@@ -49,41 +80,75 @@ class UserSftpClientUse
         }
     }
 
+    /**
+     * Whether this model has a nonempty primary key.
+     *
+     * @return bool
+     */
     public function isLoaded()
     {
         return !!@$this->attributes['id'];
     }
-    // int64 # UserSftpClientUse ID
+    /**
+     * UserSftpClientUse ID
+     *
+     * @return int|null
+     */
     public function getId()
     {
         return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
-    // string # The SFTP client used
+    /**
+     * The SFTP client used
+     *
+     * @return string|null
+     */
     public function getSftpClient()
     {
         return isset($this->attributes['sftp_client']) ? $this->attributes['sftp_client'] : null;
     }
-    // date-time # The earliest recorded use of this SFTP client (for this user)
+    /**
+     * The earliest recorded use of this SFTP client (for this user)
+     *
+     * @return string|null
+     */
     public function getCreatedAt()
     {
         return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
-    // date-time # The most recent use of this SFTP client (for this user)
+    /**
+     * The most recent use of this SFTP client (for this user)
+     *
+     * @return string|null
+     */
     public function getUpdatedAt()
     {
         return isset($this->attributes['updated_at']) ? $this->attributes['updated_at'] : null;
     }
-    // int64 # ID of the user who performed this access
+    /**
+     * ID of the user who performed this access
+     *
+     * @return int|null
+     */
     public function getUserId()
     {
         return isset($this->attributes['user_id']) ? $this->attributes['user_id'] : null;
     }
 
-    // Parameters:
-    //   user_id - int64 - User ID. If provided, will return uses for this user.
-    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-    //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `created_at`.
+    /**
+     * List User SFTP Client Uses
+     *
+     * GET /user_sftp_client_uses
+     *
+     * @param array $params Request parameters.
+     *     - `user_id` (int, optional): User ID. If provided, will return uses for this user.
+     *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+     *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+     *     - `sort_by` (array|object, optional): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `created_at`.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\UserSftpClientUse[]
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function all($params = [], $options = [])
     {
         if (!empty($params['user_id']) && !is_int($params['user_id'])) {

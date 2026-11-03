@@ -8,8 +8,31 @@ use Files\Logger;
 require_once __DIR__ . '/../Files.php';
 
 /**
- * Class AutomationRun
+ * An AutomationRun is a record with information about a single execution of a given Automation.
  *
+ * @property int|null $id ID.
+ * @property int|null $automation_id ID of the associated Automation.
+ * @property int|null $automation_version_id ID of the immutable Automation version pinned by this run.
+ * @property int|null $version Pinned Automation v2 definition version.
+ * @property int|null $workspace_id Workspace ID.
+ * @property string|null $cancel_requested_at Date/time at which cancellation was requested.
+ * @property string|null $completed_at Automation run completion/failure date/time.
+ * @property string|null $created_at Automation run start date/time.
+ * @property string|null $retry_at If set, this automation will be retried at this date/time due to `failure` or `partial_failure`.
+ * @property string|null $retried_at If set, this Automation run was retried due to `failure` or `partial_failure`.
+ * @property int|null $retried_in_run_id ID of the run that is or will be retrying this run.
+ * @property int|null $retry_of_run_id ID of the original run that this run is retrying.
+ * @property int|null $rerun_of_run_id ID of the run whose persisted node outputs this run reused.
+ * @property string|null $rerun_from_node_id Node at which this run resumed execution.
+ * @property float|null $runtime Automation run runtime.
+ * @property string|null $status The status of the AutomationRun. One of `queued`, `running`, `success`, `partial_failure`, `failure`, `skipped`, or `canceled`.
+ * @property int|null $successful_operations Count of successful operations.
+ * @property int|null $failed_operations Count of failed operations.
+ * @property object|null $definition Automation definition snapshot pinned by this run. For performance reasons, this is not provided when listing Automation runs.
+ * @property object|null $node_states Status and execution stage for each node in this run. For performance reasons, this is not provided when listing Automation runs.
+ * @property object[]|null $execution_nodes Execution status, timing, and bounded output summaries for each node. For performance reasons, this is not provided when listing Automation runs.
+ * @property string|null $journal_url Link to the run journal artifact.
+ * @property string|null $status_messages_url Link to status messages log file.
  * @package Files
  */
 class AutomationRun
@@ -20,6 +43,12 @@ class AutomationRun
         'list' => 'all',
     ];
 
+    /**
+     * Build a model from API attributes and retain its request options.
+     *
+     * @param array $attributes Initial model attributes, keyed by property name.
+     * @param array $options Request options used by this model's operations.
+     */
     public function __construct($attributes = [], $options = [])
     {
         foreach ($attributes as $key => $value) {
@@ -29,16 +58,36 @@ class AutomationRun
         $this->options = $options;
     }
 
+    /**
+     * Set a model attribute locally; call save() to persist supported changes.
+     *
+     * @param string $name Attribute name.
+     * @param mixed $value Attribute value.
+     * @return void
+     */
     public function __set($name, $value)
     {
         $this->attributes[$name] = $value;
     }
 
+    /**
+     * Read a model attribute.
+     *
+     * @param string $name Attribute name.
+     * @return mixed The attribute value, or null when it is not set.
+     */
     public function __get($name)
     {
         return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
+    /**
+     * Dispatch a legacy static alias, including list() to all().
+     *
+     * @param string $name Alias name.
+     * @param array $arguments Arguments passed to the canonical method.
+     * @return mixed The canonical method's result, or null for an unknown alias.
+     */
     public static function __callStatic($name, $arguments)
     {
         if (in_array($name, array_keys(self::$static_mapped_functions))) {
@@ -49,127 +98,233 @@ class AutomationRun
         }
     }
 
+    /**
+     * Whether this model has a nonempty primary key.
+     *
+     * @return bool
+     */
     public function isLoaded()
     {
         return !!@$this->attributes['id'];
     }
-    // int64 # ID.
+    /**
+     * ID.
+     *
+     * @return int|null
+     */
     public function getId()
     {
         return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
-    // int64 # ID of the associated Automation.
+    /**
+     * ID of the associated Automation.
+     *
+     * @return int|null
+     */
     public function getAutomationId()
     {
         return isset($this->attributes['automation_id']) ? $this->attributes['automation_id'] : null;
     }
-    // int64 # ID of the immutable Automation version pinned by this run.
+    /**
+     * ID of the immutable Automation version pinned by this run.
+     *
+     * @return int|null
+     */
     public function getAutomationVersionId()
     {
         return isset($this->attributes['automation_version_id']) ? $this->attributes['automation_version_id'] : null;
     }
-    // int64 # Pinned Automation v2 definition version.
+    /**
+     * Pinned Automation v2 definition version.
+     *
+     * @return int|null
+     */
     public function getVersion()
     {
         return isset($this->attributes['version']) ? $this->attributes['version'] : null;
     }
-    // int64 # Workspace ID.
+    /**
+     * Workspace ID.
+     *
+     * @return int|null
+     */
     public function getWorkspaceId()
     {
         return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
-    // date-time # Date/time at which cancellation was requested.
+    /**
+     * Date/time at which cancellation was requested.
+     *
+     * @return string|null
+     */
     public function getCancelRequestedAt()
     {
         return isset($this->attributes['cancel_requested_at']) ? $this->attributes['cancel_requested_at'] : null;
     }
-    // date-time # Automation run completion/failure date/time.
+    /**
+     * Automation run completion/failure date/time.
+     *
+     * @return string|null
+     */
     public function getCompletedAt()
     {
         return isset($this->attributes['completed_at']) ? $this->attributes['completed_at'] : null;
     }
-    // date-time # Automation run start date/time.
+    /**
+     * Automation run start date/time.
+     *
+     * @return string|null
+     */
     public function getCreatedAt()
     {
         return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
-    // date-time # If set, this automation will be retried at this date/time due to `failure` or `partial_failure`.
+    /**
+     * If set, this automation will be retried at this date/time due to `failure` or `partial_failure`.
+     *
+     * @return string|null
+     */
     public function getRetryAt()
     {
         return isset($this->attributes['retry_at']) ? $this->attributes['retry_at'] : null;
     }
-    // date-time # If set, this Automation run was retried due to `failure` or `partial_failure`.
+    /**
+     * If set, this Automation run was retried due to `failure` or `partial_failure`.
+     *
+     * @return string|null
+     */
     public function getRetriedAt()
     {
         return isset($this->attributes['retried_at']) ? $this->attributes['retried_at'] : null;
     }
-    // int64 # ID of the run that is or will be retrying this run.
+    /**
+     * ID of the run that is or will be retrying this run.
+     *
+     * @return int|null
+     */
     public function getRetriedInRunId()
     {
         return isset($this->attributes['retried_in_run_id']) ? $this->attributes['retried_in_run_id'] : null;
     }
-    // int64 # ID of the original run that this run is retrying.
+    /**
+     * ID of the original run that this run is retrying.
+     *
+     * @return int|null
+     */
     public function getRetryOfRunId()
     {
         return isset($this->attributes['retry_of_run_id']) ? $this->attributes['retry_of_run_id'] : null;
     }
-    // int64 # ID of the run whose persisted node outputs this run reused.
+    /**
+     * ID of the run whose persisted node outputs this run reused.
+     *
+     * @return int|null
+     */
     public function getRerunOfRunId()
     {
         return isset($this->attributes['rerun_of_run_id']) ? $this->attributes['rerun_of_run_id'] : null;
     }
-    // string # Node at which this run resumed execution.
+    /**
+     * Node at which this run resumed execution.
+     *
+     * @return string|null
+     */
     public function getRerunFromNodeId()
     {
         return isset($this->attributes['rerun_from_node_id']) ? $this->attributes['rerun_from_node_id'] : null;
     }
-    // double # Automation run runtime.
+    /**
+     * Automation run runtime.
+     *
+     * @return float|null
+     */
     public function getRuntime()
     {
         return isset($this->attributes['runtime']) ? $this->attributes['runtime'] : null;
     }
-    // string # The status of the AutomationRun. One of `queued`, `running`, `success`, `partial_failure`, `failure`, `skipped`, or `canceled`.
+    /**
+     * The status of the AutomationRun. One of `queued`, `running`, `success`, `partial_failure`, `failure`, `skipped`, or `canceled`.
+     *
+     * @return string|null
+     */
     public function getStatus()
     {
         return isset($this->attributes['status']) ? $this->attributes['status'] : null;
     }
-    // int64 # Count of successful operations.
+    /**
+     * Count of successful operations.
+     *
+     * @return int|null
+     */
     public function getSuccessfulOperations()
     {
         return isset($this->attributes['successful_operations']) ? $this->attributes['successful_operations'] : null;
     }
-    // int64 # Count of failed operations.
+    /**
+     * Count of failed operations.
+     *
+     * @return int|null
+     */
     public function getFailedOperations()
     {
         return isset($this->attributes['failed_operations']) ? $this->attributes['failed_operations'] : null;
     }
-    // object # Automation definition snapshot pinned by this run. For performance reasons, this is not provided when listing Automation runs.
+    /**
+     * Automation definition snapshot pinned by this run. For performance reasons, this is not provided when listing Automation runs.
+     *
+     * @return object|null
+     */
     public function getDefinition()
     {
         return isset($this->attributes['definition']) ? $this->attributes['definition'] : null;
     }
-    // object # Status and execution stage for each node in this run. For performance reasons, this is not provided when listing Automation runs.
+    /**
+     * Status and execution stage for each node in this run. For performance reasons, this is not provided when listing Automation runs.
+     *
+     * @return object|null
+     */
     public function getNodeStates()
     {
         return isset($this->attributes['node_states']) ? $this->attributes['node_states'] : null;
     }
-    // array(object) # Execution status, timing, and bounded output summaries for each node. For performance reasons, this is not provided when listing Automation runs.
+    /**
+     * Execution status, timing, and bounded output summaries for each node. For performance reasons, this is not provided when listing Automation runs.
+     *
+     * @return object[]|null
+     */
     public function getExecutionNodes()
     {
         return isset($this->attributes['execution_nodes']) ? $this->attributes['execution_nodes'] : null;
     }
-    // string # Link to the run journal artifact.
+    /**
+     * Link to the run journal artifact.
+     *
+     * @return string|null
+     */
     public function getJournalUrl()
     {
         return isset($this->attributes['journal_url']) ? $this->attributes['journal_url'] : null;
     }
-    // string # Link to status messages log file.
+    /**
+     * Link to status messages log file.
+     *
+     * @return string|null
+     */
     public function getStatusMessagesUrl()
     {
         return isset($this->attributes['status_messages_url']) ? $this->attributes['status_messages_url'] : null;
     }
 
-    // Cancel Automation Run
+    /**
+     * Cancel Automation Run
+     *
+     * POST /automation_runs/{id}/cancel
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Automation Run ID.
+     * @return \Files\Model\AutomationRun
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function cancel($params = [])
     {
         if (!is_array($params)) {
@@ -192,10 +347,17 @@ class AutomationRun
         return new AutomationRun((array) (@$response->data ?: []), $this->options);
     }
 
-    // Re-run Automation from Node
-    //
-    // Parameters:
-    //   node_id (required) - string - Node ID at which execution should resume.
+    /**
+     * Re-run Automation from Node
+     *
+     * POST /automation_runs/{id}/rerun
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Automation Run ID.
+     *     - `node_id` (string, required): Node ID at which execution should resume.
+     * @return \Files\Model\AutomationRun
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function rerun($params = [])
     {
         if (!is_array($params)) {
@@ -230,13 +392,22 @@ class AutomationRun
         return new AutomationRun((array) (@$response->data ?: []), $this->options);
     }
 
-    // Parameters:
-    //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
-    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-    //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `automation_id`, `created_at` or `status`.
-    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `status`, `workspace_id` or `automation_id`. Valid field combinations are `[ workspace_id, status ]`, `[ automation_id, status ]`, `[ workspace_id, automation_id ]` or `[ workspace_id, automation_id, status ]`.
-    //   automation_id (required) - int64 - ID of the associated Automation.
+    /**
+     * List Automation Runs
+     *
+     * GET /automation_runs
+     *
+     * @param array $params Request parameters.
+     *     - `user_id` (int, optional): User ID.  Provide a value of `0` to operate the current session's user.
+     *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+     *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+     *     - `sort_by` (array|object, optional): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `automation_id`, `created_at` or `status`.
+     *     - `filter` (array|object, optional): If set, return records where the specified field is equal to the supplied value. Valid fields are `status`, `workspace_id` or `automation_id`. Valid field combinations are `[ workspace_id, status ]`, `[ automation_id, status ]`, `[ workspace_id, automation_id ]` or `[ workspace_id, automation_id, status ]`.
+     *     - `automation_id` (int, required): ID of the associated Automation.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\AutomationRun[]
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function all($params = [], $options = [])
     {
         if (empty($params['automation_id'])) {
@@ -270,8 +441,17 @@ class AutomationRun
         return $return_array;
     }
 
-    // Parameters:
-    //   id (required) - int64 - Automation Run ID.
+    /**
+     * Show Automation Run
+     *
+     * GET /automation_runs/{id}
+     *
+     * @param int $id Automation Run ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\AutomationRun
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function find($id, $params = [], $options = [])
     {
         if (!is_array($params)) {
@@ -292,14 +472,36 @@ class AutomationRun
 
         return new AutomationRun((array) (@$response->data ?: []), $options);
     }
+    /**
+     * Show Automation Run
+     *
+     * GET /automation_runs/{id}
+     *
+     * Alias of find().
+     *
+     * @param int $id Automation Run ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\AutomationRun
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function get($id, $params = [], $options = [])
     {
         return self::find($id, $params, $options);
     }
 
-    // Parameters:
-    //   id (required) - int64 - Automation Run ID.
-    //   node_id (required) - string - Node ID from the pinned Automation definition.
+    /**
+     * Show Automation Run Node
+     *
+     * GET /automation_runs/{id}/node
+     *
+     * @param int $id Automation Run ID.
+     * @param array $params Request parameters.
+     *     - `node_id` (string, required): Node ID from the pinned Automation definition.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\AutomationExecutionNode
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function findNode($id, $params = [], $options = [])
     {
         if (!is_array($params)) {

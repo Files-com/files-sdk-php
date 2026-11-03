@@ -8,8 +8,13 @@ use Files\Logger;
 require_once __DIR__ . '/../Files.php';
 
 /**
- * Class BundleDownload
+ * A BundleDownload is a record of the download action that happened in the bundle.
  *
+ * @property \stdClass|null $bundle_registration
+ * @property string|null $download_method Download method (file or full_zip)
+ * @property string|null $path Download path. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
+ * @property int|null $workspace_id Workspace ID. `0` means the default workspace.
+ * @property string|null $created_at Download date/time
  * @package Files
  */
 class BundleDownload
@@ -20,6 +25,12 @@ class BundleDownload
         'list' => 'all',
     ];
 
+    /**
+     * Build a model from API attributes and retain its request options.
+     *
+     * @param array $attributes Initial model attributes, keyed by property name.
+     * @param array $options Request options used by this model's operations.
+     */
     public function __construct($attributes = [], $options = [])
     {
         foreach ($attributes as $key => $value) {
@@ -29,16 +40,36 @@ class BundleDownload
         $this->options = $options;
     }
 
+    /**
+     * Set a model attribute locally; call save() to persist supported changes.
+     *
+     * @param string $name Attribute name.
+     * @param mixed $value Attribute value.
+     * @return void
+     */
     public function __set($name, $value)
     {
         $this->attributes[$name] = $value;
     }
 
+    /**
+     * Read a model attribute.
+     *
+     * @param string $name Attribute name.
+     * @return mixed The attribute value, or null when it is not set.
+     */
     public function __get($name)
     {
         return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
+    /**
+     * Dispatch a legacy static alias, including list() to all().
+     *
+     * @param string $name Alias name.
+     * @param array $arguments Arguments passed to the canonical method.
+     * @return mixed The canonical method's result, or null for an unknown alias.
+     */
     public static function __callStatic($name, $arguments)
     {
         if (in_array($name, array_keys(self::$static_mapped_functions))) {
@@ -49,47 +80,81 @@ class BundleDownload
         }
     }
 
+    /**
+     * Whether this model has a nonempty primary key.
+     *
+     * @return bool
+     */
     public function isLoaded()
     {
         return !!@$this->attributes['id'];
     }
-    // BundleRegistration
+    /**
+     * Read bundle_registration.
+     *
+     * @return \stdClass|null
+     */
     public function getBundleRegistration()
     {
         return isset($this->attributes['bundle_registration']) ? $this->attributes['bundle_registration'] : null;
     }
-    // string # Download method (file or full_zip)
+    /**
+     * Download method (file or full_zip)
+     *
+     * @return string|null
+     */
     public function getDownloadMethod()
     {
         return isset($this->attributes['download_method']) ? $this->attributes['download_method'] : null;
     }
-    // string # Download path. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
+    /**
+     * Download path. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
+     *
+     * @return string|null
+     */
     public function getPath()
     {
         return isset($this->attributes['path']) ? $this->attributes['path'] : null;
     }
-    // int64 # Workspace ID. `0` means the default workspace.
+    /**
+     * Workspace ID. `0` means the default workspace.
+     *
+     * @return int|null
+     */
     public function getWorkspaceId()
     {
         return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
-    // date-time # Download date/time
+    /**
+     * Download date/time
+     *
+     * @return string|null
+     */
     public function getCreatedAt()
     {
         return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
 
-    // Parameters:
-    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-    //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `workspace_id` and `created_at`.
-    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `created_at`.
-    //   filter_gt - object - If set, return records where the specified field is greater than the supplied value. Valid fields are `created_at`.
-    //   filter_gteq - object - If set, return records where the specified field is greater than or equal the supplied value. Valid fields are `created_at`.
-    //   filter_lt - object - If set, return records where the specified field is less than the supplied value. Valid fields are `created_at`.
-    //   filter_lteq - object - If set, return records where the specified field is less than or equal the supplied value. Valid fields are `created_at`.
-    //   bundle_id - int64 - Bundle ID
-    //   bundle_registration_id - int64 - BundleRegistration ID
+    /**
+     * List Share Link Downloads
+     *
+     * GET /bundle_downloads
+     *
+     * @param array $params Request parameters.
+     *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+     *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+     *     - `sort_by` (array|object, optional): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `workspace_id` and `created_at`.
+     *     - `filter` (array|object, optional): If set, return records where the specified field is equal to the supplied value. Valid fields are `created_at`.
+     *     - `filter_gt` (array|object, optional): If set, return records where the specified field is greater than the supplied value. Valid fields are `created_at`.
+     *     - `filter_gteq` (array|object, optional): If set, return records where the specified field is greater than or equal the supplied value. Valid fields are `created_at`.
+     *     - `filter_lt` (array|object, optional): If set, return records where the specified field is less than the supplied value. Valid fields are `created_at`.
+     *     - `filter_lteq` (array|object, optional): If set, return records where the specified field is less than or equal the supplied value. Valid fields are `created_at`.
+     *     - `bundle_id` (int, optional): Bundle ID
+     *     - `bundle_registration_id` (int, optional): BundleRegistration ID
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\BundleDownload[]
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function all($params = [], $options = [])
     {
         if (!empty($params['cursor']) && !is_string($params['cursor'])) {

@@ -8,8 +8,16 @@ use Files\Logger;
 require_once __DIR__ . '/../Files.php';
 
 /**
- * Class Snapshot
+ * Snapshots allow you to create a read-only archive of files at a specific point in time.
  *
+ * @property int|null $id The snapshot's unique ID.
+ * @property string|null $expires_at When the snapshot expires.
+ * @property string|null $finalized_at When the snapshot was finalized.
+ * @property string|null $name A name for the snapshot.
+ * @property int|null $user_id The user that created this snapshot, if applicable.
+ * @property int|null $bundle_id The bundle using this snapshot, if applicable.
+ * @property int|null $workspace_id Workspace ID. `0` means the default workspace.
+ * @property string[]|null $paths An array of paths to add to the snapshot.
  * @package Files
  */
 class Snapshot
@@ -20,6 +28,12 @@ class Snapshot
         'list' => 'all',
     ];
 
+    /**
+     * Build a model from API attributes and retain its request options.
+     *
+     * @param array $attributes Initial model attributes, keyed by property name.
+     * @param array $options Request options used by this model's operations.
+     */
     public function __construct($attributes = [], $options = [])
     {
         foreach ($attributes as $key => $value) {
@@ -29,16 +43,36 @@ class Snapshot
         $this->options = $options;
     }
 
+    /**
+     * Set a model attribute locally; call save() to persist supported changes.
+     *
+     * @param string $name Attribute name.
+     * @param mixed $value Attribute value.
+     * @return void
+     */
     public function __set($name, $value)
     {
         $this->attributes[$name] = $value;
     }
 
+    /**
+     * Read a model attribute.
+     *
+     * @param string $name Attribute name.
+     * @return mixed The attribute value, or null when it is not set.
+     */
     public function __get($name)
     {
         return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
+    /**
+     * Dispatch a legacy static alias, including list() to all().
+     *
+     * @param string $name Alias name.
+     * @param array $arguments Arguments passed to the canonical method.
+     * @return mixed The canonical method's result, or null for an unknown alias.
+     */
     public static function __callStatic($name, $arguments)
     {
         if (in_array($name, array_keys(self::$static_mapped_functions))) {
@@ -49,92 +83,186 @@ class Snapshot
         }
     }
 
+    /**
+     * Whether this model has a nonempty primary key.
+     *
+     * @return bool
+     */
     public function isLoaded()
     {
         return !!@$this->attributes['id'];
     }
-    // int64 # The snapshot's unique ID.
+    /**
+     * The snapshot's unique ID.
+     *
+     * @return int|null
+     */
     public function getId()
     {
         return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
+    /**
+     * The snapshot's unique ID.
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setId($value)
     {
         return $this->attributes['id'] = $value;
     }
-    // date-time # When the snapshot expires.
+    /**
+     * When the snapshot expires.
+     *
+     * @return string|null
+     */
     public function getExpiresAt()
     {
         return isset($this->attributes['expires_at']) ? $this->attributes['expires_at'] : null;
     }
 
+    /**
+     * When the snapshot expires.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setExpiresAt($value)
     {
         return $this->attributes['expires_at'] = $value;
     }
-    // date-time # When the snapshot was finalized.
+    /**
+     * When the snapshot was finalized.
+     *
+     * @return string|null
+     */
     public function getFinalizedAt()
     {
         return isset($this->attributes['finalized_at']) ? $this->attributes['finalized_at'] : null;
     }
 
+    /**
+     * When the snapshot was finalized.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setFinalizedAt($value)
     {
         return $this->attributes['finalized_at'] = $value;
     }
-    // string # A name for the snapshot.
+    /**
+     * A name for the snapshot.
+     *
+     * @return string|null
+     */
     public function getName()
     {
         return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
 
+    /**
+     * A name for the snapshot.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setName($value)
     {
         return $this->attributes['name'] = $value;
     }
-    // int64 # The user that created this snapshot, if applicable.
+    /**
+     * The user that created this snapshot, if applicable.
+     *
+     * @return int|null
+     */
     public function getUserId()
     {
         return isset($this->attributes['user_id']) ? $this->attributes['user_id'] : null;
     }
 
+    /**
+     * The user that created this snapshot, if applicable.
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setUserId($value)
     {
         return $this->attributes['user_id'] = $value;
     }
-    // int64 # The bundle using this snapshot, if applicable.
+    /**
+     * The bundle using this snapshot, if applicable.
+     *
+     * @return int|null
+     */
     public function getBundleId()
     {
         return isset($this->attributes['bundle_id']) ? $this->attributes['bundle_id'] : null;
     }
 
+    /**
+     * The bundle using this snapshot, if applicable.
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setBundleId($value)
     {
         return $this->attributes['bundle_id'] = $value;
     }
-    // int64 # Workspace ID. `0` means the default workspace.
+    /**
+     * Workspace ID. `0` means the default workspace.
+     *
+     * @return int|null
+     */
     public function getWorkspaceId()
     {
         return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
 
+    /**
+     * Workspace ID. `0` means the default workspace.
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setWorkspaceId($value)
     {
         return $this->attributes['workspace_id'] = $value;
     }
-    // array(string) # An array of paths to add to the snapshot.
+    /**
+     * An array of paths to add to the snapshot.
+     *
+     * @return string[]|null
+     */
     public function getPaths()
     {
         return isset($this->attributes['paths']) ? $this->attributes['paths'] : null;
     }
 
+    /**
+     * An array of paths to add to the snapshot.
+     *
+     * @param string[]|null $value
+     * @return string[]|null The assigned value.
+     */
     public function setPaths($value)
     {
         return $this->attributes['paths'] = $value;
     }
 
-    // Finalize Snapshot
+    /**
+     * Finalize Snapshot
+     *
+     * POST /snapshots/{id}/finalize
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Snapshot ID.
+     * @return void
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function finalize($params = [])
     {
         if (!is_array($params)) {
@@ -157,10 +285,19 @@ class Snapshot
         return;
     }
 
-    // Parameters:
-    //   expires_at - string - When the snapshot expires.
-    //   name - string - A name for the snapshot.
-    //   paths - array(string) - An array of paths to add to the snapshot.
+    /**
+     * Update Snapshot
+     *
+     * PATCH /snapshots/{id}
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Snapshot ID.
+     *     - `expires_at` (string, optional): When the snapshot expires.
+     *     - `name` (string, optional): A name for the snapshot.
+     *     - `paths` (string[], optional): An array of paths to add to the snapshot.
+     * @return \Files\Model\Snapshot
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function update($params = [])
     {
         if (!is_array($params)) {
@@ -195,6 +332,16 @@ class Snapshot
         return new Snapshot((array) (@$response->data ?: []), $this->options);
     }
 
+    /**
+     * Delete Snapshot
+     *
+     * DELETE /snapshots/{id}
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Snapshot ID.
+     * @return void
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function delete($params = [])
     {
         if (!is_array($params)) {
@@ -217,12 +364,30 @@ class Snapshot
         return;
     }
 
+    /**
+     * Delete Snapshot
+     *
+     * DELETE /snapshots/{id}
+     *
+     * Alias of delete().
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Snapshot ID.
+     * @return void
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function destroy($params = [])
     {
         $this->delete($params);
         return;
     }
 
+    /**
+     * Persist this model's attributes and replace them with the API response.
+     *
+     * @return bool True after the operation succeeds.
+     * @throws \Files\Exception\FilesException When saving fails or updates are unsupported.
+     */
     public function save()
     {
         if (@$this->attributes['id']) {
@@ -237,9 +402,18 @@ class Snapshot
     }
 
 
-    // Parameters:
-    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-    //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+    /**
+     * List Snapshots
+     *
+     * GET /snapshots
+     *
+     * @param array $params Request parameters.
+     *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+     *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\Snapshot[]
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function all($params = [], $options = [])
     {
         if (!empty($params['cursor']) && !is_string($params['cursor'])) {
@@ -261,8 +435,17 @@ class Snapshot
         return $return_array;
     }
 
-    // Parameters:
-    //   id (required) - int64 - Snapshot ID.
+    /**
+     * Show Snapshot
+     *
+     * GET /snapshots/{id}
+     *
+     * @param int $id Snapshot ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\Snapshot
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function find($id, $params = [], $options = [])
     {
         if (!is_array($params)) {
@@ -283,16 +466,38 @@ class Snapshot
 
         return new Snapshot((array) (@$response->data ?: []), $options);
     }
+    /**
+     * Show Snapshot
+     *
+     * GET /snapshots/{id}
+     *
+     * Alias of find().
+     *
+     * @param int $id Snapshot ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\Snapshot
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function get($id, $params = [], $options = [])
     {
         return self::find($id, $params, $options);
     }
 
-    // Parameters:
-    //   expires_at - string - When the snapshot expires.
-    //   name - string - A name for the snapshot.
-    //   paths - array(string) - An array of paths to add to the snapshot.
-    //   workspace_id - int64 - Workspace ID. `0` means the default workspace.
+    /**
+     * Create Snapshot
+     *
+     * POST /snapshots
+     *
+     * @param array $params Request parameters.
+     *     - `expires_at` (string, optional): When the snapshot expires.
+     *     - `name` (string, optional): A name for the snapshot.
+     *     - `paths` (string[], optional): An array of paths to add to the snapshot.
+     *     - `workspace_id` (int, optional): Workspace ID. `0` means the default workspace.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\Snapshot
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function create($params = [], $options = [])
     {
         if (!empty($params['expires_at']) && !is_string($params['expires_at'])) {

@@ -8,8 +8,10 @@ use Files\Logger;
 require_once __DIR__ . '/../Files.php';
 
 /**
- * Class ZipListEntry
+ * ZipListEntry API model.
  *
+ * @property string|null $path Entry path inside the ZIP. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
+ * @property int|null $size Uncompressed size in bytes.
  * @package Files
  */
 class ZipListEntry
@@ -20,6 +22,12 @@ class ZipListEntry
         'list' => 'all',
     ];
 
+    /**
+     * Build a model from API attributes and retain its request options.
+     *
+     * @param array $attributes Initial model attributes, keyed by property name.
+     * @param array $options Request options used by this model's operations.
+     */
     public function __construct($attributes = [], $options = [])
     {
         foreach ($attributes as $key => $value) {
@@ -29,16 +37,36 @@ class ZipListEntry
         $this->options = $options;
     }
 
+    /**
+     * Set a model attribute locally; call save() to persist supported changes.
+     *
+     * @param string $name Attribute name.
+     * @param mixed $value Attribute value.
+     * @return void
+     */
     public function __set($name, $value)
     {
         $this->attributes[$name] = $value;
     }
 
+    /**
+     * Read a model attribute.
+     *
+     * @param string $name Attribute name.
+     * @return mixed The attribute value, or null when it is not set.
+     */
     public function __get($name)
     {
         return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
+    /**
+     * Dispatch a legacy static alias, including list() to all().
+     *
+     * @param string $name Alias name.
+     * @param array $arguments Arguments passed to the canonical method.
+     * @return mixed The canonical method's result, or null for an unknown alias.
+     */
     public static function __callStatic($name, $arguments)
     {
         if (in_array($name, array_keys(self::$static_mapped_functions))) {
@@ -49,16 +77,29 @@ class ZipListEntry
         }
     }
 
+    /**
+     * Whether this model has a nonempty primary key.
+     *
+     * @return bool
+     */
     public function isLoaded()
     {
         return !!@$this->attributes['id'];
     }
-    // string # Entry path inside the ZIP. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
+    /**
+     * Entry path inside the ZIP. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
+     *
+     * @return string|null
+     */
     public function getPath()
     {
         return isset($this->attributes['path']) ? $this->attributes['path'] : null;
     }
-    // int64 # Uncompressed size in bytes.
+    /**
+     * Uncompressed size in bytes.
+     *
+     * @return int|null
+     */
     public function getSize()
     {
         return isset($this->attributes['size']) ? $this->attributes['size'] : null;

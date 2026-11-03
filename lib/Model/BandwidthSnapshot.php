@@ -8,8 +8,17 @@ use Files\Logger;
 require_once __DIR__ . '/../Files.php';
 
 /**
- * Class BandwidthSnapshot
+ * A BandwidthSnapshot is information about site bandwidth usage for the given date.
  *
+ * @property int|null $id Site bandwidth ID
+ * @property int|null $bytes_received Site bandwidth report bytes received
+ * @property int|null $bytes_sent Site bandwidth report bytes sent
+ * @property int|null $sync_bytes_received Site sync bandwidth report bytes received
+ * @property int|null $sync_bytes_sent Site sync bandwidth report bytes sent
+ * @property int|null $requests_get Site bandwidth report get requests
+ * @property int|null $requests_put Site bandwidth report put requests
+ * @property int|null $requests_other Site bandwidth report other requests
+ * @property string|null $logged_at Time the site bandwidth report was logged
  * @package Files
  */
 class BandwidthSnapshot
@@ -20,6 +29,12 @@ class BandwidthSnapshot
         'list' => 'all',
     ];
 
+    /**
+     * Build a model from API attributes and retain its request options.
+     *
+     * @param array $attributes Initial model attributes, keyed by property name.
+     * @param array $options Request options used by this model's operations.
+     */
     public function __construct($attributes = [], $options = [])
     {
         foreach ($attributes as $key => $value) {
@@ -29,16 +44,36 @@ class BandwidthSnapshot
         $this->options = $options;
     }
 
+    /**
+     * Set a model attribute locally; call save() to persist supported changes.
+     *
+     * @param string $name Attribute name.
+     * @param mixed $value Attribute value.
+     * @return void
+     */
     public function __set($name, $value)
     {
         $this->attributes[$name] = $value;
     }
 
+    /**
+     * Read a model attribute.
+     *
+     * @param string $name Attribute name.
+     * @return mixed The attribute value, or null when it is not set.
+     */
     public function __get($name)
     {
         return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
+    /**
+     * Dispatch a legacy static alias, including list() to all().
+     *
+     * @param string $name Alias name.
+     * @param array $arguments Arguments passed to the canonical method.
+     * @return mixed The canonical method's result, or null for an unknown alias.
+     */
     public static function __callStatic($name, $arguments)
     {
         if (in_array($name, array_keys(self::$static_mapped_functions))) {
@@ -49,65 +84,115 @@ class BandwidthSnapshot
         }
     }
 
+    /**
+     * Whether this model has a nonempty primary key.
+     *
+     * @return bool
+     */
     public function isLoaded()
     {
         return !!@$this->attributes['id'];
     }
-    // int64 # Site bandwidth ID
+    /**
+     * Site bandwidth ID
+     *
+     * @return int|null
+     */
     public function getId()
     {
         return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
-    // int64 # Site bandwidth report bytes received
+    /**
+     * Site bandwidth report bytes received
+     *
+     * @return int|null
+     */
     public function getBytesReceived()
     {
         return isset($this->attributes['bytes_received']) ? $this->attributes['bytes_received'] : null;
     }
-    // int64 # Site bandwidth report bytes sent
+    /**
+     * Site bandwidth report bytes sent
+     *
+     * @return int|null
+     */
     public function getBytesSent()
     {
         return isset($this->attributes['bytes_sent']) ? $this->attributes['bytes_sent'] : null;
     }
-    // int64 # Site sync bandwidth report bytes received
+    /**
+     * Site sync bandwidth report bytes received
+     *
+     * @return int|null
+     */
     public function getSyncBytesReceived()
     {
         return isset($this->attributes['sync_bytes_received']) ? $this->attributes['sync_bytes_received'] : null;
     }
-    // int64 # Site sync bandwidth report bytes sent
+    /**
+     * Site sync bandwidth report bytes sent
+     *
+     * @return int|null
+     */
     public function getSyncBytesSent()
     {
         return isset($this->attributes['sync_bytes_sent']) ? $this->attributes['sync_bytes_sent'] : null;
     }
-    // int64 # Site bandwidth report get requests
+    /**
+     * Site bandwidth report get requests
+     *
+     * @return int|null
+     */
     public function getRequestsGet()
     {
         return isset($this->attributes['requests_get']) ? $this->attributes['requests_get'] : null;
     }
-    // int64 # Site bandwidth report put requests
+    /**
+     * Site bandwidth report put requests
+     *
+     * @return int|null
+     */
     public function getRequestsPut()
     {
         return isset($this->attributes['requests_put']) ? $this->attributes['requests_put'] : null;
     }
-    // int64 # Site bandwidth report other requests
+    /**
+     * Site bandwidth report other requests
+     *
+     * @return int|null
+     */
     public function getRequestsOther()
     {
         return isset($this->attributes['requests_other']) ? $this->attributes['requests_other'] : null;
     }
-    // date-time # Time the site bandwidth report was logged
+    /**
+     * Time the site bandwidth report was logged
+     *
+     * @return string|null
+     */
     public function getLoggedAt()
     {
         return isset($this->attributes['logged_at']) ? $this->attributes['logged_at'] : null;
     }
 
-    // Parameters:
-    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-    //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `logged_at`.
-    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `logged_at`.
-    //   filter_gt - object - If set, return records where the specified field is greater than the supplied value. Valid fields are `logged_at`.
-    //   filter_gteq - object - If set, return records where the specified field is greater than or equal the supplied value. Valid fields are `logged_at`.
-    //   filter_lt - object - If set, return records where the specified field is less than the supplied value. Valid fields are `logged_at`.
-    //   filter_lteq - object - If set, return records where the specified field is less than or equal the supplied value. Valid fields are `logged_at`.
+    /**
+     * List Bandwidth Snapshots
+     *
+     * GET /bandwidth_snapshots
+     *
+     * @param array $params Request parameters.
+     *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+     *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+     *     - `sort_by` (array|object, optional): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `logged_at`.
+     *     - `filter` (array|object, optional): If set, return records where the specified field is equal to the supplied value. Valid fields are `logged_at`.
+     *     - `filter_gt` (array|object, optional): If set, return records where the specified field is greater than the supplied value. Valid fields are `logged_at`.
+     *     - `filter_gteq` (array|object, optional): If set, return records where the specified field is greater than or equal the supplied value. Valid fields are `logged_at`.
+     *     - `filter_lt` (array|object, optional): If set, return records where the specified field is less than the supplied value. Valid fields are `logged_at`.
+     *     - `filter_lteq` (array|object, optional): If set, return records where the specified field is less than or equal the supplied value. Valid fields are `logged_at`.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\BandwidthSnapshot[]
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function all($params = [], $options = [])
     {
         if (!empty($params['cursor']) && !is_string($params['cursor'])) {

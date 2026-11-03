@@ -8,8 +8,10 @@ use Files\Logger;
 require_once __DIR__ . '/../Files.php';
 
 /**
- * Class BundlePath
+ * A BundlePath is a single bundlepath in the associated Bundle.
  *
+ * @property bool|null $recursive Allow access to subfolders content?
+ * @property string|null $path The path to the resource relative to filesystem. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
  * @package Files
  */
 class BundlePath
@@ -20,6 +22,12 @@ class BundlePath
         'list' => 'all',
     ];
 
+    /**
+     * Build a model from API attributes and retain its request options.
+     *
+     * @param array $attributes Initial model attributes, keyed by property name.
+     * @param array $options Request options used by this model's operations.
+     */
     public function __construct($attributes = [], $options = [])
     {
         foreach ($attributes as $key => $value) {
@@ -29,16 +37,36 @@ class BundlePath
         $this->options = $options;
     }
 
+    /**
+     * Set a model attribute locally; call save() to persist supported changes.
+     *
+     * @param string $name Attribute name.
+     * @param mixed $value Attribute value.
+     * @return void
+     */
     public function __set($name, $value)
     {
         $this->attributes[$name] = $value;
     }
 
+    /**
+     * Read a model attribute.
+     *
+     * @param string $name Attribute name.
+     * @return mixed The attribute value, or null when it is not set.
+     */
     public function __get($name)
     {
         return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
+    /**
+     * Dispatch a legacy static alias, including list() to all().
+     *
+     * @param string $name Alias name.
+     * @param array $arguments Arguments passed to the canonical method.
+     * @return mixed The canonical method's result, or null for an unknown alias.
+     */
     public static function __callStatic($name, $arguments)
     {
         if (in_array($name, array_keys(self::$static_mapped_functions))) {
@@ -49,16 +77,29 @@ class BundlePath
         }
     }
 
+    /**
+     * Whether this model has a nonempty primary key.
+     *
+     * @return bool
+     */
     public function isLoaded()
     {
         return !!@$this->attributes['id'];
     }
-    // boolean # Allow access to subfolders content?
+    /**
+     * Allow access to subfolders content?
+     *
+     * @return bool|null
+     */
     public function getRecursive()
     {
         return isset($this->attributes['recursive']) ? $this->attributes['recursive'] : null;
     }
-    // string # The path to the resource relative to filesystem. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
+    /**
+     * The path to the resource relative to filesystem. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
+     *
+     * @return string|null
+     */
     public function getPath()
     {
         return isset($this->attributes['path']) ? $this->attributes['path'] : null;

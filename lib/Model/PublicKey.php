@@ -8,8 +8,27 @@ use Files\Logger;
 require_once __DIR__ . '/../Files.php';
 
 /**
- * Class PublicKey
+ * A PublicKey is used to authenticate to Files.com via SFTP (SSH File Transfer Protocol).
  *
+ * @property int|null $id Public key ID
+ * @property int|null $workspace_id Workspace ID (0 for default workspace).
+ * @property string|null $title Public key title
+ * @property string|null $created_at Public key created at date/time
+ * @property string|null $expires_at Public key expiration date/time
+ * @property bool|null $expired Is this public key expired?
+ * @property string|null $fingerprint Public key fingerprint (MD5)
+ * @property string|null $fingerprint_sha256 Public key fingerprint (SHA256)
+ * @property string|null $status Only returned when generating keys. Can be invalid, not_generated, generating, complete
+ * @property string|null $last_login_at Key's most recent login time via SFTP
+ * @property string|null $generated_private_key Only returned when generating keys. Private key generated for the user.
+ * @property string|null $generated_public_key Only returned when generating keys. Public key generated for the user.
+ * @property string|null $username Username of the user this public key is associated with
+ * @property int|null $user_id User ID this public key is associated with
+ * @property string|null $public_key Actual contents of SSH key.
+ * @property bool|null $generate_keypair If true, generate a new SSH key pair. Can not be used with `public_key`
+ * @property string|null $generate_private_key_password Password for the private key. Used for the generation of the key. Will be ignored if `generate_keypair` is false.
+ * @property string|null $generate_algorithm Type of key to generate. One of rsa, dsa, ecdsa, ed25519. Used for the generation of the key. Will be ignored if `generate_keypair` is false.
+ * @property int|null $generate_length Length of key to generate. If algorithm is ecdsa, this is the signature size. Used for the generation of the key. Will be ignored if `generate_keypair` is false.
  * @package Files
  */
 class PublicKey
@@ -20,6 +39,12 @@ class PublicKey
         'list' => 'all',
     ];
 
+    /**
+     * Build a model from API attributes and retain its request options.
+     *
+     * @param array $attributes Initial model attributes, keyed by property name.
+     * @param array $options Request options used by this model's operations.
+     */
     public function __construct($attributes = [], $options = [])
     {
         foreach ($attributes as $key => $value) {
@@ -29,16 +54,36 @@ class PublicKey
         $this->options = $options;
     }
 
+    /**
+     * Set a model attribute locally; call save() to persist supported changes.
+     *
+     * @param string $name Attribute name.
+     * @param mixed $value Attribute value.
+     * @return void
+     */
     public function __set($name, $value)
     {
         $this->attributes[$name] = $value;
     }
 
+    /**
+     * Read a model attribute.
+     *
+     * @param string $name Attribute name.
+     * @return mixed The attribute value, or null when it is not set.
+     */
     public function __get($name)
     {
         return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
+    /**
+     * Dispatch a legacy static alias, including list() to all().
+     *
+     * @param string $name Alias name.
+     * @param array $arguments Arguments passed to the canonical method.
+     * @return mixed The canonical method's result, or null for an unknown alias.
+     */
     public static function __callStatic($name, $arguments)
     {
         if (in_array($name, array_keys(self::$static_mapped_functions))) {
@@ -49,198 +94,396 @@ class PublicKey
         }
     }
 
+    /**
+     * Whether this model has a nonempty primary key.
+     *
+     * @return bool
+     */
     public function isLoaded()
     {
         return !!@$this->attributes['id'];
     }
-    // int64 # Public key ID
+    /**
+     * Public key ID
+     *
+     * @return int|null
+     */
     public function getId()
     {
         return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
+    /**
+     * Public key ID
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setId($value)
     {
         return $this->attributes['id'] = $value;
     }
-    // int64 # Workspace ID (0 for default workspace).
+    /**
+     * Workspace ID (0 for default workspace).
+     *
+     * @return int|null
+     */
     public function getWorkspaceId()
     {
         return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
 
+    /**
+     * Workspace ID (0 for default workspace).
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setWorkspaceId($value)
     {
         return $this->attributes['workspace_id'] = $value;
     }
-    // string # Public key title
+    /**
+     * Public key title
+     *
+     * @return string|null
+     */
     public function getTitle()
     {
         return isset($this->attributes['title']) ? $this->attributes['title'] : null;
     }
 
+    /**
+     * Public key title
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setTitle($value)
     {
         return $this->attributes['title'] = $value;
     }
-    // date-time # Public key created at date/time
+    /**
+     * Public key created at date/time
+     *
+     * @return string|null
+     */
     public function getCreatedAt()
     {
         return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
-    // date-time # Public key expiration date/time
+    /**
+     * Public key expiration date/time
+     *
+     * @return string|null
+     */
     public function getExpiresAt()
     {
         return isset($this->attributes['expires_at']) ? $this->attributes['expires_at'] : null;
     }
 
+    /**
+     * Public key expiration date/time
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setExpiresAt($value)
     {
         return $this->attributes['expires_at'] = $value;
     }
-    // boolean # Is this public key expired?
+    /**
+     * Is this public key expired?
+     *
+     * @return bool|null
+     */
     public function getExpired()
     {
         return isset($this->attributes['expired']) ? $this->attributes['expired'] : null;
     }
 
+    /**
+     * Is this public key expired?
+     *
+     * @param bool|null $value
+     * @return bool|null The assigned value.
+     */
     public function setExpired($value)
     {
         return $this->attributes['expired'] = $value;
     }
-    // string # Public key fingerprint (MD5)
+    /**
+     * Public key fingerprint (MD5)
+     *
+     * @return string|null
+     */
     public function getFingerprint()
     {
         return isset($this->attributes['fingerprint']) ? $this->attributes['fingerprint'] : null;
     }
 
+    /**
+     * Public key fingerprint (MD5)
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setFingerprint($value)
     {
         return $this->attributes['fingerprint'] = $value;
     }
-    // string # Public key fingerprint (SHA256)
+    /**
+     * Public key fingerprint (SHA256)
+     *
+     * @return string|null
+     */
     public function getFingerprintSha256()
     {
         return isset($this->attributes['fingerprint_sha256']) ? $this->attributes['fingerprint_sha256'] : null;
     }
 
+    /**
+     * Public key fingerprint (SHA256)
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setFingerprintSha256($value)
     {
         return $this->attributes['fingerprint_sha256'] = $value;
     }
-    // string # Only returned when generating keys. Can be invalid, not_generated, generating, complete
+    /**
+     * Only returned when generating keys. Can be invalid, not_generated, generating, complete
+     *
+     * @return string|null
+     */
     public function getStatus()
     {
         return isset($this->attributes['status']) ? $this->attributes['status'] : null;
     }
 
+    /**
+     * Only returned when generating keys. Can be invalid, not_generated, generating, complete
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setStatus($value)
     {
         return $this->attributes['status'] = $value;
     }
-    // date-time # Key's most recent login time via SFTP
+    /**
+     * Key's most recent login time via SFTP
+     *
+     * @return string|null
+     */
     public function getLastLoginAt()
     {
         return isset($this->attributes['last_login_at']) ? $this->attributes['last_login_at'] : null;
     }
 
+    /**
+     * Key's most recent login time via SFTP
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setLastLoginAt($value)
     {
         return $this->attributes['last_login_at'] = $value;
     }
-    // string # Only returned when generating keys. Private key generated for the user.
+    /**
+     * Only returned when generating keys. Private key generated for the user.
+     *
+     * @return string|null
+     */
     public function getGeneratedPrivateKey()
     {
         return isset($this->attributes['generated_private_key']) ? $this->attributes['generated_private_key'] : null;
     }
 
+    /**
+     * Only returned when generating keys. Private key generated for the user.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setGeneratedPrivateKey($value)
     {
         return $this->attributes['generated_private_key'] = $value;
     }
-    // string # Only returned when generating keys. Public key generated for the user.
+    /**
+     * Only returned when generating keys. Public key generated for the user.
+     *
+     * @return string|null
+     */
     public function getGeneratedPublicKey()
     {
         return isset($this->attributes['generated_public_key']) ? $this->attributes['generated_public_key'] : null;
     }
 
+    /**
+     * Only returned when generating keys. Public key generated for the user.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setGeneratedPublicKey($value)
     {
         return $this->attributes['generated_public_key'] = $value;
     }
-    // string # Username of the user this public key is associated with
+    /**
+     * Username of the user this public key is associated with
+     *
+     * @return string|null
+     */
     public function getUsername()
     {
         return isset($this->attributes['username']) ? $this->attributes['username'] : null;
     }
 
+    /**
+     * Username of the user this public key is associated with
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setUsername($value)
     {
         return $this->attributes['username'] = $value;
     }
-    // int64 # User ID this public key is associated with
+    /**
+     * User ID this public key is associated with
+     *
+     * @return int|null
+     */
     public function getUserId()
     {
         return isset($this->attributes['user_id']) ? $this->attributes['user_id'] : null;
     }
 
+    /**
+     * User ID this public key is associated with
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setUserId($value)
     {
         return $this->attributes['user_id'] = $value;
     }
-    // string # Actual contents of SSH key.
+    /**
+     * Actual contents of SSH key.
+     *
+     * @return string|null
+     */
     public function getPublicKey()
     {
         return isset($this->attributes['public_key']) ? $this->attributes['public_key'] : null;
     }
 
+    /**
+     * Actual contents of SSH key.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setPublicKey($value)
     {
         return $this->attributes['public_key'] = $value;
     }
-    // boolean # If true, generate a new SSH key pair. Can not be used with `public_key`
+    /**
+     * If true, generate a new SSH key pair. Can not be used with `public_key`
+     *
+     * @return bool|null
+     */
     public function getGenerateKeypair()
     {
         return isset($this->attributes['generate_keypair']) ? $this->attributes['generate_keypair'] : null;
     }
 
+    /**
+     * If true, generate a new SSH key pair. Can not be used with `public_key`
+     *
+     * @param bool|null $value
+     * @return bool|null The assigned value.
+     */
     public function setGenerateKeypair($value)
     {
         return $this->attributes['generate_keypair'] = $value;
     }
-    // string # Password for the private key. Used for the generation of the key. Will be ignored if `generate_keypair` is false.
+    /**
+     * Password for the private key. Used for the generation of the key. Will be ignored if `generate_keypair` is false.
+     *
+     * @return string|null
+     */
     public function getGeneratePrivateKeyPassword()
     {
         return isset($this->attributes['generate_private_key_password']) ? $this->attributes['generate_private_key_password'] : null;
     }
 
+    /**
+     * Password for the private key. Used for the generation of the key. Will be ignored if `generate_keypair` is false.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setGeneratePrivateKeyPassword($value)
     {
         return $this->attributes['generate_private_key_password'] = $value;
     }
-    // string # Type of key to generate.  One of rsa, dsa, ecdsa, ed25519. Used for the generation of the key. Will be ignored if `generate_keypair` is false.
+    /**
+     * Type of key to generate.  One of rsa, dsa, ecdsa, ed25519. Used for the generation of the key. Will be ignored if `generate_keypair` is false.
+     *
+     * @return string|null
+     */
     public function getGenerateAlgorithm()
     {
         return isset($this->attributes['generate_algorithm']) ? $this->attributes['generate_algorithm'] : null;
     }
 
+    /**
+     * Type of key to generate.  One of rsa, dsa, ecdsa, ed25519. Used for the generation of the key. Will be ignored if `generate_keypair` is false.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setGenerateAlgorithm($value)
     {
         return $this->attributes['generate_algorithm'] = $value;
     }
-    // int64 # Length of key to generate. If algorithm is ecdsa, this is the signature size. Used for the generation of the key. Will be ignored if `generate_keypair` is false.
+    /**
+     * Length of key to generate. If algorithm is ecdsa, this is the signature size. Used for the generation of the key. Will be ignored if `generate_keypair` is false.
+     *
+     * @return int|null
+     */
     public function getGenerateLength()
     {
         return isset($this->attributes['generate_length']) ? $this->attributes['generate_length'] : null;
     }
 
+    /**
+     * Length of key to generate. If algorithm is ecdsa, this is the signature size. Used for the generation of the key. Will be ignored if `generate_keypair` is false.
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setGenerateLength($value)
     {
         return $this->attributes['generate_length'] = $value;
     }
 
-    // Parameters:
-    //   title (required) - string - Internal reference for key.
+    /**
+     * Update Public Key
+     *
+     * PATCH /public_keys/{id}
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Public Key ID.
+     *     - `title` (string, required): Internal reference for key.
+     * @return \Files\Model\PublicKey
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function update($params = [])
     {
         if (!is_array($params)) {
@@ -275,6 +518,16 @@ class PublicKey
         return new PublicKey((array) (@$response->data ?: []), $this->options);
     }
 
+    /**
+     * Delete Public Key
+     *
+     * DELETE /public_keys/{id}
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Public Key ID.
+     * @return void
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function delete($params = [])
     {
         if (!is_array($params)) {
@@ -297,12 +550,30 @@ class PublicKey
         return;
     }
 
+    /**
+     * Delete Public Key
+     *
+     * DELETE /public_keys/{id}
+     *
+     * Alias of delete().
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Public Key ID.
+     * @return void
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function destroy($params = [])
     {
         $this->delete($params);
         return;
     }
 
+    /**
+     * Persist this model's attributes and replace them with the API response.
+     *
+     * @return bool True after the operation succeeds.
+     * @throws \Files\Exception\FilesException When saving fails or updates are unsupported.
+     */
     public function save()
     {
         if (@$this->attributes['id']) {
@@ -317,16 +588,25 @@ class PublicKey
     }
 
 
-    // Parameters:
-    //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
-    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-    //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `workspace_id`, `user_id`, `title` or `created_at`.
-    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `created_at` and `workspace_id`. Valid field combinations are `[ workspace_id, created_at ]`.
-    //   filter_gt - object - If set, return records where the specified field is greater than the supplied value. Valid fields are `created_at`.
-    //   filter_gteq - object - If set, return records where the specified field is greater than or equal the supplied value. Valid fields are `created_at`.
-    //   filter_lt - object - If set, return records where the specified field is less than the supplied value. Valid fields are `created_at`.
-    //   filter_lteq - object - If set, return records where the specified field is less than or equal the supplied value. Valid fields are `created_at`.
+    /**
+     * List Public Keys
+     *
+     * GET /public_keys
+     *
+     * @param array $params Request parameters.
+     *     - `user_id` (int, optional): User ID.  Provide a value of `0` to operate the current session's user.
+     *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+     *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+     *     - `sort_by` (array|object, optional): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `workspace_id`, `user_id`, `title` or `created_at`.
+     *     - `filter` (array|object, optional): If set, return records where the specified field is equal to the supplied value. Valid fields are `created_at` and `workspace_id`. Valid field combinations are `[ workspace_id, created_at ]`.
+     *     - `filter_gt` (array|object, optional): If set, return records where the specified field is greater than the supplied value. Valid fields are `created_at`.
+     *     - `filter_gteq` (array|object, optional): If set, return records where the specified field is greater than or equal the supplied value. Valid fields are `created_at`.
+     *     - `filter_lt` (array|object, optional): If set, return records where the specified field is less than the supplied value. Valid fields are `created_at`.
+     *     - `filter_lteq` (array|object, optional): If set, return records where the specified field is less than or equal the supplied value. Valid fields are `created_at`.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\PublicKey[]
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function all($params = [], $options = [])
     {
         if (!empty($params['user_id']) && !is_int($params['user_id'])) {
@@ -352,8 +632,17 @@ class PublicKey
         return $return_array;
     }
 
-    // Parameters:
-    //   id (required) - int64 - Public Key ID.
+    /**
+     * Show Public Key
+     *
+     * GET /public_keys/{id}
+     *
+     * @param int $id Public Key ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\PublicKey
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function find($id, $params = [], $options = [])
     {
         if (!is_array($params)) {
@@ -374,19 +663,41 @@ class PublicKey
 
         return new PublicKey((array) (@$response->data ?: []), $options);
     }
+    /**
+     * Show Public Key
+     *
+     * GET /public_keys/{id}
+     *
+     * Alias of find().
+     *
+     * @param int $id Public Key ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\PublicKey
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function get($id, $params = [], $options = [])
     {
         return self::find($id, $params, $options);
     }
 
-    // Parameters:
-    //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
-    //   title (required) - string - Internal reference for key.
-    //   public_key - string - Actual contents of SSH key.
-    //   generate_keypair - boolean - If true, generate a new SSH key pair. Can not be used with `public_key`
-    //   generate_private_key_password - string - Password for the private key. Used for the generation of the key. Will be ignored if `generate_keypair` is false.
-    //   generate_algorithm - string - Type of key to generate.  One of rsa, dsa, ecdsa, ed25519. Used for the generation of the key. Will be ignored if `generate_keypair` is false.
-    //   generate_length - int64 - Length of key to generate. If algorithm is ecdsa, this is the signature size. Used for the generation of the key. Will be ignored if `generate_keypair` is false.
+    /**
+     * Create Public Key
+     *
+     * POST /public_keys
+     *
+     * @param array $params Request parameters.
+     *     - `user_id` (int, optional): User ID.  Provide a value of `0` to operate the current session's user.
+     *     - `title` (string, required): Internal reference for key.
+     *     - `public_key` (string, optional): Actual contents of SSH key.
+     *     - `generate_keypair` (bool, optional): If true, generate a new SSH key pair. Can not be used with `public_key`
+     *     - `generate_private_key_password` (string, optional): Password for the private key. Used for the generation of the key. Will be ignored if `generate_keypair` is false.
+     *     - `generate_algorithm` (string, optional): Type of key to generate.  One of rsa, dsa, ecdsa, ed25519. Used for the generation of the key. Will be ignored if `generate_keypair` is false.
+     *     - `generate_length` (int, optional): Length of key to generate. If algorithm is ecdsa, this is the signature size. Used for the generation of the key. Will be ignored if `generate_keypair` is false.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\PublicKey
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function create($params = [], $options = [])
     {
         if (empty($params['title'])) {

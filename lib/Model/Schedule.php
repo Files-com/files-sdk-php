@@ -8,8 +8,17 @@ use Files\Logger;
 require_once __DIR__ . '/../Files.php';
 
 /**
- * Class Schedule
+ * A Schedule is a named, reusable weekday-and-time schedule shared by scheduled resources across a Site.
  *
+ * @property int|null $id Schedule ID.
+ * @property string|null $name Schedule name.
+ * @property int[]|null $schedule_days_of_week 0-based weekdays used by the Schedule. 0 is Sunday.
+ * @property string[]|null $schedule_times_of_day Times of day in HH:MM format (24-hour).
+ * @property string|null $schedule_time_zone Time zone for scheduled times. If not set, times are interpreted as UTC.
+ * @property string|null $holiday_region Optional holiday region on which linked resources do not run.
+ * @property string|null $human_readable_schedule Human-readable Schedule description.
+ * @property string|null $created_at Creation time.
+ * @property string|null $updated_at Last update time.
  * @package Files
  */
 class Schedule
@@ -20,6 +29,12 @@ class Schedule
         'list' => 'all',
     ];
 
+    /**
+     * Build a model from API attributes and retain its request options.
+     *
+     * @param array $attributes Initial model attributes, keyed by property name.
+     * @param array $options Request options used by this model's operations.
+     */
     public function __construct($attributes = [], $options = [])
     {
         foreach ($attributes as $key => $value) {
@@ -29,16 +44,36 @@ class Schedule
         $this->options = $options;
     }
 
+    /**
+     * Set a model attribute locally; call save() to persist supported changes.
+     *
+     * @param string $name Attribute name.
+     * @param mixed $value Attribute value.
+     * @return void
+     */
     public function __set($name, $value)
     {
         $this->attributes[$name] = $value;
     }
 
+    /**
+     * Read a model attribute.
+     *
+     * @param string $name Attribute name.
+     * @return mixed The attribute value, or null when it is not set.
+     */
     public function __get($name)
     {
         return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
+    /**
+     * Dispatch a legacy static alias, including list() to all().
+     *
+     * @param string $name Alias name.
+     * @param array $arguments Arguments passed to the canonical method.
+     * @return mixed The canonical method's result, or null for an unknown alias.
+     */
     public static function __callStatic($name, $arguments)
     {
         if (in_array($name, array_keys(self::$static_mapped_functions))) {
@@ -49,97 +84,189 @@ class Schedule
         }
     }
 
+    /**
+     * Whether this model has a nonempty primary key.
+     *
+     * @return bool
+     */
     public function isLoaded()
     {
         return !!@$this->attributes['id'];
     }
-    // int64 # Schedule ID.
+    /**
+     * Schedule ID.
+     *
+     * @return int|null
+     */
     public function getId()
     {
         return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
+    /**
+     * Schedule ID.
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setId($value)
     {
         return $this->attributes['id'] = $value;
     }
-    // string # Schedule name.
+    /**
+     * Schedule name.
+     *
+     * @return string|null
+     */
     public function getName()
     {
         return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
 
+    /**
+     * Schedule name.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setName($value)
     {
         return $this->attributes['name'] = $value;
     }
-    // array(int64) # 0-based weekdays used by the Schedule. 0 is Sunday.
+    /**
+     * 0-based weekdays used by the Schedule. 0 is Sunday.
+     *
+     * @return int[]|null
+     */
     public function getScheduleDaysOfWeek()
     {
         return isset($this->attributes['schedule_days_of_week']) ? $this->attributes['schedule_days_of_week'] : null;
     }
 
+    /**
+     * 0-based weekdays used by the Schedule. 0 is Sunday.
+     *
+     * @param int[]|null $value
+     * @return int[]|null The assigned value.
+     */
     public function setScheduleDaysOfWeek($value)
     {
         return $this->attributes['schedule_days_of_week'] = $value;
     }
-    // array(string) # Times of day in HH:MM format (24-hour).
+    /**
+     * Times of day in HH:MM format (24-hour).
+     *
+     * @return string[]|null
+     */
     public function getScheduleTimesOfDay()
     {
         return isset($this->attributes['schedule_times_of_day']) ? $this->attributes['schedule_times_of_day'] : null;
     }
 
+    /**
+     * Times of day in HH:MM format (24-hour).
+     *
+     * @param string[]|null $value
+     * @return string[]|null The assigned value.
+     */
     public function setScheduleTimesOfDay($value)
     {
         return $this->attributes['schedule_times_of_day'] = $value;
     }
-    // string # Time zone for scheduled times. If not set, times are interpreted as UTC.
+    /**
+     * Time zone for scheduled times. If not set, times are interpreted as UTC.
+     *
+     * @return string|null
+     */
     public function getScheduleTimeZone()
     {
         return isset($this->attributes['schedule_time_zone']) ? $this->attributes['schedule_time_zone'] : null;
     }
 
+    /**
+     * Time zone for scheduled times. If not set, times are interpreted as UTC.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setScheduleTimeZone($value)
     {
         return $this->attributes['schedule_time_zone'] = $value;
     }
-    // string # Optional holiday region on which linked resources do not run.
+    /**
+     * Optional holiday region on which linked resources do not run.
+     *
+     * @return string|null
+     */
     public function getHolidayRegion()
     {
         return isset($this->attributes['holiday_region']) ? $this->attributes['holiday_region'] : null;
     }
 
+    /**
+     * Optional holiday region on which linked resources do not run.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setHolidayRegion($value)
     {
         return $this->attributes['holiday_region'] = $value;
     }
-    // string # Human-readable Schedule description.
+    /**
+     * Human-readable Schedule description.
+     *
+     * @return string|null
+     */
     public function getHumanReadableSchedule()
     {
         return isset($this->attributes['human_readable_schedule']) ? $this->attributes['human_readable_schedule'] : null;
     }
 
+    /**
+     * Human-readable Schedule description.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setHumanReadableSchedule($value)
     {
         return $this->attributes['human_readable_schedule'] = $value;
     }
-    // date-time # Creation time.
+    /**
+     * Creation time.
+     *
+     * @return string|null
+     */
     public function getCreatedAt()
     {
         return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
-    // date-time # Last update time.
+    /**
+     * Last update time.
+     *
+     * @return string|null
+     */
     public function getUpdatedAt()
     {
         return isset($this->attributes['updated_at']) ? $this->attributes['updated_at'] : null;
     }
 
-    // Parameters:
-    //   name - string - Schedule name.
-    //   schedule_days_of_week - array(int64) - 0-based weekdays used by the Schedule. 0 is Sunday.
-    //   schedule_times_of_day - array(string) - Times of day in HH:MM format (24-hour).
-    //   schedule_time_zone - string - Time zone for scheduled times. If not set, times are interpreted as UTC.
-    //   holiday_region - string - Optional holiday region on which linked resources do not run.
+    /**
+     * Update Schedule
+     *
+     * PATCH /schedules/{id}
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Schedule ID.
+     *     - `name` (string, optional): Schedule name.
+     *     - `schedule_days_of_week` (int[], optional): 0-based weekdays used by the Schedule. 0 is Sunday.
+     *     - `schedule_times_of_day` (string[], optional): Times of day in HH:MM format (24-hour).
+     *     - `schedule_time_zone` (string, optional): Time zone for scheduled times. If not set, times are interpreted as UTC.
+     *     - `holiday_region` (string, optional): Optional holiday region on which linked resources do not run.
+     * @return \Files\Model\Schedule
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function update($params = [])
     {
         if (!is_array($params)) {
@@ -182,6 +309,16 @@ class Schedule
         return new Schedule((array) (@$response->data ?: []), $this->options);
     }
 
+    /**
+     * Delete Schedule
+     *
+     * DELETE /schedules/{id}
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Schedule ID.
+     * @return void
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function delete($params = [])
     {
         if (!is_array($params)) {
@@ -204,12 +341,30 @@ class Schedule
         return;
     }
 
+    /**
+     * Delete Schedule
+     *
+     * DELETE /schedules/{id}
+     *
+     * Alias of delete().
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Schedule ID.
+     * @return void
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function destroy($params = [])
     {
         $this->delete($params);
         return;
     }
 
+    /**
+     * Persist this model's attributes and replace them with the API response.
+     *
+     * @return bool True after the operation succeeds.
+     * @throws \Files\Exception\FilesException When saving fails or updates are unsupported.
+     */
     public function save()
     {
         if (@$this->attributes['id']) {
@@ -224,10 +379,19 @@ class Schedule
     }
 
 
-    // Parameters:
-    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-    //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `name`.
+    /**
+     * List Schedules
+     *
+     * GET /schedules
+     *
+     * @param array $params Request parameters.
+     *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+     *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+     *     - `sort_by` (array|object, optional): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `name`.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\Schedule[]
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function all($params = [], $options = [])
     {
         if (!empty($params['cursor']) && !is_string($params['cursor'])) {
@@ -249,8 +413,17 @@ class Schedule
         return $return_array;
     }
 
-    // Parameters:
-    //   id (required) - int64 - Schedule ID.
+    /**
+     * Show Schedule
+     *
+     * GET /schedules/{id}
+     *
+     * @param int $id Schedule ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\Schedule
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function find($id, $params = [], $options = [])
     {
         if (!is_array($params)) {
@@ -271,17 +444,39 @@ class Schedule
 
         return new Schedule((array) (@$response->data ?: []), $options);
     }
+    /**
+     * Show Schedule
+     *
+     * GET /schedules/{id}
+     *
+     * Alias of find().
+     *
+     * @param int $id Schedule ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\Schedule
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function get($id, $params = [], $options = [])
     {
         return self::find($id, $params, $options);
     }
 
-    // Parameters:
-    //   name (required) - string - Schedule name.
-    //   schedule_days_of_week (required) - array(int64) - 0-based weekdays used by the Schedule. 0 is Sunday.
-    //   schedule_times_of_day (required) - array(string) - Times of day in HH:MM format (24-hour).
-    //   schedule_time_zone - string - Time zone for scheduled times. If not set, times are interpreted as UTC.
-    //   holiday_region - string - Optional holiday region on which linked resources do not run.
+    /**
+     * Create Schedule
+     *
+     * POST /schedules
+     *
+     * @param array $params Request parameters.
+     *     - `name` (string, required): Schedule name.
+     *     - `schedule_days_of_week` (int[], required): 0-based weekdays used by the Schedule. 0 is Sunday.
+     *     - `schedule_times_of_day` (string[], required): Times of day in HH:MM format (24-hour).
+     *     - `schedule_time_zone` (string, optional): Time zone for scheduled times. If not set, times are interpreted as UTC.
+     *     - `holiday_region` (string, optional): Optional holiday region on which linked resources do not run.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\Schedule
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function create($params = [], $options = [])
     {
         if (empty($params['name'])) {

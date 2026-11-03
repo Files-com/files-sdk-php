@@ -8,8 +8,15 @@ use Files\Logger;
 require_once __DIR__ . '/../Files.php';
 
 /**
- * Class KeyLifecycleRule
+ * A KeyLifecycleRule represents a rule that applies to API keys, GPG keys, and SSH keys (also called User Public Keys) based on their inactivity or age.
  *
+ * @property int|null $id Key Lifecycle Rule ID
+ * @property string|null $key_type Key type for which the rule will apply (gpg, ssh, or api).
+ * @property int|null $inactivity_days Number of days of inactivity before the rule applies.
+ * @property int|null $expiration_days Number of days after creation before an SSH key expires. Applies only to SSH keys.
+ * @property bool|null $apply_to_all_workspaces If true, a default-workspace rule also applies to keys in all workspaces.
+ * @property string|null $name Key Lifecycle Rule name
+ * @property int|null $workspace_id Workspace ID. `0` means the default workspace.
  * @package Files
  */
 class KeyLifecycleRule
@@ -20,6 +27,12 @@ class KeyLifecycleRule
         'list' => 'all',
     ];
 
+    /**
+     * Build a model from API attributes and retain its request options.
+     *
+     * @param array $attributes Initial model attributes, keyed by property name.
+     * @param array $options Request options used by this model's operations.
+     */
     public function __construct($attributes = [], $options = [])
     {
         foreach ($attributes as $key => $value) {
@@ -29,16 +42,36 @@ class KeyLifecycleRule
         $this->options = $options;
     }
 
+    /**
+     * Set a model attribute locally; call save() to persist supported changes.
+     *
+     * @param string $name Attribute name.
+     * @param mixed $value Attribute value.
+     * @return void
+     */
     public function __set($name, $value)
     {
         $this->attributes[$name] = $value;
     }
 
+    /**
+     * Read a model attribute.
+     *
+     * @param string $name Attribute name.
+     * @return mixed The attribute value, or null when it is not set.
+     */
     public function __get($name)
     {
         return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
+    /**
+     * Dispatch a legacy static alias, including list() to all().
+     *
+     * @param string $name Alias name.
+     * @param array $arguments Arguments passed to the canonical method.
+     * @return mixed The canonical method's result, or null for an unknown alias.
+     */
     public static function __callStatic($name, $arguments)
     {
         if (in_array($name, array_keys(self::$static_mapped_functions))) {
@@ -49,88 +82,172 @@ class KeyLifecycleRule
         }
     }
 
+    /**
+     * Whether this model has a nonempty primary key.
+     *
+     * @return bool
+     */
     public function isLoaded()
     {
         return !!@$this->attributes['id'];
     }
-    // int64 # Key Lifecycle Rule ID
+    /**
+     * Key Lifecycle Rule ID
+     *
+     * @return int|null
+     */
     public function getId()
     {
         return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
+    /**
+     * Key Lifecycle Rule ID
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setId($value)
     {
         return $this->attributes['id'] = $value;
     }
-    // string # Key type for which the rule will apply (gpg, ssh, or api).
+    /**
+     * Key type for which the rule will apply (gpg, ssh, or api).
+     *
+     * @return string|null
+     */
     public function getKeyType()
     {
         return isset($this->attributes['key_type']) ? $this->attributes['key_type'] : null;
     }
 
+    /**
+     * Key type for which the rule will apply (gpg, ssh, or api).
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setKeyType($value)
     {
         return $this->attributes['key_type'] = $value;
     }
-    // int64 # Number of days of inactivity before the rule applies.
+    /**
+     * Number of days of inactivity before the rule applies.
+     *
+     * @return int|null
+     */
     public function getInactivityDays()
     {
         return isset($this->attributes['inactivity_days']) ? $this->attributes['inactivity_days'] : null;
     }
 
+    /**
+     * Number of days of inactivity before the rule applies.
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setInactivityDays($value)
     {
         return $this->attributes['inactivity_days'] = $value;
     }
-    // int64 # Number of days after creation before an SSH key expires. Applies only to SSH keys.
+    /**
+     * Number of days after creation before an SSH key expires. Applies only to SSH keys.
+     *
+     * @return int|null
+     */
     public function getExpirationDays()
     {
         return isset($this->attributes['expiration_days']) ? $this->attributes['expiration_days'] : null;
     }
 
+    /**
+     * Number of days after creation before an SSH key expires. Applies only to SSH keys.
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setExpirationDays($value)
     {
         return $this->attributes['expiration_days'] = $value;
     }
-    // boolean # If true, a default-workspace rule also applies to keys in all workspaces.
+    /**
+     * If true, a default-workspace rule also applies to keys in all workspaces.
+     *
+     * @return bool|null
+     */
     public function getApplyToAllWorkspaces()
     {
         return isset($this->attributes['apply_to_all_workspaces']) ? $this->attributes['apply_to_all_workspaces'] : null;
     }
 
+    /**
+     * If true, a default-workspace rule also applies to keys in all workspaces.
+     *
+     * @param bool|null $value
+     * @return bool|null The assigned value.
+     */
     public function setApplyToAllWorkspaces($value)
     {
         return $this->attributes['apply_to_all_workspaces'] = $value;
     }
-    // string # Key Lifecycle Rule name
+    /**
+     * Key Lifecycle Rule name
+     *
+     * @return string|null
+     */
     public function getName()
     {
         return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
 
+    /**
+     * Key Lifecycle Rule name
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setName($value)
     {
         return $this->attributes['name'] = $value;
     }
-    // int64 # Workspace ID. `0` means the default workspace.
+    /**
+     * Workspace ID. `0` means the default workspace.
+     *
+     * @return int|null
+     */
     public function getWorkspaceId()
     {
         return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
 
+    /**
+     * Workspace ID. `0` means the default workspace.
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setWorkspaceId($value)
     {
         return $this->attributes['workspace_id'] = $value;
     }
 
-    // Parameters:
-    //   apply_to_all_workspaces - boolean - If true, a default-workspace rule also applies to keys in all workspaces.
-    //   expiration_days - int64 - Number of days after creation before an SSH key expires. Applies only to SSH keys.
-    //   key_type - string - Key type for which the rule will apply (gpg, ssh, or api).
-    //   inactivity_days - int64 - Number of days of inactivity before the rule applies.
-    //   name - string - Key Lifecycle Rule name
-    //   workspace_id - int64 - Workspace ID. `0` means the default workspace.
+    /**
+     * Update Key Lifecycle Rule
+     *
+     * PATCH /key_lifecycle_rules/{id}
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Key Lifecycle Rule ID.
+     *     - `apply_to_all_workspaces` (bool, optional): If true, a default-workspace rule also applies to keys in all workspaces.
+     *     - `expiration_days` (int, optional): Number of days after creation before an SSH key expires. Applies only to SSH keys.
+     *     - `key_type` (string, optional): Key type for which the rule will apply (gpg, ssh, or api). Allowed values: gpg, ssh, api.
+     *     - `inactivity_days` (int, optional): Number of days of inactivity before the rule applies.
+     *     - `name` (string, optional): Key Lifecycle Rule name
+     *     - `workspace_id` (int, optional): Workspace ID. `0` means the default workspace.
+     * @return \Files\Model\KeyLifecycleRule
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function update($params = [])
     {
         if (!is_array($params)) {
@@ -173,6 +290,16 @@ class KeyLifecycleRule
         return new KeyLifecycleRule((array) (@$response->data ?: []), $this->options);
     }
 
+    /**
+     * Delete Key Lifecycle Rule
+     *
+     * DELETE /key_lifecycle_rules/{id}
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Key Lifecycle Rule ID.
+     * @return void
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function delete($params = [])
     {
         if (!is_array($params)) {
@@ -195,12 +322,30 @@ class KeyLifecycleRule
         return;
     }
 
+    /**
+     * Delete Key Lifecycle Rule
+     *
+     * DELETE /key_lifecycle_rules/{id}
+     *
+     * Alias of delete().
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Key Lifecycle Rule ID.
+     * @return void
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function destroy($params = [])
     {
         $this->delete($params);
         return;
     }
 
+    /**
+     * Persist this model's attributes and replace them with the API response.
+     *
+     * @return bool True after the operation succeeds.
+     * @throws \Files\Exception\FilesException When saving fails or updates are unsupported.
+     */
     public function save()
     {
         if (@$this->attributes['id']) {
@@ -215,11 +360,20 @@ class KeyLifecycleRule
     }
 
 
-    // Parameters:
-    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-    //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `workspace_id` and `key_type`.
-    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `key_type` and `workspace_id`. Valid field combinations are `[ workspace_id, key_type ]`.
+    /**
+     * List Key Lifecycle Rules
+     *
+     * GET /key_lifecycle_rules
+     *
+     * @param array $params Request parameters.
+     *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+     *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+     *     - `sort_by` (array|object, optional): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `workspace_id` and `key_type`.
+     *     - `filter` (array|object, optional): If set, return records where the specified field is equal to the supplied value. Valid fields are `key_type` and `workspace_id`. Valid field combinations are `[ workspace_id, key_type ]`.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\KeyLifecycleRule[]
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function all($params = [], $options = [])
     {
         if (!empty($params['cursor']) && !is_string($params['cursor'])) {
@@ -241,8 +395,17 @@ class KeyLifecycleRule
         return $return_array;
     }
 
-    // Parameters:
-    //   id (required) - int64 - Key Lifecycle Rule ID.
+    /**
+     * Show Key Lifecycle Rule
+     *
+     * GET /key_lifecycle_rules/{id}
+     *
+     * @param int $id Key Lifecycle Rule ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\KeyLifecycleRule
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function find($id, $params = [], $options = [])
     {
         if (!is_array($params)) {
@@ -263,18 +426,40 @@ class KeyLifecycleRule
 
         return new KeyLifecycleRule((array) (@$response->data ?: []), $options);
     }
+    /**
+     * Show Key Lifecycle Rule
+     *
+     * GET /key_lifecycle_rules/{id}
+     *
+     * Alias of find().
+     *
+     * @param int $id Key Lifecycle Rule ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\KeyLifecycleRule
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function get($id, $params = [], $options = [])
     {
         return self::find($id, $params, $options);
     }
 
-    // Parameters:
-    //   apply_to_all_workspaces - boolean - If true, a default-workspace rule also applies to keys in all workspaces.
-    //   expiration_days - int64 - Number of days after creation before an SSH key expires. Applies only to SSH keys.
-    //   key_type - string - Key type for which the rule will apply (gpg, ssh, or api).
-    //   inactivity_days - int64 - Number of days of inactivity before the rule applies.
-    //   name - string - Key Lifecycle Rule name
-    //   workspace_id - int64 - Workspace ID. `0` means the default workspace.
+    /**
+     * Create Key Lifecycle Rule
+     *
+     * POST /key_lifecycle_rules
+     *
+     * @param array $params Request parameters.
+     *     - `apply_to_all_workspaces` (bool, optional): If true, a default-workspace rule also applies to keys in all workspaces.
+     *     - `expiration_days` (int, optional): Number of days after creation before an SSH key expires. Applies only to SSH keys.
+     *     - `key_type` (string, optional): Key type for which the rule will apply (gpg, ssh, or api). Allowed values: gpg, ssh, api.
+     *     - `inactivity_days` (int, optional): Number of days of inactivity before the rule applies.
+     *     - `name` (string, optional): Key Lifecycle Rule name
+     *     - `workspace_id` (int, optional): Workspace ID. `0` means the default workspace.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\KeyLifecycleRule
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function create($params = [], $options = [])
     {
         if (!empty($params['expiration_days']) && !is_int($params['expiration_days'])) {

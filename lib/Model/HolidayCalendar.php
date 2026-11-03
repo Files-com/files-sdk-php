@@ -8,8 +8,13 @@ use Files\Logger;
 require_once __DIR__ . '/../Files.php';
 
 /**
- * Class HolidayCalendar
+ * A Holiday Calendar defines site-wide holiday dates and optional partial-day windows that scheduled resources skip.
  *
+ * @property int|null $id Holiday Calendar ID. Set a scheduled resource's `holiday_region` to `custom_` followed by this ID to make it skip the days in this calendar.
+ * @property string|null $name Holiday Calendar name.
+ * @property object|null $definition Holiday rules for the calendar.
+ * @property string|null $created_at Creation time.
+ * @property string|null $updated_at Last update time.
  * @package Files
  */
 class HolidayCalendar
@@ -20,6 +25,12 @@ class HolidayCalendar
         'list' => 'all',
     ];
 
+    /**
+     * Build a model from API attributes and retain its request options.
+     *
+     * @param array $attributes Initial model attributes, keyed by property name.
+     * @param array $options Request options used by this model's operations.
+     */
     public function __construct($attributes = [], $options = [])
     {
         foreach ($attributes as $key => $value) {
@@ -29,16 +40,36 @@ class HolidayCalendar
         $this->options = $options;
     }
 
+    /**
+     * Set a model attribute locally; call save() to persist supported changes.
+     *
+     * @param string $name Attribute name.
+     * @param mixed $value Attribute value.
+     * @return void
+     */
     public function __set($name, $value)
     {
         $this->attributes[$name] = $value;
     }
 
+    /**
+     * Read a model attribute.
+     *
+     * @param string $name Attribute name.
+     * @return mixed The attribute value, or null when it is not set.
+     */
     public function __get($name)
     {
         return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
+    /**
+     * Dispatch a legacy static alias, including list() to all().
+     *
+     * @param string $name Alias name.
+     * @param array $arguments Arguments passed to the canonical method.
+     * @return mixed The canonical method's result, or null for an unknown alias.
+     */
     public static function __callStatic($name, $arguments)
     {
         if (in_array($name, array_keys(self::$static_mapped_functions))) {
@@ -49,54 +80,106 @@ class HolidayCalendar
         }
     }
 
+    /**
+     * Whether this model has a nonempty primary key.
+     *
+     * @return bool
+     */
     public function isLoaded()
     {
         return !!@$this->attributes['id'];
     }
-    // int64 # Holiday Calendar ID. Set a scheduled resource's `holiday_region` to `custom_` followed by this ID to make it skip the days in this calendar.
+    /**
+     * Holiday Calendar ID. Set a scheduled resource's `holiday_region` to `custom_` followed by this ID to make it skip the days in this calendar.
+     *
+     * @return int|null
+     */
     public function getId()
     {
         return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
+    /**
+     * Holiday Calendar ID. Set a scheduled resource's `holiday_region` to `custom_` followed by this ID to make it skip the days in this calendar.
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setId($value)
     {
         return $this->attributes['id'] = $value;
     }
-    // string # Holiday Calendar name.
+    /**
+     * Holiday Calendar name.
+     *
+     * @return string|null
+     */
     public function getName()
     {
         return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
 
+    /**
+     * Holiday Calendar name.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setName($value)
     {
         return $this->attributes['name'] = $value;
     }
-    // object # Holiday rules for the calendar.
+    /**
+     * Holiday rules for the calendar.
+     *
+     * @return object|null
+     */
     public function getDefinition()
     {
         return isset($this->attributes['definition']) ? $this->attributes['definition'] : null;
     }
 
+    /**
+     * Holiday rules for the calendar.
+     *
+     * @param object|null $value
+     * @return object|null The assigned value.
+     */
     public function setDefinition($value)
     {
         return $this->attributes['definition'] = $value;
     }
-    // date-time # Creation time.
+    /**
+     * Creation time.
+     *
+     * @return string|null
+     */
     public function getCreatedAt()
     {
         return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
-    // date-time # Last update time.
+    /**
+     * Last update time.
+     *
+     * @return string|null
+     */
     public function getUpdatedAt()
     {
         return isset($this->attributes['updated_at']) ? $this->attributes['updated_at'] : null;
     }
 
-    // Parameters:
-    //   definition - object - Holiday rules for the calendar.
-    //   name - string - Holiday Calendar name.
+    /**
+     * Update Holiday Calendar
+     *
+     * PATCH /holiday_calendars/{id}
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Holiday Calendar ID.
+     *     - `definition` (array|object, optional): Holiday rules for the calendar.
+     *     - `name` (string, optional): Holiday Calendar name.
+     * @return \Files\Model\HolidayCalendar
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function update($params = [])
     {
         if (!is_array($params)) {
@@ -123,6 +206,16 @@ class HolidayCalendar
         return new HolidayCalendar((array) (@$response->data ?: []), $this->options);
     }
 
+    /**
+     * Delete Holiday Calendar
+     *
+     * DELETE /holiday_calendars/{id}
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Holiday Calendar ID.
+     * @return void
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function delete($params = [])
     {
         if (!is_array($params)) {
@@ -145,12 +238,30 @@ class HolidayCalendar
         return;
     }
 
+    /**
+     * Delete Holiday Calendar
+     *
+     * DELETE /holiday_calendars/{id}
+     *
+     * Alias of delete().
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Holiday Calendar ID.
+     * @return void
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function destroy($params = [])
     {
         $this->delete($params);
         return;
     }
 
+    /**
+     * Persist this model's attributes and replace them with the API response.
+     *
+     * @return bool True after the operation succeeds.
+     * @throws \Files\Exception\FilesException When saving fails or updates are unsupported.
+     */
     public function save()
     {
         if (@$this->attributes['id']) {
@@ -165,10 +276,19 @@ class HolidayCalendar
     }
 
 
-    // Parameters:
-    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-    //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are .
+    /**
+     * List Holiday Calendars
+     *
+     * GET /holiday_calendars
+     *
+     * @param array $params Request parameters.
+     *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+     *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+     *     - `sort_by` (array|object, optional): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are .
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\HolidayCalendar[]
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function all($params = [], $options = [])
     {
         if (!empty($params['cursor']) && !is_string($params['cursor'])) {
@@ -190,8 +310,17 @@ class HolidayCalendar
         return $return_array;
     }
 
-    // Parameters:
-    //   id (required) - int64 - Holiday Calendar ID.
+    /**
+     * Show Holiday Calendar
+     *
+     * GET /holiday_calendars/{id}
+     *
+     * @param int $id Holiday Calendar ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\HolidayCalendar
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function find($id, $params = [], $options = [])
     {
         if (!is_array($params)) {
@@ -212,14 +341,36 @@ class HolidayCalendar
 
         return new HolidayCalendar((array) (@$response->data ?: []), $options);
     }
+    /**
+     * Show Holiday Calendar
+     *
+     * GET /holiday_calendars/{id}
+     *
+     * Alias of find().
+     *
+     * @param int $id Holiday Calendar ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\HolidayCalendar
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function get($id, $params = [], $options = [])
     {
         return self::find($id, $params, $options);
     }
 
-    // Parameters:
-    //   definition (required) - object - Holiday rules for the calendar.
-    //   name (required) - string - Holiday Calendar name.
+    /**
+     * Create Holiday Calendar
+     *
+     * POST /holiday_calendars
+     *
+     * @param array $params Request parameters.
+     *     - `definition` (array|object, required): Holiday rules for the calendar.
+     *     - `name` (string, required): Holiday Calendar name.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\HolidayCalendar
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function create($params = [], $options = [])
     {
         if (empty($params['definition'])) {

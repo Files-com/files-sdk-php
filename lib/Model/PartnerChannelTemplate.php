@@ -8,8 +8,22 @@ use Files\Logger;
 require_once __DIR__ . '/../Files.php';
 
 /**
- * Class PartnerChannelTemplate
+ * A PartnerChannelTemplate defines reusable Partner Channel configuration that can be applied to Partners.
  *
+ * @property int|null $id The unique ID of the Partner Channel Template.
+ * @property int|null $workspace_id ID of the Workspace associated with this Partner Channel Template.
+ * @property string|null $direction Channel directions. `two_way` enables both directions, `to_partner` enables outgoing downloads, and `from_partner` enables incoming uploads.
+ * @property bool|null $use_channel_root Use the Channel folder directly for a one-way exchange. Defaults to false. Cannot be changed after creation. Folder name overrides must be blank when enabled, and the Template must remain one-way.
+ * @property string|null $name The name of the Partner Channel Template.
+ * @property string|null $path Channel path relative to the Partner root folder. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
+ * @property string|null $to_partner_folder_name Optional Channel-level to-Partner folder name override.
+ * @property string|null $from_partner_folder_name Optional Channel-level from-Partner folder name override.
+ * @property string|null $from_partner_route_path_pattern Optional route path pattern for files uploaded by the Partner. Supports {{partner_name}}.
+ * @property string|null $to_partner_route_path_pattern Optional route path pattern for files delivered to the Partner. Supports {{partner_name}}.
+ * @property string[]|null $to_partner_managed_folder_paths Managed folder paths inside the to-Partner folder.
+ * @property string[]|null $from_partner_managed_folder_paths Managed folder paths inside the from-Partner folder.
+ * @property string|null $effective_to_partner_folder_name Resolved to-Partner subfolder name. Null when the direction is disabled or uses the Channel folder directly.
+ * @property string|null $effective_from_partner_folder_name Resolved from-Partner subfolder name. Null when the direction is disabled or uses the Channel folder directly.
  * @package Files
  */
 class PartnerChannelTemplate
@@ -20,6 +34,12 @@ class PartnerChannelTemplate
         'list' => 'all',
     ];
 
+    /**
+     * Build a model from API attributes and retain its request options.
+     *
+     * @param array $attributes Initial model attributes, keyed by property name.
+     * @param array $options Request options used by this model's operations.
+     */
     public function __construct($attributes = [], $options = [])
     {
         foreach ($attributes as $key => $value) {
@@ -29,16 +49,36 @@ class PartnerChannelTemplate
         $this->options = $options;
     }
 
+    /**
+     * Set a model attribute locally; call save() to persist supported changes.
+     *
+     * @param string $name Attribute name.
+     * @param mixed $value Attribute value.
+     * @return void
+     */
     public function __set($name, $value)
     {
         $this->attributes[$name] = $value;
     }
 
+    /**
+     * Read a model attribute.
+     *
+     * @param string $name Attribute name.
+     * @return mixed The attribute value, or null when it is not set.
+     */
     public function __get($name)
     {
         return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
+    /**
+     * Dispatch a legacy static alias, including list() to all().
+     *
+     * @param string $name Alias name.
+     * @param array $arguments Arguments passed to the canonical method.
+     * @return mixed The canonical method's result, or null for an unknown alias.
+     */
     public static function __callStatic($name, $arguments)
     {
         if (in_array($name, array_keys(self::$static_mapped_functions))) {
@@ -49,162 +89,316 @@ class PartnerChannelTemplate
         }
     }
 
+    /**
+     * Whether this model has a nonempty primary key.
+     *
+     * @return bool
+     */
     public function isLoaded()
     {
         return !!@$this->attributes['id'];
     }
-    // int64 # The unique ID of the Partner Channel Template.
+    /**
+     * The unique ID of the Partner Channel Template.
+     *
+     * @return int|null
+     */
     public function getId()
     {
         return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
+    /**
+     * The unique ID of the Partner Channel Template.
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setId($value)
     {
         return $this->attributes['id'] = $value;
     }
-    // int64 # ID of the Workspace associated with this Partner Channel Template.
+    /**
+     * ID of the Workspace associated with this Partner Channel Template.
+     *
+     * @return int|null
+     */
     public function getWorkspaceId()
     {
         return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
 
+    /**
+     * ID of the Workspace associated with this Partner Channel Template.
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setWorkspaceId($value)
     {
         return $this->attributes['workspace_id'] = $value;
     }
-    // string # Channel directions. `two_way` enables both directions, `to_partner` enables outgoing downloads, and `from_partner` enables incoming uploads.
+    /**
+     * Channel directions. `two_way` enables both directions, `to_partner` enables outgoing downloads, and `from_partner` enables incoming uploads.
+     *
+     * @return string|null
+     */
     public function getDirection()
     {
         return isset($this->attributes['direction']) ? $this->attributes['direction'] : null;
     }
 
+    /**
+     * Channel directions. `two_way` enables both directions, `to_partner` enables outgoing downloads, and `from_partner` enables incoming uploads.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setDirection($value)
     {
         return $this->attributes['direction'] = $value;
     }
-    // boolean # Use the Channel folder directly for a one-way exchange. Defaults to false. Cannot be changed after creation. Folder name overrides must be blank when enabled, and the Template must remain one-way.
+    /**
+     * Use the Channel folder directly for a one-way exchange. Defaults to false. Cannot be changed after creation. Folder name overrides must be blank when enabled, and the Template must remain one-way.
+     *
+     * @return bool|null
+     */
     public function getUseChannelRoot()
     {
         return isset($this->attributes['use_channel_root']) ? $this->attributes['use_channel_root'] : null;
     }
 
+    /**
+     * Use the Channel folder directly for a one-way exchange. Defaults to false. Cannot be changed after creation. Folder name overrides must be blank when enabled, and the Template must remain one-way.
+     *
+     * @param bool|null $value
+     * @return bool|null The assigned value.
+     */
     public function setUseChannelRoot($value)
     {
         return $this->attributes['use_channel_root'] = $value;
     }
-    // string # The name of the Partner Channel Template.
+    /**
+     * The name of the Partner Channel Template.
+     *
+     * @return string|null
+     */
     public function getName()
     {
         return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
 
+    /**
+     * The name of the Partner Channel Template.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setName($value)
     {
         return $this->attributes['name'] = $value;
     }
-    // string # Channel path relative to the Partner root folder. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
+    /**
+     * Channel path relative to the Partner root folder. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
+     *
+     * @return string|null
+     */
     public function getPath()
     {
         return isset($this->attributes['path']) ? $this->attributes['path'] : null;
     }
 
+    /**
+     * Channel path relative to the Partner root folder. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setPath($value)
     {
         return $this->attributes['path'] = $value;
     }
-    // string # Optional Channel-level to-Partner folder name override.
+    /**
+     * Optional Channel-level to-Partner folder name override.
+     *
+     * @return string|null
+     */
     public function getToPartnerFolderName()
     {
         return isset($this->attributes['to_partner_folder_name']) ? $this->attributes['to_partner_folder_name'] : null;
     }
 
+    /**
+     * Optional Channel-level to-Partner folder name override.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setToPartnerFolderName($value)
     {
         return $this->attributes['to_partner_folder_name'] = $value;
     }
-    // string # Optional Channel-level from-Partner folder name override.
+    /**
+     * Optional Channel-level from-Partner folder name override.
+     *
+     * @return string|null
+     */
     public function getFromPartnerFolderName()
     {
         return isset($this->attributes['from_partner_folder_name']) ? $this->attributes['from_partner_folder_name'] : null;
     }
 
+    /**
+     * Optional Channel-level from-Partner folder name override.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setFromPartnerFolderName($value)
     {
         return $this->attributes['from_partner_folder_name'] = $value;
     }
-    // string # Optional route path pattern for files uploaded by the Partner. Supports {{partner_name}}.
+    /**
+     * Optional route path pattern for files uploaded by the Partner. Supports {{partner_name}}.
+     *
+     * @return string|null
+     */
     public function getFromPartnerRoutePathPattern()
     {
         return isset($this->attributes['from_partner_route_path_pattern']) ? $this->attributes['from_partner_route_path_pattern'] : null;
     }
 
+    /**
+     * Optional route path pattern for files uploaded by the Partner. Supports {{partner_name}}.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setFromPartnerRoutePathPattern($value)
     {
         return $this->attributes['from_partner_route_path_pattern'] = $value;
     }
-    // string # Optional route path pattern for files delivered to the Partner. Supports {{partner_name}}.
+    /**
+     * Optional route path pattern for files delivered to the Partner. Supports {{partner_name}}.
+     *
+     * @return string|null
+     */
     public function getToPartnerRoutePathPattern()
     {
         return isset($this->attributes['to_partner_route_path_pattern']) ? $this->attributes['to_partner_route_path_pattern'] : null;
     }
 
+    /**
+     * Optional route path pattern for files delivered to the Partner. Supports {{partner_name}}.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setToPartnerRoutePathPattern($value)
     {
         return $this->attributes['to_partner_route_path_pattern'] = $value;
     }
-    // array(string) # Managed folder paths inside the to-Partner folder.
+    /**
+     * Managed folder paths inside the to-Partner folder.
+     *
+     * @return string[]|null
+     */
     public function getToPartnerManagedFolderPaths()
     {
         return isset($this->attributes['to_partner_managed_folder_paths']) ? $this->attributes['to_partner_managed_folder_paths'] : null;
     }
 
+    /**
+     * Managed folder paths inside the to-Partner folder.
+     *
+     * @param string[]|null $value
+     * @return string[]|null The assigned value.
+     */
     public function setToPartnerManagedFolderPaths($value)
     {
         return $this->attributes['to_partner_managed_folder_paths'] = $value;
     }
-    // array(string) # Managed folder paths inside the from-Partner folder.
+    /**
+     * Managed folder paths inside the from-Partner folder.
+     *
+     * @return string[]|null
+     */
     public function getFromPartnerManagedFolderPaths()
     {
         return isset($this->attributes['from_partner_managed_folder_paths']) ? $this->attributes['from_partner_managed_folder_paths'] : null;
     }
 
+    /**
+     * Managed folder paths inside the from-Partner folder.
+     *
+     * @param string[]|null $value
+     * @return string[]|null The assigned value.
+     */
     public function setFromPartnerManagedFolderPaths($value)
     {
         return $this->attributes['from_partner_managed_folder_paths'] = $value;
     }
-    // string # Resolved to-Partner subfolder name. Null when the direction is disabled or uses the Channel folder directly.
+    /**
+     * Resolved to-Partner subfolder name. Null when the direction is disabled or uses the Channel folder directly.
+     *
+     * @return string|null
+     */
     public function getEffectiveToPartnerFolderName()
     {
         return isset($this->attributes['effective_to_partner_folder_name']) ? $this->attributes['effective_to_partner_folder_name'] : null;
     }
 
+    /**
+     * Resolved to-Partner subfolder name. Null when the direction is disabled or uses the Channel folder directly.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setEffectiveToPartnerFolderName($value)
     {
         return $this->attributes['effective_to_partner_folder_name'] = $value;
     }
-    // string # Resolved from-Partner subfolder name. Null when the direction is disabled or uses the Channel folder directly.
+    /**
+     * Resolved from-Partner subfolder name. Null when the direction is disabled or uses the Channel folder directly.
+     *
+     * @return string|null
+     */
     public function getEffectiveFromPartnerFolderName()
     {
         return isset($this->attributes['effective_from_partner_folder_name']) ? $this->attributes['effective_from_partner_folder_name'] : null;
     }
 
+    /**
+     * Resolved from-Partner subfolder name. Null when the direction is disabled or uses the Channel folder directly.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setEffectiveFromPartnerFolderName($value)
     {
         return $this->attributes['effective_from_partner_folder_name'] = $value;
     }
 
-    // Parameters:
-    //   direction - string - Channel directions. `two_way` enables both directions, `to_partner` enables outgoing downloads, and `from_partner` enables incoming uploads.
-    //   use_channel_root - boolean - Use the Channel folder directly for a one-way exchange. Defaults to false. Cannot be changed after creation. Folder name overrides must be blank when enabled, and the Template must remain one-way.
-    //   from_partner_folder_name - string - Optional Channel-level from-Partner folder name override.
-    //   from_partner_managed_folder_paths - array(string) - Managed folder paths inside the from-Partner folder.
-    //   from_partner_route_path_pattern - string - Optional route path pattern for files uploaded by the Partner. Supports {{partner_name}}.
-    //   to_partner_folder_name - string - Optional Channel-level to-Partner folder name override.
-    //   to_partner_managed_folder_paths - array(string) - Managed folder paths inside the to-Partner folder.
-    //   to_partner_route_path_pattern - string - Optional route path pattern for files delivered to the Partner. Supports {{partner_name}}.
-    //   name - string - The name of the Partner Channel Template.
-    //   path - string - Channel path relative to the Partner root folder.
+    /**
+     * Update Partner Channel Template
+     *
+     * PATCH /partner_channel_templates/{id}
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Partner Channel Template ID.
+     *     - `direction` (string, optional): Channel directions. `two_way` enables both directions, `to_partner` enables outgoing downloads, and `from_partner` enables incoming uploads. Allowed values: two_way, to_partner, from_partner.
+     *     - `use_channel_root` (bool, optional): Use the Channel folder directly for a one-way exchange. Defaults to false. Cannot be changed after creation. Folder name overrides must be blank when enabled, and the Template must remain one-way.
+     *     - `from_partner_folder_name` (string, optional): Optional Channel-level from-Partner folder name override.
+     *     - `from_partner_managed_folder_paths` (string[], optional): Managed folder paths inside the from-Partner folder.
+     *     - `from_partner_route_path_pattern` (string, optional): Optional route path pattern for files uploaded by the Partner. Supports {{partner_name}}.
+     *     - `to_partner_folder_name` (string, optional): Optional Channel-level to-Partner folder name override.
+     *     - `to_partner_managed_folder_paths` (string[], optional): Managed folder paths inside the to-Partner folder.
+     *     - `to_partner_route_path_pattern` (string, optional): Optional route path pattern for files delivered to the Partner. Supports {{partner_name}}.
+     *     - `name` (string, optional): The name of the Partner Channel Template.
+     *     - `path` (string, optional): Channel path relative to the Partner root folder.
+     * @return \Files\Model\PartnerChannelTemplate
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function update($params = [])
     {
         if (!is_array($params)) {
@@ -263,6 +457,16 @@ class PartnerChannelTemplate
         return new PartnerChannelTemplate((array) (@$response->data ?: []), $this->options);
     }
 
+    /**
+     * Delete Partner Channel Template
+     *
+     * DELETE /partner_channel_templates/{id}
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Partner Channel Template ID.
+     * @return void
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function delete($params = [])
     {
         if (!is_array($params)) {
@@ -285,12 +489,30 @@ class PartnerChannelTemplate
         return;
     }
 
+    /**
+     * Delete Partner Channel Template
+     *
+     * DELETE /partner_channel_templates/{id}
+     *
+     * Alias of delete().
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Partner Channel Template ID.
+     * @return void
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function destroy($params = [])
     {
         $this->delete($params);
         return;
     }
 
+    /**
+     * Persist this model's attributes and replace them with the API response.
+     *
+     * @return bool True after the operation succeeds.
+     * @throws \Files\Exception\FilesException When saving fails or updates are unsupported.
+     */
     public function save()
     {
         if (@$this->attributes['id']) {
@@ -305,11 +527,20 @@ class PartnerChannelTemplate
     }
 
 
-    // Parameters:
-    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-    //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `workspace_id` and `name`.
-    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `workspace_id`.
+    /**
+     * List Partner Channel Templates
+     *
+     * GET /partner_channel_templates
+     *
+     * @param array $params Request parameters.
+     *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+     *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+     *     - `sort_by` (array|object, optional): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `workspace_id` and `name`.
+     *     - `filter` (array|object, optional): If set, return records where the specified field is equal to the supplied value. Valid fields are `workspace_id`.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\PartnerChannelTemplate[]
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function all($params = [], $options = [])
     {
         if (!empty($params['cursor']) && !is_string($params['cursor'])) {
@@ -331,8 +562,17 @@ class PartnerChannelTemplate
         return $return_array;
     }
 
-    // Parameters:
-    //   id (required) - int64 - Partner Channel Template ID.
+    /**
+     * Show Partner Channel Template
+     *
+     * GET /partner_channel_templates/{id}
+     *
+     * @param int $id Partner Channel Template ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\PartnerChannelTemplate
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function find($id, $params = [], $options = [])
     {
         if (!is_array($params)) {
@@ -353,23 +593,45 @@ class PartnerChannelTemplate
 
         return new PartnerChannelTemplate((array) (@$response->data ?: []), $options);
     }
+    /**
+     * Show Partner Channel Template
+     *
+     * GET /partner_channel_templates/{id}
+     *
+     * Alias of find().
+     *
+     * @param int $id Partner Channel Template ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\PartnerChannelTemplate
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function get($id, $params = [], $options = [])
     {
         return self::find($id, $params, $options);
     }
 
-    // Parameters:
-    //   direction - string - Channel directions. `two_way` enables both directions, `to_partner` enables outgoing downloads, and `from_partner` enables incoming uploads.
-    //   use_channel_root - boolean - Use the Channel folder directly for a one-way exchange. Defaults to false. Cannot be changed after creation. Folder name overrides must be blank when enabled, and the Template must remain one-way.
-    //   from_partner_folder_name - string - Optional Channel-level from-Partner folder name override.
-    //   from_partner_managed_folder_paths - array(string) - Managed folder paths inside the from-Partner folder.
-    //   from_partner_route_path_pattern - string - Optional route path pattern for files uploaded by the Partner. Supports {{partner_name}}.
-    //   to_partner_folder_name - string - Optional Channel-level to-Partner folder name override.
-    //   to_partner_managed_folder_paths - array(string) - Managed folder paths inside the to-Partner folder.
-    //   to_partner_route_path_pattern - string - Optional route path pattern for files delivered to the Partner. Supports {{partner_name}}.
-    //   name (required) - string - The name of the Partner Channel Template.
-    //   path (required) - string - Channel path relative to the Partner root folder.
-    //   workspace_id - int64 - ID of the Workspace associated with this Partner Channel Template.
+    /**
+     * Create Partner Channel Template
+     *
+     * POST /partner_channel_templates
+     *
+     * @param array $params Request parameters.
+     *     - `direction` (string, optional): Channel directions. `two_way` enables both directions, `to_partner` enables outgoing downloads, and `from_partner` enables incoming uploads. Allowed values: two_way, to_partner, from_partner.
+     *     - `use_channel_root` (bool, optional): Use the Channel folder directly for a one-way exchange. Defaults to false. Cannot be changed after creation. Folder name overrides must be blank when enabled, and the Template must remain one-way.
+     *     - `from_partner_folder_name` (string, optional): Optional Channel-level from-Partner folder name override.
+     *     - `from_partner_managed_folder_paths` (string[], optional): Managed folder paths inside the from-Partner folder.
+     *     - `from_partner_route_path_pattern` (string, optional): Optional route path pattern for files uploaded by the Partner. Supports {{partner_name}}.
+     *     - `to_partner_folder_name` (string, optional): Optional Channel-level to-Partner folder name override.
+     *     - `to_partner_managed_folder_paths` (string[], optional): Managed folder paths inside the to-Partner folder.
+     *     - `to_partner_route_path_pattern` (string, optional): Optional route path pattern for files delivered to the Partner. Supports {{partner_name}}.
+     *     - `name` (string, required): The name of the Partner Channel Template.
+     *     - `path` (string, required): Channel path relative to the Partner root folder.
+     *     - `workspace_id` (int, optional): ID of the Workspace associated with this Partner Channel Template.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\PartnerChannelTemplate
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function create($params = [], $options = [])
     {
         if (empty($params['name'])) {

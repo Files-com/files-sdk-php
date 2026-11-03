@@ -8,8 +8,16 @@ use Files\Logger;
 require_once __DIR__ . '/../Files.php';
 
 /**
- * Class Request
+ * A Request is a file that *should* be uploaded by a specific user or group.
  *
+ * @property int|null $id Request ID
+ * @property string|null $path Folder path. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
+ * @property string|null $source Source filename, if applicable
+ * @property string|null $destination Destination filename
+ * @property int|null $automation_id ID of automation that created request
+ * @property string|null $user_display_name User making the request (if applicable)
+ * @property string|null $user_ids A list of user IDs to request the file from. If sent as a string, it should be comma-delimited.
+ * @property string|null $group_ids A list of group IDs to request the file from. If sent as a string, it should be comma-delimited.
  * @package Files
  */
 class Request
@@ -20,6 +28,12 @@ class Request
         'list' => 'all',
     ];
 
+    /**
+     * Build a model from API attributes and retain its request options.
+     *
+     * @param array $attributes Initial model attributes, keyed by property name.
+     * @param array $options Request options used by this model's operations.
+     */
     public function __construct($attributes = [], $options = [])
     {
         foreach ($attributes as $key => $value) {
@@ -29,16 +43,36 @@ class Request
         $this->options = $options;
     }
 
+    /**
+     * Set a model attribute locally; call save() to persist supported changes.
+     *
+     * @param string $name Attribute name.
+     * @param mixed $value Attribute value.
+     * @return void
+     */
     public function __set($name, $value)
     {
         $this->attributes[$name] = $value;
     }
 
+    /**
+     * Read a model attribute.
+     *
+     * @param string $name Attribute name.
+     * @return mixed The attribute value, or null when it is not set.
+     */
     public function __get($name)
     {
         return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
+    /**
+     * Dispatch a legacy static alias, including list() to all().
+     *
+     * @param string $name Alias name.
+     * @param array $arguments Arguments passed to the canonical method.
+     * @return mixed The canonical method's result, or null for an unknown alias.
+     */
     public static function __callStatic($name, $arguments)
     {
         if (in_array($name, array_keys(self::$static_mapped_functions))) {
@@ -49,91 +83,186 @@ class Request
         }
     }
 
+    /**
+     * Whether this model has a nonempty primary key.
+     *
+     * @return bool
+     */
     public function isLoaded()
     {
         return !!@$this->attributes['id'];
     }
-    // int64 # Request ID
+    /**
+     * Request ID
+     *
+     * @return int|null
+     */
     public function getId()
     {
         return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
+    /**
+     * Request ID
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setId($value)
     {
         return $this->attributes['id'] = $value;
     }
-    // string # Folder path. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
+    /**
+     * Folder path. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
+     *
+     * @return string|null
+     */
     public function getPath()
     {
         return isset($this->attributes['path']) ? $this->attributes['path'] : null;
     }
 
+    /**
+     * Folder path. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setPath($value)
     {
         return $this->attributes['path'] = $value;
     }
-    // string # Source filename, if applicable
+    /**
+     * Source filename, if applicable
+     *
+     * @return string|null
+     */
     public function getSource()
     {
         return isset($this->attributes['source']) ? $this->attributes['source'] : null;
     }
 
+    /**
+     * Source filename, if applicable
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setSource($value)
     {
         return $this->attributes['source'] = $value;
     }
-    // string # Destination filename
+    /**
+     * Destination filename
+     *
+     * @return string|null
+     */
     public function getDestination()
     {
         return isset($this->attributes['destination']) ? $this->attributes['destination'] : null;
     }
 
+    /**
+     * Destination filename
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setDestination($value)
     {
         return $this->attributes['destination'] = $value;
     }
-    // int64 # ID of automation that created request
+    /**
+     * ID of automation that created request
+     *
+     * @return int|null
+     */
     public function getAutomationId()
     {
         return isset($this->attributes['automation_id']) ? $this->attributes['automation_id'] : null;
     }
 
+    /**
+     * ID of automation that created request
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setAutomationId($value)
     {
         return $this->attributes['automation_id'] = $value;
     }
-    // string # User making the request (if applicable)
+    /**
+     * User making the request (if applicable)
+     *
+     * @return string|null
+     */
     public function getUserDisplayName()
     {
         return isset($this->attributes['user_display_name']) ? $this->attributes['user_display_name'] : null;
     }
 
+    /**
+     * User making the request (if applicable)
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setUserDisplayName($value)
     {
         return $this->attributes['user_display_name'] = $value;
     }
-    // string # A list of user IDs to request the file from. If sent as a string, it should be comma-delimited.
+    /**
+     * A list of user IDs to request the file from. If sent as a string, it should be comma-delimited.
+     *
+     * @return string|null
+     */
     public function getUserIds()
     {
         return isset($this->attributes['user_ids']) ? $this->attributes['user_ids'] : null;
     }
 
+    /**
+     * A list of user IDs to request the file from. If sent as a string, it should be comma-delimited.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setUserIds($value)
     {
         return $this->attributes['user_ids'] = $value;
     }
-    // string # A list of group IDs to request the file from. If sent as a string, it should be comma-delimited.
+    /**
+     * A list of group IDs to request the file from. If sent as a string, it should be comma-delimited.
+     *
+     * @return string|null
+     */
     public function getGroupIds()
     {
         return isset($this->attributes['group_ids']) ? $this->attributes['group_ids'] : null;
     }
 
+    /**
+     * A list of group IDs to request the file from. If sent as a string, it should be comma-delimited.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setGroupIds($value)
     {
         return $this->attributes['group_ids'] = $value;
     }
 
+    /**
+     * Delete Request
+     *
+     * DELETE /requests/{id}
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Request ID.
+     * @return void
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function delete($params = [])
     {
         if (!is_array($params)) {
@@ -156,12 +285,30 @@ class Request
         return;
     }
 
+    /**
+     * Delete Request
+     *
+     * DELETE /requests/{id}
+     *
+     * Alias of delete().
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Request ID.
+     * @return void
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function destroy($params = [])
     {
         $this->delete($params);
         return;
     }
 
+    /**
+     * Persist this model's attributes and replace them with the API response.
+     *
+     * @return bool True after the operation succeeds.
+     * @throws \Files\Exception\FilesException When saving fails or updates are unsupported.
+     */
     public function save()
     {
         if (@$this->attributes['id']) {
@@ -174,12 +321,21 @@ class Request
     }
 
 
-    // Parameters:
-    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-    //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are .
-    //   mine - boolean - Only show requests of the current user?  (Defaults to true if current user is not a site admin.)
-    //   path - string - Path to show requests for.  If omitted, shows all paths. Send `/` to represent the root directory.
+    /**
+     * List Requests
+     *
+     * GET /requests
+     *
+     * @param array $params Request parameters.
+     *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+     *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+     *     - `sort_by` (array|object, optional): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are .
+     *     - `mine` (bool, optional): Only show requests of the current user?  (Defaults to true if current user is not a site admin.)
+     *     - `path` (string, optional): Path to show requests for.  If omitted, shows all paths. Send `/` to represent the root directory.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\Request[]
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function all($params = [], $options = [])
     {
         if (!empty($params['cursor']) && !is_string($params['cursor'])) {
@@ -205,12 +361,21 @@ class Request
         return $return_array;
     }
 
-    // Parameters:
-    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-    //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are .
-    //   mine - boolean - Only show requests of the current user?  (Defaults to true if current user is not a site admin.)
-    //   path (required) - string - Path to show requests for.  If omitted, shows all paths. Send `/` to represent the root directory.
+    /**
+     * List Requests
+     *
+     * GET /requests/folders/{path}
+     *
+     * @param string $path Path to show requests for.  If omitted, shows all paths. Send `/` to represent the root directory.
+     * @param array $params Request parameters.
+     *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+     *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+     *     - `sort_by` (array|object, optional): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are .
+     *     - `mine` (bool, optional): Only show requests of the current user?  (Defaults to true if current user is not a site admin.)
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\Request[]
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function getFolder($path, $params = [], $options = [])
     {
         if (!is_array($params)) {
@@ -246,11 +411,20 @@ class Request
         return $return_array;
     }
 
-    // Parameters:
-    //   path (required) - string - Folder path on which to request the file.
-    //   destination (required) - string - Destination filename (without extension) to request.
-    //   user_ids - string - A list of user IDs to request the file from. If sent as a string, it should be comma-delimited.
-    //   group_ids - string - A list of group IDs to request the file from. If sent as a string, it should be comma-delimited.
+    /**
+     * Create Request
+     *
+     * POST /requests
+     *
+     * @param array $params Request parameters.
+     *     - `path` (string, required): Folder path on which to request the file.
+     *     - `destination` (string, required): Destination filename (without extension) to request.
+     *     - `user_ids` (string, optional): A list of user IDs to request the file from. If sent as a string, it should be comma-delimited.
+     *     - `group_ids` (string, optional): A list of group IDs to request the file from. If sent as a string, it should be comma-delimited.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\Request
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function create($params = [], $options = [])
     {
         if (empty($params['path'])) {

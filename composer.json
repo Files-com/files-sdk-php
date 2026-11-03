@@ -26,5 +26,8 @@
     "psr-4": {
       "Files\\": "lib/"
     }
+  },
+  "scripts": {
+    "docs": "bash build.sh --docs"
   }
 }

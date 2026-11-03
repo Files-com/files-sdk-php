@@ -8,8 +8,13 @@ use Files\Logger;
 require_once __DIR__ . '/../Files.php';
 
 /**
- * Class IntegrationCentricProfile
+ * An Integration Centric Profile defines the Remote Server integrations a user is expected to add and connect during integration-centric onboarding.
  *
+ * @property int|null $id Integration Centric Profile ID
+ * @property string|null $name Profile name
+ * @property int|null $workspace_id Workspace ID
+ * @property bool|null $use_for_all_users Whether this profile applies to all users in the Workspace by default
+ * @property object[]|null $expected_remote_servers Remote Server integrations the user is expected to add and connect. Each entry requires `server_type` and may include a display `name`.
  * @package Files
  */
 class IntegrationCentricProfile
@@ -20,6 +25,12 @@ class IntegrationCentricProfile
         'list' => 'all',
     ];
 
+    /**
+     * Build a model from API attributes and retain its request options.
+     *
+     * @param array $attributes Initial model attributes, keyed by property name.
+     * @param array $options Request options used by this model's operations.
+     */
     public function __construct($attributes = [], $options = [])
     {
         foreach ($attributes as $key => $value) {
@@ -29,16 +40,36 @@ class IntegrationCentricProfile
         $this->options = $options;
     }
 
+    /**
+     * Set a model attribute locally; call save() to persist supported changes.
+     *
+     * @param string $name Attribute name.
+     * @param mixed $value Attribute value.
+     * @return void
+     */
     public function __set($name, $value)
     {
         $this->attributes[$name] = $value;
     }
 
+    /**
+     * Read a model attribute.
+     *
+     * @param string $name Attribute name.
+     * @return mixed The attribute value, or null when it is not set.
+     */
     public function __get($name)
     {
         return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
+    /**
+     * Dispatch a legacy static alias, including list() to all().
+     *
+     * @param string $name Alias name.
+     * @param array $arguments Arguments passed to the canonical method.
+     * @return mixed The canonical method's result, or null for an unknown alias.
+     */
     public static function __callStatic($name, $arguments)
     {
         if (in_array($name, array_keys(self::$static_mapped_functions))) {
@@ -49,66 +80,130 @@ class IntegrationCentricProfile
         }
     }
 
+    /**
+     * Whether this model has a nonempty primary key.
+     *
+     * @return bool
+     */
     public function isLoaded()
     {
         return !!@$this->attributes['id'];
     }
-    // int64 # Integration Centric Profile ID
+    /**
+     * Integration Centric Profile ID
+     *
+     * @return int|null
+     */
     public function getId()
     {
         return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
+    /**
+     * Integration Centric Profile ID
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setId($value)
     {
         return $this->attributes['id'] = $value;
     }
-    // string # Profile name
+    /**
+     * Profile name
+     *
+     * @return string|null
+     */
     public function getName()
     {
         return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
 
+    /**
+     * Profile name
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setName($value)
     {
         return $this->attributes['name'] = $value;
     }
-    // int64 # Workspace ID
+    /**
+     * Workspace ID
+     *
+     * @return int|null
+     */
     public function getWorkspaceId()
     {
         return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
 
+    /**
+     * Workspace ID
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setWorkspaceId($value)
     {
         return $this->attributes['workspace_id'] = $value;
     }
-    // boolean # Whether this profile applies to all users in the Workspace by default
+    /**
+     * Whether this profile applies to all users in the Workspace by default
+     *
+     * @return bool|null
+     */
     public function getUseForAllUsers()
     {
         return isset($this->attributes['use_for_all_users']) ? $this->attributes['use_for_all_users'] : null;
     }
 
+    /**
+     * Whether this profile applies to all users in the Workspace by default
+     *
+     * @param bool|null $value
+     * @return bool|null The assigned value.
+     */
     public function setUseForAllUsers($value)
     {
         return $this->attributes['use_for_all_users'] = $value;
     }
-    // array(object) # Remote Server integrations the user is expected to add and connect. Each entry requires `server_type` and may include a display `name`.
+    /**
+     * Remote Server integrations the user is expected to add and connect. Each entry requires `server_type` and may include a display `name`.
+     *
+     * @return object[]|null
+     */
     public function getExpectedRemoteServers()
     {
         return isset($this->attributes['expected_remote_servers']) ? $this->attributes['expected_remote_servers'] : null;
     }
 
+    /**
+     * Remote Server integrations the user is expected to add and connect. Each entry requires `server_type` and may include a display `name`.
+     *
+     * @param object[]|null $value
+     * @return object[]|null The assigned value.
+     */
     public function setExpectedRemoteServers($value)
     {
         return $this->attributes['expected_remote_servers'] = $value;
     }
 
-    // Parameters:
-    //   name - string - Profile name
-    //   workspace_id - int64 - Workspace ID
-    //   expected_remote_servers - array(object) - Remote Server integrations the user is expected to add and connect. Each entry requires `server_type` and may include a display `name`.
-    //   use_for_all_users - boolean - Whether this profile applies to all users in the Workspace by default
+    /**
+     * Update Integration Centric Profile
+     *
+     * PATCH /integration_centric_profiles/{id}
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Integration Centric Profile ID.
+     *     - `name` (string, optional): Profile name
+     *     - `workspace_id` (int, optional): Workspace ID
+     *     - `expected_remote_servers` ((array|object)[], optional): Remote Server integrations the user is expected to add and connect. Each entry requires `server_type` and may include a display `name`.
+     *     - `use_for_all_users` (bool, optional): Whether this profile applies to all users in the Workspace by default
+     * @return \Files\Model\IntegrationCentricProfile
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function update($params = [])
     {
         if (!is_array($params)) {
@@ -143,6 +238,16 @@ class IntegrationCentricProfile
         return new IntegrationCentricProfile((array) (@$response->data ?: []), $this->options);
     }
 
+    /**
+     * Delete Integration Centric Profile
+     *
+     * DELETE /integration_centric_profiles/{id}
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Integration Centric Profile ID.
+     * @return void
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function delete($params = [])
     {
         if (!is_array($params)) {
@@ -165,12 +270,30 @@ class IntegrationCentricProfile
         return;
     }
 
+    /**
+     * Delete Integration Centric Profile
+     *
+     * DELETE /integration_centric_profiles/{id}
+     *
+     * Alias of delete().
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Integration Centric Profile ID.
+     * @return void
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function destroy($params = [])
     {
         $this->delete($params);
         return;
     }
 
+    /**
+     * Persist this model's attributes and replace them with the API response.
+     *
+     * @return bool True after the operation succeeds.
+     * @throws \Files\Exception\FilesException When saving fails or updates are unsupported.
+     */
     public function save()
     {
         if (@$this->attributes['id']) {
@@ -185,11 +308,20 @@ class IntegrationCentricProfile
     }
 
 
-    // Parameters:
-    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-    //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `workspace_id` and `name`.
-    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `workspace_id`.
+    /**
+     * List Integration Centric Profiles
+     *
+     * GET /integration_centric_profiles
+     *
+     * @param array $params Request parameters.
+     *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+     *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+     *     - `sort_by` (array|object, optional): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `workspace_id` and `name`.
+     *     - `filter` (array|object, optional): If set, return records where the specified field is equal to the supplied value. Valid fields are `workspace_id`.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\IntegrationCentricProfile[]
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function all($params = [], $options = [])
     {
         if (!empty($params['cursor']) && !is_string($params['cursor'])) {
@@ -211,8 +343,17 @@ class IntegrationCentricProfile
         return $return_array;
     }
 
-    // Parameters:
-    //   id (required) - int64 - Integration Centric Profile ID.
+    /**
+     * Show Integration Centric Profile
+     *
+     * GET /integration_centric_profiles/{id}
+     *
+     * @param int $id Integration Centric Profile ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\IntegrationCentricProfile
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function find($id, $params = [], $options = [])
     {
         if (!is_array($params)) {
@@ -233,16 +374,38 @@ class IntegrationCentricProfile
 
         return new IntegrationCentricProfile((array) (@$response->data ?: []), $options);
     }
+    /**
+     * Show Integration Centric Profile
+     *
+     * GET /integration_centric_profiles/{id}
+     *
+     * Alias of find().
+     *
+     * @param int $id Integration Centric Profile ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\IntegrationCentricProfile
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function get($id, $params = [], $options = [])
     {
         return self::find($id, $params, $options);
     }
 
-    // Parameters:
-    //   name (required) - string - Profile name
-    //   expected_remote_servers (required) - array(object) - Remote Server integrations the user is expected to add and connect. Each entry requires `server_type` and may include a display `name`.
-    //   workspace_id - int64 - Workspace ID
-    //   use_for_all_users - boolean - Whether this profile applies to all users in the Workspace by default
+    /**
+     * Create Integration Centric Profile
+     *
+     * POST /integration_centric_profiles
+     *
+     * @param array $params Request parameters.
+     *     - `name` (string, required): Profile name
+     *     - `expected_remote_servers` ((array|object)[], required): Remote Server integrations the user is expected to add and connect. Each entry requires `server_type` and may include a display `name`.
+     *     - `workspace_id` (int, optional): Workspace ID
+     *     - `use_for_all_users` (bool, optional): Whether this profile applies to all users in the Workspace by default
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\IntegrationCentricProfile
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function create($params = [], $options = [])
     {
         if (empty($params['name'])) {

@@ -8,8 +8,16 @@ use Files\Logger;
 require_once __DIR__ . '/../Files.php';
 
 /**
- * Class ChatSession
+ * A ChatSession represents one conversation with the Files.com AI Assistant.
  *
+ * @property string|null $id Chat Session ID.
+ * @property string|null $title Short AI-generated chat title.
+ * @property int|null $user_id User ID.
+ * @property int|null $ai_task_id AI Task ID. Present when the conversation was started by an AI Task.
+ * @property int|null $workspace_id Workspace ID. `0` means the default workspace.
+ * @property string|null $last_active_at Most recent chat activity date/time.
+ * @property string|null $created_at Chat session creation date/time.
+ * @property object[]|null $messages Visible conversation messages in this chat session. For performance reasons, this is not provided when listing chat sessions.
  * @package Files
  */
 class ChatSession
@@ -20,6 +28,12 @@ class ChatSession
         'list' => 'all',
     ];
 
+    /**
+     * Build a model from API attributes and retain its request options.
+     *
+     * @param array $attributes Initial model attributes, keyed by property name.
+     * @param array $options Request options used by this model's operations.
+     */
     public function __construct($attributes = [], $options = [])
     {
         foreach ($attributes as $key => $value) {
@@ -29,16 +43,36 @@ class ChatSession
         $this->options = $options;
     }
 
+    /**
+     * Set a model attribute locally; call save() to persist supported changes.
+     *
+     * @param string $name Attribute name.
+     * @param mixed $value Attribute value.
+     * @return void
+     */
     public function __set($name, $value)
     {
         $this->attributes[$name] = $value;
     }
 
+    /**
+     * Read a model attribute.
+     *
+     * @param string $name Attribute name.
+     * @return mixed The attribute value, or null when it is not set.
+     */
     public function __get($name)
     {
         return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
+    /**
+     * Dispatch a legacy static alias, including list() to all().
+     *
+     * @param string $name Alias name.
+     * @param array $arguments Arguments passed to the canonical method.
+     * @return mixed The canonical method's result, or null for an unknown alias.
+     */
     public static function __callStatic($name, $arguments)
     {
         if (in_array($name, array_keys(self::$static_mapped_functions))) {
@@ -49,56 +83,102 @@ class ChatSession
         }
     }
 
+    /**
+     * Whether this model has a nonempty primary key.
+     *
+     * @return bool
+     */
     public function isLoaded()
     {
         return !!@$this->attributes['id'];
     }
-    // string # Chat Session ID.
+    /**
+     * Chat Session ID.
+     *
+     * @return string|null
+     */
     public function getId()
     {
         return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
-    // string # Short AI-generated chat title.
+    /**
+     * Short AI-generated chat title.
+     *
+     * @return string|null
+     */
     public function getTitle()
     {
         return isset($this->attributes['title']) ? $this->attributes['title'] : null;
     }
-    // int64 # User ID.
+    /**
+     * User ID.
+     *
+     * @return int|null
+     */
     public function getUserId()
     {
         return isset($this->attributes['user_id']) ? $this->attributes['user_id'] : null;
     }
-    // int64 # AI Task ID. Present when the conversation was started by an AI Task.
+    /**
+     * AI Task ID. Present when the conversation was started by an AI Task.
+     *
+     * @return int|null
+     */
     public function getAiTaskId()
     {
         return isset($this->attributes['ai_task_id']) ? $this->attributes['ai_task_id'] : null;
     }
-    // int64 # Workspace ID. `0` means the default workspace.
+    /**
+     * Workspace ID. `0` means the default workspace.
+     *
+     * @return int|null
+     */
     public function getWorkspaceId()
     {
         return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
-    // date-time # Most recent chat activity date/time.
+    /**
+     * Most recent chat activity date/time.
+     *
+     * @return string|null
+     */
     public function getLastActiveAt()
     {
         return isset($this->attributes['last_active_at']) ? $this->attributes['last_active_at'] : null;
     }
-    // date-time # Chat session creation date/time.
+    /**
+     * Chat session creation date/time.
+     *
+     * @return string|null
+     */
     public function getCreatedAt()
     {
         return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
-    // array(object) # Visible conversation messages in this chat session. For performance reasons, this is not provided when listing chat sessions.
+    /**
+     * Visible conversation messages in this chat session. For performance reasons, this is not provided when listing chat sessions.
+     *
+     * @return object[]|null
+     */
     public function getMessages()
     {
         return isset($this->attributes['messages']) ? $this->attributes['messages'] : null;
     }
 
-    // Parameters:
-    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-    //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `id`.
-    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `ai_task_id`, `user_id` or `workspace_id`.
+    /**
+     * List Chat Sessions
+     *
+     * GET /chat_sessions
+     *
+     * @param array $params Request parameters.
+     *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+     *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+     *     - `sort_by` (array|object, optional): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `id`.
+     *     - `filter` (array|object, optional): If set, return records where the specified field is equal to the supplied value. Valid fields are `ai_task_id`, `user_id` or `workspace_id`.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\ChatSession[]
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function all($params = [], $options = [])
     {
         if (!empty($params['cursor']) && !is_string($params['cursor'])) {
@@ -120,8 +200,17 @@ class ChatSession
         return $return_array;
     }
 
-    // Parameters:
-    //   id (required) - string - Chat Session ID.
+    /**
+     * Show Chat Session
+     *
+     * GET /chat_sessions/{id}
+     *
+     * @param string $id Chat Session ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\ChatSession
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function find($id, $params = [], $options = [])
     {
         if (!is_array($params)) {
@@ -142,6 +231,19 @@ class ChatSession
 
         return new ChatSession((array) (@$response->data ?: []), $options);
     }
+    /**
+     * Show Chat Session
+     *
+     * GET /chat_sessions/{id}
+     *
+     * Alias of find().
+     *
+     * @param string $id Chat Session ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\ChatSession
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function get($id, $params = [], $options = [])
     {
         return self::find($id, $params, $options);

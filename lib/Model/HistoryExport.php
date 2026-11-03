@@ -8,8 +8,35 @@ use Files\Logger;
 require_once __DIR__ . '/../Files.php';
 
 /**
- * Class HistoryExport
+ * A History Export is a resource on the API that is used to export historical action (history) logs.
  *
+ * @property int|null $workspace_id Workspace of the export. 0 represents the default workspace. A null value means a site-wide export.
+ * @property int|null $id History Export ID
+ * @property string|null $history_version Version of the history for the export.
+ * @property string|null $start_at Start date/time of export range.
+ * @property string|null $end_at End date/time of export range.
+ * @property string|null $status Status of export. Will be: `building`, `ready`, or `failed`
+ * @property string|null $query_action Filter results by this this action type. Valid values: `create`, `read`, `update`, `destroy`, `move`, `login`, `failedlogin`, `copy`, `user_create`, `user_update`, `user_destroy`, `group_create`, `group_update`, `group_destroy`, `permission_create`, `permission_destroy`, `api_key_create`, `api_key_update`, `api_key_destroy`, `archived_delete`
+ * @property string|null $query_interface Filter results by this this interface type. Valid values: `web`, `ftp`, `robot`, `jsapi`, `webdesktopapi`, `sftp`, `dav`, `desktop`, `restapi`, `scim`, `office`, `mobile`, `as2`, `inbound_email`, `remote`, `inbound_s3`
+ * @property string|null $query_user_id Return results that are actions performed by the user indicated by this User ID
+ * @property string|null $query_file_id Return results that are file actions related to the file indicated by this File ID
+ * @property string|null $query_parent_id Return results that are file actions inside the parent folder specified by this folder ID
+ * @property string|null $query_path Return results that are file actions related to paths matching this pattern.
+ * @property string|null $query_folder Return results that are file actions related to files or folders inside folder paths matching this pattern.
+ * @property string|null $query_src Return results that are file moves originating from paths matching this pattern.
+ * @property string|null $query_destination Return results that are file moves with paths matching this pattern as destination.
+ * @property string|null $query_ip Filter results by this IP address.
+ * @property string|null $query_username Filter results by this username.
+ * @property string|null $query_failure_type If searching for Histories about login failures, this parameter restricts results to failures of this specific type. Valid values: `expired_trial`, `account_overdue`, `locked_out`, `ip_mismatch`, `password_mismatch`, `site_mismatch`, `username_not_found`, `none`, `no_ftp_permission`, `no_web_permission`, `no_directory`, `errno_enoent`, `no_sftp_permission`, `no_dav_permission`, `no_restapi_permission`, `key_mismatch`, `region_mismatch`, `expired_access`, `desktop_ip_mismatch`, `desktop_api_key_not_used_quickly_enough`, `disabled`, `country_mismatch`, `insecure_ftp`, `insecure_cipher`, `rate_limited`, `no_s3_compatible_endpoint_permission`, `mobile_ip_mismatch`, `mobile_api_key_not_used_quickly_enough`, `desktop_app_disabled`, `mobile_app_disabled`
+ * @property string|null $query_target_id If searching for Histories about specific objects (such as Users, or API Keys), this parameter restricts results to objects that match this ID.
+ * @property string|null $query_target_name If searching for Histories about Users, Groups or other objects with names, this parameter restricts results to objects with this name/username.
+ * @property string|null $query_target_permission If searching for Histories about Permissions, this parameter restricts results to permissions of this level.
+ * @property string|null $query_target_user_id If searching for Histories about API keys, this parameter restricts results to API keys created by/for this user ID.
+ * @property string|null $query_target_username If searching for Histories about API keys, this parameter restricts results to API keys created by/for this username.
+ * @property string|null $query_target_platform If searching for Histories about API keys, this parameter restricts results to API keys associated with this platform.
+ * @property string|null $query_target_permission_set If searching for Histories about API keys, this parameter restricts results to API keys with this permission set.
+ * @property string|null $results_url If `status` is `ready`, this will be a URL where all the results can be downloaded at once as a CSV.
+ * @property int|null $user_id User ID. Provide a value of `0` to operate the current session's user.
  * @package Files
  */
 class HistoryExport
@@ -20,6 +47,12 @@ class HistoryExport
         'list' => 'all',
     ];
 
+    /**
+     * Build a model from API attributes and retain its request options.
+     *
+     * @param array $attributes Initial model attributes, keyed by property name.
+     * @param array $options Request options used by this model's operations.
+     */
     public function __construct($attributes = [], $options = [])
     {
         foreach ($attributes as $key => $value) {
@@ -29,16 +62,36 @@ class HistoryExport
         $this->options = $options;
     }
 
+    /**
+     * Set a model attribute locally; call save() to persist supported changes.
+     *
+     * @param string $name Attribute name.
+     * @param mixed $value Attribute value.
+     * @return void
+     */
     public function __set($name, $value)
     {
         $this->attributes[$name] = $value;
     }
 
+    /**
+     * Read a model attribute.
+     *
+     * @param string $name Attribute name.
+     * @return mixed The attribute value, or null when it is not set.
+     */
     public function __get($name)
     {
         return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
+    /**
+     * Dispatch a legacy static alias, including list() to all().
+     *
+     * @param string $name Alias name.
+     * @param array $arguments Arguments passed to the canonical method.
+     * @return mixed The canonical method's result, or null for an unknown alias.
+     */
     public static function __callStatic($name, $arguments)
     {
         if (in_array($name, array_keys(self::$static_mapped_functions))) {
@@ -49,281 +102,562 @@ class HistoryExport
         }
     }
 
+    /**
+     * Whether this model has a nonempty primary key.
+     *
+     * @return bool
+     */
     public function isLoaded()
     {
         return !!@$this->attributes['id'];
     }
-    // int64 # Workspace of the export. 0 represents the default workspace. A null value means a site-wide export.
+    /**
+     * Workspace of the export. 0 represents the default workspace. A null value means a site-wide export.
+     *
+     * @return int|null
+     */
     public function getWorkspaceId()
     {
         return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
 
+    /**
+     * Workspace of the export. 0 represents the default workspace. A null value means a site-wide export.
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setWorkspaceId($value)
     {
         return $this->attributes['workspace_id'] = $value;
     }
-    // int64 # History Export ID
+    /**
+     * History Export ID
+     *
+     * @return int|null
+     */
     public function getId()
     {
         return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
+    /**
+     * History Export ID
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setId($value)
     {
         return $this->attributes['id'] = $value;
     }
-    // string # Version of the history for the export.
+    /**
+     * Version of the history for the export.
+     *
+     * @return string|null
+     */
     public function getHistoryVersion()
     {
         return isset($this->attributes['history_version']) ? $this->attributes['history_version'] : null;
     }
 
+    /**
+     * Version of the history for the export.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setHistoryVersion($value)
     {
         return $this->attributes['history_version'] = $value;
     }
-    // date-time # Start date/time of export range.
+    /**
+     * Start date/time of export range.
+     *
+     * @return string|null
+     */
     public function getStartAt()
     {
         return isset($this->attributes['start_at']) ? $this->attributes['start_at'] : null;
     }
 
+    /**
+     * Start date/time of export range.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setStartAt($value)
     {
         return $this->attributes['start_at'] = $value;
     }
-    // date-time # End date/time of export range.
+    /**
+     * End date/time of export range.
+     *
+     * @return string|null
+     */
     public function getEndAt()
     {
         return isset($this->attributes['end_at']) ? $this->attributes['end_at'] : null;
     }
 
+    /**
+     * End date/time of export range.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setEndAt($value)
     {
         return $this->attributes['end_at'] = $value;
     }
-    // string # Status of export.  Will be: `building`, `ready`, or `failed`
+    /**
+     * Status of export.  Will be: `building`, `ready`, or `failed`
+     *
+     * @return string|null
+     */
     public function getStatus()
     {
         return isset($this->attributes['status']) ? $this->attributes['status'] : null;
     }
 
+    /**
+     * Status of export.  Will be: `building`, `ready`, or `failed`
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setStatus($value)
     {
         return $this->attributes['status'] = $value;
     }
-    // string # Filter results by this this action type. Valid values: `create`, `read`, `update`, `destroy`, `move`, `login`, `failedlogin`, `copy`, `user_create`, `user_update`, `user_destroy`, `group_create`, `group_update`, `group_destroy`, `permission_create`, `permission_destroy`, `api_key_create`, `api_key_update`, `api_key_destroy`, `archived_delete`
+    /**
+     * Filter results by this this action type. Valid values: `create`, `read`, `update`, `destroy`, `move`, `login`, `failedlogin`, `copy`, `user_create`, `user_update`, `user_destroy`, `group_create`, `group_update`, `group_destroy`, `permission_create`, `permission_destroy`, `api_key_create`, `api_key_update`, `api_key_destroy`, `archived_delete`
+     *
+     * @return string|null
+     */
     public function getQueryAction()
     {
         return isset($this->attributes['query_action']) ? $this->attributes['query_action'] : null;
     }
 
+    /**
+     * Filter results by this this action type. Valid values: `create`, `read`, `update`, `destroy`, `move`, `login`, `failedlogin`, `copy`, `user_create`, `user_update`, `user_destroy`, `group_create`, `group_update`, `group_destroy`, `permission_create`, `permission_destroy`, `api_key_create`, `api_key_update`, `api_key_destroy`, `archived_delete`
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setQueryAction($value)
     {
         return $this->attributes['query_action'] = $value;
     }
-    // string # Filter results by this this interface type. Valid values: `web`, `ftp`, `robot`, `jsapi`, `webdesktopapi`, `sftp`, `dav`, `desktop`, `restapi`, `scim`, `office`, `mobile`, `as2`, `inbound_email`, `remote`, `inbound_s3`
+    /**
+     * Filter results by this this interface type. Valid values: `web`, `ftp`, `robot`, `jsapi`, `webdesktopapi`, `sftp`, `dav`, `desktop`, `restapi`, `scim`, `office`, `mobile`, `as2`, `inbound_email`, `remote`, `inbound_s3`
+     *
+     * @return string|null
+     */
     public function getQueryInterface()
     {
         return isset($this->attributes['query_interface']) ? $this->attributes['query_interface'] : null;
     }
 
+    /**
+     * Filter results by this this interface type. Valid values: `web`, `ftp`, `robot`, `jsapi`, `webdesktopapi`, `sftp`, `dav`, `desktop`, `restapi`, `scim`, `office`, `mobile`, `as2`, `inbound_email`, `remote`, `inbound_s3`
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setQueryInterface($value)
     {
         return $this->attributes['query_interface'] = $value;
     }
-    // string # Return results that are actions performed by the user indicated by this User ID
+    /**
+     * Return results that are actions performed by the user indicated by this User ID
+     *
+     * @return string|null
+     */
     public function getQueryUserId()
     {
         return isset($this->attributes['query_user_id']) ? $this->attributes['query_user_id'] : null;
     }
 
+    /**
+     * Return results that are actions performed by the user indicated by this User ID
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setQueryUserId($value)
     {
         return $this->attributes['query_user_id'] = $value;
     }
-    // string # Return results that are file actions related to the file indicated by this File ID
+    /**
+     * Return results that are file actions related to the file indicated by this File ID
+     *
+     * @return string|null
+     */
     public function getQueryFileId()
     {
         return isset($this->attributes['query_file_id']) ? $this->attributes['query_file_id'] : null;
     }
 
+    /**
+     * Return results that are file actions related to the file indicated by this File ID
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setQueryFileId($value)
     {
         return $this->attributes['query_file_id'] = $value;
     }
-    // string # Return results that are file actions inside the parent folder specified by this folder ID
+    /**
+     * Return results that are file actions inside the parent folder specified by this folder ID
+     *
+     * @return string|null
+     */
     public function getQueryParentId()
     {
         return isset($this->attributes['query_parent_id']) ? $this->attributes['query_parent_id'] : null;
     }
 
+    /**
+     * Return results that are file actions inside the parent folder specified by this folder ID
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setQueryParentId($value)
     {
         return $this->attributes['query_parent_id'] = $value;
     }
-    // string # Return results that are file actions related to paths matching this pattern.
+    /**
+     * Return results that are file actions related to paths matching this pattern.
+     *
+     * @return string|null
+     */
     public function getQueryPath()
     {
         return isset($this->attributes['query_path']) ? $this->attributes['query_path'] : null;
     }
 
+    /**
+     * Return results that are file actions related to paths matching this pattern.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setQueryPath($value)
     {
         return $this->attributes['query_path'] = $value;
     }
-    // string # Return results that are file actions related to files or folders inside folder paths matching this pattern.
+    /**
+     * Return results that are file actions related to files or folders inside folder paths matching this pattern.
+     *
+     * @return string|null
+     */
     public function getQueryFolder()
     {
         return isset($this->attributes['query_folder']) ? $this->attributes['query_folder'] : null;
     }
 
+    /**
+     * Return results that are file actions related to files or folders inside folder paths matching this pattern.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setQueryFolder($value)
     {
         return $this->attributes['query_folder'] = $value;
     }
-    // string # Return results that are file moves originating from paths matching this pattern.
+    /**
+     * Return results that are file moves originating from paths matching this pattern.
+     *
+     * @return string|null
+     */
     public function getQuerySrc()
     {
         return isset($this->attributes['query_src']) ? $this->attributes['query_src'] : null;
     }
 
+    /**
+     * Return results that are file moves originating from paths matching this pattern.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setQuerySrc($value)
     {
         return $this->attributes['query_src'] = $value;
     }
-    // string # Return results that are file moves with paths matching this pattern as destination.
+    /**
+     * Return results that are file moves with paths matching this pattern as destination.
+     *
+     * @return string|null
+     */
     public function getQueryDestination()
     {
         return isset($this->attributes['query_destination']) ? $this->attributes['query_destination'] : null;
     }
 
+    /**
+     * Return results that are file moves with paths matching this pattern as destination.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setQueryDestination($value)
     {
         return $this->attributes['query_destination'] = $value;
     }
-    // string # Filter results by this IP address.
+    /**
+     * Filter results by this IP address.
+     *
+     * @return string|null
+     */
     public function getQueryIp()
     {
         return isset($this->attributes['query_ip']) ? $this->attributes['query_ip'] : null;
     }
 
+    /**
+     * Filter results by this IP address.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setQueryIp($value)
     {
         return $this->attributes['query_ip'] = $value;
     }
-    // string # Filter results by this username.
+    /**
+     * Filter results by this username.
+     *
+     * @return string|null
+     */
     public function getQueryUsername()
     {
         return isset($this->attributes['query_username']) ? $this->attributes['query_username'] : null;
     }
 
+    /**
+     * Filter results by this username.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setQueryUsername($value)
     {
         return $this->attributes['query_username'] = $value;
     }
-    // string # If searching for Histories about login failures, this parameter restricts results to failures of this specific type.  Valid values: `expired_trial`, `account_overdue`, `locked_out`, `ip_mismatch`, `password_mismatch`, `site_mismatch`, `username_not_found`, `none`, `no_ftp_permission`, `no_web_permission`, `no_directory`, `errno_enoent`, `no_sftp_permission`, `no_dav_permission`, `no_restapi_permission`, `key_mismatch`, `region_mismatch`, `expired_access`, `desktop_ip_mismatch`, `desktop_api_key_not_used_quickly_enough`, `disabled`, `country_mismatch`, `insecure_ftp`, `insecure_cipher`, `rate_limited`, `no_s3_compatible_endpoint_permission`, `mobile_ip_mismatch`, `mobile_api_key_not_used_quickly_enough`, `desktop_app_disabled`, `mobile_app_disabled`
+    /**
+     * If searching for Histories about login failures, this parameter restricts results to failures of this specific type.  Valid values: `expired_trial`, `account_overdue`, `locked_out`, `ip_mismatch`, `password_mismatch`, `site_mismatch`, `username_not_found`, `none`, `no_ftp_permission`, `no_web_permission`, `no_directory`, `errno_enoent`, `no_sftp_permission`, `no_dav_permission`, `no_restapi_permission`, `key_mismatch`, `region_mismatch`, `expired_access`, `desktop_ip_mismatch`, `desktop_api_key_not_used_quickly_enough`, `disabled`, `country_mismatch`, `insecure_ftp`, `insecure_cipher`, `rate_limited`, `no_s3_compatible_endpoint_permission`, `mobile_ip_mismatch`, `mobile_api_key_not_used_quickly_enough`, `desktop_app_disabled`, `mobile_app_disabled`
+     *
+     * @return string|null
+     */
     public function getQueryFailureType()
     {
         return isset($this->attributes['query_failure_type']) ? $this->attributes['query_failure_type'] : null;
     }
 
+    /**
+     * If searching for Histories about login failures, this parameter restricts results to failures of this specific type.  Valid values: `expired_trial`, `account_overdue`, `locked_out`, `ip_mismatch`, `password_mismatch`, `site_mismatch`, `username_not_found`, `none`, `no_ftp_permission`, `no_web_permission`, `no_directory`, `errno_enoent`, `no_sftp_permission`, `no_dav_permission`, `no_restapi_permission`, `key_mismatch`, `region_mismatch`, `expired_access`, `desktop_ip_mismatch`, `desktop_api_key_not_used_quickly_enough`, `disabled`, `country_mismatch`, `insecure_ftp`, `insecure_cipher`, `rate_limited`, `no_s3_compatible_endpoint_permission`, `mobile_ip_mismatch`, `mobile_api_key_not_used_quickly_enough`, `desktop_app_disabled`, `mobile_app_disabled`
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setQueryFailureType($value)
     {
         return $this->attributes['query_failure_type'] = $value;
     }
-    // string # If searching for Histories about specific objects (such as Users, or API Keys), this parameter restricts results to objects that match this ID.
+    /**
+     * If searching for Histories about specific objects (such as Users, or API Keys), this parameter restricts results to objects that match this ID.
+     *
+     * @return string|null
+     */
     public function getQueryTargetId()
     {
         return isset($this->attributes['query_target_id']) ? $this->attributes['query_target_id'] : null;
     }
 
+    /**
+     * If searching for Histories about specific objects (such as Users, or API Keys), this parameter restricts results to objects that match this ID.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setQueryTargetId($value)
     {
         return $this->attributes['query_target_id'] = $value;
     }
-    // string # If searching for Histories about Users, Groups or other objects with names, this parameter restricts results to objects with this name/username.
+    /**
+     * If searching for Histories about Users, Groups or other objects with names, this parameter restricts results to objects with this name/username.
+     *
+     * @return string|null
+     */
     public function getQueryTargetName()
     {
         return isset($this->attributes['query_target_name']) ? $this->attributes['query_target_name'] : null;
     }
 
+    /**
+     * If searching for Histories about Users, Groups or other objects with names, this parameter restricts results to objects with this name/username.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setQueryTargetName($value)
     {
         return $this->attributes['query_target_name'] = $value;
     }
-    // string # If searching for Histories about Permissions, this parameter restricts results to permissions of this level.
+    /**
+     * If searching for Histories about Permissions, this parameter restricts results to permissions of this level.
+     *
+     * @return string|null
+     */
     public function getQueryTargetPermission()
     {
         return isset($this->attributes['query_target_permission']) ? $this->attributes['query_target_permission'] : null;
     }
 
+    /**
+     * If searching for Histories about Permissions, this parameter restricts results to permissions of this level.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setQueryTargetPermission($value)
     {
         return $this->attributes['query_target_permission'] = $value;
     }
-    // string # If searching for Histories about API keys, this parameter restricts results to API keys created by/for this user ID.
+    /**
+     * If searching for Histories about API keys, this parameter restricts results to API keys created by/for this user ID.
+     *
+     * @return string|null
+     */
     public function getQueryTargetUserId()
     {
         return isset($this->attributes['query_target_user_id']) ? $this->attributes['query_target_user_id'] : null;
     }
 
+    /**
+     * If searching for Histories about API keys, this parameter restricts results to API keys created by/for this user ID.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setQueryTargetUserId($value)
     {
         return $this->attributes['query_target_user_id'] = $value;
     }
-    // string # If searching for Histories about API keys, this parameter restricts results to API keys created by/for this username.
+    /**
+     * If searching for Histories about API keys, this parameter restricts results to API keys created by/for this username.
+     *
+     * @return string|null
+     */
     public function getQueryTargetUsername()
     {
         return isset($this->attributes['query_target_username']) ? $this->attributes['query_target_username'] : null;
     }
 
+    /**
+     * If searching for Histories about API keys, this parameter restricts results to API keys created by/for this username.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setQueryTargetUsername($value)
     {
         return $this->attributes['query_target_username'] = $value;
     }
-    // string # If searching for Histories about API keys, this parameter restricts results to API keys associated with this platform.
+    /**
+     * If searching for Histories about API keys, this parameter restricts results to API keys associated with this platform.
+     *
+     * @return string|null
+     */
     public function getQueryTargetPlatform()
     {
         return isset($this->attributes['query_target_platform']) ? $this->attributes['query_target_platform'] : null;
     }
 
+    /**
+     * If searching for Histories about API keys, this parameter restricts results to API keys associated with this platform.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setQueryTargetPlatform($value)
     {
         return $this->attributes['query_target_platform'] = $value;
     }
-    // string # If searching for Histories about API keys, this parameter restricts results to API keys with this permission set.
+    /**
+     * If searching for Histories about API keys, this parameter restricts results to API keys with this permission set.
+     *
+     * @return string|null
+     */
     public function getQueryTargetPermissionSet()
     {
         return isset($this->attributes['query_target_permission_set']) ? $this->attributes['query_target_permission_set'] : null;
     }
 
+    /**
+     * If searching for Histories about API keys, this parameter restricts results to API keys with this permission set.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setQueryTargetPermissionSet($value)
     {
         return $this->attributes['query_target_permission_set'] = $value;
     }
-    // string # If `status` is `ready`, this will be a URL where all the results can be downloaded at once as a CSV.
+    /**
+     * If `status` is `ready`, this will be a URL where all the results can be downloaded at once as a CSV.
+     *
+     * @return string|null
+     */
     public function getResultsUrl()
     {
         return isset($this->attributes['results_url']) ? $this->attributes['results_url'] : null;
     }
 
+    /**
+     * If `status` is `ready`, this will be a URL where all the results can be downloaded at once as a CSV.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setResultsUrl($value)
     {
         return $this->attributes['results_url'] = $value;
     }
-    // int64 # User ID.  Provide a value of `0` to operate the current session's user.
+    /**
+     * User ID.  Provide a value of `0` to operate the current session's user.
+     *
+     * @return int|null
+     */
     public function getUserId()
     {
         return isset($this->attributes['user_id']) ? $this->attributes['user_id'] : null;
     }
 
+    /**
+     * User ID.  Provide a value of `0` to operate the current session's user.
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setUserId($value)
     {
         return $this->attributes['user_id'] = $value;
     }
 
+    /**
+     * Persist this model's attributes and replace them with the API response.
+     *
+     * @return bool True after the operation succeeds.
+     * @throws \Files\Exception\FilesException When saving fails or updates are unsupported.
+     */
     public function save()
     {
         if (@$this->attributes['id']) {
@@ -336,8 +670,17 @@ class HistoryExport
     }
 
 
-    // Parameters:
-    //   id (required) - int64 - History Export ID.
+    /**
+     * Show History Export
+     *
+     * GET /history_exports/{id}
+     *
+     * @param int $id History Export ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\HistoryExport
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function find($id, $params = [], $options = [])
     {
         if (!is_array($params)) {
@@ -358,34 +701,56 @@ class HistoryExport
 
         return new HistoryExport((array) (@$response->data ?: []), $options);
     }
+    /**
+     * Show History Export
+     *
+     * GET /history_exports/{id}
+     *
+     * Alias of find().
+     *
+     * @param int $id History Export ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\HistoryExport
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function get($id, $params = [], $options = [])
     {
         return self::find($id, $params, $options);
     }
 
-    // Parameters:
-    //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
-    //   start_at - string - Start date/time of export range.
-    //   end_at - string - End date/time of export range.
-    //   query_action - string - Filter results by this this action type. Valid values: `create`, `read`, `update`, `destroy`, `move`, `login`, `failedlogin`, `copy`, `user_create`, `user_update`, `user_destroy`, `group_create`, `group_update`, `group_destroy`, `permission_create`, `permission_destroy`, `api_key_create`, `api_key_update`, `api_key_destroy`, `archived_delete`
-    //   query_interface - string - Filter results by this this interface type. Valid values: `web`, `ftp`, `robot`, `jsapi`, `webdesktopapi`, `sftp`, `dav`, `desktop`, `restapi`, `scim`, `office`, `mobile`, `as2`, `inbound_email`, `remote`, `inbound_s3`
-    //   query_user_id - string - Return results that are actions performed by the user indicated by this User ID
-    //   query_file_id - string - Return results that are file actions related to the file indicated by this File ID
-    //   query_parent_id - string - Return results that are file actions inside the parent folder specified by this folder ID
-    //   query_path - string - Return results that are file actions related to paths matching this pattern.
-    //   query_folder - string - Return results that are file actions related to files or folders inside folder paths matching this pattern.
-    //   query_src - string - Return results that are file moves originating from paths matching this pattern.
-    //   query_destination - string - Return results that are file moves with paths matching this pattern as destination.
-    //   query_ip - string - Filter results by this IP address.
-    //   query_username - string - Filter results by this username.
-    //   query_failure_type - string - If searching for Histories about login failures, this parameter restricts results to failures of this specific type.  Valid values: `expired_trial`, `account_overdue`, `locked_out`, `ip_mismatch`, `password_mismatch`, `site_mismatch`, `username_not_found`, `none`, `no_ftp_permission`, `no_web_permission`, `no_directory`, `errno_enoent`, `no_sftp_permission`, `no_dav_permission`, `no_restapi_permission`, `key_mismatch`, `region_mismatch`, `expired_access`, `desktop_ip_mismatch`, `desktop_api_key_not_used_quickly_enough`, `disabled`, `country_mismatch`, `insecure_ftp`, `insecure_cipher`, `rate_limited`, `no_s3_compatible_endpoint_permission`, `mobile_ip_mismatch`, `mobile_api_key_not_used_quickly_enough`, `desktop_app_disabled`, `mobile_app_disabled`
-    //   query_target_id - string - If searching for Histories about specific objects (such as Users, or API Keys), this parameter restricts results to objects that match this ID.
-    //   query_target_name - string - If searching for Histories about Users, Groups or other objects with names, this parameter restricts results to objects with this name/username.
-    //   query_target_permission - string - If searching for Histories about Permissions, this parameter restricts results to permissions of this level.
-    //   query_target_user_id - string - If searching for Histories about API keys, this parameter restricts results to API keys created by/for this user ID.
-    //   query_target_username - string - If searching for Histories about API keys, this parameter restricts results to API keys created by/for this username.
-    //   query_target_platform - string - If searching for Histories about API keys, this parameter restricts results to API keys associated with this platform.
-    //   query_target_permission_set - string - If searching for Histories about API keys, this parameter restricts results to API keys with this permission set.
+    /**
+     * Create History Export
+     *
+     * POST /history_exports
+     *
+     * @param array $params Request parameters.
+     *     - `user_id` (int, optional): User ID.  Provide a value of `0` to operate the current session's user.
+     *     - `start_at` (string, optional): Start date/time of export range.
+     *     - `end_at` (string, optional): End date/time of export range.
+     *     - `query_action` (string, optional): Filter results by this this action type. Valid values: `create`, `read`, `update`, `destroy`, `move`, `login`, `failedlogin`, `copy`, `user_create`, `user_update`, `user_destroy`, `group_create`, `group_update`, `group_destroy`, `permission_create`, `permission_destroy`, `api_key_create`, `api_key_update`, `api_key_destroy`, `archived_delete`
+     *     - `query_interface` (string, optional): Filter results by this this interface type. Valid values: `web`, `ftp`, `robot`, `jsapi`, `webdesktopapi`, `sftp`, `dav`, `desktop`, `restapi`, `scim`, `office`, `mobile`, `as2`, `inbound_email`, `remote`, `inbound_s3`
+     *     - `query_user_id` (string, optional): Return results that are actions performed by the user indicated by this User ID
+     *     - `query_file_id` (string, optional): Return results that are file actions related to the file indicated by this File ID
+     *     - `query_parent_id` (string, optional): Return results that are file actions inside the parent folder specified by this folder ID
+     *     - `query_path` (string, optional): Return results that are file actions related to paths matching this pattern.
+     *     - `query_folder` (string, optional): Return results that are file actions related to files or folders inside folder paths matching this pattern.
+     *     - `query_src` (string, optional): Return results that are file moves originating from paths matching this pattern.
+     *     - `query_destination` (string, optional): Return results that are file moves with paths matching this pattern as destination.
+     *     - `query_ip` (string, optional): Filter results by this IP address.
+     *     - `query_username` (string, optional): Filter results by this username.
+     *     - `query_failure_type` (string, optional): If searching for Histories about login failures, this parameter restricts results to failures of this specific type.  Valid values: `expired_trial`, `account_overdue`, `locked_out`, `ip_mismatch`, `password_mismatch`, `site_mismatch`, `username_not_found`, `none`, `no_ftp_permission`, `no_web_permission`, `no_directory`, `errno_enoent`, `no_sftp_permission`, `no_dav_permission`, `no_restapi_permission`, `key_mismatch`, `region_mismatch`, `expired_access`, `desktop_ip_mismatch`, `desktop_api_key_not_used_quickly_enough`, `disabled`, `country_mismatch`, `insecure_ftp`, `insecure_cipher`, `rate_limited`, `no_s3_compatible_endpoint_permission`, `mobile_ip_mismatch`, `mobile_api_key_not_used_quickly_enough`, `desktop_app_disabled`, `mobile_app_disabled`
+     *     - `query_target_id` (string, optional): If searching for Histories about specific objects (such as Users, or API Keys), this parameter restricts results to objects that match this ID.
+     *     - `query_target_name` (string, optional): If searching for Histories about Users, Groups or other objects with names, this parameter restricts results to objects with this name/username.
+     *     - `query_target_permission` (string, optional): If searching for Histories about Permissions, this parameter restricts results to permissions of this level.
+     *     - `query_target_user_id` (string, optional): If searching for Histories about API keys, this parameter restricts results to API keys created by/for this user ID.
+     *     - `query_target_username` (string, optional): If searching for Histories about API keys, this parameter restricts results to API keys created by/for this username.
+     *     - `query_target_platform` (string, optional): If searching for Histories about API keys, this parameter restricts results to API keys associated with this platform.
+     *     - `query_target_permission_set` (string, optional): If searching for Histories about API keys, this parameter restricts results to API keys with this permission set.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\HistoryExport
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function create($params = [], $options = [])
     {
         if (!empty($params['user_id']) && !is_int($params['user_id'])) {

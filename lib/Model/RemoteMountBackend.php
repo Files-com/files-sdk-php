@@ -8,8 +8,25 @@ use Files\Logger;
 require_once __DIR__ . '/../Files.php';
 
 /**
- * Class RemoteMountBackend
+ * A Remote Mount Backend is used to provide high availability for a Remote Server Mount Folder Behavior.
  *
+ * @property string|null $canary_file_path Path to the canary file used for health checks.
+ * @property bool|null $enabled True if this backend is enabled.
+ * @property int|null $fall Number of consecutive failures before considering the backend unhealthy.
+ * @property bool|null $health_check_enabled True if health checks are enabled for this backend.
+ * @property object[]|null $health_check_results Array of recent health check results.
+ * @property string|null $health_check_type Type of health check to perform.
+ * @property int|null $id Unique identifier for this backend.
+ * @property int|null $interval Interval in seconds between health checks.
+ * @property string|null $min_free_cpu Minimum free CPU percentage required for this backend to be considered healthy.
+ * @property string|null $min_free_mem Minimum free memory percentage required for this backend to be considered healthy.
+ * @property int|null $priority Priority of this backend.
+ * @property string|null $remote_path Path on the remote server to treat as the root of this mount.
+ * @property int|null $remote_server_id The remote server that this backend is associated with.
+ * @property int|null $remote_server_mount_id The mount ID of the Remote Server Mount that this backend is associated with.
+ * @property int|null $rise Number of consecutive successes before considering the backend healthy.
+ * @property string|null $status Status of this backend.
+ * @property bool|null $undergoing_maintenance True if this backend is undergoing maintenance.
  * @package Files
  */
 class RemoteMountBackend
@@ -20,6 +37,12 @@ class RemoteMountBackend
         'list' => 'all',
     ];
 
+    /**
+     * Build a model from API attributes and retain its request options.
+     *
+     * @param array $attributes Initial model attributes, keyed by property name.
+     * @param array $options Request options used by this model's operations.
+     */
     public function __construct($attributes = [], $options = [])
     {
         foreach ($attributes as $key => $value) {
@@ -29,16 +52,36 @@ class RemoteMountBackend
         $this->options = $options;
     }
 
+    /**
+     * Set a model attribute locally; call save() to persist supported changes.
+     *
+     * @param string $name Attribute name.
+     * @param mixed $value Attribute value.
+     * @return void
+     */
     public function __set($name, $value)
     {
         $this->attributes[$name] = $value;
     }
 
+    /**
+     * Read a model attribute.
+     *
+     * @param string $name Attribute name.
+     * @return mixed The attribute value, or null when it is not set.
+     */
     public function __get($name)
     {
         return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
+    /**
+     * Dispatch a legacy static alias, including list() to all().
+     *
+     * @param string $name Alias name.
+     * @param array $arguments Arguments passed to the canonical method.
+     * @return mixed The canonical method's result, or null for an unknown alias.
+     */
     public static function __callStatic($name, $arguments)
     {
         if (in_array($name, array_keys(self::$static_mapped_functions))) {
@@ -49,182 +92,366 @@ class RemoteMountBackend
         }
     }
 
+    /**
+     * Whether this model has a nonempty primary key.
+     *
+     * @return bool
+     */
     public function isLoaded()
     {
         return !!@$this->attributes['id'];
     }
-    // string # Path to the canary file used for health checks.
+    /**
+     * Path to the canary file used for health checks.
+     *
+     * @return string|null
+     */
     public function getCanaryFilePath()
     {
         return isset($this->attributes['canary_file_path']) ? $this->attributes['canary_file_path'] : null;
     }
 
+    /**
+     * Path to the canary file used for health checks.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setCanaryFilePath($value)
     {
         return $this->attributes['canary_file_path'] = $value;
     }
-    // boolean # True if this backend is enabled.
+    /**
+     * True if this backend is enabled.
+     *
+     * @return bool|null
+     */
     public function getEnabled()
     {
         return isset($this->attributes['enabled']) ? $this->attributes['enabled'] : null;
     }
 
+    /**
+     * True if this backend is enabled.
+     *
+     * @param bool|null $value
+     * @return bool|null The assigned value.
+     */
     public function setEnabled($value)
     {
         return $this->attributes['enabled'] = $value;
     }
-    // int64 # Number of consecutive failures before considering the backend unhealthy.
+    /**
+     * Number of consecutive failures before considering the backend unhealthy.
+     *
+     * @return int|null
+     */
     public function getFall()
     {
         return isset($this->attributes['fall']) ? $this->attributes['fall'] : null;
     }
 
+    /**
+     * Number of consecutive failures before considering the backend unhealthy.
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setFall($value)
     {
         return $this->attributes['fall'] = $value;
     }
-    // boolean # True if health checks are enabled for this backend.
+    /**
+     * True if health checks are enabled for this backend.
+     *
+     * @return bool|null
+     */
     public function getHealthCheckEnabled()
     {
         return isset($this->attributes['health_check_enabled']) ? $this->attributes['health_check_enabled'] : null;
     }
 
+    /**
+     * True if health checks are enabled for this backend.
+     *
+     * @param bool|null $value
+     * @return bool|null The assigned value.
+     */
     public function setHealthCheckEnabled($value)
     {
         return $this->attributes['health_check_enabled'] = $value;
     }
-    // array(object) # Array of recent health check results.
+    /**
+     * Array of recent health check results.
+     *
+     * @return object[]|null
+     */
     public function getHealthCheckResults()
     {
         return isset($this->attributes['health_check_results']) ? $this->attributes['health_check_results'] : null;
     }
 
+    /**
+     * Array of recent health check results.
+     *
+     * @param object[]|null $value
+     * @return object[]|null The assigned value.
+     */
     public function setHealthCheckResults($value)
     {
         return $this->attributes['health_check_results'] = $value;
     }
-    // string # Type of health check to perform.
+    /**
+     * Type of health check to perform.
+     *
+     * @return string|null
+     */
     public function getHealthCheckType()
     {
         return isset($this->attributes['health_check_type']) ? $this->attributes['health_check_type'] : null;
     }
 
+    /**
+     * Type of health check to perform.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setHealthCheckType($value)
     {
         return $this->attributes['health_check_type'] = $value;
     }
-    // int64 # Unique identifier for this backend.
+    /**
+     * Unique identifier for this backend.
+     *
+     * @return int|null
+     */
     public function getId()
     {
         return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
+    /**
+     * Unique identifier for this backend.
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setId($value)
     {
         return $this->attributes['id'] = $value;
     }
-    // int64 # Interval in seconds between health checks.
+    /**
+     * Interval in seconds between health checks.
+     *
+     * @return int|null
+     */
     public function getInterval()
     {
         return isset($this->attributes['interval']) ? $this->attributes['interval'] : null;
     }
 
+    /**
+     * Interval in seconds between health checks.
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setInterval($value)
     {
         return $this->attributes['interval'] = $value;
     }
-    // decimal # Minimum free CPU percentage required for this backend to be considered healthy.
+    /**
+     * Minimum free CPU percentage required for this backend to be considered healthy.
+     *
+     * @return string|null
+     */
     public function getMinFreeCpu()
     {
         return isset($this->attributes['min_free_cpu']) ? $this->attributes['min_free_cpu'] : null;
     }
 
+    /**
+     * Minimum free CPU percentage required for this backend to be considered healthy.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setMinFreeCpu($value)
     {
         return $this->attributes['min_free_cpu'] = $value;
     }
-    // decimal # Minimum free memory percentage required for this backend to be considered healthy.
+    /**
+     * Minimum free memory percentage required for this backend to be considered healthy.
+     *
+     * @return string|null
+     */
     public function getMinFreeMem()
     {
         return isset($this->attributes['min_free_mem']) ? $this->attributes['min_free_mem'] : null;
     }
 
+    /**
+     * Minimum free memory percentage required for this backend to be considered healthy.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setMinFreeMem($value)
     {
         return $this->attributes['min_free_mem'] = $value;
     }
-    // int64 # Priority of this backend.
+    /**
+     * Priority of this backend.
+     *
+     * @return int|null
+     */
     public function getPriority()
     {
         return isset($this->attributes['priority']) ? $this->attributes['priority'] : null;
     }
 
+    /**
+     * Priority of this backend.
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setPriority($value)
     {
         return $this->attributes['priority'] = $value;
     }
-    // string # Path on the remote server to treat as the root of this mount.
+    /**
+     * Path on the remote server to treat as the root of this mount.
+     *
+     * @return string|null
+     */
     public function getRemotePath()
     {
         return isset($this->attributes['remote_path']) ? $this->attributes['remote_path'] : null;
     }
 
+    /**
+     * Path on the remote server to treat as the root of this mount.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setRemotePath($value)
     {
         return $this->attributes['remote_path'] = $value;
     }
-    // int64 # The remote server that this backend is associated with.
+    /**
+     * The remote server that this backend is associated with.
+     *
+     * @return int|null
+     */
     public function getRemoteServerId()
     {
         return isset($this->attributes['remote_server_id']) ? $this->attributes['remote_server_id'] : null;
     }
 
+    /**
+     * The remote server that this backend is associated with.
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setRemoteServerId($value)
     {
         return $this->attributes['remote_server_id'] = $value;
     }
-    // int64 # The mount ID of the Remote Server Mount that this backend is associated with.
+    /**
+     * The mount ID of the Remote Server Mount that this backend is associated with.
+     *
+     * @return int|null
+     */
     public function getRemoteServerMountId()
     {
         return isset($this->attributes['remote_server_mount_id']) ? $this->attributes['remote_server_mount_id'] : null;
     }
 
+    /**
+     * The mount ID of the Remote Server Mount that this backend is associated with.
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setRemoteServerMountId($value)
     {
         return $this->attributes['remote_server_mount_id'] = $value;
     }
-    // int64 # Number of consecutive successes before considering the backend healthy.
+    /**
+     * Number of consecutive successes before considering the backend healthy.
+     *
+     * @return int|null
+     */
     public function getRise()
     {
         return isset($this->attributes['rise']) ? $this->attributes['rise'] : null;
     }
 
+    /**
+     * Number of consecutive successes before considering the backend healthy.
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setRise($value)
     {
         return $this->attributes['rise'] = $value;
     }
-    // string # Status of this backend.
+    /**
+     * Status of this backend.
+     *
+     * @return string|null
+     */
     public function getStatus()
     {
         return isset($this->attributes['status']) ? $this->attributes['status'] : null;
     }
 
+    /**
+     * Status of this backend.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setStatus($value)
     {
         return $this->attributes['status'] = $value;
     }
-    // boolean # True if this backend is undergoing maintenance.
+    /**
+     * True if this backend is undergoing maintenance.
+     *
+     * @return bool|null
+     */
     public function getUndergoingMaintenance()
     {
         return isset($this->attributes['undergoing_maintenance']) ? $this->attributes['undergoing_maintenance'] : null;
     }
 
+    /**
+     * True if this backend is undergoing maintenance.
+     *
+     * @param bool|null $value
+     * @return bool|null The assigned value.
+     */
     public function setUndergoingMaintenance($value)
     {
         return $this->attributes['undergoing_maintenance'] = $value;
     }
 
-    // Reset backend status to healthy
+    /**
+     * Reset backend status to healthy
+     *
+     * POST /remote_mount_backends/{id}/reset_status
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Remote Mount Backend ID.
+     * @return void
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function resetStatus($params = [])
     {
         if (!is_array($params)) {
@@ -247,19 +474,28 @@ class RemoteMountBackend
         return;
     }
 
-    // Parameters:
-    //   enabled - boolean - True if this backend is enabled.
-    //   fall - int64 - Number of consecutive failures before considering the backend unhealthy.
-    //   health_check_enabled - boolean - True if health checks are enabled for this backend.
-    //   health_check_type - string - Type of health check to perform.
-    //   interval - int64 - Interval in seconds between health checks.
-    //   min_free_cpu - double - Minimum free CPU percentage required for this backend to be considered healthy.
-    //   min_free_mem - double - Minimum free memory percentage required for this backend to be considered healthy.
-    //   priority - int64 - Priority of this backend.
-    //   remote_path - string - Path on the remote server to treat as the root of this mount.
-    //   rise - int64 - Number of consecutive successes before considering the backend healthy.
-    //   canary_file_path - string - Path to the canary file used for health checks.
-    //   remote_server_id - int64 - The remote server that this backend is associated with.
+    /**
+     * Update Remote Mount Backend
+     *
+     * PATCH /remote_mount_backends/{id}
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Remote Mount Backend ID.
+     *     - `enabled` (bool, optional): True if this backend is enabled.
+     *     - `fall` (int, optional): Number of consecutive failures before considering the backend unhealthy.
+     *     - `health_check_enabled` (bool, optional): True if health checks are enabled for this backend.
+     *     - `health_check_type` (string, optional): Type of health check to perform. Allowed values: active, passive.
+     *     - `interval` (int, optional): Interval in seconds between health checks.
+     *     - `min_free_cpu` (float, optional): Minimum free CPU percentage required for this backend to be considered healthy.
+     *     - `min_free_mem` (float, optional): Minimum free memory percentage required for this backend to be considered healthy.
+     *     - `priority` (int, optional): Priority of this backend.
+     *     - `remote_path` (string, optional): Path on the remote server to treat as the root of this mount.
+     *     - `rise` (int, optional): Number of consecutive successes before considering the backend healthy.
+     *     - `canary_file_path` (string, optional): Path to the canary file used for health checks.
+     *     - `remote_server_id` (int, optional): The remote server that this backend is associated with.
+     * @return \Files\Model\RemoteMountBackend
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function update($params = [])
     {
         if (!is_array($params)) {
@@ -314,6 +550,16 @@ class RemoteMountBackend
         return new RemoteMountBackend((array) (@$response->data ?: []), $this->options);
     }
 
+    /**
+     * Delete Remote Mount Backend
+     *
+     * DELETE /remote_mount_backends/{id}
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Remote Mount Backend ID.
+     * @return void
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function delete($params = [])
     {
         if (!is_array($params)) {
@@ -336,12 +582,30 @@ class RemoteMountBackend
         return;
     }
 
+    /**
+     * Delete Remote Mount Backend
+     *
+     * DELETE /remote_mount_backends/{id}
+     *
+     * Alias of delete().
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Remote Mount Backend ID.
+     * @return void
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function destroy($params = [])
     {
         $this->delete($params);
         return;
     }
 
+    /**
+     * Persist this model's attributes and replace them with the API response.
+     *
+     * @return bool True after the operation succeeds.
+     * @throws \Files\Exception\FilesException When saving fails or updates are unsupported.
+     */
     public function save()
     {
         if (@$this->attributes['id']) {
@@ -356,10 +620,19 @@ class RemoteMountBackend
     }
 
 
-    // Parameters:
-    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-    //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
-    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `remote_server_mount_id`.
+    /**
+     * List Remote Mount Backends
+     *
+     * GET /remote_mount_backends
+     *
+     * @param array $params Request parameters.
+     *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+     *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+     *     - `filter` (array|object, optional): If set, return records where the specified field is equal to the supplied value. Valid fields are `remote_server_mount_id`.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\RemoteMountBackend[]
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function all($params = [], $options = [])
     {
         if (!empty($params['cursor']) && !is_string($params['cursor'])) {
@@ -381,8 +654,17 @@ class RemoteMountBackend
         return $return_array;
     }
 
-    // Parameters:
-    //   id (required) - int64 - Remote Mount Backend ID.
+    /**
+     * Show Remote Mount Backend
+     *
+     * GET /remote_mount_backends/{id}
+     *
+     * @param int $id Remote Mount Backend ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\RemoteMountBackend
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function find($id, $params = [], $options = [])
     {
         if (!is_array($params)) {
@@ -403,25 +685,47 @@ class RemoteMountBackend
 
         return new RemoteMountBackend((array) (@$response->data ?: []), $options);
     }
+    /**
+     * Show Remote Mount Backend
+     *
+     * GET /remote_mount_backends/{id}
+     *
+     * Alias of find().
+     *
+     * @param int $id Remote Mount Backend ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\RemoteMountBackend
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function get($id, $params = [], $options = [])
     {
         return self::find($id, $params, $options);
     }
 
-    // Parameters:
-    //   enabled - boolean - True if this backend is enabled.
-    //   fall - int64 - Number of consecutive failures before considering the backend unhealthy.
-    //   health_check_enabled - boolean - True if health checks are enabled for this backend.
-    //   health_check_type - string - Type of health check to perform.
-    //   interval - int64 - Interval in seconds between health checks.
-    //   min_free_cpu - double - Minimum free CPU percentage required for this backend to be considered healthy.
-    //   min_free_mem - double - Minimum free memory percentage required for this backend to be considered healthy.
-    //   priority - int64 - Priority of this backend.
-    //   remote_path - string - Path on the remote server to treat as the root of this mount.
-    //   rise - int64 - Number of consecutive successes before considering the backend healthy.
-    //   canary_file_path (required) - string - Path to the canary file used for health checks.
-    //   remote_server_mount_id (required) - int64 - The mount ID of the Remote Server Mount that this backend is associated with.
-    //   remote_server_id (required) - int64 - The remote server that this backend is associated with.
+    /**
+     * Create Remote Mount Backend
+     *
+     * POST /remote_mount_backends
+     *
+     * @param array $params Request parameters.
+     *     - `enabled` (bool, optional): True if this backend is enabled.
+     *     - `fall` (int, optional): Number of consecutive failures before considering the backend unhealthy.
+     *     - `health_check_enabled` (bool, optional): True if health checks are enabled for this backend.
+     *     - `health_check_type` (string, optional): Type of health check to perform. Allowed values: active, passive.
+     *     - `interval` (int, optional): Interval in seconds between health checks.
+     *     - `min_free_cpu` (float, optional): Minimum free CPU percentage required for this backend to be considered healthy.
+     *     - `min_free_mem` (float, optional): Minimum free memory percentage required for this backend to be considered healthy.
+     *     - `priority` (int, optional): Priority of this backend.
+     *     - `remote_path` (string, optional): Path on the remote server to treat as the root of this mount.
+     *     - `rise` (int, optional): Number of consecutive successes before considering the backend healthy.
+     *     - `canary_file_path` (string, required): Path to the canary file used for health checks.
+     *     - `remote_server_mount_id` (int, required): The mount ID of the Remote Server Mount that this backend is associated with.
+     *     - `remote_server_id` (int, required): The remote server that this backend is associated with.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\RemoteMountBackend
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function create($params = [], $options = [])
     {
         if (empty($params['canary_file_path'])) {

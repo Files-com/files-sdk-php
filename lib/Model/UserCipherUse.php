@@ -8,8 +8,16 @@ use Files\Logger;
 require_once __DIR__ . '/../Files.php';
 
 /**
- * Class UserCipherUse
+ * A UserCipherUse is a way to see the exact set of encryption ciphers and protocols used by a given user.
  *
+ * @property int|null $id UserCipherUse ID
+ * @property int|null $user_id ID of the user who performed this access
+ * @property string|null $username Username of the user who performed this access
+ * @property string|null $protocol_cipher The protocol and cipher employed
+ * @property string|null $created_at The earliest recorded use of this combination of interface and protocol and cipher (for this user)
+ * @property bool|null $insecure Is this cipher considered insecure?
+ * @property string|null $interface The interface accessed
+ * @property string|null $updated_at The most recent use of this combination of interface and protocol and cipher (for this user)
  * @package Files
  */
 class UserCipherUse
@@ -20,6 +28,12 @@ class UserCipherUse
         'list' => 'all',
     ];
 
+    /**
+     * Build a model from API attributes and retain its request options.
+     *
+     * @param array $attributes Initial model attributes, keyed by property name.
+     * @param array $options Request options used by this model's operations.
+     */
     public function __construct($attributes = [], $options = [])
     {
         foreach ($attributes as $key => $value) {
@@ -29,16 +43,36 @@ class UserCipherUse
         $this->options = $options;
     }
 
+    /**
+     * Set a model attribute locally; call save() to persist supported changes.
+     *
+     * @param string $name Attribute name.
+     * @param mixed $value Attribute value.
+     * @return void
+     */
     public function __set($name, $value)
     {
         $this->attributes[$name] = $value;
     }
 
+    /**
+     * Read a model attribute.
+     *
+     * @param string $name Attribute name.
+     * @return mixed The attribute value, or null when it is not set.
+     */
     public function __get($name)
     {
         return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
+    /**
+     * Dispatch a legacy static alias, including list() to all().
+     *
+     * @param string $name Alias name.
+     * @param array $arguments Arguments passed to the canonical method.
+     * @return mixed The canonical method's result, or null for an unknown alias.
+     */
     public static function __callStatic($name, $arguments)
     {
         if (in_array($name, array_keys(self::$static_mapped_functions))) {
@@ -49,61 +83,107 @@ class UserCipherUse
         }
     }
 
+    /**
+     * Whether this model has a nonempty primary key.
+     *
+     * @return bool
+     */
     public function isLoaded()
     {
         return !!@$this->attributes['id'];
     }
-    // int64 # UserCipherUse ID
+    /**
+     * UserCipherUse ID
+     *
+     * @return int|null
+     */
     public function getId()
     {
         return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
-    // int64 # ID of the user who performed this access
+    /**
+     * ID of the user who performed this access
+     *
+     * @return int|null
+     */
     public function getUserId()
     {
         return isset($this->attributes['user_id']) ? $this->attributes['user_id'] : null;
     }
-    // string # Username of the user who performed this access
+    /**
+     * Username of the user who performed this access
+     *
+     * @return string|null
+     */
     public function getUsername()
     {
         return isset($this->attributes['username']) ? $this->attributes['username'] : null;
     }
-    // string # The protocol and cipher employed
+    /**
+     * The protocol and cipher employed
+     *
+     * @return string|null
+     */
     public function getProtocolCipher()
     {
         return isset($this->attributes['protocol_cipher']) ? $this->attributes['protocol_cipher'] : null;
     }
-    // date-time # The earliest recorded use of this combination of interface and protocol and cipher (for this user)
+    /**
+     * The earliest recorded use of this combination of interface and protocol and cipher (for this user)
+     *
+     * @return string|null
+     */
     public function getCreatedAt()
     {
         return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
-    // boolean # Is this cipher considered insecure?
+    /**
+     * Is this cipher considered insecure?
+     *
+     * @return bool|null
+     */
     public function getInsecure()
     {
         return isset($this->attributes['insecure']) ? $this->attributes['insecure'] : null;
     }
-    // string # The interface accessed
+    /**
+     * The interface accessed
+     *
+     * @return string|null
+     */
     public function getInterface()
     {
         return isset($this->attributes['interface']) ? $this->attributes['interface'] : null;
     }
-    // date-time # The most recent use of this combination of interface and protocol and cipher (for this user)
+    /**
+     * The most recent use of this combination of interface and protocol and cipher (for this user)
+     *
+     * @return string|null
+     */
     public function getUpdatedAt()
     {
         return isset($this->attributes['updated_at']) ? $this->attributes['updated_at'] : null;
     }
 
-    // Parameters:
-    //   user_id - int64 - User ID. If provided, will return uses for this user.
-    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-    //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `updated_at`.
-    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `insecure` and `updated_at`. Valid field combinations are `[ insecure, updated_at ]`.
-    //   filter_gt - object - If set, return records where the specified field is greater than the supplied value. Valid fields are `updated_at`.
-    //   filter_gteq - object - If set, return records where the specified field is greater than or equal the supplied value. Valid fields are `updated_at`.
-    //   filter_lt - object - If set, return records where the specified field is less than the supplied value. Valid fields are `updated_at`.
-    //   filter_lteq - object - If set, return records where the specified field is less than or equal the supplied value. Valid fields are `updated_at`.
+    /**
+     * List User Cipher Uses
+     *
+     * GET /user_cipher_uses
+     *
+     * @param array $params Request parameters.
+     *     - `user_id` (int, optional): User ID. If provided, will return uses for this user.
+     *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+     *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+     *     - `sort_by` (array|object, optional): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `updated_at`.
+     *     - `filter` (array|object, optional): If set, return records where the specified field is equal to the supplied value. Valid fields are `insecure` and `updated_at`. Valid field combinations are `[ insecure, updated_at ]`.
+     *     - `filter_gt` (array|object, optional): If set, return records where the specified field is greater than the supplied value. Valid fields are `updated_at`.
+     *     - `filter_gteq` (array|object, optional): If set, return records where the specified field is greater than or equal the supplied value. Valid fields are `updated_at`.
+     *     - `filter_lt` (array|object, optional): If set, return records where the specified field is less than the supplied value. Valid fields are `updated_at`.
+     *     - `filter_lteq` (array|object, optional): If set, return records where the specified field is less than or equal the supplied value. Valid fields are `updated_at`.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\UserCipherUse[]
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function all($params = [], $options = [])
     {
         if (!empty($params['user_id']) && !is_int($params['user_id'])) {

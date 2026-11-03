@@ -8,8 +8,29 @@ use Files\Logger;
 require_once __DIR__ . '/../Files.php';
 
 /**
- * Class Partner
+ * A Partner is a first-class entity that cleanly represents an external organization, enables delegated administration, and enforces strict boundaries.
  *
+ * @property bool|null $allow_bypassing_2fa_policies Allow Partner Admins to change Two-Factor Authentication requirements for Partner Users.
+ * @property string|null $allowed_ips A list of allowed IPs for this Partner. Newline delimited. Partner User IP access is allowed when the IP matches the Partner, User, or Site allowed IP lists.
+ * @property bool|null $allow_credential_changes Allow Partner Admins to change or reset credentials for users belonging to this Partner.
+ * @property bool|null $allow_providing_gpg_keys Allow Partner Admins to provide GPG keys.
+ * @property bool|null $allow_user_creation Allow Partner Admins to create users.
+ * @property bool|null $cc_emails_to_responsible_party When `true`, emails sent to Partner users are copied to the responsible User or Group.
+ * @property object[]|null $connections Approved Connected Sites relationships for this Partner, in both directions. Empty when this Partner has no connections. Read-only.
+ * @property int|null $id The unique ID of the Partner.
+ * @property int|null $ai_assistant_personality_id AI Assistant Personality ID assigned to this Partner, if any. Users in the Partner inherit it unless a direct per-user assignment overrides it.
+ * @property int|null $workspace_id ID of the Workspace associated with this Partner.
+ * @property string|null $name The name of the Partner.
+ * @property string|null $notes Notes about this Partner.
+ * @property int[]|null $partner_admin_ids Array of User IDs that are Partner Admins for this Partner.
+ * @property int|null $partner_channel_template_id ID of the Partner Channel Template assigned to this Partner.
+ * @property string|null $partnership_role This site's role for this Partner in Connected Sites relationships. `host` is a Partner this site configured. `guest` is a Partner created by approving another site's connection request; it has no root folder and cannot hold users, permissions, or Partner Channels, or host a connection. `host_and_guest` is a configured Partner that is also the guest side of a connection. Promote a `guest` Partner by setting this to `host_and_guest` together with a `root_folder`.
+ * @property int|null $responsible_group_id ID of the Group responsible for this Partner.
+ * @property int|null $responsible_user_id ID of the User responsible for this Partner.
+ * @property string|null $root_folder The root folder path for this Partner.
+ * @property bool|null $show_partner_channel_home_page Show Partner users a simplified home page built from this Partner's Channels.
+ * @property string|null $tags Comma-separated list of Tags for this Partner. Tags are used for other features, such as UserLifecycleRules, which can target specific tags. Tags must only contain lowercase letters, numbers, and hyphens.
+ * @property int[]|null $user_ids Array of User IDs that belong to this Partner.
  * @package Files
  */
 class Partner
@@ -20,6 +41,12 @@ class Partner
         'list' => 'all',
     ];
 
+    /**
+     * Build a model from API attributes and retain its request options.
+     *
+     * @param array $attributes Initial model attributes, keyed by property name.
+     * @param array $options Request options used by this model's operations.
+     */
     public function __construct($attributes = [], $options = [])
     {
         foreach ($attributes as $key => $value) {
@@ -29,16 +56,36 @@ class Partner
         $this->options = $options;
     }
 
+    /**
+     * Set a model attribute locally; call save() to persist supported changes.
+     *
+     * @param string $name Attribute name.
+     * @param mixed $value Attribute value.
+     * @return void
+     */
     public function __set($name, $value)
     {
         $this->attributes[$name] = $value;
     }
 
+    /**
+     * Read a model attribute.
+     *
+     * @param string $name Attribute name.
+     * @return mixed The attribute value, or null when it is not set.
+     */
     public function __get($name)
     {
         return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
+    /**
+     * Dispatch a legacy static alias, including list() to all().
+     *
+     * @param string $name Alias name.
+     * @param array $arguments Arguments passed to the canonical method.
+     * @return mixed The canonical method's result, or null for an unknown alias.
+     */
     public static function __callStatic($name, $arguments)
     {
         if (in_array($name, array_keys(self::$static_mapped_functions))) {
@@ -49,238 +96,462 @@ class Partner
         }
     }
 
+    /**
+     * Whether this model has a nonempty primary key.
+     *
+     * @return bool
+     */
     public function isLoaded()
     {
         return !!@$this->attributes['id'];
     }
-    // boolean # Allow Partner Admins to change Two-Factor Authentication requirements for Partner Users.
+    /**
+     * Allow Partner Admins to change Two-Factor Authentication requirements for Partner Users.
+     *
+     * @return bool|null
+     */
     public function getAllowBypassing2faPolicies()
     {
         return isset($this->attributes['allow_bypassing_2fa_policies']) ? $this->attributes['allow_bypassing_2fa_policies'] : null;
     }
 
+    /**
+     * Allow Partner Admins to change Two-Factor Authentication requirements for Partner Users.
+     *
+     * @param bool|null $value
+     * @return bool|null The assigned value.
+     */
     public function setAllowBypassing2faPolicies($value)
     {
         return $this->attributes['allow_bypassing_2fa_policies'] = $value;
     }
-    // string # A list of allowed IPs for this Partner. Newline delimited. Partner User IP access is allowed when the IP matches the Partner, User, or Site allowed IP lists.
+    /**
+     * A list of allowed IPs for this Partner. Newline delimited. Partner User IP access is allowed when the IP matches the Partner, User, or Site allowed IP lists.
+     *
+     * @return string|null
+     */
     public function getAllowedIps()
     {
         return isset($this->attributes['allowed_ips']) ? $this->attributes['allowed_ips'] : null;
     }
 
+    /**
+     * A list of allowed IPs for this Partner. Newline delimited. Partner User IP access is allowed when the IP matches the Partner, User, or Site allowed IP lists.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setAllowedIps($value)
     {
         return $this->attributes['allowed_ips'] = $value;
     }
-    // boolean # Allow Partner Admins to change or reset credentials for users belonging to this Partner.
+    /**
+     * Allow Partner Admins to change or reset credentials for users belonging to this Partner.
+     *
+     * @return bool|null
+     */
     public function getAllowCredentialChanges()
     {
         return isset($this->attributes['allow_credential_changes']) ? $this->attributes['allow_credential_changes'] : null;
     }
 
+    /**
+     * Allow Partner Admins to change or reset credentials for users belonging to this Partner.
+     *
+     * @param bool|null $value
+     * @return bool|null The assigned value.
+     */
     public function setAllowCredentialChanges($value)
     {
         return $this->attributes['allow_credential_changes'] = $value;
     }
-    // boolean # Allow Partner Admins to provide GPG keys.
+    /**
+     * Allow Partner Admins to provide GPG keys.
+     *
+     * @return bool|null
+     */
     public function getAllowProvidingGpgKeys()
     {
         return isset($this->attributes['allow_providing_gpg_keys']) ? $this->attributes['allow_providing_gpg_keys'] : null;
     }
 
+    /**
+     * Allow Partner Admins to provide GPG keys.
+     *
+     * @param bool|null $value
+     * @return bool|null The assigned value.
+     */
     public function setAllowProvidingGpgKeys($value)
     {
         return $this->attributes['allow_providing_gpg_keys'] = $value;
     }
-    // boolean # Allow Partner Admins to create users.
+    /**
+     * Allow Partner Admins to create users.
+     *
+     * @return bool|null
+     */
     public function getAllowUserCreation()
     {
         return isset($this->attributes['allow_user_creation']) ? $this->attributes['allow_user_creation'] : null;
     }
 
+    /**
+     * Allow Partner Admins to create users.
+     *
+     * @param bool|null $value
+     * @return bool|null The assigned value.
+     */
     public function setAllowUserCreation($value)
     {
         return $this->attributes['allow_user_creation'] = $value;
     }
-    // boolean # When `true`, emails sent to Partner users are copied to the responsible User or Group.
+    /**
+     * When `true`, emails sent to Partner users are copied to the responsible User or Group.
+     *
+     * @return bool|null
+     */
     public function getCcEmailsToResponsibleParty()
     {
         return isset($this->attributes['cc_emails_to_responsible_party']) ? $this->attributes['cc_emails_to_responsible_party'] : null;
     }
 
+    /**
+     * When `true`, emails sent to Partner users are copied to the responsible User or Group.
+     *
+     * @param bool|null $value
+     * @return bool|null The assigned value.
+     */
     public function setCcEmailsToResponsibleParty($value)
     {
         return $this->attributes['cc_emails_to_responsible_party'] = $value;
     }
-    // array(object) # Approved Connected Sites relationships for this Partner, in both directions. Empty when this Partner has no connections. Read-only.
+    /**
+     * Approved Connected Sites relationships for this Partner, in both directions. Empty when this Partner has no connections. Read-only.
+     *
+     * @return object[]|null
+     */
     public function getConnections()
     {
         return isset($this->attributes['connections']) ? $this->attributes['connections'] : null;
     }
 
+    /**
+     * Approved Connected Sites relationships for this Partner, in both directions. Empty when this Partner has no connections. Read-only.
+     *
+     * @param object[]|null $value
+     * @return object[]|null The assigned value.
+     */
     public function setConnections($value)
     {
         return $this->attributes['connections'] = $value;
     }
-    // int64 # The unique ID of the Partner.
+    /**
+     * The unique ID of the Partner.
+     *
+     * @return int|null
+     */
     public function getId()
     {
         return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
+    /**
+     * The unique ID of the Partner.
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setId($value)
     {
         return $this->attributes['id'] = $value;
     }
-    // int64 # AI Assistant Personality ID assigned to this Partner, if any. Users in the Partner inherit it unless a direct per-user assignment overrides it.
+    /**
+     * AI Assistant Personality ID assigned to this Partner, if any. Users in the Partner inherit it unless a direct per-user assignment overrides it.
+     *
+     * @return int|null
+     */
     public function getAiAssistantPersonalityId()
     {
         return isset($this->attributes['ai_assistant_personality_id']) ? $this->attributes['ai_assistant_personality_id'] : null;
     }
 
+    /**
+     * AI Assistant Personality ID assigned to this Partner, if any. Users in the Partner inherit it unless a direct per-user assignment overrides it.
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setAiAssistantPersonalityId($value)
     {
         return $this->attributes['ai_assistant_personality_id'] = $value;
     }
-    // int64 # ID of the Workspace associated with this Partner.
+    /**
+     * ID of the Workspace associated with this Partner.
+     *
+     * @return int|null
+     */
     public function getWorkspaceId()
     {
         return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
 
+    /**
+     * ID of the Workspace associated with this Partner.
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setWorkspaceId($value)
     {
         return $this->attributes['workspace_id'] = $value;
     }
-    // string # The name of the Partner.
+    /**
+     * The name of the Partner.
+     *
+     * @return string|null
+     */
     public function getName()
     {
         return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
 
+    /**
+     * The name of the Partner.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setName($value)
     {
         return $this->attributes['name'] = $value;
     }
-    // string # Notes about this Partner.
+    /**
+     * Notes about this Partner.
+     *
+     * @return string|null
+     */
     public function getNotes()
     {
         return isset($this->attributes['notes']) ? $this->attributes['notes'] : null;
     }
 
+    /**
+     * Notes about this Partner.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setNotes($value)
     {
         return $this->attributes['notes'] = $value;
     }
-    // array(int64) # Array of User IDs that are Partner Admins for this Partner.
+    /**
+     * Array of User IDs that are Partner Admins for this Partner.
+     *
+     * @return int[]|null
+     */
     public function getPartnerAdminIds()
     {
         return isset($this->attributes['partner_admin_ids']) ? $this->attributes['partner_admin_ids'] : null;
     }
 
+    /**
+     * Array of User IDs that are Partner Admins for this Partner.
+     *
+     * @param int[]|null $value
+     * @return int[]|null The assigned value.
+     */
     public function setPartnerAdminIds($value)
     {
         return $this->attributes['partner_admin_ids'] = $value;
     }
-    // int64 # ID of the Partner Channel Template assigned to this Partner.
+    /**
+     * ID of the Partner Channel Template assigned to this Partner.
+     *
+     * @return int|null
+     */
     public function getPartnerChannelTemplateId()
     {
         return isset($this->attributes['partner_channel_template_id']) ? $this->attributes['partner_channel_template_id'] : null;
     }
 
+    /**
+     * ID of the Partner Channel Template assigned to this Partner.
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setPartnerChannelTemplateId($value)
     {
         return $this->attributes['partner_channel_template_id'] = $value;
     }
-    // string # This site's role for this Partner in Connected Sites relationships. `host` is a Partner this site configured. `guest` is a Partner created by approving another site's connection request; it has no root folder and cannot hold users, permissions, or Partner Channels, or host a connection. `host_and_guest` is a configured Partner that is also the guest side of a connection. Promote a `guest` Partner by setting this to `host_and_guest` together with a `root_folder`.
+    /**
+     * This site's role for this Partner in Connected Sites relationships. `host` is a Partner this site configured. `guest` is a Partner created by approving another site's connection request; it has no root folder and cannot hold users, permissions, or Partner Channels, or host a connection. `host_and_guest` is a configured Partner that is also the guest side of a connection. Promote a `guest` Partner by setting this to `host_and_guest` together with a `root_folder`.
+     *
+     * @return string|null
+     */
     public function getPartnershipRole()
     {
         return isset($this->attributes['partnership_role']) ? $this->attributes['partnership_role'] : null;
     }
 
+    /**
+     * This site's role for this Partner in Connected Sites relationships. `host` is a Partner this site configured. `guest` is a Partner created by approving another site's connection request; it has no root folder and cannot hold users, permissions, or Partner Channels, or host a connection. `host_and_guest` is a configured Partner that is also the guest side of a connection. Promote a `guest` Partner by setting this to `host_and_guest` together with a `root_folder`.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setPartnershipRole($value)
     {
         return $this->attributes['partnership_role'] = $value;
     }
-    // int64 # ID of the Group responsible for this Partner.
+    /**
+     * ID of the Group responsible for this Partner.
+     *
+     * @return int|null
+     */
     public function getResponsibleGroupId()
     {
         return isset($this->attributes['responsible_group_id']) ? $this->attributes['responsible_group_id'] : null;
     }
 
+    /**
+     * ID of the Group responsible for this Partner.
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setResponsibleGroupId($value)
     {
         return $this->attributes['responsible_group_id'] = $value;
     }
-    // int64 # ID of the User responsible for this Partner.
+    /**
+     * ID of the User responsible for this Partner.
+     *
+     * @return int|null
+     */
     public function getResponsibleUserId()
     {
         return isset($this->attributes['responsible_user_id']) ? $this->attributes['responsible_user_id'] : null;
     }
 
+    /**
+     * ID of the User responsible for this Partner.
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setResponsibleUserId($value)
     {
         return $this->attributes['responsible_user_id'] = $value;
     }
-    // string # The root folder path for this Partner.
+    /**
+     * The root folder path for this Partner.
+     *
+     * @return string|null
+     */
     public function getRootFolder()
     {
         return isset($this->attributes['root_folder']) ? $this->attributes['root_folder'] : null;
     }
 
+    /**
+     * The root folder path for this Partner.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setRootFolder($value)
     {
         return $this->attributes['root_folder'] = $value;
     }
-    // boolean # Show Partner users a simplified home page built from this Partner's Channels.
+    /**
+     * Show Partner users a simplified home page built from this Partner's Channels.
+     *
+     * @return bool|null
+     */
     public function getShowPartnerChannelHomePage()
     {
         return isset($this->attributes['show_partner_channel_home_page']) ? $this->attributes['show_partner_channel_home_page'] : null;
     }
 
+    /**
+     * Show Partner users a simplified home page built from this Partner's Channels.
+     *
+     * @param bool|null $value
+     * @return bool|null The assigned value.
+     */
     public function setShowPartnerChannelHomePage($value)
     {
         return $this->attributes['show_partner_channel_home_page'] = $value;
     }
-    // string # Comma-separated list of Tags for this Partner. Tags are used for other features, such as UserLifecycleRules, which can target specific tags.  Tags must only contain lowercase letters, numbers, and hyphens.
+    /**
+     * Comma-separated list of Tags for this Partner. Tags are used for other features, such as UserLifecycleRules, which can target specific tags.  Tags must only contain lowercase letters, numbers, and hyphens.
+     *
+     * @return string|null
+     */
     public function getTags()
     {
         return isset($this->attributes['tags']) ? $this->attributes['tags'] : null;
     }
 
+    /**
+     * Comma-separated list of Tags for this Partner. Tags are used for other features, such as UserLifecycleRules, which can target specific tags.  Tags must only contain lowercase letters, numbers, and hyphens.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setTags($value)
     {
         return $this->attributes['tags'] = $value;
     }
-    // array(int64) # Array of User IDs that belong to this Partner.
+    /**
+     * Array of User IDs that belong to this Partner.
+     *
+     * @return int[]|null
+     */
     public function getUserIds()
     {
         return isset($this->attributes['user_ids']) ? $this->attributes['user_ids'] : null;
     }
 
+    /**
+     * Array of User IDs that belong to this Partner.
+     *
+     * @param int[]|null $value
+     * @return int[]|null The assigned value.
+     */
     public function setUserIds($value)
     {
         return $this->attributes['user_ids'] = $value;
     }
 
-    // Parameters:
-    //   ai_assistant_personality_id - int64 - AI Assistant Personality ID assigned to this Partner, if any. Users in the Partner inherit it unless a direct per-user assignment overrides it.
-    //   allowed_ips - string - A list of allowed IPs for this Partner. Newline delimited. Partner User IP access is allowed when the IP matches the Partner, User, or Site allowed IP lists.
-    //   allow_bypassing_2fa_policies - boolean - Allow Partner Admins to change Two-Factor Authentication requirements for Partner Users.
-    //   allow_credential_changes - boolean - Allow Partner Admins to change or reset credentials for users belonging to this Partner.
-    //   allow_providing_gpg_keys - boolean - Allow Partner Admins to provide GPG keys.
-    //   allow_user_creation - boolean - Allow Partner Admins to create users.
-    //   cc_emails_to_responsible_party - boolean - When `true`, emails sent to Partner users are copied to the responsible User or Group.
-    //   notes - string - Notes about this Partner.
-    //   partner_channel_template_id - int64 - ID of the Partner Channel Template assigned to this Partner.
-    //   responsible_group_id - int64 - ID of the Group responsible for this Partner.
-    //   responsible_user_id - int64 - ID of the User responsible for this Partner.
-    //   show_partner_channel_home_page - boolean - Show Partner users a simplified home page built from this Partner's Channels.
-    //   tags - string - Comma-separated list of Tags for this Partner. Tags are used for other features, such as UserLifecycleRules, which can target specific tags.  Tags must only contain lowercase letters, numbers, and hyphens.
-    //   name - string - The name of the Partner.
-    //   partnership_role - string - This site's role for this Partner in Connected Sites relationships. `host` is a Partner this site configured. `guest` is a Partner created by approving another site's connection request; it has no root folder and cannot hold users, permissions, or Partner Channels, or host a connection. `host_and_guest` is a configured Partner that is also the guest side of a connection. Promote a `guest` Partner by setting this to `host_and_guest` together with a `root_folder`.
-    //   root_folder - string - The root folder path for this Partner.
+    /**
+     * Update Partner
+     *
+     * PATCH /partners/{id}
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Partner ID.
+     *     - `ai_assistant_personality_id` (int, optional): AI Assistant Personality ID assigned to this Partner, if any. Users in the Partner inherit it unless a direct per-user assignment overrides it.
+     *     - `allowed_ips` (string, optional): A list of allowed IPs for this Partner. Newline delimited. Partner User IP access is allowed when the IP matches the Partner, User, or Site allowed IP lists.
+     *     - `allow_bypassing_2fa_policies` (bool, optional): Allow Partner Admins to change Two-Factor Authentication requirements for Partner Users.
+     *     - `allow_credential_changes` (bool, optional): Allow Partner Admins to change or reset credentials for users belonging to this Partner.
+     *     - `allow_providing_gpg_keys` (bool, optional): Allow Partner Admins to provide GPG keys.
+     *     - `allow_user_creation` (bool, optional): Allow Partner Admins to create users.
+     *     - `cc_emails_to_responsible_party` (bool, optional): When `true`, emails sent to Partner users are copied to the responsible User or Group.
+     *     - `notes` (string, optional): Notes about this Partner.
+     *     - `partner_channel_template_id` (int, optional): ID of the Partner Channel Template assigned to this Partner.
+     *     - `responsible_group_id` (int, optional): ID of the Group responsible for this Partner.
+     *     - `responsible_user_id` (int, optional): ID of the User responsible for this Partner.
+     *     - `show_partner_channel_home_page` (bool, optional): Show Partner users a simplified home page built from this Partner's Channels.
+     *     - `tags` (string, optional): Comma-separated list of Tags for this Partner. Tags are used for other features, such as UserLifecycleRules, which can target specific tags.  Tags must only contain lowercase letters, numbers, and hyphens.
+     *     - `name` (string, optional): The name of the Partner.
+     *     - `partnership_role` (string, optional): This site's role for this Partner in Connected Sites relationships. `host` is a Partner this site configured. `guest` is a Partner created by approving another site's connection request; it has no root folder and cannot hold users, permissions, or Partner Channels, or host a connection. `host_and_guest` is a configured Partner that is also the guest side of a connection. Promote a `guest` Partner by setting this to `host_and_guest` together with a `root_folder`. Allowed values: host, guest, host_and_guest.
+     *     - `root_folder` (string, optional): The root folder path for this Partner.
+     * @return \Files\Model\Partner
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function update($params = [])
     {
         if (!is_array($params)) {
@@ -343,6 +614,16 @@ class Partner
         return new Partner((array) (@$response->data ?: []), $this->options);
     }
 
+    /**
+     * Delete Partner
+     *
+     * DELETE /partners/{id}
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Partner ID.
+     * @return void
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function delete($params = [])
     {
         if (!is_array($params)) {
@@ -365,12 +646,30 @@ class Partner
         return;
     }
 
+    /**
+     * Delete Partner
+     *
+     * DELETE /partners/{id}
+     *
+     * Alias of delete().
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Partner ID.
+     * @return void
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function destroy($params = [])
     {
         $this->delete($params);
         return;
     }
 
+    /**
+     * Persist this model's attributes and replace them with the API response.
+     *
+     * @return bool True after the operation succeeds.
+     * @throws \Files\Exception\FilesException When saving fails or updates are unsupported.
+     */
     public function save()
     {
         if (@$this->attributes['id']) {
@@ -385,11 +684,20 @@ class Partner
     }
 
 
-    // Parameters:
-    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-    //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `workspace_id` and `name`.
-    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `workspace_id`.
+    /**
+     * List Partners
+     *
+     * GET /partners
+     *
+     * @param array $params Request parameters.
+     *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+     *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+     *     - `sort_by` (array|object, optional): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `workspace_id` and `name`.
+     *     - `filter` (array|object, optional): If set, return records where the specified field is equal to the supplied value. Valid fields are `workspace_id`.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\Partner[]
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function all($params = [], $options = [])
     {
         if (!empty($params['cursor']) && !is_string($params['cursor'])) {
@@ -411,8 +719,17 @@ class Partner
         return $return_array;
     }
 
-    // Parameters:
-    //   id (required) - int64 - Partner ID.
+    /**
+     * Show Partner
+     *
+     * GET /partners/{id}
+     *
+     * @param int $id Partner ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\Partner
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function find($id, $params = [], $options = [])
     {
         if (!is_array($params)) {
@@ -433,28 +750,50 @@ class Partner
 
         return new Partner((array) (@$response->data ?: []), $options);
     }
+    /**
+     * Show Partner
+     *
+     * GET /partners/{id}
+     *
+     * Alias of find().
+     *
+     * @param int $id Partner ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\Partner
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function get($id, $params = [], $options = [])
     {
         return self::find($id, $params, $options);
     }
 
-    // Parameters:
-    //   ai_assistant_personality_id - int64 - AI Assistant Personality ID assigned to this Partner, if any. Users in the Partner inherit it unless a direct per-user assignment overrides it.
-    //   allowed_ips - string - A list of allowed IPs for this Partner. Newline delimited. Partner User IP access is allowed when the IP matches the Partner, User, or Site allowed IP lists.
-    //   allow_bypassing_2fa_policies - boolean - Allow Partner Admins to change Two-Factor Authentication requirements for Partner Users.
-    //   allow_credential_changes - boolean - Allow Partner Admins to change or reset credentials for users belonging to this Partner.
-    //   allow_providing_gpg_keys - boolean - Allow Partner Admins to provide GPG keys.
-    //   allow_user_creation - boolean - Allow Partner Admins to create users.
-    //   cc_emails_to_responsible_party - boolean - When `true`, emails sent to Partner users are copied to the responsible User or Group.
-    //   notes - string - Notes about this Partner.
-    //   partner_channel_template_id - int64 - ID of the Partner Channel Template assigned to this Partner.
-    //   responsible_group_id - int64 - ID of the Group responsible for this Partner.
-    //   responsible_user_id - int64 - ID of the User responsible for this Partner.
-    //   show_partner_channel_home_page - boolean - Show Partner users a simplified home page built from this Partner's Channels.
-    //   tags - string - Comma-separated list of Tags for this Partner. Tags are used for other features, such as UserLifecycleRules, which can target specific tags.  Tags must only contain lowercase letters, numbers, and hyphens.
-    //   name (required) - string - The name of the Partner.
-    //   root_folder (required) - string - The root folder path for this Partner.
-    //   workspace_id - int64 - ID of the Workspace associated with this Partner.
+    /**
+     * Create Partner
+     *
+     * POST /partners
+     *
+     * @param array $params Request parameters.
+     *     - `ai_assistant_personality_id` (int, optional): AI Assistant Personality ID assigned to this Partner, if any. Users in the Partner inherit it unless a direct per-user assignment overrides it.
+     *     - `allowed_ips` (string, optional): A list of allowed IPs for this Partner. Newline delimited. Partner User IP access is allowed when the IP matches the Partner, User, or Site allowed IP lists.
+     *     - `allow_bypassing_2fa_policies` (bool, optional): Allow Partner Admins to change Two-Factor Authentication requirements for Partner Users.
+     *     - `allow_credential_changes` (bool, optional): Allow Partner Admins to change or reset credentials for users belonging to this Partner.
+     *     - `allow_providing_gpg_keys` (bool, optional): Allow Partner Admins to provide GPG keys.
+     *     - `allow_user_creation` (bool, optional): Allow Partner Admins to create users.
+     *     - `cc_emails_to_responsible_party` (bool, optional): When `true`, emails sent to Partner users are copied to the responsible User or Group.
+     *     - `notes` (string, optional): Notes about this Partner.
+     *     - `partner_channel_template_id` (int, optional): ID of the Partner Channel Template assigned to this Partner.
+     *     - `responsible_group_id` (int, optional): ID of the Group responsible for this Partner.
+     *     - `responsible_user_id` (int, optional): ID of the User responsible for this Partner.
+     *     - `show_partner_channel_home_page` (bool, optional): Show Partner users a simplified home page built from this Partner's Channels.
+     *     - `tags` (string, optional): Comma-separated list of Tags for this Partner. Tags are used for other features, such as UserLifecycleRules, which can target specific tags.  Tags must only contain lowercase letters, numbers, and hyphens.
+     *     - `name` (string, required): The name of the Partner.
+     *     - `root_folder` (string, required): The root folder path for this Partner.
+     *     - `workspace_id` (int, optional): ID of the Workspace associated with this Partner.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\Partner
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function create($params = [], $options = [])
     {
         if (empty($params['name'])) {

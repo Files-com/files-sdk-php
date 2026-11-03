@@ -8,8 +8,19 @@ use Files\Logger;
 require_once __DIR__ . '/../Files.php';
 
 /**
- * Class ChildSiteManagementPolicy
+ * A Child Site Management Policy is a centralized policy defined by a parent site to enforce consistent configurations across child sites.
  *
+ * @property int|null $id Policy ID.
+ * @property string|null $policy_type Type of policy. Valid values: `settings`.
+ * @property string|null $name Name for this policy.
+ * @property string|null $description Description for this policy.
+ * @property object|null $value Policy configuration data. On a Child Site, contains only managed setting names with null values. Settings policies accept site settings plus an optional `folder_behaviors` array for parent-managed root behaviors on child sites. For more information, refer to the Value Hash section of the developer documentation.
+ * @property int[]|null $applied_child_site_ids IDs of child sites that this policy has been applied to. This field is read-only.
+ * @property int[]|null $skip_child_site_ids IDs of child sites excluded from this default policy.
+ * @property int[]|null $child_site_ids IDs of child sites explicitly assigned to this non-default policy.
+ * @property bool|null $default_policy Whether this policy applies to child sites not explicitly assigned to another policy.
+ * @property string|null $created_at When this policy was created.
+ * @property string|null $updated_at When this policy was last updated.
  * @package Files
  */
 class ChildSiteManagementPolicy
@@ -20,6 +31,12 @@ class ChildSiteManagementPolicy
         'list' => 'all',
     ];
 
+    /**
+     * Build a model from API attributes and retain its request options.
+     *
+     * @param array $attributes Initial model attributes, keyed by property name.
+     * @param array $options Request options used by this model's operations.
+     */
     public function __construct($attributes = [], $options = [])
     {
         foreach ($attributes as $key => $value) {
@@ -29,16 +46,36 @@ class ChildSiteManagementPolicy
         $this->options = $options;
     }
 
+    /**
+     * Set a model attribute locally; call save() to persist supported changes.
+     *
+     * @param string $name Attribute name.
+     * @param mixed $value Attribute value.
+     * @return void
+     */
     public function __set($name, $value)
     {
         $this->attributes[$name] = $value;
     }
 
+    /**
+     * Read a model attribute.
+     *
+     * @param string $name Attribute name.
+     * @return mixed The attribute value, or null when it is not set.
+     */
     public function __get($name)
     {
         return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
+    /**
+     * Dispatch a legacy static alias, including list() to all().
+     *
+     * @param string $name Alias name.
+     * @param array $arguments Arguments passed to the canonical method.
+     * @return mixed The canonical method's result, or null for an unknown alias.
+     */
     public static function __callStatic($name, $arguments)
     {
         if (in_array($name, array_keys(self::$static_mapped_functions))) {
@@ -49,119 +86,231 @@ class ChildSiteManagementPolicy
         }
     }
 
+    /**
+     * Whether this model has a nonempty primary key.
+     *
+     * @return bool
+     */
     public function isLoaded()
     {
         return !!@$this->attributes['id'];
     }
-    // int64 # Policy ID.
+    /**
+     * Policy ID.
+     *
+     * @return int|null
+     */
     public function getId()
     {
         return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
+    /**
+     * Policy ID.
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setId($value)
     {
         return $this->attributes['id'] = $value;
     }
-    // string # Type of policy.  Valid values: `settings`.
+    /**
+     * Type of policy.  Valid values: `settings`.
+     *
+     * @return string|null
+     */
     public function getPolicyType()
     {
         return isset($this->attributes['policy_type']) ? $this->attributes['policy_type'] : null;
     }
 
+    /**
+     * Type of policy.  Valid values: `settings`.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setPolicyType($value)
     {
         return $this->attributes['policy_type'] = $value;
     }
-    // string # Name for this policy.
+    /**
+     * Name for this policy.
+     *
+     * @return string|null
+     */
     public function getName()
     {
         return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
 
+    /**
+     * Name for this policy.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setName($value)
     {
         return $this->attributes['name'] = $value;
     }
-    // string # Description for this policy.
+    /**
+     * Description for this policy.
+     *
+     * @return string|null
+     */
     public function getDescription()
     {
         return isset($this->attributes['description']) ? $this->attributes['description'] : null;
     }
 
+    /**
+     * Description for this policy.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setDescription($value)
     {
         return $this->attributes['description'] = $value;
     }
-    // object # Policy configuration data. On a Child Site, contains only managed setting names with null values. Settings policies accept site settings plus an optional `folder_behaviors` array for parent-managed root behaviors on child sites. For more information, refer to the Value Hash section of the developer documentation.
+    /**
+     * Policy configuration data. On a Child Site, contains only managed setting names with null values. Settings policies accept site settings plus an optional `folder_behaviors` array for parent-managed root behaviors on child sites. For more information, refer to the Value Hash section of the developer documentation.
+     *
+     * @return object|null
+     */
     public function getValue()
     {
         return isset($this->attributes['value']) ? $this->attributes['value'] : null;
     }
 
+    /**
+     * Policy configuration data. On a Child Site, contains only managed setting names with null values. Settings policies accept site settings plus an optional `folder_behaviors` array for parent-managed root behaviors on child sites. For more information, refer to the Value Hash section of the developer documentation.
+     *
+     * @param object|null $value
+     * @return object|null The assigned value.
+     */
     public function setValue($value)
     {
         return $this->attributes['value'] = $value;
     }
-    // array(int64) # IDs of child sites that this policy has been applied to. This field is read-only.
+    /**
+     * IDs of child sites that this policy has been applied to. This field is read-only.
+     *
+     * @return int[]|null
+     */
     public function getAppliedChildSiteIds()
     {
         return isset($this->attributes['applied_child_site_ids']) ? $this->attributes['applied_child_site_ids'] : null;
     }
 
+    /**
+     * IDs of child sites that this policy has been applied to. This field is read-only.
+     *
+     * @param int[]|null $value
+     * @return int[]|null The assigned value.
+     */
     public function setAppliedChildSiteIds($value)
     {
         return $this->attributes['applied_child_site_ids'] = $value;
     }
-    // array(int64) # IDs of child sites excluded from this default policy.
+    /**
+     * IDs of child sites excluded from this default policy.
+     *
+     * @return int[]|null
+     */
     public function getSkipChildSiteIds()
     {
         return isset($this->attributes['skip_child_site_ids']) ? $this->attributes['skip_child_site_ids'] : null;
     }
 
+    /**
+     * IDs of child sites excluded from this default policy.
+     *
+     * @param int[]|null $value
+     * @return int[]|null The assigned value.
+     */
     public function setSkipChildSiteIds($value)
     {
         return $this->attributes['skip_child_site_ids'] = $value;
     }
-    // array(int64) # IDs of child sites explicitly assigned to this non-default policy.
+    /**
+     * IDs of child sites explicitly assigned to this non-default policy.
+     *
+     * @return int[]|null
+     */
     public function getChildSiteIds()
     {
         return isset($this->attributes['child_site_ids']) ? $this->attributes['child_site_ids'] : null;
     }
 
+    /**
+     * IDs of child sites explicitly assigned to this non-default policy.
+     *
+     * @param int[]|null $value
+     * @return int[]|null The assigned value.
+     */
     public function setChildSiteIds($value)
     {
         return $this->attributes['child_site_ids'] = $value;
     }
-    // boolean # Whether this policy applies to child sites not explicitly assigned to another policy.
+    /**
+     * Whether this policy applies to child sites not explicitly assigned to another policy.
+     *
+     * @return bool|null
+     */
     public function getDefaultPolicy()
     {
         return isset($this->attributes['default_policy']) ? $this->attributes['default_policy'] : null;
     }
 
+    /**
+     * Whether this policy applies to child sites not explicitly assigned to another policy.
+     *
+     * @param bool|null $value
+     * @return bool|null The assigned value.
+     */
     public function setDefaultPolicy($value)
     {
         return $this->attributes['default_policy'] = $value;
     }
-    // date-time # When this policy was created.
+    /**
+     * When this policy was created.
+     *
+     * @return string|null
+     */
     public function getCreatedAt()
     {
         return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
-    // date-time # When this policy was last updated.
+    /**
+     * When this policy was last updated.
+     *
+     * @return string|null
+     */
     public function getUpdatedAt()
     {
         return isset($this->attributes['updated_at']) ? $this->attributes['updated_at'] : null;
     }
 
-    // Parameters:
-    //   value - object - Policy configuration data. Attributes differ by policy type. For more information, refer to the Value Hash section of the developer documentation.
-    //   skip_child_site_ids - array(int64) - IDs of child sites excluded from this default policy.
-    //   child_site_ids - array(int64) - IDs of child sites explicitly assigned to this non-default policy.
-    //   default_policy - boolean - Whether this policy applies to child sites not explicitly assigned to another policy.
-    //   policy_type - string - Type of policy.  Valid values: `settings`.
-    //   name - string - Name for this policy.
-    //   description - string - Description for this policy.
+    /**
+     * Update Child Site Management Policy
+     *
+     * PATCH /child_site_management_policies/{id}
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Child Site Management Policy ID.
+     *     - `value` (array|object, optional): Policy configuration data. Attributes differ by policy type. For more information, refer to the Value Hash section of the developer documentation.
+     *     - `skip_child_site_ids` (int[], optional): IDs of child sites excluded from this default policy.
+     *     - `child_site_ids` (int[], optional): IDs of child sites explicitly assigned to this non-default policy.
+     *     - `default_policy` (bool, optional): Whether this policy applies to child sites not explicitly assigned to another policy.
+     *     - `policy_type` (string, optional): Type of policy.  Valid values: `settings`. Allowed values: settings.
+     *     - `name` (string, optional): Name for this policy.
+     *     - `description` (string, optional): Description for this policy.
+     * @return \Files\Model\ChildSiteManagementPolicy
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function update($params = [])
     {
         if (!is_array($params)) {
@@ -204,6 +353,16 @@ class ChildSiteManagementPolicy
         return new ChildSiteManagementPolicy((array) (@$response->data ?: []), $this->options);
     }
 
+    /**
+     * Delete Child Site Management Policy
+     *
+     * DELETE /child_site_management_policies/{id}
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Child Site Management Policy ID.
+     * @return void
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function delete($params = [])
     {
         if (!is_array($params)) {
@@ -226,12 +385,30 @@ class ChildSiteManagementPolicy
         return;
     }
 
+    /**
+     * Delete Child Site Management Policy
+     *
+     * DELETE /child_site_management_policies/{id}
+     *
+     * Alias of delete().
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Child Site Management Policy ID.
+     * @return void
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function destroy($params = [])
     {
         $this->delete($params);
         return;
     }
 
+    /**
+     * Persist this model's attributes and replace them with the API response.
+     *
+     * @return bool True after the operation succeeds.
+     * @throws \Files\Exception\FilesException When saving fails or updates are unsupported.
+     */
     public function save()
     {
         if (@$this->attributes['id']) {
@@ -246,9 +423,18 @@ class ChildSiteManagementPolicy
     }
 
 
-    // Parameters:
-    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-    //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+    /**
+     * List Child Site Management Policies. On a Child Site, returns only the policy covering that site. Its value contains managed setting names with null values
+     *
+     * GET /child_site_management_policies
+     *
+     * @param array $params Request parameters.
+     *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+     *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\ChildSiteManagementPolicy[]
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function all($params = [], $options = [])
     {
         if (!empty($params['cursor']) && !is_string($params['cursor'])) {
@@ -270,8 +456,17 @@ class ChildSiteManagementPolicy
         return $return_array;
     }
 
-    // Parameters:
-    //   id (required) - int64 - Child Site Management Policy ID.
+    /**
+     * Show Child Site Management Policy
+     *
+     * GET /child_site_management_policies/{id}
+     *
+     * @param int $id Child Site Management Policy ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\ChildSiteManagementPolicy
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function find($id, $params = [], $options = [])
     {
         if (!is_array($params)) {
@@ -292,19 +487,41 @@ class ChildSiteManagementPolicy
 
         return new ChildSiteManagementPolicy((array) (@$response->data ?: []), $options);
     }
+    /**
+     * Show Child Site Management Policy
+     *
+     * GET /child_site_management_policies/{id}
+     *
+     * Alias of find().
+     *
+     * @param int $id Child Site Management Policy ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\ChildSiteManagementPolicy
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function get($id, $params = [], $options = [])
     {
         return self::find($id, $params, $options);
     }
 
-    // Parameters:
-    //   value - object - Policy configuration data. Attributes differ by policy type. For more information, refer to the Value Hash section of the developer documentation.
-    //   skip_child_site_ids - array(int64) - IDs of child sites excluded from this default policy.
-    //   child_site_ids - array(int64) - IDs of child sites explicitly assigned to this non-default policy.
-    //   default_policy - boolean - Whether this policy applies to child sites not explicitly assigned to another policy.
-    //   policy_type (required) - string - Type of policy.  Valid values: `settings`.
-    //   name - string - Name for this policy.
-    //   description - string - Description for this policy.
+    /**
+     * Create Child Site Management Policy
+     *
+     * POST /child_site_management_policies
+     *
+     * @param array $params Request parameters.
+     *     - `value` (array|object, optional): Policy configuration data. Attributes differ by policy type. For more information, refer to the Value Hash section of the developer documentation.
+     *     - `skip_child_site_ids` (int[], optional): IDs of child sites excluded from this default policy.
+     *     - `child_site_ids` (int[], optional): IDs of child sites explicitly assigned to this non-default policy.
+     *     - `default_policy` (bool, optional): Whether this policy applies to child sites not explicitly assigned to another policy.
+     *     - `policy_type` (string, required): Type of policy.  Valid values: `settings`. Allowed values: settings.
+     *     - `name` (string, optional): Name for this policy.
+     *     - `description` (string, optional): Description for this policy.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\ChildSiteManagementPolicy
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function create($params = [], $options = [])
     {
         if (empty($params['policy_type'])) {

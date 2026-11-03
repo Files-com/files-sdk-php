@@ -8,8 +8,199 @@ use Files\Logger;
 require_once __DIR__ . '/../Files.php';
 
 /**
- * Class Site
+ * A Site is the place you'll come to update site settings, as well as manage site-wide API keys.
  *
+ * @property int|null $id Site Id
+ * @property string|null $name Site name
+ * @property string[]|null $additional_text_file_types Additional extensions that are considered text files
+ * @property object|null $ai_feature_availability Availability settings for AI features. Each feature requires the site_admins, workspace_admins, folder_admins, and all_users keys. Optional selected_group_members defaults to false; when true, members of at least one group in group_ids get access regardless of the other options. All availability options are additive: any enabled option matching the user grants access. Optional group_ids is an array of integer IDs of active groups on this site, from any workspace. Omitted or empty group_ids grants no access through selected_group_members and does not affect other options. Disabling all AI features overrides these settings.
+ * @property bool|null $allowed_2fa_method_sms Is SMS two factor authentication allowed?
+ * @property bool|null $allowed_2fa_method_totp Is TOTP two factor authentication allowed?
+ * @property bool|null $allowed_2fa_method_webauthn Is WebAuthn two factor authentication allowed?
+ * @property bool|null $allowed_2fa_method_yubi Is yubikey two factor authentication allowed?
+ * @property bool|null $allowed_2fa_method_email Is OTP via email two factor authentication allowed?
+ * @property bool|null $allowed_2fa_method_static Is OTP via static codes for two factor authentication allowed?
+ * @property bool|null $allowed_2fa_method_bypass_for_ftp_sftp_dav Are users allowed to configure their two factor authentication to be bypassed for FTP/SFTP/WebDAV?
+ * @property int|null $admin_user_id User ID for the main site administrator
+ * @property bool|null $admins_bypass_locked_subfolders Allow admins to bypass the locked subfolders setting.
+ * @property bool|null $allow_bundle_names Are manual Bundle names allowed?
+ * @property bool|null $allow_user_level_2fa_override Allow the site-wide two-factor authentication requirement to be overriden on a per-user-basis?
+ * @property bool|null $allow_user_level_allowed_ip_override Allow the site-wide allowed IP restriction to be overriden on a per-user-basis?
+ * @property bool|null $allow_user_level_ftp_tls_session_reuse_override Allow per-user overrides of the FTP TLS session reuse requirement?
+ * @property bool|null $allow_user_level_ssl_override Allow the site-wide FTP SSL requirement to be overriden on a per-user-basis?
+ * @property string|null $allowed_countries Comma separated list of allowed Country codes
+ * @property string|null $allowed_ips List of allowed IP addresses
+ * @property bool|null $enforce_parent_site_user_ip_restrictions Require Parent Site users entering this Child Site to match its allowed IP addresses in addition to their existing IP restrictions. Applies to all Workspaces. Defaults to false.
+ * @property bool|null $always_mkdir_parents Create parent directories if they do not exist during uploads? This is primarily used to work around broken upload clients that assume servers will perform this step.
+ * @property int|null $as2_message_retention_days Number of days to retain AS2 messages (incoming and outgoing).
+ * @property bool|null $ask_about_overwrites If false, rename conflicting files instead of asking for overwrite confirmation. Only applies to web interface.
+ * @property string|null $bundle_activity_notifications Do Bundle owners receive activity notifications?
+ * @property int|null $bundle_expiration Site-wide Bundle expiration in days
+ * @property string|null $bundle_not_found_message Custom error message to show when bundle is not found.
+ * @property bool|null $bundle_password_required Do Bundles require password protection?
+ * @property bool|null $bundles_default_owned_by_primary_group If true, new Share Links created by a user with a primary group will default to that group as owner.
+ * @property string[]|null $bundle_recipient_blacklist_domains List of email domains to disallow when entering a Bundle/Inbox recipients
+ * @property bool|null $bundle_recipient_blacklist_free_email_domains Disallow free email domains for Bundle/Inbox recipients?
+ * @property string|null $bundle_registration_notifications Do Bundle owners receive registration notification?
+ * @property bool|null $bundle_require_registration Do Bundles require registration?
+ * @property bool|null $bundle_require_share_recipient Do Bundles require recipients for sharing?
+ * @property bool|null $bundle_send_one_time_password_to_recipient_at_registration If true, new Share Links must send a one-time password to the recipient when they register. Requires bundle_require_share_recipient and cannot be enabled with bundle_password_required.
+ * @property bool|null $bundle_require_note Do Bundles require internal notes?
+ * @property bool|null $bundle_send_shared_receipts Do Bundle creators receive receipts of invitations?
+ * @property string|null $bundle_upload_receipt_notifications Do Bundle uploaders receive upload confirmation notifications?
+ * @property \stdClass|null $bundle_watermark_attachment Preview watermark image applied to all bundle items.
+ * @property object|null $bundle_watermark_value Preview watermark settings applied to all bundle items. Uses the same keys as Behavior.value
+ * @property bool|null $calculate_file_checksums_crc32 Calculate CRC32 checksums for files?
+ * @property bool|null $calculate_file_checksums_md5 Calculate MD5 checksums for files?
+ * @property bool|null $calculate_file_checksums_sha1 Calculate SHA1 checksums for files?
+ * @property bool|null $calculate_file_checksums_sha256 Calculate SHA256 checksums for files?
+ * @property bool|null $child_site_folder_admins_can_see_parent_site_directory If true, administrators on this site's Child Sites, including Folder Admins, can list this site's Default Workspace users and groups and grant them folder permissions and notifications on Child Site paths.
+ * @property bool|null $workspace_folder_admins_can_see_default_workspace_directory If true, Workspace Administrators and Folder Admins in a Custom Workspace can list the Default Workspace users and groups that have permissions in that Workspace and choose them as Email Notification recipients.
+ * @property bool|null $uploads_via_email_authentication Require email authentication, virus, and spam checks for incoming emails to Inboxes and Incoming Email Automations in every Workspace on this site?
+ * @property string|null $color2_left Page link and button color
+ * @property string|null $color2_link Top bar link color
+ * @property string|null $color2_text Page link and button color
+ * @property string|null $color2_top Top bar background color
+ * @property string|null $color2_top_text Top bar text color
+ * @property string|null $contact_name Site main contact name
+ * @property string|null $created_at Time this site was created
+ * @property string|null $currency Preferred currency
+ * @property bool|null $custom_namespace Is this site using a custom namespace for users?
+ * @property bool|null $dav_enabled Is WebDAV enabled?
+ * @property bool|null $dav_user_root_enabled Use user FTP roots also for WebDAV?
+ * @property int|null $days_to_retain_backups Number of days to keep deleted files
+ * @property bool|null $document_edits_in_bundle_allowed If true, allow public viewers of Bundles with full permissions to use document editing integrations.
+ * @property string|null $default_time_zone Site default time zone
+ * @property bool|null $desktop_app Is the desktop app enabled?
+ * @property bool|null $desktop_app_session_ip_pinning Is desktop app session IP pinning enabled?
+ * @property int|null $desktop_app_session_lifetime Desktop app session lifetime (in hours)
+ * @property bool|null $legacy_checksums_mode Use legacy checksums mode?
+ * @property bool|null $legacy_pairing_enabled Allow legacy app pairing in all workspaces? Disabled for new sites; existing sites remain enabled until changed. Disabling blocks new pairing exchanges without revoking existing app credentials or affecting OAuth sign-in. Site administrators can re-enable it.
+ * @property string|null $last_pairing_at Time of the last completed legacy app pairing across all workspaces. Failed or incomplete attempts do not count. Read-only; empty until a pairing completes after tracking begins.
+ * @property bool|null $migrate_remote_server_sync_to_sync If true, we will migrate all remote server syncs to the new Sync model.
+ * @property bool|null $mcp_dcr_enabled Is OAuth DCR (dynamic client registration) for MCP enabled?
+ * @property bool|null $mobile_app Is the mobile app enabled?
+ * @property bool|null $mobile_app_session_ip_pinning Is mobile app session IP pinning enabled?
+ * @property int|null $mobile_app_session_lifetime Mobile app session lifetime (in hours)
+ * @property string|null $disallowed_countries Comma separated list of disallowed Country codes
+ * @property bool|null $disable_all_ai_features If true, all AI features are disabled for this site.
+ * @property bool|null $disable_files_certificate_generation If set, Files.com will not set the CAA records required to generate future SSL certificates for this domain.
+ * @property bool|null $disable_notifications Are notifications disabled?
+ * @property bool|null $file_activity_events_enabled If true, file operations produce file_action.activity.v1 EventChannel events in all workspaces. Defaults to false; subscription filters and workspace access still control delivery.
+ * @property bool|null $disable_password_reset Is password reset disabled?
+ * @property string|null $domain Custom domain
+ * @property bool|null $domain_hsts_header Send HSTS (HTTP Strict Transport Security) header when visitors access the site via a custom domain?
+ * @property string|null $domain_letsencrypt_chain Letsencrypt chain to use when registering SSL Certificate for domain. No longer used as of 2026.
+ * @property string|null $email Main email for this site
+ * @property bool|null $fedramp Are FedRAMP security restrictions enabled for this site?
+ * @property bool|null $files_com_remote_server_enabled Allow other Files.com sites to use this site's API keys for native Files.com Remote Server connections? Defaults to true and applies to all keys and workspaces on this site. When false, new pairings and access through existing connections are rejected without revoking keys or deleting connections. Re-enabling permits access again with usable keys. Does not disable this site's connections to other sites, ordinary API access, or Connected Sites.
+ * @property bool|null $ftp_enabled Is FTP enabled?
+ * @property string|null $reply_to_email Reply-to email for this site
+ * @property bool|null $non_sso_groups_allowed If true, groups can be manually created / modified / deleted by Site Admins. Otherwise, groups can only be managed via your SSO provider.
+ * @property bool|null $non_sso_users_allowed If true, users can be manually created / modified / deleted by Site Admins. Otherwise, users can only be managed via your SSO provider.
+ * @property bool|null $folder_permissions_groups_only If true, permissions for this site must be bound to a group (not a user).
+ * @property bool|null $group_admins_can_add_users Allow group admins to create users in their groups
+ * @property bool|null $group_admins_can_manage_group_memberships Allow group admins to add or remove existing users in their groups
+ * @property bool|null $group_admins_can_delete_users Allow group admins to delete users in their groups
+ * @property bool|null $group_admins_can_enable_disable_users Allow group admins to enable or disable users in their groups
+ * @property bool|null $group_admins_can_modify_users Allow group admins to modify users in their groups
+ * @property bool|null $group_admins_can_bypass_user_lifecycle_rules Allow group admins to exempt users in their groups from lifecycle rules
+ * @property bool|null $group_admins_can_reset_passwords Allow group admins to reset passwords for users in their groups
+ * @property bool|null $group_admins_can_set_user_password Allow group admins to set password authentication method
+ * @property bool|null $hipaa Is there a signed HIPAA BAA between Files.com and this site?
+ * @property \stdClass|null $icon128 Branded icon 128x128
+ * @property \stdClass|null $icon16 Branded icon 16x16
+ * @property \stdClass|null $icon32 Branded icon 32x32
+ * @property \stdClass|null $icon48 Branded icon 48x48
+ * @property string|null $immutable_files_set_at Can files be modified?
+ * @property string|null $integration_centric_remote_server_admin_access Administrator access to user-owned Remote Servers in every Workspace: always_visible (default), never_visible, user_choice_default_visible, or user_choice_default_personal. Forced modes override owner preferences; choice modes use the preference or their default.
+ * @property bool|null $include_password_in_welcome_email Include password in emails to new users?
+ * @property string|null $language Site default language
+ * @property string|null $login_help_text Login help text
+ * @property \stdClass|null $logo Branded logo
+ * @property \stdClass|null $login_page_background_image Branded login page background
+ * @property int|null $max_prior_passwords Number of prior passwords to disallow
+ * @property object|null $managed_site_settings Site settings managed by the parent site. Each key identifies a managed setting, with a null value. Non-secret effective values are returned in their own Site settings fields.
+ * @property string|null $motd_text A message to show users when they connect via FTP or SFTP.
+ * @property bool|null $motd_use_for_ftp Show message to users connecting via FTP
+ * @property bool|null $motd_use_for_sftp Show message to users connecting via SFTP
+ * @property string|null $next_billing_amount Next billing amount
+ * @property string|null $next_billing_date Next billing date
+ * @property bool|null $office_integration_available If true, allows users to use a document editing integration.
+ * @property string|null $office_integration_type Which document editing integration to support. Files.com Editor or Microsoft Office for the Web.
+ * @property string|null $oncehub_link Link to scheduling a meeting with our Sales team
+ * @property bool|null $opt_out_global Use servers in the USA only?
+ * @property bool|null $overdue Is this site's billing overdue?
+ * @property int|null $password_min_length Shortest password length for users
+ * @property bool|null $password_require_letter Require a letter in passwords?
+ * @property bool|null $password_require_mixed Require lower and upper case letters in passwords?
+ * @property bool|null $password_require_number Require a number in passwords?
+ * @property bool|null $password_require_special Require special characters in password?
+ * @property bool|null $password_require_unbreached Require passwords that have not been previously breached? (see https://haveibeenpwned.com/)
+ * @property bool|null $password_requirements_apply_to_bundles Require bundles' passwords, and passwords for other items (inboxes, public shares, etc.) to conform to the same requirements as users' passwords?
+ * @property int|null $password_validity_days Number of days password is valid
+ * @property string|null $phone Site phone number
+ * @property bool|null $pin_all_remote_servers_to_site_region If true, we will ensure that all internal communications with any remote server are made through the primary region of the site. This setting overrides individual remote server settings.
+ * @property bool|null $prevent_root_permissions_for_non_site_admins If true, we will prevent non-administrators from receiving any permissions directly on the root folder. This is commonly used to prevent the accidental application of permissions.
+ * @property bool|null $protocol_access_groups_only If true, protocol access permissions on users will be ignored, and only protocol access permissions set on Groups will be honored. Make sure that your current user is a member of a group with API permission when changing this value to avoid locking yourself out of your site.
+ * @property bool|null $require_2fa Require two-factor authentication for all users?
+ * @property bool|null $restrict_root_folder_behaviors_to_site_admins If true, only site admins may create, modify, or delete any behavior at the site root, or a skip that would disable one.
+ * @property bool|null $root_folder_behaviors_apply_to_workspaces If true, supported protective behaviors at the site root also apply within named workspaces. Requires restrict_root_folder_behaviors_to_site_admins to be enabled.
+ * @property bool|null $require_2fa_exempt_all_sso_users If true, SSO users using the default user-level two-factor authentication setting are exempt from the site-wide two-factor authentication requirement.
+ * @property string|null $require_2fa_stop_time If set, requirement for two-factor authentication has been scheduled to end on this date-time.
+ * @property bool|null $revoke_bundle_access_on_disable_or_delete Auto-removes bundles for disabled/deleted users and enforces bundle expiry within user access period.
+ * @property string|null $require_2fa_user_type What type of user is required to use two-factor authentication (when require_2fa is set to `true` for this site)?
+ * @property bool|null $require_logout_from_bundles_and_inboxes If true, we will hide the 'Remember Me' box on Inbox and Bundle registration pages, requiring that the user logout and log back in every time they visit the page.
+ * @property \stdClass|null $session Current session
+ * @property bool|null $s3_compatible_endpoint_enabled Is the S3-compatible endpoint enabled for all users and workspaces on this site? Defaults to true. When false, user and group S3 permissions do not allow access.
+ * @property bool|null $sftp_enabled Is SFTP enabled?
+ * @property bool|null $sftp_finalize_partial_uploads Finalize partial SFTP uploads from interrupted connections? Default: true.
+ * @property string|null $sftp_host_key_type Sftp Host Key Type
+ * @property int|null $active_sftp_host_key_id Id of the currently selected custom SFTP Host Key
+ * @property int[]|null $active_sftp_host_key_ids Ids of the selected custom SFTP Host Keys
+ * @property bool|null $sftp_insecure_ciphers If true, we will allow weak and known insecure ciphers to be used for SFTP connections. Enabling this setting severely weakens the security of your site and it is not recommend, except as a last resort for compatibility.
+ * @property bool|null $sftp_insecure_diffie_hellman If true, we will allow weak Diffie Hellman parameters to be used within ciphers for SFTP that are otherwise on our secure list. This has the effect of making the cipher weaker than our normal threshold for security, but is required to support certain legacy or broken SSH and MFT clients. Enabling this weakens security, but not nearly as much as enabling the full `sftp_insecure_ciphers` option.
+ * @property bool|null $sftp_user_root_enabled Use user FTP roots also for SFTP?
+ * @property bool|null $sharing_enabled Allow bundle creation
+ * @property bool|null $show_user_notifications_log_in_link Show log in link in user notifications?
+ * @property bool|null $show_request_access_link Show request access link for users without access? Currently unused.
+ * @property string|null $site_footer Custom site footer text for authenticated pages
+ * @property string|null $site_header Custom site header text for authenticated pages
+ * @property string|null $site_public_footer Custom site footer text for public pages
+ * @property string|null $site_public_header Custom site header text for public pages
+ * @property string|null $smtp_address SMTP server hostname or IP
+ * @property string|null $smtp_authentication SMTP server authentication type
+ * @property string|null $smtp_from From address to use when mailing through custom SMTP
+ * @property int|null $smtp_port SMTP server port
+ * @property string|null $smtp_ssl Custom SMTP encryption mode: if_available (default) uses STARTTLS when offered and otherwise sends credentials and messages unencrypted. A certificate-verified STARTTLS connection automatically changes if_available to require unless smtp_ssl is managed by a parent policy. require requires STARTTLS before authentication; require_implicit uses TLS from connection start; never disables TLS. TLS verifies the server certificate against smtp_address. Encryption is never automatically downgraded.
+ * @property string|null $smtp_username SMTP server username
+ * @property int|null $session_expiry_minutes Session expiry in minutes
+ * @property bool|null $snapshot_sharing_enabled Allow snapshot share links creation
+ * @property bool|null $ftp_tls_session_reuse_required Require TLS-protected FTP data connections to reuse the control connection TLS session? Applies to all workspaces.
+ * @property bool|null $ssl_required Is SSL required? Disabling this is insecure.
+ * @property string|null $subdomain Site subdomain
+ * @property string|null $switch_to_plan_date If switching plans, when does the new plan take effect?
+ * @property int|null $trial_days_left Number of days left in trial
+ * @property string|null $trial_until When does this Site trial expire?
+ * @property bool|null $use_dedicated_ips_for_smtp If using custom SMTP, should we use dedicated IPs to deliver emails?
+ * @property bool|null $use_provided_modified_at Allow uploaders to set `provided_modified_at` for uploaded files?
+ * @property \stdClass|null $user User of current session
+ * @property bool|null $user_lockout Will users be locked out after incorrect login attempts?
+ * @property int|null $user_lockout_lock_period How many hours to lock user out for failed password?
+ * @property int|null $user_lockout_tries Number of login tries within `user_lockout_within` hours before users are locked out
+ * @property int|null $user_lockout_within Number of hours for user lockout window
+ * @property bool|null $user_requests_enabled Enable User Requests feature
+ * @property bool|null $user_requests_notify_admins Send email to site admins when a user request is received?
+ * @property bool|null $users_can_create_api_keys Allow users to create their own API keys?
+ * @property bool|null $users_can_create_ssh_keys Allow users to create their own SSH keys?
+ * @property string|null $username_display How usernames are displayed in the web UI. Can be `username_only`, `full_name_only`, `full_name_username`, `full_name_company`, or `full_name_username_company`.
+ * @property string|null $welcome_custom_text Custom text send in user welcome email
+ * @property string|null $email_footer_custom_text Custom footer text for system-generated emails (as Markdown). Supports standard strftime date/time patterns like %Y (4-digit year), %m (month), %d (day).
+ * @property string|null $welcome_email_cc Include this email in welcome emails if enabled
+ * @property string|null $welcome_email_subject Include this email subject in welcome emails if enabled
+ * @property bool|null $welcome_email_enabled Will the welcome email be sent to new users?
+ * @property string|null $welcome_screen Does the welcome screen appear?
+ * @property bool|null $windows_mode_ftp Does FTP user Windows emulation mode?
  * @package Files
  */
 class Site
@@ -20,6 +211,12 @@ class Site
         'list' => 'all',
     ];
 
+    /**
+     * Build a model from API attributes and retain its request options.
+     *
+     * @param array $attributes Initial model attributes, keyed by property name.
+     * @param array $options Request options used by this model's operations.
+     */
     public function __construct($attributes = [], $options = [])
     {
         foreach ($attributes as $key => $value) {
@@ -29,16 +226,36 @@ class Site
         $this->options = $options;
     }
 
+    /**
+     * Set a model attribute locally; call save() to persist supported changes.
+     *
+     * @param string $name Attribute name.
+     * @param mixed $value Attribute value.
+     * @return void
+     */
     public function __set($name, $value)
     {
         $this->attributes[$name] = $value;
     }
 
+    /**
+     * Read a model attribute.
+     *
+     * @param string $name Attribute name.
+     * @return mixed The attribute value, or null when it is not set.
+     */
     public function __get($name)
     {
         return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
+    /**
+     * Dispatch a legacy static alias, including list() to all().
+     *
+     * @param string $name Alias name.
+     * @param array $arguments Arguments passed to the canonical method.
+     * @return mixed The canonical method's result, or null for an unknown alias.
+     */
     public static function __callStatic($name, $arguments)
     {
         if (in_array($name, array_keys(self::$static_mapped_functions))) {
@@ -49,966 +266,1745 @@ class Site
         }
     }
 
+    /**
+     * Whether this model has a nonempty primary key.
+     *
+     * @return bool
+     */
     public function isLoaded()
     {
         return !!@$this->attributes['id'];
     }
-    // int64 # Site Id
+    /**
+     * Site Id
+     *
+     * @return int|null
+     */
     public function getId()
     {
         return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
-    // string # Site name
+    /**
+     * Site name
+     *
+     * @return string|null
+     */
     public function getName()
     {
         return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
-    // array(string) # Additional extensions that are considered text files
+    /**
+     * Additional extensions that are considered text files
+     *
+     * @return string[]|null
+     */
     public function getAdditionalTextFileTypes()
     {
         return isset($this->attributes['additional_text_file_types']) ? $this->attributes['additional_text_file_types'] : null;
     }
-    // object # Availability settings for AI features. Each feature requires the site_admins, workspace_admins, folder_admins, and all_users keys. Optional selected_group_members defaults to false; when true, members of at least one group in group_ids get access regardless of the other options. All availability options are additive: any enabled option matching the user grants access. Optional group_ids is an array of integer IDs of active groups on this site, from any workspace. Omitted or empty group_ids grants no access through selected_group_members and does not affect other options. Disabling all AI features overrides these settings.
+    /**
+     * Availability settings for AI features. Each feature requires the site_admins, workspace_admins, folder_admins, and all_users keys. Optional selected_group_members defaults to false; when true, members of at least one group in group_ids get access regardless of the other options. All availability options are additive: any enabled option matching the user grants access. Optional group_ids is an array of integer IDs of active groups on this site, from any workspace. Omitted or empty group_ids grants no access through selected_group_members and does not affect other options. Disabling all AI features overrides these settings.
+     *
+     * @return object|null
+     */
     public function getAiFeatureAvailability()
     {
         return isset($this->attributes['ai_feature_availability']) ? $this->attributes['ai_feature_availability'] : null;
     }
-    // boolean # Is SMS two factor authentication allowed?
+    /**
+     * Is SMS two factor authentication allowed?
+     *
+     * @return bool|null
+     */
     public function getAllowed2faMethodSms()
     {
         return isset($this->attributes['allowed_2fa_method_sms']) ? $this->attributes['allowed_2fa_method_sms'] : null;
     }
-    // boolean # Is TOTP two factor authentication allowed?
+    /**
+     * Is TOTP two factor authentication allowed?
+     *
+     * @return bool|null
+     */
     public function getAllowed2faMethodTotp()
     {
         return isset($this->attributes['allowed_2fa_method_totp']) ? $this->attributes['allowed_2fa_method_totp'] : null;
     }
-    // boolean # Is WebAuthn two factor authentication allowed?
+    /**
+     * Is WebAuthn two factor authentication allowed?
+     *
+     * @return bool|null
+     */
     public function getAllowed2faMethodWebauthn()
     {
         return isset($this->attributes['allowed_2fa_method_webauthn']) ? $this->attributes['allowed_2fa_method_webauthn'] : null;
     }
-    // boolean # Is yubikey two factor authentication allowed?
+    /**
+     * Is yubikey two factor authentication allowed?
+     *
+     * @return bool|null
+     */
     public function getAllowed2faMethodYubi()
     {
         return isset($this->attributes['allowed_2fa_method_yubi']) ? $this->attributes['allowed_2fa_method_yubi'] : null;
     }
-    // boolean # Is OTP via email two factor authentication allowed?
+    /**
+     * Is OTP via email two factor authentication allowed?
+     *
+     * @return bool|null
+     */
     public function getAllowed2faMethodEmail()
     {
         return isset($this->attributes['allowed_2fa_method_email']) ? $this->attributes['allowed_2fa_method_email'] : null;
     }
-    // boolean # Is OTP via static codes for two factor authentication allowed?
+    /**
+     * Is OTP via static codes for two factor authentication allowed?
+     *
+     * @return bool|null
+     */
     public function getAllowed2faMethodStatic()
     {
         return isset($this->attributes['allowed_2fa_method_static']) ? $this->attributes['allowed_2fa_method_static'] : null;
     }
-    // boolean # Are users allowed to configure their two factor authentication to be bypassed for FTP/SFTP/WebDAV?
+    /**
+     * Are users allowed to configure their two factor authentication to be bypassed for FTP/SFTP/WebDAV?
+     *
+     * @return bool|null
+     */
     public function getAllowed2faMethodBypassForFtpSftpDav()
     {
         return isset($this->attributes['allowed_2fa_method_bypass_for_ftp_sftp_dav']) ? $this->attributes['allowed_2fa_method_bypass_for_ftp_sftp_dav'] : null;
     }
-    // int64 # User ID for the main site administrator
+    /**
+     * User ID for the main site administrator
+     *
+     * @return int|null
+     */
     public function getAdminUserId()
     {
         return isset($this->attributes['admin_user_id']) ? $this->attributes['admin_user_id'] : null;
     }
-    // boolean # Allow admins to bypass the locked subfolders setting.
+    /**
+     * Allow admins to bypass the locked subfolders setting.
+     *
+     * @return bool|null
+     */
     public function getAdminsBypassLockedSubfolders()
     {
         return isset($this->attributes['admins_bypass_locked_subfolders']) ? $this->attributes['admins_bypass_locked_subfolders'] : null;
     }
-    // boolean # Are manual Bundle names allowed?
+    /**
+     * Are manual Bundle names allowed?
+     *
+     * @return bool|null
+     */
     public function getAllowBundleNames()
     {
         return isset($this->attributes['allow_bundle_names']) ? $this->attributes['allow_bundle_names'] : null;
     }
-    // boolean # Allow the site-wide two-factor authentication requirement to be overriden on a per-user-basis?
+    /**
+     * Allow the site-wide two-factor authentication requirement to be overriden on a per-user-basis?
+     *
+     * @return bool|null
+     */
     public function getAllowUserLevel2faOverride()
     {
         return isset($this->attributes['allow_user_level_2fa_override']) ? $this->attributes['allow_user_level_2fa_override'] : null;
     }
-    // boolean # Allow the site-wide allowed IP restriction to be overriden on a per-user-basis?
+    /**
+     * Allow the site-wide allowed IP restriction to be overriden on a per-user-basis?
+     *
+     * @return bool|null
+     */
     public function getAllowUserLevelAllowedIpOverride()
     {
         return isset($this->attributes['allow_user_level_allowed_ip_override']) ? $this->attributes['allow_user_level_allowed_ip_override'] : null;
     }
-    // boolean # Allow per-user overrides of the FTP TLS session reuse requirement?
+    /**
+     * Allow per-user overrides of the FTP TLS session reuse requirement?
+     *
+     * @return bool|null
+     */
     public function getAllowUserLevelFtpTlsSessionReuseOverride()
     {
         return isset($this->attributes['allow_user_level_ftp_tls_session_reuse_override']) ? $this->attributes['allow_user_level_ftp_tls_session_reuse_override'] : null;
     }
-    // boolean # Allow the site-wide FTP SSL requirement to be overriden on a per-user-basis?
+    /**
+     * Allow the site-wide FTP SSL requirement to be overriden on a per-user-basis?
+     *
+     * @return bool|null
+     */
     public function getAllowUserLevelSslOverride()
     {
         return isset($this->attributes['allow_user_level_ssl_override']) ? $this->attributes['allow_user_level_ssl_override'] : null;
     }
-    // string # Comma separated list of allowed Country codes
+    /**
+     * Comma separated list of allowed Country codes
+     *
+     * @return string|null
+     */
     public function getAllowedCountries()
     {
         return isset($this->attributes['allowed_countries']) ? $this->attributes['allowed_countries'] : null;
     }
-    // string # List of allowed IP addresses
+    /**
+     * List of allowed IP addresses
+     *
+     * @return string|null
+     */
     public function getAllowedIps()
     {
         return isset($this->attributes['allowed_ips']) ? $this->attributes['allowed_ips'] : null;
     }
-    // boolean # Require Parent Site users entering this Child Site to match its allowed IP addresses in addition to their existing IP restrictions. Applies to all Workspaces. Defaults to false.
+    /**
+     * Require Parent Site users entering this Child Site to match its allowed IP addresses in addition to their existing IP restrictions. Applies to all Workspaces. Defaults to false.
+     *
+     * @return bool|null
+     */
     public function getEnforceParentSiteUserIpRestrictions()
     {
         return isset($this->attributes['enforce_parent_site_user_ip_restrictions']) ? $this->attributes['enforce_parent_site_user_ip_restrictions'] : null;
     }
-    // boolean # Create parent directories if they do not exist during uploads?  This is primarily used to work around broken upload clients that assume servers will perform this step.
+    /**
+     * Create parent directories if they do not exist during uploads?  This is primarily used to work around broken upload clients that assume servers will perform this step.
+     *
+     * @return bool|null
+     */
     public function getAlwaysMkdirParents()
     {
         return isset($this->attributes['always_mkdir_parents']) ? $this->attributes['always_mkdir_parents'] : null;
     }
-    // int64 # Number of days to retain AS2 messages (incoming and outgoing).
+    /**
+     * Number of days to retain AS2 messages (incoming and outgoing).
+     *
+     * @return int|null
+     */
     public function getAs2MessageRetentionDays()
     {
         return isset($this->attributes['as2_message_retention_days']) ? $this->attributes['as2_message_retention_days'] : null;
     }
-    // boolean # If false, rename conflicting files instead of asking for overwrite confirmation.  Only applies to web interface.
+    /**
+     * If false, rename conflicting files instead of asking for overwrite confirmation.  Only applies to web interface.
+     *
+     * @return bool|null
+     */
     public function getAskAboutOverwrites()
     {
         return isset($this->attributes['ask_about_overwrites']) ? $this->attributes['ask_about_overwrites'] : null;
     }
-    // string # Do Bundle owners receive activity notifications?
+    /**
+     * Do Bundle owners receive activity notifications?
+     *
+     * @return string|null
+     */
     public function getBundleActivityNotifications()
     {
         return isset($this->attributes['bundle_activity_notifications']) ? $this->attributes['bundle_activity_notifications'] : null;
     }
-    // int64 # Site-wide Bundle expiration in days
+    /**
+     * Site-wide Bundle expiration in days
+     *
+     * @return int|null
+     */
     public function getBundleExpiration()
     {
         return isset($this->attributes['bundle_expiration']) ? $this->attributes['bundle_expiration'] : null;
     }
-    // string # Custom error message to show when bundle is not found.
+    /**
+     * Custom error message to show when bundle is not found.
+     *
+     * @return string|null
+     */
     public function getBundleNotFoundMessage()
     {
         return isset($this->attributes['bundle_not_found_message']) ? $this->attributes['bundle_not_found_message'] : null;
     }
-    // boolean # Do Bundles require password protection?
+    /**
+     * Do Bundles require password protection?
+     *
+     * @return bool|null
+     */
     public function getBundlePasswordRequired()
     {
         return isset($this->attributes['bundle_password_required']) ? $this->attributes['bundle_password_required'] : null;
     }
-    // boolean # If true, new Share Links created by a user with a primary group will default to that group as owner.
+    /**
+     * If true, new Share Links created by a user with a primary group will default to that group as owner.
+     *
+     * @return bool|null
+     */
     public function getBundlesDefaultOwnedByPrimaryGroup()
     {
         return isset($this->attributes['bundles_default_owned_by_primary_group']) ? $this->attributes['bundles_default_owned_by_primary_group'] : null;
     }
-    // array(string) # List of email domains to disallow when entering a Bundle/Inbox recipients
+    /**
+     * List of email domains to disallow when entering a Bundle/Inbox recipients
+     *
+     * @return string[]|null
+     */
     public function getBundleRecipientBlacklistDomains()
     {
         return isset($this->attributes['bundle_recipient_blacklist_domains']) ? $this->attributes['bundle_recipient_blacklist_domains'] : null;
     }
-    // boolean # Disallow free email domains for Bundle/Inbox recipients?
+    /**
+     * Disallow free email domains for Bundle/Inbox recipients?
+     *
+     * @return bool|null
+     */
     public function getBundleRecipientBlacklistFreeEmailDomains()
     {
         return isset($this->attributes['bundle_recipient_blacklist_free_email_domains']) ? $this->attributes['bundle_recipient_blacklist_free_email_domains'] : null;
     }
-    // string # Do Bundle owners receive registration notification?
+    /**
+     * Do Bundle owners receive registration notification?
+     *
+     * @return string|null
+     */
     public function getBundleRegistrationNotifications()
     {
         return isset($this->attributes['bundle_registration_notifications']) ? $this->attributes['bundle_registration_notifications'] : null;
     }
-    // boolean # Do Bundles require registration?
+    /**
+     * Do Bundles require registration?
+     *
+     * @return bool|null
+     */
     public function getBundleRequireRegistration()
     {
         return isset($this->attributes['bundle_require_registration']) ? $this->attributes['bundle_require_registration'] : null;
     }
-    // boolean # Do Bundles require recipients for sharing?
+    /**
+     * Do Bundles require recipients for sharing?
+     *
+     * @return bool|null
+     */
     public function getBundleRequireShareRecipient()
     {
         return isset($this->attributes['bundle_require_share_recipient']) ? $this->attributes['bundle_require_share_recipient'] : null;
     }
-    // boolean # If true, new Share Links must send a one-time password to the recipient when they register. Requires bundle_require_share_recipient and cannot be enabled with bundle_password_required.
+    /**
+     * If true, new Share Links must send a one-time password to the recipient when they register. Requires bundle_require_share_recipient and cannot be enabled with bundle_password_required.
+     *
+     * @return bool|null
+     */
     public function getBundleSendOneTimePasswordToRecipientAtRegistration()
     {
         return isset($this->attributes['bundle_send_one_time_password_to_recipient_at_registration']) ? $this->attributes['bundle_send_one_time_password_to_recipient_at_registration'] : null;
     }
-    // boolean # Do Bundles require internal notes?
+    /**
+     * Do Bundles require internal notes?
+     *
+     * @return bool|null
+     */
     public function getBundleRequireNote()
     {
         return isset($this->attributes['bundle_require_note']) ? $this->attributes['bundle_require_note'] : null;
     }
-    // boolean # Do Bundle creators receive receipts of invitations?
+    /**
+     * Do Bundle creators receive receipts of invitations?
+     *
+     * @return bool|null
+     */
     public function getBundleSendSharedReceipts()
     {
         return isset($this->attributes['bundle_send_shared_receipts']) ? $this->attributes['bundle_send_shared_receipts'] : null;
     }
-    // string # Do Bundle uploaders receive upload confirmation notifications?
+    /**
+     * Do Bundle uploaders receive upload confirmation notifications?
+     *
+     * @return string|null
+     */
     public function getBundleUploadReceiptNotifications()
     {
         return isset($this->attributes['bundle_upload_receipt_notifications']) ? $this->attributes['bundle_upload_receipt_notifications'] : null;
     }
-    // Image # Preview watermark image applied to all bundle items.
+    /**
+     * Preview watermark image applied to all bundle items.
+     *
+     * @return \stdClass|null
+     */
     public function getBundleWatermarkAttachment()
     {
         return isset($this->attributes['bundle_watermark_attachment']) ? $this->attributes['bundle_watermark_attachment'] : null;
     }
-    // object # Preview watermark settings applied to all bundle items. Uses the same keys as Behavior.value
+    /**
+     * Preview watermark settings applied to all bundle items. Uses the same keys as Behavior.value
+     *
+     * @return object|null
+     */
     public function getBundleWatermarkValue()
     {
         return isset($this->attributes['bundle_watermark_value']) ? $this->attributes['bundle_watermark_value'] : null;
     }
-    // boolean # Calculate CRC32 checksums for files?
+    /**
+     * Calculate CRC32 checksums for files?
+     *
+     * @return bool|null
+     */
     public function getCalculateFileChecksumsCrc32()
     {
         return isset($this->attributes['calculate_file_checksums_crc32']) ? $this->attributes['calculate_file_checksums_crc32'] : null;
     }
-    // boolean # Calculate MD5 checksums for files?
+    /**
+     * Calculate MD5 checksums for files?
+     *
+     * @return bool|null
+     */
     public function getCalculateFileChecksumsMd5()
     {
         return isset($this->attributes['calculate_file_checksums_md5']) ? $this->attributes['calculate_file_checksums_md5'] : null;
     }
-    // boolean # Calculate SHA1 checksums for files?
+    /**
+     * Calculate SHA1 checksums for files?
+     *
+     * @return bool|null
+     */
     public function getCalculateFileChecksumsSha1()
     {
         return isset($this->attributes['calculate_file_checksums_sha1']) ? $this->attributes['calculate_file_checksums_sha1'] : null;
     }
-    // boolean # Calculate SHA256 checksums for files?
+    /**
+     * Calculate SHA256 checksums for files?
+     *
+     * @return bool|null
+     */
     public function getCalculateFileChecksumsSha256()
     {
         return isset($this->attributes['calculate_file_checksums_sha256']) ? $this->attributes['calculate_file_checksums_sha256'] : null;
     }
-    // boolean # If true, administrators on this site's Child Sites, including Folder Admins, can list this site's Default Workspace users and groups and grant them folder permissions and notifications on Child Site paths.
+    /**
+     * If true, administrators on this site's Child Sites, including Folder Admins, can list this site's Default Workspace users and groups and grant them folder permissions and notifications on Child Site paths.
+     *
+     * @return bool|null
+     */
     public function getChildSiteFolderAdminsCanSeeParentSiteDirectory()
     {
         return isset($this->attributes['child_site_folder_admins_can_see_parent_site_directory']) ? $this->attributes['child_site_folder_admins_can_see_parent_site_directory'] : null;
     }
-    // boolean # If true, Workspace Administrators and Folder Admins in a Custom Workspace can list the Default Workspace users and groups that have permissions in that Workspace and choose them as Email Notification recipients.
+    /**
+     * If true, Workspace Administrators and Folder Admins in a Custom Workspace can list the Default Workspace users and groups that have permissions in that Workspace and choose them as Email Notification recipients.
+     *
+     * @return bool|null
+     */
     public function getWorkspaceFolderAdminsCanSeeDefaultWorkspaceDirectory()
     {
         return isset($this->attributes['workspace_folder_admins_can_see_default_workspace_directory']) ? $this->attributes['workspace_folder_admins_can_see_default_workspace_directory'] : null;
     }
-    // boolean # Require email authentication, virus, and spam checks for incoming emails to Inboxes and Incoming Email Automations in every Workspace on this site?
+    /**
+     * Require email authentication, virus, and spam checks for incoming emails to Inboxes and Incoming Email Automations in every Workspace on this site?
+     *
+     * @return bool|null
+     */
     public function getUploadsViaEmailAuthentication()
     {
         return isset($this->attributes['uploads_via_email_authentication']) ? $this->attributes['uploads_via_email_authentication'] : null;
     }
-    // string # Page link and button color
+    /**
+     * Page link and button color
+     *
+     * @return string|null
+     */
     public function getColor2Left()
     {
         return isset($this->attributes['color2_left']) ? $this->attributes['color2_left'] : null;
     }
-    // string # Top bar link color
+    /**
+     * Top bar link color
+     *
+     * @return string|null
+     */
     public function getColor2Link()
     {
         return isset($this->attributes['color2_link']) ? $this->attributes['color2_link'] : null;
     }
-    // string # Page link and button color
+    /**
+     * Page link and button color
+     *
+     * @return string|null
+     */
     public function getColor2Text()
     {
         return isset($this->attributes['color2_text']) ? $this->attributes['color2_text'] : null;
     }
-    // string # Top bar background color
+    /**
+     * Top bar background color
+     *
+     * @return string|null
+     */
     public function getColor2Top()
     {
         return isset($this->attributes['color2_top']) ? $this->attributes['color2_top'] : null;
     }
-    // string # Top bar text color
+    /**
+     * Top bar text color
+     *
+     * @return string|null
+     */
     public function getColor2TopText()
     {
         return isset($this->attributes['color2_top_text']) ? $this->attributes['color2_top_text'] : null;
     }
-    // string # Site main contact name
+    /**
+     * Site main contact name
+     *
+     * @return string|null
+     */
     public function getContactName()
     {
         return isset($this->attributes['contact_name']) ? $this->attributes['contact_name'] : null;
     }
-    // date-time # Time this site was created
+    /**
+     * Time this site was created
+     *
+     * @return string|null
+     */
     public function getCreatedAt()
     {
         return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
-    // string # Preferred currency
+    /**
+     * Preferred currency
+     *
+     * @return string|null
+     */
     public function getCurrency()
     {
         return isset($this->attributes['currency']) ? $this->attributes['currency'] : null;
     }
-    // boolean # Is this site using a custom namespace for users?
+    /**
+     * Is this site using a custom namespace for users?
+     *
+     * @return bool|null
+     */
     public function getCustomNamespace()
     {
         return isset($this->attributes['custom_namespace']) ? $this->attributes['custom_namespace'] : null;
     }
-    // boolean # Is WebDAV enabled?
+    /**
+     * Is WebDAV enabled?
+     *
+     * @return bool|null
+     */
     public function getDavEnabled()
     {
         return isset($this->attributes['dav_enabled']) ? $this->attributes['dav_enabled'] : null;
     }
-    // boolean # Use user FTP roots also for WebDAV?
+    /**
+     * Use user FTP roots also for WebDAV?
+     *
+     * @return bool|null
+     */
     public function getDavUserRootEnabled()
     {
         return isset($this->attributes['dav_user_root_enabled']) ? $this->attributes['dav_user_root_enabled'] : null;
     }
-    // int64 # Number of days to keep deleted files
+    /**
+     * Number of days to keep deleted files
+     *
+     * @return int|null
+     */
     public function getDaysToRetainBackups()
     {
         return isset($this->attributes['days_to_retain_backups']) ? $this->attributes['days_to_retain_backups'] : null;
     }
-    // boolean # If true, allow public viewers of Bundles with full permissions to use document editing integrations.
+    /**
+     * If true, allow public viewers of Bundles with full permissions to use document editing integrations.
+     *
+     * @return bool|null
+     */
     public function getDocumentEditsInBundleAllowed()
     {
         return isset($this->attributes['document_edits_in_bundle_allowed']) ? $this->attributes['document_edits_in_bundle_allowed'] : null;
     }
-    // string # Site default time zone
+    /**
+     * Site default time zone
+     *
+     * @return string|null
+     */
     public function getDefaultTimeZone()
     {
         return isset($this->attributes['default_time_zone']) ? $this->attributes['default_time_zone'] : null;
     }
-    // boolean # Is the desktop app enabled?
+    /**
+     * Is the desktop app enabled?
+     *
+     * @return bool|null
+     */
     public function getDesktopApp()
     {
         return isset($this->attributes['desktop_app']) ? $this->attributes['desktop_app'] : null;
     }
-    // boolean # Is desktop app session IP pinning enabled?
+    /**
+     * Is desktop app session IP pinning enabled?
+     *
+     * @return bool|null
+     */
     public function getDesktopAppSessionIpPinning()
     {
         return isset($this->attributes['desktop_app_session_ip_pinning']) ? $this->attributes['desktop_app_session_ip_pinning'] : null;
     }
-    // int64 # Desktop app session lifetime (in hours)
+    /**
+     * Desktop app session lifetime (in hours)
+     *
+     * @return int|null
+     */
     public function getDesktopAppSessionLifetime()
     {
         return isset($this->attributes['desktop_app_session_lifetime']) ? $this->attributes['desktop_app_session_lifetime'] : null;
     }
-    // boolean # Use legacy checksums mode?
+    /**
+     * Use legacy checksums mode?
+     *
+     * @return bool|null
+     */
     public function getLegacyChecksumsMode()
     {
         return isset($this->attributes['legacy_checksums_mode']) ? $this->attributes['legacy_checksums_mode'] : null;
     }
-    // boolean # Allow legacy app pairing in all workspaces? Disabled for new sites; existing sites remain enabled until changed. Disabling blocks new pairing exchanges without revoking existing app credentials or affecting OAuth sign-in. Site administrators can re-enable it.
+    /**
+     * Allow legacy app pairing in all workspaces? Disabled for new sites; existing sites remain enabled until changed. Disabling blocks new pairing exchanges without revoking existing app credentials or affecting OAuth sign-in. Site administrators can re-enable it.
+     *
+     * @return bool|null
+     */
     public function getLegacyPairingEnabled()
     {
         return isset($this->attributes['legacy_pairing_enabled']) ? $this->attributes['legacy_pairing_enabled'] : null;
     }
-    // date-time # Time of the last completed legacy app pairing across all workspaces. Failed or incomplete attempts do not count. Read-only; empty until a pairing completes after tracking begins.
+    /**
+     * Time of the last completed legacy app pairing across all workspaces. Failed or incomplete attempts do not count. Read-only; empty until a pairing completes after tracking begins.
+     *
+     * @return string|null
+     */
     public function getLastPairingAt()
     {
         return isset($this->attributes['last_pairing_at']) ? $this->attributes['last_pairing_at'] : null;
     }
-    // boolean # If true, we will migrate all remote server syncs to the new Sync model.
+    /**
+     * If true, we will migrate all remote server syncs to the new Sync model.
+     *
+     * @return bool|null
+     */
     public function getMigrateRemoteServerSyncToSync()
     {
         return isset($this->attributes['migrate_remote_server_sync_to_sync']) ? $this->attributes['migrate_remote_server_sync_to_sync'] : null;
     }
-    // boolean # Is OAuth DCR (dynamic client registration) for MCP enabled?
+    /**
+     * Is OAuth DCR (dynamic client registration) for MCP enabled?
+     *
+     * @return bool|null
+     */
     public function getMcpDcrEnabled()
     {
         return isset($this->attributes['mcp_dcr_enabled']) ? $this->attributes['mcp_dcr_enabled'] : null;
     }
-    // boolean # Is the mobile app enabled?
+    /**
+     * Is the mobile app enabled?
+     *
+     * @return bool|null
+     */
     public function getMobileApp()
     {
         return isset($this->attributes['mobile_app']) ? $this->attributes['mobile_app'] : null;
     }
-    // boolean # Is mobile app session IP pinning enabled?
+    /**
+     * Is mobile app session IP pinning enabled?
+     *
+     * @return bool|null
+     */
     public function getMobileAppSessionIpPinning()
     {
         return isset($this->attributes['mobile_app_session_ip_pinning']) ? $this->attributes['mobile_app_session_ip_pinning'] : null;
     }
-    // int64 # Mobile app session lifetime (in hours)
+    /**
+     * Mobile app session lifetime (in hours)
+     *
+     * @return int|null
+     */
     public function getMobileAppSessionLifetime()
     {
         return isset($this->attributes['mobile_app_session_lifetime']) ? $this->attributes['mobile_app_session_lifetime'] : null;
     }
-    // string # Comma separated list of disallowed Country codes
+    /**
+     * Comma separated list of disallowed Country codes
+     *
+     * @return string|null
+     */
     public function getDisallowedCountries()
     {
         return isset($this->attributes['disallowed_countries']) ? $this->attributes['disallowed_countries'] : null;
     }
-    // boolean # If true, all AI features are disabled for this site.
+    /**
+     * If true, all AI features are disabled for this site.
+     *
+     * @return bool|null
+     */
     public function getDisableAllAiFeatures()
     {
         return isset($this->attributes['disable_all_ai_features']) ? $this->attributes['disable_all_ai_features'] : null;
     }
-    // boolean # If set, Files.com will not set the CAA records required to generate future SSL certificates for this domain.
+    /**
+     * If set, Files.com will not set the CAA records required to generate future SSL certificates for this domain.
+     *
+     * @return bool|null
+     */
     public function getDisableFilesCertificateGeneration()
     {
         return isset($this->attributes['disable_files_certificate_generation']) ? $this->attributes['disable_files_certificate_generation'] : null;
     }
-    // boolean # Are notifications disabled?
+    /**
+     * Are notifications disabled?
+     *
+     * @return bool|null
+     */
     public function getDisableNotifications()
     {
         return isset($this->attributes['disable_notifications']) ? $this->attributes['disable_notifications'] : null;
     }
-    // boolean # If true, file operations produce file_action.activity.v1 EventChannel events in all workspaces. Defaults to false; subscription filters and workspace access still control delivery.
+    /**
+     * If true, file operations produce file_action.activity.v1 EventChannel events in all workspaces. Defaults to false; subscription filters and workspace access still control delivery.
+     *
+     * @return bool|null
+     */
     public function getFileActivityEventsEnabled()
     {
         return isset($this->attributes['file_activity_events_enabled']) ? $this->attributes['file_activity_events_enabled'] : null;
     }
-    // boolean # Is password reset disabled?
+    /**
+     * Is password reset disabled?
+     *
+     * @return bool|null
+     */
     public function getDisablePasswordReset()
     {
         return isset($this->attributes['disable_password_reset']) ? $this->attributes['disable_password_reset'] : null;
     }
-    // string # Custom domain
+    /**
+     * Custom domain
+     *
+     * @return string|null
+     */
     public function getDomain()
     {
         return isset($this->attributes['domain']) ? $this->attributes['domain'] : null;
     }
-    // boolean # Send HSTS (HTTP Strict Transport Security) header when visitors access the site via a custom domain?
+    /**
+     * Send HSTS (HTTP Strict Transport Security) header when visitors access the site via a custom domain?
+     *
+     * @return bool|null
+     */
     public function getDomainHstsHeader()
     {
         return isset($this->attributes['domain_hsts_header']) ? $this->attributes['domain_hsts_header'] : null;
     }
-    // string # Letsencrypt chain to use when registering SSL Certificate for domain. No longer used as of 2026.
+    /**
+     * Letsencrypt chain to use when registering SSL Certificate for domain. No longer used as of 2026.
+     *
+     * @return string|null
+     */
     public function getDomainLetsencryptChain()
     {
         return isset($this->attributes['domain_letsencrypt_chain']) ? $this->attributes['domain_letsencrypt_chain'] : null;
     }
-    // email # Main email for this site
+    /**
+     * Main email for this site
+     *
+     * @return string|null
+     */
     public function getEmail()
     {
         return isset($this->attributes['email']) ? $this->attributes['email'] : null;
     }
-    // boolean # Are FedRAMP security restrictions enabled for this site?
+    /**
+     * Are FedRAMP security restrictions enabled for this site?
+     *
+     * @return bool|null
+     */
     public function getFedramp()
     {
         return isset($this->attributes['fedramp']) ? $this->attributes['fedramp'] : null;
     }
-    // boolean # Allow other Files.com sites to use this site's API keys for native Files.com Remote Server connections? Defaults to true and applies to all keys and workspaces on this site. When false, new pairings and access through existing connections are rejected without revoking keys or deleting connections. Re-enabling permits access again with usable keys. Does not disable this site's connections to other sites, ordinary API access, or Connected Sites.
+    /**
+     * Allow other Files.com sites to use this site's API keys for native Files.com Remote Server connections? Defaults to true and applies to all keys and workspaces on this site. When false, new pairings and access through existing connections are rejected without revoking keys or deleting connections. Re-enabling permits access again with usable keys. Does not disable this site's connections to other sites, ordinary API access, or Connected Sites.
+     *
+     * @return bool|null
+     */
     public function getFilesComRemoteServerEnabled()
     {
         return isset($this->attributes['files_com_remote_server_enabled']) ? $this->attributes['files_com_remote_server_enabled'] : null;
     }
-    // boolean # Is FTP enabled?
+    /**
+     * Is FTP enabled?
+     *
+     * @return bool|null
+     */
     public function getFtpEnabled()
     {
         return isset($this->attributes['ftp_enabled']) ? $this->attributes['ftp_enabled'] : null;
     }
-    // email # Reply-to email for this site
+    /**
+     * Reply-to email for this site
+     *
+     * @return string|null
+     */
     public function getReplyToEmail()
     {
         return isset($this->attributes['reply_to_email']) ? $this->attributes['reply_to_email'] : null;
     }
-    // boolean # If true, groups can be manually created / modified / deleted by Site Admins. Otherwise, groups can only be managed via your SSO provider.
+    /**
+     * If true, groups can be manually created / modified / deleted by Site Admins. Otherwise, groups can only be managed via your SSO provider.
+     *
+     * @return bool|null
+     */
     public function getNonSsoGroupsAllowed()
     {
         return isset($this->attributes['non_sso_groups_allowed']) ? $this->attributes['non_sso_groups_allowed'] : null;
     }
-    // boolean # If true, users can be manually created / modified / deleted by Site Admins. Otherwise, users can only be managed via your SSO provider.
+    /**
+     * If true, users can be manually created / modified / deleted by Site Admins. Otherwise, users can only be managed via your SSO provider.
+     *
+     * @return bool|null
+     */
     public function getNonSsoUsersAllowed()
     {
         return isset($this->attributes['non_sso_users_allowed']) ? $this->attributes['non_sso_users_allowed'] : null;
     }
-    // boolean # If true, permissions for this site must be bound to a group (not a user).
+    /**
+     * If true, permissions for this site must be bound to a group (not a user).
+     *
+     * @return bool|null
+     */
     public function getFolderPermissionsGroupsOnly()
     {
         return isset($this->attributes['folder_permissions_groups_only']) ? $this->attributes['folder_permissions_groups_only'] : null;
     }
-    // boolean # Allow group admins to create users in their groups
+    /**
+     * Allow group admins to create users in their groups
+     *
+     * @return bool|null
+     */
     public function getGroupAdminsCanAddUsers()
     {
         return isset($this->attributes['group_admins_can_add_users']) ? $this->attributes['group_admins_can_add_users'] : null;
     }
-    // boolean # Allow group admins to add or remove existing users in their groups
+    /**
+     * Allow group admins to add or remove existing users in their groups
+     *
+     * @return bool|null
+     */
     public function getGroupAdminsCanManageGroupMemberships()
     {
         return isset($this->attributes['group_admins_can_manage_group_memberships']) ? $this->attributes['group_admins_can_manage_group_memberships'] : null;
     }
-    // boolean # Allow group admins to delete users in their groups
+    /**
+     * Allow group admins to delete users in their groups
+     *
+     * @return bool|null
+     */
     public function getGroupAdminsCanDeleteUsers()
     {
         return isset($this->attributes['group_admins_can_delete_users']) ? $this->attributes['group_admins_can_delete_users'] : null;
     }
-    // boolean # Allow group admins to enable or disable users in their groups
+    /**
+     * Allow group admins to enable or disable users in their groups
+     *
+     * @return bool|null
+     */
     public function getGroupAdminsCanEnableDisableUsers()
     {
         return isset($this->attributes['group_admins_can_enable_disable_users']) ? $this->attributes['group_admins_can_enable_disable_users'] : null;
     }
-    // boolean # Allow group admins to modify users in their groups
+    /**
+     * Allow group admins to modify users in their groups
+     *
+     * @return bool|null
+     */
     public function getGroupAdminsCanModifyUsers()
     {
         return isset($this->attributes['group_admins_can_modify_users']) ? $this->attributes['group_admins_can_modify_users'] : null;
     }
-    // boolean # Allow group admins to exempt users in their groups from lifecycle rules
+    /**
+     * Allow group admins to exempt users in their groups from lifecycle rules
+     *
+     * @return bool|null
+     */
     public function getGroupAdminsCanBypassUserLifecycleRules()
     {
         return isset($this->attributes['group_admins_can_bypass_user_lifecycle_rules']) ? $this->attributes['group_admins_can_bypass_user_lifecycle_rules'] : null;
     }
-    // boolean # Allow group admins to reset passwords for users in their groups
+    /**
+     * Allow group admins to reset passwords for users in their groups
+     *
+     * @return bool|null
+     */
     public function getGroupAdminsCanResetPasswords()
     {
         return isset($this->attributes['group_admins_can_reset_passwords']) ? $this->attributes['group_admins_can_reset_passwords'] : null;
     }
-    // boolean # Allow group admins to set password authentication method
+    /**
+     * Allow group admins to set password authentication method
+     *
+     * @return bool|null
+     */
     public function getGroupAdminsCanSetUserPassword()
     {
         return isset($this->attributes['group_admins_can_set_user_password']) ? $this->attributes['group_admins_can_set_user_password'] : null;
     }
-    // boolean # Is there a signed HIPAA BAA between Files.com and this site?
+    /**
+     * Is there a signed HIPAA BAA between Files.com and this site?
+     *
+     * @return bool|null
+     */
     public function getHipaa()
     {
         return isset($this->attributes['hipaa']) ? $this->attributes['hipaa'] : null;
     }
-    // Image # Branded icon 128x128
+    /**
+     * Branded icon 128x128
+     *
+     * @return \stdClass|null
+     */
     public function getIcon128()
     {
         return isset($this->attributes['icon128']) ? $this->attributes['icon128'] : null;
     }
-    // Image # Branded icon 16x16
+    /**
+     * Branded icon 16x16
+     *
+     * @return \stdClass|null
+     */
     public function getIcon16()
     {
         return isset($this->attributes['icon16']) ? $this->attributes['icon16'] : null;
     }
-    // Image # Branded icon 32x32
+    /**
+     * Branded icon 32x32
+     *
+     * @return \stdClass|null
+     */
     public function getIcon32()
     {
         return isset($this->attributes['icon32']) ? $this->attributes['icon32'] : null;
     }
-    // Image # Branded icon 48x48
+    /**
+     * Branded icon 48x48
+     *
+     * @return \stdClass|null
+     */
     public function getIcon48()
     {
         return isset($this->attributes['icon48']) ? $this->attributes['icon48'] : null;
     }
-    // date-time # Can files be modified?
+    /**
+     * Can files be modified?
+     *
+     * @return string|null
+     */
     public function getImmutableFilesSetAt()
     {
         return isset($this->attributes['immutable_files_set_at']) ? $this->attributes['immutable_files_set_at'] : null;
     }
-    // string # Administrator access to user-owned Remote Servers in every Workspace: always_visible (default), never_visible, user_choice_default_visible, or user_choice_default_personal. Forced modes override owner preferences; choice modes use the preference or their default.
+    /**
+     * Administrator access to user-owned Remote Servers in every Workspace: always_visible (default), never_visible, user_choice_default_visible, or user_choice_default_personal. Forced modes override owner preferences; choice modes use the preference or their default.
+     *
+     * @return string|null
+     */
     public function getIntegrationCentricRemoteServerAdminAccess()
     {
         return isset($this->attributes['integration_centric_remote_server_admin_access']) ? $this->attributes['integration_centric_remote_server_admin_access'] : null;
     }
-    // boolean # Include password in emails to new users?
+    /**
+     * Include password in emails to new users?
+     *
+     * @return bool|null
+     */
     public function getIncludePasswordInWelcomeEmail()
     {
         return isset($this->attributes['include_password_in_welcome_email']) ? $this->attributes['include_password_in_welcome_email'] : null;
     }
-    // string # Site default language
+    /**
+     * Site default language
+     *
+     * @return string|null
+     */
     public function getLanguage()
     {
         return isset($this->attributes['language']) ? $this->attributes['language'] : null;
     }
-    // string # Login help text
+    /**
+     * Login help text
+     *
+     * @return string|null
+     */
     public function getLoginHelpText()
     {
         return isset($this->attributes['login_help_text']) ? $this->attributes['login_help_text'] : null;
     }
-    // Image # Branded logo
+    /**
+     * Branded logo
+     *
+     * @return \stdClass|null
+     */
     public function getLogo()
     {
         return isset($this->attributes['logo']) ? $this->attributes['logo'] : null;
     }
-    // Image # Branded login page background
+    /**
+     * Branded login page background
+     *
+     * @return \stdClass|null
+     */
     public function getLoginPageBackgroundImage()
     {
         return isset($this->attributes['login_page_background_image']) ? $this->attributes['login_page_background_image'] : null;
     }
-    // int64 # Number of prior passwords to disallow
+    /**
+     * Number of prior passwords to disallow
+     *
+     * @return int|null
+     */
     public function getMaxPriorPasswords()
     {
         return isset($this->attributes['max_prior_passwords']) ? $this->attributes['max_prior_passwords'] : null;
     }
-    // object # Site settings managed by the parent site. Each key identifies a managed setting, with a null value. Non-secret effective values are returned in their own Site settings fields.
+    /**
+     * Site settings managed by the parent site. Each key identifies a managed setting, with a null value. Non-secret effective values are returned in their own Site settings fields.
+     *
+     * @return object|null
+     */
     public function getManagedSiteSettings()
     {
         return isset($this->attributes['managed_site_settings']) ? $this->attributes['managed_site_settings'] : null;
     }
-    // string # A message to show users when they connect via FTP or SFTP.
+    /**
+     * A message to show users when they connect via FTP or SFTP.
+     *
+     * @return string|null
+     */
     public function getMotdText()
     {
         return isset($this->attributes['motd_text']) ? $this->attributes['motd_text'] : null;
     }
-    // boolean # Show message to users connecting via FTP
+    /**
+     * Show message to users connecting via FTP
+     *
+     * @return bool|null
+     */
     public function getMotdUseForFtp()
     {
         return isset($this->attributes['motd_use_for_ftp']) ? $this->attributes['motd_use_for_ftp'] : null;
     }
-    // boolean # Show message to users connecting via SFTP
+    /**
+     * Show message to users connecting via SFTP
+     *
+     * @return bool|null
+     */
     public function getMotdUseForSftp()
     {
         return isset($this->attributes['motd_use_for_sftp']) ? $this->attributes['motd_use_for_sftp'] : null;
     }
-    // decimal # Next billing amount
+    /**
+     * Next billing amount
+     *
+     * @return string|null
+     */
     public function getNextBillingAmount()
     {
         return isset($this->attributes['next_billing_amount']) ? $this->attributes['next_billing_amount'] : null;
     }
-    // string # Next billing date
+    /**
+     * Next billing date
+     *
+     * @return string|null
+     */
     public function getNextBillingDate()
     {
         return isset($this->attributes['next_billing_date']) ? $this->attributes['next_billing_date'] : null;
     }
-    // boolean # If true, allows users to use a document editing integration.
+    /**
+     * If true, allows users to use a document editing integration.
+     *
+     * @return bool|null
+     */
     public function getOfficeIntegrationAvailable()
     {
         return isset($this->attributes['office_integration_available']) ? $this->attributes['office_integration_available'] : null;
     }
-    // string # Which document editing integration to support. Files.com Editor or Microsoft Office for the Web.
+    /**
+     * Which document editing integration to support. Files.com Editor or Microsoft Office for the Web.
+     *
+     * @return string|null
+     */
     public function getOfficeIntegrationType()
     {
         return isset($this->attributes['office_integration_type']) ? $this->attributes['office_integration_type'] : null;
     }
-    // string # Link to scheduling a meeting with our Sales team
+    /**
+     * Link to scheduling a meeting with our Sales team
+     *
+     * @return string|null
+     */
     public function getOncehubLink()
     {
         return isset($this->attributes['oncehub_link']) ? $this->attributes['oncehub_link'] : null;
     }
-    // boolean # Use servers in the USA only?
+    /**
+     * Use servers in the USA only?
+     *
+     * @return bool|null
+     */
     public function getOptOutGlobal()
     {
         return isset($this->attributes['opt_out_global']) ? $this->attributes['opt_out_global'] : null;
     }
-    // boolean # Is this site's billing overdue?
+    /**
+     * Is this site's billing overdue?
+     *
+     * @return bool|null
+     */
     public function getOverdue()
     {
         return isset($this->attributes['overdue']) ? $this->attributes['overdue'] : null;
     }
-    // int64 # Shortest password length for users
+    /**
+     * Shortest password length for users
+     *
+     * @return int|null
+     */
     public function getPasswordMinLength()
     {
         return isset($this->attributes['password_min_length']) ? $this->attributes['password_min_length'] : null;
     }
-    // boolean # Require a letter in passwords?
+    /**
+     * Require a letter in passwords?
+     *
+     * @return bool|null
+     */
     public function getPasswordRequireLetter()
     {
         return isset($this->attributes['password_require_letter']) ? $this->attributes['password_require_letter'] : null;
     }
-    // boolean # Require lower and upper case letters in passwords?
+    /**
+     * Require lower and upper case letters in passwords?
+     *
+     * @return bool|null
+     */
     public function getPasswordRequireMixed()
     {
         return isset($this->attributes['password_require_mixed']) ? $this->attributes['password_require_mixed'] : null;
     }
-    // boolean # Require a number in passwords?
+    /**
+     * Require a number in passwords?
+     *
+     * @return bool|null
+     */
     public function getPasswordRequireNumber()
     {
         return isset($this->attributes['password_require_number']) ? $this->attributes['password_require_number'] : null;
     }
-    // boolean # Require special characters in password?
+    /**
+     * Require special characters in password?
+     *
+     * @return bool|null
+     */
     public function getPasswordRequireSpecial()
     {
         return isset($this->attributes['password_require_special']) ? $this->attributes['password_require_special'] : null;
     }
-    // boolean # Require passwords that have not been previously breached? (see https://haveibeenpwned.com/)
+    /**
+     * Require passwords that have not been previously breached? (see https://haveibeenpwned.com/)
+     *
+     * @return bool|null
+     */
     public function getPasswordRequireUnbreached()
     {
         return isset($this->attributes['password_require_unbreached']) ? $this->attributes['password_require_unbreached'] : null;
     }
-    // boolean # Require bundles' passwords, and passwords for other items (inboxes, public shares, etc.) to conform to the same requirements as users' passwords?
+    /**
+     * Require bundles' passwords, and passwords for other items (inboxes, public shares, etc.) to conform to the same requirements as users' passwords?
+     *
+     * @return bool|null
+     */
     public function getPasswordRequirementsApplyToBundles()
     {
         return isset($this->attributes['password_requirements_apply_to_bundles']) ? $this->attributes['password_requirements_apply_to_bundles'] : null;
     }
-    // int64 # Number of days password is valid
+    /**
+     * Number of days password is valid
+     *
+     * @return int|null
+     */
     public function getPasswordValidityDays()
     {
         return isset($this->attributes['password_validity_days']) ? $this->attributes['password_validity_days'] : null;
     }
-    // string # Site phone number
+    /**
+     * Site phone number
+     *
+     * @return string|null
+     */
     public function getPhone()
     {
         return isset($this->attributes['phone']) ? $this->attributes['phone'] : null;
     }
-    // boolean # If true, we will ensure that all internal communications with any remote server are made through the primary region of the site. This setting overrides individual remote server settings.
+    /**
+     * If true, we will ensure that all internal communications with any remote server are made through the primary region of the site. This setting overrides individual remote server settings.
+     *
+     * @return bool|null
+     */
     public function getPinAllRemoteServersToSiteRegion()
     {
         return isset($this->attributes['pin_all_remote_servers_to_site_region']) ? $this->attributes['pin_all_remote_servers_to_site_region'] : null;
     }
-    // boolean # If true, we will prevent non-administrators from receiving any permissions directly on the root folder.  This is commonly used to prevent the accidental application of permissions.
+    /**
+     * If true, we will prevent non-administrators from receiving any permissions directly on the root folder.  This is commonly used to prevent the accidental application of permissions.
+     *
+     * @return bool|null
+     */
     public function getPreventRootPermissionsForNonSiteAdmins()
     {
         return isset($this->attributes['prevent_root_permissions_for_non_site_admins']) ? $this->attributes['prevent_root_permissions_for_non_site_admins'] : null;
     }
-    // boolean # If true, protocol access permissions on users will be ignored, and only protocol access permissions set on Groups will be honored.  Make sure that your current user is a member of a group with API permission when changing this value to avoid locking yourself out of your site.
+    /**
+     * If true, protocol access permissions on users will be ignored, and only protocol access permissions set on Groups will be honored.  Make sure that your current user is a member of a group with API permission when changing this value to avoid locking yourself out of your site.
+     *
+     * @return bool|null
+     */
     public function getProtocolAccessGroupsOnly()
     {
         return isset($this->attributes['protocol_access_groups_only']) ? $this->attributes['protocol_access_groups_only'] : null;
     }
-    // boolean # Require two-factor authentication for all users?
+    /**
+     * Require two-factor authentication for all users?
+     *
+     * @return bool|null
+     */
     public function getRequire2fa()
     {
         return isset($this->attributes['require_2fa']) ? $this->attributes['require_2fa'] : null;
     }
-    // boolean # If true, only site admins may create, modify, or delete any behavior at the site root, or a skip that would disable one.
+    /**
+     * If true, only site admins may create, modify, or delete any behavior at the site root, or a skip that would disable one.
+     *
+     * @return bool|null
+     */
     public function getRestrictRootFolderBehaviorsToSiteAdmins()
     {
         return isset($this->attributes['restrict_root_folder_behaviors_to_site_admins']) ? $this->attributes['restrict_root_folder_behaviors_to_site_admins'] : null;
     }
-    // boolean # If true, supported protective behaviors at the site root also apply within named workspaces. Requires restrict_root_folder_behaviors_to_site_admins to be enabled.
+    /**
+     * If true, supported protective behaviors at the site root also apply within named workspaces. Requires restrict_root_folder_behaviors_to_site_admins to be enabled.
+     *
+     * @return bool|null
+     */
     public function getRootFolderBehaviorsApplyToWorkspaces()
     {
         return isset($this->attributes['root_folder_behaviors_apply_to_workspaces']) ? $this->attributes['root_folder_behaviors_apply_to_workspaces'] : null;
     }
-    // boolean # If true, SSO users using the default user-level two-factor authentication setting are exempt from the site-wide two-factor authentication requirement.
+    /**
+     * If true, SSO users using the default user-level two-factor authentication setting are exempt from the site-wide two-factor authentication requirement.
+     *
+     * @return bool|null
+     */
     public function getRequire2faExemptAllSsoUsers()
     {
         return isset($this->attributes['require_2fa_exempt_all_sso_users']) ? $this->attributes['require_2fa_exempt_all_sso_users'] : null;
     }
-    // date-time # If set, requirement for two-factor authentication has been scheduled to end on this date-time.
+    /**
+     * If set, requirement for two-factor authentication has been scheduled to end on this date-time.
+     *
+     * @return string|null
+     */
     public function getRequire2faStopTime()
     {
         return isset($this->attributes['require_2fa_stop_time']) ? $this->attributes['require_2fa_stop_time'] : null;
     }
-    // boolean # Auto-removes bundles for disabled/deleted users and enforces bundle expiry within user access period.
+    /**
+     * Auto-removes bundles for disabled/deleted users and enforces bundle expiry within user access period.
+     *
+     * @return bool|null
+     */
     public function getRevokeBundleAccessOnDisableOrDelete()
     {
         return isset($this->attributes['revoke_bundle_access_on_disable_or_delete']) ? $this->attributes['revoke_bundle_access_on_disable_or_delete'] : null;
     }
-    // string # What type of user is required to use two-factor authentication (when require_2fa is set to `true` for this site)?
+    /**
+     * What type of user is required to use two-factor authentication (when require_2fa is set to `true` for this site)?
+     *
+     * @return string|null
+     */
     public function getRequire2faUserType()
     {
         return isset($this->attributes['require_2fa_user_type']) ? $this->attributes['require_2fa_user_type'] : null;
     }
-    // boolean # If true, we will hide the 'Remember Me' box on Inbox and Bundle registration pages, requiring that the user logout and log back in every time they visit the page.
+    /**
+     * If true, we will hide the 'Remember Me' box on Inbox and Bundle registration pages, requiring that the user logout and log back in every time they visit the page.
+     *
+     * @return bool|null
+     */
     public function getRequireLogoutFromBundlesAndInboxes()
     {
         return isset($this->attributes['require_logout_from_bundles_and_inboxes']) ? $this->attributes['require_logout_from_bundles_and_inboxes'] : null;
     }
-    // Session # Current session
+    /**
+     * Current session
+     *
+     * @return \stdClass|null
+     */
     public function getSession()
     {
         return isset($this->attributes['session']) ? $this->attributes['session'] : null;
     }
-    // boolean # Is the S3-compatible endpoint enabled for all users and workspaces on this site? Defaults to true. When false, user and group S3 permissions do not allow access.
+    /**
+     * Is the S3-compatible endpoint enabled for all users and workspaces on this site? Defaults to true. When false, user and group S3 permissions do not allow access.
+     *
+     * @return bool|null
+     */
     public function getS3CompatibleEndpointEnabled()
     {
         return isset($this->attributes['s3_compatible_endpoint_enabled']) ? $this->attributes['s3_compatible_endpoint_enabled'] : null;
     }
-    // boolean # Is SFTP enabled?
+    /**
+     * Is SFTP enabled?
+     *
+     * @return bool|null
+     */
     public function getSftpEnabled()
     {
         return isset($this->attributes['sftp_enabled']) ? $this->attributes['sftp_enabled'] : null;
     }
-    // boolean # Finalize partial SFTP uploads from interrupted connections? Default: true.
+    /**
+     * Finalize partial SFTP uploads from interrupted connections? Default: true.
+     *
+     * @return bool|null
+     */
     public function getSftpFinalizePartialUploads()
     {
         return isset($this->attributes['sftp_finalize_partial_uploads']) ? $this->attributes['sftp_finalize_partial_uploads'] : null;
     }
-    // string # Sftp Host Key Type
+    /**
+     * Sftp Host Key Type
+     *
+     * @return string|null
+     */
     public function getSftpHostKeyType()
     {
         return isset($this->attributes['sftp_host_key_type']) ? $this->attributes['sftp_host_key_type'] : null;
     }
-    // int64 # Id of the currently selected custom SFTP Host Key
+    /**
+     * Id of the currently selected custom SFTP Host Key
+     *
+     * @return int|null
+     */
     public function getActiveSftpHostKeyId()
     {
         return isset($this->attributes['active_sftp_host_key_id']) ? $this->attributes['active_sftp_host_key_id'] : null;
     }
-    // array(int64) # Ids of the selected custom SFTP Host Keys
+    /**
+     * Ids of the selected custom SFTP Host Keys
+     *
+     * @return int[]|null
+     */
     public function getActiveSftpHostKeyIds()
     {
         return isset($this->attributes['active_sftp_host_key_ids']) ? $this->attributes['active_sftp_host_key_ids'] : null;
     }
-    // boolean # If true, we will allow weak and known insecure ciphers to be used for SFTP connections.  Enabling this setting severely weakens the security of your site and it is not recommend, except as a last resort for compatibility.
+    /**
+     * If true, we will allow weak and known insecure ciphers to be used for SFTP connections.  Enabling this setting severely weakens the security of your site and it is not recommend, except as a last resort for compatibility.
+     *
+     * @return bool|null
+     */
     public function getSftpInsecureCiphers()
     {
         return isset($this->attributes['sftp_insecure_ciphers']) ? $this->attributes['sftp_insecure_ciphers'] : null;
     }
-    // boolean # If true, we will allow weak Diffie Hellman parameters to be used within ciphers for SFTP that are otherwise on our secure list.  This has the effect of making the cipher weaker than our normal threshold for security, but is required to support certain legacy or broken SSH and MFT clients.  Enabling this weakens security, but not nearly as much as enabling the full `sftp_insecure_ciphers` option.
+    /**
+     * If true, we will allow weak Diffie Hellman parameters to be used within ciphers for SFTP that are otherwise on our secure list.  This has the effect of making the cipher weaker than our normal threshold for security, but is required to support certain legacy or broken SSH and MFT clients.  Enabling this weakens security, but not nearly as much as enabling the full `sftp_insecure_ciphers` option.
+     *
+     * @return bool|null
+     */
     public function getSftpInsecureDiffieHellman()
     {
         return isset($this->attributes['sftp_insecure_diffie_hellman']) ? $this->attributes['sftp_insecure_diffie_hellman'] : null;
     }
-    // boolean # Use user FTP roots also for SFTP?
+    /**
+     * Use user FTP roots also for SFTP?
+     *
+     * @return bool|null
+     */
     public function getSftpUserRootEnabled()
     {
         return isset($this->attributes['sftp_user_root_enabled']) ? $this->attributes['sftp_user_root_enabled'] : null;
     }
-    // boolean # Allow bundle creation
+    /**
+     * Allow bundle creation
+     *
+     * @return bool|null
+     */
     public function getSharingEnabled()
     {
         return isset($this->attributes['sharing_enabled']) ? $this->attributes['sharing_enabled'] : null;
     }
-    // boolean # Show log in link in user notifications?
+    /**
+     * Show log in link in user notifications?
+     *
+     * @return bool|null
+     */
     public function getShowUserNotificationsLogInLink()
     {
         return isset($this->attributes['show_user_notifications_log_in_link']) ? $this->attributes['show_user_notifications_log_in_link'] : null;
     }
-    // boolean # Show request access link for users without access?  Currently unused.
+    /**
+     * Show request access link for users without access?  Currently unused.
+     *
+     * @return bool|null
+     */
     public function getShowRequestAccessLink()
     {
         return isset($this->attributes['show_request_access_link']) ? $this->attributes['show_request_access_link'] : null;
     }
-    // string # Custom site footer text for authenticated pages
+    /**
+     * Custom site footer text for authenticated pages
+     *
+     * @return string|null
+     */
     public function getSiteFooter()
     {
         return isset($this->attributes['site_footer']) ? $this->attributes['site_footer'] : null;
     }
-    // string # Custom site header text for authenticated pages
+    /**
+     * Custom site header text for authenticated pages
+     *
+     * @return string|null
+     */
     public function getSiteHeader()
     {
         return isset($this->attributes['site_header']) ? $this->attributes['site_header'] : null;
     }
-    // string # Custom site footer text for public pages
+    /**
+     * Custom site footer text for public pages
+     *
+     * @return string|null
+     */
     public function getSitePublicFooter()
     {
         return isset($this->attributes['site_public_footer']) ? $this->attributes['site_public_footer'] : null;
     }
-    // string # Custom site header text for public pages
+    /**
+     * Custom site header text for public pages
+     *
+     * @return string|null
+     */
     public function getSitePublicHeader()
     {
         return isset($this->attributes['site_public_header']) ? $this->attributes['site_public_header'] : null;
     }
-    // string # SMTP server hostname or IP
+    /**
+     * SMTP server hostname or IP
+     *
+     * @return string|null
+     */
     public function getSmtpAddress()
     {
         return isset($this->attributes['smtp_address']) ? $this->attributes['smtp_address'] : null;
     }
-    // string # SMTP server authentication type
+    /**
+     * SMTP server authentication type
+     *
+     * @return string|null
+     */
     public function getSmtpAuthentication()
     {
         return isset($this->attributes['smtp_authentication']) ? $this->attributes['smtp_authentication'] : null;
     }
-    // string # From address to use when mailing through custom SMTP
+    /**
+     * From address to use when mailing through custom SMTP
+     *
+     * @return string|null
+     */
     public function getSmtpFrom()
     {
         return isset($this->attributes['smtp_from']) ? $this->attributes['smtp_from'] : null;
     }
-    // int64 # SMTP server port
+    /**
+     * SMTP server port
+     *
+     * @return int|null
+     */
     public function getSmtpPort()
     {
         return isset($this->attributes['smtp_port']) ? $this->attributes['smtp_port'] : null;
     }
-    // string # Custom SMTP encryption mode: if_available (default) uses STARTTLS when offered and otherwise sends credentials and messages unencrypted. A certificate-verified STARTTLS connection automatically changes if_available to require unless smtp_ssl is managed by a parent policy. require requires STARTTLS before authentication; require_implicit uses TLS from connection start; never disables TLS. TLS verifies the server certificate against smtp_address. Encryption is never automatically downgraded.
+    /**
+     * Custom SMTP encryption mode: if_available (default) uses STARTTLS when offered and otherwise sends credentials and messages unencrypted. A certificate-verified STARTTLS connection automatically changes if_available to require unless smtp_ssl is managed by a parent policy. require requires STARTTLS before authentication; require_implicit uses TLS from connection start; never disables TLS. TLS verifies the server certificate against smtp_address. Encryption is never automatically downgraded.
+     *
+     * @return string|null
+     */
     public function getSmtpSsl()
     {
         return isset($this->attributes['smtp_ssl']) ? $this->attributes['smtp_ssl'] : null;
     }
-    // string # SMTP server username
+    /**
+     * SMTP server username
+     *
+     * @return string|null
+     */
     public function getSmtpUsername()
     {
         return isset($this->attributes['smtp_username']) ? $this->attributes['smtp_username'] : null;
     }
-    // int64 # Session expiry in minutes
+    /**
+     * Session expiry in minutes
+     *
+     * @return int|null
+     */
     public function getSessionExpiryMinutes()
     {
         return isset($this->attributes['session_expiry_minutes']) ? $this->attributes['session_expiry_minutes'] : null;
     }
-    // boolean # Allow snapshot share links creation
+    /**
+     * Allow snapshot share links creation
+     *
+     * @return bool|null
+     */
     public function getSnapshotSharingEnabled()
     {
         return isset($this->attributes['snapshot_sharing_enabled']) ? $this->attributes['snapshot_sharing_enabled'] : null;
     }
-    // boolean # Require TLS-protected FTP data connections to reuse the control connection TLS session? Applies to all workspaces.
+    /**
+     * Require TLS-protected FTP data connections to reuse the control connection TLS session? Applies to all workspaces.
+     *
+     * @return bool|null
+     */
     public function getFtpTlsSessionReuseRequired()
     {
         return isset($this->attributes['ftp_tls_session_reuse_required']) ? $this->attributes['ftp_tls_session_reuse_required'] : null;
     }
-    // boolean # Is SSL required?  Disabling this is insecure.
+    /**
+     * Is SSL required?  Disabling this is insecure.
+     *
+     * @return bool|null
+     */
     public function getSslRequired()
     {
         return isset($this->attributes['ssl_required']) ? $this->attributes['ssl_required'] : null;
     }
-    // string # Site subdomain
+    /**
+     * Site subdomain
+     *
+     * @return string|null
+     */
     public function getSubdomain()
     {
         return isset($this->attributes['subdomain']) ? $this->attributes['subdomain'] : null;
     }
-    // date-time # If switching plans, when does the new plan take effect?
+    /**
+     * If switching plans, when does the new plan take effect?
+     *
+     * @return string|null
+     */
     public function getSwitchToPlanDate()
     {
         return isset($this->attributes['switch_to_plan_date']) ? $this->attributes['switch_to_plan_date'] : null;
     }
-    // int64 # Number of days left in trial
+    /**
+     * Number of days left in trial
+     *
+     * @return int|null
+     */
     public function getTrialDaysLeft()
     {
         return isset($this->attributes['trial_days_left']) ? $this->attributes['trial_days_left'] : null;
     }
-    // date-time # When does this Site trial expire?
+    /**
+     * When does this Site trial expire?
+     *
+     * @return string|null
+     */
     public function getTrialUntil()
     {
         return isset($this->attributes['trial_until']) ? $this->attributes['trial_until'] : null;
     }
-    // boolean # If using custom SMTP, should we use dedicated IPs to deliver emails?
+    /**
+     * If using custom SMTP, should we use dedicated IPs to deliver emails?
+     *
+     * @return bool|null
+     */
     public function getUseDedicatedIpsForSmtp()
     {
         return isset($this->attributes['use_dedicated_ips_for_smtp']) ? $this->attributes['use_dedicated_ips_for_smtp'] : null;
     }
-    // boolean # Allow uploaders to set `provided_modified_at` for uploaded files?
+    /**
+     * Allow uploaders to set `provided_modified_at` for uploaded files?
+     *
+     * @return bool|null
+     */
     public function getUseProvidedModifiedAt()
     {
         return isset($this->attributes['use_provided_modified_at']) ? $this->attributes['use_provided_modified_at'] : null;
     }
-    // User # User of current session
+    /**
+     * User of current session
+     *
+     * @return \stdClass|null
+     */
     public function getUser()
     {
         return isset($this->attributes['user']) ? $this->attributes['user'] : null;
     }
-    // boolean # Will users be locked out after incorrect login attempts?
+    /**
+     * Will users be locked out after incorrect login attempts?
+     *
+     * @return bool|null
+     */
     public function getUserLockout()
     {
         return isset($this->attributes['user_lockout']) ? $this->attributes['user_lockout'] : null;
     }
-    // int64 # How many hours to lock user out for failed password?
+    /**
+     * How many hours to lock user out for failed password?
+     *
+     * @return int|null
+     */
     public function getUserLockoutLockPeriod()
     {
         return isset($this->attributes['user_lockout_lock_period']) ? $this->attributes['user_lockout_lock_period'] : null;
     }
-    // int64 # Number of login tries within `user_lockout_within` hours before users are locked out
+    /**
+     * Number of login tries within `user_lockout_within` hours before users are locked out
+     *
+     * @return int|null
+     */
     public function getUserLockoutTries()
     {
         return isset($this->attributes['user_lockout_tries']) ? $this->attributes['user_lockout_tries'] : null;
     }
-    // int64 # Number of hours for user lockout window
+    /**
+     * Number of hours for user lockout window
+     *
+     * @return int|null
+     */
     public function getUserLockoutWithin()
     {
         return isset($this->attributes['user_lockout_within']) ? $this->attributes['user_lockout_within'] : null;
     }
-    // boolean # Enable User Requests feature
+    /**
+     * Enable User Requests feature
+     *
+     * @return bool|null
+     */
     public function getUserRequestsEnabled()
     {
         return isset($this->attributes['user_requests_enabled']) ? $this->attributes['user_requests_enabled'] : null;
     }
-    // boolean # Send email to site admins when a user request is received?
+    /**
+     * Send email to site admins when a user request is received?
+     *
+     * @return bool|null
+     */
     public function getUserRequestsNotifyAdmins()
     {
         return isset($this->attributes['user_requests_notify_admins']) ? $this->attributes['user_requests_notify_admins'] : null;
     }
-    // boolean # Allow users to create their own API keys?
+    /**
+     * Allow users to create their own API keys?
+     *
+     * @return bool|null
+     */
     public function getUsersCanCreateApiKeys()
     {
         return isset($this->attributes['users_can_create_api_keys']) ? $this->attributes['users_can_create_api_keys'] : null;
     }
-    // boolean # Allow users to create their own SSH keys?
+    /**
+     * Allow users to create their own SSH keys?
+     *
+     * @return bool|null
+     */
     public function getUsersCanCreateSshKeys()
     {
         return isset($this->attributes['users_can_create_ssh_keys']) ? $this->attributes['users_can_create_ssh_keys'] : null;
     }
-    // string # How usernames are displayed in the web UI. Can be `username_only`, `full_name_only`, `full_name_username`, `full_name_company`, or `full_name_username_company`.
+    /**
+     * How usernames are displayed in the web UI. Can be `username_only`, `full_name_only`, `full_name_username`, `full_name_company`, or `full_name_username_company`.
+     *
+     * @return string|null
+     */
     public function getUsernameDisplay()
     {
         return isset($this->attributes['username_display']) ? $this->attributes['username_display'] : null;
     }
-    // string # Custom text send in user welcome email
+    /**
+     * Custom text send in user welcome email
+     *
+     * @return string|null
+     */
     public function getWelcomeCustomText()
     {
         return isset($this->attributes['welcome_custom_text']) ? $this->attributes['welcome_custom_text'] : null;
     }
-    // string # Custom footer text for system-generated emails (as Markdown). Supports standard strftime date/time patterns like %Y (4-digit year), %m (month), %d (day).
+    /**
+     * Custom footer text for system-generated emails (as Markdown). Supports standard strftime date/time patterns like %Y (4-digit year), %m (month), %d (day).
+     *
+     * @return string|null
+     */
     public function getEmailFooterCustomText()
     {
         return isset($this->attributes['email_footer_custom_text']) ? $this->attributes['email_footer_custom_text'] : null;
     }
-    // email # Include this email in welcome emails if enabled
+    /**
+     * Include this email in welcome emails if enabled
+     *
+     * @return string|null
+     */
     public function getWelcomeEmailCc()
     {
         return isset($this->attributes['welcome_email_cc']) ? $this->attributes['welcome_email_cc'] : null;
     }
-    // string # Include this email subject in welcome emails if enabled
+    /**
+     * Include this email subject in welcome emails if enabled
+     *
+     * @return string|null
+     */
     public function getWelcomeEmailSubject()
     {
         return isset($this->attributes['welcome_email_subject']) ? $this->attributes['welcome_email_subject'] : null;
     }
-    // boolean # Will the welcome email be sent to new users?
+    /**
+     * Will the welcome email be sent to new users?
+     *
+     * @return bool|null
+     */
     public function getWelcomeEmailEnabled()
     {
         return isset($this->attributes['welcome_email_enabled']) ? $this->attributes['welcome_email_enabled'] : null;
     }
-    // string # Does the welcome screen appear?
+    /**
+     * Does the welcome screen appear?
+     *
+     * @return string|null
+     */
     public function getWelcomeScreen()
     {
         return isset($this->attributes['welcome_screen']) ? $this->attributes['welcome_screen'] : null;
     }
-    // boolean # Does FTP user Windows emulation mode?
+    /**
+     * Does FTP user Windows emulation mode?
+     *
+     * @return bool|null
+     */
     public function getWindowsModeFtp()
     {
         return isset($this->attributes['windows_mode_ftp']) ? $this->attributes['windows_mode_ftp'] : null;
     }
 
+    /**
+     * Show Site Settings
+     *
+     * GET /site
+     *
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\Site
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function get($params = [], $options = [])
     {
         $response = Api::sendRequest('/site', 'GET', $options);
@@ -1016,6 +2012,16 @@ class Site
         return new Site((array) (@$response->data ?: []), $options);
     }
 
+    /**
+     * Get the most recent usage snapshot (usage data for billing purposes) for a Site
+     *
+     * GET /site/usage
+     *
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\UsageSnapshot
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function getUsage($params = [], $options = [])
     {
         $response = Api::sendRequest('/site/usage', 'GET', $options);
@@ -1023,8 +2029,17 @@ class Site
         return new UsageSnapshot((array) (@$response->data ?: []), $options);
     }
 
-    // Parameters:
-    //   end_date (required) - string - New conversion-window end date in YYYY-MM-DD format, in Eastern Time (EST/EDT). Must be a Tuesday, Wednesday, or Thursday. Can only extend the current end date, within six weeks of the originally announced end date.
+    /**
+     * Extend the Automations conversion window by up to six weeks beyond its originally announced end date
+     *
+     * POST /site/extend_automation_migration_window
+     *
+     * @param array $params Request parameters.
+     *     - `end_date` (string, required): New conversion-window end date in YYYY-MM-DD format, in Eastern Time (EST/EDT). Must be a Tuesday, Wednesday, or Thursday. Can only extend the current end date, within six weeks of the originally announced end date.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return void
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function extendAutomationMigrationWindow($params = [], $options = [])
     {
         if (empty($params['end_date'])) {
@@ -1040,189 +2055,198 @@ class Site
         return;
     }
 
-    // Parameters:
-    //   name - string - Site name
-    //   subdomain - string - Site subdomain
-    //   domain - string - Custom domain
-    //   domain_hsts_header - boolean - Send HSTS (HTTP Strict Transport Security) header when visitors access the site via a custom domain?
-    //   domain_letsencrypt_chain - string - Letsencrypt chain to use when registering SSL Certificate for domain. No longer used as of 2026.
-    //   email - string - Main email for this site
-    //   reply_to_email - string - Reply-to email for this site
-    //   allow_bundle_names - boolean - Are manual Bundle names allowed?
-    //   bundle_expiration - int64 - Site-wide Bundle expiration in days
-    //   welcome_email_enabled - boolean - Will the welcome email be sent to new users?
-    //   ask_about_overwrites - boolean - If false, rename conflicting files instead of asking for overwrite confirmation.  Only applies to web interface.
-    //   show_request_access_link - boolean - Show request access link for users without access?  Currently unused.
-    //   always_mkdir_parents - boolean - Create parent directories if they do not exist during uploads?  This is primarily used to work around broken upload clients that assume servers will perform this step.
-    //   welcome_email_cc - string - Include this email in welcome emails if enabled
-    //   welcome_email_subject - string - Include this email subject in welcome emails if enabled
-    //   welcome_custom_text - string - Custom text send in user welcome email
-    //   language - string - Site default language
-    //   windows_mode_ftp - boolean - Does FTP user Windows emulation mode?
-    //   default_time_zone - string - Site default time zone
-    //   desktop_app - boolean - Is the desktop app enabled?
-    //   desktop_app_session_ip_pinning - boolean - Is desktop app session IP pinning enabled?
-    //   desktop_app_session_lifetime - int64 - Desktop app session lifetime (in hours)
-    //   mobile_app - boolean - Is the mobile app enabled?
-    //   mobile_app_session_ip_pinning - boolean - Is mobile app session IP pinning enabled?
-    //   mobile_app_session_lifetime - int64 - Mobile app session lifetime (in hours)
-    //   folder_permissions_groups_only - boolean - If true, permissions for this site must be bound to a group (not a user).
-    //   welcome_screen - string - Does the welcome screen appear?
-    //   office_integration_available - boolean - If true, allows users to use a document editing integration.
-    //   office_integration_type - string - Which document editing integration to support. Files.com Editor or Microsoft Office for the Web.
-    //   pin_all_remote_servers_to_site_region - boolean - If true, we will ensure that all internal communications with any remote server are made through the primary region of the site. This setting overrides individual remote server settings.
-    //   motd_text - string - A message to show users when they connect via FTP or SFTP.
-    //   motd_use_for_ftp - boolean - Show message to users connecting via FTP
-    //   motd_use_for_sftp - boolean - Show message to users connecting via SFTP
-    //   left_navigation_visibility - object - Visibility settings for account navigation
-    //   disable_all_ai_features - boolean - If true, all AI features are disabled for this site.
-    //   ai_feature_availability - object - Availability settings for AI features. Each feature requires the site_admins, workspace_admins, folder_admins, and all_users keys. Optional selected_group_members defaults to false; when true, members of at least one group in group_ids get access regardless of the other options. All availability options are additive: any enabled option matching the user grants access. Optional group_ids is an array of integer IDs of active groups on this site, from any workspace. Omitted or empty group_ids grants no access through selected_group_members and does not affect other options. Disabling all AI features overrides these settings.
-    //   mcp_dcr_enabled - boolean - Is OAuth DCR (dynamic client registration) for MCP enabled?
-    //   additional_text_file_types - array(string) - Additional extensions that are considered text files
-    //   bundle_require_note - boolean - Do Bundles require internal notes?
-    //   bundle_send_shared_receipts - boolean - Do Bundle creators receive receipts of invitations?
-    //   bundles_default_owned_by_primary_group - boolean - If true, new Share Links created by a user with a primary group will default to that group as owner.
-    //   calculate_file_checksums_crc32 - boolean - Calculate CRC32 checksums for files?
-    //   calculate_file_checksums_md5 - boolean - Calculate MD5 checksums for files?
-    //   calculate_file_checksums_sha1 - boolean - Calculate SHA1 checksums for files?
-    //   calculate_file_checksums_sha256 - boolean - Calculate SHA256 checksums for files?
-    //   legacy_checksums_mode - boolean - Use legacy checksums mode?
-    //   migrate_remote_server_sync_to_sync - boolean - If true, we will migrate all remote server syncs to the new Sync model.
-    //   as2_message_retention_days - int64 - Number of days to retain AS2 messages (incoming and outgoing).
-    //   file_activity_events_enabled - boolean - If true, file operations produce file_action.activity.v1 EventChannel events in all workspaces. Defaults to false; subscription filters and workspace access still control delivery.
-    //   username_display - string - How usernames are displayed in the web UI. Can be `username_only`, `full_name_only`, `full_name_username`, `full_name_company`, or `full_name_username_company`.
-    //   integration_centric_remote_server_admin_access - string - Administrator access to user-owned Remote Servers in every Workspace: always_visible (default), never_visible, user_choice_default_visible, or user_choice_default_personal. Forced modes override owner preferences; choice modes use the preference or their default.
-    //   session_expiry_minutes - int64 - Session expiry in minutes
-    //   legacy_pairing_enabled - boolean - Allow legacy app pairing in all workspaces? Disabled for new sites; existing sites remain enabled until changed. Disabling blocks new pairing exchanges without revoking existing app credentials or affecting OAuth sign-in. Site administrators can re-enable it.
-    //   ssl_required - boolean - Is SSL required?  Disabling this is insecure.
-    //   ftp_tls_session_reuse_required - boolean - Require TLS-protected FTP data connections to reuse the control connection TLS session? Applies to all workspaces.
-    //   sftp_insecure_ciphers - boolean - If true, we will allow weak and known insecure ciphers to be used for SFTP connections.  Enabling this setting severely weakens the security of your site and it is not recommend, except as a last resort for compatibility.
-    //   sftp_insecure_diffie_hellman - boolean - If true, we will allow weak Diffie Hellman parameters to be used within ciphers for SFTP that are otherwise on our secure list.  This has the effect of making the cipher weaker than our normal threshold for security, but is required to support certain legacy or broken SSH and MFT clients.  Enabling this weakens security, but not nearly as much as enabling the full `sftp_insecure_ciphers` option.
-    //   disable_files_certificate_generation - boolean - If set, Files.com will not set the CAA records required to generate future SSL certificates for this domain.
-    //   fedramp - boolean - Are FedRAMP security restrictions enabled for this site?
-    //   user_lockout - boolean - Will users be locked out after incorrect login attempts?
-    //   user_lockout_tries - int64 - Number of login tries within `user_lockout_within` hours before users are locked out
-    //   user_lockout_within - int64 - Number of hours for user lockout window
-    //   user_lockout_lock_period - int64 - How many hours to lock user out for failed password?
-    //   include_password_in_welcome_email - boolean - Include password in emails to new users?
-    //   allowed_countries - string - Comma separated list of allowed Country codes
-    //   allowed_ips - string - List of allowed IP addresses
-    //   allow_user_level_2fa_override - boolean - Allow the site-wide two-factor authentication requirement to be overriden on a per-user-basis?
-    //   allow_user_level_allowed_ip_override - boolean - Allow the site-wide allowed IP restriction to be overriden on a per-user-basis?
-    //   allow_user_level_ssl_override - boolean - Allow the site-wide FTP SSL requirement to be overriden on a per-user-basis?
-    //   allow_user_level_ftp_tls_session_reuse_override - boolean - Allow per-user overrides of the FTP TLS session reuse requirement?
-    //   enforce_parent_site_user_ip_restrictions - boolean - Require Parent Site users entering this Child Site to match its allowed IP addresses in addition to their existing IP restrictions. Applies to all Workspaces. Defaults to false.
-    //   disallowed_countries - string - Comma separated list of disallowed Country codes
-    //   days_to_retain_backups - int64 - Number of days to keep deleted files
-    //   max_prior_passwords - int64 - Number of prior passwords to disallow
-    //   password_validity_days - int64 - Number of days password is valid
-    //   password_min_length - int64 - Shortest password length for users
-    //   password_require_letter - boolean - Require a letter in passwords?
-    //   password_require_mixed - boolean - Require lower and upper case letters in passwords?
-    //   password_require_special - boolean - Require special characters in password?
-    //   password_require_number - boolean - Require a number in passwords?
-    //   password_require_unbreached - boolean - Require passwords that have not been previously breached? (see https://haveibeenpwned.com/)
-    //   require_logout_from_bundles_and_inboxes - boolean - If true, we will hide the 'Remember Me' box on Inbox and Bundle registration pages, requiring that the user logout and log back in every time they visit the page.
-    //   dav_user_root_enabled - boolean - Use user FTP roots also for WebDAV?
-    //   sftp_user_root_enabled - boolean - Use user FTP roots also for SFTP?
-    //   disable_password_reset - boolean - Is password reset disabled?
-    //   immutable_files - boolean - Are files protected from modification?
-    //   bundle_not_found_message - string - Custom error message to show when bundle is not found.
-    //   bundle_password_required - boolean - Do Bundles require password protection?
-    //   bundle_require_registration - boolean - Do Bundles require registration?
-    //   bundle_require_share_recipient - boolean - Do Bundles require recipients for sharing?
-    //   bundle_send_one_time_password_to_recipient_at_registration - boolean - If true, new Share Links must send a one-time password to the recipient when they register. Requires bundle_require_share_recipient and cannot be enabled with bundle_password_required.
-    //   bundle_registration_notifications - string - Do Bundle owners receive registration notification?
-    //   bundle_activity_notifications - string - Do Bundle owners receive activity notifications?
-    //   bundle_upload_receipt_notifications - string - Do Bundle uploaders receive upload confirmation notifications?
-    //   document_edits_in_bundle_allowed - boolean - If true, allow public viewers of Bundles with full permissions to use document editing integrations.
-    //   password_requirements_apply_to_bundles - boolean - Require bundles' passwords, and passwords for other items (inboxes, public shares, etc.) to conform to the same requirements as users' passwords?
-    //   prevent_root_permissions_for_non_site_admins - boolean - If true, we will prevent non-administrators from receiving any permissions directly on the root folder.  This is commonly used to prevent the accidental application of permissions.
-    //   restrict_root_folder_behaviors_to_site_admins - boolean - If true, only site admins may create, modify, or delete any behavior at the site root, or a skip that would disable one.
-    //   root_folder_behaviors_apply_to_workspaces - boolean - If true, supported protective behaviors at the site root also apply within named workspaces. Requires restrict_root_folder_behaviors_to_site_admins to be enabled.
-    //   opt_out_global - boolean - Use servers in the USA only?
-    //   use_provided_modified_at - boolean - Allow uploaders to set `provided_modified_at` for uploaded files?
-    //   custom_namespace - boolean - Is this site using a custom namespace for users?
-    //   non_sso_groups_allowed - boolean - If true, groups can be manually created / modified / deleted by Site Admins. Otherwise, groups can only be managed via your SSO provider.
-    //   non_sso_users_allowed - boolean - If true, users can be manually created / modified / deleted by Site Admins. Otherwise, users can only be managed via your SSO provider.
-    //   sharing_enabled - boolean - Allow bundle creation
-    //   snapshot_sharing_enabled - boolean - Allow snapshot share links creation
-    //   user_requests_enabled - boolean - Enable User Requests feature
-    //   user_requests_notify_admins - boolean - Send email to site admins when a user request is received?
-    //   dav_enabled - boolean - Is WebDAV enabled?
-    //   files_com_remote_server_enabled - boolean - Allow other Files.com sites to use this site's API keys for native Files.com Remote Server connections? Defaults to true and applies to all keys and workspaces on this site. When false, new pairings and access through existing connections are rejected without revoking keys or deleting connections. Re-enabling permits access again with usable keys. Does not disable this site's connections to other sites, ordinary API access, or Connected Sites.
-    //   ftp_enabled - boolean - Is FTP enabled?
-    //   s3_compatible_endpoint_enabled - boolean - Is the S3-compatible endpoint enabled for all users and workspaces on this site? Defaults to true. When false, user and group S3 permissions do not allow access.
-    //   sftp_enabled - boolean - Is SFTP enabled?
-    //   sftp_finalize_partial_uploads - boolean - Finalize partial SFTP uploads from interrupted connections? Default: true.
-    //   users_can_create_api_keys - boolean - Allow users to create their own API keys?
-    //   users_can_create_ssh_keys - boolean - Allow users to create their own SSH keys?
-    //   show_user_notifications_log_in_link - boolean - Show log in link in user notifications?
-    //   sftp_host_key_type - string - Sftp Host Key Type
-    //   active_sftp_host_key_id - int64 - Id of the currently selected custom SFTP Host Key
-    //   active_sftp_host_key_ids - array(int64) - Ids of the selected custom SFTP Host Keys
-    //   protocol_access_groups_only - boolean - If true, protocol access permissions on users will be ignored, and only protocol access permissions set on Groups will be honored.  Make sure that your current user is a member of a group with API permission when changing this value to avoid locking yourself out of your site.
-    //   revoke_bundle_access_on_disable_or_delete - boolean - Auto-removes bundles for disabled/deleted users and enforces bundle expiry within user access period.
-    //   group_admins_can_add_users - boolean - Allow group admins to create users in their groups
-    //   group_admins_can_manage_group_memberships - boolean - Allow group admins to add or remove existing users in their groups
-    //   group_admins_can_delete_users - boolean - Allow group admins to delete users in their groups
-    //   group_admins_can_enable_disable_users - boolean - Allow group admins to enable or disable users in their groups
-    //   group_admins_can_modify_users - boolean - Allow group admins to modify users in their groups
-    //   group_admins_can_bypass_user_lifecycle_rules - boolean - Allow group admins to exempt users in their groups from lifecycle rules
-    //   group_admins_can_reset_passwords - boolean - Allow group admins to reset passwords for users in their groups
-    //   group_admins_can_set_user_password - boolean - Allow group admins to set password authentication method
-    //   child_site_folder_admins_can_see_parent_site_directory - boolean - If true, administrators on this site's Child Sites, including Folder Admins, can list this site's Default Workspace users and groups and grant them folder permissions and notifications on Child Site paths.
-    //   workspace_folder_admins_can_see_default_workspace_directory - boolean - If true, Workspace Administrators and Folder Admins in a Custom Workspace can list the Default Workspace users and groups that have permissions in that Workspace and choose them as Email Notification recipients.
-    //   bundle_recipient_blacklist_free_email_domains - boolean - Disallow free email domains for Bundle/Inbox recipients?
-    //   bundle_recipient_blacklist_domains - array(string) - List of email domains to disallow when entering a Bundle/Inbox recipients
-    //   admins_bypass_locked_subfolders - boolean - Allow admins to bypass the locked subfolders setting.
-    //   allowed_2fa_method_sms - boolean - Is SMS two factor authentication allowed?
-    //   allowed_2fa_method_totp - boolean - Is TOTP two factor authentication allowed?
-    //   allowed_2fa_method_webauthn - boolean - Is WebAuthn two factor authentication allowed?
-    //   allowed_2fa_method_yubi - boolean - Is yubikey two factor authentication allowed?
-    //   allowed_2fa_method_email - boolean - Is OTP via email two factor authentication allowed?
-    //   allowed_2fa_method_static - boolean - Is OTP via static codes for two factor authentication allowed?
-    //   allowed_2fa_method_bypass_for_ftp_sftp_dav - boolean - Are users allowed to configure their two factor authentication to be bypassed for FTP/SFTP/WebDAV?
-    //   require_2fa - boolean - Require two-factor authentication for all users?
-    //   require_2fa_exempt_all_sso_users - boolean - If true, SSO users using the default user-level two-factor authentication setting are exempt from the site-wide two-factor authentication requirement.
-    //   require_2fa_user_type - string - What type of user is required to use two-factor authentication (when require_2fa is set to `true` for this site)?
-    //   color2_top - string - Top bar background color
-    //   color2_left - string - Page link and button color
-    //   color2_link - string - Top bar link color
-    //   color2_text - string - Page link and button color
-    //   color2_top_text - string - Top bar text color
-    //   site_header - string - Custom site header text for authenticated pages
-    //   site_footer - string - Custom site footer text for authenticated pages
-    //   site_public_header - string - Custom site header text for public pages
-    //   site_public_footer - string - Custom site footer text for public pages
-    //   login_help_text - string - Login help text
-    //   use_dedicated_ips_for_smtp - boolean - If using custom SMTP, should we use dedicated IPs to deliver emails?
-    //   email_footer_custom_text - string - Custom footer text for system-generated emails (as Markdown). Supports standard strftime date/time patterns like %Y (4-digit year), %m (month), %d (day).
-    //   smtp_address - string - SMTP server hostname or IP
-    //   smtp_authentication - string - SMTP server authentication type
-    //   smtp_from - string - From address to use when mailing through custom SMTP
-    //   smtp_username - string - SMTP server username
-    //   smtp_port - int64 - SMTP server port
-    //   smtp_ssl - string - Custom SMTP encryption mode: if_available (default) uses STARTTLS when offered and otherwise sends credentials and messages unencrypted. A certificate-verified STARTTLS connection automatically changes if_available to require unless smtp_ssl is managed by a parent policy. require requires STARTTLS before authentication; require_implicit uses TLS from connection start; never disables TLS. TLS verifies the server certificate against smtp_address. Encryption is never automatically downgraded.
-    //   uploads_via_email_authentication - boolean - Require email authentication, virus, and spam checks for incoming emails to Inboxes and Incoming Email Automations in every Workspace on this site?
-    //   bundle_watermark_value - object - Preview watermark settings applied to all bundle items. Uses the same keys as Behavior.value
-    //   icon16_file - file
-    //   icon16_delete - boolean - If true, will delete the file stored in icon16
-    //   icon32_file - file
-    //   icon32_delete - boolean - If true, will delete the file stored in icon32
-    //   icon48_file - file
-    //   icon48_delete - boolean - If true, will delete the file stored in icon48
-    //   icon128_file - file
-    //   icon128_delete - boolean - If true, will delete the file stored in icon128
-    //   logo_file - file
-    //   logo_delete - boolean - If true, will delete the file stored in logo
-    //   bundle_watermark_attachment_file - file
-    //   bundle_watermark_attachment_delete - boolean - If true, will delete the file stored in bundle_watermark_attachment
-    //   login_page_background_image_file - file
-    //   login_page_background_image_delete - boolean - If true, will delete the file stored in login_page_background_image
-    //   disable_2fa_with_delay - boolean - If set to true, we will begin the process of disabling 2FA on this site.
-    //   redirect_old_subdomain - boolean - If true, and if changing the site subdomain, then create a redirect from the previous Files.com subdomain to the new Files.com subdomain.
-    //   smtp_password - string - Password for SMTP server.
+    /**
+     * Update Site Settings
+     *
+     * PATCH /site
+     *
+     * @param array $params Request parameters.
+     *     - `name` (string, optional): Site name
+     *     - `subdomain` (string, optional): Site subdomain
+     *     - `domain` (string, optional): Custom domain
+     *     - `domain_hsts_header` (bool, optional): Send HSTS (HTTP Strict Transport Security) header when visitors access the site via a custom domain?
+     *     - `domain_letsencrypt_chain` (string, optional): Letsencrypt chain to use when registering SSL Certificate for domain. No longer used as of 2026.
+     *     - `email` (string, optional): Main email for this site
+     *     - `reply_to_email` (string, optional): Reply-to email for this site
+     *     - `allow_bundle_names` (bool, optional): Are manual Bundle names allowed?
+     *     - `bundle_expiration` (int, optional): Site-wide Bundle expiration in days
+     *     - `welcome_email_enabled` (bool, optional): Will the welcome email be sent to new users?
+     *     - `ask_about_overwrites` (bool, optional): If false, rename conflicting files instead of asking for overwrite confirmation.  Only applies to web interface.
+     *     - `show_request_access_link` (bool, optional): Show request access link for users without access?  Currently unused.
+     *     - `always_mkdir_parents` (bool, optional): Create parent directories if they do not exist during uploads?  This is primarily used to work around broken upload clients that assume servers will perform this step.
+     *     - `welcome_email_cc` (string, optional): Include this email in welcome emails if enabled
+     *     - `welcome_email_subject` (string, optional): Include this email subject in welcome emails if enabled
+     *     - `welcome_custom_text` (string, optional): Custom text send in user welcome email
+     *     - `language` (string, optional): Site default language
+     *     - `windows_mode_ftp` (bool, optional): Does FTP user Windows emulation mode?
+     *     - `default_time_zone` (string, optional): Site default time zone
+     *     - `desktop_app` (bool, optional): Is the desktop app enabled?
+     *     - `desktop_app_session_ip_pinning` (bool, optional): Is desktop app session IP pinning enabled?
+     *     - `desktop_app_session_lifetime` (int, optional): Desktop app session lifetime (in hours)
+     *     - `mobile_app` (bool, optional): Is the mobile app enabled?
+     *     - `mobile_app_session_ip_pinning` (bool, optional): Is mobile app session IP pinning enabled?
+     *     - `mobile_app_session_lifetime` (int, optional): Mobile app session lifetime (in hours)
+     *     - `folder_permissions_groups_only` (bool, optional): If true, permissions for this site must be bound to a group (not a user).
+     *     - `welcome_screen` (string, optional): Does the welcome screen appear?
+     *     - `office_integration_available` (bool, optional): If true, allows users to use a document editing integration.
+     *     - `office_integration_type` (string, optional): Which document editing integration to support. Files.com Editor or Microsoft Office for the Web.
+     *     - `pin_all_remote_servers_to_site_region` (bool, optional): If true, we will ensure that all internal communications with any remote server are made through the primary region of the site. This setting overrides individual remote server settings.
+     *     - `motd_text` (string, optional): A message to show users when they connect via FTP or SFTP.
+     *     - `motd_use_for_ftp` (bool, optional): Show message to users connecting via FTP
+     *     - `motd_use_for_sftp` (bool, optional): Show message to users connecting via SFTP
+     *     - `left_navigation_visibility` (array|object, optional): Visibility settings for account navigation
+     *     - `disable_all_ai_features` (bool, optional): If true, all AI features are disabled for this site.
+     *     - `ai_feature_availability` (array|object, optional): Availability settings for AI features. Each feature requires the site_admins, workspace_admins, folder_admins, and all_users keys. Optional selected_group_members defaults to false; when true, members of at least one group in group_ids get access regardless of the other options. All availability options are additive: any enabled option matching the user grants access. Optional group_ids is an array of integer IDs of active groups on this site, from any workspace. Omitted or empty group_ids grants no access through selected_group_members and does not affect other options. Disabling all AI features overrides these settings.
+     *     - `mcp_dcr_enabled` (bool, optional): Is OAuth DCR (dynamic client registration) for MCP enabled?
+     *     - `additional_text_file_types` (string[], optional): Additional extensions that are considered text files
+     *     - `bundle_require_note` (bool, optional): Do Bundles require internal notes?
+     *     - `bundle_send_shared_receipts` (bool, optional): Do Bundle creators receive receipts of invitations?
+     *     - `bundles_default_owned_by_primary_group` (bool, optional): If true, new Share Links created by a user with a primary group will default to that group as owner.
+     *     - `calculate_file_checksums_crc32` (bool, optional): Calculate CRC32 checksums for files?
+     *     - `calculate_file_checksums_md5` (bool, optional): Calculate MD5 checksums for files?
+     *     - `calculate_file_checksums_sha1` (bool, optional): Calculate SHA1 checksums for files?
+     *     - `calculate_file_checksums_sha256` (bool, optional): Calculate SHA256 checksums for files?
+     *     - `legacy_checksums_mode` (bool, optional): Use legacy checksums mode?
+     *     - `migrate_remote_server_sync_to_sync` (bool, optional): If true, we will migrate all remote server syncs to the new Sync model.
+     *     - `as2_message_retention_days` (int, optional): Number of days to retain AS2 messages (incoming and outgoing).
+     *     - `file_activity_events_enabled` (bool, optional): If true, file operations produce file_action.activity.v1 EventChannel events in all workspaces. Defaults to false; subscription filters and workspace access still control delivery.
+     *     - `username_display` (string, optional): How usernames are displayed in the web UI. Can be `username_only`, `full_name_only`, `full_name_username`, `full_name_company`, or `full_name_username_company`.
+     *     - `integration_centric_remote_server_admin_access` (string, optional): Administrator access to user-owned Remote Servers in every Workspace: always_visible (default), never_visible, user_choice_default_visible, or user_choice_default_personal. Forced modes override owner preferences; choice modes use the preference or their default.
+     *     - `session_expiry_minutes` (int, optional): Session expiry in minutes
+     *     - `legacy_pairing_enabled` (bool, optional): Allow legacy app pairing in all workspaces? Disabled for new sites; existing sites remain enabled until changed. Disabling blocks new pairing exchanges without revoking existing app credentials or affecting OAuth sign-in. Site administrators can re-enable it.
+     *     - `ssl_required` (bool, optional): Is SSL required?  Disabling this is insecure.
+     *     - `ftp_tls_session_reuse_required` (bool, optional): Require TLS-protected FTP data connections to reuse the control connection TLS session? Applies to all workspaces.
+     *     - `sftp_insecure_ciphers` (bool, optional): If true, we will allow weak and known insecure ciphers to be used for SFTP connections.  Enabling this setting severely weakens the security of your site and it is not recommend, except as a last resort for compatibility.
+     *     - `sftp_insecure_diffie_hellman` (bool, optional): If true, we will allow weak Diffie Hellman parameters to be used within ciphers for SFTP that are otherwise on our secure list.  This has the effect of making the cipher weaker than our normal threshold for security, but is required to support certain legacy or broken SSH and MFT clients.  Enabling this weakens security, but not nearly as much as enabling the full `sftp_insecure_ciphers` option.
+     *     - `disable_files_certificate_generation` (bool, optional): If set, Files.com will not set the CAA records required to generate future SSL certificates for this domain.
+     *     - `fedramp` (bool, optional): Are FedRAMP security restrictions enabled for this site?
+     *     - `user_lockout` (bool, optional): Will users be locked out after incorrect login attempts?
+     *     - `user_lockout_tries` (int, optional): Number of login tries within `user_lockout_within` hours before users are locked out
+     *     - `user_lockout_within` (int, optional): Number of hours for user lockout window
+     *     - `user_lockout_lock_period` (int, optional): How many hours to lock user out for failed password?
+     *     - `include_password_in_welcome_email` (bool, optional): Include password in emails to new users?
+     *     - `allowed_countries` (string, optional): Comma separated list of allowed Country codes
+     *     - `allowed_ips` (string, optional): List of allowed IP addresses
+     *     - `allow_user_level_2fa_override` (bool, optional): Allow the site-wide two-factor authentication requirement to be overriden on a per-user-basis?
+     *     - `allow_user_level_allowed_ip_override` (bool, optional): Allow the site-wide allowed IP restriction to be overriden on a per-user-basis?
+     *     - `allow_user_level_ssl_override` (bool, optional): Allow the site-wide FTP SSL requirement to be overriden on a per-user-basis?
+     *     - `allow_user_level_ftp_tls_session_reuse_override` (bool, optional): Allow per-user overrides of the FTP TLS session reuse requirement?
+     *     - `enforce_parent_site_user_ip_restrictions` (bool, optional): Require Parent Site users entering this Child Site to match its allowed IP addresses in addition to their existing IP restrictions. Applies to all Workspaces. Defaults to false.
+     *     - `disallowed_countries` (string, optional): Comma separated list of disallowed Country codes
+     *     - `days_to_retain_backups` (int, optional): Number of days to keep deleted files
+     *     - `max_prior_passwords` (int, optional): Number of prior passwords to disallow
+     *     - `password_validity_days` (int, optional): Number of days password is valid
+     *     - `password_min_length` (int, optional): Shortest password length for users
+     *     - `password_require_letter` (bool, optional): Require a letter in passwords?
+     *     - `password_require_mixed` (bool, optional): Require lower and upper case letters in passwords?
+     *     - `password_require_special` (bool, optional): Require special characters in password?
+     *     - `password_require_number` (bool, optional): Require a number in passwords?
+     *     - `password_require_unbreached` (bool, optional): Require passwords that have not been previously breached? (see https://haveibeenpwned.com/)
+     *     - `require_logout_from_bundles_and_inboxes` (bool, optional): If true, we will hide the 'Remember Me' box on Inbox and Bundle registration pages, requiring that the user logout and log back in every time they visit the page.
+     *     - `dav_user_root_enabled` (bool, optional): Use user FTP roots also for WebDAV?
+     *     - `sftp_user_root_enabled` (bool, optional): Use user FTP roots also for SFTP?
+     *     - `disable_password_reset` (bool, optional): Is password reset disabled?
+     *     - `immutable_files` (bool, optional): Are files protected from modification?
+     *     - `bundle_not_found_message` (string, optional): Custom error message to show when bundle is not found.
+     *     - `bundle_password_required` (bool, optional): Do Bundles require password protection?
+     *     - `bundle_require_registration` (bool, optional): Do Bundles require registration?
+     *     - `bundle_require_share_recipient` (bool, optional): Do Bundles require recipients for sharing?
+     *     - `bundle_send_one_time_password_to_recipient_at_registration` (bool, optional): If true, new Share Links must send a one-time password to the recipient when they register. Requires bundle_require_share_recipient and cannot be enabled with bundle_password_required.
+     *     - `bundle_registration_notifications` (string, optional): Do Bundle owners receive registration notification?
+     *     - `bundle_activity_notifications` (string, optional): Do Bundle owners receive activity notifications?
+     *     - `bundle_upload_receipt_notifications` (string, optional): Do Bundle uploaders receive upload confirmation notifications?
+     *     - `document_edits_in_bundle_allowed` (bool, optional): If true, allow public viewers of Bundles with full permissions to use document editing integrations.
+     *     - `password_requirements_apply_to_bundles` (bool, optional): Require bundles' passwords, and passwords for other items (inboxes, public shares, etc.) to conform to the same requirements as users' passwords?
+     *     - `prevent_root_permissions_for_non_site_admins` (bool, optional): If true, we will prevent non-administrators from receiving any permissions directly on the root folder.  This is commonly used to prevent the accidental application of permissions.
+     *     - `restrict_root_folder_behaviors_to_site_admins` (bool, optional): If true, only site admins may create, modify, or delete any behavior at the site root, or a skip that would disable one.
+     *     - `root_folder_behaviors_apply_to_workspaces` (bool, optional): If true, supported protective behaviors at the site root also apply within named workspaces. Requires restrict_root_folder_behaviors_to_site_admins to be enabled.
+     *     - `opt_out_global` (bool, optional): Use servers in the USA only?
+     *     - `use_provided_modified_at` (bool, optional): Allow uploaders to set `provided_modified_at` for uploaded files?
+     *     - `custom_namespace` (bool, optional): Is this site using a custom namespace for users?
+     *     - `non_sso_groups_allowed` (bool, optional): If true, groups can be manually created / modified / deleted by Site Admins. Otherwise, groups can only be managed via your SSO provider.
+     *     - `non_sso_users_allowed` (bool, optional): If true, users can be manually created / modified / deleted by Site Admins. Otherwise, users can only be managed via your SSO provider.
+     *     - `sharing_enabled` (bool, optional): Allow bundle creation
+     *     - `snapshot_sharing_enabled` (bool, optional): Allow snapshot share links creation
+     *     - `user_requests_enabled` (bool, optional): Enable User Requests feature
+     *     - `user_requests_notify_admins` (bool, optional): Send email to site admins when a user request is received?
+     *     - `dav_enabled` (bool, optional): Is WebDAV enabled?
+     *     - `files_com_remote_server_enabled` (bool, optional): Allow other Files.com sites to use this site's API keys for native Files.com Remote Server connections? Defaults to true and applies to all keys and workspaces on this site. When false, new pairings and access through existing connections are rejected without revoking keys or deleting connections. Re-enabling permits access again with usable keys. Does not disable this site's connections to other sites, ordinary API access, or Connected Sites.
+     *     - `ftp_enabled` (bool, optional): Is FTP enabled?
+     *     - `s3_compatible_endpoint_enabled` (bool, optional): Is the S3-compatible endpoint enabled for all users and workspaces on this site? Defaults to true. When false, user and group S3 permissions do not allow access.
+     *     - `sftp_enabled` (bool, optional): Is SFTP enabled?
+     *     - `sftp_finalize_partial_uploads` (bool, optional): Finalize partial SFTP uploads from interrupted connections? Default: true.
+     *     - `users_can_create_api_keys` (bool, optional): Allow users to create their own API keys?
+     *     - `users_can_create_ssh_keys` (bool, optional): Allow users to create their own SSH keys?
+     *     - `show_user_notifications_log_in_link` (bool, optional): Show log in link in user notifications?
+     *     - `sftp_host_key_type` (string, optional): Sftp Host Key Type
+     *     - `active_sftp_host_key_id` (int, optional): Id of the currently selected custom SFTP Host Key
+     *     - `active_sftp_host_key_ids` (int[], optional): Ids of the selected custom SFTP Host Keys
+     *     - `protocol_access_groups_only` (bool, optional): If true, protocol access permissions on users will be ignored, and only protocol access permissions set on Groups will be honored.  Make sure that your current user is a member of a group with API permission when changing this value to avoid locking yourself out of your site.
+     *     - `revoke_bundle_access_on_disable_or_delete` (bool, optional): Auto-removes bundles for disabled/deleted users and enforces bundle expiry within user access period.
+     *     - `group_admins_can_add_users` (bool, optional): Allow group admins to create users in their groups
+     *     - `group_admins_can_manage_group_memberships` (bool, optional): Allow group admins to add or remove existing users in their groups
+     *     - `group_admins_can_delete_users` (bool, optional): Allow group admins to delete users in their groups
+     *     - `group_admins_can_enable_disable_users` (bool, optional): Allow group admins to enable or disable users in their groups
+     *     - `group_admins_can_modify_users` (bool, optional): Allow group admins to modify users in their groups
+     *     - `group_admins_can_bypass_user_lifecycle_rules` (bool, optional): Allow group admins to exempt users in their groups from lifecycle rules
+     *     - `group_admins_can_reset_passwords` (bool, optional): Allow group admins to reset passwords for users in their groups
+     *     - `group_admins_can_set_user_password` (bool, optional): Allow group admins to set password authentication method
+     *     - `child_site_folder_admins_can_see_parent_site_directory` (bool, optional): If true, administrators on this site's Child Sites, including Folder Admins, can list this site's Default Workspace users and groups and grant them folder permissions and notifications on Child Site paths.
+     *     - `workspace_folder_admins_can_see_default_workspace_directory` (bool, optional): If true, Workspace Administrators and Folder Admins in a Custom Workspace can list the Default Workspace users and groups that have permissions in that Workspace and choose them as Email Notification recipients.
+     *     - `bundle_recipient_blacklist_free_email_domains` (bool, optional): Disallow free email domains for Bundle/Inbox recipients?
+     *     - `bundle_recipient_blacklist_domains` (string[], optional): List of email domains to disallow when entering a Bundle/Inbox recipients
+     *     - `admins_bypass_locked_subfolders` (bool, optional): Allow admins to bypass the locked subfolders setting.
+     *     - `allowed_2fa_method_sms` (bool, optional): Is SMS two factor authentication allowed?
+     *     - `allowed_2fa_method_totp` (bool, optional): Is TOTP two factor authentication allowed?
+     *     - `allowed_2fa_method_webauthn` (bool, optional): Is WebAuthn two factor authentication allowed?
+     *     - `allowed_2fa_method_yubi` (bool, optional): Is yubikey two factor authentication allowed?
+     *     - `allowed_2fa_method_email` (bool, optional): Is OTP via email two factor authentication allowed?
+     *     - `allowed_2fa_method_static` (bool, optional): Is OTP via static codes for two factor authentication allowed?
+     *     - `allowed_2fa_method_bypass_for_ftp_sftp_dav` (bool, optional): Are users allowed to configure their two factor authentication to be bypassed for FTP/SFTP/WebDAV?
+     *     - `require_2fa` (bool, optional): Require two-factor authentication for all users?
+     *     - `require_2fa_exempt_all_sso_users` (bool, optional): If true, SSO users using the default user-level two-factor authentication setting are exempt from the site-wide two-factor authentication requirement.
+     *     - `require_2fa_user_type` (string, optional): What type of user is required to use two-factor authentication (when require_2fa is set to `true` for this site)?
+     *     - `color2_top` (string, optional): Top bar background color
+     *     - `color2_left` (string, optional): Page link and button color
+     *     - `color2_link` (string, optional): Top bar link color
+     *     - `color2_text` (string, optional): Page link and button color
+     *     - `color2_top_text` (string, optional): Top bar text color
+     *     - `site_header` (string, optional): Custom site header text for authenticated pages
+     *     - `site_footer` (string, optional): Custom site footer text for authenticated pages
+     *     - `site_public_header` (string, optional): Custom site header text for public pages
+     *     - `site_public_footer` (string, optional): Custom site footer text for public pages
+     *     - `login_help_text` (string, optional): Login help text
+     *     - `use_dedicated_ips_for_smtp` (bool, optional): If using custom SMTP, should we use dedicated IPs to deliver emails?
+     *     - `email_footer_custom_text` (string, optional): Custom footer text for system-generated emails (as Markdown). Supports standard strftime date/time patterns like %Y (4-digit year), %m (month), %d (day).
+     *     - `smtp_address` (string, optional): SMTP server hostname or IP
+     *     - `smtp_authentication` (string, optional): SMTP server authentication type
+     *     - `smtp_from` (string, optional): From address to use when mailing through custom SMTP
+     *     - `smtp_username` (string, optional): SMTP server username
+     *     - `smtp_port` (int, optional): SMTP server port
+     *     - `smtp_ssl` (string, optional): Custom SMTP encryption mode: if_available (default) uses STARTTLS when offered and otherwise sends credentials and messages unencrypted. A certificate-verified STARTTLS connection automatically changes if_available to require unless smtp_ssl is managed by a parent policy. require requires STARTTLS before authentication; require_implicit uses TLS from connection start; never disables TLS. TLS verifies the server certificate against smtp_address. Encryption is never automatically downgraded.
+     *     - `uploads_via_email_authentication` (bool, optional): Require email authentication, virus, and spam checks for incoming emails to Inboxes and Incoming Email Automations in every Workspace on this site?
+     *     - `bundle_watermark_value` (array|object, optional): Preview watermark settings applied to all bundle items. Uses the same keys as Behavior.value
+     *     - `icon16_file` (mixed, optional):
+     *     - `icon16_delete` (bool, optional): If true, will delete the file stored in icon16
+     *     - `icon32_file` (mixed, optional):
+     *     - `icon32_delete` (bool, optional): If true, will delete the file stored in icon32
+     *     - `icon48_file` (mixed, optional):
+     *     - `icon48_delete` (bool, optional): If true, will delete the file stored in icon48
+     *     - `icon128_file` (mixed, optional):
+     *     - `icon128_delete` (bool, optional): If true, will delete the file stored in icon128
+     *     - `logo_file` (mixed, optional):
+     *     - `logo_delete` (bool, optional): If true, will delete the file stored in logo
+     *     - `bundle_watermark_attachment_file` (mixed, optional):
+     *     - `bundle_watermark_attachment_delete` (bool, optional): If true, will delete the file stored in bundle_watermark_attachment
+     *     - `login_page_background_image_file` (mixed, optional):
+     *     - `login_page_background_image_delete` (bool, optional): If true, will delete the file stored in login_page_background_image
+     *     - `disable_2fa_with_delay` (bool, optional): If set to true, we will begin the process of disabling 2FA on this site.
+     *     - `redirect_old_subdomain` (bool, optional): If true, and if changing the site subdomain, then create a redirect from the previous Files.com subdomain to the new Files.com subdomain.
+     *     - `smtp_password` (string, optional): Password for SMTP server.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\Site
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function update($params = [], $options = [])
     {
         if (!empty($params['name']) && !is_string($params['name'])) {

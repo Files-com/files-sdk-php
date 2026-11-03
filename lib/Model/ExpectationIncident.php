@@ -8,8 +8,23 @@ use Files\Logger;
 require_once __DIR__ . '/../Files.php';
 
 /**
- * Class ExpectationIncident
+ * An ExpectationIncident groups ongoing failure behavior for an Expectation over time.
  *
+ * @property int|null $id Expectation Incident ID
+ * @property int|null $workspace_id Workspace ID. `0` means the default workspace.
+ * @property int|null $expectation_id Expectation ID.
+ * @property string|null $status Incident status.
+ * @property string|null $opened_at When the incident was opened.
+ * @property string|null $last_failed_at When the most recent failing evaluation contributing to the incident occurred.
+ * @property string|null $acknowledged_at When the incident was acknowledged.
+ * @property string|null $snoozed_until When the current snooze expires.
+ * @property string|null $resolved_at When the incident was resolved.
+ * @property int|null $opened_by_evaluation_id Evaluation that first opened the incident.
+ * @property int|null $last_evaluation_id Most recent evaluation linked to the incident.
+ * @property int|null $resolved_by_evaluation_id Evaluation that resolved the incident.
+ * @property object|null $summary Compact incident summary payload.
+ * @property string|null $created_at Creation time.
+ * @property string|null $updated_at Last update time.
  * @package Files
  */
 class ExpectationIncident
@@ -20,6 +35,12 @@ class ExpectationIncident
         'list' => 'all',
     ];
 
+    /**
+     * Build a model from API attributes and retain its request options.
+     *
+     * @param array $attributes Initial model attributes, keyed by property name.
+     * @param array $options Request options used by this model's operations.
+     */
     public function __construct($attributes = [], $options = [])
     {
         foreach ($attributes as $key => $value) {
@@ -29,16 +50,36 @@ class ExpectationIncident
         $this->options = $options;
     }
 
+    /**
+     * Set a model attribute locally; call save() to persist supported changes.
+     *
+     * @param string $name Attribute name.
+     * @param mixed $value Attribute value.
+     * @return void
+     */
     public function __set($name, $value)
     {
         $this->attributes[$name] = $value;
     }
 
+    /**
+     * Read a model attribute.
+     *
+     * @param string $name Attribute name.
+     * @return mixed The attribute value, or null when it is not set.
+     */
     public function __get($name)
     {
         return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
+    /**
+     * Dispatch a legacy static alias, including list() to all().
+     *
+     * @param string $name Alias name.
+     * @param array $arguments Arguments passed to the canonical method.
+     * @return mixed The canonical method's result, or null for an unknown alias.
+     */
     public static function __callStatic($name, $arguments)
     {
         if (in_array($name, array_keys(self::$static_mapped_functions))) {
@@ -49,87 +90,161 @@ class ExpectationIncident
         }
     }
 
+    /**
+     * Whether this model has a nonempty primary key.
+     *
+     * @return bool
+     */
     public function isLoaded()
     {
         return !!@$this->attributes['id'];
     }
-    // int64 # Expectation Incident ID
+    /**
+     * Expectation Incident ID
+     *
+     * @return int|null
+     */
     public function getId()
     {
         return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
-    // int64 # Workspace ID. `0` means the default workspace.
+    /**
+     * Workspace ID. `0` means the default workspace.
+     *
+     * @return int|null
+     */
     public function getWorkspaceId()
     {
         return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
-    // int64 # Expectation ID.
+    /**
+     * Expectation ID.
+     *
+     * @return int|null
+     */
     public function getExpectationId()
     {
         return isset($this->attributes['expectation_id']) ? $this->attributes['expectation_id'] : null;
     }
-    // string # Incident status.
+    /**
+     * Incident status.
+     *
+     * @return string|null
+     */
     public function getStatus()
     {
         return isset($this->attributes['status']) ? $this->attributes['status'] : null;
     }
-    // date-time # When the incident was opened.
+    /**
+     * When the incident was opened.
+     *
+     * @return string|null
+     */
     public function getOpenedAt()
     {
         return isset($this->attributes['opened_at']) ? $this->attributes['opened_at'] : null;
     }
-    // date-time # When the most recent failing evaluation contributing to the incident occurred.
+    /**
+     * When the most recent failing evaluation contributing to the incident occurred.
+     *
+     * @return string|null
+     */
     public function getLastFailedAt()
     {
         return isset($this->attributes['last_failed_at']) ? $this->attributes['last_failed_at'] : null;
     }
-    // date-time # When the incident was acknowledged.
+    /**
+     * When the incident was acknowledged.
+     *
+     * @return string|null
+     */
     public function getAcknowledgedAt()
     {
         return isset($this->attributes['acknowledged_at']) ? $this->attributes['acknowledged_at'] : null;
     }
-    // date-time # When the current snooze expires.
+    /**
+     * When the current snooze expires.
+     *
+     * @return string|null
+     */
     public function getSnoozedUntil()
     {
         return isset($this->attributes['snoozed_until']) ? $this->attributes['snoozed_until'] : null;
     }
-    // date-time # When the incident was resolved.
+    /**
+     * When the incident was resolved.
+     *
+     * @return string|null
+     */
     public function getResolvedAt()
     {
         return isset($this->attributes['resolved_at']) ? $this->attributes['resolved_at'] : null;
     }
-    // int64 # Evaluation that first opened the incident.
+    /**
+     * Evaluation that first opened the incident.
+     *
+     * @return int|null
+     */
     public function getOpenedByEvaluationId()
     {
         return isset($this->attributes['opened_by_evaluation_id']) ? $this->attributes['opened_by_evaluation_id'] : null;
     }
-    // int64 # Most recent evaluation linked to the incident.
+    /**
+     * Most recent evaluation linked to the incident.
+     *
+     * @return int|null
+     */
     public function getLastEvaluationId()
     {
         return isset($this->attributes['last_evaluation_id']) ? $this->attributes['last_evaluation_id'] : null;
     }
-    // int64 # Evaluation that resolved the incident.
+    /**
+     * Evaluation that resolved the incident.
+     *
+     * @return int|null
+     */
     public function getResolvedByEvaluationId()
     {
         return isset($this->attributes['resolved_by_evaluation_id']) ? $this->attributes['resolved_by_evaluation_id'] : null;
     }
-    // object # Compact incident summary payload.
+    /**
+     * Compact incident summary payload.
+     *
+     * @return object|null
+     */
     public function getSummary()
     {
         return isset($this->attributes['summary']) ? $this->attributes['summary'] : null;
     }
-    // date-time # Creation time.
+    /**
+     * Creation time.
+     *
+     * @return string|null
+     */
     public function getCreatedAt()
     {
         return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
-    // date-time # Last update time.
+    /**
+     * Last update time.
+     *
+     * @return string|null
+     */
     public function getUpdatedAt()
     {
         return isset($this->attributes['updated_at']) ? $this->attributes['updated_at'] : null;
     }
 
-    // Resolve an expectation incident
+    /**
+     * Resolve an expectation incident
+     *
+     * POST /expectation_incidents/{id}/resolve
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Expectation Incident ID.
+     * @return \Files\Model\ExpectationIncident
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function resolve($params = [])
     {
         if (!is_array($params)) {
@@ -152,10 +267,17 @@ class ExpectationIncident
         return new ExpectationIncident((array) (@$response->data ?: []), $this->options);
     }
 
-    // Snooze an expectation incident until a specified time
-    //
-    // Parameters:
-    //   snoozed_until (required) - string - Time until which the incident should remain snoozed.
+    /**
+     * Snooze an expectation incident until a specified time
+     *
+     * POST /expectation_incidents/{id}/snooze
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Expectation Incident ID.
+     *     - `snoozed_until` (string, required): Time until which the incident should remain snoozed.
+     * @return \Files\Model\ExpectationIncident
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function snooze($params = [])
     {
         if (!is_array($params)) {
@@ -190,7 +312,16 @@ class ExpectationIncident
         return new ExpectationIncident((array) (@$response->data ?: []), $this->options);
     }
 
-    // Acknowledge an expectation incident
+    /**
+     * Acknowledge an expectation incident
+     *
+     * POST /expectation_incidents/{id}/acknowledge
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Expectation Incident ID.
+     * @return \Files\Model\ExpectationIncident
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function acknowledge($params = [])
     {
         if (!is_array($params)) {
@@ -213,11 +344,20 @@ class ExpectationIncident
         return new ExpectationIncident((array) (@$response->data ?: []), $this->options);
     }
 
-    // Parameters:
-    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-    //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `workspace_id`, `created_at` or `expectation_id`.
-    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `expectation_id` and `workspace_id`. Valid field combinations are `[ workspace_id, expectation_id ]`.
+    /**
+     * List Expectation Incidents
+     *
+     * GET /expectation_incidents
+     *
+     * @param array $params Request parameters.
+     *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+     *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+     *     - `sort_by` (array|object, optional): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `workspace_id`, `created_at` or `expectation_id`.
+     *     - `filter` (array|object, optional): If set, return records where the specified field is equal to the supplied value. Valid fields are `expectation_id` and `workspace_id`. Valid field combinations are `[ workspace_id, expectation_id ]`.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\ExpectationIncident[]
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function all($params = [], $options = [])
     {
         if (!empty($params['cursor']) && !is_string($params['cursor'])) {
@@ -239,8 +379,17 @@ class ExpectationIncident
         return $return_array;
     }
 
-    // Parameters:
-    //   id (required) - int64 - Expectation Incident ID.
+    /**
+     * Show Expectation Incident
+     *
+     * GET /expectation_incidents/{id}
+     *
+     * @param int $id Expectation Incident ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\ExpectationIncident
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function find($id, $params = [], $options = [])
     {
         if (!is_array($params)) {
@@ -261,6 +410,19 @@ class ExpectationIncident
 
         return new ExpectationIncident((array) (@$response->data ?: []), $options);
     }
+    /**
+     * Show Expectation Incident
+     *
+     * GET /expectation_incidents/{id}
+     *
+     * Alias of find().
+     *
+     * @param int $id Expectation Incident ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\ExpectationIncident
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function get($id, $params = [], $options = [])
     {
         return self::find($id, $params, $options);

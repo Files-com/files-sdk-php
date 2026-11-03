@@ -8,8 +8,16 @@ use Files\Logger;
 require_once __DIR__ . '/../Files.php';
 
 /**
- * Class EventChannel
+ * An EventChannel is a named grouping of EventSubscriptions.
  *
+ * @property int|null $id Event Channel ID
+ * @property string|null $name Event Channel name.
+ * @property int|null $workspace_id Workspace ID. 0 means the default workspace.
+ * @property string|null $description Event Channel description.
+ * @property bool|null $enabled Whether this Event Channel can dispatch events.
+ * @property bool|null $default_channel Whether this Event Channel is the default destination for newly published events.
+ * @property string|null $created_at Event Channel create date/time.
+ * @property string|null $updated_at Event Channel update date/time.
  * @package Files
  */
 class EventChannel
@@ -20,6 +28,12 @@ class EventChannel
         'list' => 'all',
     ];
 
+    /**
+     * Build a model from API attributes and retain its request options.
+     *
+     * @param array $attributes Initial model attributes, keyed by property name.
+     * @param array $options Request options used by this model's operations.
+     */
     public function __construct($attributes = [], $options = [])
     {
         foreach ($attributes as $key => $value) {
@@ -29,16 +43,36 @@ class EventChannel
         $this->options = $options;
     }
 
+    /**
+     * Set a model attribute locally; call save() to persist supported changes.
+     *
+     * @param string $name Attribute name.
+     * @param mixed $value Attribute value.
+     * @return void
+     */
     public function __set($name, $value)
     {
         $this->attributes[$name] = $value;
     }
 
+    /**
+     * Read a model attribute.
+     *
+     * @param string $name Attribute name.
+     * @return mixed The attribute value, or null when it is not set.
+     */
     public function __get($name)
     {
         return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
+    /**
+     * Dispatch a legacy static alias, including list() to all().
+     *
+     * @param string $name Alias name.
+     * @param array $arguments Arguments passed to the canonical method.
+     * @return mixed The canonical method's result, or null for an unknown alias.
+     */
     public static function __callStatic($name, $arguments)
     {
         if (in_array($name, array_keys(self::$static_mapped_functions))) {
@@ -49,87 +83,169 @@ class EventChannel
         }
     }
 
+    /**
+     * Whether this model has a nonempty primary key.
+     *
+     * @return bool
+     */
     public function isLoaded()
     {
         return !!@$this->attributes['id'];
     }
-    // int64 # Event Channel ID
+    /**
+     * Event Channel ID
+     *
+     * @return int|null
+     */
     public function getId()
     {
         return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
+    /**
+     * Event Channel ID
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setId($value)
     {
         return $this->attributes['id'] = $value;
     }
-    // string # Event Channel name.
+    /**
+     * Event Channel name.
+     *
+     * @return string|null
+     */
     public function getName()
     {
         return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
 
+    /**
+     * Event Channel name.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setName($value)
     {
         return $this->attributes['name'] = $value;
     }
-    // int64 # Workspace ID. 0 means the default workspace.
+    /**
+     * Workspace ID. 0 means the default workspace.
+     *
+     * @return int|null
+     */
     public function getWorkspaceId()
     {
         return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
 
+    /**
+     * Workspace ID. 0 means the default workspace.
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setWorkspaceId($value)
     {
         return $this->attributes['workspace_id'] = $value;
     }
-    // string # Event Channel description.
+    /**
+     * Event Channel description.
+     *
+     * @return string|null
+     */
     public function getDescription()
     {
         return isset($this->attributes['description']) ? $this->attributes['description'] : null;
     }
 
+    /**
+     * Event Channel description.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setDescription($value)
     {
         return $this->attributes['description'] = $value;
     }
-    // boolean # Whether this Event Channel can dispatch events.
+    /**
+     * Whether this Event Channel can dispatch events.
+     *
+     * @return bool|null
+     */
     public function getEnabled()
     {
         return isset($this->attributes['enabled']) ? $this->attributes['enabled'] : null;
     }
 
+    /**
+     * Whether this Event Channel can dispatch events.
+     *
+     * @param bool|null $value
+     * @return bool|null The assigned value.
+     */
     public function setEnabled($value)
     {
         return $this->attributes['enabled'] = $value;
     }
-    // boolean # Whether this Event Channel is the default destination for newly published events.
+    /**
+     * Whether this Event Channel is the default destination for newly published events.
+     *
+     * @return bool|null
+     */
     public function getDefaultChannel()
     {
         return isset($this->attributes['default_channel']) ? $this->attributes['default_channel'] : null;
     }
 
+    /**
+     * Whether this Event Channel is the default destination for newly published events.
+     *
+     * @param bool|null $value
+     * @return bool|null The assigned value.
+     */
     public function setDefaultChannel($value)
     {
         return $this->attributes['default_channel'] = $value;
     }
-    // date-time # Event Channel create date/time.
+    /**
+     * Event Channel create date/time.
+     *
+     * @return string|null
+     */
     public function getCreatedAt()
     {
         return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
-    // date-time # Event Channel update date/time.
+    /**
+     * Event Channel update date/time.
+     *
+     * @return string|null
+     */
     public function getUpdatedAt()
     {
         return isset($this->attributes['updated_at']) ? $this->attributes['updated_at'] : null;
     }
 
-    // Parameters:
-    //   name - string - Event Channel name.
-    //   workspace_id - int64 - Workspace ID. 0 means the default workspace.
-    //   description - string - Event Channel description.
-    //   enabled - boolean - Whether this Event Channel can dispatch events.
-    //   default_channel - boolean - Whether this Event Channel is the default destination for newly published events.
+    /**
+     * Update Event Channel
+     *
+     * PATCH /event_channels/{id}
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Event Channel ID.
+     *     - `name` (string, optional): Event Channel name.
+     *     - `workspace_id` (int, optional): Workspace ID. 0 means the default workspace.
+     *     - `description` (string, optional): Event Channel description.
+     *     - `enabled` (bool, optional): Whether this Event Channel can dispatch events.
+     *     - `default_channel` (bool, optional): Whether this Event Channel is the default destination for newly published events.
+     * @return \Files\Model\EventChannel
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function update($params = [])
     {
         if (!is_array($params)) {
@@ -164,6 +280,16 @@ class EventChannel
         return new EventChannel((array) (@$response->data ?: []), $this->options);
     }
 
+    /**
+     * Delete Event Channel
+     *
+     * DELETE /event_channels/{id}
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Event Channel ID.
+     * @return void
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function delete($params = [])
     {
         if (!is_array($params)) {
@@ -186,12 +312,30 @@ class EventChannel
         return;
     }
 
+    /**
+     * Delete Event Channel
+     *
+     * DELETE /event_channels/{id}
+     *
+     * Alias of delete().
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Event Channel ID.
+     * @return void
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function destroy($params = [])
     {
         $this->delete($params);
         return;
     }
 
+    /**
+     * Persist this model's attributes and replace them with the API response.
+     *
+     * @return bool True after the operation succeeds.
+     * @throws \Files\Exception\FilesException When saving fails or updates are unsupported.
+     */
     public function save()
     {
         if (@$this->attributes['id']) {
@@ -206,11 +350,20 @@ class EventChannel
     }
 
 
-    // Parameters:
-    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-    //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `name`, `enabled`, `default_channel` or `workspace_id`.
-    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `enabled`, `default_channel` or `workspace_id`. Valid field combinations are `[ workspace_id, enabled ]` and `[ workspace_id, default_channel ]`.
+    /**
+     * List Event Channels
+     *
+     * GET /event_channels
+     *
+     * @param array $params Request parameters.
+     *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+     *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+     *     - `sort_by` (array|object, optional): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `name`, `enabled`, `default_channel` or `workspace_id`.
+     *     - `filter` (array|object, optional): If set, return records where the specified field is equal to the supplied value. Valid fields are `enabled`, `default_channel` or `workspace_id`. Valid field combinations are `[ workspace_id, enabled ]` and `[ workspace_id, default_channel ]`.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\EventChannel[]
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function all($params = [], $options = [])
     {
         if (!empty($params['cursor']) && !is_string($params['cursor'])) {
@@ -232,8 +385,17 @@ class EventChannel
         return $return_array;
     }
 
-    // Parameters:
-    //   id (required) - int64 - Event Channel ID.
+    /**
+     * Show Event Channel
+     *
+     * GET /event_channels/{id}
+     *
+     * @param int $id Event Channel ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\EventChannel
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function find($id, $params = [], $options = [])
     {
         if (!is_array($params)) {
@@ -254,17 +416,39 @@ class EventChannel
 
         return new EventChannel((array) (@$response->data ?: []), $options);
     }
+    /**
+     * Show Event Channel
+     *
+     * GET /event_channels/{id}
+     *
+     * Alias of find().
+     *
+     * @param int $id Event Channel ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\EventChannel
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function get($id, $params = [], $options = [])
     {
         return self::find($id, $params, $options);
     }
 
-    // Parameters:
-    //   name (required) - string - Event Channel name.
-    //   workspace_id - int64 - Workspace ID. 0 means the default workspace.
-    //   description - string - Event Channel description.
-    //   enabled - boolean - Whether this Event Channel can dispatch events.
-    //   default_channel - boolean - Whether this Event Channel is the default destination for newly published events.
+    /**
+     * Create Event Channel
+     *
+     * POST /event_channels
+     *
+     * @param array $params Request parameters.
+     *     - `name` (string, required): Event Channel name.
+     *     - `workspace_id` (int, optional): Workspace ID. 0 means the default workspace.
+     *     - `description` (string, optional): Event Channel description.
+     *     - `enabled` (bool, optional): Whether this Event Channel can dispatch events.
+     *     - `default_channel` (bool, optional): Whether this Event Channel is the default destination for newly published events.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\EventChannel
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function create($params = [], $options = [])
     {
         if (empty($params['name'])) {

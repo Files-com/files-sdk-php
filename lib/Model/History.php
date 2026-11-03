@@ -8,8 +8,22 @@ use Files\Logger;
 require_once __DIR__ . '/../Files.php';
 
 /**
- * Class History
+ * An Action is a single record in our history log.
  *
+ * @property int|null $id Action ID
+ * @property string|null $path Path. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
+ * @property string|null $when Action occurrence date/time
+ * @property string|null $destination The destination path for this action, if applicable
+ * @property string|null $display Friendly displayed output
+ * @property string|null $ip IP Address that performed this action
+ * @property string|null $source The source path for this action, if applicable
+ * @property object|null $targets Targets
+ * @property int|null $user_id User ID
+ * @property string|null $username Username
+ * @property bool|null $user_is_from_parent_site true if this change was performed by a user on a parent site.
+ * @property string|null $action Type of action
+ * @property string|null $failure_type Failure type. If action was a user login or session failure, why did it fail?
+ * @property string|null $interface Interface on which this action occurred.
  * @package Files
  */
 class History
@@ -20,6 +34,12 @@ class History
         'list' => 'all',
     ];
 
+    /**
+     * Build a model from API attributes and retain its request options.
+     *
+     * @param array $attributes Initial model attributes, keyed by property name.
+     * @param array $options Request options used by this model's operations.
+     */
     public function __construct($attributes = [], $options = [])
     {
         foreach ($attributes as $key => $value) {
@@ -29,16 +49,36 @@ class History
         $this->options = $options;
     }
 
+    /**
+     * Set a model attribute locally; call save() to persist supported changes.
+     *
+     * @param string $name Attribute name.
+     * @param mixed $value Attribute value.
+     * @return void
+     */
     public function __set($name, $value)
     {
         $this->attributes[$name] = $value;
     }
 
+    /**
+     * Read a model attribute.
+     *
+     * @param string $name Attribute name.
+     * @return mixed The attribute value, or null when it is not set.
+     */
     public function __get($name)
     {
         return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
+    /**
+     * Dispatch a legacy static alias, including list() to all().
+     *
+     * @param string $name Alias name.
+     * @param array $arguments Arguments passed to the canonical method.
+     * @return mixed The canonical method's result, or null for an unknown alias.
+     */
     public static function __callStatic($name, $arguments)
     {
         if (in_array($name, array_keys(self::$static_mapped_functions))) {
@@ -49,89 +89,159 @@ class History
         }
     }
 
+    /**
+     * Whether this model has a nonempty primary key.
+     *
+     * @return bool
+     */
     public function isLoaded()
     {
         return !!@$this->attributes['path'];
     }
-    // int64 # Action ID
+    /**
+     * Action ID
+     *
+     * @return int|null
+     */
     public function getId()
     {
         return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
-    // string # Path. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
+    /**
+     * Path. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
+     *
+     * @return string|null
+     */
     public function getPath()
     {
         return isset($this->attributes['path']) ? $this->attributes['path'] : null;
     }
-    // date-time # Action occurrence date/time
+    /**
+     * Action occurrence date/time
+     *
+     * @return string|null
+     */
     public function getWhen()
     {
         return isset($this->attributes['when']) ? $this->attributes['when'] : null;
     }
-    // string # The destination path for this action, if applicable
+    /**
+     * The destination path for this action, if applicable
+     *
+     * @return string|null
+     */
     public function getDestination()
     {
         return isset($this->attributes['destination']) ? $this->attributes['destination'] : null;
     }
-    // string # Friendly displayed output
+    /**
+     * Friendly displayed output
+     *
+     * @return string|null
+     */
     public function getDisplay()
     {
         return isset($this->attributes['display']) ? $this->attributes['display'] : null;
     }
-    // string # IP Address that performed this action
+    /**
+     * IP Address that performed this action
+     *
+     * @return string|null
+     */
     public function getIp()
     {
         return isset($this->attributes['ip']) ? $this->attributes['ip'] : null;
     }
-    // string # The source path for this action, if applicable
+    /**
+     * The source path for this action, if applicable
+     *
+     * @return string|null
+     */
     public function getSource()
     {
         return isset($this->attributes['source']) ? $this->attributes['source'] : null;
     }
-    // object # Targets
+    /**
+     * Targets
+     *
+     * @return object|null
+     */
     public function getTargets()
     {
         return isset($this->attributes['targets']) ? $this->attributes['targets'] : null;
     }
-    // int64 # User ID
+    /**
+     * User ID
+     *
+     * @return int|null
+     */
     public function getUserId()
     {
         return isset($this->attributes['user_id']) ? $this->attributes['user_id'] : null;
     }
-    // string # Username
+    /**
+     * Username
+     *
+     * @return string|null
+     */
     public function getUsername()
     {
         return isset($this->attributes['username']) ? $this->attributes['username'] : null;
     }
-    // boolean # true if this change was performed by a user on a parent site.
+    /**
+     * true if this change was performed by a user on a parent site.
+     *
+     * @return bool|null
+     */
     public function getUserIsFromParentSite()
     {
         return isset($this->attributes['user_is_from_parent_site']) ? $this->attributes['user_is_from_parent_site'] : null;
     }
-    // string # Type of action
+    /**
+     * Type of action
+     *
+     * @return string|null
+     */
     public function getAction()
     {
         return isset($this->attributes['action']) ? $this->attributes['action'] : null;
     }
-    // string # Failure type.  If action was a user login or session failure, why did it fail?
+    /**
+     * Failure type.  If action was a user login or session failure, why did it fail?
+     *
+     * @return string|null
+     */
     public function getFailureType()
     {
         return isset($this->attributes['failure_type']) ? $this->attributes['failure_type'] : null;
     }
-    // string # Interface on which this action occurred.
+    /**
+     * Interface on which this action occurred.
+     *
+     * @return string|null
+     */
     public function getInterface()
     {
         return isset($this->attributes['interface']) ? $this->attributes['interface'] : null;
     }
 
-    // Parameters:
-    //   start_at - string - Leave blank or set to a date/time to filter earlier entries.
-    //   end_at - string - Leave blank or set to a date/time to filter later entries.
-    //   display - string - Display format. Leave blank or set to `full` or `parent`.
-    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-    //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `created_at`.
-    //   path (required) - string - Path to operate on.
+    /**
+     * List history for specific file
+     *
+     * GET /history/files/{path}
+     *
+     * @param string $path Path to operate on.
+     * @param array $params Request parameters.
+     *     - `start_at` (string, optional): Leave blank or set to a date/time to filter earlier entries.
+     *     - `end_at` (string, optional): Leave blank or set to a date/time to filter later entries.
+     *     - `display` (string, optional): Display format. Leave blank or set to `full` or `parent`.
+     *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+     *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+     *     - `sort_by` (array|object, optional): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `created_at`.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\Action[]
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function listForFile($path, $params = [], $options = [])
     {
         if (!is_array($params)) {
@@ -179,14 +289,23 @@ class History
         return $return_array;
     }
 
-    // Parameters:
-    //   start_at - string - Leave blank or set to a date/time to filter earlier entries.
-    //   end_at - string - Leave blank or set to a date/time to filter later entries.
-    //   display - string - Display format. Leave blank or set to `full` or `parent`.
-    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-    //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `created_at`.
-    //   path (required) - string - Path to operate on.
+    /**
+     * List history for specific folder
+     *
+     * GET /history/folders/{path}
+     *
+     * @param string $path Path to operate on.
+     * @param array $params Request parameters.
+     *     - `start_at` (string, optional): Leave blank or set to a date/time to filter earlier entries.
+     *     - `end_at` (string, optional): Leave blank or set to a date/time to filter later entries.
+     *     - `display` (string, optional): Display format. Leave blank or set to `full` or `parent`.
+     *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+     *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+     *     - `sort_by` (array|object, optional): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `created_at`.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\Action[]
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function listForFolder($path, $params = [], $options = [])
     {
         if (!is_array($params)) {
@@ -234,14 +353,23 @@ class History
         return $return_array;
     }
 
-    // Parameters:
-    //   start_at - string - Leave blank or set to a date/time to filter earlier entries.
-    //   end_at - string - Leave blank or set to a date/time to filter later entries.
-    //   display - string - Display format. Leave blank or set to `full` or `parent`.
-    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-    //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `created_at`.
-    //   user_id (required) - int64 - User ID.
+    /**
+     * List history for specific user
+     *
+     * GET /history/users/{user_id}
+     *
+     * @param int $user_id User ID.
+     * @param array $params Request parameters.
+     *     - `start_at` (string, optional): Leave blank or set to a date/time to filter earlier entries.
+     *     - `end_at` (string, optional): Leave blank or set to a date/time to filter later entries.
+     *     - `display` (string, optional): Display format. Leave blank or set to `full` or `parent`.
+     *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+     *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+     *     - `sort_by` (array|object, optional): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `created_at`.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\Action[]
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function listForUser($user_id, $params = [], $options = [])
     {
         if (!is_array($params)) {
@@ -289,13 +417,22 @@ class History
         return $return_array;
     }
 
-    // Parameters:
-    //   start_at - string - Leave blank or set to a date/time to filter earlier entries.
-    //   end_at - string - Leave blank or set to a date/time to filter later entries.
-    //   display - string - Display format. Leave blank or set to `full` or `parent`.
-    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-    //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `created_at`.
+    /**
+     * List site login history
+     *
+     * GET /history/login
+     *
+     * @param array $params Request parameters.
+     *     - `start_at` (string, optional): Leave blank or set to a date/time to filter earlier entries.
+     *     - `end_at` (string, optional): Leave blank or set to a date/time to filter later entries.
+     *     - `display` (string, optional): Display format. Leave blank or set to `full` or `parent`.
+     *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+     *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+     *     - `sort_by` (array|object, optional): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `created_at`.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\Action[]
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function listLogins($params = [], $options = [])
     {
         if (!empty($params['start_at']) && !is_string($params['start_at'])) {
@@ -329,15 +466,24 @@ class History
         return $return_array;
     }
 
-    // Parameters:
-    //   start_at - string - Leave blank or set to a date/time to filter earlier entries.
-    //   end_at - string - Leave blank or set to a date/time to filter later entries.
-    //   display - string - Display format. Leave blank or set to `full` or `parent`.
-    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-    //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `created_at`.
-    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `user_id`, `folder` or `path`. Valid field combinations are `[  ]`, `[ path ]`, `[ path ]` or `[ path ]`.
-    //   filter_prefix - object - If set, return records where the specified field is prefixed by the supplied value. Valid fields are `path`.
+    /**
+     * List site full action history
+     *
+     * GET /history
+     *
+     * @param array $params Request parameters.
+     *     - `start_at` (string, optional): Leave blank or set to a date/time to filter earlier entries.
+     *     - `end_at` (string, optional): Leave blank or set to a date/time to filter later entries.
+     *     - `display` (string, optional): Display format. Leave blank or set to `full` or `parent`.
+     *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+     *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+     *     - `sort_by` (array|object, optional): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `created_at`.
+     *     - `filter` (array|object, optional): If set, return records where the specified field is equal to the supplied value. Valid fields are `user_id`, `folder` or `path`. Valid field combinations are `[  ]`, `[ path ]`, `[ path ]` or `[ path ]`.
+     *     - `filter_prefix` (array|object, optional): If set, return records where the specified field is prefixed by the supplied value. Valid fields are `path`.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\Action[]
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function all($params = [], $options = [])
     {
         if (!empty($params['start_at']) && !is_string($params['start_at'])) {

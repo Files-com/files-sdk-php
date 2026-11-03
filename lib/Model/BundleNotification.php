@@ -8,8 +8,16 @@ use Files\Logger;
 require_once __DIR__ . '/../Files.php';
 
 /**
- * Class BundleNotification
+ * A BundleNotification is an E-Mail sent out to users when certain actions are performed on or within a shared set of files and folders.
  *
+ * @property int|null $bundle_id Bundle ID to notify on
+ * @property int|null $id Bundle Notification ID
+ * @property bool|null $notify_on_registration Triggers bundle notification when a registration action occurs for it.
+ * @property bool|null $notify_on_upload Triggers bundle notification when a upload action occurs for it.
+ * @property bool|null $notify_current_user Is the current user the user to notify?
+ * @property int|null $notify_user_id The id of the user to notify.
+ * @property int|null $workspace_id Workspace ID. `0` means the default workspace.
+ * @property int|null $user_id User ID. Provide a value of `0` to operate the current session's user.
  * @package Files
  */
 class BundleNotification
@@ -20,6 +28,12 @@ class BundleNotification
         'list' => 'all',
     ];
 
+    /**
+     * Build a model from API attributes and retain its request options.
+     *
+     * @param array $attributes Initial model attributes, keyed by property name.
+     * @param array $options Request options used by this model's operations.
+     */
     public function __construct($attributes = [], $options = [])
     {
         foreach ($attributes as $key => $value) {
@@ -29,16 +43,36 @@ class BundleNotification
         $this->options = $options;
     }
 
+    /**
+     * Set a model attribute locally; call save() to persist supported changes.
+     *
+     * @param string $name Attribute name.
+     * @param mixed $value Attribute value.
+     * @return void
+     */
     public function __set($name, $value)
     {
         $this->attributes[$name] = $value;
     }
 
+    /**
+     * Read a model attribute.
+     *
+     * @param string $name Attribute name.
+     * @return mixed The attribute value, or null when it is not set.
+     */
     public function __get($name)
     {
         return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
+    /**
+     * Dispatch a legacy static alias, including list() to all().
+     *
+     * @param string $name Alias name.
+     * @param array $arguments Arguments passed to the canonical method.
+     * @return mixed The canonical method's result, or null for an unknown alias.
+     */
     public static function __callStatic($name, $arguments)
     {
         if (in_array($name, array_keys(self::$static_mapped_functions))) {
@@ -49,94 +83,188 @@ class BundleNotification
         }
     }
 
+    /**
+     * Whether this model has a nonempty primary key.
+     *
+     * @return bool
+     */
     public function isLoaded()
     {
         return !!@$this->attributes['id'];
     }
-    // int64 # Bundle ID to notify on
+    /**
+     * Bundle ID to notify on
+     *
+     * @return int|null
+     */
     public function getBundleId()
     {
         return isset($this->attributes['bundle_id']) ? $this->attributes['bundle_id'] : null;
     }
 
+    /**
+     * Bundle ID to notify on
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setBundleId($value)
     {
         return $this->attributes['bundle_id'] = $value;
     }
-    // int64 # Bundle Notification ID
+    /**
+     * Bundle Notification ID
+     *
+     * @return int|null
+     */
     public function getId()
     {
         return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
+    /**
+     * Bundle Notification ID
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setId($value)
     {
         return $this->attributes['id'] = $value;
     }
-    // boolean # Triggers bundle notification when a registration action occurs for it.
+    /**
+     * Triggers bundle notification when a registration action occurs for it.
+     *
+     * @return bool|null
+     */
     public function getNotifyOnRegistration()
     {
         return isset($this->attributes['notify_on_registration']) ? $this->attributes['notify_on_registration'] : null;
     }
 
+    /**
+     * Triggers bundle notification when a registration action occurs for it.
+     *
+     * @param bool|null $value
+     * @return bool|null The assigned value.
+     */
     public function setNotifyOnRegistration($value)
     {
         return $this->attributes['notify_on_registration'] = $value;
     }
-    // boolean # Triggers bundle notification when a upload action occurs for it.
+    /**
+     * Triggers bundle notification when a upload action occurs for it.
+     *
+     * @return bool|null
+     */
     public function getNotifyOnUpload()
     {
         return isset($this->attributes['notify_on_upload']) ? $this->attributes['notify_on_upload'] : null;
     }
 
+    /**
+     * Triggers bundle notification when a upload action occurs for it.
+     *
+     * @param bool|null $value
+     * @return bool|null The assigned value.
+     */
     public function setNotifyOnUpload($value)
     {
         return $this->attributes['notify_on_upload'] = $value;
     }
-    // boolean # Is the current user the user to notify?
+    /**
+     * Is the current user the user to notify?
+     *
+     * @return bool|null
+     */
     public function getNotifyCurrentUser()
     {
         return isset($this->attributes['notify_current_user']) ? $this->attributes['notify_current_user'] : null;
     }
 
+    /**
+     * Is the current user the user to notify?
+     *
+     * @param bool|null $value
+     * @return bool|null The assigned value.
+     */
     public function setNotifyCurrentUser($value)
     {
         return $this->attributes['notify_current_user'] = $value;
     }
-    // int64 # The id of the user to notify.
+    /**
+     * The id of the user to notify.
+     *
+     * @return int|null
+     */
     public function getNotifyUserId()
     {
         return isset($this->attributes['notify_user_id']) ? $this->attributes['notify_user_id'] : null;
     }
 
+    /**
+     * The id of the user to notify.
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setNotifyUserId($value)
     {
         return $this->attributes['notify_user_id'] = $value;
     }
-    // int64 # Workspace ID. `0` means the default workspace.
+    /**
+     * Workspace ID. `0` means the default workspace.
+     *
+     * @return int|null
+     */
     public function getWorkspaceId()
     {
         return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
 
+    /**
+     * Workspace ID. `0` means the default workspace.
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setWorkspaceId($value)
     {
         return $this->attributes['workspace_id'] = $value;
     }
-    // int64 # User ID.  Provide a value of `0` to operate the current session's user.
+    /**
+     * User ID.  Provide a value of `0` to operate the current session's user.
+     *
+     * @return int|null
+     */
     public function getUserId()
     {
         return isset($this->attributes['user_id']) ? $this->attributes['user_id'] : null;
     }
 
+    /**
+     * User ID.  Provide a value of `0` to operate the current session's user.
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setUserId($value)
     {
         return $this->attributes['user_id'] = $value;
     }
 
-    // Parameters:
-    //   notify_on_registration - boolean - Triggers bundle notification when a registration action occurs for it.
-    //   notify_on_upload - boolean - Triggers bundle notification when a upload action occurs for it.
+    /**
+     * Update Share Link Notification
+     *
+     * PATCH /bundle_notifications/{id}
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Bundle Notification ID.
+     *     - `notify_on_registration` (bool, optional): Triggers bundle notification when a registration action occurs for it.
+     *     - `notify_on_upload` (bool, optional): Triggers bundle notification when a upload action occurs for it.
+     * @return \Files\Model\BundleNotification
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function update($params = [])
     {
         if (!is_array($params)) {
@@ -159,6 +287,16 @@ class BundleNotification
         return new BundleNotification((array) (@$response->data ?: []), $this->options);
     }
 
+    /**
+     * Delete Share Link Notification
+     *
+     * DELETE /bundle_notifications/{id}
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Bundle Notification ID.
+     * @return void
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function delete($params = [])
     {
         if (!is_array($params)) {
@@ -181,12 +319,30 @@ class BundleNotification
         return;
     }
 
+    /**
+     * Delete Share Link Notification
+     *
+     * DELETE /bundle_notifications/{id}
+     *
+     * Alias of delete().
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Bundle Notification ID.
+     * @return void
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function destroy($params = [])
     {
         $this->delete($params);
         return;
     }
 
+    /**
+     * Persist this model's attributes and replace them with the API response.
+     *
+     * @return bool True after the operation succeeds.
+     * @throws \Files\Exception\FilesException When saving fails or updates are unsupported.
+     */
     public function save()
     {
         if (@$this->attributes['id']) {
@@ -201,13 +357,22 @@ class BundleNotification
     }
 
 
-    // Parameters:
-    //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
-    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-    //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `workspace_id` and `bundle_id`.
-    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `bundle_id`.
-    //   bundle_id - int64 - Bundle ID
+    /**
+     * List Share Link Notifications
+     *
+     * GET /bundle_notifications
+     *
+     * @param array $params Request parameters.
+     *     - `user_id` (int, optional): User ID.  Provide a value of `0` to operate the current session's user.
+     *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+     *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+     *     - `sort_by` (array|object, optional): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `workspace_id` and `bundle_id`.
+     *     - `filter` (array|object, optional): If set, return records where the specified field is equal to the supplied value. Valid fields are `bundle_id`.
+     *     - `bundle_id` (int, optional): Bundle ID
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\BundleNotification[]
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function all($params = [], $options = [])
     {
         if (!empty($params['user_id']) && !is_int($params['user_id'])) {
@@ -237,8 +402,17 @@ class BundleNotification
         return $return_array;
     }
 
-    // Parameters:
-    //   id (required) - int64 - Bundle Notification ID.
+    /**
+     * Show Share Link Notification
+     *
+     * GET /bundle_notifications/{id}
+     *
+     * @param int $id Bundle Notification ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\BundleNotification
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function find($id, $params = [], $options = [])
     {
         if (!is_array($params)) {
@@ -259,17 +433,39 @@ class BundleNotification
 
         return new BundleNotification((array) (@$response->data ?: []), $options);
     }
+    /**
+     * Show Share Link Notification
+     *
+     * GET /bundle_notifications/{id}
+     *
+     * Alias of find().
+     *
+     * @param int $id Bundle Notification ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\BundleNotification
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function get($id, $params = [], $options = [])
     {
         return self::find($id, $params, $options);
     }
 
-    // Parameters:
-    //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
-    //   bundle_id (required) - int64 - Bundle ID to notify on
-    //   notify_user_id - int64 - The id of the user to notify.
-    //   notify_on_registration - boolean - Triggers bundle notification when a registration action occurs for it.
-    //   notify_on_upload - boolean - Triggers bundle notification when a upload action occurs for it.
+    /**
+     * Create Share Link Notification
+     *
+     * POST /bundle_notifications
+     *
+     * @param array $params Request parameters.
+     *     - `user_id` (int, optional): User ID.  Provide a value of `0` to operate the current session's user.
+     *     - `bundle_id` (int, required): Bundle ID to notify on
+     *     - `notify_user_id` (int, optional): The id of the user to notify.
+     *     - `notify_on_registration` (bool, optional): Triggers bundle notification when a registration action occurs for it.
+     *     - `notify_on_upload` (bool, optional): Triggers bundle notification when a upload action occurs for it.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\BundleNotification
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function create($params = [], $options = [])
     {
         if (empty($params['bundle_id'])) {

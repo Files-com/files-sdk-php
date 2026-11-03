@@ -8,8 +8,26 @@ use Files\Logger;
 require_once __DIR__ . '/../Files.php';
 
 /**
- * Class ExpectationEvaluation
+ * An ExpectationEvaluation records one open or closed window for an Expectation.
  *
+ * @property int|null $id ExpectationEvaluation ID
+ * @property int|null $workspace_id Workspace ID. `0` means the default workspace.
+ * @property int|null $expectation_id Expectation ID.
+ * @property string|null $status Evaluation status.
+ * @property string|null $opened_via How the evaluation window was opened.
+ * @property string|null $opened_at When the evaluation row was opened.
+ * @property string|null $window_start_at Logical start of the candidate window.
+ * @property string|null $window_end_at Actual candidate cutoff boundary for the window.
+ * @property string|null $deadline_at Logical due boundary for schedule-driven windows.
+ * @property string|null $late_acceptance_cutoff_at Logical cutoff for late acceptance, when present.
+ * @property string|null $hard_close_at Hard stop after which the window may not remain open.
+ * @property string|null $closed_at When the evaluation row was finalized.
+ * @property object[]|null $matched_files Captured evidence for files that matched the window.
+ * @property object[]|null $missing_files Captured evidence for required files that were missing.
+ * @property string[]|null $criteria_errors Captured criteria failures for the window, including file-scoped FTS errors and returned validation details.
+ * @property object|null $summary Compact evaluator summary payload.
+ * @property string|null $created_at Creation time.
+ * @property string|null $updated_at Last update time.
  * @package Files
  */
 class ExpectationEvaluation
@@ -20,6 +38,12 @@ class ExpectationEvaluation
         'list' => 'all',
     ];
 
+    /**
+     * Build a model from API attributes and retain its request options.
+     *
+     * @param array $attributes Initial model attributes, keyed by property name.
+     * @param array $options Request options used by this model's operations.
+     */
     public function __construct($attributes = [], $options = [])
     {
         foreach ($attributes as $key => $value) {
@@ -29,16 +53,36 @@ class ExpectationEvaluation
         $this->options = $options;
     }
 
+    /**
+     * Set a model attribute locally; call save() to persist supported changes.
+     *
+     * @param string $name Attribute name.
+     * @param mixed $value Attribute value.
+     * @return void
+     */
     public function __set($name, $value)
     {
         $this->attributes[$name] = $value;
     }
 
+    /**
+     * Read a model attribute.
+     *
+     * @param string $name Attribute name.
+     * @return mixed The attribute value, or null when it is not set.
+     */
     public function __get($name)
     {
         return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
+    /**
+     * Dispatch a legacy static alias, including list() to all().
+     *
+     * @param string $name Alias name.
+     * @param array $arguments Arguments passed to the canonical method.
+     * @return mixed The canonical method's result, or null for an unknown alias.
+     */
     public static function __callStatic($name, $arguments)
     {
         if (in_array($name, array_keys(self::$static_mapped_functions))) {
@@ -49,106 +93,192 @@ class ExpectationEvaluation
         }
     }
 
+    /**
+     * Whether this model has a nonempty primary key.
+     *
+     * @return bool
+     */
     public function isLoaded()
     {
         return !!@$this->attributes['id'];
     }
-    // int64 # ExpectationEvaluation ID
+    /**
+     * ExpectationEvaluation ID
+     *
+     * @return int|null
+     */
     public function getId()
     {
         return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
-    // int64 # Workspace ID. `0` means the default workspace.
+    /**
+     * Workspace ID. `0` means the default workspace.
+     *
+     * @return int|null
+     */
     public function getWorkspaceId()
     {
         return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
-    // int64 # Expectation ID.
+    /**
+     * Expectation ID.
+     *
+     * @return int|null
+     */
     public function getExpectationId()
     {
         return isset($this->attributes['expectation_id']) ? $this->attributes['expectation_id'] : null;
     }
-    // string # Evaluation status.
+    /**
+     * Evaluation status.
+     *
+     * @return string|null
+     */
     public function getStatus()
     {
         return isset($this->attributes['status']) ? $this->attributes['status'] : null;
     }
-    // string # How the evaluation window was opened.
+    /**
+     * How the evaluation window was opened.
+     *
+     * @return string|null
+     */
     public function getOpenedVia()
     {
         return isset($this->attributes['opened_via']) ? $this->attributes['opened_via'] : null;
     }
-    // date-time # When the evaluation row was opened.
+    /**
+     * When the evaluation row was opened.
+     *
+     * @return string|null
+     */
     public function getOpenedAt()
     {
         return isset($this->attributes['opened_at']) ? $this->attributes['opened_at'] : null;
     }
-    // date-time # Logical start of the candidate window.
+    /**
+     * Logical start of the candidate window.
+     *
+     * @return string|null
+     */
     public function getWindowStartAt()
     {
         return isset($this->attributes['window_start_at']) ? $this->attributes['window_start_at'] : null;
     }
-    // date-time # Actual candidate cutoff boundary for the window.
+    /**
+     * Actual candidate cutoff boundary for the window.
+     *
+     * @return string|null
+     */
     public function getWindowEndAt()
     {
         return isset($this->attributes['window_end_at']) ? $this->attributes['window_end_at'] : null;
     }
-    // date-time # Logical due boundary for schedule-driven windows.
+    /**
+     * Logical due boundary for schedule-driven windows.
+     *
+     * @return string|null
+     */
     public function getDeadlineAt()
     {
         return isset($this->attributes['deadline_at']) ? $this->attributes['deadline_at'] : null;
     }
-    // date-time # Logical cutoff for late acceptance, when present.
+    /**
+     * Logical cutoff for late acceptance, when present.
+     *
+     * @return string|null
+     */
     public function getLateAcceptanceCutoffAt()
     {
         return isset($this->attributes['late_acceptance_cutoff_at']) ? $this->attributes['late_acceptance_cutoff_at'] : null;
     }
-    // date-time # Hard stop after which the window may not remain open.
+    /**
+     * Hard stop after which the window may not remain open.
+     *
+     * @return string|null
+     */
     public function getHardCloseAt()
     {
         return isset($this->attributes['hard_close_at']) ? $this->attributes['hard_close_at'] : null;
     }
-    // date-time # When the evaluation row was finalized.
+    /**
+     * When the evaluation row was finalized.
+     *
+     * @return string|null
+     */
     public function getClosedAt()
     {
         return isset($this->attributes['closed_at']) ? $this->attributes['closed_at'] : null;
     }
-    // array(object) # Captured evidence for files that matched the window.
+    /**
+     * Captured evidence for files that matched the window.
+     *
+     * @return object[]|null
+     */
     public function getMatchedFiles()
     {
         return isset($this->attributes['matched_files']) ? $this->attributes['matched_files'] : null;
     }
-    // array(object) # Captured evidence for required files that were missing.
+    /**
+     * Captured evidence for required files that were missing.
+     *
+     * @return object[]|null
+     */
     public function getMissingFiles()
     {
         return isset($this->attributes['missing_files']) ? $this->attributes['missing_files'] : null;
     }
-    // array(string) # Captured criteria failures for the window, including file-scoped FTS errors and returned validation details.
+    /**
+     * Captured criteria failures for the window, including file-scoped FTS errors and returned validation details.
+     *
+     * @return string[]|null
+     */
     public function getCriteriaErrors()
     {
         return isset($this->attributes['criteria_errors']) ? $this->attributes['criteria_errors'] : null;
     }
-    // object # Compact evaluator summary payload.
+    /**
+     * Compact evaluator summary payload.
+     *
+     * @return object|null
+     */
     public function getSummary()
     {
         return isset($this->attributes['summary']) ? $this->attributes['summary'] : null;
     }
-    // date-time # Creation time.
+    /**
+     * Creation time.
+     *
+     * @return string|null
+     */
     public function getCreatedAt()
     {
         return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
-    // date-time # Last update time.
+    /**
+     * Last update time.
+     *
+     * @return string|null
+     */
     public function getUpdatedAt()
     {
         return isset($this->attributes['updated_at']) ? $this->attributes['updated_at'] : null;
     }
 
-    // Parameters:
-    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-    //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `workspace_id`, `created_at` or `expectation_id`.
-    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `expectation_id` and `workspace_id`. Valid field combinations are `[ workspace_id, expectation_id ]`.
+    /**
+     * List Expectation Evaluations
+     *
+     * GET /expectation_evaluations
+     *
+     * @param array $params Request parameters.
+     *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+     *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+     *     - `sort_by` (array|object, optional): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `workspace_id`, `created_at` or `expectation_id`.
+     *     - `filter` (array|object, optional): If set, return records where the specified field is equal to the supplied value. Valid fields are `expectation_id` and `workspace_id`. Valid field combinations are `[ workspace_id, expectation_id ]`.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\ExpectationEvaluation[]
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function all($params = [], $options = [])
     {
         if (!empty($params['cursor']) && !is_string($params['cursor'])) {
@@ -170,8 +300,17 @@ class ExpectationEvaluation
         return $return_array;
     }
 
-    // Parameters:
-    //   id (required) - int64 - Expectation Evaluation ID.
+    /**
+     * Show Expectation Evaluation
+     *
+     * GET /expectation_evaluations/{id}
+     *
+     * @param int $id Expectation Evaluation ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\ExpectationEvaluation
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function find($id, $params = [], $options = [])
     {
         if (!is_array($params)) {
@@ -192,6 +331,19 @@ class ExpectationEvaluation
 
         return new ExpectationEvaluation((array) (@$response->data ?: []), $options);
     }
+    /**
+     * Show Expectation Evaluation
+     *
+     * GET /expectation_evaluations/{id}
+     *
+     * Alias of find().
+     *
+     * @param int $id Expectation Evaluation ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\ExpectationEvaluation
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function get($id, $params = [], $options = [])
     {
         return self::find($id, $params, $options);

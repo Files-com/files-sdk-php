@@ -8,8 +8,14 @@ use Files\Logger;
 require_once __DIR__ . '/../Files.php';
 
 /**
- * Class Clickwrap
+ * A Clickwrap is a legal agreement (such as an NDA or Terms of Use) that your Users and/or Bundle/Inbox participants will need to agree to via a "Clickwrap" UI before accessing the site, bundle, or inbox.
  *
+ * @property int|null $id Clickwrap ID
+ * @property string|null $name Name of the Clickwrap agreement (used when selecting from multiple Clickwrap agreements.)
+ * @property string|null $body Body text of Clickwrap (supports Markdown formatting).
+ * @property string|null $use_with_users Use this Clickwrap for Users? Values: `none`, `require` (new user signup via email invitation only), `require_all_users_once` (show to all users at their next web login; once accepted, not shown again), `require_all_users_always` (show to all users on every web login).
+ * @property string|null $use_with_bundles Use this Clickwrap for Bundles?
+ * @property string|null $use_with_inboxes Use this Clickwrap for Inboxes?
  * @package Files
  */
 class Clickwrap
@@ -20,6 +26,12 @@ class Clickwrap
         'list' => 'all',
     ];
 
+    /**
+     * Build a model from API attributes and retain its request options.
+     *
+     * @param array $attributes Initial model attributes, keyed by property name.
+     * @param array $options Request options used by this model's operations.
+     */
     public function __construct($attributes = [], $options = [])
     {
         foreach ($attributes as $key => $value) {
@@ -29,16 +41,36 @@ class Clickwrap
         $this->options = $options;
     }
 
+    /**
+     * Set a model attribute locally; call save() to persist supported changes.
+     *
+     * @param string $name Attribute name.
+     * @param mixed $value Attribute value.
+     * @return void
+     */
     public function __set($name, $value)
     {
         $this->attributes[$name] = $value;
     }
 
+    /**
+     * Read a model attribute.
+     *
+     * @param string $name Attribute name.
+     * @return mixed The attribute value, or null when it is not set.
+     */
     public function __get($name)
     {
         return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
+    /**
+     * Dispatch a legacy static alias, including list() to all().
+     *
+     * @param string $name Alias name.
+     * @param array $arguments Arguments passed to the canonical method.
+     * @return mixed The canonical method's result, or null for an unknown alias.
+     */
     public static function __callStatic($name, $arguments)
     {
         if (in_array($name, array_keys(self::$static_mapped_functions))) {
@@ -49,77 +81,151 @@ class Clickwrap
         }
     }
 
+    /**
+     * Whether this model has a nonempty primary key.
+     *
+     * @return bool
+     */
     public function isLoaded()
     {
         return !!@$this->attributes['id'];
     }
-    // int64 # Clickwrap ID
+    /**
+     * Clickwrap ID
+     *
+     * @return int|null
+     */
     public function getId()
     {
         return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
+    /**
+     * Clickwrap ID
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setId($value)
     {
         return $this->attributes['id'] = $value;
     }
-    // string # Name of the Clickwrap agreement (used when selecting from multiple Clickwrap agreements.)
+    /**
+     * Name of the Clickwrap agreement (used when selecting from multiple Clickwrap agreements.)
+     *
+     * @return string|null
+     */
     public function getName()
     {
         return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
 
+    /**
+     * Name of the Clickwrap agreement (used when selecting from multiple Clickwrap agreements.)
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setName($value)
     {
         return $this->attributes['name'] = $value;
     }
-    // string # Body text of Clickwrap (supports Markdown formatting).
+    /**
+     * Body text of Clickwrap (supports Markdown formatting).
+     *
+     * @return string|null
+     */
     public function getBody()
     {
         return isset($this->attributes['body']) ? $this->attributes['body'] : null;
     }
 
+    /**
+     * Body text of Clickwrap (supports Markdown formatting).
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setBody($value)
     {
         return $this->attributes['body'] = $value;
     }
-    // string # Use this Clickwrap for Users?  Values: `none`, `require` (new user signup via email invitation only), `require_all_users_once` (show to all users at their next web login; once accepted, not shown again), `require_all_users_always` (show to all users on every web login).
+    /**
+     * Use this Clickwrap for Users?  Values: `none`, `require` (new user signup via email invitation only), `require_all_users_once` (show to all users at their next web login; once accepted, not shown again), `require_all_users_always` (show to all users on every web login).
+     *
+     * @return string|null
+     */
     public function getUseWithUsers()
     {
         return isset($this->attributes['use_with_users']) ? $this->attributes['use_with_users'] : null;
     }
 
+    /**
+     * Use this Clickwrap for Users?  Values: `none`, `require` (new user signup via email invitation only), `require_all_users_once` (show to all users at their next web login; once accepted, not shown again), `require_all_users_always` (show to all users on every web login).
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setUseWithUsers($value)
     {
         return $this->attributes['use_with_users'] = $value;
     }
-    // string # Use this Clickwrap for Bundles?
+    /**
+     * Use this Clickwrap for Bundles?
+     *
+     * @return string|null
+     */
     public function getUseWithBundles()
     {
         return isset($this->attributes['use_with_bundles']) ? $this->attributes['use_with_bundles'] : null;
     }
 
+    /**
+     * Use this Clickwrap for Bundles?
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setUseWithBundles($value)
     {
         return $this->attributes['use_with_bundles'] = $value;
     }
-    // string # Use this Clickwrap for Inboxes?
+    /**
+     * Use this Clickwrap for Inboxes?
+     *
+     * @return string|null
+     */
     public function getUseWithInboxes()
     {
         return isset($this->attributes['use_with_inboxes']) ? $this->attributes['use_with_inboxes'] : null;
     }
 
+    /**
+     * Use this Clickwrap for Inboxes?
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setUseWithInboxes($value)
     {
         return $this->attributes['use_with_inboxes'] = $value;
     }
 
-    // Parameters:
-    //   name - string - Name of the Clickwrap agreement (used when selecting from multiple Clickwrap agreements.)
-    //   body - string - Body text of Clickwrap (supports Markdown formatting).
-    //   use_with_bundles - string - Use this Clickwrap for Bundles?
-    //   use_with_inboxes - string - Use this Clickwrap for Inboxes?
-    //   use_with_users - string - Use this Clickwrap for Users?  Values: `none`, `require` (new user signup via email invitation only), `require_all_users_once` (show to all users at their next web login; once accepted, not shown again), `require_all_users_always` (show to all users on every web login).
+    /**
+     * Update Clickwrap
+     *
+     * PATCH /clickwraps/{id}
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Clickwrap ID.
+     *     - `name` (string, optional): Name of the Clickwrap agreement (used when selecting from multiple Clickwrap agreements.)
+     *     - `body` (string, optional): Body text of Clickwrap (supports Markdown formatting).
+     *     - `use_with_bundles` (string, optional): Use this Clickwrap for Bundles? Allowed values: none, available, require, available_to_all_users.
+     *     - `use_with_inboxes` (string, optional): Use this Clickwrap for Inboxes? Allowed values: none, available, require, available_to_all_users.
+     *     - `use_with_users` (string, optional): Use this Clickwrap for Users?  Values: `none`, `require` (new user signup via email invitation only), `require_all_users_once` (show to all users at their next web login; once accepted, not shown again), `require_all_users_always` (show to all users on every web login). Allowed values: none, require, require_all_users_once, require_all_users_always.
+     * @return \Files\Model\Clickwrap
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function update($params = [])
     {
         if (!is_array($params)) {
@@ -162,6 +268,16 @@ class Clickwrap
         return new Clickwrap((array) (@$response->data ?: []), $this->options);
     }
 
+    /**
+     * Delete Clickwrap
+     *
+     * DELETE /clickwraps/{id}
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Clickwrap ID.
+     * @return void
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function delete($params = [])
     {
         if (!is_array($params)) {
@@ -184,12 +300,30 @@ class Clickwrap
         return;
     }
 
+    /**
+     * Delete Clickwrap
+     *
+     * DELETE /clickwraps/{id}
+     *
+     * Alias of delete().
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Clickwrap ID.
+     * @return void
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function destroy($params = [])
     {
         $this->delete($params);
         return;
     }
 
+    /**
+     * Persist this model's attributes and replace them with the API response.
+     *
+     * @return bool True after the operation succeeds.
+     * @throws \Files\Exception\FilesException When saving fails or updates are unsupported.
+     */
     public function save()
     {
         if (@$this->attributes['id']) {
@@ -204,10 +338,19 @@ class Clickwrap
     }
 
 
-    // Parameters:
-    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-    //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are .
+    /**
+     * List Clickwraps
+     *
+     * GET /clickwraps
+     *
+     * @param array $params Request parameters.
+     *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+     *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+     *     - `sort_by` (array|object, optional): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are .
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\Clickwrap[]
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function all($params = [], $options = [])
     {
         if (!empty($params['cursor']) && !is_string($params['cursor'])) {
@@ -229,8 +372,17 @@ class Clickwrap
         return $return_array;
     }
 
-    // Parameters:
-    //   id (required) - int64 - Clickwrap ID.
+    /**
+     * Show Clickwrap
+     *
+     * GET /clickwraps/{id}
+     *
+     * @param int $id Clickwrap ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\Clickwrap
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function find($id, $params = [], $options = [])
     {
         if (!is_array($params)) {
@@ -251,17 +403,39 @@ class Clickwrap
 
         return new Clickwrap((array) (@$response->data ?: []), $options);
     }
+    /**
+     * Show Clickwrap
+     *
+     * GET /clickwraps/{id}
+     *
+     * Alias of find().
+     *
+     * @param int $id Clickwrap ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\Clickwrap
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function get($id, $params = [], $options = [])
     {
         return self::find($id, $params, $options);
     }
 
-    // Parameters:
-    //   name - string - Name of the Clickwrap agreement (used when selecting from multiple Clickwrap agreements.)
-    //   body - string - Body text of Clickwrap (supports Markdown formatting).
-    //   use_with_bundles - string - Use this Clickwrap for Bundles?
-    //   use_with_inboxes - string - Use this Clickwrap for Inboxes?
-    //   use_with_users - string - Use this Clickwrap for Users?  Values: `none`, `require` (new user signup via email invitation only), `require_all_users_once` (show to all users at their next web login; once accepted, not shown again), `require_all_users_always` (show to all users on every web login).
+    /**
+     * Create Clickwrap
+     *
+     * POST /clickwraps
+     *
+     * @param array $params Request parameters.
+     *     - `name` (string, optional): Name of the Clickwrap agreement (used when selecting from multiple Clickwrap agreements.)
+     *     - `body` (string, optional): Body text of Clickwrap (supports Markdown formatting).
+     *     - `use_with_bundles` (string, optional): Use this Clickwrap for Bundles? Allowed values: none, available, require, available_to_all_users.
+     *     - `use_with_inboxes` (string, optional): Use this Clickwrap for Inboxes? Allowed values: none, available, require, available_to_all_users.
+     *     - `use_with_users` (string, optional): Use this Clickwrap for Users?  Values: `none`, `require` (new user signup via email invitation only), `require_all_users_once` (show to all users at their next web login; once accepted, not shown again), `require_all_users_always` (show to all users on every web login). Allowed values: none, require, require_all_users_once, require_all_users_always.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\Clickwrap
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function create($params = [], $options = [])
     {
         if (!empty($params['name']) && !is_string($params['name'])) {

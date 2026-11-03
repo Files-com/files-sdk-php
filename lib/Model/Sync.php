@@ -8,8 +8,41 @@ use Files\Logger;
 require_once __DIR__ . '/../Files.php';
 
 /**
- * Class Sync
+ * A Sync represents a file synchronization job between two locations (local-remote, remote-remote, local-child_site, etc).
  *
+ * @property int|null $id Sync ID
+ * @property string|null $name Name for this sync job
+ * @property string|null $description Description for this sync job
+ * @property int|null $site_id Site ID this sync belongs to
+ * @property int|null $workspace_id Workspace ID this sync belongs to
+ * @property int|null $user_id User who created or owns this sync
+ * @property string|null $src_path Absolute source path for the sync
+ * @property string|null $dest_path Absolute destination path for the sync
+ * @property int|null $src_remote_server_id Remote server ID for the source (if remote)
+ * @property int|null $dest_remote_server_id Remote server ID for the destination (if remote)
+ * @property int|null $src_site_id Source site ID if syncing from a child or partner site
+ * @property int|null $dest_site_id Destination site ID if syncing to a child or partner site
+ * @property bool|null $two_way Is this a two-way sync?
+ * @property bool|null $keep_after_copy Keep files after copying?
+ * @property bool|null $delete_empty_folders Delete empty folders after sync?
+ * @property bool|null $disabled Is this sync disabled?
+ * @property string|null $trigger Trigger type: daily, custom_schedule, or manual
+ * @property string|null $trigger_file Some MFT services request an empty file (known as a trigger file) to signal the sync is complete and they can begin further processing. If trigger_file is set, a zero-byte file will be sent at the end of the sync.
+ * @property bool|null $always_write_trigger_file If true, the trigger file will be sent at the end of a successful sync even when no files were transferred.
+ * @property string[]|null $include_patterns Array of glob patterns to include
+ * @property string[]|null $exclude_patterns Array of glob patterns to exclude
+ * @property string|null $created_at When this sync was created
+ * @property string|null $updated_at When this sync was last updated
+ * @property int|null $sync_interval_minutes Frequency in minutes between syncs. If set, this value must be greater than or equal to the `remote_sync_interval` value for the site's plan. If left blank, the plan's `remote_sync_interval` will be used. This setting is only used if `trigger` is empty.
+ * @property string|null $interval If trigger is `daily`, this specifies how often to run this sync. One of: `day`, `week`, `week_end`, `month`, `month_end`, `quarter`, `quarter_end`, `year`, `year_end`
+ * @property int|null $recurring_day If trigger type is `daily`, this specifies a day number to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
+ * @property int[]|null $recurring_days If trigger type is `daily`, this specifies one or more day numbers to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
+ * @property int|null $schedule_id If trigger is `custom_schedule`, the reusable Schedule used instead of the sync's schedule fields.
+ * @property int[]|null $schedule_days_of_week If trigger is `custom_schedule`, Custom schedule description for when the sync should be run. 0-based days of the week. 0 is Sunday, 1 is Monday, etc.
+ * @property string[]|null $schedule_times_of_day Times of day to run in HH:MM format. For `custom_schedule`, run at these times on specified days of week. For `daily`, run at these times on the scheduled interval date.
+ * @property string|null $schedule_time_zone Time zone for the schedule. If not set, times are interpreted as UTC.
+ * @property string|null $holiday_region Skip the sync if there is a formal, observed holiday for this region.
+ * @property \stdClass|null $latest_sync_run The latest run of this sync
  * @package Files
  */
 class Sync
@@ -20,6 +53,12 @@ class Sync
         'list' => 'all',
     ];
 
+    /**
+     * Build a model from API attributes and retain its request options.
+     *
+     * @param array $attributes Initial model attributes, keyed by property name.
+     * @param array $options Request options used by this model's operations.
+     */
     public function __construct($attributes = [], $options = [])
     {
         foreach ($attributes as $key => $value) {
@@ -29,16 +68,36 @@ class Sync
         $this->options = $options;
     }
 
+    /**
+     * Set a model attribute locally; call save() to persist supported changes.
+     *
+     * @param string $name Attribute name.
+     * @param mixed $value Attribute value.
+     * @return void
+     */
     public function __set($name, $value)
     {
         $this->attributes[$name] = $value;
     }
 
+    /**
+     * Read a model attribute.
+     *
+     * @param string $name Attribute name.
+     * @return mixed The attribute value, or null when it is not set.
+     */
     public function __get($name)
     {
         return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
+    /**
+     * Dispatch a legacy static alias, including list() to all().
+     *
+     * @param string $name Alias name.
+     * @param array $arguments Arguments passed to the canonical method.
+     * @return mixed The canonical method's result, or null for an unknown alias.
+     */
     public static function __callStatic($name, $arguments)
     {
         if (in_array($name, array_keys(self::$static_mapped_functions))) {
@@ -49,332 +108,664 @@ class Sync
         }
     }
 
+    /**
+     * Whether this model has a nonempty primary key.
+     *
+     * @return bool
+     */
     public function isLoaded()
     {
         return !!@$this->attributes['id'];
     }
-    // int64 # Sync ID
+    /**
+     * Sync ID
+     *
+     * @return int|null
+     */
     public function getId()
     {
         return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
+    /**
+     * Sync ID
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setId($value)
     {
         return $this->attributes['id'] = $value;
     }
-    // string # Name for this sync job
+    /**
+     * Name for this sync job
+     *
+     * @return string|null
+     */
     public function getName()
     {
         return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
 
+    /**
+     * Name for this sync job
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setName($value)
     {
         return $this->attributes['name'] = $value;
     }
-    // string # Description for this sync job
+    /**
+     * Description for this sync job
+     *
+     * @return string|null
+     */
     public function getDescription()
     {
         return isset($this->attributes['description']) ? $this->attributes['description'] : null;
     }
 
+    /**
+     * Description for this sync job
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setDescription($value)
     {
         return $this->attributes['description'] = $value;
     }
-    // int64 # Site ID this sync belongs to
+    /**
+     * Site ID this sync belongs to
+     *
+     * @return int|null
+     */
     public function getSiteId()
     {
         return isset($this->attributes['site_id']) ? $this->attributes['site_id'] : null;
     }
 
+    /**
+     * Site ID this sync belongs to
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setSiteId($value)
     {
         return $this->attributes['site_id'] = $value;
     }
-    // int64 # Workspace ID this sync belongs to
+    /**
+     * Workspace ID this sync belongs to
+     *
+     * @return int|null
+     */
     public function getWorkspaceId()
     {
         return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
 
+    /**
+     * Workspace ID this sync belongs to
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setWorkspaceId($value)
     {
         return $this->attributes['workspace_id'] = $value;
     }
-    // int64 # User who created or owns this sync
+    /**
+     * User who created or owns this sync
+     *
+     * @return int|null
+     */
     public function getUserId()
     {
         return isset($this->attributes['user_id']) ? $this->attributes['user_id'] : null;
     }
 
+    /**
+     * User who created or owns this sync
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setUserId($value)
     {
         return $this->attributes['user_id'] = $value;
     }
-    // string # Absolute source path for the sync
+    /**
+     * Absolute source path for the sync
+     *
+     * @return string|null
+     */
     public function getSrcPath()
     {
         return isset($this->attributes['src_path']) ? $this->attributes['src_path'] : null;
     }
 
+    /**
+     * Absolute source path for the sync
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setSrcPath($value)
     {
         return $this->attributes['src_path'] = $value;
     }
-    // string # Absolute destination path for the sync
+    /**
+     * Absolute destination path for the sync
+     *
+     * @return string|null
+     */
     public function getDestPath()
     {
         return isset($this->attributes['dest_path']) ? $this->attributes['dest_path'] : null;
     }
 
+    /**
+     * Absolute destination path for the sync
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setDestPath($value)
     {
         return $this->attributes['dest_path'] = $value;
     }
-    // int64 # Remote server ID for the source (if remote)
+    /**
+     * Remote server ID for the source (if remote)
+     *
+     * @return int|null
+     */
     public function getSrcRemoteServerId()
     {
         return isset($this->attributes['src_remote_server_id']) ? $this->attributes['src_remote_server_id'] : null;
     }
 
+    /**
+     * Remote server ID for the source (if remote)
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setSrcRemoteServerId($value)
     {
         return $this->attributes['src_remote_server_id'] = $value;
     }
-    // int64 # Remote server ID for the destination (if remote)
+    /**
+     * Remote server ID for the destination (if remote)
+     *
+     * @return int|null
+     */
     public function getDestRemoteServerId()
     {
         return isset($this->attributes['dest_remote_server_id']) ? $this->attributes['dest_remote_server_id'] : null;
     }
 
+    /**
+     * Remote server ID for the destination (if remote)
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setDestRemoteServerId($value)
     {
         return $this->attributes['dest_remote_server_id'] = $value;
     }
-    // int64 # Source site ID if syncing from a child or partner site
+    /**
+     * Source site ID if syncing from a child or partner site
+     *
+     * @return int|null
+     */
     public function getSrcSiteId()
     {
         return isset($this->attributes['src_site_id']) ? $this->attributes['src_site_id'] : null;
     }
 
+    /**
+     * Source site ID if syncing from a child or partner site
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setSrcSiteId($value)
     {
         return $this->attributes['src_site_id'] = $value;
     }
-    // int64 # Destination site ID if syncing to a child or partner site
+    /**
+     * Destination site ID if syncing to a child or partner site
+     *
+     * @return int|null
+     */
     public function getDestSiteId()
     {
         return isset($this->attributes['dest_site_id']) ? $this->attributes['dest_site_id'] : null;
     }
 
+    /**
+     * Destination site ID if syncing to a child or partner site
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setDestSiteId($value)
     {
         return $this->attributes['dest_site_id'] = $value;
     }
-    // boolean # Is this a two-way sync?
+    /**
+     * Is this a two-way sync?
+     *
+     * @return bool|null
+     */
     public function getTwoWay()
     {
         return isset($this->attributes['two_way']) ? $this->attributes['two_way'] : null;
     }
 
+    /**
+     * Is this a two-way sync?
+     *
+     * @param bool|null $value
+     * @return bool|null The assigned value.
+     */
     public function setTwoWay($value)
     {
         return $this->attributes['two_way'] = $value;
     }
-    // boolean # Keep files after copying?
+    /**
+     * Keep files after copying?
+     *
+     * @return bool|null
+     */
     public function getKeepAfterCopy()
     {
         return isset($this->attributes['keep_after_copy']) ? $this->attributes['keep_after_copy'] : null;
     }
 
+    /**
+     * Keep files after copying?
+     *
+     * @param bool|null $value
+     * @return bool|null The assigned value.
+     */
     public function setKeepAfterCopy($value)
     {
         return $this->attributes['keep_after_copy'] = $value;
     }
-    // boolean # Delete empty folders after sync?
+    /**
+     * Delete empty folders after sync?
+     *
+     * @return bool|null
+     */
     public function getDeleteEmptyFolders()
     {
         return isset($this->attributes['delete_empty_folders']) ? $this->attributes['delete_empty_folders'] : null;
     }
 
+    /**
+     * Delete empty folders after sync?
+     *
+     * @param bool|null $value
+     * @return bool|null The assigned value.
+     */
     public function setDeleteEmptyFolders($value)
     {
         return $this->attributes['delete_empty_folders'] = $value;
     }
-    // boolean # Is this sync disabled?
+    /**
+     * Is this sync disabled?
+     *
+     * @return bool|null
+     */
     public function getDisabled()
     {
         return isset($this->attributes['disabled']) ? $this->attributes['disabled'] : null;
     }
 
+    /**
+     * Is this sync disabled?
+     *
+     * @param bool|null $value
+     * @return bool|null The assigned value.
+     */
     public function setDisabled($value)
     {
         return $this->attributes['disabled'] = $value;
     }
-    // string # Trigger type: daily, custom_schedule, or manual
+    /**
+     * Trigger type: daily, custom_schedule, or manual
+     *
+     * @return string|null
+     */
     public function getTrigger()
     {
         return isset($this->attributes['trigger']) ? $this->attributes['trigger'] : null;
     }
 
+    /**
+     * Trigger type: daily, custom_schedule, or manual
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setTrigger($value)
     {
         return $this->attributes['trigger'] = $value;
     }
-    // string # Some MFT services request an empty file (known as a trigger file) to signal the sync is complete and they can begin further processing. If trigger_file is set, a zero-byte file will be sent at the end of the sync.
+    /**
+     * Some MFT services request an empty file (known as a trigger file) to signal the sync is complete and they can begin further processing. If trigger_file is set, a zero-byte file will be sent at the end of the sync.
+     *
+     * @return string|null
+     */
     public function getTriggerFile()
     {
         return isset($this->attributes['trigger_file']) ? $this->attributes['trigger_file'] : null;
     }
 
+    /**
+     * Some MFT services request an empty file (known as a trigger file) to signal the sync is complete and they can begin further processing. If trigger_file is set, a zero-byte file will be sent at the end of the sync.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setTriggerFile($value)
     {
         return $this->attributes['trigger_file'] = $value;
     }
-    // boolean # If true, the trigger file will be sent at the end of a successful sync even when no files were transferred.
+    /**
+     * If true, the trigger file will be sent at the end of a successful sync even when no files were transferred.
+     *
+     * @return bool|null
+     */
     public function getAlwaysWriteTriggerFile()
     {
         return isset($this->attributes['always_write_trigger_file']) ? $this->attributes['always_write_trigger_file'] : null;
     }
 
+    /**
+     * If true, the trigger file will be sent at the end of a successful sync even when no files were transferred.
+     *
+     * @param bool|null $value
+     * @return bool|null The assigned value.
+     */
     public function setAlwaysWriteTriggerFile($value)
     {
         return $this->attributes['always_write_trigger_file'] = $value;
     }
-    // array(string) # Array of glob patterns to include
+    /**
+     * Array of glob patterns to include
+     *
+     * @return string[]|null
+     */
     public function getIncludePatterns()
     {
         return isset($this->attributes['include_patterns']) ? $this->attributes['include_patterns'] : null;
     }
 
+    /**
+     * Array of glob patterns to include
+     *
+     * @param string[]|null $value
+     * @return string[]|null The assigned value.
+     */
     public function setIncludePatterns($value)
     {
         return $this->attributes['include_patterns'] = $value;
     }
-    // array(string) # Array of glob patterns to exclude
+    /**
+     * Array of glob patterns to exclude
+     *
+     * @return string[]|null
+     */
     public function getExcludePatterns()
     {
         return isset($this->attributes['exclude_patterns']) ? $this->attributes['exclude_patterns'] : null;
     }
 
+    /**
+     * Array of glob patterns to exclude
+     *
+     * @param string[]|null $value
+     * @return string[]|null The assigned value.
+     */
     public function setExcludePatterns($value)
     {
         return $this->attributes['exclude_patterns'] = $value;
     }
-    // date-time # When this sync was created
+    /**
+     * When this sync was created
+     *
+     * @return string|null
+     */
     public function getCreatedAt()
     {
         return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
-    // date-time # When this sync was last updated
+    /**
+     * When this sync was last updated
+     *
+     * @return string|null
+     */
     public function getUpdatedAt()
     {
         return isset($this->attributes['updated_at']) ? $this->attributes['updated_at'] : null;
     }
-    // int64 # Frequency in minutes between syncs. If set, this value must be greater than or equal to the `remote_sync_interval` value for the site's plan. If left blank, the plan's `remote_sync_interval` will be used. This setting is only used if `trigger` is empty.
+    /**
+     * Frequency in minutes between syncs. If set, this value must be greater than or equal to the `remote_sync_interval` value for the site's plan. If left blank, the plan's `remote_sync_interval` will be used. This setting is only used if `trigger` is empty.
+     *
+     * @return int|null
+     */
     public function getSyncIntervalMinutes()
     {
         return isset($this->attributes['sync_interval_minutes']) ? $this->attributes['sync_interval_minutes'] : null;
     }
 
+    /**
+     * Frequency in minutes between syncs. If set, this value must be greater than or equal to the `remote_sync_interval` value for the site's plan. If left blank, the plan's `remote_sync_interval` will be used. This setting is only used if `trigger` is empty.
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setSyncIntervalMinutes($value)
     {
         return $this->attributes['sync_interval_minutes'] = $value;
     }
-    // string # If trigger is `daily`, this specifies how often to run this sync.  One of: `day`, `week`, `week_end`, `month`, `month_end`, `quarter`, `quarter_end`, `year`, `year_end`
+    /**
+     * If trigger is `daily`, this specifies how often to run this sync.  One of: `day`, `week`, `week_end`, `month`, `month_end`, `quarter`, `quarter_end`, `year`, `year_end`
+     *
+     * @return string|null
+     */
     public function getInterval()
     {
         return isset($this->attributes['interval']) ? $this->attributes['interval'] : null;
     }
 
+    /**
+     * If trigger is `daily`, this specifies how often to run this sync.  One of: `day`, `week`, `week_end`, `month`, `month_end`, `quarter`, `quarter_end`, `year`, `year_end`
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setInterval($value)
     {
         return $this->attributes['interval'] = $value;
     }
-    // int64 # If trigger type is `daily`, this specifies a day number to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
+    /**
+     * If trigger type is `daily`, this specifies a day number to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
+     *
+     * @return int|null
+     */
     public function getRecurringDay()
     {
         return isset($this->attributes['recurring_day']) ? $this->attributes['recurring_day'] : null;
     }
 
+    /**
+     * If trigger type is `daily`, this specifies a day number to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setRecurringDay($value)
     {
         return $this->attributes['recurring_day'] = $value;
     }
-    // array(int64) # If trigger type is `daily`, this specifies one or more day numbers to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
+    /**
+     * If trigger type is `daily`, this specifies one or more day numbers to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
+     *
+     * @return int[]|null
+     */
     public function getRecurringDays()
     {
         return isset($this->attributes['recurring_days']) ? $this->attributes['recurring_days'] : null;
     }
 
+    /**
+     * If trigger type is `daily`, this specifies one or more day numbers to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
+     *
+     * @param int[]|null $value
+     * @return int[]|null The assigned value.
+     */
     public function setRecurringDays($value)
     {
         return $this->attributes['recurring_days'] = $value;
     }
-    // int64 # If trigger is `custom_schedule`, the reusable Schedule used instead of the sync's schedule fields.
+    /**
+     * If trigger is `custom_schedule`, the reusable Schedule used instead of the sync's schedule fields.
+     *
+     * @return int|null
+     */
     public function getScheduleId()
     {
         return isset($this->attributes['schedule_id']) ? $this->attributes['schedule_id'] : null;
     }
 
+    /**
+     * If trigger is `custom_schedule`, the reusable Schedule used instead of the sync's schedule fields.
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setScheduleId($value)
     {
         return $this->attributes['schedule_id'] = $value;
     }
-    // array(int64) # If trigger is `custom_schedule`, Custom schedule description for when the sync should be run. 0-based days of the week. 0 is Sunday, 1 is Monday, etc.
+    /**
+     * If trigger is `custom_schedule`, Custom schedule description for when the sync should be run. 0-based days of the week. 0 is Sunday, 1 is Monday, etc.
+     *
+     * @return int[]|null
+     */
     public function getScheduleDaysOfWeek()
     {
         return isset($this->attributes['schedule_days_of_week']) ? $this->attributes['schedule_days_of_week'] : null;
     }
 
+    /**
+     * If trigger is `custom_schedule`, Custom schedule description for when the sync should be run. 0-based days of the week. 0 is Sunday, 1 is Monday, etc.
+     *
+     * @param int[]|null $value
+     * @return int[]|null The assigned value.
+     */
     public function setScheduleDaysOfWeek($value)
     {
         return $this->attributes['schedule_days_of_week'] = $value;
     }
-    // array(string) # Times of day to run in HH:MM format. For `custom_schedule`, run at these times on specified days of week. For `daily`, run at these times on the scheduled interval date.
+    /**
+     * Times of day to run in HH:MM format. For `custom_schedule`, run at these times on specified days of week. For `daily`, run at these times on the scheduled interval date.
+     *
+     * @return string[]|null
+     */
     public function getScheduleTimesOfDay()
     {
         return isset($this->attributes['schedule_times_of_day']) ? $this->attributes['schedule_times_of_day'] : null;
     }
 
+    /**
+     * Times of day to run in HH:MM format. For `custom_schedule`, run at these times on specified days of week. For `daily`, run at these times on the scheduled interval date.
+     *
+     * @param string[]|null $value
+     * @return string[]|null The assigned value.
+     */
     public function setScheduleTimesOfDay($value)
     {
         return $this->attributes['schedule_times_of_day'] = $value;
     }
-    // string # Time zone for the schedule. If not set, times are interpreted as UTC.
+    /**
+     * Time zone for the schedule. If not set, times are interpreted as UTC.
+     *
+     * @return string|null
+     */
     public function getScheduleTimeZone()
     {
         return isset($this->attributes['schedule_time_zone']) ? $this->attributes['schedule_time_zone'] : null;
     }
 
+    /**
+     * Time zone for the schedule. If not set, times are interpreted as UTC.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setScheduleTimeZone($value)
     {
         return $this->attributes['schedule_time_zone'] = $value;
     }
-    // string # Skip the sync if there is a formal, observed holiday for this region.
+    /**
+     * Skip the sync if there is a formal, observed holiday for this region.
+     *
+     * @return string|null
+     */
     public function getHolidayRegion()
     {
         return isset($this->attributes['holiday_region']) ? $this->attributes['holiday_region'] : null;
     }
 
+    /**
+     * Skip the sync if there is a formal, observed holiday for this region.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setHolidayRegion($value)
     {
         return $this->attributes['holiday_region'] = $value;
     }
-    // SyncRun # The latest run of this sync
+    /**
+     * The latest run of this sync
+     *
+     * @return \stdClass|null
+     */
     public function getLatestSyncRun()
     {
         return isset($this->attributes['latest_sync_run']) ? $this->attributes['latest_sync_run'] : null;
     }
 
+    /**
+     * The latest run of this sync
+     *
+     * @param \stdClass|null $value
+     * @return \stdClass|null The assigned value.
+     */
     public function setLatestSyncRun($value)
     {
         return $this->attributes['latest_sync_run'] = $value;
     }
 
-    // Dry Run Sync
+    /**
+     * Dry Run Sync
+     *
+     * POST /syncs/{id}/dry_run
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Sync ID.
+     * @return void
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function dryRun($params = [])
     {
         if (!is_array($params)) {
@@ -397,7 +788,16 @@ class Sync
         return;
     }
 
-    // Manually Run Sync
+    /**
+     * Manually Run Sync
+     *
+     * POST /syncs/{id}/manual_run
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Sync ID.
+     * @return void
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function manualRun($params = [])
     {
         if (!is_array($params)) {
@@ -420,30 +820,39 @@ class Sync
         return;
     }
 
-    // Parameters:
-    //   delete_empty_folders - boolean - Delete empty folders after sync?
-    //   description - string - Description for this sync job
-    //   dest_path - string - Absolute destination path for the sync
-    //   dest_remote_server_id - int64 - Remote server ID for the destination (if remote)
-    //   disabled - boolean - Is this sync disabled?
-    //   exclude_patterns - array(string) - Array of glob patterns to exclude
-    //   holiday_region - string - Skip the sync if there is a formal, observed holiday for this region.
-    //   include_patterns - array(string) - Array of glob patterns to include
-    //   interval - string - If trigger is `daily`, this specifies how often to run this sync.  One of: `day`, `week`, `week_end`, `month`, `month_end`, `quarter`, `quarter_end`, `year`, `year_end`
-    //   keep_after_copy - boolean - Keep files after copying?
-    //   name - string - Name for this sync job
-    //   recurring_day - int64 - If trigger type is `daily`, this specifies a day number to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
-    //   recurring_days - array(int64) - If trigger type is `daily`, this specifies one or more day numbers to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
-    //   schedule_id - int64 - If trigger is `custom_schedule`, the reusable Schedule used instead of the sync's schedule fields.
-    //   schedule_days_of_week - array(int64) - If trigger is `custom_schedule`, Custom schedule description for when the sync should be run. 0-based days of the week. 0 is Sunday, 1 is Monday, etc.
-    //   schedule_time_zone - string - Time zone for the schedule. If not set, times are interpreted as UTC.
-    //   schedule_times_of_day - array(string) - Times of day to run in HH:MM format. For `custom_schedule`, run at these times on specified days of week. For `daily`, run at these times on the scheduled interval date.
-    //   src_path - string - Absolute source path for the sync
-    //   src_remote_server_id - int64 - Remote server ID for the source (if remote)
-    //   sync_interval_minutes - int64 - Frequency in minutes between syncs. If set, this value must be greater than or equal to the `remote_sync_interval` value for the site's plan. If left blank, the plan's `remote_sync_interval` will be used. This setting is only used if `trigger` is empty.
-    //   trigger - string - Trigger type: daily, custom_schedule, or manual
-    //   trigger_file - string - Some MFT services request an empty file (known as a trigger file) to signal the sync is complete and they can begin further processing. If trigger_file is set, a zero-byte file will be sent at the end of the sync.
-    //   always_write_trigger_file - boolean - If true, the trigger file will be sent at the end of a successful sync even when no files were transferred.
+    /**
+     * Update Sync
+     *
+     * PATCH /syncs/{id}
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Sync ID.
+     *     - `delete_empty_folders` (bool, optional): Delete empty folders after sync?
+     *     - `description` (string, optional): Description for this sync job
+     *     - `dest_path` (string, optional): Absolute destination path for the sync
+     *     - `dest_remote_server_id` (int, optional): Remote server ID for the destination (if remote)
+     *     - `disabled` (bool, optional): Is this sync disabled?
+     *     - `exclude_patterns` (string[], optional): Array of glob patterns to exclude
+     *     - `holiday_region` (string, optional): Skip the sync if there is a formal, observed holiday for this region.
+     *     - `include_patterns` (string[], optional): Array of glob patterns to include
+     *     - `interval` (string, optional): If trigger is `daily`, this specifies how often to run this sync.  One of: `day`, `week`, `week_end`, `month`, `month_end`, `quarter`, `quarter_end`, `year`, `year_end`
+     *     - `keep_after_copy` (bool, optional): Keep files after copying?
+     *     - `name` (string, optional): Name for this sync job
+     *     - `recurring_day` (int, optional): If trigger type is `daily`, this specifies a day number to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
+     *     - `recurring_days` (int[], optional): If trigger type is `daily`, this specifies one or more day numbers to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
+     *     - `schedule_id` (int, optional): If trigger is `custom_schedule`, the reusable Schedule used instead of the sync's schedule fields.
+     *     - `schedule_days_of_week` (int[], optional): If trigger is `custom_schedule`, Custom schedule description for when the sync should be run. 0-based days of the week. 0 is Sunday, 1 is Monday, etc.
+     *     - `schedule_time_zone` (string, optional): Time zone for the schedule. If not set, times are interpreted as UTC.
+     *     - `schedule_times_of_day` (string[], optional): Times of day to run in HH:MM format. For `custom_schedule`, run at these times on specified days of week. For `daily`, run at these times on the scheduled interval date.
+     *     - `src_path` (string, optional): Absolute source path for the sync
+     *     - `src_remote_server_id` (int, optional): Remote server ID for the source (if remote)
+     *     - `sync_interval_minutes` (int, optional): Frequency in minutes between syncs. If set, this value must be greater than or equal to the `remote_sync_interval` value for the site's plan. If left blank, the plan's `remote_sync_interval` will be used. This setting is only used if `trigger` is empty.
+     *     - `trigger` (string, optional): Trigger type: daily, custom_schedule, or manual Allowed values: daily, custom_schedule, manual.
+     *     - `trigger_file` (string, optional): Some MFT services request an empty file (known as a trigger file) to signal the sync is complete and they can begin further processing. If trigger_file is set, a zero-byte file will be sent at the end of the sync.
+     *     - `always_write_trigger_file` (bool, optional): If true, the trigger file will be sent at the end of a successful sync even when no files were transferred.
+     * @return \Files\Model\Sync
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function update($params = [])
     {
         if (!is_array($params)) {
@@ -542,6 +951,16 @@ class Sync
         return new Sync((array) (@$response->data ?: []), $this->options);
     }
 
+    /**
+     * Delete Sync
+     *
+     * DELETE /syncs/{id}
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Sync ID.
+     * @return void
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function delete($params = [])
     {
         if (!is_array($params)) {
@@ -564,12 +983,30 @@ class Sync
         return;
     }
 
+    /**
+     * Delete Sync
+     *
+     * DELETE /syncs/{id}
+     *
+     * Alias of delete().
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Sync ID.
+     * @return void
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function destroy($params = [])
     {
         $this->delete($params);
         return;
     }
 
+    /**
+     * Persist this model's attributes and replace them with the API response.
+     *
+     * @return bool True after the operation succeeds.
+     * @throws \Files\Exception\FilesException When saving fails or updates are unsupported.
+     */
     public function save()
     {
         if (@$this->attributes['id']) {
@@ -584,11 +1021,20 @@ class Sync
     }
 
 
-    // Parameters:
-    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-    //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `site_id`, `workspace_id` or `name`.
-    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `workspace_id`, `disabled`, `src_remote_server_id` or `dest_remote_server_id`. Valid field combinations are `[ workspace_id, disabled ]`, `[ workspace_id, src_remote_server_id ]`, `[ workspace_id, dest_remote_server_id ]`, `[ disabled, src_remote_server_id ]`, `[ disabled, dest_remote_server_id ]`, `[ workspace_id, disabled, src_remote_server_id ]` or `[ workspace_id, disabled, dest_remote_server_id ]`.
+    /**
+     * List Syncs
+     *
+     * GET /syncs
+     *
+     * @param array $params Request parameters.
+     *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+     *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+     *     - `sort_by` (array|object, optional): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `site_id`, `workspace_id` or `name`.
+     *     - `filter` (array|object, optional): If set, return records where the specified field is equal to the supplied value. Valid fields are `workspace_id`, `disabled`, `src_remote_server_id` or `dest_remote_server_id`. Valid field combinations are `[ workspace_id, disabled ]`, `[ workspace_id, src_remote_server_id ]`, `[ workspace_id, dest_remote_server_id ]`, `[ disabled, src_remote_server_id ]`, `[ disabled, dest_remote_server_id ]`, `[ workspace_id, disabled, src_remote_server_id ]` or `[ workspace_id, disabled, dest_remote_server_id ]`.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\Sync[]
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function all($params = [], $options = [])
     {
         if (!empty($params['cursor']) && !is_string($params['cursor'])) {
@@ -610,8 +1056,17 @@ class Sync
         return $return_array;
     }
 
-    // Parameters:
-    //   id (required) - int64 - Sync ID.
+    /**
+     * Show Sync
+     *
+     * GET /syncs/{id}
+     *
+     * @param int $id Sync ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\Sync
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function find($id, $params = [], $options = [])
     {
         if (!is_array($params)) {
@@ -632,36 +1087,58 @@ class Sync
 
         return new Sync((array) (@$response->data ?: []), $options);
     }
+    /**
+     * Show Sync
+     *
+     * GET /syncs/{id}
+     *
+     * Alias of find().
+     *
+     * @param int $id Sync ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\Sync
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function get($id, $params = [], $options = [])
     {
         return self::find($id, $params, $options);
     }
 
-    // Parameters:
-    //   delete_empty_folders - boolean - Delete empty folders after sync?
-    //   description - string - Description for this sync job
-    //   dest_path - string - Absolute destination path for the sync
-    //   dest_remote_server_id - int64 - Remote server ID for the destination (if remote)
-    //   disabled - boolean - Is this sync disabled?
-    //   exclude_patterns - array(string) - Array of glob patterns to exclude
-    //   holiday_region - string - Skip the sync if there is a formal, observed holiday for this region.
-    //   include_patterns - array(string) - Array of glob patterns to include
-    //   interval - string - If trigger is `daily`, this specifies how often to run this sync.  One of: `day`, `week`, `week_end`, `month`, `month_end`, `quarter`, `quarter_end`, `year`, `year_end`
-    //   keep_after_copy - boolean - Keep files after copying?
-    //   name - string - Name for this sync job
-    //   recurring_day - int64 - If trigger type is `daily`, this specifies a day number to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
-    //   recurring_days - array(int64) - If trigger type is `daily`, this specifies one or more day numbers to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
-    //   schedule_id - int64 - If trigger is `custom_schedule`, the reusable Schedule used instead of the sync's schedule fields.
-    //   schedule_days_of_week - array(int64) - If trigger is `custom_schedule`, Custom schedule description for when the sync should be run. 0-based days of the week. 0 is Sunday, 1 is Monday, etc.
-    //   schedule_time_zone - string - Time zone for the schedule. If not set, times are interpreted as UTC.
-    //   schedule_times_of_day - array(string) - Times of day to run in HH:MM format. For `custom_schedule`, run at these times on specified days of week. For `daily`, run at these times on the scheduled interval date.
-    //   src_path - string - Absolute source path for the sync
-    //   src_remote_server_id - int64 - Remote server ID for the source (if remote)
-    //   sync_interval_minutes - int64 - Frequency in minutes between syncs. If set, this value must be greater than or equal to the `remote_sync_interval` value for the site's plan. If left blank, the plan's `remote_sync_interval` will be used. This setting is only used if `trigger` is empty.
-    //   trigger - string - Trigger type: daily, custom_schedule, or manual
-    //   trigger_file - string - Some MFT services request an empty file (known as a trigger file) to signal the sync is complete and they can begin further processing. If trigger_file is set, a zero-byte file will be sent at the end of the sync.
-    //   always_write_trigger_file - boolean - If true, the trigger file will be sent at the end of a successful sync even when no files were transferred.
-    //   workspace_id - int64 - Workspace ID this sync belongs to
+    /**
+     * Create Sync
+     *
+     * POST /syncs
+     *
+     * @param array $params Request parameters.
+     *     - `delete_empty_folders` (bool, optional): Delete empty folders after sync?
+     *     - `description` (string, optional): Description for this sync job
+     *     - `dest_path` (string, optional): Absolute destination path for the sync
+     *     - `dest_remote_server_id` (int, optional): Remote server ID for the destination (if remote)
+     *     - `disabled` (bool, optional): Is this sync disabled?
+     *     - `exclude_patterns` (string[], optional): Array of glob patterns to exclude
+     *     - `holiday_region` (string, optional): Skip the sync if there is a formal, observed holiday for this region.
+     *     - `include_patterns` (string[], optional): Array of glob patterns to include
+     *     - `interval` (string, optional): If trigger is `daily`, this specifies how often to run this sync.  One of: `day`, `week`, `week_end`, `month`, `month_end`, `quarter`, `quarter_end`, `year`, `year_end`
+     *     - `keep_after_copy` (bool, optional): Keep files after copying?
+     *     - `name` (string, optional): Name for this sync job
+     *     - `recurring_day` (int, optional): If trigger type is `daily`, this specifies a day number to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
+     *     - `recurring_days` (int[], optional): If trigger type is `daily`, this specifies one or more day numbers to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
+     *     - `schedule_id` (int, optional): If trigger is `custom_schedule`, the reusable Schedule used instead of the sync's schedule fields.
+     *     - `schedule_days_of_week` (int[], optional): If trigger is `custom_schedule`, Custom schedule description for when the sync should be run. 0-based days of the week. 0 is Sunday, 1 is Monday, etc.
+     *     - `schedule_time_zone` (string, optional): Time zone for the schedule. If not set, times are interpreted as UTC.
+     *     - `schedule_times_of_day` (string[], optional): Times of day to run in HH:MM format. For `custom_schedule`, run at these times on specified days of week. For `daily`, run at these times on the scheduled interval date.
+     *     - `src_path` (string, optional): Absolute source path for the sync
+     *     - `src_remote_server_id` (int, optional): Remote server ID for the source (if remote)
+     *     - `sync_interval_minutes` (int, optional): Frequency in minutes between syncs. If set, this value must be greater than or equal to the `remote_sync_interval` value for the site's plan. If left blank, the plan's `remote_sync_interval` will be used. This setting is only used if `trigger` is empty.
+     *     - `trigger` (string, optional): Trigger type: daily, custom_schedule, or manual Allowed values: daily, custom_schedule, manual.
+     *     - `trigger_file` (string, optional): Some MFT services request an empty file (known as a trigger file) to signal the sync is complete and they can begin further processing. If trigger_file is set, a zero-byte file will be sent at the end of the sync.
+     *     - `always_write_trigger_file` (bool, optional): If true, the trigger file will be sent at the end of a successful sync even when no files were transferred.
+     *     - `workspace_id` (int, optional): Workspace ID this sync belongs to
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\Sync
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function create($params = [], $options = [])
     {
         if (!empty($params['description']) && !is_string($params['description'])) {

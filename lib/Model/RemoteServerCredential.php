@@ -8,8 +8,47 @@ use Files\Logger;
 require_once __DIR__ . '/../Files.php';
 
 /**
- * Class RemoteServerCredential
+ * A RemoteServerCredential is a way to store a credential for Remote Servers in a centralized vault and then reference it from Remote Server definitions.
  *
+ * @property int|null $id Remote Server Credential ID
+ * @property int|null $workspace_id Workspace ID (0 for default workspace)
+ * @property string|null $name Internal name for your reference
+ * @property string|null $description Internal description for your reference
+ * @property string|null $server_type Remote server type. Remote Server Credentials are only valid for a single type of Remote Server.
+ * @property string|null $aws_access_key AWS Access Key.
+ * @property string|null $s3_assume_role_arn AWS IAM Role ARN for AssumeRole authentication.
+ * @property int|null $s3_assume_role_duration_seconds Session duration in seconds for AssumeRole authentication (900-43200).
+ * @property string|null $s3_assume_role_external_id External ID for AssumeRole authentication.
+ * @property string|null $google_cloud_storage_s3_compatible_access_key Google Cloud Storage: S3-compatible Access Key.
+ * @property string|null $wasabi_access_key Wasabi: Access Key.
+ * @property string|null $s3_compatible_access_key S3-compatible: Access Key
+ * @property string|null $filebase_access_key Filebase: Access Key.
+ * @property string|null $cloudflare_access_key Cloudflare: Access Key.
+ * @property string|null $linode_access_key Linode: Access Key
+ * @property string|null $sharepoint_tenant_id SharePoint: Microsoft Entra tenant ID for app-only authentication.
+ * @property string|null $sharepoint_client_id SharePoint: Microsoft Entra application client ID for app-only authentication.
+ * @property string|null $sharepoint_app_credential_type SharePoint: App-only credential type. Either secret or certificate.
+ * @property string|null $username Remote server username.
+ * @property string|null $password Password, if needed.
+ * @property string|null $private_key Private key, if needed.
+ * @property string|null $private_key_passphrase Passphrase for private key if needed.
+ * @property string|null $aws_secret_key AWS: secret key.
+ * @property string|null $azure_blob_storage_access_key Azure Blob Storage: Access Key
+ * @property string|null $azure_blob_storage_sas_token Azure Blob Storage: Shared Access Signature (SAS) token
+ * @property string|null $azure_files_storage_access_key Azure File Storage: Access Key
+ * @property string|null $azure_files_storage_sas_token Azure File Storage: Shared Access Signature (SAS) token
+ * @property string|null $backblaze_b2_application_key Backblaze B2 Cloud Storage: applicationKey
+ * @property string|null $backblaze_b2_key_id Backblaze B2 Cloud Storage: keyID
+ * @property string|null $cloudflare_secret_key Cloudflare: Secret Key
+ * @property string|null $filebase_secret_key Filebase: Secret Key
+ * @property string|null $google_cloud_storage_credentials_json Google Cloud Storage: JSON file that contains the private key. To generate see https://cloud.google.com/storage/docs/json_api/v1/how-tos/authorizing#APIKey
+ * @property string|null $google_cloud_storage_s3_compatible_secret_key Google Cloud Storage: S3-compatible secret key
+ * @property string|null $linode_secret_key Linode: Secret Key
+ * @property string|null $s3_compatible_secret_key S3-compatible: Secret Key
+ * @property string|null $sharepoint_client_certificate SharePoint: PEM-encoded certificate and unencrypted private key for app-only authentication.
+ * @property string|null $sharepoint_client_secret SharePoint: Microsoft Entra application client secret for app-only authentication.
+ * @property string|null $wasabi_secret_key Wasabi: Secret Key
+ * @property int|null $copy_values_from_credential_id ID of Remote Server Credential to copy omitted values from.
  * @package Files
  */
 class RemoteServerCredential
@@ -20,6 +59,12 @@ class RemoteServerCredential
         'list' => 'all',
     ];
 
+    /**
+     * Build a model from API attributes and retain its request options.
+     *
+     * @param array $attributes Initial model attributes, keyed by property name.
+     * @param array $options Request options used by this model's operations.
+     */
     public function __construct($attributes = [], $options = [])
     {
         foreach ($attributes as $key => $value) {
@@ -29,16 +74,36 @@ class RemoteServerCredential
         $this->options = $options;
     }
 
+    /**
+     * Set a model attribute locally; call save() to persist supported changes.
+     *
+     * @param string $name Attribute name.
+     * @param mixed $value Attribute value.
+     * @return void
+     */
     public function __set($name, $value)
     {
         $this->attributes[$name] = $value;
     }
 
+    /**
+     * Read a model attribute.
+     *
+     * @param string $name Attribute name.
+     * @return mixed The attribute value, or null when it is not set.
+     */
     public function __get($name)
     {
         return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
+    /**
+     * Dispatch a legacy static alias, including list() to all().
+     *
+     * @param string $name Alias name.
+     * @param array $arguments Arguments passed to the canonical method.
+     * @return mixed The canonical method's result, or null for an unknown alias.
+     */
     public static function __callStatic($name, $arguments)
     {
         if (in_array($name, array_keys(self::$static_mapped_functions))) {
@@ -49,436 +114,840 @@ class RemoteServerCredential
         }
     }
 
+    /**
+     * Whether this model has a nonempty primary key.
+     *
+     * @return bool
+     */
     public function isLoaded()
     {
         return !!@$this->attributes['id'];
     }
-    // int64 # Remote Server Credential ID
+    /**
+     * Remote Server Credential ID
+     *
+     * @return int|null
+     */
     public function getId()
     {
         return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
+    /**
+     * Remote Server Credential ID
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setId($value)
     {
         return $this->attributes['id'] = $value;
     }
-    // int64 # Workspace ID (0 for default workspace)
+    /**
+     * Workspace ID (0 for default workspace)
+     *
+     * @return int|null
+     */
     public function getWorkspaceId()
     {
         return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
 
+    /**
+     * Workspace ID (0 for default workspace)
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setWorkspaceId($value)
     {
         return $this->attributes['workspace_id'] = $value;
     }
-    // string # Internal name for your reference
+    /**
+     * Internal name for your reference
+     *
+     * @return string|null
+     */
     public function getName()
     {
         return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
 
+    /**
+     * Internal name for your reference
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setName($value)
     {
         return $this->attributes['name'] = $value;
     }
-    // string # Internal description for your reference
+    /**
+     * Internal description for your reference
+     *
+     * @return string|null
+     */
     public function getDescription()
     {
         return isset($this->attributes['description']) ? $this->attributes['description'] : null;
     }
 
+    /**
+     * Internal description for your reference
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setDescription($value)
     {
         return $this->attributes['description'] = $value;
     }
-    // string # Remote server type.  Remote Server Credentials are only valid for a single type of Remote Server.
+    /**
+     * Remote server type.  Remote Server Credentials are only valid for a single type of Remote Server.
+     *
+     * @return string|null
+     */
     public function getServerType()
     {
         return isset($this->attributes['server_type']) ? $this->attributes['server_type'] : null;
     }
 
+    /**
+     * Remote server type.  Remote Server Credentials are only valid for a single type of Remote Server.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setServerType($value)
     {
         return $this->attributes['server_type'] = $value;
     }
-    // string # AWS Access Key.
+    /**
+     * AWS Access Key.
+     *
+     * @return string|null
+     */
     public function getAwsAccessKey()
     {
         return isset($this->attributes['aws_access_key']) ? $this->attributes['aws_access_key'] : null;
     }
 
+    /**
+     * AWS Access Key.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setAwsAccessKey($value)
     {
         return $this->attributes['aws_access_key'] = $value;
     }
-    // string # AWS IAM Role ARN for AssumeRole authentication.
+    /**
+     * AWS IAM Role ARN for AssumeRole authentication.
+     *
+     * @return string|null
+     */
     public function getS3AssumeRoleArn()
     {
         return isset($this->attributes['s3_assume_role_arn']) ? $this->attributes['s3_assume_role_arn'] : null;
     }
 
+    /**
+     * AWS IAM Role ARN for AssumeRole authentication.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setS3AssumeRoleArn($value)
     {
         return $this->attributes['s3_assume_role_arn'] = $value;
     }
-    // int64 # Session duration in seconds for AssumeRole authentication (900-43200).
+    /**
+     * Session duration in seconds for AssumeRole authentication (900-43200).
+     *
+     * @return int|null
+     */
     public function getS3AssumeRoleDurationSeconds()
     {
         return isset($this->attributes['s3_assume_role_duration_seconds']) ? $this->attributes['s3_assume_role_duration_seconds'] : null;
     }
 
+    /**
+     * Session duration in seconds for AssumeRole authentication (900-43200).
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setS3AssumeRoleDurationSeconds($value)
     {
         return $this->attributes['s3_assume_role_duration_seconds'] = $value;
     }
-    // string # External ID for AssumeRole authentication.
+    /**
+     * External ID for AssumeRole authentication.
+     *
+     * @return string|null
+     */
     public function getS3AssumeRoleExternalId()
     {
         return isset($this->attributes['s3_assume_role_external_id']) ? $this->attributes['s3_assume_role_external_id'] : null;
     }
 
+    /**
+     * External ID for AssumeRole authentication.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setS3AssumeRoleExternalId($value)
     {
         return $this->attributes['s3_assume_role_external_id'] = $value;
     }
-    // string # Google Cloud Storage: S3-compatible Access Key.
+    /**
+     * Google Cloud Storage: S3-compatible Access Key.
+     *
+     * @return string|null
+     */
     public function getGoogleCloudStorageS3CompatibleAccessKey()
     {
         return isset($this->attributes['google_cloud_storage_s3_compatible_access_key']) ? $this->attributes['google_cloud_storage_s3_compatible_access_key'] : null;
     }
 
+    /**
+     * Google Cloud Storage: S3-compatible Access Key.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setGoogleCloudStorageS3CompatibleAccessKey($value)
     {
         return $this->attributes['google_cloud_storage_s3_compatible_access_key'] = $value;
     }
-    // string # Wasabi: Access Key.
+    /**
+     * Wasabi: Access Key.
+     *
+     * @return string|null
+     */
     public function getWasabiAccessKey()
     {
         return isset($this->attributes['wasabi_access_key']) ? $this->attributes['wasabi_access_key'] : null;
     }
 
+    /**
+     * Wasabi: Access Key.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setWasabiAccessKey($value)
     {
         return $this->attributes['wasabi_access_key'] = $value;
     }
-    // string # S3-compatible: Access Key
+    /**
+     * S3-compatible: Access Key
+     *
+     * @return string|null
+     */
     public function getS3CompatibleAccessKey()
     {
         return isset($this->attributes['s3_compatible_access_key']) ? $this->attributes['s3_compatible_access_key'] : null;
     }
 
+    /**
+     * S3-compatible: Access Key
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setS3CompatibleAccessKey($value)
     {
         return $this->attributes['s3_compatible_access_key'] = $value;
     }
-    // string # Filebase: Access Key.
+    /**
+     * Filebase: Access Key.
+     *
+     * @return string|null
+     */
     public function getFilebaseAccessKey()
     {
         return isset($this->attributes['filebase_access_key']) ? $this->attributes['filebase_access_key'] : null;
     }
 
+    /**
+     * Filebase: Access Key.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setFilebaseAccessKey($value)
     {
         return $this->attributes['filebase_access_key'] = $value;
     }
-    // string # Cloudflare: Access Key.
+    /**
+     * Cloudflare: Access Key.
+     *
+     * @return string|null
+     */
     public function getCloudflareAccessKey()
     {
         return isset($this->attributes['cloudflare_access_key']) ? $this->attributes['cloudflare_access_key'] : null;
     }
 
+    /**
+     * Cloudflare: Access Key.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setCloudflareAccessKey($value)
     {
         return $this->attributes['cloudflare_access_key'] = $value;
     }
-    // string # Linode: Access Key
+    /**
+     * Linode: Access Key
+     *
+     * @return string|null
+     */
     public function getLinodeAccessKey()
     {
         return isset($this->attributes['linode_access_key']) ? $this->attributes['linode_access_key'] : null;
     }
 
+    /**
+     * Linode: Access Key
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setLinodeAccessKey($value)
     {
         return $this->attributes['linode_access_key'] = $value;
     }
-    // string # SharePoint: Microsoft Entra tenant ID for app-only authentication.
+    /**
+     * SharePoint: Microsoft Entra tenant ID for app-only authentication.
+     *
+     * @return string|null
+     */
     public function getSharepointTenantId()
     {
         return isset($this->attributes['sharepoint_tenant_id']) ? $this->attributes['sharepoint_tenant_id'] : null;
     }
 
+    /**
+     * SharePoint: Microsoft Entra tenant ID for app-only authentication.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setSharepointTenantId($value)
     {
         return $this->attributes['sharepoint_tenant_id'] = $value;
     }
-    // string # SharePoint: Microsoft Entra application client ID for app-only authentication.
+    /**
+     * SharePoint: Microsoft Entra application client ID for app-only authentication.
+     *
+     * @return string|null
+     */
     public function getSharepointClientId()
     {
         return isset($this->attributes['sharepoint_client_id']) ? $this->attributes['sharepoint_client_id'] : null;
     }
 
+    /**
+     * SharePoint: Microsoft Entra application client ID for app-only authentication.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setSharepointClientId($value)
     {
         return $this->attributes['sharepoint_client_id'] = $value;
     }
-    // string # SharePoint: App-only credential type. Either secret or certificate.
+    /**
+     * SharePoint: App-only credential type. Either secret or certificate.
+     *
+     * @return string|null
+     */
     public function getSharepointAppCredentialType()
     {
         return isset($this->attributes['sharepoint_app_credential_type']) ? $this->attributes['sharepoint_app_credential_type'] : null;
     }
 
+    /**
+     * SharePoint: App-only credential type. Either secret or certificate.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setSharepointAppCredentialType($value)
     {
         return $this->attributes['sharepoint_app_credential_type'] = $value;
     }
-    // string # Remote server username.
+    /**
+     * Remote server username.
+     *
+     * @return string|null
+     */
     public function getUsername()
     {
         return isset($this->attributes['username']) ? $this->attributes['username'] : null;
     }
 
+    /**
+     * Remote server username.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setUsername($value)
     {
         return $this->attributes['username'] = $value;
     }
-    // string # Password, if needed.
+    /**
+     * Password, if needed.
+     *
+     * @return string|null
+     */
     public function getPassword()
     {
         return isset($this->attributes['password']) ? $this->attributes['password'] : null;
     }
 
+    /**
+     * Password, if needed.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setPassword($value)
     {
         return $this->attributes['password'] = $value;
     }
-    // string # Private key, if needed.
+    /**
+     * Private key, if needed.
+     *
+     * @return string|null
+     */
     public function getPrivateKey()
     {
         return isset($this->attributes['private_key']) ? $this->attributes['private_key'] : null;
     }
 
+    /**
+     * Private key, if needed.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setPrivateKey($value)
     {
         return $this->attributes['private_key'] = $value;
     }
-    // string # Passphrase for private key if needed.
+    /**
+     * Passphrase for private key if needed.
+     *
+     * @return string|null
+     */
     public function getPrivateKeyPassphrase()
     {
         return isset($this->attributes['private_key_passphrase']) ? $this->attributes['private_key_passphrase'] : null;
     }
 
+    /**
+     * Passphrase for private key if needed.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setPrivateKeyPassphrase($value)
     {
         return $this->attributes['private_key_passphrase'] = $value;
     }
-    // string # AWS: secret key.
+    /**
+     * AWS: secret key.
+     *
+     * @return string|null
+     */
     public function getAwsSecretKey()
     {
         return isset($this->attributes['aws_secret_key']) ? $this->attributes['aws_secret_key'] : null;
     }
 
+    /**
+     * AWS: secret key.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setAwsSecretKey($value)
     {
         return $this->attributes['aws_secret_key'] = $value;
     }
-    // string # Azure Blob Storage: Access Key
+    /**
+     * Azure Blob Storage: Access Key
+     *
+     * @return string|null
+     */
     public function getAzureBlobStorageAccessKey()
     {
         return isset($this->attributes['azure_blob_storage_access_key']) ? $this->attributes['azure_blob_storage_access_key'] : null;
     }
 
+    /**
+     * Azure Blob Storage: Access Key
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setAzureBlobStorageAccessKey($value)
     {
         return $this->attributes['azure_blob_storage_access_key'] = $value;
     }
-    // string # Azure Blob Storage: Shared Access Signature (SAS) token
+    /**
+     * Azure Blob Storage: Shared Access Signature (SAS) token
+     *
+     * @return string|null
+     */
     public function getAzureBlobStorageSasToken()
     {
         return isset($this->attributes['azure_blob_storage_sas_token']) ? $this->attributes['azure_blob_storage_sas_token'] : null;
     }
 
+    /**
+     * Azure Blob Storage: Shared Access Signature (SAS) token
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setAzureBlobStorageSasToken($value)
     {
         return $this->attributes['azure_blob_storage_sas_token'] = $value;
     }
-    // string # Azure File Storage: Access Key
+    /**
+     * Azure File Storage: Access Key
+     *
+     * @return string|null
+     */
     public function getAzureFilesStorageAccessKey()
     {
         return isset($this->attributes['azure_files_storage_access_key']) ? $this->attributes['azure_files_storage_access_key'] : null;
     }
 
+    /**
+     * Azure File Storage: Access Key
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setAzureFilesStorageAccessKey($value)
     {
         return $this->attributes['azure_files_storage_access_key'] = $value;
     }
-    // string # Azure File Storage: Shared Access Signature (SAS) token
+    /**
+     * Azure File Storage: Shared Access Signature (SAS) token
+     *
+     * @return string|null
+     */
     public function getAzureFilesStorageSasToken()
     {
         return isset($this->attributes['azure_files_storage_sas_token']) ? $this->attributes['azure_files_storage_sas_token'] : null;
     }
 
+    /**
+     * Azure File Storage: Shared Access Signature (SAS) token
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setAzureFilesStorageSasToken($value)
     {
         return $this->attributes['azure_files_storage_sas_token'] = $value;
     }
-    // string # Backblaze B2 Cloud Storage: applicationKey
+    /**
+     * Backblaze B2 Cloud Storage: applicationKey
+     *
+     * @return string|null
+     */
     public function getBackblazeB2ApplicationKey()
     {
         return isset($this->attributes['backblaze_b2_application_key']) ? $this->attributes['backblaze_b2_application_key'] : null;
     }
 
+    /**
+     * Backblaze B2 Cloud Storage: applicationKey
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setBackblazeB2ApplicationKey($value)
     {
         return $this->attributes['backblaze_b2_application_key'] = $value;
     }
-    // string # Backblaze B2 Cloud Storage: keyID
+    /**
+     * Backblaze B2 Cloud Storage: keyID
+     *
+     * @return string|null
+     */
     public function getBackblazeB2KeyId()
     {
         return isset($this->attributes['backblaze_b2_key_id']) ? $this->attributes['backblaze_b2_key_id'] : null;
     }
 
+    /**
+     * Backblaze B2 Cloud Storage: keyID
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setBackblazeB2KeyId($value)
     {
         return $this->attributes['backblaze_b2_key_id'] = $value;
     }
-    // string # Cloudflare: Secret Key
+    /**
+     * Cloudflare: Secret Key
+     *
+     * @return string|null
+     */
     public function getCloudflareSecretKey()
     {
         return isset($this->attributes['cloudflare_secret_key']) ? $this->attributes['cloudflare_secret_key'] : null;
     }
 
+    /**
+     * Cloudflare: Secret Key
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setCloudflareSecretKey($value)
     {
         return $this->attributes['cloudflare_secret_key'] = $value;
     }
-    // string # Filebase: Secret Key
+    /**
+     * Filebase: Secret Key
+     *
+     * @return string|null
+     */
     public function getFilebaseSecretKey()
     {
         return isset($this->attributes['filebase_secret_key']) ? $this->attributes['filebase_secret_key'] : null;
     }
 
+    /**
+     * Filebase: Secret Key
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setFilebaseSecretKey($value)
     {
         return $this->attributes['filebase_secret_key'] = $value;
     }
-    // string # Google Cloud Storage: JSON file that contains the private key. To generate see https://cloud.google.com/storage/docs/json_api/v1/how-tos/authorizing#APIKey
+    /**
+     * Google Cloud Storage: JSON file that contains the private key. To generate see https://cloud.google.com/storage/docs/json_api/v1/how-tos/authorizing#APIKey
+     *
+     * @return string|null
+     */
     public function getGoogleCloudStorageCredentialsJson()
     {
         return isset($this->attributes['google_cloud_storage_credentials_json']) ? $this->attributes['google_cloud_storage_credentials_json'] : null;
     }
 
+    /**
+     * Google Cloud Storage: JSON file that contains the private key. To generate see https://cloud.google.com/storage/docs/json_api/v1/how-tos/authorizing#APIKey
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setGoogleCloudStorageCredentialsJson($value)
     {
         return $this->attributes['google_cloud_storage_credentials_json'] = $value;
     }
-    // string # Google Cloud Storage: S3-compatible secret key
+    /**
+     * Google Cloud Storage: S3-compatible secret key
+     *
+     * @return string|null
+     */
     public function getGoogleCloudStorageS3CompatibleSecretKey()
     {
         return isset($this->attributes['google_cloud_storage_s3_compatible_secret_key']) ? $this->attributes['google_cloud_storage_s3_compatible_secret_key'] : null;
     }
 
+    /**
+     * Google Cloud Storage: S3-compatible secret key
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setGoogleCloudStorageS3CompatibleSecretKey($value)
     {
         return $this->attributes['google_cloud_storage_s3_compatible_secret_key'] = $value;
     }
-    // string # Linode: Secret Key
+    /**
+     * Linode: Secret Key
+     *
+     * @return string|null
+     */
     public function getLinodeSecretKey()
     {
         return isset($this->attributes['linode_secret_key']) ? $this->attributes['linode_secret_key'] : null;
     }
 
+    /**
+     * Linode: Secret Key
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setLinodeSecretKey($value)
     {
         return $this->attributes['linode_secret_key'] = $value;
     }
-    // string # S3-compatible: Secret Key
+    /**
+     * S3-compatible: Secret Key
+     *
+     * @return string|null
+     */
     public function getS3CompatibleSecretKey()
     {
         return isset($this->attributes['s3_compatible_secret_key']) ? $this->attributes['s3_compatible_secret_key'] : null;
     }
 
+    /**
+     * S3-compatible: Secret Key
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setS3CompatibleSecretKey($value)
     {
         return $this->attributes['s3_compatible_secret_key'] = $value;
     }
-    // string # SharePoint: PEM-encoded certificate and unencrypted private key for app-only authentication.
+    /**
+     * SharePoint: PEM-encoded certificate and unencrypted private key for app-only authentication.
+     *
+     * @return string|null
+     */
     public function getSharepointClientCertificate()
     {
         return isset($this->attributes['sharepoint_client_certificate']) ? $this->attributes['sharepoint_client_certificate'] : null;
     }
 
+    /**
+     * SharePoint: PEM-encoded certificate and unencrypted private key for app-only authentication.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setSharepointClientCertificate($value)
     {
         return $this->attributes['sharepoint_client_certificate'] = $value;
     }
-    // string # SharePoint: Microsoft Entra application client secret for app-only authentication.
+    /**
+     * SharePoint: Microsoft Entra application client secret for app-only authentication.
+     *
+     * @return string|null
+     */
     public function getSharepointClientSecret()
     {
         return isset($this->attributes['sharepoint_client_secret']) ? $this->attributes['sharepoint_client_secret'] : null;
     }
 
+    /**
+     * SharePoint: Microsoft Entra application client secret for app-only authentication.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setSharepointClientSecret($value)
     {
         return $this->attributes['sharepoint_client_secret'] = $value;
     }
-    // string # Wasabi: Secret Key
+    /**
+     * Wasabi: Secret Key
+     *
+     * @return string|null
+     */
     public function getWasabiSecretKey()
     {
         return isset($this->attributes['wasabi_secret_key']) ? $this->attributes['wasabi_secret_key'] : null;
     }
 
+    /**
+     * Wasabi: Secret Key
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setWasabiSecretKey($value)
     {
         return $this->attributes['wasabi_secret_key'] = $value;
     }
-    // int64 # ID of Remote Server Credential to copy omitted values from.
+    /**
+     * ID of Remote Server Credential to copy omitted values from.
+     *
+     * @return int|null
+     */
     public function getCopyValuesFromCredentialId()
     {
         return isset($this->attributes['copy_values_from_credential_id']) ? $this->attributes['copy_values_from_credential_id'] : null;
     }
 
+    /**
+     * ID of Remote Server Credential to copy omitted values from.
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setCopyValuesFromCredentialId($value)
     {
         return $this->attributes['copy_values_from_credential_id'] = $value;
     }
 
-    // Parameters:
-    //   name - string - Internal name for your reference
-    //   description - string - Internal description for your reference
-    //   server_type - string - Remote server type.  Remote Server Credentials are only valid for a single type of Remote Server.
-    //   aws_access_key - string - AWS Access Key.
-    //   s3_assume_role_arn - string - AWS IAM Role ARN for AssumeRole authentication.
-    //   s3_assume_role_duration_seconds - int64 - Session duration in seconds for AssumeRole authentication (900-43200).
-    //   cloudflare_access_key - string - Cloudflare: Access Key.
-    //   filebase_access_key - string - Filebase: Access Key.
-    //   google_cloud_storage_s3_compatible_access_key - string - Google Cloud Storage: S3-compatible Access Key.
-    //   linode_access_key - string - Linode: Access Key
-    //   s3_compatible_access_key - string - S3-compatible: Access Key
-    //   sharepoint_client_id - string - SharePoint: Microsoft Entra application client ID for app-only authentication.
-    //   sharepoint_tenant_id - string - SharePoint: Microsoft Entra tenant ID for app-only authentication.
-    //   username - string - Remote server username.
-    //   wasabi_access_key - string - Wasabi: Access Key.
-    //   password - string - Password, if needed.
-    //   private_key - string - Private key, if needed.
-    //   private_key_passphrase - string - Passphrase for private key if needed.
-    //   aws_secret_key - string - AWS: secret key.
-    //   azure_blob_storage_access_key - string - Azure Blob Storage: Access Key
-    //   azure_blob_storage_sas_token - string - Azure Blob Storage: Shared Access Signature (SAS) token
-    //   azure_files_storage_access_key - string - Azure File Storage: Access Key
-    //   azure_files_storage_sas_token - string - Azure File Storage: Shared Access Signature (SAS) token
-    //   backblaze_b2_application_key - string - Backblaze B2 Cloud Storage: applicationKey
-    //   backblaze_b2_key_id - string - Backblaze B2 Cloud Storage: keyID
-    //   cloudflare_secret_key - string - Cloudflare: Secret Key
-    //   filebase_secret_key - string - Filebase: Secret Key
-    //   google_cloud_storage_credentials_json - string - Google Cloud Storage: JSON file that contains the private key. To generate see https://cloud.google.com/storage/docs/json_api/v1/how-tos/authorizing#APIKey
-    //   google_cloud_storage_s3_compatible_secret_key - string - Google Cloud Storage: S3-compatible secret key
-    //   linode_secret_key - string - Linode: Secret Key
-    //   s3_compatible_secret_key - string - S3-compatible: Secret Key
-    //   sharepoint_client_certificate - string - SharePoint: PEM-encoded certificate and unencrypted private key for app-only authentication.
-    //   sharepoint_client_secret - string - SharePoint: Microsoft Entra application client secret for app-only authentication.
-    //   wasabi_secret_key - string - Wasabi: Secret Key
+    /**
+     * Update Remote Server Credential
+     *
+     * PATCH /remote_server_credentials/{id}
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Remote Server Credential ID.
+     *     - `name` (string, optional): Internal name for your reference
+     *     - `description` (string, optional): Internal description for your reference
+     *     - `server_type` (string, optional): Remote server type.  Remote Server Credentials are only valid for a single type of Remote Server. Allowed values: ftp, sftp, s3, google_cloud_storage, webdav, wasabi, backblaze_b2, one_drive, box, dropbox, google_drive, azure, sharepoint, s3_compatible, azure_files, files_agent, filebase, cloudflare, linode, files_com.
+     *     - `aws_access_key` (string, optional): AWS Access Key.
+     *     - `s3_assume_role_arn` (string, optional): AWS IAM Role ARN for AssumeRole authentication.
+     *     - `s3_assume_role_duration_seconds` (int, optional): Session duration in seconds for AssumeRole authentication (900-43200).
+     *     - `cloudflare_access_key` (string, optional): Cloudflare: Access Key.
+     *     - `filebase_access_key` (string, optional): Filebase: Access Key.
+     *     - `google_cloud_storage_s3_compatible_access_key` (string, optional): Google Cloud Storage: S3-compatible Access Key.
+     *     - `linode_access_key` (string, optional): Linode: Access Key
+     *     - `s3_compatible_access_key` (string, optional): S3-compatible: Access Key
+     *     - `sharepoint_client_id` (string, optional): SharePoint: Microsoft Entra application client ID for app-only authentication.
+     *     - `sharepoint_tenant_id` (string, optional): SharePoint: Microsoft Entra tenant ID for app-only authentication.
+     *     - `username` (string, optional): Remote server username.
+     *     - `wasabi_access_key` (string, optional): Wasabi: Access Key.
+     *     - `password` (string, optional): Password, if needed.
+     *     - `private_key` (string, optional): Private key, if needed.
+     *     - `private_key_passphrase` (string, optional): Passphrase for private key if needed.
+     *     - `aws_secret_key` (string, optional): AWS: secret key.
+     *     - `azure_blob_storage_access_key` (string, optional): Azure Blob Storage: Access Key
+     *     - `azure_blob_storage_sas_token` (string, optional): Azure Blob Storage: Shared Access Signature (SAS) token
+     *     - `azure_files_storage_access_key` (string, optional): Azure File Storage: Access Key
+     *     - `azure_files_storage_sas_token` (string, optional): Azure File Storage: Shared Access Signature (SAS) token
+     *     - `backblaze_b2_application_key` (string, optional): Backblaze B2 Cloud Storage: applicationKey
+     *     - `backblaze_b2_key_id` (string, optional): Backblaze B2 Cloud Storage: keyID
+     *     - `cloudflare_secret_key` (string, optional): Cloudflare: Secret Key
+     *     - `filebase_secret_key` (string, optional): Filebase: Secret Key
+     *     - `google_cloud_storage_credentials_json` (string, optional): Google Cloud Storage: JSON file that contains the private key. To generate see https://cloud.google.com/storage/docs/json_api/v1/how-tos/authorizing#APIKey
+     *     - `google_cloud_storage_s3_compatible_secret_key` (string, optional): Google Cloud Storage: S3-compatible secret key
+     *     - `linode_secret_key` (string, optional): Linode: Secret Key
+     *     - `s3_compatible_secret_key` (string, optional): S3-compatible: Secret Key
+     *     - `sharepoint_client_certificate` (string, optional): SharePoint: PEM-encoded certificate and unencrypted private key for app-only authentication.
+     *     - `sharepoint_client_secret` (string, optional): SharePoint: Microsoft Entra application client secret for app-only authentication.
+     *     - `wasabi_secret_key` (string, optional): Wasabi: Secret Key
+     * @return \Files\Model\RemoteServerCredential
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function update($params = [])
     {
         if (!is_array($params)) {
@@ -637,6 +1106,16 @@ class RemoteServerCredential
         return new RemoteServerCredential((array) (@$response->data ?: []), $this->options);
     }
 
+    /**
+     * Delete Remote Server Credential
+     *
+     * DELETE /remote_server_credentials/{id}
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Remote Server Credential ID.
+     * @return void
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function delete($params = [])
     {
         if (!is_array($params)) {
@@ -659,12 +1138,30 @@ class RemoteServerCredential
         return;
     }
 
+    /**
+     * Delete Remote Server Credential
+     *
+     * DELETE /remote_server_credentials/{id}
+     *
+     * Alias of delete().
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Remote Server Credential ID.
+     * @return void
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function destroy($params = [])
     {
         $this->delete($params);
         return;
     }
 
+    /**
+     * Persist this model's attributes and replace them with the API response.
+     *
+     * @return bool True after the operation succeeds.
+     * @throws \Files\Exception\FilesException When saving fails or updates are unsupported.
+     */
     public function save()
     {
         if (@$this->attributes['id']) {
@@ -679,12 +1176,21 @@ class RemoteServerCredential
     }
 
 
-    // Parameters:
-    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-    //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `workspace_id` and `name`.
-    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `workspace_id` and `name`. Valid field combinations are `[ workspace_id, name ]`.
-    //   filter_prefix - object - If set, return records where the specified field is prefixed by the supplied value. Valid fields are `name`.
+    /**
+     * List Remote Server Credentials
+     *
+     * GET /remote_server_credentials
+     *
+     * @param array $params Request parameters.
+     *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+     *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+     *     - `sort_by` (array|object, optional): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `workspace_id` and `name`.
+     *     - `filter` (array|object, optional): If set, return records where the specified field is equal to the supplied value. Valid fields are `workspace_id` and `name`. Valid field combinations are `[ workspace_id, name ]`.
+     *     - `filter_prefix` (array|object, optional): If set, return records where the specified field is prefixed by the supplied value. Valid fields are `name`.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\RemoteServerCredential[]
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function all($params = [], $options = [])
     {
         if (!empty($params['cursor']) && !is_string($params['cursor'])) {
@@ -706,8 +1212,17 @@ class RemoteServerCredential
         return $return_array;
     }
 
-    // Parameters:
-    //   id (required) - int64 - Remote Server Credential ID.
+    /**
+     * Show Remote Server Credential
+     *
+     * GET /remote_server_credentials/{id}
+     *
+     * @param int $id Remote Server Credential ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\RemoteServerCredential
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function find($id, $params = [], $options = [])
     {
         if (!is_array($params)) {
@@ -728,48 +1243,70 @@ class RemoteServerCredential
 
         return new RemoteServerCredential((array) (@$response->data ?: []), $options);
     }
+    /**
+     * Show Remote Server Credential
+     *
+     * GET /remote_server_credentials/{id}
+     *
+     * Alias of find().
+     *
+     * @param int $id Remote Server Credential ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\RemoteServerCredential
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function get($id, $params = [], $options = [])
     {
         return self::find($id, $params, $options);
     }
 
-    // Parameters:
-    //   name - string - Internal name for your reference
-    //   description - string - Internal description for your reference
-    //   server_type - string - Remote server type.  Remote Server Credentials are only valid for a single type of Remote Server.
-    //   aws_access_key - string - AWS Access Key.
-    //   s3_assume_role_arn - string - AWS IAM Role ARN for AssumeRole authentication.
-    //   s3_assume_role_duration_seconds - int64 - Session duration in seconds for AssumeRole authentication (900-43200).
-    //   cloudflare_access_key - string - Cloudflare: Access Key.
-    //   filebase_access_key - string - Filebase: Access Key.
-    //   google_cloud_storage_s3_compatible_access_key - string - Google Cloud Storage: S3-compatible Access Key.
-    //   linode_access_key - string - Linode: Access Key
-    //   s3_compatible_access_key - string - S3-compatible: Access Key
-    //   sharepoint_client_id - string - SharePoint: Microsoft Entra application client ID for app-only authentication.
-    //   sharepoint_tenant_id - string - SharePoint: Microsoft Entra tenant ID for app-only authentication.
-    //   username - string - Remote server username.
-    //   wasabi_access_key - string - Wasabi: Access Key.
-    //   password - string - Password, if needed.
-    //   private_key - string - Private key, if needed.
-    //   private_key_passphrase - string - Passphrase for private key if needed.
-    //   aws_secret_key - string - AWS: secret key.
-    //   azure_blob_storage_access_key - string - Azure Blob Storage: Access Key
-    //   azure_blob_storage_sas_token - string - Azure Blob Storage: Shared Access Signature (SAS) token
-    //   azure_files_storage_access_key - string - Azure File Storage: Access Key
-    //   azure_files_storage_sas_token - string - Azure File Storage: Shared Access Signature (SAS) token
-    //   backblaze_b2_application_key - string - Backblaze B2 Cloud Storage: applicationKey
-    //   backblaze_b2_key_id - string - Backblaze B2 Cloud Storage: keyID
-    //   cloudflare_secret_key - string - Cloudflare: Secret Key
-    //   filebase_secret_key - string - Filebase: Secret Key
-    //   google_cloud_storage_credentials_json - string - Google Cloud Storage: JSON file that contains the private key. To generate see https://cloud.google.com/storage/docs/json_api/v1/how-tos/authorizing#APIKey
-    //   google_cloud_storage_s3_compatible_secret_key - string - Google Cloud Storage: S3-compatible secret key
-    //   linode_secret_key - string - Linode: Secret Key
-    //   s3_compatible_secret_key - string - S3-compatible: Secret Key
-    //   sharepoint_client_certificate - string - SharePoint: PEM-encoded certificate and unencrypted private key for app-only authentication.
-    //   sharepoint_client_secret - string - SharePoint: Microsoft Entra application client secret for app-only authentication.
-    //   wasabi_secret_key - string - Wasabi: Secret Key
-    //   workspace_id - int64 - Workspace ID (0 for default workspace)
-    //   copy_values_from_credential_id - int64 - ID of Remote Server Credential to copy omitted values from.
+    /**
+     * Create Remote Server Credential
+     *
+     * POST /remote_server_credentials
+     *
+     * @param array $params Request parameters.
+     *     - `name` (string, optional): Internal name for your reference
+     *     - `description` (string, optional): Internal description for your reference
+     *     - `server_type` (string, optional): Remote server type.  Remote Server Credentials are only valid for a single type of Remote Server. Allowed values: ftp, sftp, s3, google_cloud_storage, webdav, wasabi, backblaze_b2, one_drive, box, dropbox, google_drive, azure, sharepoint, s3_compatible, azure_files, files_agent, filebase, cloudflare, linode, files_com.
+     *     - `aws_access_key` (string, optional): AWS Access Key.
+     *     - `s3_assume_role_arn` (string, optional): AWS IAM Role ARN for AssumeRole authentication.
+     *     - `s3_assume_role_duration_seconds` (int, optional): Session duration in seconds for AssumeRole authentication (900-43200).
+     *     - `cloudflare_access_key` (string, optional): Cloudflare: Access Key.
+     *     - `filebase_access_key` (string, optional): Filebase: Access Key.
+     *     - `google_cloud_storage_s3_compatible_access_key` (string, optional): Google Cloud Storage: S3-compatible Access Key.
+     *     - `linode_access_key` (string, optional): Linode: Access Key
+     *     - `s3_compatible_access_key` (string, optional): S3-compatible: Access Key
+     *     - `sharepoint_client_id` (string, optional): SharePoint: Microsoft Entra application client ID for app-only authentication.
+     *     - `sharepoint_tenant_id` (string, optional): SharePoint: Microsoft Entra tenant ID for app-only authentication.
+     *     - `username` (string, optional): Remote server username.
+     *     - `wasabi_access_key` (string, optional): Wasabi: Access Key.
+     *     - `password` (string, optional): Password, if needed.
+     *     - `private_key` (string, optional): Private key, if needed.
+     *     - `private_key_passphrase` (string, optional): Passphrase for private key if needed.
+     *     - `aws_secret_key` (string, optional): AWS: secret key.
+     *     - `azure_blob_storage_access_key` (string, optional): Azure Blob Storage: Access Key
+     *     - `azure_blob_storage_sas_token` (string, optional): Azure Blob Storage: Shared Access Signature (SAS) token
+     *     - `azure_files_storage_access_key` (string, optional): Azure File Storage: Access Key
+     *     - `azure_files_storage_sas_token` (string, optional): Azure File Storage: Shared Access Signature (SAS) token
+     *     - `backblaze_b2_application_key` (string, optional): Backblaze B2 Cloud Storage: applicationKey
+     *     - `backblaze_b2_key_id` (string, optional): Backblaze B2 Cloud Storage: keyID
+     *     - `cloudflare_secret_key` (string, optional): Cloudflare: Secret Key
+     *     - `filebase_secret_key` (string, optional): Filebase: Secret Key
+     *     - `google_cloud_storage_credentials_json` (string, optional): Google Cloud Storage: JSON file that contains the private key. To generate see https://cloud.google.com/storage/docs/json_api/v1/how-tos/authorizing#APIKey
+     *     - `google_cloud_storage_s3_compatible_secret_key` (string, optional): Google Cloud Storage: S3-compatible secret key
+     *     - `linode_secret_key` (string, optional): Linode: Secret Key
+     *     - `s3_compatible_secret_key` (string, optional): S3-compatible: Secret Key
+     *     - `sharepoint_client_certificate` (string, optional): SharePoint: PEM-encoded certificate and unencrypted private key for app-only authentication.
+     *     - `sharepoint_client_secret` (string, optional): SharePoint: Microsoft Entra application client secret for app-only authentication.
+     *     - `wasabi_secret_key` (string, optional): Wasabi: Secret Key
+     *     - `workspace_id` (int, optional): Workspace ID (0 for default workspace)
+     *     - `copy_values_from_credential_id` (int, optional): ID of Remote Server Credential to copy omitted values from.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\RemoteServerCredential
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function create($params = [], $options = [])
     {
         if (!empty($params['name']) && !is_string($params['name'])) {

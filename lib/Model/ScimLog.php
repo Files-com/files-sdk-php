@@ -8,8 +8,16 @@ use Files\Logger;
 require_once __DIR__ . '/../Files.php';
 
 /**
- * Class ScimLog
+ * A SCIM log entry represents a single SCIM request made to the system.
  *
+ * @property int|null $id The unique ID of this SCIM request.
+ * @property string|null $created_at The date and time when this SCIM request occurred.
+ * @property string|null $request_path The path portion of the URL requested.
+ * @property string|null $request_method The HTTP method used for this request.
+ * @property string|null $http_response_code The HTTP response code returned for this request.
+ * @property string|null $user_agent The User-Agent header sent with the request.
+ * @property string|null $request_json The JSON payload sent with the request.
+ * @property string|null $response_json The JSON payload returned in the response.
  * @package Files
  */
 class ScimLog
@@ -20,6 +28,12 @@ class ScimLog
         'list' => 'all',
     ];
 
+    /**
+     * Build a model from API attributes and retain its request options.
+     *
+     * @param array $attributes Initial model attributes, keyed by property name.
+     * @param array $options Request options used by this model's operations.
+     */
     public function __construct($attributes = [], $options = [])
     {
         foreach ($attributes as $key => $value) {
@@ -29,16 +43,36 @@ class ScimLog
         $this->options = $options;
     }
 
+    /**
+     * Set a model attribute locally; call save() to persist supported changes.
+     *
+     * @param string $name Attribute name.
+     * @param mixed $value Attribute value.
+     * @return void
+     */
     public function __set($name, $value)
     {
         $this->attributes[$name] = $value;
     }
 
+    /**
+     * Read a model attribute.
+     *
+     * @param string $name Attribute name.
+     * @return mixed The attribute value, or null when it is not set.
+     */
     public function __get($name)
     {
         return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
+    /**
+     * Dispatch a legacy static alias, including list() to all().
+     *
+     * @param string $name Alias name.
+     * @param array $arguments Arguments passed to the canonical method.
+     * @return mixed The canonical method's result, or null for an unknown alias.
+     */
     public static function __callStatic($name, $arguments)
     {
         if (in_array($name, array_keys(self::$static_mapped_functions))) {
@@ -49,55 +83,101 @@ class ScimLog
         }
     }
 
+    /**
+     * Whether this model has a nonempty primary key.
+     *
+     * @return bool
+     */
     public function isLoaded()
     {
         return !!@$this->attributes['id'];
     }
-    // int64 # The unique ID of this SCIM request.
+    /**
+     * The unique ID of this SCIM request.
+     *
+     * @return int|null
+     */
     public function getId()
     {
         return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
-    // string # The date and time when this SCIM request occurred.
+    /**
+     * The date and time when this SCIM request occurred.
+     *
+     * @return string|null
+     */
     public function getCreatedAt()
     {
         return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
-    // string # The path portion of the URL requested.
+    /**
+     * The path portion of the URL requested.
+     *
+     * @return string|null
+     */
     public function getRequestPath()
     {
         return isset($this->attributes['request_path']) ? $this->attributes['request_path'] : null;
     }
-    // string # The HTTP method used for this request.
+    /**
+     * The HTTP method used for this request.
+     *
+     * @return string|null
+     */
     public function getRequestMethod()
     {
         return isset($this->attributes['request_method']) ? $this->attributes['request_method'] : null;
     }
-    // string # The HTTP response code returned for this request.
+    /**
+     * The HTTP response code returned for this request.
+     *
+     * @return string|null
+     */
     public function getHttpResponseCode()
     {
         return isset($this->attributes['http_response_code']) ? $this->attributes['http_response_code'] : null;
     }
-    // string # The User-Agent header sent with the request.
+    /**
+     * The User-Agent header sent with the request.
+     *
+     * @return string|null
+     */
     public function getUserAgent()
     {
         return isset($this->attributes['user_agent']) ? $this->attributes['user_agent'] : null;
     }
-    // string # The JSON payload sent with the request.
+    /**
+     * The JSON payload sent with the request.
+     *
+     * @return string|null
+     */
     public function getRequestJson()
     {
         return isset($this->attributes['request_json']) ? $this->attributes['request_json'] : null;
     }
-    // string # The JSON payload returned in the response.
+    /**
+     * The JSON payload returned in the response.
+     *
+     * @return string|null
+     */
     public function getResponseJson()
     {
         return isset($this->attributes['response_json']) ? $this->attributes['response_json'] : null;
     }
 
-    // Parameters:
-    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-    //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `created_at`.
+    /**
+     * List Scim Logs
+     *
+     * GET /scim_logs
+     *
+     * @param array $params Request parameters.
+     *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+     *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+     *     - `sort_by` (array|object, optional): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `created_at`.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\ScimLog[]
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function all($params = [], $options = [])
     {
         if (!empty($params['cursor']) && !is_string($params['cursor'])) {
@@ -119,8 +199,17 @@ class ScimLog
         return $return_array;
     }
 
-    // Parameters:
-    //   id (required) - int64 - Scim Log ID.
+    /**
+     * Show Scim Log
+     *
+     * GET /scim_logs/{id}
+     *
+     * @param int $id Scim Log ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\ScimLog
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function find($id, $params = [], $options = [])
     {
         if (!is_array($params)) {
@@ -141,6 +230,19 @@ class ScimLog
 
         return new ScimLog((array) (@$response->data ?: []), $options);
     }
+    /**
+     * Show Scim Log
+     *
+     * GET /scim_logs/{id}
+     *
+     * Alias of find().
+     *
+     * @param int $id Scim Log ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\ScimLog
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function get($id, $params = [], $options = [])
     {
         return self::find($id, $params, $options);

@@ -8,8 +8,21 @@ use Files\Logger;
 require_once __DIR__ . '/../Files.php';
 
 /**
- * Class Invoice
+ * An AccountLineItem is a single line item in the accounting ledger for a billing account.
  *
+ * @property int|null $id Line item Id
+ * @property string|null $amount Line item amount
+ * @property string|null $balance Line item balance
+ * @property string|null $created_at Line item created at
+ * @property string|null $currency Line item currency
+ * @property string|null $download_uri Line item download uri
+ * @property object[]|null $invoice_line_items Associated invoice line items
+ * @property string|null $method Line item payment method
+ * @property object[]|null $payment_line_items Associated payment line items
+ * @property string|null $payment_reversed_at Date/time payment was reversed if applicable
+ * @property string|null $payment_type Type of payment if applicable
+ * @property string|null $site_name Site name this line item is for
+ * @property string|null $type Type of line item, either payment or invoice
  * @package Files
  */
 class Invoice
@@ -20,6 +33,12 @@ class Invoice
         'list' => 'all',
     ];
 
+    /**
+     * Build a model from API attributes and retain its request options.
+     *
+     * @param array $attributes Initial model attributes, keyed by property name.
+     * @param array $options Request options used by this model's operations.
+     */
     public function __construct($attributes = [], $options = [])
     {
         foreach ($attributes as $key => $value) {
@@ -29,16 +48,36 @@ class Invoice
         $this->options = $options;
     }
 
+    /**
+     * Set a model attribute locally; call save() to persist supported changes.
+     *
+     * @param string $name Attribute name.
+     * @param mixed $value Attribute value.
+     * @return void
+     */
     public function __set($name, $value)
     {
         $this->attributes[$name] = $value;
     }
 
+    /**
+     * Read a model attribute.
+     *
+     * @param string $name Attribute name.
+     * @return mixed The attribute value, or null when it is not set.
+     */
     public function __get($name)
     {
         return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
+    /**
+     * Dispatch a legacy static alias, including list() to all().
+     *
+     * @param string $name Alias name.
+     * @param array $arguments Arguments passed to the canonical method.
+     * @return mixed The canonical method's result, or null for an unknown alias.
+     */
     public static function __callStatic($name, $arguments)
     {
         if (in_array($name, array_keys(self::$static_mapped_functions))) {
@@ -49,79 +88,145 @@ class Invoice
         }
     }
 
+    /**
+     * Whether this model has a nonempty primary key.
+     *
+     * @return bool
+     */
     public function isLoaded()
     {
         return !!@$this->attributes['id'];
     }
-    // int64 # Line item Id
+    /**
+     * Line item Id
+     *
+     * @return int|null
+     */
     public function getId()
     {
         return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
-    // decimal # Line item amount
+    /**
+     * Line item amount
+     *
+     * @return string|null
+     */
     public function getAmount()
     {
         return isset($this->attributes['amount']) ? $this->attributes['amount'] : null;
     }
-    // decimal # Line item balance
+    /**
+     * Line item balance
+     *
+     * @return string|null
+     */
     public function getBalance()
     {
         return isset($this->attributes['balance']) ? $this->attributes['balance'] : null;
     }
-    // date-time # Line item created at
+    /**
+     * Line item created at
+     *
+     * @return string|null
+     */
     public function getCreatedAt()
     {
         return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
-    // string # Line item currency
+    /**
+     * Line item currency
+     *
+     * @return string|null
+     */
     public function getCurrency()
     {
         return isset($this->attributes['currency']) ? $this->attributes['currency'] : null;
     }
-    // string # Line item download uri
+    /**
+     * Line item download uri
+     *
+     * @return string|null
+     */
     public function getDownloadUri()
     {
         return isset($this->attributes['download_uri']) ? $this->attributes['download_uri'] : null;
     }
-    // array(object) # Associated invoice line items
+    /**
+     * Associated invoice line items
+     *
+     * @return object[]|null
+     */
     public function getInvoiceLineItems()
     {
         return isset($this->attributes['invoice_line_items']) ? $this->attributes['invoice_line_items'] : null;
     }
-    // string # Line item payment method
+    /**
+     * Line item payment method
+     *
+     * @return string|null
+     */
     public function getMethod()
     {
         return isset($this->attributes['method']) ? $this->attributes['method'] : null;
     }
-    // array(object) # Associated payment line items
+    /**
+     * Associated payment line items
+     *
+     * @return object[]|null
+     */
     public function getPaymentLineItems()
     {
         return isset($this->attributes['payment_line_items']) ? $this->attributes['payment_line_items'] : null;
     }
-    // date-time # Date/time payment was reversed if applicable
+    /**
+     * Date/time payment was reversed if applicable
+     *
+     * @return string|null
+     */
     public function getPaymentReversedAt()
     {
         return isset($this->attributes['payment_reversed_at']) ? $this->attributes['payment_reversed_at'] : null;
     }
-    // string # Type of payment if applicable
+    /**
+     * Type of payment if applicable
+     *
+     * @return string|null
+     */
     public function getPaymentType()
     {
         return isset($this->attributes['payment_type']) ? $this->attributes['payment_type'] : null;
     }
-    // string # Site name this line item is for
+    /**
+     * Site name this line item is for
+     *
+     * @return string|null
+     */
     public function getSiteName()
     {
         return isset($this->attributes['site_name']) ? $this->attributes['site_name'] : null;
     }
-    // string # Type of line item, either payment or invoice
+    /**
+     * Type of line item, either payment or invoice
+     *
+     * @return string|null
+     */
     public function getType()
     {
         return isset($this->attributes['type']) ? $this->attributes['type'] : null;
     }
 
-    // Parameters:
-    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-    //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+    /**
+     * List Invoices
+     *
+     * GET /invoices
+     *
+     * @param array $params Request parameters.
+     *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+     *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\AccountLineItem[]
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function all($params = [], $options = [])
     {
         if (!empty($params['cursor']) && !is_string($params['cursor'])) {
@@ -143,8 +248,17 @@ class Invoice
         return $return_array;
     }
 
-    // Parameters:
-    //   id (required) - int64 - Invoice ID.
+    /**
+     * Show Invoice
+     *
+     * GET /invoices/{id}
+     *
+     * @param int $id Invoice ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\AccountLineItem
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function find($id, $params = [], $options = [])
     {
         if (!is_array($params)) {
@@ -165,6 +279,19 @@ class Invoice
 
         return new AccountLineItem((array) (@$response->data ?: []), $options);
     }
+    /**
+     * Show Invoice
+     *
+     * GET /invoices/{id}
+     *
+     * Alias of find().
+     *
+     * @param int $id Invoice ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\AccountLineItem
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function get($id, $params = [], $options = [])
     {
         return self::find($id, $params, $options);

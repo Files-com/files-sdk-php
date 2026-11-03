@@ -8,8 +8,21 @@ use Files\Logger;
 require_once __DIR__ . '/../Files.php';
 
 /**
- * Class BundleAction
+ * A BundleAction is an action performed on a bundle.
  *
+ * @property string|null $action Type of action
+ * @property \stdClass|null $bundle_registration Object that contains bundle registration information
+ * @property string|null $created_at Action occurrence date/time
+ * @property string|null $destination The destination path for this bundle action, if applicable
+ * @property string|null $path Path. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
+ * @property string|null $source The source path for this bundle action, if applicable
+ * @property int|null $bundle_registration_id Identifier of the associated bundle registration
+ * @property int|null $workspace_id Workspace ID. `0` means the default workspace.
+ * @property string|null $bundle_registration_name Name of the registrant who performed the action
+ * @property string|null $bundle_registration_email Email of the registrant
+ * @property string|null $bundle_registration_ip IP address of the registrant
+ * @property int|null $form_field_set_id Id of associated form field set
+ * @property object|null $form_field_data Data for form field set with form field ids as keys and user data as values
  * @package Files
  */
 class BundleAction
@@ -20,6 +33,12 @@ class BundleAction
         'list' => 'all',
     ];
 
+    /**
+     * Build a model from API attributes and retain its request options.
+     *
+     * @param array $attributes Initial model attributes, keyed by property name.
+     * @param array $options Request options used by this model's operations.
+     */
     public function __construct($attributes = [], $options = [])
     {
         foreach ($attributes as $key => $value) {
@@ -29,16 +48,36 @@ class BundleAction
         $this->options = $options;
     }
 
+    /**
+     * Set a model attribute locally; call save() to persist supported changes.
+     *
+     * @param string $name Attribute name.
+     * @param mixed $value Attribute value.
+     * @return void
+     */
     public function __set($name, $value)
     {
         $this->attributes[$name] = $value;
     }
 
+    /**
+     * Read a model attribute.
+     *
+     * @param string $name Attribute name.
+     * @return mixed The attribute value, or null when it is not set.
+     */
     public function __get($name)
     {
         return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
+    /**
+     * Dispatch a legacy static alias, including list() to all().
+     *
+     * @param string $name Alias name.
+     * @param array $arguments Arguments passed to the canonical method.
+     * @return mixed The canonical method's result, or null for an unknown alias.
+     */
     public static function __callStatic($name, $arguments)
     {
         if (in_array($name, array_keys(self::$static_mapped_functions))) {
@@ -49,88 +88,154 @@ class BundleAction
         }
     }
 
+    /**
+     * Whether this model has a nonempty primary key.
+     *
+     * @return bool
+     */
     public function isLoaded()
     {
         return !!@$this->attributes['id'];
     }
-    // string # Type of action
+    /**
+     * Type of action
+     *
+     * @return string|null
+     */
     public function getAction()
     {
         return isset($this->attributes['action']) ? $this->attributes['action'] : null;
     }
-    // BundleRegistration # Object that contains bundle registration information
+    /**
+     * Object that contains bundle registration information
+     *
+     * @return \stdClass|null
+     */
     public function getBundleRegistration()
     {
         return isset($this->attributes['bundle_registration']) ? $this->attributes['bundle_registration'] : null;
     }
-    // date-time # Action occurrence date/time
+    /**
+     * Action occurrence date/time
+     *
+     * @return string|null
+     */
     public function getCreatedAt()
     {
         return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
-    // string # The destination path for this bundle action, if applicable
+    /**
+     * The destination path for this bundle action, if applicable
+     *
+     * @return string|null
+     */
     public function getDestination()
     {
         return isset($this->attributes['destination']) ? $this->attributes['destination'] : null;
     }
-    // string # Path. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
+    /**
+     * Path. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
+     *
+     * @return string|null
+     */
     public function getPath()
     {
         return isset($this->attributes['path']) ? $this->attributes['path'] : null;
     }
-    // string # The source path for this bundle action, if applicable
+    /**
+     * The source path for this bundle action, if applicable
+     *
+     * @return string|null
+     */
     public function getSource()
     {
         return isset($this->attributes['source']) ? $this->attributes['source'] : null;
     }
-    // int64 # Identifier of the associated bundle registration
+    /**
+     * Identifier of the associated bundle registration
+     *
+     * @return int|null
+     */
     public function getBundleRegistrationId()
     {
         return isset($this->attributes['bundle_registration_id']) ? $this->attributes['bundle_registration_id'] : null;
     }
-    // int64 # Workspace ID. `0` means the default workspace.
+    /**
+     * Workspace ID. `0` means the default workspace.
+     *
+     * @return int|null
+     */
     public function getWorkspaceId()
     {
         return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
-    // string # Name of the registrant who performed the action
+    /**
+     * Name of the registrant who performed the action
+     *
+     * @return string|null
+     */
     public function getBundleRegistrationName()
     {
         return isset($this->attributes['bundle_registration_name']) ? $this->attributes['bundle_registration_name'] : null;
     }
-    // string # Email of the registrant
+    /**
+     * Email of the registrant
+     *
+     * @return string|null
+     */
     public function getBundleRegistrationEmail()
     {
         return isset($this->attributes['bundle_registration_email']) ? $this->attributes['bundle_registration_email'] : null;
     }
-    // string # IP address of the registrant
+    /**
+     * IP address of the registrant
+     *
+     * @return string|null
+     */
     public function getBundleRegistrationIp()
     {
         return isset($this->attributes['bundle_registration_ip']) ? $this->attributes['bundle_registration_ip'] : null;
     }
-    // int64 # Id of associated form field set
+    /**
+     * Id of associated form field set
+     *
+     * @return int|null
+     */
     public function getFormFieldSetId()
     {
         return isset($this->attributes['form_field_set_id']) ? $this->attributes['form_field_set_id'] : null;
     }
-    // object # Data for form field set with form field ids as keys and user data as values
+    /**
+     * Data for form field set with form field ids as keys and user data as values
+     *
+     * @return object|null
+     */
     public function getFormFieldData()
     {
         return isset($this->attributes['form_field_data']) ? $this->attributes['form_field_data'] : null;
     }
 
-    // Parameters:
-    //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
-    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-    //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `workspace_id`, `created_at` or `bundle_registration_id`.
-    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `created_at`, `bundle_id` or `bundle_registration_id`. Valid field combinations are `[ bundle_id, created_at ]`, `[ bundle_registration_id, created_at ]`, `[ bundle_id, bundle_registration_id ]` or `[ bundle_id, bundle_registration_id, created_at ]`.
-    //   filter_gt - object - If set, return records where the specified field is greater than the supplied value. Valid fields are `created_at`.
-    //   filter_gteq - object - If set, return records where the specified field is greater than or equal the supplied value. Valid fields are `created_at`.
-    //   filter_lt - object - If set, return records where the specified field is less than the supplied value. Valid fields are `created_at`.
-    //   filter_lteq - object - If set, return records where the specified field is less than or equal the supplied value. Valid fields are `created_at`.
-    //   bundle_id - int64 - Bundle ID
-    //   bundle_registration_id - int64 - Bundle Registration ID
+    /**
+     * List Bundle Actions
+     *
+     * GET /bundle_actions
+     *
+     * @param array $params Request parameters.
+     *     - `user_id` (int, optional): User ID.  Provide a value of `0` to operate the current session's user.
+     *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+     *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+     *     - `sort_by` (array|object, optional): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `workspace_id`, `created_at` or `bundle_registration_id`.
+     *     - `filter` (array|object, optional): If set, return records where the specified field is equal to the supplied value. Valid fields are `created_at`, `bundle_id` or `bundle_registration_id`. Valid field combinations are `[ bundle_id, created_at ]`, `[ bundle_registration_id, created_at ]`, `[ bundle_id, bundle_registration_id ]` or `[ bundle_id, bundle_registration_id, created_at ]`.
+     *     - `filter_gt` (array|object, optional): If set, return records where the specified field is greater than the supplied value. Valid fields are `created_at`.
+     *     - `filter_gteq` (array|object, optional): If set, return records where the specified field is greater than or equal the supplied value. Valid fields are `created_at`.
+     *     - `filter_lt` (array|object, optional): If set, return records where the specified field is less than the supplied value. Valid fields are `created_at`.
+     *     - `filter_lteq` (array|object, optional): If set, return records where the specified field is less than or equal the supplied value. Valid fields are `created_at`.
+     *     - `bundle_id` (int, optional): Bundle ID
+     *     - `bundle_registration_id` (int, optional): Bundle Registration ID
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\BundleAction[]
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function all($params = [], $options = [])
     {
         if (!empty($params['user_id']) && !is_int($params['user_id'])) {

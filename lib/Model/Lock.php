@@ -8,8 +8,21 @@ use Files\Logger;
 require_once __DIR__ . '/../Files.php';
 
 /**
- * Class Lock
+ * A Lock can be used by your custom-developed applications to implement file locking and concurrency features.
  *
+ * @property string|null $path Path. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
+ * @property int|null $timeout Lock timeout in seconds
+ * @property string|null $depth
+ * @property bool|null $recursive Does lock apply to subfolders?
+ * @property string|null $owner Arbitrary descriptive label for the lock. Does not change the lock creator or permissions.
+ * @property string|null $scope
+ * @property bool|null $exclusive Is lock exclusive?
+ * @property string|null $token Lock token. Use to release lock.
+ * @property string|null $type
+ * @property bool|null $allow_access_by_any_user Can lock be modified by users other than its creator?
+ * @property int|null $user_id Lock creator user ID
+ * @property string|null $username Lock creator username
+ * @property string|null $expected_token Require this existing, unexpired token before refreshing or replacing a lock. Set token to the same value to refresh, or a different value to replace.
  * @package Files
  */
 class Lock
@@ -20,6 +33,12 @@ class Lock
         'list' => 'all',
     ];
 
+    /**
+     * Build a model from API attributes and retain its request options.
+     *
+     * @param array $attributes Initial model attributes, keyed by property name.
+     * @param array $options Request options used by this model's operations.
+     */
     public function __construct($attributes = [], $options = [])
     {
         foreach ($attributes as $key => $value) {
@@ -29,16 +48,36 @@ class Lock
         $this->options = $options;
     }
 
+    /**
+     * Set a model attribute locally; call save() to persist supported changes.
+     *
+     * @param string $name Attribute name.
+     * @param mixed $value Attribute value.
+     * @return void
+     */
     public function __set($name, $value)
     {
         $this->attributes[$name] = $value;
     }
 
+    /**
+     * Read a model attribute.
+     *
+     * @param string $name Attribute name.
+     * @return mixed The attribute value, or null when it is not set.
+     */
     public function __get($name)
     {
         return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
+    /**
+     * Dispatch a legacy static alias, including list() to all().
+     *
+     * @param string $name Alias name.
+     * @param array $arguments Arguments passed to the canonical method.
+     * @return mixed The canonical method's result, or null for an unknown alias.
+     */
     public static function __callStatic($name, $arguments)
     {
         if (in_array($name, array_keys(self::$static_mapped_functions))) {
@@ -49,143 +88,287 @@ class Lock
         }
     }
 
+    /**
+     * Whether this model has a nonempty primary key.
+     *
+     * @return bool
+     */
     public function isLoaded()
     {
         return !!@$this->attributes['path'];
     }
-    // string # Path. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
+    /**
+     * Path. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
+     *
+     * @return string|null
+     */
     public function getPath()
     {
         return isset($this->attributes['path']) ? $this->attributes['path'] : null;
     }
 
+    /**
+     * Path. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setPath($value)
     {
         return $this->attributes['path'] = $value;
     }
-    // int64 # Lock timeout in seconds
+    /**
+     * Lock timeout in seconds
+     *
+     * @return int|null
+     */
     public function getTimeout()
     {
         return isset($this->attributes['timeout']) ? $this->attributes['timeout'] : null;
     }
 
+    /**
+     * Lock timeout in seconds
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setTimeout($value)
     {
         return $this->attributes['timeout'] = $value;
     }
-    // string
+    /**
+     * Read depth.
+     *
+     * @return string|null
+     */
     public function getDepth()
     {
         return isset($this->attributes['depth']) ? $this->attributes['depth'] : null;
     }
 
+    /**
+     * Set depth locally.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setDepth($value)
     {
         return $this->attributes['depth'] = $value;
     }
-    // boolean # Does lock apply to subfolders?
+    /**
+     * Does lock apply to subfolders?
+     *
+     * @return bool|null
+     */
     public function getRecursive()
     {
         return isset($this->attributes['recursive']) ? $this->attributes['recursive'] : null;
     }
 
+    /**
+     * Does lock apply to subfolders?
+     *
+     * @param bool|null $value
+     * @return bool|null The assigned value.
+     */
     public function setRecursive($value)
     {
         return $this->attributes['recursive'] = $value;
     }
-    // string # Arbitrary descriptive label for the lock. Does not change the lock creator or permissions.
+    /**
+     * Arbitrary descriptive label for the lock. Does not change the lock creator or permissions.
+     *
+     * @return string|null
+     */
     public function getOwner()
     {
         return isset($this->attributes['owner']) ? $this->attributes['owner'] : null;
     }
 
+    /**
+     * Arbitrary descriptive label for the lock. Does not change the lock creator or permissions.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setOwner($value)
     {
         return $this->attributes['owner'] = $value;
     }
-    // string
+    /**
+     * Read scope.
+     *
+     * @return string|null
+     */
     public function getScope()
     {
         return isset($this->attributes['scope']) ? $this->attributes['scope'] : null;
     }
 
+    /**
+     * Set scope locally.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setScope($value)
     {
         return $this->attributes['scope'] = $value;
     }
-    // boolean # Is lock exclusive?
+    /**
+     * Is lock exclusive?
+     *
+     * @return bool|null
+     */
     public function getExclusive()
     {
         return isset($this->attributes['exclusive']) ? $this->attributes['exclusive'] : null;
     }
 
+    /**
+     * Is lock exclusive?
+     *
+     * @param bool|null $value
+     * @return bool|null The assigned value.
+     */
     public function setExclusive($value)
     {
         return $this->attributes['exclusive'] = $value;
     }
-    // string # Lock token.  Use to release lock.
+    /**
+     * Lock token.  Use to release lock.
+     *
+     * @return string|null
+     */
     public function getToken()
     {
         return isset($this->attributes['token']) ? $this->attributes['token'] : null;
     }
 
+    /**
+     * Lock token.  Use to release lock.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setToken($value)
     {
         return $this->attributes['token'] = $value;
     }
-    // string
+    /**
+     * Read type.
+     *
+     * @return string|null
+     */
     public function getType()
     {
         return isset($this->attributes['type']) ? $this->attributes['type'] : null;
     }
 
+    /**
+     * Set type locally.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setType($value)
     {
         return $this->attributes['type'] = $value;
     }
-    // boolean # Can lock be modified by users other than its creator?
+    /**
+     * Can lock be modified by users other than its creator?
+     *
+     * @return bool|null
+     */
     public function getAllowAccessByAnyUser()
     {
         return isset($this->attributes['allow_access_by_any_user']) ? $this->attributes['allow_access_by_any_user'] : null;
     }
 
+    /**
+     * Can lock be modified by users other than its creator?
+     *
+     * @param bool|null $value
+     * @return bool|null The assigned value.
+     */
     public function setAllowAccessByAnyUser($value)
     {
         return $this->attributes['allow_access_by_any_user'] = $value;
     }
-    // int64 # Lock creator user ID
+    /**
+     * Lock creator user ID
+     *
+     * @return int|null
+     */
     public function getUserId()
     {
         return isset($this->attributes['user_id']) ? $this->attributes['user_id'] : null;
     }
 
+    /**
+     * Lock creator user ID
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setUserId($value)
     {
         return $this->attributes['user_id'] = $value;
     }
-    // string # Lock creator username
+    /**
+     * Lock creator username
+     *
+     * @return string|null
+     */
     public function getUsername()
     {
         return isset($this->attributes['username']) ? $this->attributes['username'] : null;
     }
 
+    /**
+     * Lock creator username
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setUsername($value)
     {
         return $this->attributes['username'] = $value;
     }
-    // string # Require this existing, unexpired token before refreshing or replacing a lock. Set token to the same value to refresh, or a different value to replace.
+    /**
+     * Require this existing, unexpired token before refreshing or replacing a lock. Set token to the same value to refresh, or a different value to replace.
+     *
+     * @return string|null
+     */
     public function getExpectedToken()
     {
         return isset($this->attributes['expected_token']) ? $this->attributes['expected_token'] : null;
     }
 
+    /**
+     * Require this existing, unexpired token before refreshing or replacing a lock. Set token to the same value to refresh, or a different value to replace.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setExpectedToken($value)
     {
         return $this->attributes['expected_token'] = $value;
     }
 
-    // Parameters:
-    //   token (required) - string - Lock token
+    /**
+     * Delete Lock
+     *
+     * DELETE /locks/{path}
+     *
+     * @param array $params Request parameters.
+     *     - `path` (string, optional when set on this model): Path
+     *     - `token` (string, required): Lock token
+     * @return void
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function delete($params = [])
     {
         if (!is_array($params)) {
@@ -220,12 +403,31 @@ class Lock
         return;
     }
 
+    /**
+     * Delete Lock
+     *
+     * DELETE /locks/{path}
+     *
+     * Alias of delete().
+     *
+     * @param array $params Request parameters.
+     *     - `path` (string, optional when set on this model): Path
+     *     - `token` (string, required): Lock token
+     * @return void
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function destroy($params = [])
     {
         $this->delete($params);
         return;
     }
 
+    /**
+     * Persist this model's attributes and replace them with the API response.
+     *
+     * @return bool True after the operation succeeds.
+     * @throws \Files\Exception\FilesException When saving fails or updates are unsupported.
+     */
     public function save()
     {
         $new_obj = self::create($this->path, $this->attributes, $this->options);
@@ -234,11 +436,20 @@ class Lock
     }
 
 
-    // Parameters:
-    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-    //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
-    //   path (required) - string - Path to operate on.
-    //   include_children - boolean - Include locks from children objects?
+    /**
+     * List Locks by Path
+     *
+     * GET /locks/{path}
+     *
+     * @param string $path Path to operate on.
+     * @param array $params Request parameters.
+     *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+     *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+     *     - `include_children` (bool, optional): Include locks from children objects?
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\Lock[]
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function listFor($path, $params = [], $options = [])
     {
         if (!is_array($params)) {
@@ -274,15 +485,24 @@ class Lock
         return $return_array;
     }
 
-    // Parameters:
-    //   path (required) - string - Path
-    //   token - string - Lock token. With expected_token, use the same value to refresh or a different value to replace the existing token.
-    //   expected_token - string - Require this existing, unexpired token before refreshing or replacing a lock. Set token to the same value to refresh, or a different value to replace.
-    //   allow_access_by_any_user - boolean - Can lock be modified by users other than its creator?
-    //   exclusive - boolean - Is lock exclusive?
-    //   recursive - boolean - Does lock apply to subfolders?
-    //   owner - string - Arbitrary descriptive label for the lock. Does not change the lock creator or permissions.
-    //   timeout - int64 - Lock timeout in seconds
+    /**
+     * Create Lock
+     *
+     * POST /locks/{path}
+     *
+     * @param string $path Path
+     * @param array $params Request parameters.
+     *     - `token` (string, optional): Lock token. With expected_token, use the same value to refresh or a different value to replace the existing token.
+     *     - `expected_token` (string, optional): Require this existing, unexpired token before refreshing or replacing a lock. Set token to the same value to refresh, or a different value to replace.
+     *     - `allow_access_by_any_user` (bool, optional): Can lock be modified by users other than its creator?
+     *     - `exclusive` (bool, optional): Is lock exclusive?
+     *     - `recursive` (bool, optional): Does lock apply to subfolders?
+     *     - `owner` (string, optional): Arbitrary descriptive label for the lock. Does not change the lock creator or permissions.
+     *     - `timeout` (int, optional): Lock timeout in seconds
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\Lock
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function create($path, $params = [], $options = [])
     {
         if (!is_array($params)) {

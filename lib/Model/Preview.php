@@ -8,8 +8,13 @@ use Files\Logger;
 require_once __DIR__ . '/../Files.php';
 
 /**
- * Class Preview
+ * A Preview is an image or PDF preview that is meant to be viewed within the web interface.
  *
+ * @property int|null $id Preview ID
+ * @property string|null $status Preview status. Can be invalid, not_generated, generating, complete, or file_too_large
+ * @property string|null $download_uri Link to download preview
+ * @property string|null $type Preview type. Can be image, pdf, pdf_native, video, audio, or text
+ * @property string|null $size Preview size
  * @package Files
  */
 class Preview
@@ -20,6 +25,12 @@ class Preview
         'list' => 'all',
     ];
 
+    /**
+     * Build a model from API attributes and retain its request options.
+     *
+     * @param array $attributes Initial model attributes, keyed by property name.
+     * @param array $options Request options used by this model's operations.
+     */
     public function __construct($attributes = [], $options = [])
     {
         foreach ($attributes as $key => $value) {
@@ -29,16 +40,36 @@ class Preview
         $this->options = $options;
     }
 
+    /**
+     * Set a model attribute locally; call save() to persist supported changes.
+     *
+     * @param string $name Attribute name.
+     * @param mixed $value Attribute value.
+     * @return void
+     */
     public function __set($name, $value)
     {
         $this->attributes[$name] = $value;
     }
 
+    /**
+     * Read a model attribute.
+     *
+     * @param string $name Attribute name.
+     * @return mixed The attribute value, or null when it is not set.
+     */
     public function __get($name)
     {
         return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
+    /**
+     * Dispatch a legacy static alias, including list() to all().
+     *
+     * @param string $name Alias name.
+     * @param array $arguments Arguments passed to the canonical method.
+     * @return mixed The canonical method's result, or null for an unknown alias.
+     */
     public static function __callStatic($name, $arguments)
     {
         if (in_array($name, array_keys(self::$static_mapped_functions))) {
@@ -49,31 +80,56 @@ class Preview
         }
     }
 
+    /**
+     * Whether this model has a nonempty primary key.
+     *
+     * @return bool
+     */
     public function isLoaded()
     {
         return !!@$this->attributes['id'];
     }
-    // int64 # Preview ID
+    /**
+     * Preview ID
+     *
+     * @return int|null
+     */
     public function getId()
     {
         return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
-    // string # Preview status.  Can be invalid, not_generated, generating, complete, or file_too_large
+    /**
+     * Preview status.  Can be invalid, not_generated, generating, complete, or file_too_large
+     *
+     * @return string|null
+     */
     public function getStatus()
     {
         return isset($this->attributes['status']) ? $this->attributes['status'] : null;
     }
-    // string # Link to download preview
+    /**
+     * Link to download preview
+     *
+     * @return string|null
+     */
     public function getDownloadUri()
     {
         return isset($this->attributes['download_uri']) ? $this->attributes['download_uri'] : null;
     }
-    // string # Preview type. Can be image, pdf, pdf_native, video, audio, or text
+    /**
+     * Preview type. Can be image, pdf, pdf_native, video, audio, or text
+     *
+     * @return string|null
+     */
     public function getType()
     {
         return isset($this->attributes['type']) ? $this->attributes['type'] : null;
     }
-    // string # Preview size
+    /**
+     * Preview size
+     *
+     * @return string|null
+     */
     public function getSize()
     {
         return isset($this->attributes['size']) ? $this->attributes['size'] : null;

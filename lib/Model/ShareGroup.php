@@ -8,8 +8,13 @@ use Files\Logger;
 require_once __DIR__ . '/../Files.php';
 
 /**
- * Class ShareGroup
+ * A ShareGroup is a way for you to store and name groups of email contacts to be used for sending share and inbox invitations.
  *
+ * @property int|null $id Share Group ID
+ * @property string|null $name Name of the share group
+ * @property string|null $notes Additional notes of the share group
+ * @property int|null $user_id Owner User ID
+ * @property object[]|null $members A list of share group members
  * @package Files
  */
 class ShareGroup
@@ -20,6 +25,12 @@ class ShareGroup
         'list' => 'all',
     ];
 
+    /**
+     * Build a model from API attributes and retain its request options.
+     *
+     * @param array $attributes Initial model attributes, keyed by property name.
+     * @param array $options Request options used by this model's operations.
+     */
     public function __construct($attributes = [], $options = [])
     {
         foreach ($attributes as $key => $value) {
@@ -29,16 +40,36 @@ class ShareGroup
         $this->options = $options;
     }
 
+    /**
+     * Set a model attribute locally; call save() to persist supported changes.
+     *
+     * @param string $name Attribute name.
+     * @param mixed $value Attribute value.
+     * @return void
+     */
     public function __set($name, $value)
     {
         $this->attributes[$name] = $value;
     }
 
+    /**
+     * Read a model attribute.
+     *
+     * @param string $name Attribute name.
+     * @return mixed The attribute value, or null when it is not set.
+     */
     public function __get($name)
     {
         return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
+    /**
+     * Dispatch a legacy static alias, including list() to all().
+     *
+     * @param string $name Alias name.
+     * @param array $arguments Arguments passed to the canonical method.
+     * @return mixed The canonical method's result, or null for an unknown alias.
+     */
     public static function __callStatic($name, $arguments)
     {
         if (in_array($name, array_keys(self::$static_mapped_functions))) {
@@ -49,65 +80,129 @@ class ShareGroup
         }
     }
 
+    /**
+     * Whether this model has a nonempty primary key.
+     *
+     * @return bool
+     */
     public function isLoaded()
     {
         return !!@$this->attributes['id'];
     }
-    // int64 # Share Group ID
+    /**
+     * Share Group ID
+     *
+     * @return int|null
+     */
     public function getId()
     {
         return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
+    /**
+     * Share Group ID
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setId($value)
     {
         return $this->attributes['id'] = $value;
     }
-    // string # Name of the share group
+    /**
+     * Name of the share group
+     *
+     * @return string|null
+     */
     public function getName()
     {
         return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
 
+    /**
+     * Name of the share group
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setName($value)
     {
         return $this->attributes['name'] = $value;
     }
-    // string # Additional notes of the share group
+    /**
+     * Additional notes of the share group
+     *
+     * @return string|null
+     */
     public function getNotes()
     {
         return isset($this->attributes['notes']) ? $this->attributes['notes'] : null;
     }
 
+    /**
+     * Additional notes of the share group
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setNotes($value)
     {
         return $this->attributes['notes'] = $value;
     }
-    // int64 # Owner User ID
+    /**
+     * Owner User ID
+     *
+     * @return int|null
+     */
     public function getUserId()
     {
         return isset($this->attributes['user_id']) ? $this->attributes['user_id'] : null;
     }
 
+    /**
+     * Owner User ID
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setUserId($value)
     {
         return $this->attributes['user_id'] = $value;
     }
-    // array(object) # A list of share group members
+    /**
+     * A list of share group members
+     *
+     * @return object[]|null
+     */
     public function getMembers()
     {
         return isset($this->attributes['members']) ? $this->attributes['members'] : null;
     }
 
+    /**
+     * A list of share group members
+     *
+     * @param object[]|null $value
+     * @return object[]|null The assigned value.
+     */
     public function setMembers($value)
     {
         return $this->attributes['members'] = $value;
     }
 
-    // Parameters:
-    //   notes - string - Additional notes of the share group
-    //   name - string - Name of the share group
-    //   members - array(object) - A list of share group members.
+    /**
+     * Update Share Group
+     *
+     * PATCH /share_groups/{id}
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Share Group ID.
+     *     - `notes` (string, optional): Additional notes of the share group
+     *     - `name` (string, optional): Name of the share group
+     *     - `members` ((array|object)[], optional): A list of share group members.
+     * @return \Files\Model\ShareGroup
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function update($params = [])
     {
         if (!is_array($params)) {
@@ -142,6 +237,16 @@ class ShareGroup
         return new ShareGroup((array) (@$response->data ?: []), $this->options);
     }
 
+    /**
+     * Delete Share Group
+     *
+     * DELETE /share_groups/{id}
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Share Group ID.
+     * @return void
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function delete($params = [])
     {
         if (!is_array($params)) {
@@ -164,12 +269,30 @@ class ShareGroup
         return;
     }
 
+    /**
+     * Delete Share Group
+     *
+     * DELETE /share_groups/{id}
+     *
+     * Alias of delete().
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Share Group ID.
+     * @return void
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function destroy($params = [])
     {
         $this->delete($params);
         return;
     }
 
+    /**
+     * Persist this model's attributes and replace them with the API response.
+     *
+     * @return bool True after the operation succeeds.
+     * @throws \Files\Exception\FilesException When saving fails or updates are unsupported.
+     */
     public function save()
     {
         if (@$this->attributes['id']) {
@@ -184,10 +307,19 @@ class ShareGroup
     }
 
 
-    // Parameters:
-    //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
-    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-    //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+    /**
+     * List Share Groups
+     *
+     * GET /share_groups
+     *
+     * @param array $params Request parameters.
+     *     - `user_id` (int, optional): User ID.  Provide a value of `0` to operate the current session's user.
+     *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+     *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\ShareGroup[]
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function all($params = [], $options = [])
     {
         if (!empty($params['user_id']) && !is_int($params['user_id'])) {
@@ -213,8 +345,17 @@ class ShareGroup
         return $return_array;
     }
 
-    // Parameters:
-    //   id (required) - int64 - Share Group ID.
+    /**
+     * Show Share Group
+     *
+     * GET /share_groups/{id}
+     *
+     * @param int $id Share Group ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\ShareGroup
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function find($id, $params = [], $options = [])
     {
         if (!is_array($params)) {
@@ -235,16 +376,38 @@ class ShareGroup
 
         return new ShareGroup((array) (@$response->data ?: []), $options);
     }
+    /**
+     * Show Share Group
+     *
+     * GET /share_groups/{id}
+     *
+     * Alias of find().
+     *
+     * @param int $id Share Group ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\ShareGroup
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function get($id, $params = [], $options = [])
     {
         return self::find($id, $params, $options);
     }
 
-    // Parameters:
-    //   user_id - int64 - User ID.  Provide a value of `0` to operate the current session's user.
-    //   notes - string - Additional notes of the share group
-    //   name (required) - string - Name of the share group
-    //   members (required) - array(object) - A list of share group members.
+    /**
+     * Create Share Group
+     *
+     * POST /share_groups
+     *
+     * @param array $params Request parameters.
+     *     - `user_id` (int, optional): User ID.  Provide a value of `0` to operate the current session's user.
+     *     - `notes` (string, optional): Additional notes of the share group
+     *     - `name` (string, required): Name of the share group
+     *     - `members` ((array|object)[], required): A list of share group members.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\ShareGroup
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function create($params = [], $options = [])
     {
         if (empty($params['name'])) {

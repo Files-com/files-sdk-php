@@ -8,8 +8,18 @@ use Files\Logger;
 require_once __DIR__ . '/../Files.php';
 
 /**
- * Class EmailLog
+ * An EmailLog is a record of the email notifications that were sent.
  *
+ * @property string|null $timestamp Start Time of Action. Deprecrated: Use created_at.
+ * @property string|null $message Log Message
+ * @property string|null $status Status of E-Mail delivery
+ * @property string|null $subject Subject line of E-Mail
+ * @property string|null $to To field of E-Mail
+ * @property string|null $cc CC field of E-Mail
+ * @property string|null $delivery_method How was the email delivered? `customer_smtp` or `files.com`
+ * @property string|null $smtp_hostname Customer SMTP Hostname used.
+ * @property string|null $smtp_ip Customer SMTP IP address as resolved for use (useful for troubleshooting DNS issues with customer SMTP).
+ * @property string|null $created_at Start Time of Action
  * @package Files
  */
 class EmailLog
@@ -20,6 +30,12 @@ class EmailLog
         'list' => 'all',
     ];
 
+    /**
+     * Build a model from API attributes and retain its request options.
+     *
+     * @param array $attributes Initial model attributes, keyed by property name.
+     * @param array $options Request options used by this model's operations.
+     */
     public function __construct($attributes = [], $options = [])
     {
         foreach ($attributes as $key => $value) {
@@ -29,16 +45,36 @@ class EmailLog
         $this->options = $options;
     }
 
+    /**
+     * Set a model attribute locally; call save() to persist supported changes.
+     *
+     * @param string $name Attribute name.
+     * @param mixed $value Attribute value.
+     * @return void
+     */
     public function __set($name, $value)
     {
         $this->attributes[$name] = $value;
     }
 
+    /**
+     * Read a model attribute.
+     *
+     * @param string $name Attribute name.
+     * @return mixed The attribute value, or null when it is not set.
+     */
     public function __get($name)
     {
         return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
+    /**
+     * Dispatch a legacy static alias, including list() to all().
+     *
+     * @param string $name Alias name.
+     * @param array $arguments Arguments passed to the canonical method.
+     * @return mixed The canonical method's result, or null for an unknown alias.
+     */
     public static function __callStatic($name, $arguments)
     {
         if (in_array($name, array_keys(self::$static_mapped_functions))) {
@@ -49,69 +85,123 @@ class EmailLog
         }
     }
 
+    /**
+     * Whether this model has a nonempty primary key.
+     *
+     * @return bool
+     */
     public function isLoaded()
     {
         return !!@$this->attributes['id'];
     }
-    // date-time # Start Time of Action. Deprecrated: Use created_at.
+    /**
+     * Start Time of Action. Deprecrated: Use created_at.
+     *
+     * @return string|null
+     */
     public function getTimestamp()
     {
         return isset($this->attributes['timestamp']) ? $this->attributes['timestamp'] : null;
     }
-    // string # Log Message
+    /**
+     * Log Message
+     *
+     * @return string|null
+     */
     public function getMessage()
     {
         return isset($this->attributes['message']) ? $this->attributes['message'] : null;
     }
-    // string # Status of E-Mail delivery
+    /**
+     * Status of E-Mail delivery
+     *
+     * @return string|null
+     */
     public function getStatus()
     {
         return isset($this->attributes['status']) ? $this->attributes['status'] : null;
     }
-    // string # Subject line of E-Mail
+    /**
+     * Subject line of E-Mail
+     *
+     * @return string|null
+     */
     public function getSubject()
     {
         return isset($this->attributes['subject']) ? $this->attributes['subject'] : null;
     }
-    // string # To field of E-Mail
+    /**
+     * To field of E-Mail
+     *
+     * @return string|null
+     */
     public function getTo()
     {
         return isset($this->attributes['to']) ? $this->attributes['to'] : null;
     }
-    // string # CC field of E-Mail
+    /**
+     * CC field of E-Mail
+     *
+     * @return string|null
+     */
     public function getCc()
     {
         return isset($this->attributes['cc']) ? $this->attributes['cc'] : null;
     }
-    // string # How was the email delivered?  `customer_smtp` or `files.com`
+    /**
+     * How was the email delivered?  `customer_smtp` or `files.com`
+     *
+     * @return string|null
+     */
     public function getDeliveryMethod()
     {
         return isset($this->attributes['delivery_method']) ? $this->attributes['delivery_method'] : null;
     }
-    // string # Customer SMTP Hostname used.
+    /**
+     * Customer SMTP Hostname used.
+     *
+     * @return string|null
+     */
     public function getSmtpHostname()
     {
         return isset($this->attributes['smtp_hostname']) ? $this->attributes['smtp_hostname'] : null;
     }
-    // string # Customer SMTP IP address as resolved for use (useful for troubleshooting DNS issues with customer SMTP).
+    /**
+     * Customer SMTP IP address as resolved for use (useful for troubleshooting DNS issues with customer SMTP).
+     *
+     * @return string|null
+     */
     public function getSmtpIp()
     {
         return isset($this->attributes['smtp_ip']) ? $this->attributes['smtp_ip'] : null;
     }
-    // date-time # Start Time of Action
+    /**
+     * Start Time of Action
+     *
+     * @return string|null
+     */
     public function getCreatedAt()
     {
         return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
 
-    // Parameters:
-    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-    //   per_page - int64 - Number of records to show per page.  (Max: 1000, 1,000 or less is recommended).
-    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `status` and `created_at`. Valid field combinations are `[ status ]`, `[ created_at ]` or `[ status, created_at ]`.
-    //   filter_gt - object - If set, return records where the specified field is greater than the supplied value. Valid fields are `created_at`. Valid field combinations are `[ status ]`, `[ created_at ]` or `[ status, created_at ]`.
-    //   filter_gteq - object - If set, return records where the specified field is greater than or equal the supplied value. Valid fields are `created_at`. Valid field combinations are `[ status ]`, `[ created_at ]` or `[ status, created_at ]`.
-    //   filter_lt - object - If set, return records where the specified field is less than the supplied value. Valid fields are `created_at`. Valid field combinations are `[ status ]`, `[ created_at ]` or `[ status, created_at ]`.
-    //   filter_lteq - object - If set, return records where the specified field is less than or equal the supplied value. Valid fields are `created_at`. Valid field combinations are `[ status ]`, `[ created_at ]` or `[ status, created_at ]`.
+    /**
+     * List Email Logs
+     *
+     * GET /email_logs
+     *
+     * @param array $params Request parameters.
+     *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+     *     - `per_page` (int, optional): Number of records to show per page.  (Max: 1000, 1,000 or less is recommended).
+     *     - `filter` (array|object, optional): If set, return records where the specified field is equal to the supplied value. Valid fields are `status` and `created_at`. Valid field combinations are `[ status ]`, `[ created_at ]` or `[ status, created_at ]`.
+     *     - `filter_gt` (array|object, optional): If set, return records where the specified field is greater than the supplied value. Valid fields are `created_at`. Valid field combinations are `[ status ]`, `[ created_at ]` or `[ status, created_at ]`.
+     *     - `filter_gteq` (array|object, optional): If set, return records where the specified field is greater than or equal the supplied value. Valid fields are `created_at`. Valid field combinations are `[ status ]`, `[ created_at ]` or `[ status, created_at ]`.
+     *     - `filter_lt` (array|object, optional): If set, return records where the specified field is less than the supplied value. Valid fields are `created_at`. Valid field combinations are `[ status ]`, `[ created_at ]` or `[ status, created_at ]`.
+     *     - `filter_lteq` (array|object, optional): If set, return records where the specified field is less than or equal the supplied value. Valid fields are `created_at`. Valid field combinations are `[ status ]`, `[ created_at ]` or `[ status, created_at ]`.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\EmailLog[]
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function all($params = [], $options = [])
     {
         if (!empty($params['cursor']) && !is_string($params['cursor'])) {

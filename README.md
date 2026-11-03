@@ -1139,3 +1139,32 @@ Use PHP file and SPL interfaces through the `files://` stream wrapper. See [nati
 ## API region routing
 
 See [API region routing](docs/RegionRouting.md) for automatic region continuation and its policy override.
+
+## Native PHP API reference
+
+The generated classes include PHPDoc for model properties, accessors and API
+operations, including request parameters and return types. IDEs can read these
+comments directly. The generated Markdown reference remains in `docs/Model/`.
+
+To build a browsable phpDocumentor reference, install the separate documentation
+tools using PHP 8.1.2 or later, then run the documentation build from this SDK's
+root:
+
+```sh
+composer --working-dir=tools/phpdoc install
+composer docs
+```
+
+Open `docs/api/index.html` to browse the result. The documentation tool's
+requirements do not change the PHP versions or Guzzle versions supported by the
+SDK. The builder analyzes source files without loading the SDK or making API
+requests.
+
+`./build.sh --docs` runs the same build without Composer's script wrapper. To use
+an existing phpDocumentor 3 executable or PHAR, set `PHPDOC_BIN` to its path. Set
+`PHPDOC_PHP` to the PHP executable used by the builder when it differs from
+`php`. A plain `./build.sh` checks PHP source syntax and reports how to build the
+reference. To generate and build the reference in one SDK Generator command,
+set `PHPDOC_BIN` to an absolute tool path outside `generated/php` and run
+`bundle exec ruby files-sdk-generator.rb --target php --build-args=--docs`.
+Regeneration replaces the generated SDK, including locally installed tools.

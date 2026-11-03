@@ -8,8 +8,23 @@ use Files\Logger;
 require_once __DIR__ . '/../Files.php';
 
 /**
- * Class UserLifecycleRule
+ * A UserLifecycleRule represents a rule that applies to users based on their inactivity, state and authentication method.
  *
+ * @property int|null $id User Lifecycle Rule ID
+ * @property string|null $authentication_method User authentication method for which the rule will apply. Use `all_non_sso` to target every non-SSO authentication method with one rule.
+ * @property int[]|null $group_ids Array of Group IDs to which the rule applies. If empty or not set, the rule applies to all users.
+ * @property string|null $action Action to take on inactive users (disable or delete)
+ * @property int|null $inactivity_days Number of days of inactivity before the rule applies
+ * @property bool|null $include_folder_admins If true, the rule will apply to folder admins.
+ * @property bool|null $include_site_admins If true, the rule includes Site Administrators, who always belong to the Default Workspace. Can only be enabled when `workspace_id` is `0`.
+ * @property bool|null $apply_to_all_workspaces If true, a Default Workspace rule also applies to users in all Custom Workspaces. Can only be enabled when `workspace_id` is `0`.
+ * @property string|null $name User Lifecycle Rule name
+ * @property bool|null $notify_users If true, users will be emailed before the rule disables or deletes them.
+ * @property string|null $partner_tag If provided, only users belonging to Partners with this tag at the Partner level will be affected by the rule. Tags must only contain lowercase letters, numbers, and hyphens.
+ * @property int|null $site_id Site ID
+ * @property int|null $workspace_id Workspace whose users the rule applies to. `0` means the Default Workspace. A Custom Workspace rule applies only to users who belong to that Workspace, regardless of access granted to other users.
+ * @property string|null $user_state State of the users to apply the rule to (inactive or disabled)
+ * @property string|null $user_tag If provided, only users with this tag will be affected by the rule. Tags must only contain lowercase letters, numbers, and hyphens.
  * @package Files
  */
 class UserLifecycleRule
@@ -20,6 +35,12 @@ class UserLifecycleRule
         'list' => 'all',
     ];
 
+    /**
+     * Build a model from API attributes and retain its request options.
+     *
+     * @param array $attributes Initial model attributes, keyed by property name.
+     * @param array $options Request options used by this model's operations.
+     */
     public function __construct($attributes = [], $options = [])
     {
         foreach ($attributes as $key => $value) {
@@ -29,16 +50,36 @@ class UserLifecycleRule
         $this->options = $options;
     }
 
+    /**
+     * Set a model attribute locally; call save() to persist supported changes.
+     *
+     * @param string $name Attribute name.
+     * @param mixed $value Attribute value.
+     * @return void
+     */
     public function __set($name, $value)
     {
         $this->attributes[$name] = $value;
     }
 
+    /**
+     * Read a model attribute.
+     *
+     * @param string $name Attribute name.
+     * @return mixed The attribute value, or null when it is not set.
+     */
     public function __get($name)
     {
         return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
+    /**
+     * Dispatch a legacy static alias, including list() to all().
+     *
+     * @param string $name Alias name.
+     * @param array $arguments Arguments passed to the canonical method.
+     * @return mixed The canonical method's result, or null for an unknown alias.
+     */
     public static function __callStatic($name, $arguments)
     {
         if (in_array($name, array_keys(self::$static_mapped_functions))) {
@@ -49,175 +90,339 @@ class UserLifecycleRule
         }
     }
 
+    /**
+     * Whether this model has a nonempty primary key.
+     *
+     * @return bool
+     */
     public function isLoaded()
     {
         return !!@$this->attributes['id'];
     }
-    // int64 # User Lifecycle Rule ID
+    /**
+     * User Lifecycle Rule ID
+     *
+     * @return int|null
+     */
     public function getId()
     {
         return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
 
+    /**
+     * User Lifecycle Rule ID
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setId($value)
     {
         return $this->attributes['id'] = $value;
     }
-    // string # User authentication method for which the rule will apply. Use `all_non_sso` to target every non-SSO authentication method with one rule.
+    /**
+     * User authentication method for which the rule will apply. Use `all_non_sso` to target every non-SSO authentication method with one rule.
+     *
+     * @return string|null
+     */
     public function getAuthenticationMethod()
     {
         return isset($this->attributes['authentication_method']) ? $this->attributes['authentication_method'] : null;
     }
 
+    /**
+     * User authentication method for which the rule will apply. Use `all_non_sso` to target every non-SSO authentication method with one rule.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setAuthenticationMethod($value)
     {
         return $this->attributes['authentication_method'] = $value;
     }
-    // array(int64) # Array of Group IDs to which the rule applies. If empty or not set, the rule applies to all users.
+    /**
+     * Array of Group IDs to which the rule applies. If empty or not set, the rule applies to all users.
+     *
+     * @return int[]|null
+     */
     public function getGroupIds()
     {
         return isset($this->attributes['group_ids']) ? $this->attributes['group_ids'] : null;
     }
 
+    /**
+     * Array of Group IDs to which the rule applies. If empty or not set, the rule applies to all users.
+     *
+     * @param int[]|null $value
+     * @return int[]|null The assigned value.
+     */
     public function setGroupIds($value)
     {
         return $this->attributes['group_ids'] = $value;
     }
-    // string # Action to take on inactive users (disable or delete)
+    /**
+     * Action to take on inactive users (disable or delete)
+     *
+     * @return string|null
+     */
     public function getAction()
     {
         return isset($this->attributes['action']) ? $this->attributes['action'] : null;
     }
 
+    /**
+     * Action to take on inactive users (disable or delete)
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setAction($value)
     {
         return $this->attributes['action'] = $value;
     }
-    // int64 # Number of days of inactivity before the rule applies
+    /**
+     * Number of days of inactivity before the rule applies
+     *
+     * @return int|null
+     */
     public function getInactivityDays()
     {
         return isset($this->attributes['inactivity_days']) ? $this->attributes['inactivity_days'] : null;
     }
 
+    /**
+     * Number of days of inactivity before the rule applies
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setInactivityDays($value)
     {
         return $this->attributes['inactivity_days'] = $value;
     }
-    // boolean # If true, the rule will apply to folder admins.
+    /**
+     * If true, the rule will apply to folder admins.
+     *
+     * @return bool|null
+     */
     public function getIncludeFolderAdmins()
     {
         return isset($this->attributes['include_folder_admins']) ? $this->attributes['include_folder_admins'] : null;
     }
 
+    /**
+     * If true, the rule will apply to folder admins.
+     *
+     * @param bool|null $value
+     * @return bool|null The assigned value.
+     */
     public function setIncludeFolderAdmins($value)
     {
         return $this->attributes['include_folder_admins'] = $value;
     }
-    // boolean # If true, the rule includes Site Administrators, who always belong to the Default Workspace. Can only be enabled when `workspace_id` is `0`.
+    /**
+     * If true, the rule includes Site Administrators, who always belong to the Default Workspace. Can only be enabled when `workspace_id` is `0`.
+     *
+     * @return bool|null
+     */
     public function getIncludeSiteAdmins()
     {
         return isset($this->attributes['include_site_admins']) ? $this->attributes['include_site_admins'] : null;
     }
 
+    /**
+     * If true, the rule includes Site Administrators, who always belong to the Default Workspace. Can only be enabled when `workspace_id` is `0`.
+     *
+     * @param bool|null $value
+     * @return bool|null The assigned value.
+     */
     public function setIncludeSiteAdmins($value)
     {
         return $this->attributes['include_site_admins'] = $value;
     }
-    // boolean # If true, a Default Workspace rule also applies to users in all Custom Workspaces. Can only be enabled when `workspace_id` is `0`.
+    /**
+     * If true, a Default Workspace rule also applies to users in all Custom Workspaces. Can only be enabled when `workspace_id` is `0`.
+     *
+     * @return bool|null
+     */
     public function getApplyToAllWorkspaces()
     {
         return isset($this->attributes['apply_to_all_workspaces']) ? $this->attributes['apply_to_all_workspaces'] : null;
     }
 
+    /**
+     * If true, a Default Workspace rule also applies to users in all Custom Workspaces. Can only be enabled when `workspace_id` is `0`.
+     *
+     * @param bool|null $value
+     * @return bool|null The assigned value.
+     */
     public function setApplyToAllWorkspaces($value)
     {
         return $this->attributes['apply_to_all_workspaces'] = $value;
     }
-    // string # User Lifecycle Rule name
+    /**
+     * User Lifecycle Rule name
+     *
+     * @return string|null
+     */
     public function getName()
     {
         return isset($this->attributes['name']) ? $this->attributes['name'] : null;
     }
 
+    /**
+     * User Lifecycle Rule name
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setName($value)
     {
         return $this->attributes['name'] = $value;
     }
-    // boolean # If true, users will be emailed before the rule disables or deletes them.
+    /**
+     * If true, users will be emailed before the rule disables or deletes them.
+     *
+     * @return bool|null
+     */
     public function getNotifyUsers()
     {
         return isset($this->attributes['notify_users']) ? $this->attributes['notify_users'] : null;
     }
 
+    /**
+     * If true, users will be emailed before the rule disables or deletes them.
+     *
+     * @param bool|null $value
+     * @return bool|null The assigned value.
+     */
     public function setNotifyUsers($value)
     {
         return $this->attributes['notify_users'] = $value;
     }
-    // string # If provided, only users belonging to Partners with this tag at the Partner level will be affected by the rule. Tags must only contain lowercase letters, numbers, and hyphens.
+    /**
+     * If provided, only users belonging to Partners with this tag at the Partner level will be affected by the rule. Tags must only contain lowercase letters, numbers, and hyphens.
+     *
+     * @return string|null
+     */
     public function getPartnerTag()
     {
         return isset($this->attributes['partner_tag']) ? $this->attributes['partner_tag'] : null;
     }
 
+    /**
+     * If provided, only users belonging to Partners with this tag at the Partner level will be affected by the rule. Tags must only contain lowercase letters, numbers, and hyphens.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setPartnerTag($value)
     {
         return $this->attributes['partner_tag'] = $value;
     }
-    // int64 # Site ID
+    /**
+     * Site ID
+     *
+     * @return int|null
+     */
     public function getSiteId()
     {
         return isset($this->attributes['site_id']) ? $this->attributes['site_id'] : null;
     }
 
+    /**
+     * Site ID
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setSiteId($value)
     {
         return $this->attributes['site_id'] = $value;
     }
-    // int64 # Workspace whose users the rule applies to. `0` means the Default Workspace. A Custom Workspace rule applies only to users who belong to that Workspace, regardless of access granted to other users.
+    /**
+     * Workspace whose users the rule applies to. `0` means the Default Workspace. A Custom Workspace rule applies only to users who belong to that Workspace, regardless of access granted to other users.
+     *
+     * @return int|null
+     */
     public function getWorkspaceId()
     {
         return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
 
+    /**
+     * Workspace whose users the rule applies to. `0` means the Default Workspace. A Custom Workspace rule applies only to users who belong to that Workspace, regardless of access granted to other users.
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
     public function setWorkspaceId($value)
     {
         return $this->attributes['workspace_id'] = $value;
     }
-    // string # State of the users to apply the rule to (inactive or disabled)
+    /**
+     * State of the users to apply the rule to (inactive or disabled)
+     *
+     * @return string|null
+     */
     public function getUserState()
     {
         return isset($this->attributes['user_state']) ? $this->attributes['user_state'] : null;
     }
 
+    /**
+     * State of the users to apply the rule to (inactive or disabled)
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setUserState($value)
     {
         return $this->attributes['user_state'] = $value;
     }
-    // string # If provided, only users with this tag will be affected by the rule. Tags must only contain lowercase letters, numbers, and hyphens.
+    /**
+     * If provided, only users with this tag will be affected by the rule. Tags must only contain lowercase letters, numbers, and hyphens.
+     *
+     * @return string|null
+     */
     public function getUserTag()
     {
         return isset($this->attributes['user_tag']) ? $this->attributes['user_tag'] : null;
     }
 
+    /**
+     * If provided, only users with this tag will be affected by the rule. Tags must only contain lowercase letters, numbers, and hyphens.
+     *
+     * @param string|null $value
+     * @return string|null The assigned value.
+     */
     public function setUserTag($value)
     {
         return $this->attributes['user_tag'] = $value;
     }
 
-    // Parameters:
-    //   action - string - Action to take on inactive users (disable or delete)
-    //   apply_to_all_workspaces - boolean - If true, a Default Workspace rule also applies to users in all Custom Workspaces. Can only be enabled when `workspace_id` is `0`.
-    //   authentication_method - string - User authentication method for which the rule will apply. Use `all_non_sso` to target every non-SSO authentication method with one rule.
-    //   group_ids - array(int64) - Array of Group IDs to which the rule applies. If empty or not set, the rule applies to all users.
-    //   inactivity_days - int64 - Number of days of inactivity before the rule applies
-    //   include_site_admins - boolean - If true, the rule includes Site Administrators, who always belong to the Default Workspace. Can only be enabled when `workspace_id` is `0`.
-    //   include_folder_admins - boolean - If true, the rule will apply to folder admins.
-    //   name - string - User Lifecycle Rule name
-    //   notify_users - boolean - If true, users will be emailed before the rule disables or deletes them.
-    //   partner_tag - string - If provided, only users belonging to Partners with this tag at the Partner level will be affected by the rule. Tags must only contain lowercase letters, numbers, and hyphens.
-    //   user_state - string - State of the users to apply the rule to (inactive or disabled)
-    //   user_tag - string - If provided, only users with this tag will be affected by the rule. Tags must only contain lowercase letters, numbers, and hyphens.
-    //   workspace_id - int64 - Workspace whose users the rule applies to. `0` means the Default Workspace. A Custom Workspace rule applies only to users who belong to that Workspace, regardless of access granted to other users.
+    /**
+     * Update User Lifecycle Rule
+     *
+     * PATCH /user_lifecycle_rules/{id}
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): User Lifecycle Rule ID.
+     *     - `action` (string, optional): Action to take on inactive users (disable or delete) Allowed values: disable, delete.
+     *     - `apply_to_all_workspaces` (bool, optional): If true, a Default Workspace rule also applies to users in all Custom Workspaces. Can only be enabled when `workspace_id` is `0`.
+     *     - `authentication_method` (string, optional): User authentication method for which the rule will apply. Use `all_non_sso` to target every non-SSO authentication method with one rule. Allowed values: all, password, sso, none, email_signup, password_with_imported_hash, password_and_ssh_key, all_non_sso.
+     *     - `group_ids` (int[], optional): Array of Group IDs to which the rule applies. If empty or not set, the rule applies to all users.
+     *     - `inactivity_days` (int, optional): Number of days of inactivity before the rule applies
+     *     - `include_site_admins` (bool, optional): If true, the rule includes Site Administrators, who always belong to the Default Workspace. Can only be enabled when `workspace_id` is `0`.
+     *     - `include_folder_admins` (bool, optional): If true, the rule will apply to folder admins.
+     *     - `name` (string, optional): User Lifecycle Rule name
+     *     - `notify_users` (bool, optional): If true, users will be emailed before the rule disables or deletes them.
+     *     - `partner_tag` (string, optional): If provided, only users belonging to Partners with this tag at the Partner level will be affected by the rule. Tags must only contain lowercase letters, numbers, and hyphens.
+     *     - `user_state` (string, optional): State of the users to apply the rule to (inactive or disabled) Allowed values: inactive, disabled.
+     *     - `user_tag` (string, optional): If provided, only users with this tag will be affected by the rule. Tags must only contain lowercase letters, numbers, and hyphens.
+     *     - `workspace_id` (int, optional): Workspace whose users the rule applies to. `0` means the Default Workspace. A Custom Workspace rule applies only to users who belong to that Workspace, regardless of access granted to other users.
+     * @return \Files\Model\UserLifecycleRule
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function update($params = [])
     {
         if (!is_array($params)) {
@@ -276,6 +481,16 @@ class UserLifecycleRule
         return new UserLifecycleRule((array) (@$response->data ?: []), $this->options);
     }
 
+    /**
+     * Delete User Lifecycle Rule
+     *
+     * DELETE /user_lifecycle_rules/{id}
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): User Lifecycle Rule ID.
+     * @return void
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function delete($params = [])
     {
         if (!is_array($params)) {
@@ -298,12 +513,30 @@ class UserLifecycleRule
         return;
     }
 
+    /**
+     * Delete User Lifecycle Rule
+     *
+     * DELETE /user_lifecycle_rules/{id}
+     *
+     * Alias of delete().
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): User Lifecycle Rule ID.
+     * @return void
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public function destroy($params = [])
     {
         $this->delete($params);
         return;
     }
 
+    /**
+     * Persist this model's attributes and replace them with the API response.
+     *
+     * @return bool True after the operation succeeds.
+     * @throws \Files\Exception\FilesException When saving fails or updates are unsupported.
+     */
     public function save()
     {
         if (@$this->attributes['id']) {
@@ -318,11 +551,20 @@ class UserLifecycleRule
     }
 
 
-    // Parameters:
-    //   cursor - string - Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-    //   per_page - int64 - Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
-    //   sort_by - object - If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `site_id` and `workspace_id`.
-    //   filter - object - If set, return records where the specified field is equal to the supplied value. Valid fields are `workspace_id`.
+    /**
+     * List User Lifecycle Rules
+     *
+     * GET /user_lifecycle_rules
+     *
+     * @param array $params Request parameters.
+     *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+     *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+     *     - `sort_by` (array|object, optional): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `site_id` and `workspace_id`.
+     *     - `filter` (array|object, optional): If set, return records where the specified field is equal to the supplied value. Valid fields are `workspace_id`.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\UserLifecycleRule[]
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function all($params = [], $options = [])
     {
         if (!empty($params['cursor']) && !is_string($params['cursor'])) {
@@ -344,8 +586,17 @@ class UserLifecycleRule
         return $return_array;
     }
 
-    // Parameters:
-    //   id (required) - int64 - User Lifecycle Rule ID.
+    /**
+     * Show User Lifecycle Rule
+     *
+     * GET /user_lifecycle_rules/{id}
+     *
+     * @param int $id User Lifecycle Rule ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\UserLifecycleRule
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function find($id, $params = [], $options = [])
     {
         if (!is_array($params)) {
@@ -366,25 +617,47 @@ class UserLifecycleRule
 
         return new UserLifecycleRule((array) (@$response->data ?: []), $options);
     }
+    /**
+     * Show User Lifecycle Rule
+     *
+     * GET /user_lifecycle_rules/{id}
+     *
+     * Alias of find().
+     *
+     * @param int $id User Lifecycle Rule ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\UserLifecycleRule
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function get($id, $params = [], $options = [])
     {
         return self::find($id, $params, $options);
     }
 
-    // Parameters:
-    //   action - string - Action to take on inactive users (disable or delete)
-    //   apply_to_all_workspaces - boolean - If true, a Default Workspace rule also applies to users in all Custom Workspaces. Can only be enabled when `workspace_id` is `0`.
-    //   authentication_method - string - User authentication method for which the rule will apply. Use `all_non_sso` to target every non-SSO authentication method with one rule.
-    //   group_ids - array(int64) - Array of Group IDs to which the rule applies. If empty or not set, the rule applies to all users.
-    //   inactivity_days - int64 - Number of days of inactivity before the rule applies
-    //   include_site_admins - boolean - If true, the rule includes Site Administrators, who always belong to the Default Workspace. Can only be enabled when `workspace_id` is `0`.
-    //   include_folder_admins - boolean - If true, the rule will apply to folder admins.
-    //   name - string - User Lifecycle Rule name
-    //   notify_users - boolean - If true, users will be emailed before the rule disables or deletes them.
-    //   partner_tag - string - If provided, only users belonging to Partners with this tag at the Partner level will be affected by the rule. Tags must only contain lowercase letters, numbers, and hyphens.
-    //   user_state - string - State of the users to apply the rule to (inactive or disabled)
-    //   user_tag - string - If provided, only users with this tag will be affected by the rule. Tags must only contain lowercase letters, numbers, and hyphens.
-    //   workspace_id - int64 - Workspace whose users the rule applies to. `0` means the Default Workspace. A Custom Workspace rule applies only to users who belong to that Workspace, regardless of access granted to other users.
+    /**
+     * Create User Lifecycle Rule
+     *
+     * POST /user_lifecycle_rules
+     *
+     * @param array $params Request parameters.
+     *     - `action` (string, optional): Action to take on inactive users (disable or delete) Allowed values: disable, delete.
+     *     - `apply_to_all_workspaces` (bool, optional): If true, a Default Workspace rule also applies to users in all Custom Workspaces. Can only be enabled when `workspace_id` is `0`.
+     *     - `authentication_method` (string, optional): User authentication method for which the rule will apply. Use `all_non_sso` to target every non-SSO authentication method with one rule. Allowed values: all, password, sso, none, email_signup, password_with_imported_hash, password_and_ssh_key, all_non_sso.
+     *     - `group_ids` (int[], optional): Array of Group IDs to which the rule applies. If empty or not set, the rule applies to all users.
+     *     - `inactivity_days` (int, optional): Number of days of inactivity before the rule applies
+     *     - `include_site_admins` (bool, optional): If true, the rule includes Site Administrators, who always belong to the Default Workspace. Can only be enabled when `workspace_id` is `0`.
+     *     - `include_folder_admins` (bool, optional): If true, the rule will apply to folder admins.
+     *     - `name` (string, optional): User Lifecycle Rule name
+     *     - `notify_users` (bool, optional): If true, users will be emailed before the rule disables or deletes them.
+     *     - `partner_tag` (string, optional): If provided, only users belonging to Partners with this tag at the Partner level will be affected by the rule. Tags must only contain lowercase letters, numbers, and hyphens.
+     *     - `user_state` (string, optional): State of the users to apply the rule to (inactive or disabled) Allowed values: inactive, disabled.
+     *     - `user_tag` (string, optional): If provided, only users with this tag will be affected by the rule. Tags must only contain lowercase letters, numbers, and hyphens.
+     *     - `workspace_id` (int, optional): Workspace whose users the rule applies to. `0` means the Default Workspace. A Custom Workspace rule applies only to users who belong to that Workspace, regardless of access granted to other users.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\UserLifecycleRule
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
     public static function create($params = [], $options = [])
     {
         if (!empty($params['action']) && !is_string($params['action'])) {

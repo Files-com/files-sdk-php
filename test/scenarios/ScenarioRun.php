@@ -30,7 +30,9 @@ class ScenarioRun
     const PARENT = 'php_api_scenarios';
     // How many lookups, a second apart, the run's own cleanup waits for a deleted folder to be absent.
     const CLEANUP_LOOKUPS = 5;
-    const USER_AGENT = '/^Files\\.com PHP SDK v\\S+$/';
+    // What follows the SDK's identity (Files.com PHP SDK v and Api::VERSION) in the User-Agent of its API requests: one
+    // comment naming a coarse operating system family and the PHP runtime, with its version when it can carry it.
+    const USER_AGENT_METADATA = '/^ \\(files-sdk-meta\\/1; os=(?:windows|macos|linux|android|ios|freebsd|other|unknown); runtime=php(?:\\/[0-9][A-Za-z0-9.+_-]{0,47})?\\)$/D';
 
     private $test;
     private $name;
@@ -168,10 +170,22 @@ class ScenarioRun
             $credentials = isset($entry['credentials']) ? $entry['credentials'] : [];
             $this->test->assertTrue(isset($credentials['api_key']) && is_int($credentials['api_key']), 'Request ' . $entry['seq'] . ' carried no journaled API key.');
             $this->test->assertTrue(!isset($credentials['session']), 'Request ' . $entry['seq'] . ' carried a session.');
-            $this->test->assertSame(1, preg_match(self::USER_AGENT, (string) $entry['user_agent']), 'Request ' . $entry['seq'] . ' came with the User-Agent ' . $entry['user_agent'] . ', not the SDK\'s.');
+            $this->test->assertTrue(self::isSdkUserAgent((string) $entry['user_agent']), 'Request ' . $entry['seq'] . ' came with the User-Agent ' . $entry['user_agent'] . ', not the SDK\'s.');
             $keys[$credentials['api_key']] = true;
         }
         $this->test->assertSame(1, count($keys), 'The SDK\'s API requests carried ' . count($keys) . ' API keys, not one.');
+    }
+
+    // Whether $userAgent is the SDK's own: exactly its identity, then its metadata comment (USER_AGENT_METADATA), at most
+    // 190 bytes in all and 128 for the comment.
+    private static function isSdkUserAgent($userAgent)
+    {
+        $identity = 'Files.com PHP SDK v' . \Files\Api::VERSION;
+        if (strpos($userAgent, $identity) !== 0 || strlen($userAgent) > 190) {
+            return false;
+        }
+        $metadata = (string) substr($userAgent, strlen($identity));
+        return strlen($metadata) <= 128 && preg_match(self::USER_AGENT_METADATA, $metadata) === 1;
     }
 
     // Writes the run's record, removes its local folder and restores the SDK's configuration.

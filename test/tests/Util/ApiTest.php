@@ -296,6 +296,88 @@ class ApiTest extends TestCase
         Files::setWorkspaceId(null);
     }
 
+    // The SDK's own requests through sendRequest, to the API and to an external URL alike, carry its name and version
+    // and then one comment naming this PHP and its operating system's family, within 190 bytes and 128 for the comment;
+    // the external one carries no API credential. A User-Agent in the options' headers is still replaced by the SDK's,
+    // and sendFile sends exactly the User-Agent it is given, with no API credential.
+    public function testSdkRequestsNameThisPhpAndItsOperatingSystemInTheUserAgent()
+    {
+        Files::setBaseUrl('https://app.files.com');
+        Files::setApiKey('test-key');
+        Files::setSessionId(null);
+        $history = [];
+        $mock = new MockHandler([
+            new Response(200, ['Content-Type' => 'application/json'], '[]'),
+            new Response(200, ['Content-Type' => 'application/json'], '[]'),
+            new Response(200, ['Content-Type' => 'application/json'], '[]'),
+            new Response(200, ['ETag' => '"part"']),
+        ]);
+        $stack = HandlerStack::create($mock);
+        $stack->push(Middleware::history($history));
+        Files::setHandler($stack);
+
+        Api::sendRequest('/folders', 'GET');
+        Api::sendRequest('https://storage.example.test/object', 'GET');
+        Api::sendRequest('/folders', 'GET', null, ['headers' => ['User-Agent' => 'Files.com PHP SDK v0.1 (files-sdk-meta/1; os=other; runtime=php)']]);
+        Api::sendFile('https://storage.example.test/part-1?X-Amz-Signature=signed', 'PUT', 'hi', ['User-Agent' => 'Storage client']);
+
+        $this->assertCount(4, $history);
+        $identity = 'Files.com PHP SDK v' . Api::VERSION;
+        $userAgent = $history[0]['request']->getHeaderLine('User-Agent');
+        $families = ['Linux' => 'linux', 'Darwin' => 'macos', 'WINNT' => 'windows'];
+        $os = isset($families[PHP_OS]) ? $families[PHP_OS] : '[a-z][a-z0-9-]{0,15}';
+        // This PHP's own version follows runtime=php exactly when it is a token the comment can carry: a digit, then at
+        // most 47 ASCII letters, digits, dots, plus signs, underscores and hyphens. Any other version, such as a
+        // distribution build's with a tilde, is left out, never changed.
+        $runtime = preg_match('/^[0-9][A-Za-z0-9.+_-]{0,47}$/D', PHP_VERSION) === 1 ? 'php\/' . preg_quote(PHP_VERSION, '/') : 'php';
+        $pattern = '/^' . preg_quote($identity, '/') . ' \(files-sdk-meta\/1; os=' . $os . '; runtime=' . $runtime . '\)$/D';
+        $this->assertSame(1, preg_match($pattern, $userAgent), $userAgent);
+        $this->assertLessThanOrEqual(190, strlen($userAgent));
+        $this->assertLessThanOrEqual(128, strlen($userAgent) - strlen($identity));
+        $this->assertSame('test-key', $history[0]['request']->getHeaderLine('X-FilesAPI-Key'));
+
+        $this->assertSame($userAgent, $history[1]['request']->getHeaderLine('User-Agent'));
+        $this->assertFalse($history[1]['request']->hasHeader('X-FilesAPI-Key'));
+        $this->assertSame($userAgent, $history[2]['request']->getHeaderLine('User-Agent'));
+        $this->assertSame('Storage client', $history[3]['request']->getHeaderLine('User-Agent'));
+        $this->assertFalse($history[3]['request']->hasHeader('X-FilesAPI-Key'));
+
+        list($preparedPath, $preparedOptions) = Api::prepareApiRequest(Files::snapshot(), '/folders', 'GET');
+        $this->assertSame($userAgent, $preparedOptions['headers']['User-Agent']);
+    }
+
+    // A runtime version the comment cannot carry is left out, an operating system outside the families it names is
+    // other, and none is unknown. When the whole User-Agent would be longer than 190 bytes, the version goes first and
+    // then the whole comment, and the SDK's identity is never shortened; one that is not printable ASCII gets no comment.
+    public function testUserAgentMetadataStaysWithinItsBoundsWithoutChangingTheIdentity()
+    {
+        $identity = 'Files.com PHP SDK v1.2.3';
+        // $identity, padded to $bytes.
+        $padded = function ($bytes) use ($identity) {
+            return $identity . str_repeat('0', $bytes - strlen($identity));
+        };
+        $cases = [
+            'a release on Linux' => [$identity, '8.3.4', 'Linux', $identity . ' (files-sdk-meta/1; os=linux; runtime=php/8.3.4)'],
+            'a distribution build on macOS' => [$identity, '8.1.2-1ubuntu2.14', 'Darwin', $identity . ' (files-sdk-meta/1; os=macos; runtime=php/8.1.2-1ubuntu2.14)'],
+            'Windows' => [$identity, '8.2.0', 'WINNT', $identity . ' (files-sdk-meta/1; os=windows; runtime=php/8.2.0)'],
+            'FreeBSD' => [$identity, '8.2.0', 'FreeBSD', $identity . ' (files-sdk-meta/1; os=freebsd; runtime=php/8.2.0)'],
+            'another operating system' => [$identity, '8.2.0', 'SunOS', $identity . ' (files-sdk-meta/1; os=other; runtime=php/8.2.0)'],
+            'no operating system' => [$identity, '8.2.0', '', $identity . ' (files-sdk-meta/1; os=unknown; runtime=php/8.2.0)'],
+            'a version it cannot carry' => [$identity, '8.4.0 (dev)', 'Linux', $identity . ' (files-sdk-meta/1; os=linux; runtime=php)'],
+            // 46 bytes, within the 48 a version may take: only the tilde keeps it out.
+            'a distribution build whose version has a tilde' => [$identity, '5.6.40-1+ubuntu22.04.1+deb.sury.org+1~20260617', 'Linux', $identity . ' (files-sdk-meta/1; os=linux; runtime=php)'],
+            'no version' => [$identity, '', 'Linux', $identity . ' (files-sdk-meta/1; os=linux; runtime=php)'],
+            'room for the version' => [$padded(142), '8.3.4', 'Linux', $padded(142) . ' (files-sdk-meta/1; os=linux; runtime=php/8.3.4)'],
+            'room without the version' => [$padded(143), '8.3.4', 'Linux', $padded(143) . ' (files-sdk-meta/1; os=linux; runtime=php)'],
+            'no room for the comment' => [$padded(149), '8.3.4', 'Linux', $padded(149)],
+            'an identity that is not printable ASCII' => [$identity . " Caf\xc3\xa9", '8.3.4', 'Linux', $identity . " Caf\xc3\xa9"],
+        ];
+
+        foreach ($cases as $case => list($name, $version, $os, $expected)) {
+            $this->assertSame($expected, Api::userAgentWithMetadata($name, $version, $os), $case);
+        }
+    }
+
     public function testCrossOriginRedirectStripsFilesAuthHeaders()
     {
         Files::setBaseUrl('https://app.files.com');

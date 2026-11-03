@@ -24,7 +24,7 @@ function middlewareRemoveHeader($header)
  */
 class Api
 {
-    const VERSION = "2.0.744";
+    const VERSION = "2.0.745";
 
     private static function urlOrigin($url)
     {
@@ -291,7 +291,7 @@ class Api
               ? ['Accept-Language' => $config['language']]
               : [],
             @$options['headers'] ?: [],
-            ['User-Agent' => "Files.com PHP SDK v" . self::VERSION]
+            ['User-Agent' => self::userAgentWithMetadata("Files.com PHP SDK v" . self::VERSION)]
         );
 
         $isExternal = preg_match('@^[a-zA-Z]+://@', $path);
@@ -479,6 +479,51 @@ class Api
         return [];
     }
 
+    // The User-Agent sendRequest sends with the SDK's own requests: $identity, the SDK's name and version, followed by
+    // one comment naming the coarse family of the operating system $phpOs (PHP_OS) names and the PHP runtime, with the
+    // version $phpVersion (PHP_VERSION) gives, such as "Files.com PHP SDK v1.0 (files-sdk-meta/1; os=linux;
+    // runtime=php/8.3.4)". The comment carries nothing else: no host or user name, path, architecture or build. A version
+    // it cannot carry as given is left out rather than changed. When the whole User-Agent would be longer than 190 bytes,
+    // the version is left out first and then the whole comment, so $identity is always sent as it is; an identity that
+    // is not printable ASCII gets no comment. sendFile sends only the headers it is given.
+    public static function userAgentWithMetadata($identity, $phpVersion = PHP_VERSION, $phpOs = PHP_OS)
+    {
+        $identity = (string) $identity;
+        if (preg_match('/^[\x20-\x7e]+$/D', $identity) !== 1) {
+            return $identity;
+        }
+
+        $runtimes = ['php'];
+        if (is_string($phpVersion) && preg_match('/^[0-9][A-Za-z0-9.+_-]{0,47}$/D', $phpVersion) === 1) {
+            $runtimes = ['php/' . $phpVersion, 'php'];
+        }
+        $os = self::userAgentOs($phpOs);
+        foreach ($runtimes as $runtime) {
+            $metadata = ' (files-sdk-meta/1; os=' . $os . '; runtime=' . $runtime . ')';
+            if (strlen($metadata) <= 128 && strlen($identity) + strlen($metadata) <= 190) {
+                return $identity . $metadata;
+            }
+        }
+
+        return $identity;
+    }
+
+    // The coarse family of the operating system PHP_OS names: "unknown" for none, and "other" for one the User-Agent's
+    // comment does not name.
+    private static function userAgentOs($phpOs)
+    {
+        $name = strtolower((string) $phpOs);
+        if ($name === '') {
+            return 'unknown';
+        }
+        if (strpos($name, 'win') === 0 || strpos($name, 'cygwin') === 0) {
+            return 'windows';
+        }
+
+        $families = ['darwin' => 'macos', 'linux' => 'linux', 'android' => 'android', 'freebsd' => 'freebsd'];
+        return isset($families[$name]) ? $families[$name] : 'other';
+    }
+
     private static function autoPaginate($path, $verb, $params, $options, $response, $metadata = [])
     {
         if (Files::$autoPaginate) {
@@ -558,7 +603,7 @@ class Api
               ? ['Accept-Language' => Files::getLanguage()]
               : [],
             !empty($options['headers']) ? $options['headers'] : [],
-            ['User-Agent' => "Files.com PHP SDK v" . self::VERSION]
+            ['User-Agent' => self::userAgentWithMetadata("Files.com PHP SDK v" . self::VERSION)]
         );
 
         $isExternal = preg_match('@^[a-zA-Z]+://@', $path);

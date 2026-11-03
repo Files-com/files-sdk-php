@@ -781,6 +781,7 @@ Exception
 |`TwoFactorAuthenticationUnsubscribedRecipientException`|  `ProcessingFailureException` |
 |`UpdatesNotAllowedForRemotesException`|  `ProcessingFailureException` |
 |`DuplicateShareRecipientException`|  `RateLimitedException` |
+|`FilesNativeStorageOverloadedException`|  `RateLimitedException` |
 |`ReauthenticationRateLimitedException`|  `RateLimitedException` |
 |`TooManyConcurrentLoginsException`|  `RateLimitedException` |
 |`TooManyConcurrentRequestsException`|  `RateLimitedException` |

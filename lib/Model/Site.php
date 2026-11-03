@@ -2007,9 +2007,9 @@ class Site
      */
     public static function get($params = [], $options = [])
     {
-        $response = Api::sendRequest('/site', 'GET', $options);
+        $response = Api::sendRequest('/site', 'GET', null, $options);
 
-        return new Site((array) (@$response->data ?: []), $options);
+        return new Site(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
 
     /**
@@ -2024,9 +2024,9 @@ class Site
      */
     public static function getUsage($params = [], $options = [])
     {
-        $response = Api::sendRequest('/site/usage', 'GET', $options);
+        $response = Api::sendRequest('/site/usage', 'GET', null, $options);
 
-        return new UsageSnapshot((array) (@$response->data ?: []), $options);
+        return new UsageSnapshot(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
 
     /**
@@ -2046,7 +2046,7 @@ class Site
             throw new \Files\Exception\MissingParameterException('Parameter missing: end_date');
         }
 
-        if (!empty($params['end_date']) && !is_string($params['end_date'])) {
+        if (isset($params['end_date']) && !is_string($params['end_date'])) {
             throw new \Files\Exception\InvalidParameterException('$end_date must be of type string; received ' . gettype(@$params['end_date']));
         }
 
@@ -2249,244 +2249,696 @@ class Site
      */
     public static function update($params = [], $options = [])
     {
-        if (!empty($params['name']) && !is_string($params['name'])) {
+        if (isset($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (!empty($params['subdomain']) && !is_string($params['subdomain'])) {
+        if (isset($params['subdomain']) && !is_string($params['subdomain'])) {
             throw new \Files\Exception\InvalidParameterException('$subdomain must be of type string; received ' . gettype(@$params['subdomain']));
         }
 
-        if (!empty($params['domain']) && !is_string($params['domain'])) {
+        if (isset($params['domain']) && !is_string($params['domain'])) {
             throw new \Files\Exception\InvalidParameterException('$domain must be of type string; received ' . gettype(@$params['domain']));
         }
 
-        if (!empty($params['domain_letsencrypt_chain']) && !is_string($params['domain_letsencrypt_chain'])) {
+        if (isset($params['domain_hsts_header']) && !is_scalar($params['domain_hsts_header'])) {
+            throw new \Files\Exception\InvalidParameterException('$domain_hsts_header must be of type boolean; received ' . gettype(@$params['domain_hsts_header']));
+        }
+
+        if (isset($params['domain_letsencrypt_chain']) && !is_string($params['domain_letsencrypt_chain'])) {
             throw new \Files\Exception\InvalidParameterException('$domain_letsencrypt_chain must be of type string; received ' . gettype(@$params['domain_letsencrypt_chain']));
         }
 
-        if (!empty($params['email']) && !is_string($params['email'])) {
+        if (isset($params['email']) && !is_string($params['email'])) {
             throw new \Files\Exception\InvalidParameterException('$email must be of type string; received ' . gettype(@$params['email']));
         }
 
-        if (!empty($params['reply_to_email']) && !is_string($params['reply_to_email'])) {
+        if (isset($params['reply_to_email']) && !is_string($params['reply_to_email'])) {
             throw new \Files\Exception\InvalidParameterException('$reply_to_email must be of type string; received ' . gettype(@$params['reply_to_email']));
         }
 
-        if (!empty($params['bundle_expiration']) && !is_int($params['bundle_expiration'])) {
+        if (isset($params['allow_bundle_names']) && !is_scalar($params['allow_bundle_names'])) {
+            throw new \Files\Exception\InvalidParameterException('$allow_bundle_names must be of type boolean; received ' . gettype(@$params['allow_bundle_names']));
+        }
+
+        if (isset($params['bundle_expiration']) && !is_int($params['bundle_expiration'])) {
             throw new \Files\Exception\InvalidParameterException('$bundle_expiration must be of type int; received ' . gettype(@$params['bundle_expiration']));
         }
 
-        if (!empty($params['welcome_email_cc']) && !is_string($params['welcome_email_cc'])) {
+        if (isset($params['welcome_email_enabled']) && !is_scalar($params['welcome_email_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$welcome_email_enabled must be of type boolean; received ' . gettype(@$params['welcome_email_enabled']));
+        }
+
+        if (isset($params['ask_about_overwrites']) && !is_scalar($params['ask_about_overwrites'])) {
+            throw new \Files\Exception\InvalidParameterException('$ask_about_overwrites must be of type boolean; received ' . gettype(@$params['ask_about_overwrites']));
+        }
+
+        if (isset($params['show_request_access_link']) && !is_scalar($params['show_request_access_link'])) {
+            throw new \Files\Exception\InvalidParameterException('$show_request_access_link must be of type boolean; received ' . gettype(@$params['show_request_access_link']));
+        }
+
+        if (isset($params['always_mkdir_parents']) && !is_scalar($params['always_mkdir_parents'])) {
+            throw new \Files\Exception\InvalidParameterException('$always_mkdir_parents must be of type boolean; received ' . gettype(@$params['always_mkdir_parents']));
+        }
+
+        if (isset($params['welcome_email_cc']) && !is_string($params['welcome_email_cc'])) {
             throw new \Files\Exception\InvalidParameterException('$welcome_email_cc must be of type string; received ' . gettype(@$params['welcome_email_cc']));
         }
 
-        if (!empty($params['welcome_email_subject']) && !is_string($params['welcome_email_subject'])) {
+        if (isset($params['welcome_email_subject']) && !is_string($params['welcome_email_subject'])) {
             throw new \Files\Exception\InvalidParameterException('$welcome_email_subject must be of type string; received ' . gettype(@$params['welcome_email_subject']));
         }
 
-        if (!empty($params['welcome_custom_text']) && !is_string($params['welcome_custom_text'])) {
+        if (isset($params['welcome_custom_text']) && !is_string($params['welcome_custom_text'])) {
             throw new \Files\Exception\InvalidParameterException('$welcome_custom_text must be of type string; received ' . gettype(@$params['welcome_custom_text']));
         }
 
-        if (!empty($params['language']) && !is_string($params['language'])) {
+        if (isset($params['language']) && !is_string($params['language'])) {
             throw new \Files\Exception\InvalidParameterException('$language must be of type string; received ' . gettype(@$params['language']));
         }
 
-        if (!empty($params['default_time_zone']) && !is_string($params['default_time_zone'])) {
+        if (isset($params['windows_mode_ftp']) && !is_scalar($params['windows_mode_ftp'])) {
+            throw new \Files\Exception\InvalidParameterException('$windows_mode_ftp must be of type boolean; received ' . gettype(@$params['windows_mode_ftp']));
+        }
+
+        if (isset($params['default_time_zone']) && !is_string($params['default_time_zone'])) {
             throw new \Files\Exception\InvalidParameterException('$default_time_zone must be of type string; received ' . gettype(@$params['default_time_zone']));
         }
 
-        if (!empty($params['desktop_app_session_lifetime']) && !is_int($params['desktop_app_session_lifetime'])) {
+        if (isset($params['desktop_app']) && !is_scalar($params['desktop_app'])) {
+            throw new \Files\Exception\InvalidParameterException('$desktop_app must be of type boolean; received ' . gettype(@$params['desktop_app']));
+        }
+
+        if (isset($params['desktop_app_session_ip_pinning']) && !is_scalar($params['desktop_app_session_ip_pinning'])) {
+            throw new \Files\Exception\InvalidParameterException('$desktop_app_session_ip_pinning must be of type boolean; received ' . gettype(@$params['desktop_app_session_ip_pinning']));
+        }
+
+        if (isset($params['desktop_app_session_lifetime']) && !is_int($params['desktop_app_session_lifetime'])) {
             throw new \Files\Exception\InvalidParameterException('$desktop_app_session_lifetime must be of type int; received ' . gettype(@$params['desktop_app_session_lifetime']));
         }
 
-        if (!empty($params['mobile_app_session_lifetime']) && !is_int($params['mobile_app_session_lifetime'])) {
+        if (isset($params['mobile_app']) && !is_scalar($params['mobile_app'])) {
+            throw new \Files\Exception\InvalidParameterException('$mobile_app must be of type boolean; received ' . gettype(@$params['mobile_app']));
+        }
+
+        if (isset($params['mobile_app_session_ip_pinning']) && !is_scalar($params['mobile_app_session_ip_pinning'])) {
+            throw new \Files\Exception\InvalidParameterException('$mobile_app_session_ip_pinning must be of type boolean; received ' . gettype(@$params['mobile_app_session_ip_pinning']));
+        }
+
+        if (isset($params['mobile_app_session_lifetime']) && !is_int($params['mobile_app_session_lifetime'])) {
             throw new \Files\Exception\InvalidParameterException('$mobile_app_session_lifetime must be of type int; received ' . gettype(@$params['mobile_app_session_lifetime']));
         }
 
-        if (!empty($params['welcome_screen']) && !is_string($params['welcome_screen'])) {
+        if (isset($params['folder_permissions_groups_only']) && !is_scalar($params['folder_permissions_groups_only'])) {
+            throw new \Files\Exception\InvalidParameterException('$folder_permissions_groups_only must be of type boolean; received ' . gettype(@$params['folder_permissions_groups_only']));
+        }
+
+        if (isset($params['welcome_screen']) && !is_string($params['welcome_screen'])) {
             throw new \Files\Exception\InvalidParameterException('$welcome_screen must be of type string; received ' . gettype(@$params['welcome_screen']));
         }
 
-        if (!empty($params['office_integration_type']) && !is_string($params['office_integration_type'])) {
+        if (isset($params['office_integration_available']) && !is_scalar($params['office_integration_available'])) {
+            throw new \Files\Exception\InvalidParameterException('$office_integration_available must be of type boolean; received ' . gettype(@$params['office_integration_available']));
+        }
+
+        if (isset($params['office_integration_type']) && !is_string($params['office_integration_type'])) {
             throw new \Files\Exception\InvalidParameterException('$office_integration_type must be of type string; received ' . gettype(@$params['office_integration_type']));
         }
 
-        if (!empty($params['motd_text']) && !is_string($params['motd_text'])) {
+        if (isset($params['pin_all_remote_servers_to_site_region']) && !is_scalar($params['pin_all_remote_servers_to_site_region'])) {
+            throw new \Files\Exception\InvalidParameterException('$pin_all_remote_servers_to_site_region must be of type boolean; received ' . gettype(@$params['pin_all_remote_servers_to_site_region']));
+        }
+
+        if (isset($params['motd_text']) && !is_string($params['motd_text'])) {
             throw new \Files\Exception\InvalidParameterException('$motd_text must be of type string; received ' . gettype(@$params['motd_text']));
         }
 
-        if (!empty($params['additional_text_file_types']) && !is_array($params['additional_text_file_types'])) {
+        if (isset($params['motd_use_for_ftp']) && !is_scalar($params['motd_use_for_ftp'])) {
+            throw new \Files\Exception\InvalidParameterException('$motd_use_for_ftp must be of type boolean; received ' . gettype(@$params['motd_use_for_ftp']));
+        }
+
+        if (isset($params['motd_use_for_sftp']) && !is_scalar($params['motd_use_for_sftp'])) {
+            throw new \Files\Exception\InvalidParameterException('$motd_use_for_sftp must be of type boolean; received ' . gettype(@$params['motd_use_for_sftp']));
+        }
+
+        if (isset($params['disable_all_ai_features']) && !is_scalar($params['disable_all_ai_features'])) {
+            throw new \Files\Exception\InvalidParameterException('$disable_all_ai_features must be of type boolean; received ' . gettype(@$params['disable_all_ai_features']));
+        }
+
+        if (isset($params['mcp_dcr_enabled']) && !is_scalar($params['mcp_dcr_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$mcp_dcr_enabled must be of type boolean; received ' . gettype(@$params['mcp_dcr_enabled']));
+        }
+
+        if (isset($params['additional_text_file_types']) && !is_array($params['additional_text_file_types'])) {
             throw new \Files\Exception\InvalidParameterException('$additional_text_file_types must be of type array; received ' . gettype(@$params['additional_text_file_types']));
         }
 
-        if (!empty($params['as2_message_retention_days']) && !is_int($params['as2_message_retention_days'])) {
+        if (isset($params['bundle_require_note']) && !is_scalar($params['bundle_require_note'])) {
+            throw new \Files\Exception\InvalidParameterException('$bundle_require_note must be of type boolean; received ' . gettype(@$params['bundle_require_note']));
+        }
+
+        if (isset($params['bundle_send_shared_receipts']) && !is_scalar($params['bundle_send_shared_receipts'])) {
+            throw new \Files\Exception\InvalidParameterException('$bundle_send_shared_receipts must be of type boolean; received ' . gettype(@$params['bundle_send_shared_receipts']));
+        }
+
+        if (isset($params['bundles_default_owned_by_primary_group']) && !is_scalar($params['bundles_default_owned_by_primary_group'])) {
+            throw new \Files\Exception\InvalidParameterException('$bundles_default_owned_by_primary_group must be of type boolean; received ' . gettype(@$params['bundles_default_owned_by_primary_group']));
+        }
+
+        if (isset($params['calculate_file_checksums_crc32']) && !is_scalar($params['calculate_file_checksums_crc32'])) {
+            throw new \Files\Exception\InvalidParameterException('$calculate_file_checksums_crc32 must be of type boolean; received ' . gettype(@$params['calculate_file_checksums_crc32']));
+        }
+
+        if (isset($params['calculate_file_checksums_md5']) && !is_scalar($params['calculate_file_checksums_md5'])) {
+            throw new \Files\Exception\InvalidParameterException('$calculate_file_checksums_md5 must be of type boolean; received ' . gettype(@$params['calculate_file_checksums_md5']));
+        }
+
+        if (isset($params['calculate_file_checksums_sha1']) && !is_scalar($params['calculate_file_checksums_sha1'])) {
+            throw new \Files\Exception\InvalidParameterException('$calculate_file_checksums_sha1 must be of type boolean; received ' . gettype(@$params['calculate_file_checksums_sha1']));
+        }
+
+        if (isset($params['calculate_file_checksums_sha256']) && !is_scalar($params['calculate_file_checksums_sha256'])) {
+            throw new \Files\Exception\InvalidParameterException('$calculate_file_checksums_sha256 must be of type boolean; received ' . gettype(@$params['calculate_file_checksums_sha256']));
+        }
+
+        if (isset($params['legacy_checksums_mode']) && !is_scalar($params['legacy_checksums_mode'])) {
+            throw new \Files\Exception\InvalidParameterException('$legacy_checksums_mode must be of type boolean; received ' . gettype(@$params['legacy_checksums_mode']));
+        }
+
+        if (isset($params['migrate_remote_server_sync_to_sync']) && !is_scalar($params['migrate_remote_server_sync_to_sync'])) {
+            throw new \Files\Exception\InvalidParameterException('$migrate_remote_server_sync_to_sync must be of type boolean; received ' . gettype(@$params['migrate_remote_server_sync_to_sync']));
+        }
+
+        if (isset($params['as2_message_retention_days']) && !is_int($params['as2_message_retention_days'])) {
             throw new \Files\Exception\InvalidParameterException('$as2_message_retention_days must be of type int; received ' . gettype(@$params['as2_message_retention_days']));
         }
 
-        if (!empty($params['username_display']) && !is_string($params['username_display'])) {
+        if (isset($params['file_activity_events_enabled']) && !is_scalar($params['file_activity_events_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$file_activity_events_enabled must be of type boolean; received ' . gettype(@$params['file_activity_events_enabled']));
+        }
+
+        if (isset($params['username_display']) && !is_string($params['username_display'])) {
             throw new \Files\Exception\InvalidParameterException('$username_display must be of type string; received ' . gettype(@$params['username_display']));
         }
 
-        if (!empty($params['integration_centric_remote_server_admin_access']) && !is_string($params['integration_centric_remote_server_admin_access'])) {
+        if (isset($params['integration_centric_remote_server_admin_access']) && !is_string($params['integration_centric_remote_server_admin_access'])) {
             throw new \Files\Exception\InvalidParameterException('$integration_centric_remote_server_admin_access must be of type string; received ' . gettype(@$params['integration_centric_remote_server_admin_access']));
         }
 
-        if (!empty($params['session_expiry_minutes']) && !is_int($params['session_expiry_minutes'])) {
+        if (isset($params['session_expiry_minutes']) && !is_int($params['session_expiry_minutes'])) {
             throw new \Files\Exception\InvalidParameterException('$session_expiry_minutes must be of type int; received ' . gettype(@$params['session_expiry_minutes']));
         }
 
-        if (!empty($params['user_lockout_tries']) && !is_int($params['user_lockout_tries'])) {
+        if (isset($params['legacy_pairing_enabled']) && !is_scalar($params['legacy_pairing_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$legacy_pairing_enabled must be of type boolean; received ' . gettype(@$params['legacy_pairing_enabled']));
+        }
+
+        if (isset($params['ssl_required']) && !is_scalar($params['ssl_required'])) {
+            throw new \Files\Exception\InvalidParameterException('$ssl_required must be of type boolean; received ' . gettype(@$params['ssl_required']));
+        }
+
+        if (isset($params['ftp_tls_session_reuse_required']) && !is_scalar($params['ftp_tls_session_reuse_required'])) {
+            throw new \Files\Exception\InvalidParameterException('$ftp_tls_session_reuse_required must be of type boolean; received ' . gettype(@$params['ftp_tls_session_reuse_required']));
+        }
+
+        if (isset($params['sftp_insecure_ciphers']) && !is_scalar($params['sftp_insecure_ciphers'])) {
+            throw new \Files\Exception\InvalidParameterException('$sftp_insecure_ciphers must be of type boolean; received ' . gettype(@$params['sftp_insecure_ciphers']));
+        }
+
+        if (isset($params['sftp_insecure_diffie_hellman']) && !is_scalar($params['sftp_insecure_diffie_hellman'])) {
+            throw new \Files\Exception\InvalidParameterException('$sftp_insecure_diffie_hellman must be of type boolean; received ' . gettype(@$params['sftp_insecure_diffie_hellman']));
+        }
+
+        if (isset($params['disable_files_certificate_generation']) && !is_scalar($params['disable_files_certificate_generation'])) {
+            throw new \Files\Exception\InvalidParameterException('$disable_files_certificate_generation must be of type boolean; received ' . gettype(@$params['disable_files_certificate_generation']));
+        }
+
+        if (isset($params['fedramp']) && !is_scalar($params['fedramp'])) {
+            throw new \Files\Exception\InvalidParameterException('$fedramp must be of type boolean; received ' . gettype(@$params['fedramp']));
+        }
+
+        if (isset($params['user_lockout']) && !is_scalar($params['user_lockout'])) {
+            throw new \Files\Exception\InvalidParameterException('$user_lockout must be of type boolean; received ' . gettype(@$params['user_lockout']));
+        }
+
+        if (isset($params['user_lockout_tries']) && !is_int($params['user_lockout_tries'])) {
             throw new \Files\Exception\InvalidParameterException('$user_lockout_tries must be of type int; received ' . gettype(@$params['user_lockout_tries']));
         }
 
-        if (!empty($params['user_lockout_within']) && !is_int($params['user_lockout_within'])) {
+        if (isset($params['user_lockout_within']) && !is_int($params['user_lockout_within'])) {
             throw new \Files\Exception\InvalidParameterException('$user_lockout_within must be of type int; received ' . gettype(@$params['user_lockout_within']));
         }
 
-        if (!empty($params['user_lockout_lock_period']) && !is_int($params['user_lockout_lock_period'])) {
+        if (isset($params['user_lockout_lock_period']) && !is_int($params['user_lockout_lock_period'])) {
             throw new \Files\Exception\InvalidParameterException('$user_lockout_lock_period must be of type int; received ' . gettype(@$params['user_lockout_lock_period']));
         }
 
-        if (!empty($params['allowed_countries']) && !is_string($params['allowed_countries'])) {
+        if (isset($params['include_password_in_welcome_email']) && !is_scalar($params['include_password_in_welcome_email'])) {
+            throw new \Files\Exception\InvalidParameterException('$include_password_in_welcome_email must be of type boolean; received ' . gettype(@$params['include_password_in_welcome_email']));
+        }
+
+        if (isset($params['allowed_countries']) && !is_string($params['allowed_countries'])) {
             throw new \Files\Exception\InvalidParameterException('$allowed_countries must be of type string; received ' . gettype(@$params['allowed_countries']));
         }
 
-        if (!empty($params['allowed_ips']) && !is_string($params['allowed_ips'])) {
+        if (isset($params['allowed_ips']) && !is_string($params['allowed_ips'])) {
             throw new \Files\Exception\InvalidParameterException('$allowed_ips must be of type string; received ' . gettype(@$params['allowed_ips']));
         }
 
-        if (!empty($params['disallowed_countries']) && !is_string($params['disallowed_countries'])) {
+        if (isset($params['allow_user_level_2fa_override']) && !is_scalar($params['allow_user_level_2fa_override'])) {
+            throw new \Files\Exception\InvalidParameterException('$allow_user_level_2fa_override must be of type boolean; received ' . gettype(@$params['allow_user_level_2fa_override']));
+        }
+
+        if (isset($params['allow_user_level_allowed_ip_override']) && !is_scalar($params['allow_user_level_allowed_ip_override'])) {
+            throw new \Files\Exception\InvalidParameterException('$allow_user_level_allowed_ip_override must be of type boolean; received ' . gettype(@$params['allow_user_level_allowed_ip_override']));
+        }
+
+        if (isset($params['allow_user_level_ssl_override']) && !is_scalar($params['allow_user_level_ssl_override'])) {
+            throw new \Files\Exception\InvalidParameterException('$allow_user_level_ssl_override must be of type boolean; received ' . gettype(@$params['allow_user_level_ssl_override']));
+        }
+
+        if (isset($params['allow_user_level_ftp_tls_session_reuse_override']) && !is_scalar($params['allow_user_level_ftp_tls_session_reuse_override'])) {
+            throw new \Files\Exception\InvalidParameterException('$allow_user_level_ftp_tls_session_reuse_override must be of type boolean; received ' . gettype(@$params['allow_user_level_ftp_tls_session_reuse_override']));
+        }
+
+        if (isset($params['enforce_parent_site_user_ip_restrictions']) && !is_scalar($params['enforce_parent_site_user_ip_restrictions'])) {
+            throw new \Files\Exception\InvalidParameterException('$enforce_parent_site_user_ip_restrictions must be of type boolean; received ' . gettype(@$params['enforce_parent_site_user_ip_restrictions']));
+        }
+
+        if (isset($params['disallowed_countries']) && !is_string($params['disallowed_countries'])) {
             throw new \Files\Exception\InvalidParameterException('$disallowed_countries must be of type string; received ' . gettype(@$params['disallowed_countries']));
         }
 
-        if (!empty($params['days_to_retain_backups']) && !is_int($params['days_to_retain_backups'])) {
+        if (isset($params['days_to_retain_backups']) && !is_int($params['days_to_retain_backups'])) {
             throw new \Files\Exception\InvalidParameterException('$days_to_retain_backups must be of type int; received ' . gettype(@$params['days_to_retain_backups']));
         }
 
-        if (!empty($params['max_prior_passwords']) && !is_int($params['max_prior_passwords'])) {
+        if (isset($params['max_prior_passwords']) && !is_int($params['max_prior_passwords'])) {
             throw new \Files\Exception\InvalidParameterException('$max_prior_passwords must be of type int; received ' . gettype(@$params['max_prior_passwords']));
         }
 
-        if (!empty($params['password_validity_days']) && !is_int($params['password_validity_days'])) {
+        if (isset($params['password_validity_days']) && !is_int($params['password_validity_days'])) {
             throw new \Files\Exception\InvalidParameterException('$password_validity_days must be of type int; received ' . gettype(@$params['password_validity_days']));
         }
 
-        if (!empty($params['password_min_length']) && !is_int($params['password_min_length'])) {
+        if (isset($params['password_min_length']) && !is_int($params['password_min_length'])) {
             throw new \Files\Exception\InvalidParameterException('$password_min_length must be of type int; received ' . gettype(@$params['password_min_length']));
         }
 
-        if (!empty($params['bundle_not_found_message']) && !is_string($params['bundle_not_found_message'])) {
+        if (isset($params['password_require_letter']) && !is_scalar($params['password_require_letter'])) {
+            throw new \Files\Exception\InvalidParameterException('$password_require_letter must be of type boolean; received ' . gettype(@$params['password_require_letter']));
+        }
+
+        if (isset($params['password_require_mixed']) && !is_scalar($params['password_require_mixed'])) {
+            throw new \Files\Exception\InvalidParameterException('$password_require_mixed must be of type boolean; received ' . gettype(@$params['password_require_mixed']));
+        }
+
+        if (isset($params['password_require_special']) && !is_scalar($params['password_require_special'])) {
+            throw new \Files\Exception\InvalidParameterException('$password_require_special must be of type boolean; received ' . gettype(@$params['password_require_special']));
+        }
+
+        if (isset($params['password_require_number']) && !is_scalar($params['password_require_number'])) {
+            throw new \Files\Exception\InvalidParameterException('$password_require_number must be of type boolean; received ' . gettype(@$params['password_require_number']));
+        }
+
+        if (isset($params['password_require_unbreached']) && !is_scalar($params['password_require_unbreached'])) {
+            throw new \Files\Exception\InvalidParameterException('$password_require_unbreached must be of type boolean; received ' . gettype(@$params['password_require_unbreached']));
+        }
+
+        if (isset($params['require_logout_from_bundles_and_inboxes']) && !is_scalar($params['require_logout_from_bundles_and_inboxes'])) {
+            throw new \Files\Exception\InvalidParameterException('$require_logout_from_bundles_and_inboxes must be of type boolean; received ' . gettype(@$params['require_logout_from_bundles_and_inboxes']));
+        }
+
+        if (isset($params['dav_user_root_enabled']) && !is_scalar($params['dav_user_root_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$dav_user_root_enabled must be of type boolean; received ' . gettype(@$params['dav_user_root_enabled']));
+        }
+
+        if (isset($params['sftp_user_root_enabled']) && !is_scalar($params['sftp_user_root_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$sftp_user_root_enabled must be of type boolean; received ' . gettype(@$params['sftp_user_root_enabled']));
+        }
+
+        if (isset($params['disable_password_reset']) && !is_scalar($params['disable_password_reset'])) {
+            throw new \Files\Exception\InvalidParameterException('$disable_password_reset must be of type boolean; received ' . gettype(@$params['disable_password_reset']));
+        }
+
+        if (isset($params['immutable_files']) && !is_scalar($params['immutable_files'])) {
+            throw new \Files\Exception\InvalidParameterException('$immutable_files must be of type boolean; received ' . gettype(@$params['immutable_files']));
+        }
+
+        if (isset($params['bundle_not_found_message']) && !is_string($params['bundle_not_found_message'])) {
             throw new \Files\Exception\InvalidParameterException('$bundle_not_found_message must be of type string; received ' . gettype(@$params['bundle_not_found_message']));
         }
 
-        if (!empty($params['bundle_registration_notifications']) && !is_string($params['bundle_registration_notifications'])) {
+        if (isset($params['bundle_password_required']) && !is_scalar($params['bundle_password_required'])) {
+            throw new \Files\Exception\InvalidParameterException('$bundle_password_required must be of type boolean; received ' . gettype(@$params['bundle_password_required']));
+        }
+
+        if (isset($params['bundle_require_registration']) && !is_scalar($params['bundle_require_registration'])) {
+            throw new \Files\Exception\InvalidParameterException('$bundle_require_registration must be of type boolean; received ' . gettype(@$params['bundle_require_registration']));
+        }
+
+        if (isset($params['bundle_require_share_recipient']) && !is_scalar($params['bundle_require_share_recipient'])) {
+            throw new \Files\Exception\InvalidParameterException('$bundle_require_share_recipient must be of type boolean; received ' . gettype(@$params['bundle_require_share_recipient']));
+        }
+
+        if (isset($params['bundle_send_one_time_password_to_recipient_at_registration']) && !is_scalar($params['bundle_send_one_time_password_to_recipient_at_registration'])) {
+            throw new \Files\Exception\InvalidParameterException('$bundle_send_one_time_password_to_recipient_at_registration must be of type boolean; received ' . gettype(@$params['bundle_send_one_time_password_to_recipient_at_registration']));
+        }
+
+        if (isset($params['bundle_registration_notifications']) && !is_string($params['bundle_registration_notifications'])) {
             throw new \Files\Exception\InvalidParameterException('$bundle_registration_notifications must be of type string; received ' . gettype(@$params['bundle_registration_notifications']));
         }
 
-        if (!empty($params['bundle_activity_notifications']) && !is_string($params['bundle_activity_notifications'])) {
+        if (isset($params['bundle_activity_notifications']) && !is_string($params['bundle_activity_notifications'])) {
             throw new \Files\Exception\InvalidParameterException('$bundle_activity_notifications must be of type string; received ' . gettype(@$params['bundle_activity_notifications']));
         }
 
-        if (!empty($params['bundle_upload_receipt_notifications']) && !is_string($params['bundle_upload_receipt_notifications'])) {
+        if (isset($params['bundle_upload_receipt_notifications']) && !is_string($params['bundle_upload_receipt_notifications'])) {
             throw new \Files\Exception\InvalidParameterException('$bundle_upload_receipt_notifications must be of type string; received ' . gettype(@$params['bundle_upload_receipt_notifications']));
         }
 
-        if (!empty($params['sftp_host_key_type']) && !is_string($params['sftp_host_key_type'])) {
+        if (isset($params['document_edits_in_bundle_allowed']) && !is_scalar($params['document_edits_in_bundle_allowed'])) {
+            throw new \Files\Exception\InvalidParameterException('$document_edits_in_bundle_allowed must be of type boolean; received ' . gettype(@$params['document_edits_in_bundle_allowed']));
+        }
+
+        if (isset($params['password_requirements_apply_to_bundles']) && !is_scalar($params['password_requirements_apply_to_bundles'])) {
+            throw new \Files\Exception\InvalidParameterException('$password_requirements_apply_to_bundles must be of type boolean; received ' . gettype(@$params['password_requirements_apply_to_bundles']));
+        }
+
+        if (isset($params['prevent_root_permissions_for_non_site_admins']) && !is_scalar($params['prevent_root_permissions_for_non_site_admins'])) {
+            throw new \Files\Exception\InvalidParameterException('$prevent_root_permissions_for_non_site_admins must be of type boolean; received ' . gettype(@$params['prevent_root_permissions_for_non_site_admins']));
+        }
+
+        if (isset($params['restrict_root_folder_behaviors_to_site_admins']) && !is_scalar($params['restrict_root_folder_behaviors_to_site_admins'])) {
+            throw new \Files\Exception\InvalidParameterException('$restrict_root_folder_behaviors_to_site_admins must be of type boolean; received ' . gettype(@$params['restrict_root_folder_behaviors_to_site_admins']));
+        }
+
+        if (isset($params['root_folder_behaviors_apply_to_workspaces']) && !is_scalar($params['root_folder_behaviors_apply_to_workspaces'])) {
+            throw new \Files\Exception\InvalidParameterException('$root_folder_behaviors_apply_to_workspaces must be of type boolean; received ' . gettype(@$params['root_folder_behaviors_apply_to_workspaces']));
+        }
+
+        if (isset($params['opt_out_global']) && !is_scalar($params['opt_out_global'])) {
+            throw new \Files\Exception\InvalidParameterException('$opt_out_global must be of type boolean; received ' . gettype(@$params['opt_out_global']));
+        }
+
+        if (isset($params['use_provided_modified_at']) && !is_scalar($params['use_provided_modified_at'])) {
+            throw new \Files\Exception\InvalidParameterException('$use_provided_modified_at must be of type boolean; received ' . gettype(@$params['use_provided_modified_at']));
+        }
+
+        if (isset($params['custom_namespace']) && !is_scalar($params['custom_namespace'])) {
+            throw new \Files\Exception\InvalidParameterException('$custom_namespace must be of type boolean; received ' . gettype(@$params['custom_namespace']));
+        }
+
+        if (isset($params['non_sso_groups_allowed']) && !is_scalar($params['non_sso_groups_allowed'])) {
+            throw new \Files\Exception\InvalidParameterException('$non_sso_groups_allowed must be of type boolean; received ' . gettype(@$params['non_sso_groups_allowed']));
+        }
+
+        if (isset($params['non_sso_users_allowed']) && !is_scalar($params['non_sso_users_allowed'])) {
+            throw new \Files\Exception\InvalidParameterException('$non_sso_users_allowed must be of type boolean; received ' . gettype(@$params['non_sso_users_allowed']));
+        }
+
+        if (isset($params['sharing_enabled']) && !is_scalar($params['sharing_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$sharing_enabled must be of type boolean; received ' . gettype(@$params['sharing_enabled']));
+        }
+
+        if (isset($params['snapshot_sharing_enabled']) && !is_scalar($params['snapshot_sharing_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$snapshot_sharing_enabled must be of type boolean; received ' . gettype(@$params['snapshot_sharing_enabled']));
+        }
+
+        if (isset($params['user_requests_enabled']) && !is_scalar($params['user_requests_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$user_requests_enabled must be of type boolean; received ' . gettype(@$params['user_requests_enabled']));
+        }
+
+        if (isset($params['user_requests_notify_admins']) && !is_scalar($params['user_requests_notify_admins'])) {
+            throw new \Files\Exception\InvalidParameterException('$user_requests_notify_admins must be of type boolean; received ' . gettype(@$params['user_requests_notify_admins']));
+        }
+
+        if (isset($params['dav_enabled']) && !is_scalar($params['dav_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$dav_enabled must be of type boolean; received ' . gettype(@$params['dav_enabled']));
+        }
+
+        if (isset($params['files_com_remote_server_enabled']) && !is_scalar($params['files_com_remote_server_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$files_com_remote_server_enabled must be of type boolean; received ' . gettype(@$params['files_com_remote_server_enabled']));
+        }
+
+        if (isset($params['ftp_enabled']) && !is_scalar($params['ftp_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$ftp_enabled must be of type boolean; received ' . gettype(@$params['ftp_enabled']));
+        }
+
+        if (isset($params['s3_compatible_endpoint_enabled']) && !is_scalar($params['s3_compatible_endpoint_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$s3_compatible_endpoint_enabled must be of type boolean; received ' . gettype(@$params['s3_compatible_endpoint_enabled']));
+        }
+
+        if (isset($params['sftp_enabled']) && !is_scalar($params['sftp_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$sftp_enabled must be of type boolean; received ' . gettype(@$params['sftp_enabled']));
+        }
+
+        if (isset($params['sftp_finalize_partial_uploads']) && !is_scalar($params['sftp_finalize_partial_uploads'])) {
+            throw new \Files\Exception\InvalidParameterException('$sftp_finalize_partial_uploads must be of type boolean; received ' . gettype(@$params['sftp_finalize_partial_uploads']));
+        }
+
+        if (isset($params['users_can_create_api_keys']) && !is_scalar($params['users_can_create_api_keys'])) {
+            throw new \Files\Exception\InvalidParameterException('$users_can_create_api_keys must be of type boolean; received ' . gettype(@$params['users_can_create_api_keys']));
+        }
+
+        if (isset($params['users_can_create_ssh_keys']) && !is_scalar($params['users_can_create_ssh_keys'])) {
+            throw new \Files\Exception\InvalidParameterException('$users_can_create_ssh_keys must be of type boolean; received ' . gettype(@$params['users_can_create_ssh_keys']));
+        }
+
+        if (isset($params['show_user_notifications_log_in_link']) && !is_scalar($params['show_user_notifications_log_in_link'])) {
+            throw new \Files\Exception\InvalidParameterException('$show_user_notifications_log_in_link must be of type boolean; received ' . gettype(@$params['show_user_notifications_log_in_link']));
+        }
+
+        if (isset($params['sftp_host_key_type']) && !is_string($params['sftp_host_key_type'])) {
             throw new \Files\Exception\InvalidParameterException('$sftp_host_key_type must be of type string; received ' . gettype(@$params['sftp_host_key_type']));
         }
 
-        if (!empty($params['active_sftp_host_key_id']) && !is_int($params['active_sftp_host_key_id'])) {
+        if (isset($params['active_sftp_host_key_id']) && !is_int($params['active_sftp_host_key_id'])) {
             throw new \Files\Exception\InvalidParameterException('$active_sftp_host_key_id must be of type int; received ' . gettype(@$params['active_sftp_host_key_id']));
         }
 
-        if (!empty($params['active_sftp_host_key_ids']) && !is_array($params['active_sftp_host_key_ids'])) {
+        if (isset($params['active_sftp_host_key_ids']) && !is_array($params['active_sftp_host_key_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$active_sftp_host_key_ids must be of type array; received ' . gettype(@$params['active_sftp_host_key_ids']));
         }
 
-        if (!empty($params['bundle_recipient_blacklist_domains']) && !is_array($params['bundle_recipient_blacklist_domains'])) {
+        if (isset($params['protocol_access_groups_only']) && !is_scalar($params['protocol_access_groups_only'])) {
+            throw new \Files\Exception\InvalidParameterException('$protocol_access_groups_only must be of type boolean; received ' . gettype(@$params['protocol_access_groups_only']));
+        }
+
+        if (isset($params['revoke_bundle_access_on_disable_or_delete']) && !is_scalar($params['revoke_bundle_access_on_disable_or_delete'])) {
+            throw new \Files\Exception\InvalidParameterException('$revoke_bundle_access_on_disable_or_delete must be of type boolean; received ' . gettype(@$params['revoke_bundle_access_on_disable_or_delete']));
+        }
+
+        if (isset($params['group_admins_can_add_users']) && !is_scalar($params['group_admins_can_add_users'])) {
+            throw new \Files\Exception\InvalidParameterException('$group_admins_can_add_users must be of type boolean; received ' . gettype(@$params['group_admins_can_add_users']));
+        }
+
+        if (isset($params['group_admins_can_manage_group_memberships']) && !is_scalar($params['group_admins_can_manage_group_memberships'])) {
+            throw new \Files\Exception\InvalidParameterException('$group_admins_can_manage_group_memberships must be of type boolean; received ' . gettype(@$params['group_admins_can_manage_group_memberships']));
+        }
+
+        if (isset($params['group_admins_can_delete_users']) && !is_scalar($params['group_admins_can_delete_users'])) {
+            throw new \Files\Exception\InvalidParameterException('$group_admins_can_delete_users must be of type boolean; received ' . gettype(@$params['group_admins_can_delete_users']));
+        }
+
+        if (isset($params['group_admins_can_enable_disable_users']) && !is_scalar($params['group_admins_can_enable_disable_users'])) {
+            throw new \Files\Exception\InvalidParameterException('$group_admins_can_enable_disable_users must be of type boolean; received ' . gettype(@$params['group_admins_can_enable_disable_users']));
+        }
+
+        if (isset($params['group_admins_can_modify_users']) && !is_scalar($params['group_admins_can_modify_users'])) {
+            throw new \Files\Exception\InvalidParameterException('$group_admins_can_modify_users must be of type boolean; received ' . gettype(@$params['group_admins_can_modify_users']));
+        }
+
+        if (isset($params['group_admins_can_bypass_user_lifecycle_rules']) && !is_scalar($params['group_admins_can_bypass_user_lifecycle_rules'])) {
+            throw new \Files\Exception\InvalidParameterException('$group_admins_can_bypass_user_lifecycle_rules must be of type boolean; received ' . gettype(@$params['group_admins_can_bypass_user_lifecycle_rules']));
+        }
+
+        if (isset($params['group_admins_can_reset_passwords']) && !is_scalar($params['group_admins_can_reset_passwords'])) {
+            throw new \Files\Exception\InvalidParameterException('$group_admins_can_reset_passwords must be of type boolean; received ' . gettype(@$params['group_admins_can_reset_passwords']));
+        }
+
+        if (isset($params['group_admins_can_set_user_password']) && !is_scalar($params['group_admins_can_set_user_password'])) {
+            throw new \Files\Exception\InvalidParameterException('$group_admins_can_set_user_password must be of type boolean; received ' . gettype(@$params['group_admins_can_set_user_password']));
+        }
+
+        if (isset($params['child_site_folder_admins_can_see_parent_site_directory']) && !is_scalar($params['child_site_folder_admins_can_see_parent_site_directory'])) {
+            throw new \Files\Exception\InvalidParameterException('$child_site_folder_admins_can_see_parent_site_directory must be of type boolean; received ' . gettype(@$params['child_site_folder_admins_can_see_parent_site_directory']));
+        }
+
+        if (isset($params['workspace_folder_admins_can_see_default_workspace_directory']) && !is_scalar($params['workspace_folder_admins_can_see_default_workspace_directory'])) {
+            throw new \Files\Exception\InvalidParameterException('$workspace_folder_admins_can_see_default_workspace_directory must be of type boolean; received ' . gettype(@$params['workspace_folder_admins_can_see_default_workspace_directory']));
+        }
+
+        if (isset($params['bundle_recipient_blacklist_free_email_domains']) && !is_scalar($params['bundle_recipient_blacklist_free_email_domains'])) {
+            throw new \Files\Exception\InvalidParameterException('$bundle_recipient_blacklist_free_email_domains must be of type boolean; received ' . gettype(@$params['bundle_recipient_blacklist_free_email_domains']));
+        }
+
+        if (isset($params['bundle_recipient_blacklist_domains']) && !is_array($params['bundle_recipient_blacklist_domains'])) {
             throw new \Files\Exception\InvalidParameterException('$bundle_recipient_blacklist_domains must be of type array; received ' . gettype(@$params['bundle_recipient_blacklist_domains']));
         }
 
-        if (!empty($params['require_2fa_user_type']) && !is_string($params['require_2fa_user_type'])) {
+        if (isset($params['admins_bypass_locked_subfolders']) && !is_scalar($params['admins_bypass_locked_subfolders'])) {
+            throw new \Files\Exception\InvalidParameterException('$admins_bypass_locked_subfolders must be of type boolean; received ' . gettype(@$params['admins_bypass_locked_subfolders']));
+        }
+
+        if (isset($params['allowed_2fa_method_sms']) && !is_scalar($params['allowed_2fa_method_sms'])) {
+            throw new \Files\Exception\InvalidParameterException('$allowed_2fa_method_sms must be of type boolean; received ' . gettype(@$params['allowed_2fa_method_sms']));
+        }
+
+        if (isset($params['allowed_2fa_method_totp']) && !is_scalar($params['allowed_2fa_method_totp'])) {
+            throw new \Files\Exception\InvalidParameterException('$allowed_2fa_method_totp must be of type boolean; received ' . gettype(@$params['allowed_2fa_method_totp']));
+        }
+
+        if (isset($params['allowed_2fa_method_webauthn']) && !is_scalar($params['allowed_2fa_method_webauthn'])) {
+            throw new \Files\Exception\InvalidParameterException('$allowed_2fa_method_webauthn must be of type boolean; received ' . gettype(@$params['allowed_2fa_method_webauthn']));
+        }
+
+        if (isset($params['allowed_2fa_method_yubi']) && !is_scalar($params['allowed_2fa_method_yubi'])) {
+            throw new \Files\Exception\InvalidParameterException('$allowed_2fa_method_yubi must be of type boolean; received ' . gettype(@$params['allowed_2fa_method_yubi']));
+        }
+
+        if (isset($params['allowed_2fa_method_email']) && !is_scalar($params['allowed_2fa_method_email'])) {
+            throw new \Files\Exception\InvalidParameterException('$allowed_2fa_method_email must be of type boolean; received ' . gettype(@$params['allowed_2fa_method_email']));
+        }
+
+        if (isset($params['allowed_2fa_method_static']) && !is_scalar($params['allowed_2fa_method_static'])) {
+            throw new \Files\Exception\InvalidParameterException('$allowed_2fa_method_static must be of type boolean; received ' . gettype(@$params['allowed_2fa_method_static']));
+        }
+
+        if (isset($params['allowed_2fa_method_bypass_for_ftp_sftp_dav']) && !is_scalar($params['allowed_2fa_method_bypass_for_ftp_sftp_dav'])) {
+            throw new \Files\Exception\InvalidParameterException('$allowed_2fa_method_bypass_for_ftp_sftp_dav must be of type boolean; received ' . gettype(@$params['allowed_2fa_method_bypass_for_ftp_sftp_dav']));
+        }
+
+        if (isset($params['require_2fa']) && !is_scalar($params['require_2fa'])) {
+            throw new \Files\Exception\InvalidParameterException('$require_2fa must be of type boolean; received ' . gettype(@$params['require_2fa']));
+        }
+
+        if (isset($params['require_2fa_exempt_all_sso_users']) && !is_scalar($params['require_2fa_exempt_all_sso_users'])) {
+            throw new \Files\Exception\InvalidParameterException('$require_2fa_exempt_all_sso_users must be of type boolean; received ' . gettype(@$params['require_2fa_exempt_all_sso_users']));
+        }
+
+        if (isset($params['require_2fa_user_type']) && !is_string($params['require_2fa_user_type'])) {
             throw new \Files\Exception\InvalidParameterException('$require_2fa_user_type must be of type string; received ' . gettype(@$params['require_2fa_user_type']));
         }
 
-        if (!empty($params['color2_top']) && !is_string($params['color2_top'])) {
+        if (isset($params['color2_top']) && !is_string($params['color2_top'])) {
             throw new \Files\Exception\InvalidParameterException('$color2_top must be of type string; received ' . gettype(@$params['color2_top']));
         }
 
-        if (!empty($params['color2_left']) && !is_string($params['color2_left'])) {
+        if (isset($params['color2_left']) && !is_string($params['color2_left'])) {
             throw new \Files\Exception\InvalidParameterException('$color2_left must be of type string; received ' . gettype(@$params['color2_left']));
         }
 
-        if (!empty($params['color2_link']) && !is_string($params['color2_link'])) {
+        if (isset($params['color2_link']) && !is_string($params['color2_link'])) {
             throw new \Files\Exception\InvalidParameterException('$color2_link must be of type string; received ' . gettype(@$params['color2_link']));
         }
 
-        if (!empty($params['color2_text']) && !is_string($params['color2_text'])) {
+        if (isset($params['color2_text']) && !is_string($params['color2_text'])) {
             throw new \Files\Exception\InvalidParameterException('$color2_text must be of type string; received ' . gettype(@$params['color2_text']));
         }
 
-        if (!empty($params['color2_top_text']) && !is_string($params['color2_top_text'])) {
+        if (isset($params['color2_top_text']) && !is_string($params['color2_top_text'])) {
             throw new \Files\Exception\InvalidParameterException('$color2_top_text must be of type string; received ' . gettype(@$params['color2_top_text']));
         }
 
-        if (!empty($params['site_header']) && !is_string($params['site_header'])) {
+        if (isset($params['site_header']) && !is_string($params['site_header'])) {
             throw new \Files\Exception\InvalidParameterException('$site_header must be of type string; received ' . gettype(@$params['site_header']));
         }
 
-        if (!empty($params['site_footer']) && !is_string($params['site_footer'])) {
+        if (isset($params['site_footer']) && !is_string($params['site_footer'])) {
             throw new \Files\Exception\InvalidParameterException('$site_footer must be of type string; received ' . gettype(@$params['site_footer']));
         }
 
-        if (!empty($params['site_public_header']) && !is_string($params['site_public_header'])) {
+        if (isset($params['site_public_header']) && !is_string($params['site_public_header'])) {
             throw new \Files\Exception\InvalidParameterException('$site_public_header must be of type string; received ' . gettype(@$params['site_public_header']));
         }
 
-        if (!empty($params['site_public_footer']) && !is_string($params['site_public_footer'])) {
+        if (isset($params['site_public_footer']) && !is_string($params['site_public_footer'])) {
             throw new \Files\Exception\InvalidParameterException('$site_public_footer must be of type string; received ' . gettype(@$params['site_public_footer']));
         }
 
-        if (!empty($params['login_help_text']) && !is_string($params['login_help_text'])) {
+        if (isset($params['login_help_text']) && !is_string($params['login_help_text'])) {
             throw new \Files\Exception\InvalidParameterException('$login_help_text must be of type string; received ' . gettype(@$params['login_help_text']));
         }
 
-        if (!empty($params['email_footer_custom_text']) && !is_string($params['email_footer_custom_text'])) {
+        if (isset($params['use_dedicated_ips_for_smtp']) && !is_scalar($params['use_dedicated_ips_for_smtp'])) {
+            throw new \Files\Exception\InvalidParameterException('$use_dedicated_ips_for_smtp must be of type boolean; received ' . gettype(@$params['use_dedicated_ips_for_smtp']));
+        }
+
+        if (isset($params['email_footer_custom_text']) && !is_string($params['email_footer_custom_text'])) {
             throw new \Files\Exception\InvalidParameterException('$email_footer_custom_text must be of type string; received ' . gettype(@$params['email_footer_custom_text']));
         }
 
-        if (!empty($params['smtp_address']) && !is_string($params['smtp_address'])) {
+        if (isset($params['smtp_address']) && !is_string($params['smtp_address'])) {
             throw new \Files\Exception\InvalidParameterException('$smtp_address must be of type string; received ' . gettype(@$params['smtp_address']));
         }
 
-        if (!empty($params['smtp_authentication']) && !is_string($params['smtp_authentication'])) {
+        if (isset($params['smtp_authentication']) && !is_string($params['smtp_authentication'])) {
             throw new \Files\Exception\InvalidParameterException('$smtp_authentication must be of type string; received ' . gettype(@$params['smtp_authentication']));
         }
 
-        if (!empty($params['smtp_from']) && !is_string($params['smtp_from'])) {
+        if (isset($params['smtp_from']) && !is_string($params['smtp_from'])) {
             throw new \Files\Exception\InvalidParameterException('$smtp_from must be of type string; received ' . gettype(@$params['smtp_from']));
         }
 
-        if (!empty($params['smtp_username']) && !is_string($params['smtp_username'])) {
+        if (isset($params['smtp_username']) && !is_string($params['smtp_username'])) {
             throw new \Files\Exception\InvalidParameterException('$smtp_username must be of type string; received ' . gettype(@$params['smtp_username']));
         }
 
-        if (!empty($params['smtp_port']) && !is_int($params['smtp_port'])) {
+        if (isset($params['smtp_port']) && !is_int($params['smtp_port'])) {
             throw new \Files\Exception\InvalidParameterException('$smtp_port must be of type int; received ' . gettype(@$params['smtp_port']));
         }
 
-        if (!empty($params['smtp_ssl']) && !is_string($params['smtp_ssl'])) {
+        if (isset($params['smtp_ssl']) && !is_string($params['smtp_ssl'])) {
             throw new \Files\Exception\InvalidParameterException('$smtp_ssl must be of type string; received ' . gettype(@$params['smtp_ssl']));
         }
 
-        if (!empty($params['smtp_password']) && !is_string($params['smtp_password'])) {
+        if (isset($params['uploads_via_email_authentication']) && !is_scalar($params['uploads_via_email_authentication'])) {
+            throw new \Files\Exception\InvalidParameterException('$uploads_via_email_authentication must be of type boolean; received ' . gettype(@$params['uploads_via_email_authentication']));
+        }
+
+        if (isset($params['icon16_delete']) && !is_scalar($params['icon16_delete'])) {
+            throw new \Files\Exception\InvalidParameterException('$icon16_delete must be of type boolean; received ' . gettype(@$params['icon16_delete']));
+        }
+
+        if (isset($params['icon32_delete']) && !is_scalar($params['icon32_delete'])) {
+            throw new \Files\Exception\InvalidParameterException('$icon32_delete must be of type boolean; received ' . gettype(@$params['icon32_delete']));
+        }
+
+        if (isset($params['icon48_delete']) && !is_scalar($params['icon48_delete'])) {
+            throw new \Files\Exception\InvalidParameterException('$icon48_delete must be of type boolean; received ' . gettype(@$params['icon48_delete']));
+        }
+
+        if (isset($params['icon128_delete']) && !is_scalar($params['icon128_delete'])) {
+            throw new \Files\Exception\InvalidParameterException('$icon128_delete must be of type boolean; received ' . gettype(@$params['icon128_delete']));
+        }
+
+        if (isset($params['logo_delete']) && !is_scalar($params['logo_delete'])) {
+            throw new \Files\Exception\InvalidParameterException('$logo_delete must be of type boolean; received ' . gettype(@$params['logo_delete']));
+        }
+
+        if (isset($params['bundle_watermark_attachment_delete']) && !is_scalar($params['bundle_watermark_attachment_delete'])) {
+            throw new \Files\Exception\InvalidParameterException('$bundle_watermark_attachment_delete must be of type boolean; received ' . gettype(@$params['bundle_watermark_attachment_delete']));
+        }
+
+        if (isset($params['login_page_background_image_delete']) && !is_scalar($params['login_page_background_image_delete'])) {
+            throw new \Files\Exception\InvalidParameterException('$login_page_background_image_delete must be of type boolean; received ' . gettype(@$params['login_page_background_image_delete']));
+        }
+
+        if (isset($params['disable_2fa_with_delay']) && !is_scalar($params['disable_2fa_with_delay'])) {
+            throw new \Files\Exception\InvalidParameterException('$disable_2fa_with_delay must be of type boolean; received ' . gettype(@$params['disable_2fa_with_delay']));
+        }
+
+        if (isset($params['redirect_old_subdomain']) && !is_scalar($params['redirect_old_subdomain'])) {
+            throw new \Files\Exception\InvalidParameterException('$redirect_old_subdomain must be of type boolean; received ' . gettype(@$params['redirect_old_subdomain']));
+        }
+
+        if (isset($params['smtp_password']) && !is_string($params['smtp_password'])) {
             throw new \Files\Exception\InvalidParameterException('$smtp_password must be of type string; received ' . gettype(@$params['smtp_password']));
         }
 
         $response = Api::sendRequest('/site', 'PATCH', $params, $options);
 
-        return new Site((array) (@$response->data ?: []), $options);
+        return new Site(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
 }

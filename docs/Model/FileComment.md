@@ -25,9 +25,11 @@
 ## List File Comments by Path
 
 ```
-$file_comment = new \Files\Model\FileComment();
-$file_comment->listFor($path);
+\Files\Model\FileComment::listFor($path);
 ```
+
+`\Files\Model\FileComment::listForPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -41,8 +43,7 @@ $file_comment->listFor($path);
 ## Create File Comment
 
 ```
-$file_comment = new \Files\Model\FileComment();
-$file_comment->create(, [
+\Files\Model\FileComment::create([
   'body' => "What a great file!",
   'path' => "path",
 ]);
@@ -65,6 +66,9 @@ $file_comment->update([
   'body' => "What a great file!",
 ]);
 ```
+
+`update()` refreshes `$file_comment` with the saved attributes, and also returns them as a separate
+`\Files\Model\FileComment`.
 
 ### Parameters
 

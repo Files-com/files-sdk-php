@@ -7,9 +7,12 @@ namespace Files\Transfer;
 use Files\Exception\ApiBadResponseException;
 use Files\Exception\ApiServerException;
 use Files\Exception\ConfigurationException;
+use Files\Exception\FilesException;
 use Files\Exception\InvalidParameterException;
 use Files\Files;
 use Files\Model\File;
+use Files\Test\Fixtures;
+use Files\Test\UnboundTransportGuard;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\CurlHandler;
 use GuzzleHttp\HandlerStack;
@@ -26,6 +29,8 @@ use PHPUnit\Framework\TestCase;
  */
 class AdaptiveTransferTest extends TestCase
 {
+    use UnboundTransportGuard;
+
     const MIB = 1048576;
 
     // 32-bit integers, an older PHP without the hrtime extension, and a userland class named like the extension's do
@@ -99,8 +104,14 @@ class AdaptiveTransferTest extends TestCase
     // another parameter). Storage retries follow Retry-After, 5xx but 501, and exactly S3's RequestTimeout error.
     public function testSignedUrlExpiryAndStorageRetriesFollowTheirRules()
     {
-        $fixtures = json_decode((string) file_get_contents(__DIR__ . '/../../../shared/url_test_data.json'), true);
+        $fixtures = Fixtures::requiredJsonArray(__DIR__ . '/../../../shared/url_test_data.json');
         $this->assertTrue(is_array($fixtures), 'The shared URL fixtures');
+        foreach (['substitute_urls', 'error_urls'] as $category) {
+            $this->assertTrue(
+                isset($fixtures[$category]) && is_array($fixtures[$category]) && $fixtures[$category] !== [],
+                "The shared URL fixtures' $category must be a non-empty list"
+            );
+        }
         $noon = gmmktime(12, 0, 0, 1, 1, 2022);
         foreach ($fixtures['substitute_urls'] as $template) {
             if (strpos($template, 'blob.core.windows.net') !== false) {
@@ -825,6 +836,88 @@ class AdaptiveTransferTest extends TestCase
             });
         } finally {
             @unlink($destination);
+        }
+    }
+
+    // A job's API requests choose their credential from the job's copy of the SDK's settings and their own options, as
+    // every API request does (ApiTest::testCredentialOptionsChooseTheRequestsOnlyCredential), whatever the SDK is set to
+    // after the job is made. Each credential the job is given replaces its copy, even when null; the job's api_key, when
+    // PHP reads it as true, replaces the copied session too, unless its session_id is also one PHP reads as true.
+    public function testAJobsApiRequestsChooseTheirCredentialFromItsCopyAndTheirOwnOptions()
+    {
+        if (!$this->adaptive()) {
+            return;
+        }
+
+        $cases = [
+            'the copied session' => [[], [], ['x-filesapi-auth' => ['session-a']]],
+            'options PHP reads as false' => [[], ['session_id' => '0', 'api_key' => ''], ['x-filesapi-auth' => ['session-a']]],
+            'an api_key option over headers of both names' => [
+                [],
+                ['api_key' => 'key-b', 'headers' => ['x-filesapi-auth' => 'raw-session', 'X-FILESAPI-KEY' => 'raw-key', 'X-Custom' => 'kept']],
+                ['x-filesapi-key' => ['key-b']],
+            ],
+            'both options' => [[], ['session_id' => 'session-b', 'api_key' => 'key-b'], ['x-filesapi-auth' => ['session-b']]],
+            "the job's api_key" => [['api_key' => 'job-key'], [], ['x-filesapi-key' => ['job-key']]],
+            "the job's api_key and session_id" => [
+                ['api_key' => 'job-key', 'session_id' => 'job-session'],
+                [],
+                ['x-filesapi-auth' => ['job-session']],
+            ],
+            "the job's null session_id" => [['session_id' => null], [], ['x-filesapi-key' => ['key-a']]],
+            "the job's api_key and a null session_id option" => [
+                ['api_key' => 'job-key'],
+                ['session_id' => null],
+                ['x-filesapi-key' => ['job-key']],
+            ],
+            "the job's session_id and an api_key option" => [
+                ['session_id' => 'job-session'],
+                ['api_key' => 'key-b'],
+                ['x-filesapi-key' => ['key-b']],
+            ],
+        ];
+        $saved = Files::snapshot();
+        try {
+            foreach ($cases as $case => list($jobOptions, $options, $expected)) {
+                $requests = [];
+                Files::setBaseUrl('https://app.files.com');
+                Files::setApiKey('key-a');
+                Files::setSessionId('session-a');
+                Files::setHandler(function ($request) use (&$requests) {
+                    $requests[] = $request;
+                    return Create::promiseFor(new Response(404, ['Content-Type' => 'application/json'], '{"type":"not-found","http-code":404,"error":"Not Found"}'));
+                });
+                $job = new TransferJob($jobOptions);
+                Files::setApiKey('key-later');
+                Files::setSessionId('session-later');
+
+                $stream = fopen('php://memory', 'w+');
+                $error = null;
+                try {
+                    $job->downloadToStream('reports/a.csv', $stream, $options);
+                    $job->wait();
+                } catch (FilesException $e) {
+                    $error = $e;
+                }
+                fclose($stream);
+
+                $this->assertInstanceOf(FilesException::class, $error, $case);
+                $this->assertNotEmpty($requests, $case);
+                foreach ($requests as $request) {
+                    $sent = array_intersect_key(
+                        array_change_key_case($request->getHeaders()),
+                        ['x-filesapi-auth' => true, 'x-filesapi-key' => true]
+                    );
+                    ksort($sent);
+                    $this->assertSame($expected, $sent, $case);
+                    if (isset($options['headers'])) {
+                        $this->assertSame('kept', $request->getHeaderLine('X-Custom'), $case);
+                    }
+                }
+                $this->assertSame(['key-later', 'session-later'], [Files::getApiKey(), Files::getSessionId()], $case);
+            }
+        } finally {
+            $this->restore($saved);
         }
     }
 

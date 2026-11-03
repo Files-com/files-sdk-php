@@ -31,9 +31,11 @@
 ## List Pending Work Events
 
 ```
-$pending_work_event = new \Files\Model\PendingWorkEvent();
-$pending_work_event->list
+\Files\Model\PendingWorkEvent::all();
 ```
+
+`\Files\Model\PendingWorkEvent::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -52,8 +54,7 @@ $pending_work_event->list
 ## Show Pending Work Event
 
 ```
-$pending_work_event = new \Files\Model\PendingWorkEvent();
-$pending_work_event->find($id);
+\Files\Model\PendingWorkEvent::find($id);
 ```
 
 

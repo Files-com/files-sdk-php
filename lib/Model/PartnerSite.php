@@ -109,7 +109,7 @@ class PartnerSite
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 

@@ -66,8 +66,7 @@
 ## Show History Export
 
 ```
-$history_export = new \Files\Model\HistoryExport();
-$history_export->find($id);
+\Files\Model\HistoryExport::find($id);
 ```
 
 
@@ -80,8 +79,7 @@ $history_export->find($id);
 ## Create History Export
 
 ```
-$history_export = new \Files\Model\HistoryExport();
-$history_export->create(, [
+\Files\Model\HistoryExport::create([
   'user_id' => 1,
   'start_at' => "2000-01-01T01:00:00Z",
   'end_at' => "2000-01-01T01:00:00Z",

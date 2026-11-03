@@ -71,11 +71,13 @@
 ## List Sync Runs
 
 ```
-$sync_run = new \Files\Model\SyncRun();
-$sync_run->list(, [
+\Files\Model\SyncRun::all([
   'user_id' => 1,
 ]);
 ```
+
+`\Files\Model\SyncRun::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -95,8 +97,7 @@ $sync_run->list(, [
 ## Show Sync Run
 
 ```
-$sync_run = new \Files\Model\SyncRun();
-$sync_run->find($id);
+\Files\Model\SyncRun::find($id);
 ```
 
 

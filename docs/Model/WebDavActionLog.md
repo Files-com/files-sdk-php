@@ -49,9 +49,11 @@
 ## List WebDAV Action Logs
 
 ```
-$web_dav_action_log = new \Files\Model\WebDavActionLog();
-$web_dav_action_log->list
+\Files\Model\WebDavActionLog::all();
 ```
+
+`\Files\Model\WebDavActionLog::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters

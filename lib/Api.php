@@ -24,7 +24,9 @@ function middlewareRemoveHeader($header)
  */
 class Api
 {
-    const VERSION = "2.0.747";
+    const VERSION = "2.0.748";
+
+    const REPEATED_CURSOR_MESSAGE = 'The list returned a cursor it already returned, so following it would repeat pages.';
 
     private static function urlOrigin($url)
     {
@@ -167,8 +169,10 @@ class Api
         if ($operation->policy === false || $operation->crossedOrigin || $operation->retries >= $operation->maxRetries) {
             return $response;
         }
-        // A response may already have written to this caller-owned sink. Do not close it or append a second answer.
-        if (isset($options['sink']) && (is_resource($options['sink']) || $options['sink'] instanceof \Psr\Http\Message\StreamInterface)) {
+        // A response may already have written to this caller-owned sink. Do not close it or append a second answer. The
+        // SDK's own file for a destination path is not the caller's: every transfer, a relocated one too, starts it anew.
+        $sink = isset($options['sink']) ? $options['sink'] : null;
+        if (!($sink instanceof Util\DownloadFileSink) && (is_resource($sink) || $sink instanceof \Psr\Http\Message\StreamInterface)) {
             return $response;
         }
         $target = self::regionDestination(self::regionHost($response));
@@ -279,10 +283,45 @@ class Api
         return $handlerStack;
     }
 
+    // $headers with the credential of an API request to $path: a session_id that $options gives, else an api_key that
+    // it gives (in place of the ambient session too), else the ambient session, else the ambient API key. Options that
+    // PHP reads as false (null, '', 0, '0', false) leave the ambient ones in place. Given a credential option,
+    // $headers lose any X-FilesAPI-Auth or X-FilesAPI-Key, in any case, so that the chosen credential is the only one;
+    // without one, they are kept as they are. Creating a session sends no API key of the SDK's own, configured or
+    // given as an option.
+    private static function withCredential($headers, $options, $ambientSessionId, $ambientApiKey, $path, $verb)
+    {
+        $sessionId = !empty($options['session_id']) ? $options['session_id'] : null;
+        $apiKey = !empty($options['api_key']) ? $options['api_key'] : null;
+        if ($sessionId || $apiKey) {
+            foreach (array_keys($headers) as $name) {
+                if (in_array(strtolower((string) $name), ['x-filesapi-auth', 'x-filesapi-key'], true)) {
+                    unset($headers[$name]);
+                }
+            }
+        } else {
+            $sessionId = $ambientSessionId;
+        }
+
+        if ($sessionId) {
+            $headers['X-FilesAPI-Auth'] = $sessionId;
+        } elseif ($path !== '/sessions' || strtoupper($verb) !== 'POST') {
+            $apiKey = $apiKey ?: $ambientApiKey;
+            if (!$apiKey) {
+                throw new Exception\ConfigurationException('No Files.com API key provided. Set your API key using Files::setApiKey(<API-KEY>). You can generate API keys from the Files.com web interface.');
+            }
+
+            $headers['X-FilesAPI-Key'] = $apiKey;
+        }
+
+        return $headers;
+    }
+
     // The request path and Guzzle options of an API request for $path (under the endpoint prefix, or an external URL),
-    // as sendRequest sends it: the headers, with the language, session, API key and workspace of $config
-    // (Files::snapshot(), or a transfer job's copy of it) unless $options gives its own, and $params as the query of a
-    // GET or the JSON body of anything else. Throws a ConfigurationException for an API request without an API key.
+    // as sendRequest sends it: the headers, with the language and workspace of $config (Files::snapshot(), or a
+    // transfer job's copy of it) unless $options gives its own and the credential withCredential chooses, and $params
+    // as the query of a GET or the JSON body of anything else. Throws a ConfigurationException for an API request
+    // without a credential.
     public static function prepareApiRequest($config, $path, $verb, $params = null, $options = [])
     {
         $options = $options ?: [];
@@ -298,28 +337,18 @@ class Api
 
         if (!$isExternal) {
             $headers['Accept'] = 'application/json';
+            $headers = self::withCredential(
+                $headers,
+                $options,
+                $config['session_id'],
+                $config['api_key'],
+                $path,
+                $verb
+            );
 
-            $sessionId = @$options['session_id'] ?: $config['session_id'];
             $workspaceId = array_key_exists('workspace_id', $options)
               ? $options['workspace_id']
               : $config['workspace_id'];
-
-            if ($sessionId) {
-                $headers['X-FilesAPI-Auth'] = $sessionId;
-            } else {
-                $isCreatingSession = $path === '/sessions' && strtoupper($verb) === 'POST';
-
-                // api key cannot be used when creating a session
-                if (!$isCreatingSession) {
-                    $apiKey = @$options['api_key'] ?: $config['api_key'];
-
-                    if (!$apiKey) {
-                        throw new Exception\ConfigurationException('No Files.com API key provided. Set your API key using Files::setApiKey(<API-KEY>). You can generate API keys from the Files.com web interface.');
-                    }
-
-                    $headers['X-FilesAPI-Key'] = $apiKey;
-                }
-            }
 
             if ($workspaceId !== null && $workspaceId !== '') {
                 $headers['X-Files-Workspace-Id'] = (string) $workspaceId;
@@ -379,6 +408,21 @@ class Api
             throw new Exception\ConfigurationException('Region relocation must be a boolean or callable.');
         }
         $handler = Files::getHandler();
+        // A destination path given as the sink is opened by the SDK rather than by Guzzle (Util\DownloadFileSink), so
+        // that the file is closed before this returns or throws, even while the caller keeps the exception. $options
+        // keeps the caller's sink, which still decides whether the result includes the response data. A request that
+        // names its own Guzzle handler option is sent by that handler, so its path stays Guzzle's, opened anew for each
+        // of that handler's transfers.
+        $requestOptions = $options;
+        $ownedSink = null;
+        if (
+            isset($options['sink']) && !array_key_exists('handler', $options)
+            && Util\DownloadFileSink::canOwn($options['sink'], $handler)
+        ) {
+            $ownedSink = new Util\DownloadFileSink($options['sink']);
+            $requestOptions['sink'] = $ownedSink;
+            $handler = Util\DownloadFileSink::newFilePerTransfer($handler);
+        }
         if ($operation && $handler instanceof HandlerStack) {
             $handler = clone $handler;
             // Observe and scope the request after the caller's middleware, immediately before its transport.
@@ -407,31 +451,42 @@ class Api
             'read_timeout' => Files::$readTimeout,
         ]);
 
+        // An owned file is released once the request has ended, after any error body or response data has been read from
+        // it. A failure to release it is thrown only when the request succeeded: it never replaces the request's own
+        // failure, nor passes for success.
+        $completed = false;
         try {
-            $response = $client->request($verb, $url, $options);
-        } catch (\Exception $error) {
-            handleErrorResponse($error);
-        }
+            try {
+                $response = $client->request($verb, $url, $requestOptions);
+            } catch (\Exception $error) {
+                handleErrorResponse($error);
+            }
 
-        $statusCode = $response->getStatusCode();
-        $statusReason = $response->getReasonPhrase();
+            $statusCode = $response->getStatusCode();
+            $statusReason = $response->getReasonPhrase();
 
-        Logger::debug("Status: $statusCode $statusReason");
+            Logger::debug("Status: $statusCode $statusReason");
 
-        if (Files::$debugResponseHeaders) {
-            Logger::debug('Response Headers: ');
-            Logger::debug($response->getHeaders());
-        }
+            if (Files::$debugResponseHeaders) {
+                Logger::debug('Response Headers: ');
+                Logger::debug($response->getHeaders());
+            }
 
-        $result = (object) [
-            'status' => $statusCode,
-            'reason' => $statusReason,
-            'headers' => $response->getHeaders(),
-        ];
+            $result = (object) [
+                'status' => $statusCode,
+                'reason' => $statusReason,
+                'headers' => $response->getHeaders(),
+            ];
 
-        // if the response wasn't redirected into a stream or file, add it to the result
-        if (empty($options['sink'])) {
-            $result->data = json_decode((string) $response->getBody());
+            // if the response wasn't redirected into a stream or file, add it to the result
+            if (empty($options['sink'])) {
+                $result->data = json_decode((string) $response->getBody());
+            }
+            $completed = true;
+        } finally {
+            if ($ownedSink) {
+                $ownedSink->release(!$completed);
+            }
         }
 
         return $result;
@@ -524,47 +579,129 @@ class Api
         return isset($families[$name]) ? $families[$name] : 'other';
     }
 
-    private static function autoPaginate($path, $verb, $params, $options, $response, $metadata = [])
+    /**
+     * The opaque cursor of the page after a list response, or null on the last page. X-Files-Cursor-Next, in any case,
+     * names it whenever the response has that header, even empty; X-Files-Cursor, its older name, counts only without
+     * it. Only a missing or empty cursor ends a list, so even "0" is sent back unchanged.
+     *
+     * @internal Page and auto-pagination follow lists with this.
+     * @param object $response A result of sendSingleRequest().
+     * @return string|null
+     */
+    public static function nextCursor($response)
     {
-        if (Files::$autoPaginate) {
-            $nextCursor = current(self::headerValues($response->headers, 'X-Files-Cursor'));
-
-            $autoPaginateCount = isset($metadata['autoPaginateCount']) ? $metadata['autoPaginateCount'] : null;
-            $previousAutoPaginateData = isset($metadata['previousAutoPaginateData']) ? $metadata['previousAutoPaginateData'] : null;
-
-            if ($nextCursor) {
-                $nextPage = (intval(@$params['page']) ?: 1) + 1;
-
-                $nextParams = $params ?: [];
-                $nextParams['cursor'] = $nextCursor;
-                $nextParams['page'] = $nextPage;
-
-                $nextMetadata = [
-                    'autoPaginateCount' => ($autoPaginateCount ?: 1) + 1,
-                    'previousAutoPaginateData' => array_merge(
-                        $previousAutoPaginateData ?: [],
-                        $response->data
-                    ),
-                ];
-
-                Logger::debug('Auto-pagination is enabled and next cursor was received - fetching next page...');
-
-                return self::sendRequest($path, $verb, $nextParams, $options, $nextMetadata);
-            } elseif ($previousAutoPaginateData) {
-                Logger::debug('Auto-pagination is enabled the final cursor was processed - pagination complete.');
-
-                return (object) array_merge([
-                    $response,
-                    'autoPaginateRequests' => $autoPaginateCount,
-                    'data' => array_merge(
-                        $previousAutoPaginateData,
-                        $response->data
-                    ),
-                ]);
+        $headers = isset($response->headers) && is_array($response->headers) ? $response->headers : [];
+        // A present X-Files-Cursor-Next decides, even with no value at all; X-Files-Cursor counts only without it.
+        $values = null;
+        foreach (['X-Files-Cursor-Next', 'X-Files-Cursor'] as $name) {
+            foreach ($headers as $key => $headerValues) {
+                if (strcasecmp((string) $key, $name) === 0) {
+                    $values = $headerValues;
+                    break 2;
+                }
             }
         }
+        $cursor = is_array($values) ? current($values) : null;
 
-        return $response;
+        return is_string($cursor) && $cursor !== '' ? $cursor : null;
+    }
+
+    /**
+     * The attributes of a model that the API sent as a JSON object.
+     *
+     * @internal Generated models and Page build models only from these.
+     * @param mixed $data A value decoded from a response body.
+     * @param int $status The status of that response.
+     * @return array
+     * @throws \Files\Exception\ApiBadResponseException When $data is anything else, such as the null of an empty or
+     *     non-JSON body, so that no model is built or refreshed from it.
+     */
+    public static function modelAttributes($data, $status)
+    {
+        if (!is_object($data)) {
+            throw self::unexpectedJson('a JSON object', $data, $status);
+        }
+
+        return (array) $data;
+    }
+
+    /**
+     * The entries of a list that the API sent as a JSON array, whatever the entries are.
+     *
+     * @internal Generated list methods, Page and auto-pagination read lists only through this.
+     * @param mixed $data A value decoded from a response body.
+     * @param int $status The status of that response.
+     * @return array
+     * @throws \Files\Exception\ApiBadResponseException When $data is anything else, such as a JSON object wrapping the
+     *     list or the null of an empty or non-JSON body.
+     */
+    public static function listEntries($data, $status)
+    {
+        if (!is_array($data)) {
+            throw self::unexpectedJson('a JSON array', $data, $status);
+        }
+
+        return $data;
+    }
+
+    private static function unexpectedJson($expected, $data, $status)
+    {
+        $found = $data === null
+          ? 'null or no JSON at all'
+          : 'a JSON ' . (is_array($data) ? 'array' : (is_object($data) ? 'object' : gettype($data)));
+
+        return new Exception\ApiBadResponseException(
+            "The response should have held $expected, but it held $found.",
+            $status
+        );
+    }
+
+    // With Files::$autoPaginate, a list response is followed to its last page, one request at a time, with the same
+    // parameters and options, and the result holds every page's entries. Each page must be a JSON array before its
+    // cursor is followed. A cursor this list already sent, the caller's own starting cursor included, could only
+    // repeat pages, so the list stops there with an ApiBadResponseException. For the wire compatibility of earlier
+    // releases, each later request also sends the next page number. The result has the status, reason and headers
+    // of the last page.
+    private static function autoPaginate($path, $verb, $params, $options, $response)
+    {
+        $cursor = Files::$autoPaginate ? self::nextCursor($response) : null;
+        if ($cursor === null) {
+            return $response;
+        }
+
+        $params = $params ?: [];
+        $pages = [self::listEntries(isset($response->data) ? $response->data : null, $response->status)];
+        $page = isset($params['page']) ? intval($params['page']) : 0;
+        $page = $page ?: 1;
+        $sentCursors = [];
+        if (isset($params['cursor']) && (string) $params['cursor'] !== '') {
+            $sentCursors[(string) $params['cursor']] = true;
+        }
+        do {
+            if (isset($sentCursors[$cursor])) {
+                throw new Exception\ApiBadResponseException(self::REPEATED_CURSOR_MESSAGE, 0);
+            }
+            $sentCursors[$cursor] = true;
+
+            Logger::debug('Auto-pagination is enabled and next cursor was received - fetching next page...');
+
+            $params['cursor'] = $cursor;
+            $params['page'] = ++$page;
+            $response = self::sendSingleRequest($path, $verb, $params, $options);
+            $pages[] = self::listEntries(isset($response->data) ? $response->data : null, $response->status);
+            $cursor = self::nextCursor($response);
+        } while ($cursor !== null);
+
+        Logger::debug('Auto-pagination is enabled the final cursor was processed - pagination complete.');
+
+        return (object) array_merge([
+            $response,
+            'status' => $response->status,
+            'reason' => $response->reason,
+            'headers' => $response->headers,
+            'autoPaginateRequests' => count($pages),
+            'data' => call_user_func_array('array_merge', $pages),
+        ]);
     }
 
     /**
@@ -574,7 +711,7 @@ class Api
      * @param string $verb HTTP method.
      * @param array|null $params Query parameters for GET, or the JSON request body.
      * @param array $options Guzzle options and api_key, session_id, workspace_id or region_relocation overrides.
-     * @param array $metadata Pagination state used internally by the transport.
+     * @param array $metadata Unused: auto-pagination follows a list's pages within one call.
      * @return \stdClass Object containing status, reason, headers and decoded data when no sink is used.
      * @throws \Files\Exception\FilesException When configuration, validation or a request fails.
      */
@@ -584,13 +721,13 @@ class Api
 
         return preg_match('@^[a-zA-Z]+://@', $path)
           ? $response
-          : self::autoPaginate($path, $verb, $params, $options, $response, $metadata);
+          : self::autoPaginate($path, $verb, $params, $options, $response);
     }
 
     /**
      * Sends one request without following list cursors, regardless of Files::$autoPaginate.
      *
-     * @internal Native directory handles fetch one page at a time with this.
+     * @internal Page and native directory handles fetch one page at a time with this.
      */
     public static function sendSingleRequest($path, $verb, $params = null, $options = [])
     {
@@ -610,28 +747,18 @@ class Api
 
         if (!$isExternal) {
             $headers['Accept'] = 'application/json';
+            $headers = self::withCredential(
+                $headers,
+                $options,
+                Files::getSessionId(),
+                Files::getApiKey(),
+                $path,
+                $verb
+            );
 
-            $sessionId = !empty($options['session_id']) ? $options['session_id'] : Files::getSessionId();
             $workspaceId = array_key_exists('workspace_id', $options)
               ? $options['workspace_id']
               : Files::getWorkspaceId();
-
-            if ($sessionId) {
-                $headers['X-FilesAPI-Auth'] = $sessionId;
-            } else {
-                $isCreatingSession = $path === '/sessions' && strtoupper($verb) === 'POST';
-
-                // api key cannot be used when creating a session
-                if (!$isCreatingSession) {
-                    $apiKey = !empty($options['api_key']) ? $options['api_key'] : Files::getApiKey();
-
-                    if (!$apiKey) {
-                        throw new Exception\ConfigurationException('No Files.com API key provided. Set your API key using Files::setApiKey(<API-KEY>). You can generate API keys from the Files.com web interface.');
-                    }
-
-                    $headers['X-FilesAPI-Key'] = $apiKey;
-                }
-            }
 
             if ($workspaceId !== null && $workspaceId !== '') {
                 $headers['X-Files-Workspace-Id'] = (string) $workspaceId;

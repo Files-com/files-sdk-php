@@ -179,6 +179,10 @@ class UserAdditionalEmailRecipient
         return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
 
+    // Saves the changes, then refreshes this object with the saved attributes, which it also returns as a separate
+    // UserAdditionalEmailRecipient with this object's options. A response that is not a JSON object raises
+    // ApiBadResponseException and leaves this object unchanged.
+    //
     /**
      * Update User Additional Email Recipient
      *
@@ -204,16 +208,18 @@ class UserAdditionalEmailRecipient
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (!empty($params['email']) && !is_string($params['email'])) {
+        if (isset($params['email']) && !is_string($params['email'])) {
             throw new \Files\Exception\InvalidParameterException('$email must be of type string; received ' . gettype(@$params['email']));
         }
 
         $response = Api::sendRequest('/user_additional_email_recipients/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
-        return new UserAdditionalEmailRecipient((array) (@$response->data ?: []), $this->options);
+        $updated = new UserAdditionalEmailRecipient(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $this->options);
+        $this->attributes = $updated->attributes;
+        return $updated;
     }
 
     /**
@@ -240,7 +246,7 @@ class UserAdditionalEmailRecipient
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -304,15 +310,15 @@ class UserAdditionalEmailRecipient
      */
     public static function all($params = [], $options = [])
     {
-        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
+        if (isset($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -320,11 +326,35 @@ class UserAdditionalEmailRecipient
 
         $return_array = [];
 
-        foreach ($response->data as $obj) {
-            $return_array[] = new UserAdditionalEmailRecipient((array) $obj, $options);
+        foreach (Api::listEntries(isset($response->data) ? $response->data : null, $response->status) as $obj) {
+            $return_array[] = new UserAdditionalEmailRecipient(Api::modelAttributes($obj, $response->status), $options);
         }
 
         return $return_array;
+    }
+
+    /**
+     * Fetches one page of all()'s results, with the same parameters and options,
+     * whatever Files::$autoPaginate is. Iterate the page, step with nextPage(), or read every result lazily with
+     * autoPagingIterator(). A 'cursor' parameter starts from a page saved with getNextCursor().
+     *
+     * @return \Files\Page
+     */
+    public static function listPage($params = [], $options = [])
+    {
+        if (isset($params['user_id']) && !is_int($params['user_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
+        }
+
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        return \Files\Page::fetch('/user_additional_email_recipients', $params, $options, UserAdditionalEmailRecipient::class);
     }
 
     /**
@@ -350,13 +380,13 @@ class UserAdditionalEmailRecipient
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
         $response = Api::sendRequest('/user_additional_email_recipients/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
-        return new UserAdditionalEmailRecipient((array) (@$response->data ?: []), $options);
+        return new UserAdditionalEmailRecipient(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
     /**
      * Show User Additional Email Recipient
@@ -394,16 +424,16 @@ class UserAdditionalEmailRecipient
             throw new \Files\Exception\MissingParameterException('Parameter missing: email');
         }
 
-        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
+        if (isset($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (!empty($params['email']) && !is_string($params['email'])) {
+        if (isset($params['email']) && !is_string($params['email'])) {
             throw new \Files\Exception\InvalidParameterException('$email must be of type string; received ' . gettype(@$params['email']));
         }
 
         $response = Api::sendRequest('/user_additional_email_recipients', 'POST', $params, $options);
 
-        return new UserAdditionalEmailRecipient((array) (@$response->data ?: []), $options);
+        return new UserAdditionalEmailRecipient(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
 }

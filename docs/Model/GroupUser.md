@@ -24,12 +24,14 @@
 ## List Group Users
 
 ```
-$group_user = new \Files\Model\GroupUser();
-$group_user->list(, [
+\Files\Model\GroupUser::all([
   'group_id' => 1,
   'user_id' => 1,
 ]);
 ```
+
+`\Files\Model\GroupUser::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -44,8 +46,7 @@ $group_user->list(, [
 ## Create Group User
 
 ```
-$group_user = new \Files\Model\GroupUser();
-$group_user->create(, [
+\Files\Model\GroupUser::create([
   'group_id' => 1,
   'user_id' => 1,
   'admin' => false,
@@ -72,6 +73,9 @@ $group_user->update([
   'admin' => false,
 ]);
 ```
+
+`update()` refreshes `$group_user` with the saved attributes, and also returns them as a separate
+`\Files\Model\GroupUser`.
 
 ### Parameters
 

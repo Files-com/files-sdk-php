@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace Files;
 
+use Files\Test\Fixtures;
+use Files\Test\UnboundTransportGuard;
 use Files\Util;
 use PHPUnit\Framework\TestCase;
 
 class PathUtilTest extends TestCase
 {
+    use UnboundTransportGuard;
+
     public function testEmpty()
     {
         $this->assertEquals(true, Util\PathUtil::same("", ""));
@@ -19,12 +23,7 @@ class PathUtilTest extends TestCase
      */
     public function testSameProvider()
     {
-        // parse your data file however you want
-        $json = file_get_contents(__DIR__ . '/../../../shared/normalization_for_comparison_test_data.json');
-        $json_items = json_decode($json, true);
-
-
-        return $json_items;
+        return Fixtures::requiredJsonArray(__DIR__ . '/../../../shared/normalization_for_comparison_test_data.json');
     }
 
     /**
@@ -39,7 +38,7 @@ class PathUtilTest extends TestCase
 
     public function testServerComparisonExamples()
     {
-        $examples = json_decode(file_get_contents(__DIR__ . '/../../../shared/comparison_examples.json'), true);
+        $examples = Fixtures::requiredJsonArray(__DIR__ . '/../../../shared/comparison_examples.json');
         foreach ($examples as $pair) {
             $this->assertSame($pair[1], Util\PathUtil::normalizeForComparison($pair[0]));
         }

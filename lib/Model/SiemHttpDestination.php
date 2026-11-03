@@ -1387,6 +1387,10 @@ class SiemHttpDestination
         return $this->attributes['datadog_api_key'] = $value;
     }
 
+    // Saves the changes, then refreshes this object with the saved attributes, which it also returns as a separate
+    // SiemHttpDestination with this object's options. A response that is not a JSON object raises
+    // ApiBadResponseException and leaves this object unchanged.
+    //
     /**
      * Update SIEM HTTP Destination
      *
@@ -1444,88 +1448,142 @@ class SiemHttpDestination
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (!empty($params['name']) && !is_string($params['name'])) {
+        if (isset($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (!empty($params['generic_payload_type']) && !is_string($params['generic_payload_type'])) {
+        if (isset($params['sending_active']) && !is_scalar($params['sending_active'])) {
+            throw new \Files\Exception\InvalidParameterException('$sending_active must be of type boolean; received ' . gettype(@$params['sending_active']));
+        }
+
+        if (isset($params['generic_payload_type']) && !is_string($params['generic_payload_type'])) {
             throw new \Files\Exception\InvalidParameterException('$generic_payload_type must be of type string; received ' . gettype(@$params['generic_payload_type']));
         }
 
-        if (!empty($params['file_destination_path']) && !is_string($params['file_destination_path'])) {
+        if (isset($params['file_destination_path']) && !is_string($params['file_destination_path'])) {
             throw new \Files\Exception\InvalidParameterException('$file_destination_path must be of type string; received ' . gettype(@$params['file_destination_path']));
         }
 
-        if (!empty($params['file_format']) && !is_string($params['file_format'])) {
+        if (isset($params['file_format']) && !is_string($params['file_format'])) {
             throw new \Files\Exception\InvalidParameterException('$file_format must be of type string; received ' . gettype(@$params['file_format']));
         }
 
-        if (!empty($params['file_interval_minutes']) && !is_int($params['file_interval_minutes'])) {
+        if (isset($params['file_interval_minutes']) && !is_int($params['file_interval_minutes'])) {
             throw new \Files\Exception\InvalidParameterException('$file_interval_minutes must be of type int; received ' . gettype(@$params['file_interval_minutes']));
         }
 
-        if (!empty($params['splunk_token']) && !is_string($params['splunk_token'])) {
+        if (isset($params['splunk_token']) && !is_string($params['splunk_token'])) {
             throw new \Files\Exception\InvalidParameterException('$splunk_token must be of type string; received ' . gettype(@$params['splunk_token']));
         }
 
-        if (!empty($params['crowdstrike_token']) && !is_string($params['crowdstrike_token'])) {
+        if (isset($params['crowdstrike_token']) && !is_string($params['crowdstrike_token'])) {
             throw new \Files\Exception\InvalidParameterException('$crowdstrike_token must be of type string; received ' . gettype(@$params['crowdstrike_token']));
         }
 
-        if (!empty($params['azure_dcr_immutable_id']) && !is_string($params['azure_dcr_immutable_id'])) {
+        if (isset($params['azure_dcr_immutable_id']) && !is_string($params['azure_dcr_immutable_id'])) {
             throw new \Files\Exception\InvalidParameterException('$azure_dcr_immutable_id must be of type string; received ' . gettype(@$params['azure_dcr_immutable_id']));
         }
 
-        if (!empty($params['azure_stream_name']) && !is_string($params['azure_stream_name'])) {
+        if (isset($params['azure_stream_name']) && !is_string($params['azure_stream_name'])) {
             throw new \Files\Exception\InvalidParameterException('$azure_stream_name must be of type string; received ' . gettype(@$params['azure_stream_name']));
         }
 
-        if (!empty($params['azure_oauth_client_credentials_tenant_id']) && !is_string($params['azure_oauth_client_credentials_tenant_id'])) {
+        if (isset($params['azure_oauth_client_credentials_tenant_id']) && !is_string($params['azure_oauth_client_credentials_tenant_id'])) {
             throw new \Files\Exception\InvalidParameterException('$azure_oauth_client_credentials_tenant_id must be of type string; received ' . gettype(@$params['azure_oauth_client_credentials_tenant_id']));
         }
 
-        if (!empty($params['azure_oauth_client_credentials_client_id']) && !is_string($params['azure_oauth_client_credentials_client_id'])) {
+        if (isset($params['azure_oauth_client_credentials_client_id']) && !is_string($params['azure_oauth_client_credentials_client_id'])) {
             throw new \Files\Exception\InvalidParameterException('$azure_oauth_client_credentials_client_id must be of type string; received ' . gettype(@$params['azure_oauth_client_credentials_client_id']));
         }
 
-        if (!empty($params['azure_oauth_client_credentials_client_secret']) && !is_string($params['azure_oauth_client_credentials_client_secret'])) {
+        if (isset($params['azure_oauth_client_credentials_client_secret']) && !is_string($params['azure_oauth_client_credentials_client_secret'])) {
             throw new \Files\Exception\InvalidParameterException('$azure_oauth_client_credentials_client_secret must be of type string; received ' . gettype(@$params['azure_oauth_client_credentials_client_secret']));
         }
 
-        if (!empty($params['qradar_username']) && !is_string($params['qradar_username'])) {
+        if (isset($params['qradar_username']) && !is_string($params['qradar_username'])) {
             throw new \Files\Exception\InvalidParameterException('$qradar_username must be of type string; received ' . gettype(@$params['qradar_username']));
         }
 
-        if (!empty($params['qradar_password']) && !is_string($params['qradar_password'])) {
+        if (isset($params['qradar_password']) && !is_string($params['qradar_password'])) {
             throw new \Files\Exception\InvalidParameterException('$qradar_password must be of type string; received ' . gettype(@$params['qradar_password']));
         }
 
-        if (!empty($params['solar_winds_token']) && !is_string($params['solar_winds_token'])) {
+        if (isset($params['solar_winds_token']) && !is_string($params['solar_winds_token'])) {
             throw new \Files\Exception\InvalidParameterException('$solar_winds_token must be of type string; received ' . gettype(@$params['solar_winds_token']));
         }
 
-        if (!empty($params['new_relic_api_key']) && !is_string($params['new_relic_api_key'])) {
+        if (isset($params['new_relic_api_key']) && !is_string($params['new_relic_api_key'])) {
             throw new \Files\Exception\InvalidParameterException('$new_relic_api_key must be of type string; received ' . gettype(@$params['new_relic_api_key']));
         }
 
-        if (!empty($params['datadog_api_key']) && !is_string($params['datadog_api_key'])) {
+        if (isset($params['datadog_api_key']) && !is_string($params['datadog_api_key'])) {
             throw new \Files\Exception\InvalidParameterException('$datadog_api_key must be of type string; received ' . gettype(@$params['datadog_api_key']));
         }
 
-        if (!empty($params['destination_type']) && !is_string($params['destination_type'])) {
+        if (isset($params['action_send_enabled']) && !is_scalar($params['action_send_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$action_send_enabled must be of type boolean; received ' . gettype(@$params['action_send_enabled']));
+        }
+
+        if (isset($params['sftp_action_send_enabled']) && !is_scalar($params['sftp_action_send_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$sftp_action_send_enabled must be of type boolean; received ' . gettype(@$params['sftp_action_send_enabled']));
+        }
+
+        if (isset($params['ftp_action_send_enabled']) && !is_scalar($params['ftp_action_send_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$ftp_action_send_enabled must be of type boolean; received ' . gettype(@$params['ftp_action_send_enabled']));
+        }
+
+        if (isset($params['web_dav_action_send_enabled']) && !is_scalar($params['web_dav_action_send_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$web_dav_action_send_enabled must be of type boolean; received ' . gettype(@$params['web_dav_action_send_enabled']));
+        }
+
+        if (isset($params['sync_send_enabled']) && !is_scalar($params['sync_send_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$sync_send_enabled must be of type boolean; received ' . gettype(@$params['sync_send_enabled']));
+        }
+
+        if (isset($params['outbound_connection_send_enabled']) && !is_scalar($params['outbound_connection_send_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$outbound_connection_send_enabled must be of type boolean; received ' . gettype(@$params['outbound_connection_send_enabled']));
+        }
+
+        if (isset($params['automation_send_enabled']) && !is_scalar($params['automation_send_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$automation_send_enabled must be of type boolean; received ' . gettype(@$params['automation_send_enabled']));
+        }
+
+        if (isset($params['api_request_send_enabled']) && !is_scalar($params['api_request_send_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$api_request_send_enabled must be of type boolean; received ' . gettype(@$params['api_request_send_enabled']));
+        }
+
+        if (isset($params['public_hosting_request_send_enabled']) && !is_scalar($params['public_hosting_request_send_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$public_hosting_request_send_enabled must be of type boolean; received ' . gettype(@$params['public_hosting_request_send_enabled']));
+        }
+
+        if (isset($params['email_send_enabled']) && !is_scalar($params['email_send_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$email_send_enabled must be of type boolean; received ' . gettype(@$params['email_send_enabled']));
+        }
+
+        if (isset($params['exavault_api_request_send_enabled']) && !is_scalar($params['exavault_api_request_send_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$exavault_api_request_send_enabled must be of type boolean; received ' . gettype(@$params['exavault_api_request_send_enabled']));
+        }
+
+        if (isset($params['settings_change_send_enabled']) && !is_scalar($params['settings_change_send_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$settings_change_send_enabled must be of type boolean; received ' . gettype(@$params['settings_change_send_enabled']));
+        }
+
+        if (isset($params['destination_type']) && !is_string($params['destination_type'])) {
             throw new \Files\Exception\InvalidParameterException('$destination_type must be of type string; received ' . gettype(@$params['destination_type']));
         }
 
-        if (!empty($params['destination_url']) && !is_string($params['destination_url'])) {
+        if (isset($params['destination_url']) && !is_string($params['destination_url'])) {
             throw new \Files\Exception\InvalidParameterException('$destination_url must be of type string; received ' . gettype(@$params['destination_url']));
         }
 
         $response = Api::sendRequest('/siem_http_destinations/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
-        return new SiemHttpDestination((array) (@$response->data ?: []), $this->options);
+        $updated = new SiemHttpDestination(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $this->options);
+        $this->attributes = $updated->attributes;
+        return $updated;
     }
 
     /**
@@ -1552,7 +1610,7 @@ class SiemHttpDestination
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -1612,11 +1670,11 @@ class SiemHttpDestination
      */
     public static function all($params = [], $options = [])
     {
-        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -1624,11 +1682,31 @@ class SiemHttpDestination
 
         $return_array = [];
 
-        foreach ($response->data as $obj) {
-            $return_array[] = new SiemHttpDestination((array) $obj, $options);
+        foreach (Api::listEntries(isset($response->data) ? $response->data : null, $response->status) as $obj) {
+            $return_array[] = new SiemHttpDestination(Api::modelAttributes($obj, $response->status), $options);
         }
 
         return $return_array;
+    }
+
+    /**
+     * Fetches one page of all()'s results, with the same parameters and options,
+     * whatever Files::$autoPaginate is. Iterate the page, step with nextPage(), or read every result lazily with
+     * autoPagingIterator(). A 'cursor' parameter starts from a page saved with getNextCursor().
+     *
+     * @return \Files\Page
+     */
+    public static function listPage($params = [], $options = [])
+    {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        return \Files\Page::fetch('/siem_http_destinations', $params, $options, SiemHttpDestination::class);
     }
 
     /**
@@ -1654,13 +1732,13 @@ class SiemHttpDestination
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
         $response = Api::sendRequest('/siem_http_destinations/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
-        return new SiemHttpDestination((array) (@$response->data ?: []), $options);
+        return new SiemHttpDestination(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
     /**
      * Show SIEM HTTP Destination
@@ -1729,85 +1807,137 @@ class SiemHttpDestination
             throw new \Files\Exception\MissingParameterException('Parameter missing: destination_type');
         }
 
-        if (!empty($params['name']) && !is_string($params['name'])) {
+        if (isset($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (!empty($params['generic_payload_type']) && !is_string($params['generic_payload_type'])) {
+        if (isset($params['sending_active']) && !is_scalar($params['sending_active'])) {
+            throw new \Files\Exception\InvalidParameterException('$sending_active must be of type boolean; received ' . gettype(@$params['sending_active']));
+        }
+
+        if (isset($params['generic_payload_type']) && !is_string($params['generic_payload_type'])) {
             throw new \Files\Exception\InvalidParameterException('$generic_payload_type must be of type string; received ' . gettype(@$params['generic_payload_type']));
         }
 
-        if (!empty($params['file_destination_path']) && !is_string($params['file_destination_path'])) {
+        if (isset($params['file_destination_path']) && !is_string($params['file_destination_path'])) {
             throw new \Files\Exception\InvalidParameterException('$file_destination_path must be of type string; received ' . gettype(@$params['file_destination_path']));
         }
 
-        if (!empty($params['file_format']) && !is_string($params['file_format'])) {
+        if (isset($params['file_format']) && !is_string($params['file_format'])) {
             throw new \Files\Exception\InvalidParameterException('$file_format must be of type string; received ' . gettype(@$params['file_format']));
         }
 
-        if (!empty($params['file_interval_minutes']) && !is_int($params['file_interval_minutes'])) {
+        if (isset($params['file_interval_minutes']) && !is_int($params['file_interval_minutes'])) {
             throw new \Files\Exception\InvalidParameterException('$file_interval_minutes must be of type int; received ' . gettype(@$params['file_interval_minutes']));
         }
 
-        if (!empty($params['splunk_token']) && !is_string($params['splunk_token'])) {
+        if (isset($params['splunk_token']) && !is_string($params['splunk_token'])) {
             throw new \Files\Exception\InvalidParameterException('$splunk_token must be of type string; received ' . gettype(@$params['splunk_token']));
         }
 
-        if (!empty($params['crowdstrike_token']) && !is_string($params['crowdstrike_token'])) {
+        if (isset($params['crowdstrike_token']) && !is_string($params['crowdstrike_token'])) {
             throw new \Files\Exception\InvalidParameterException('$crowdstrike_token must be of type string; received ' . gettype(@$params['crowdstrike_token']));
         }
 
-        if (!empty($params['azure_dcr_immutable_id']) && !is_string($params['azure_dcr_immutable_id'])) {
+        if (isset($params['azure_dcr_immutable_id']) && !is_string($params['azure_dcr_immutable_id'])) {
             throw new \Files\Exception\InvalidParameterException('$azure_dcr_immutable_id must be of type string; received ' . gettype(@$params['azure_dcr_immutable_id']));
         }
 
-        if (!empty($params['azure_stream_name']) && !is_string($params['azure_stream_name'])) {
+        if (isset($params['azure_stream_name']) && !is_string($params['azure_stream_name'])) {
             throw new \Files\Exception\InvalidParameterException('$azure_stream_name must be of type string; received ' . gettype(@$params['azure_stream_name']));
         }
 
-        if (!empty($params['azure_oauth_client_credentials_tenant_id']) && !is_string($params['azure_oauth_client_credentials_tenant_id'])) {
+        if (isset($params['azure_oauth_client_credentials_tenant_id']) && !is_string($params['azure_oauth_client_credentials_tenant_id'])) {
             throw new \Files\Exception\InvalidParameterException('$azure_oauth_client_credentials_tenant_id must be of type string; received ' . gettype(@$params['azure_oauth_client_credentials_tenant_id']));
         }
 
-        if (!empty($params['azure_oauth_client_credentials_client_id']) && !is_string($params['azure_oauth_client_credentials_client_id'])) {
+        if (isset($params['azure_oauth_client_credentials_client_id']) && !is_string($params['azure_oauth_client_credentials_client_id'])) {
             throw new \Files\Exception\InvalidParameterException('$azure_oauth_client_credentials_client_id must be of type string; received ' . gettype(@$params['azure_oauth_client_credentials_client_id']));
         }
 
-        if (!empty($params['azure_oauth_client_credentials_client_secret']) && !is_string($params['azure_oauth_client_credentials_client_secret'])) {
+        if (isset($params['azure_oauth_client_credentials_client_secret']) && !is_string($params['azure_oauth_client_credentials_client_secret'])) {
             throw new \Files\Exception\InvalidParameterException('$azure_oauth_client_credentials_client_secret must be of type string; received ' . gettype(@$params['azure_oauth_client_credentials_client_secret']));
         }
 
-        if (!empty($params['qradar_username']) && !is_string($params['qradar_username'])) {
+        if (isset($params['qradar_username']) && !is_string($params['qradar_username'])) {
             throw new \Files\Exception\InvalidParameterException('$qradar_username must be of type string; received ' . gettype(@$params['qradar_username']));
         }
 
-        if (!empty($params['qradar_password']) && !is_string($params['qradar_password'])) {
+        if (isset($params['qradar_password']) && !is_string($params['qradar_password'])) {
             throw new \Files\Exception\InvalidParameterException('$qradar_password must be of type string; received ' . gettype(@$params['qradar_password']));
         }
 
-        if (!empty($params['solar_winds_token']) && !is_string($params['solar_winds_token'])) {
+        if (isset($params['solar_winds_token']) && !is_string($params['solar_winds_token'])) {
             throw new \Files\Exception\InvalidParameterException('$solar_winds_token must be of type string; received ' . gettype(@$params['solar_winds_token']));
         }
 
-        if (!empty($params['new_relic_api_key']) && !is_string($params['new_relic_api_key'])) {
+        if (isset($params['new_relic_api_key']) && !is_string($params['new_relic_api_key'])) {
             throw new \Files\Exception\InvalidParameterException('$new_relic_api_key must be of type string; received ' . gettype(@$params['new_relic_api_key']));
         }
 
-        if (!empty($params['datadog_api_key']) && !is_string($params['datadog_api_key'])) {
+        if (isset($params['datadog_api_key']) && !is_string($params['datadog_api_key'])) {
             throw new \Files\Exception\InvalidParameterException('$datadog_api_key must be of type string; received ' . gettype(@$params['datadog_api_key']));
         }
 
-        if (!empty($params['destination_type']) && !is_string($params['destination_type'])) {
+        if (isset($params['action_send_enabled']) && !is_scalar($params['action_send_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$action_send_enabled must be of type boolean; received ' . gettype(@$params['action_send_enabled']));
+        }
+
+        if (isset($params['sftp_action_send_enabled']) && !is_scalar($params['sftp_action_send_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$sftp_action_send_enabled must be of type boolean; received ' . gettype(@$params['sftp_action_send_enabled']));
+        }
+
+        if (isset($params['ftp_action_send_enabled']) && !is_scalar($params['ftp_action_send_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$ftp_action_send_enabled must be of type boolean; received ' . gettype(@$params['ftp_action_send_enabled']));
+        }
+
+        if (isset($params['web_dav_action_send_enabled']) && !is_scalar($params['web_dav_action_send_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$web_dav_action_send_enabled must be of type boolean; received ' . gettype(@$params['web_dav_action_send_enabled']));
+        }
+
+        if (isset($params['sync_send_enabled']) && !is_scalar($params['sync_send_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$sync_send_enabled must be of type boolean; received ' . gettype(@$params['sync_send_enabled']));
+        }
+
+        if (isset($params['outbound_connection_send_enabled']) && !is_scalar($params['outbound_connection_send_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$outbound_connection_send_enabled must be of type boolean; received ' . gettype(@$params['outbound_connection_send_enabled']));
+        }
+
+        if (isset($params['automation_send_enabled']) && !is_scalar($params['automation_send_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$automation_send_enabled must be of type boolean; received ' . gettype(@$params['automation_send_enabled']));
+        }
+
+        if (isset($params['api_request_send_enabled']) && !is_scalar($params['api_request_send_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$api_request_send_enabled must be of type boolean; received ' . gettype(@$params['api_request_send_enabled']));
+        }
+
+        if (isset($params['public_hosting_request_send_enabled']) && !is_scalar($params['public_hosting_request_send_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$public_hosting_request_send_enabled must be of type boolean; received ' . gettype(@$params['public_hosting_request_send_enabled']));
+        }
+
+        if (isset($params['email_send_enabled']) && !is_scalar($params['email_send_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$email_send_enabled must be of type boolean; received ' . gettype(@$params['email_send_enabled']));
+        }
+
+        if (isset($params['exavault_api_request_send_enabled']) && !is_scalar($params['exavault_api_request_send_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$exavault_api_request_send_enabled must be of type boolean; received ' . gettype(@$params['exavault_api_request_send_enabled']));
+        }
+
+        if (isset($params['settings_change_send_enabled']) && !is_scalar($params['settings_change_send_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$settings_change_send_enabled must be of type boolean; received ' . gettype(@$params['settings_change_send_enabled']));
+        }
+
+        if (isset($params['destination_type']) && !is_string($params['destination_type'])) {
             throw new \Files\Exception\InvalidParameterException('$destination_type must be of type string; received ' . gettype(@$params['destination_type']));
         }
 
-        if (!empty($params['destination_url']) && !is_string($params['destination_url'])) {
+        if (isset($params['destination_url']) && !is_string($params['destination_url'])) {
             throw new \Files\Exception\InvalidParameterException('$destination_url must be of type string; received ' . gettype(@$params['destination_url']));
         }
 
         $response = Api::sendRequest('/siem_http_destinations', 'POST', $params, $options);
 
-        return new SiemHttpDestination((array) (@$response->data ?: []), $options);
+        return new SiemHttpDestination(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
 
     /**
@@ -1856,84 +1986,136 @@ class SiemHttpDestination
      */
     public static function sendTestEntry($params = [], $options = [])
     {
-        if (!empty($params['siem_http_destination_id']) && !is_int($params['siem_http_destination_id'])) {
+        if (isset($params['siem_http_destination_id']) && !is_int($params['siem_http_destination_id'])) {
             throw new \Files\Exception\InvalidParameterException('$siem_http_destination_id must be of type int; received ' . gettype(@$params['siem_http_destination_id']));
         }
 
-        if (!empty($params['destination_type']) && !is_string($params['destination_type'])) {
+        if (isset($params['destination_type']) && !is_string($params['destination_type'])) {
             throw new \Files\Exception\InvalidParameterException('$destination_type must be of type string; received ' . gettype(@$params['destination_type']));
         }
 
-        if (!empty($params['destination_url']) && !is_string($params['destination_url'])) {
+        if (isset($params['destination_url']) && !is_string($params['destination_url'])) {
             throw new \Files\Exception\InvalidParameterException('$destination_url must be of type string; received ' . gettype(@$params['destination_url']));
         }
 
-        if (!empty($params['name']) && !is_string($params['name'])) {
+        if (isset($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (!empty($params['generic_payload_type']) && !is_string($params['generic_payload_type'])) {
+        if (isset($params['sending_active']) && !is_scalar($params['sending_active'])) {
+            throw new \Files\Exception\InvalidParameterException('$sending_active must be of type boolean; received ' . gettype(@$params['sending_active']));
+        }
+
+        if (isset($params['generic_payload_type']) && !is_string($params['generic_payload_type'])) {
             throw new \Files\Exception\InvalidParameterException('$generic_payload_type must be of type string; received ' . gettype(@$params['generic_payload_type']));
         }
 
-        if (!empty($params['file_destination_path']) && !is_string($params['file_destination_path'])) {
+        if (isset($params['file_destination_path']) && !is_string($params['file_destination_path'])) {
             throw new \Files\Exception\InvalidParameterException('$file_destination_path must be of type string; received ' . gettype(@$params['file_destination_path']));
         }
 
-        if (!empty($params['file_format']) && !is_string($params['file_format'])) {
+        if (isset($params['file_format']) && !is_string($params['file_format'])) {
             throw new \Files\Exception\InvalidParameterException('$file_format must be of type string; received ' . gettype(@$params['file_format']));
         }
 
-        if (!empty($params['file_interval_minutes']) && !is_int($params['file_interval_minutes'])) {
+        if (isset($params['file_interval_minutes']) && !is_int($params['file_interval_minutes'])) {
             throw new \Files\Exception\InvalidParameterException('$file_interval_minutes must be of type int; received ' . gettype(@$params['file_interval_minutes']));
         }
 
-        if (!empty($params['splunk_token']) && !is_string($params['splunk_token'])) {
+        if (isset($params['splunk_token']) && !is_string($params['splunk_token'])) {
             throw new \Files\Exception\InvalidParameterException('$splunk_token must be of type string; received ' . gettype(@$params['splunk_token']));
         }
 
-        if (!empty($params['crowdstrike_token']) && !is_string($params['crowdstrike_token'])) {
+        if (isset($params['crowdstrike_token']) && !is_string($params['crowdstrike_token'])) {
             throw new \Files\Exception\InvalidParameterException('$crowdstrike_token must be of type string; received ' . gettype(@$params['crowdstrike_token']));
         }
 
-        if (!empty($params['azure_dcr_immutable_id']) && !is_string($params['azure_dcr_immutable_id'])) {
+        if (isset($params['azure_dcr_immutable_id']) && !is_string($params['azure_dcr_immutable_id'])) {
             throw new \Files\Exception\InvalidParameterException('$azure_dcr_immutable_id must be of type string; received ' . gettype(@$params['azure_dcr_immutable_id']));
         }
 
-        if (!empty($params['azure_stream_name']) && !is_string($params['azure_stream_name'])) {
+        if (isset($params['azure_stream_name']) && !is_string($params['azure_stream_name'])) {
             throw new \Files\Exception\InvalidParameterException('$azure_stream_name must be of type string; received ' . gettype(@$params['azure_stream_name']));
         }
 
-        if (!empty($params['azure_oauth_client_credentials_tenant_id']) && !is_string($params['azure_oauth_client_credentials_tenant_id'])) {
+        if (isset($params['azure_oauth_client_credentials_tenant_id']) && !is_string($params['azure_oauth_client_credentials_tenant_id'])) {
             throw new \Files\Exception\InvalidParameterException('$azure_oauth_client_credentials_tenant_id must be of type string; received ' . gettype(@$params['azure_oauth_client_credentials_tenant_id']));
         }
 
-        if (!empty($params['azure_oauth_client_credentials_client_id']) && !is_string($params['azure_oauth_client_credentials_client_id'])) {
+        if (isset($params['azure_oauth_client_credentials_client_id']) && !is_string($params['azure_oauth_client_credentials_client_id'])) {
             throw new \Files\Exception\InvalidParameterException('$azure_oauth_client_credentials_client_id must be of type string; received ' . gettype(@$params['azure_oauth_client_credentials_client_id']));
         }
 
-        if (!empty($params['azure_oauth_client_credentials_client_secret']) && !is_string($params['azure_oauth_client_credentials_client_secret'])) {
+        if (isset($params['azure_oauth_client_credentials_client_secret']) && !is_string($params['azure_oauth_client_credentials_client_secret'])) {
             throw new \Files\Exception\InvalidParameterException('$azure_oauth_client_credentials_client_secret must be of type string; received ' . gettype(@$params['azure_oauth_client_credentials_client_secret']));
         }
 
-        if (!empty($params['qradar_username']) && !is_string($params['qradar_username'])) {
+        if (isset($params['qradar_username']) && !is_string($params['qradar_username'])) {
             throw new \Files\Exception\InvalidParameterException('$qradar_username must be of type string; received ' . gettype(@$params['qradar_username']));
         }
 
-        if (!empty($params['qradar_password']) && !is_string($params['qradar_password'])) {
+        if (isset($params['qradar_password']) && !is_string($params['qradar_password'])) {
             throw new \Files\Exception\InvalidParameterException('$qradar_password must be of type string; received ' . gettype(@$params['qradar_password']));
         }
 
-        if (!empty($params['solar_winds_token']) && !is_string($params['solar_winds_token'])) {
+        if (isset($params['solar_winds_token']) && !is_string($params['solar_winds_token'])) {
             throw new \Files\Exception\InvalidParameterException('$solar_winds_token must be of type string; received ' . gettype(@$params['solar_winds_token']));
         }
 
-        if (!empty($params['new_relic_api_key']) && !is_string($params['new_relic_api_key'])) {
+        if (isset($params['new_relic_api_key']) && !is_string($params['new_relic_api_key'])) {
             throw new \Files\Exception\InvalidParameterException('$new_relic_api_key must be of type string; received ' . gettype(@$params['new_relic_api_key']));
         }
 
-        if (!empty($params['datadog_api_key']) && !is_string($params['datadog_api_key'])) {
+        if (isset($params['datadog_api_key']) && !is_string($params['datadog_api_key'])) {
             throw new \Files\Exception\InvalidParameterException('$datadog_api_key must be of type string; received ' . gettype(@$params['datadog_api_key']));
+        }
+
+        if (isset($params['action_send_enabled']) && !is_scalar($params['action_send_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$action_send_enabled must be of type boolean; received ' . gettype(@$params['action_send_enabled']));
+        }
+
+        if (isset($params['sftp_action_send_enabled']) && !is_scalar($params['sftp_action_send_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$sftp_action_send_enabled must be of type boolean; received ' . gettype(@$params['sftp_action_send_enabled']));
+        }
+
+        if (isset($params['ftp_action_send_enabled']) && !is_scalar($params['ftp_action_send_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$ftp_action_send_enabled must be of type boolean; received ' . gettype(@$params['ftp_action_send_enabled']));
+        }
+
+        if (isset($params['web_dav_action_send_enabled']) && !is_scalar($params['web_dav_action_send_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$web_dav_action_send_enabled must be of type boolean; received ' . gettype(@$params['web_dav_action_send_enabled']));
+        }
+
+        if (isset($params['sync_send_enabled']) && !is_scalar($params['sync_send_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$sync_send_enabled must be of type boolean; received ' . gettype(@$params['sync_send_enabled']));
+        }
+
+        if (isset($params['outbound_connection_send_enabled']) && !is_scalar($params['outbound_connection_send_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$outbound_connection_send_enabled must be of type boolean; received ' . gettype(@$params['outbound_connection_send_enabled']));
+        }
+
+        if (isset($params['automation_send_enabled']) && !is_scalar($params['automation_send_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$automation_send_enabled must be of type boolean; received ' . gettype(@$params['automation_send_enabled']));
+        }
+
+        if (isset($params['api_request_send_enabled']) && !is_scalar($params['api_request_send_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$api_request_send_enabled must be of type boolean; received ' . gettype(@$params['api_request_send_enabled']));
+        }
+
+        if (isset($params['public_hosting_request_send_enabled']) && !is_scalar($params['public_hosting_request_send_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$public_hosting_request_send_enabled must be of type boolean; received ' . gettype(@$params['public_hosting_request_send_enabled']));
+        }
+
+        if (isset($params['email_send_enabled']) && !is_scalar($params['email_send_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$email_send_enabled must be of type boolean; received ' . gettype(@$params['email_send_enabled']));
+        }
+
+        if (isset($params['exavault_api_request_send_enabled']) && !is_scalar($params['exavault_api_request_send_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$exavault_api_request_send_enabled must be of type boolean; received ' . gettype(@$params['exavault_api_request_send_enabled']));
+        }
+
+        if (isset($params['settings_change_send_enabled']) && !is_scalar($params['settings_change_send_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$settings_change_send_enabled must be of type boolean; received ' . gettype(@$params['settings_change_send_enabled']));
         }
 
         $response = Api::sendRequest('/siem_http_destinations/send_test_entry', 'POST', $params, $options);

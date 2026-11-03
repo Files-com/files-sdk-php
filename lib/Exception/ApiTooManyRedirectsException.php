@@ -2,6 +2,9 @@
 
 namespace Files\Exception;
 
-class ApiTooManyRedirectsException extends FilesException
+/**
+ * The request was redirected more times than allowed.
+ */
+class ApiTooManyRedirectsException extends ApiConnectionException
 {
 }

@@ -37,9 +37,11 @@
 ## List Exavault API Request Logs
 
 ```
-$exavault_api_request_log = new \Files\Model\ExavaultApiRequestLog();
-$exavault_api_request_log->list
+\Files\Model\ExavaultApiRequestLog::all();
 ```
+
+`\Files\Model\ExavaultApiRequestLog::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters

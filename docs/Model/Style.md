@@ -27,8 +27,7 @@
 ## Show Style
 
 ```
-$style = new \Files\Model\Style();
-$style->find($path);
+\Files\Model\Style::find($path);
 ```
 
 
@@ -47,6 +46,9 @@ $style->update([
   'logo_click_href' => "https://www.example.com",
 ]);
 ```
+
+`update()` refreshes `$style` with the saved attributes, and also returns them as a separate
+`\Files\Model\Style`.
 
 ### Parameters
 

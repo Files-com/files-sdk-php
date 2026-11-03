@@ -61,9 +61,11 @@
 ## List SFTP Action Logs
 
 ```
-$sftp_action_log = new \Files\Model\SftpActionLog();
-$sftp_action_log->list
+\Files\Model\SftpActionLog::all();
 ```
+
+`\Files\Model\SftpActionLog::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters

@@ -43,8 +43,7 @@
 ## List Permissions
 
 ```
-$permission = new \Files\Model\Permission();
-$permission->list(, [
+\Files\Model\Permission::all([
   'path' => "example",
   'include_groups' => false,
   'group_id' => 1,
@@ -52,6 +51,9 @@ $permission->list(, [
   'user_id' => 1,
 ]);
 ```
+
+`\Files\Model\Permission::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -72,8 +74,7 @@ $permission->list(, [
 ## Create Permission
 
 ```
-$permission = new \Files\Model\Permission();
-$permission->create(, [
+\Files\Model\Permission::create([
   'path' => "path",
   'group_id' => 1,
   'group_ids' => [1],

@@ -33,8 +33,7 @@
 ## Show File Migration
 
 ```
-$file_migration = new \Files\Model\FileMigration();
-$file_migration->find($id);
+\Files\Model\FileMigration::find($id);
 ```
 
 

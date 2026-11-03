@@ -39,11 +39,13 @@
 ## List Inbox Registrations
 
 ```
-$inbox_registration = new \Files\Model\InboxRegistration();
-$inbox_registration->list(, [
+\Files\Model\InboxRegistration::all([
   'folder_behavior_id' => 1,
 ]);
 ```
+
+`\Files\Model\InboxRegistration::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters

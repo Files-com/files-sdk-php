@@ -29,11 +29,13 @@
 ## List User Cipher Uses
 
 ```
-$user_cipher_use = new \Files\Model\UserCipherUse();
-$user_cipher_use->list(, [
+\Files\Model\UserCipherUse::all([
   'user_id' => 1,
 ]);
 ```
+
+`\Files\Model\UserCipherUse::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters

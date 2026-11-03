@@ -113,8 +113,7 @@
 ## Upload File
 
 ```
-$file = new \Files\Model\File();
-$file->create($path, [
+\Files\Model\File::create($path, [
   'custom_metadata' => {"department":"finance"},
   'length' => 1,
   'mkdir_parents' => false,
@@ -157,8 +156,7 @@ $file->create($path, [
 ## Find File/Folder by Path
 
 ```
-$file = new \Files\Model\File();
-$file->find($path, [
+\Files\Model\File::find($path, [
   'with_previews' => false,
   'with_priority_color' => false,
 ]);
@@ -177,8 +175,7 @@ $file->find($path, [
 ## Create a ZIP from one or more paths and save it to a destination path
 
 ```
-$file = new \Files\Model\File();
-$file->zip(, [
+\Files\Model\File::zip([
   'paths' => "paths",
   'destination' => "destination",
   'overwrite' => false,
@@ -288,6 +285,9 @@ $file->update([
   'priority_color' => "red",
 ]);
 ```
+
+`update()` refreshes `$file` with the saved attributes, and also returns them as a separate
+`\Files\Model\File`.
 
 ### Parameters
 

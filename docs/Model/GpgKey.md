@@ -44,11 +44,13 @@
 ## List GPG Keys
 
 ```
-$gpg_key = new \Files\Model\GpgKey();
-$gpg_key->list(, [
+\Files\Model\GpgKey::all([
   'user_id' => 1,
 ]);
 ```
+
+`\Files\Model\GpgKey::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -68,8 +70,7 @@ $gpg_key->list(, [
 ## Show GPG Key
 
 ```
-$gpg_key = new \Files\Model\GpgKey();
-$gpg_key->find($id);
+\Files\Model\GpgKey::find($id);
 ```
 
 
@@ -82,8 +83,7 @@ $gpg_key->find($id);
 ## Create GPG Key
 
 ```
-$gpg_key = new \Files\Model\GpgKey();
-$gpg_key->create(, [
+\Files\Model\GpgKey::create([
   'user_id' => 1,
   'partner_id' => 1,
   'name' => "key name",
@@ -122,6 +122,9 @@ $gpg_key->update([
   'name' => "key name",
 ]);
 ```
+
+`update()` refreshes `$gpg_key` with the saved attributes, and also returns them as a separate
+`\Files\Model\GpgKey`.
 
 ### Parameters
 

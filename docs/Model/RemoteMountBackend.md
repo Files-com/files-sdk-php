@@ -58,9 +58,11 @@
 ## List Remote Mount Backends
 
 ```
-$remote_mount_backend = new \Files\Model\RemoteMountBackend();
-$remote_mount_backend->list
+\Files\Model\RemoteMountBackend::all();
 ```
+
+`\Files\Model\RemoteMountBackend::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -74,8 +76,7 @@ $remote_mount_backend->list
 ## Show Remote Mount Backend
 
 ```
-$remote_mount_backend = new \Files\Model\RemoteMountBackend();
-$remote_mount_backend->find($id);
+\Files\Model\RemoteMountBackend::find($id);
 ```
 
 
@@ -88,8 +89,7 @@ $remote_mount_backend->find($id);
 ## Create Remote Mount Backend
 
 ```
-$remote_mount_backend = new \Files\Model\RemoteMountBackend();
-$remote_mount_backend->create(, [
+\Files\Model\RemoteMountBackend::create([
   'enabled' => true,
   'fall' => 1,
   'health_check_enabled' => true,
@@ -160,6 +160,9 @@ $remote_mount_backend->update([
   'remote_server_id' => 1,
 ]);
 ```
+
+`update()` refreshes `$remote_mount_backend` with the saved attributes, and also returns them as a separate
+`\Files\Model\RemoteMountBackend`.
 
 ### Parameters
 

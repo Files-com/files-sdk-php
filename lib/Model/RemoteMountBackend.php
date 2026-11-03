@@ -466,7 +466,7 @@ class RemoteMountBackend
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -474,6 +474,10 @@ class RemoteMountBackend
         return;
     }
 
+    // Saves the changes, then refreshes this object with the saved attributes, which it also returns as a separate
+    // RemoteMountBackend with this object's options. A response that is not a JSON object raises
+    // ApiBadResponseException and leaves this object unchanged.
+    //
     /**
      * Update Remote Mount Backend
      *
@@ -510,44 +514,54 @@ class RemoteMountBackend
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (!empty($params['fall']) && !is_int($params['fall'])) {
+        if (isset($params['enabled']) && !is_scalar($params['enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$enabled must be of type boolean; received ' . gettype(@$params['enabled']));
+        }
+
+        if (isset($params['fall']) && !is_int($params['fall'])) {
             throw new \Files\Exception\InvalidParameterException('$fall must be of type int; received ' . gettype(@$params['fall']));
         }
 
-        if (!empty($params['health_check_type']) && !is_string($params['health_check_type'])) {
+        if (isset($params['health_check_enabled']) && !is_scalar($params['health_check_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$health_check_enabled must be of type boolean; received ' . gettype(@$params['health_check_enabled']));
+        }
+
+        if (isset($params['health_check_type']) && !is_string($params['health_check_type'])) {
             throw new \Files\Exception\InvalidParameterException('$health_check_type must be of type string; received ' . gettype(@$params['health_check_type']));
         }
 
-        if (!empty($params['interval']) && !is_int($params['interval'])) {
+        if (isset($params['interval']) && !is_int($params['interval'])) {
             throw new \Files\Exception\InvalidParameterException('$interval must be of type int; received ' . gettype(@$params['interval']));
         }
 
-        if (!empty($params['priority']) && !is_int($params['priority'])) {
+        if (isset($params['priority']) && !is_int($params['priority'])) {
             throw new \Files\Exception\InvalidParameterException('$priority must be of type int; received ' . gettype(@$params['priority']));
         }
 
-        if (!empty($params['remote_path']) && !is_string($params['remote_path'])) {
+        if (isset($params['remote_path']) && !is_string($params['remote_path'])) {
             throw new \Files\Exception\InvalidParameterException('$remote_path must be of type string; received ' . gettype(@$params['remote_path']));
         }
 
-        if (!empty($params['rise']) && !is_int($params['rise'])) {
+        if (isset($params['rise']) && !is_int($params['rise'])) {
             throw new \Files\Exception\InvalidParameterException('$rise must be of type int; received ' . gettype(@$params['rise']));
         }
 
-        if (!empty($params['canary_file_path']) && !is_string($params['canary_file_path'])) {
+        if (isset($params['canary_file_path']) && !is_string($params['canary_file_path'])) {
             throw new \Files\Exception\InvalidParameterException('$canary_file_path must be of type string; received ' . gettype(@$params['canary_file_path']));
         }
 
-        if (!empty($params['remote_server_id']) && !is_int($params['remote_server_id'])) {
+        if (isset($params['remote_server_id']) && !is_int($params['remote_server_id'])) {
             throw new \Files\Exception\InvalidParameterException('$remote_server_id must be of type int; received ' . gettype(@$params['remote_server_id']));
         }
 
         $response = Api::sendRequest('/remote_mount_backends/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
-        return new RemoteMountBackend((array) (@$response->data ?: []), $this->options);
+        $updated = new RemoteMountBackend(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $this->options);
+        $this->attributes = $updated->attributes;
+        return $updated;
     }
 
     /**
@@ -574,7 +588,7 @@ class RemoteMountBackend
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -635,11 +649,11 @@ class RemoteMountBackend
      */
     public static function all($params = [], $options = [])
     {
-        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -647,11 +661,31 @@ class RemoteMountBackend
 
         $return_array = [];
 
-        foreach ($response->data as $obj) {
-            $return_array[] = new RemoteMountBackend((array) $obj, $options);
+        foreach (Api::listEntries(isset($response->data) ? $response->data : null, $response->status) as $obj) {
+            $return_array[] = new RemoteMountBackend(Api::modelAttributes($obj, $response->status), $options);
         }
 
         return $return_array;
+    }
+
+    /**
+     * Fetches one page of all()'s results, with the same parameters and options,
+     * whatever Files::$autoPaginate is. Iterate the page, step with nextPage(), or read every result lazily with
+     * autoPagingIterator(). A 'cursor' parameter starts from a page saved with getNextCursor().
+     *
+     * @return \Files\Page
+     */
+    public static function listPage($params = [], $options = [])
+    {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        return \Files\Page::fetch('/remote_mount_backends', $params, $options, RemoteMountBackend::class);
     }
 
     /**
@@ -677,13 +711,13 @@ class RemoteMountBackend
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
         $response = Api::sendRequest('/remote_mount_backends/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
-        return new RemoteMountBackend((array) (@$response->data ?: []), $options);
+        return new RemoteMountBackend(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
     /**
      * Show Remote Mount Backend
@@ -740,44 +774,52 @@ class RemoteMountBackend
             throw new \Files\Exception\MissingParameterException('Parameter missing: remote_server_id');
         }
 
-        if (!empty($params['fall']) && !is_int($params['fall'])) {
+        if (isset($params['enabled']) && !is_scalar($params['enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$enabled must be of type boolean; received ' . gettype(@$params['enabled']));
+        }
+
+        if (isset($params['fall']) && !is_int($params['fall'])) {
             throw new \Files\Exception\InvalidParameterException('$fall must be of type int; received ' . gettype(@$params['fall']));
         }
 
-        if (!empty($params['health_check_type']) && !is_string($params['health_check_type'])) {
+        if (isset($params['health_check_enabled']) && !is_scalar($params['health_check_enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$health_check_enabled must be of type boolean; received ' . gettype(@$params['health_check_enabled']));
+        }
+
+        if (isset($params['health_check_type']) && !is_string($params['health_check_type'])) {
             throw new \Files\Exception\InvalidParameterException('$health_check_type must be of type string; received ' . gettype(@$params['health_check_type']));
         }
 
-        if (!empty($params['interval']) && !is_int($params['interval'])) {
+        if (isset($params['interval']) && !is_int($params['interval'])) {
             throw new \Files\Exception\InvalidParameterException('$interval must be of type int; received ' . gettype(@$params['interval']));
         }
 
-        if (!empty($params['priority']) && !is_int($params['priority'])) {
+        if (isset($params['priority']) && !is_int($params['priority'])) {
             throw new \Files\Exception\InvalidParameterException('$priority must be of type int; received ' . gettype(@$params['priority']));
         }
 
-        if (!empty($params['remote_path']) && !is_string($params['remote_path'])) {
+        if (isset($params['remote_path']) && !is_string($params['remote_path'])) {
             throw new \Files\Exception\InvalidParameterException('$remote_path must be of type string; received ' . gettype(@$params['remote_path']));
         }
 
-        if (!empty($params['rise']) && !is_int($params['rise'])) {
+        if (isset($params['rise']) && !is_int($params['rise'])) {
             throw new \Files\Exception\InvalidParameterException('$rise must be of type int; received ' . gettype(@$params['rise']));
         }
 
-        if (!empty($params['canary_file_path']) && !is_string($params['canary_file_path'])) {
+        if (isset($params['canary_file_path']) && !is_string($params['canary_file_path'])) {
             throw new \Files\Exception\InvalidParameterException('$canary_file_path must be of type string; received ' . gettype(@$params['canary_file_path']));
         }
 
-        if (!empty($params['remote_server_mount_id']) && !is_int($params['remote_server_mount_id'])) {
+        if (isset($params['remote_server_mount_id']) && !is_int($params['remote_server_mount_id'])) {
             throw new \Files\Exception\InvalidParameterException('$remote_server_mount_id must be of type int; received ' . gettype(@$params['remote_server_mount_id']));
         }
 
-        if (!empty($params['remote_server_id']) && !is_int($params['remote_server_id'])) {
+        if (isset($params['remote_server_id']) && !is_int($params['remote_server_id'])) {
             throw new \Files\Exception\InvalidParameterException('$remote_server_id must be of type int; received ' . gettype(@$params['remote_server_id']));
         }
 
         $response = Api::sendRequest('/remote_mount_backends', 'POST', $params, $options);
 
-        return new RemoteMountBackend((array) (@$response->data ?: []), $options);
+        return new RemoteMountBackend(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
 }

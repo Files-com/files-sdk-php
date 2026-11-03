@@ -10,6 +10,7 @@ use Files\Exception\InvalidParameterException;
 use Files\Model\File;
 use Files\Model\FileAction;
 use Files\Model\FileMigration;
+use Files\Test\UnboundTransportGuard;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
@@ -18,6 +19,8 @@ use PHPUnit\Framework\TestCase;
 
 class FileActionTest extends TestCase
 {
+    use UnboundTransportGuard;
+
     private function response($data)
     {
         return new Response(200, ['Content-Type' => 'application/json'], json_encode($data));

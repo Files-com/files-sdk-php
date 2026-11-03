@@ -899,35 +899,47 @@ class Folder
             throw new \Files\Exception\MissingParameterException('Parameter missing: path');
         }
 
-        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
-        if (!empty($params['path']) && !is_string($params['path'])) {
+        if (isset($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (!empty($params['preview_size']) && !is_string($params['preview_size'])) {
+        if (isset($params['preview_size']) && !is_string($params['preview_size'])) {
             throw new \Files\Exception\InvalidParameterException('$preview_size must be of type string; received ' . gettype(@$params['preview_size']));
         }
 
-        if (!empty($params['search']) && !is_string($params['search'])) {
+        if (isset($params['search']) && !is_string($params['search'])) {
             throw new \Files\Exception\InvalidParameterException('$search must be of type string; received ' . gettype(@$params['search']));
         }
 
-        if (!empty($params['search_custom_metadata_key']) && !is_string($params['search_custom_metadata_key'])) {
+        if (isset($params['search_custom_metadata_key']) && !is_string($params['search_custom_metadata_key'])) {
             throw new \Files\Exception\InvalidParameterException('$search_custom_metadata_key must be of type string; received ' . gettype(@$params['search_custom_metadata_key']));
         }
 
-        if (!empty($params['type']) && !is_string($params['type'])) {
+        if (isset($params['search_all']) && !is_scalar($params['search_all'])) {
+            throw new \Files\Exception\InvalidParameterException('$search_all must be of type boolean; received ' . gettype(@$params['search_all']));
+        }
+
+        if (isset($params['with_previews']) && !is_scalar($params['with_previews'])) {
+            throw new \Files\Exception\InvalidParameterException('$with_previews must be of type boolean; received ' . gettype(@$params['with_previews']));
+        }
+
+        if (isset($params['with_priority_color']) && !is_scalar($params['with_priority_color'])) {
+            throw new \Files\Exception\InvalidParameterException('$with_priority_color must be of type boolean; received ' . gettype(@$params['with_priority_color']));
+        }
+
+        if (isset($params['type']) && !is_string($params['type'])) {
             throw new \Files\Exception\InvalidParameterException('$type must be of type string; received ' . gettype(@$params['type']));
         }
 
-        if (!empty($params['modified_at_datetime']) && !is_string($params['modified_at_datetime'])) {
+        if (isset($params['modified_at_datetime']) && !is_string($params['modified_at_datetime'])) {
             throw new \Files\Exception\InvalidParameterException('$modified_at_datetime must be of type string; received ' . gettype(@$params['modified_at_datetime']));
         }
 
@@ -935,11 +947,77 @@ class Folder
 
         $return_array = [];
 
-        foreach ($response->data as $obj) {
-            $return_array[] = new File((array) $obj, $options);
+        foreach (Api::listEntries(isset($response->data) ? $response->data : null, $response->status) as $obj) {
+            $return_array[] = new File(Api::modelAttributes($obj, $response->status), $options);
         }
 
         return $return_array;
+    }
+
+    /**
+     * Fetches one page of listFor()'s results, with the same parameters and options,
+     * whatever Files::$autoPaginate is. Iterate the page, step with nextPage(), or read every result lazily with
+     * autoPagingIterator(). A 'cursor' parameter starts from a page saved with getNextCursor().
+     *
+     * @return \Files\Page
+     */
+    public static function listForPage($path, $params = [], $options = [])
+    {
+        if (!is_array($params)) {
+            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+        }
+
+        $params['path'] = $path;
+
+        if (empty($params['path'])) {
+            throw new \Files\Exception\MissingParameterException('Parameter missing: path');
+        }
+
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        if (isset($params['path']) && !is_string($params['path'])) {
+            throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
+        }
+
+        if (isset($params['preview_size']) && !is_string($params['preview_size'])) {
+            throw new \Files\Exception\InvalidParameterException('$preview_size must be of type string; received ' . gettype(@$params['preview_size']));
+        }
+
+        if (isset($params['search']) && !is_string($params['search'])) {
+            throw new \Files\Exception\InvalidParameterException('$search must be of type string; received ' . gettype(@$params['search']));
+        }
+
+        if (isset($params['search_custom_metadata_key']) && !is_string($params['search_custom_metadata_key'])) {
+            throw new \Files\Exception\InvalidParameterException('$search_custom_metadata_key must be of type string; received ' . gettype(@$params['search_custom_metadata_key']));
+        }
+
+        if (isset($params['search_all']) && !is_scalar($params['search_all'])) {
+            throw new \Files\Exception\InvalidParameterException('$search_all must be of type boolean; received ' . gettype(@$params['search_all']));
+        }
+
+        if (isset($params['with_previews']) && !is_scalar($params['with_previews'])) {
+            throw new \Files\Exception\InvalidParameterException('$with_previews must be of type boolean; received ' . gettype(@$params['with_previews']));
+        }
+
+        if (isset($params['with_priority_color']) && !is_scalar($params['with_priority_color'])) {
+            throw new \Files\Exception\InvalidParameterException('$with_priority_color must be of type boolean; received ' . gettype(@$params['with_priority_color']));
+        }
+
+        if (isset($params['type']) && !is_string($params['type'])) {
+            throw new \Files\Exception\InvalidParameterException('$type must be of type string; received ' . gettype(@$params['type']));
+        }
+
+        if (isset($params['modified_at_datetime']) && !is_string($params['modified_at_datetime'])) {
+            throw new \Files\Exception\InvalidParameterException('$modified_at_datetime must be of type string; received ' . gettype(@$params['modified_at_datetime']));
+        }
+
+        return \Files\Page::fetch('/folders/' . rawurlencode(strval(@$params['path'])) . '', $params, $options, File::class);
     }
 
     /**
@@ -967,16 +1045,20 @@ class Folder
             throw new \Files\Exception\MissingParameterException('Parameter missing: path');
         }
 
-        if (!empty($params['path']) && !is_string($params['path'])) {
+        if (isset($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (!empty($params['provided_mtime']) && !is_string($params['provided_mtime'])) {
+        if (isset($params['mkdir_parents']) && !is_scalar($params['mkdir_parents'])) {
+            throw new \Files\Exception\InvalidParameterException('$mkdir_parents must be of type boolean; received ' . gettype(@$params['mkdir_parents']));
+        }
+
+        if (isset($params['provided_mtime']) && !is_string($params['provided_mtime'])) {
             throw new \Files\Exception\InvalidParameterException('$provided_mtime must be of type string; received ' . gettype(@$params['provided_mtime']));
         }
 
         $response = Api::sendRequest('/folders/' . rawurlencode(strval(@$params['path'])) . '', 'POST', $params, $options);
 
-        return new File((array) (@$response->data ?: []), $options);
+        return new File(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
 }

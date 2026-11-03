@@ -400,6 +400,10 @@ class Behavior
         return $this->attributes['attachment_delete'] = $value;
     }
 
+    // Saves the changes, then refreshes this object with the saved attributes, which it also returns as a separate
+    // Behavior with this object's options. A response that is not a JSON object raises
+    // ApiBadResponseException and leaves this object unchanged.
+    //
     /**
      * Update Behavior
      *
@@ -431,20 +435,34 @@ class Behavior
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (!empty($params['name']) && !is_string($params['name'])) {
+        if (isset($params['disable_parent_folder_behavior']) && !is_scalar($params['disable_parent_folder_behavior'])) {
+            throw new \Files\Exception\InvalidParameterException('$disable_parent_folder_behavior must be of type boolean; received ' . gettype(@$params['disable_parent_folder_behavior']));
+        }
+
+        if (isset($params['recursive']) && !is_scalar($params['recursive'])) {
+            throw new \Files\Exception\InvalidParameterException('$recursive must be of type boolean; received ' . gettype(@$params['recursive']));
+        }
+
+        if (isset($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (!empty($params['description']) && !is_string($params['description'])) {
+        if (isset($params['description']) && !is_string($params['description'])) {
             throw new \Files\Exception\InvalidParameterException('$description must be of type string; received ' . gettype(@$params['description']));
         }
 
+        if (isset($params['attachment_delete']) && !is_scalar($params['attachment_delete'])) {
+            throw new \Files\Exception\InvalidParameterException('$attachment_delete must be of type boolean; received ' . gettype(@$params['attachment_delete']));
+        }
+
         $response = Api::sendRequest('/behaviors/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
-        return new Behavior((array) (@$response->data ?: []), $this->options);
+        $updated = new Behavior(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $this->options);
+        $this->attributes = $updated->attributes;
+        return $updated;
     }
 
     /**
@@ -471,7 +489,7 @@ class Behavior
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -533,11 +551,11 @@ class Behavior
      */
     public static function all($params = [], $options = [])
     {
-        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -545,11 +563,31 @@ class Behavior
 
         $return_array = [];
 
-        foreach ($response->data as $obj) {
-            $return_array[] = new Behavior((array) $obj, $options);
+        foreach (Api::listEntries(isset($response->data) ? $response->data : null, $response->status) as $obj) {
+            $return_array[] = new Behavior(Api::modelAttributes($obj, $response->status), $options);
         }
 
         return $return_array;
+    }
+
+    /**
+     * Fetches one page of all()'s results, with the same parameters and options,
+     * whatever Files::$autoPaginate is. Iterate the page, step with nextPage(), or read every result lazily with
+     * autoPagingIterator(). A 'cursor' parameter starts from a page saved with getNextCursor().
+     *
+     * @return \Files\Page
+     */
+    public static function listPage($params = [], $options = [])
+    {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        return \Files\Page::fetch('/behaviors', $params, $options, Behavior::class);
     }
 
     /**
@@ -575,13 +613,13 @@ class Behavior
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
         $response = Api::sendRequest('/behaviors/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
-        return new Behavior((array) (@$response->data ?: []), $options);
+        return new Behavior(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
     /**
      * Show Behavior
@@ -629,27 +667,69 @@ class Behavior
             throw new \Files\Exception\MissingParameterException('Parameter missing: path');
         }
 
-        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
-        if (!empty($params['path']) && !is_string($params['path'])) {
+        if (isset($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
+        }
+
+        if (isset($params['ancestor_behaviors']) && !is_scalar($params['ancestor_behaviors'])) {
+            throw new \Files\Exception\InvalidParameterException('$ancestor_behaviors must be of type boolean; received ' . gettype(@$params['ancestor_behaviors']));
         }
 
         $response = Api::sendRequest('/behaviors/folders/' . rawurlencode(strval(@$params['path'])) . '', 'GET', $params, $options);
 
         $return_array = [];
 
-        foreach ($response->data as $obj) {
-            $return_array[] = new Behavior((array) $obj, $options);
+        foreach (Api::listEntries(isset($response->data) ? $response->data : null, $response->status) as $obj) {
+            $return_array[] = new Behavior(Api::modelAttributes($obj, $response->status), $options);
         }
 
         return $return_array;
+    }
+
+    /**
+     * Fetches one page of listFor()'s results, with the same parameters and options,
+     * whatever Files::$autoPaginate is. Iterate the page, step with nextPage(), or read every result lazily with
+     * autoPagingIterator(). A 'cursor' parameter starts from a page saved with getNextCursor().
+     *
+     * @return \Files\Page
+     */
+    public static function listForPage($path, $params = [], $options = [])
+    {
+        if (!is_array($params)) {
+            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+        }
+
+        $params['path'] = $path;
+
+        if (empty($params['path'])) {
+            throw new \Files\Exception\MissingParameterException('Parameter missing: path');
+        }
+
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        if (isset($params['path']) && !is_string($params['path'])) {
+            throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
+        }
+
+        if (isset($params['ancestor_behaviors']) && !is_scalar($params['ancestor_behaviors'])) {
+            throw new \Files\Exception\InvalidParameterException('$ancestor_behaviors must be of type boolean; received ' . gettype(@$params['ancestor_behaviors']));
+        }
+
+        return \Files\Page::fetch('/behaviors/folders/' . rawurlencode(strval(@$params['path'])) . '', $params, $options, Behavior::class);
     }
 
     /**
@@ -680,25 +760,33 @@ class Behavior
             throw new \Files\Exception\MissingParameterException('Parameter missing: behavior');
         }
 
-        if (!empty($params['name']) && !is_string($params['name'])) {
+        if (isset($params['disable_parent_folder_behavior']) && !is_scalar($params['disable_parent_folder_behavior'])) {
+            throw new \Files\Exception\InvalidParameterException('$disable_parent_folder_behavior must be of type boolean; received ' . gettype(@$params['disable_parent_folder_behavior']));
+        }
+
+        if (isset($params['recursive']) && !is_scalar($params['recursive'])) {
+            throw new \Files\Exception\InvalidParameterException('$recursive must be of type boolean; received ' . gettype(@$params['recursive']));
+        }
+
+        if (isset($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (!empty($params['description']) && !is_string($params['description'])) {
+        if (isset($params['description']) && !is_string($params['description'])) {
             throw new \Files\Exception\InvalidParameterException('$description must be of type string; received ' . gettype(@$params['description']));
         }
 
-        if (!empty($params['path']) && !is_string($params['path'])) {
+        if (isset($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (!empty($params['behavior']) && !is_string($params['behavior'])) {
+        if (isset($params['behavior']) && !is_string($params['behavior'])) {
             throw new \Files\Exception\InvalidParameterException('$behavior must be of type string; received ' . gettype(@$params['behavior']));
         }
 
         $response = Api::sendRequest('/behaviors', 'POST', $params, $options);
 
-        return new Behavior((array) (@$response->data ?: []), $options);
+        return new Behavior(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
 
     /**
@@ -723,19 +811,19 @@ class Behavior
             throw new \Files\Exception\MissingParameterException('Parameter missing: url');
         }
 
-        if (!empty($params['url']) && !is_string($params['url'])) {
+        if (isset($params['url']) && !is_string($params['url'])) {
             throw new \Files\Exception\InvalidParameterException('$url must be of type string; received ' . gettype(@$params['url']));
         }
 
-        if (!empty($params['method']) && !is_string($params['method'])) {
+        if (isset($params['method']) && !is_string($params['method'])) {
             throw new \Files\Exception\InvalidParameterException('$method must be of type string; received ' . gettype(@$params['method']));
         }
 
-        if (!empty($params['encoding']) && !is_string($params['encoding'])) {
+        if (isset($params['encoding']) && !is_string($params['encoding'])) {
             throw new \Files\Exception\InvalidParameterException('$encoding must be of type string; received ' . gettype(@$params['encoding']));
         }
 
-        if (!empty($params['action']) && !is_string($params['action'])) {
+        if (isset($params['action']) && !is_string($params['action'])) {
             throw new \Files\Exception\InvalidParameterException('$action must be of type string; received ' . gettype(@$params['action']));
         }
 

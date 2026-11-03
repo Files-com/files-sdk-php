@@ -36,9 +36,11 @@
 ## List Chat Sessions
 
 ```
-$chat_session = new \Files\Model\ChatSession();
-$chat_session->list
+\Files\Model\ChatSession::all();
 ```
+
+`\Files\Model\ChatSession::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -53,8 +55,7 @@ $chat_session->list
 ## Show Chat Session
 
 ```
-$chat_session = new \Files\Model\ChatSession();
-$chat_session->find($id);
+\Files\Model\ChatSession::find($id);
 ```
 
 

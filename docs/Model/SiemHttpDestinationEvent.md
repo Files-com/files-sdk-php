@@ -31,9 +31,11 @@
 ## List SIEM HTTP Destination Events
 
 ```
-$siem_http_destination_event = new \Files\Model\SiemHttpDestinationEvent();
-$siem_http_destination_event->list
+\Files\Model\SiemHttpDestinationEvent::all();
 ```
+
+`\Files\Model\SiemHttpDestinationEvent::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -52,8 +54,7 @@ $siem_http_destination_event->list
 ## Show SIEM HTTP Destination Event
 
 ```
-$siem_http_destination_event = new \Files\Model\SiemHttpDestinationEvent();
-$siem_http_destination_event->find($id);
+\Files\Model\SiemHttpDestinationEvent::find($id);
 ```
 
 

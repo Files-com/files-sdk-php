@@ -1256,19 +1256,19 @@ class Bundle
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (!empty($params['to']) && !is_array($params['to'])) {
+        if (isset($params['to']) && !is_array($params['to'])) {
             throw new \Files\Exception\InvalidParameterException('$to must be of type array; received ' . gettype(@$params['to']));
         }
 
-        if (!empty($params['note']) && !is_string($params['note'])) {
+        if (isset($params['note']) && !is_string($params['note'])) {
             throw new \Files\Exception\InvalidParameterException('$note must be of type string; received ' . gettype(@$params['note']));
         }
 
-        if (!empty($params['recipients']) && !is_array($params['recipients'])) {
+        if (isset($params['recipients']) && !is_array($params['recipients'])) {
             throw new \Files\Exception\InvalidParameterException('$recipients must be of type array; received ' . gettype(@$params['recipients']));
         }
 
@@ -1276,6 +1276,10 @@ class Bundle
         return;
     }
 
+    // Saves the changes, then refreshes this object with the saved attributes, which it also returns as a separate
+    // Bundle with this object's options. A response that is not a JSON object raises
+    // ApiBadResponseException and leaves this object unchanged.
+    //
     /**
      * Update Share Link
      *
@@ -1332,84 +1336,134 @@ class Bundle
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (!empty($params['paths']) && !is_array($params['paths'])) {
+        if (isset($params['paths']) && !is_array($params['paths'])) {
             throw new \Files\Exception\InvalidParameterException('$paths must be of type array; received ' . gettype(@$params['paths']));
         }
 
-        if (!empty($params['password']) && !is_string($params['password'])) {
+        if (isset($params['password']) && !is_string($params['password'])) {
             throw new \Files\Exception\InvalidParameterException('$password must be of type string; received ' . gettype(@$params['password']));
         }
 
-        if (!empty($params['form_field_set_id']) && !is_int($params['form_field_set_id'])) {
+        if (isset($params['bypasses_site_expiration_rules']) && !is_scalar($params['bypasses_site_expiration_rules'])) {
+            throw new \Files\Exception\InvalidParameterException('$bypasses_site_expiration_rules must be of type boolean; received ' . gettype(@$params['bypasses_site_expiration_rules']));
+        }
+
+        if (isset($params['form_field_set_id']) && !is_int($params['form_field_set_id'])) {
             throw new \Files\Exception\InvalidParameterException('$form_field_set_id must be of type int; received ' . gettype(@$params['form_field_set_id']));
         }
 
-        if (!empty($params['clickwrap_id']) && !is_int($params['clickwrap_id'])) {
+        if (isset($params['clickwrap_id']) && !is_int($params['clickwrap_id'])) {
             throw new \Files\Exception\InvalidParameterException('$clickwrap_id must be of type int; received ' . gettype(@$params['clickwrap_id']));
         }
 
-        if (!empty($params['code']) && !is_string($params['code'])) {
+        if (isset($params['code']) && !is_string($params['code'])) {
             throw new \Files\Exception\InvalidParameterException('$code must be of type string; received ' . gettype(@$params['code']));
         }
 
-        if (!empty($params['description']) && !is_string($params['description'])) {
+        if (isset($params['create_snapshot']) && !is_scalar($params['create_snapshot'])) {
+            throw new \Files\Exception\InvalidParameterException('$create_snapshot must be of type boolean; received ' . gettype(@$params['create_snapshot']));
+        }
+
+        if (isset($params['description']) && !is_string($params['description'])) {
             throw new \Files\Exception\InvalidParameterException('$description must be of type string; received ' . gettype(@$params['description']));
         }
 
-        if (!empty($params['expires_at']) && !is_string($params['expires_at'])) {
+        if (isset($params['dont_separate_submissions_by_folder']) && !is_scalar($params['dont_separate_submissions_by_folder'])) {
+            throw new \Files\Exception\InvalidParameterException('$dont_separate_submissions_by_folder must be of type boolean; received ' . gettype(@$params['dont_separate_submissions_by_folder']));
+        }
+
+        if (isset($params['expires_at']) && !is_string($params['expires_at'])) {
             throw new \Files\Exception\InvalidParameterException('$expires_at must be of type string; received ' . gettype(@$params['expires_at']));
         }
 
-        if (!empty($params['inbox_id']) && !is_int($params['inbox_id'])) {
+        if (isset($params['finalize_snapshot']) && !is_scalar($params['finalize_snapshot'])) {
+            throw new \Files\Exception\InvalidParameterException('$finalize_snapshot must be of type boolean; received ' . gettype(@$params['finalize_snapshot']));
+        }
+
+        if (isset($params['inbox_id']) && !is_int($params['inbox_id'])) {
             throw new \Files\Exception\InvalidParameterException('$inbox_id must be of type int; received ' . gettype(@$params['inbox_id']));
         }
 
-        if (!empty($params['max_uses']) && !is_int($params['max_uses'])) {
+        if (isset($params['max_uses']) && !is_int($params['max_uses'])) {
             throw new \Files\Exception\InvalidParameterException('$max_uses must be of type int; received ' . gettype(@$params['max_uses']));
         }
 
-        if (!empty($params['group_id']) && !is_int($params['group_id'])) {
+        if (isset($params['group_id']) && !is_int($params['group_id'])) {
             throw new \Files\Exception\InvalidParameterException('$group_id must be of type int; received ' . gettype(@$params['group_id']));
         }
 
-        if (!empty($params['internal_name']) && !is_string($params['internal_name'])) {
+        if (isset($params['internal_name']) && !is_string($params['internal_name'])) {
             throw new \Files\Exception\InvalidParameterException('$internal_name must be of type string; received ' . gettype(@$params['internal_name']));
         }
 
-        if (!empty($params['note']) && !is_string($params['note'])) {
+        if (isset($params['note']) && !is_string($params['note'])) {
             throw new \Files\Exception\InvalidParameterException('$note must be of type string; received ' . gettype(@$params['note']));
         }
 
-        if (!empty($params['path_template']) && !is_string($params['path_template'])) {
+        if (isset($params['path_template']) && !is_string($params['path_template'])) {
             throw new \Files\Exception\InvalidParameterException('$path_template must be of type string; received ' . gettype(@$params['path_template']));
         }
 
-        if (!empty($params['path_template_time_zone']) && !is_string($params['path_template_time_zone'])) {
+        if (isset($params['path_template_time_zone']) && !is_string($params['path_template_time_zone'])) {
             throw new \Files\Exception\InvalidParameterException('$path_template_time_zone must be of type string; received ' . gettype(@$params['path_template_time_zone']));
         }
 
-        if (!empty($params['permissions']) && !is_string($params['permissions'])) {
+        if (isset($params['permissions']) && !is_string($params['permissions'])) {
             throw new \Files\Exception\InvalidParameterException('$permissions must be of type string; received ' . gettype(@$params['permissions']));
         }
 
-        if (!empty($params['start_access_on_date']) && !is_string($params['start_access_on_date'])) {
+        if (isset($params['require_registration']) && !is_scalar($params['require_registration'])) {
+            throw new \Files\Exception\InvalidParameterException('$require_registration must be of type boolean; received ' . gettype(@$params['require_registration']));
+        }
+
+        if (isset($params['require_share_recipient']) && !is_scalar($params['require_share_recipient'])) {
+            throw new \Files\Exception\InvalidParameterException('$require_share_recipient must be of type boolean; received ' . gettype(@$params['require_share_recipient']));
+        }
+
+        if (isset($params['send_one_time_password_to_recipient_at_registration']) && !is_scalar($params['send_one_time_password_to_recipient_at_registration'])) {
+            throw new \Files\Exception\InvalidParameterException('$send_one_time_password_to_recipient_at_registration must be of type boolean; received ' . gettype(@$params['send_one_time_password_to_recipient_at_registration']));
+        }
+
+        if (isset($params['send_email_receipt_to_uploader']) && !is_scalar($params['send_email_receipt_to_uploader'])) {
+            throw new \Files\Exception\InvalidParameterException('$send_email_receipt_to_uploader must be of type boolean; received ' . gettype(@$params['send_email_receipt_to_uploader']));
+        }
+
+        if (isset($params['skip_company']) && !is_scalar($params['skip_company'])) {
+            throw new \Files\Exception\InvalidParameterException('$skip_company must be of type boolean; received ' . gettype(@$params['skip_company']));
+        }
+
+        if (isset($params['start_access_on_date']) && !is_string($params['start_access_on_date'])) {
             throw new \Files\Exception\InvalidParameterException('$start_access_on_date must be of type string; received ' . gettype(@$params['start_access_on_date']));
         }
 
-        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
+        if (isset($params['skip_email']) && !is_scalar($params['skip_email'])) {
+            throw new \Files\Exception\InvalidParameterException('$skip_email must be of type boolean; received ' . gettype(@$params['skip_email']));
+        }
+
+        if (isset($params['skip_name']) && !is_scalar($params['skip_name'])) {
+            throw new \Files\Exception\InvalidParameterException('$skip_name must be of type boolean; received ' . gettype(@$params['skip_name']));
+        }
+
+        if (isset($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
+        if (isset($params['watermark_attachment_delete']) && !is_scalar($params['watermark_attachment_delete'])) {
+            throw new \Files\Exception\InvalidParameterException('$watermark_attachment_delete must be of type boolean; received ' . gettype(@$params['watermark_attachment_delete']));
+        }
+
+        if (isset($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
         $response = Api::sendRequest('/bundles/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
-        return new Bundle((array) (@$response->data ?: []), $this->options);
+        $updated = new Bundle(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $this->options);
+        $this->attributes = $updated->attributes;
+        return $updated;
     }
 
     /**
@@ -1436,7 +1490,7 @@ class Bundle
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -1505,27 +1559,59 @@ class Bundle
      */
     public static function all($params = [], $options = [])
     {
-        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
+        if (isset($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        if (isset($params['deleted']) && !is_scalar($params['deleted'])) {
+            throw new \Files\Exception\InvalidParameterException('$deleted must be of type boolean; received ' . gettype(@$params['deleted']));
         }
 
         $response = Api::sendRequest('/bundles', 'GET', $params, $options);
 
         $return_array = [];
 
-        foreach ($response->data as $obj) {
-            $return_array[] = new Bundle((array) $obj, $options);
+        foreach (Api::listEntries(isset($response->data) ? $response->data : null, $response->status) as $obj) {
+            $return_array[] = new Bundle(Api::modelAttributes($obj, $response->status), $options);
         }
 
         return $return_array;
+    }
+
+    /**
+     * Fetches one page of all()'s results, with the same parameters and options,
+     * whatever Files::$autoPaginate is. Iterate the page, step with nextPage(), or read every result lazily with
+     * autoPagingIterator(). A 'cursor' parameter starts from a page saved with getNextCursor().
+     *
+     * @return \Files\Page
+     */
+    public static function listPage($params = [], $options = [])
+    {
+        if (isset($params['user_id']) && !is_int($params['user_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
+        }
+
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        if (isset($params['deleted']) && !is_scalar($params['deleted'])) {
+            throw new \Files\Exception\InvalidParameterException('$deleted must be of type boolean; received ' . gettype(@$params['deleted']));
+        }
+
+        return \Files\Page::fetch('/bundles', $params, $options, Bundle::class);
     }
 
     /**
@@ -1552,13 +1638,17 @@ class Bundle
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
+        }
+
+        if (isset($params['deleted']) && !is_scalar($params['deleted'])) {
+            throw new \Files\Exception\InvalidParameterException('$deleted must be of type boolean; received ' . gettype(@$params['deleted']));
         }
 
         $response = Api::sendRequest('/bundles/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
-        return new Bundle((array) (@$response->data ?: []), $options);
+        return new Bundle(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
     /**
      * Show Share Link
@@ -1627,84 +1717,128 @@ class Bundle
             throw new \Files\Exception\MissingParameterException('Parameter missing: paths');
         }
 
-        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
+        if (isset($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (!empty($params['paths']) && !is_array($params['paths'])) {
+        if (isset($params['paths']) && !is_array($params['paths'])) {
             throw new \Files\Exception\InvalidParameterException('$paths must be of type array; received ' . gettype(@$params['paths']));
         }
 
-        if (!empty($params['password']) && !is_string($params['password'])) {
+        if (isset($params['password']) && !is_string($params['password'])) {
             throw new \Files\Exception\InvalidParameterException('$password must be of type string; received ' . gettype(@$params['password']));
         }
 
-        if (!empty($params['form_field_set_id']) && !is_int($params['form_field_set_id'])) {
+        if (isset($params['bypasses_site_expiration_rules']) && !is_scalar($params['bypasses_site_expiration_rules'])) {
+            throw new \Files\Exception\InvalidParameterException('$bypasses_site_expiration_rules must be of type boolean; received ' . gettype(@$params['bypasses_site_expiration_rules']));
+        }
+
+        if (isset($params['form_field_set_id']) && !is_int($params['form_field_set_id'])) {
             throw new \Files\Exception\InvalidParameterException('$form_field_set_id must be of type int; received ' . gettype(@$params['form_field_set_id']));
         }
 
-        if (!empty($params['expires_at']) && !is_string($params['expires_at'])) {
+        if (isset($params['create_snapshot']) && !is_scalar($params['create_snapshot'])) {
+            throw new \Files\Exception\InvalidParameterException('$create_snapshot must be of type boolean; received ' . gettype(@$params['create_snapshot']));
+        }
+
+        if (isset($params['dont_separate_submissions_by_folder']) && !is_scalar($params['dont_separate_submissions_by_folder'])) {
+            throw new \Files\Exception\InvalidParameterException('$dont_separate_submissions_by_folder must be of type boolean; received ' . gettype(@$params['dont_separate_submissions_by_folder']));
+        }
+
+        if (isset($params['expires_at']) && !is_string($params['expires_at'])) {
             throw new \Files\Exception\InvalidParameterException('$expires_at must be of type string; received ' . gettype(@$params['expires_at']));
         }
 
-        if (!empty($params['max_uses']) && !is_int($params['max_uses'])) {
+        if (isset($params['finalize_snapshot']) && !is_scalar($params['finalize_snapshot'])) {
+            throw new \Files\Exception\InvalidParameterException('$finalize_snapshot must be of type boolean; received ' . gettype(@$params['finalize_snapshot']));
+        }
+
+        if (isset($params['max_uses']) && !is_int($params['max_uses'])) {
             throw new \Files\Exception\InvalidParameterException('$max_uses must be of type int; received ' . gettype(@$params['max_uses']));
         }
 
-        if (!empty($params['group_id']) && !is_int($params['group_id'])) {
+        if (isset($params['group_id']) && !is_int($params['group_id'])) {
             throw new \Files\Exception\InvalidParameterException('$group_id must be of type int; received ' . gettype(@$params['group_id']));
         }
 
-        if (!empty($params['internal_name']) && !is_string($params['internal_name'])) {
+        if (isset($params['internal_name']) && !is_string($params['internal_name'])) {
             throw new \Files\Exception\InvalidParameterException('$internal_name must be of type string; received ' . gettype(@$params['internal_name']));
         }
 
-        if (!empty($params['description']) && !is_string($params['description'])) {
+        if (isset($params['description']) && !is_string($params['description'])) {
             throw new \Files\Exception\InvalidParameterException('$description must be of type string; received ' . gettype(@$params['description']));
         }
 
-        if (!empty($params['note']) && !is_string($params['note'])) {
+        if (isset($params['note']) && !is_string($params['note'])) {
             throw new \Files\Exception\InvalidParameterException('$note must be of type string; received ' . gettype(@$params['note']));
         }
 
-        if (!empty($params['code']) && !is_string($params['code'])) {
+        if (isset($params['code']) && !is_string($params['code'])) {
             throw new \Files\Exception\InvalidParameterException('$code must be of type string; received ' . gettype(@$params['code']));
         }
 
-        if (!empty($params['path_template']) && !is_string($params['path_template'])) {
+        if (isset($params['path_template']) && !is_string($params['path_template'])) {
             throw new \Files\Exception\InvalidParameterException('$path_template must be of type string; received ' . gettype(@$params['path_template']));
         }
 
-        if (!empty($params['path_template_time_zone']) && !is_string($params['path_template_time_zone'])) {
+        if (isset($params['path_template_time_zone']) && !is_string($params['path_template_time_zone'])) {
             throw new \Files\Exception\InvalidParameterException('$path_template_time_zone must be of type string; received ' . gettype(@$params['path_template_time_zone']));
         }
 
-        if (!empty($params['permissions']) && !is_string($params['permissions'])) {
+        if (isset($params['permissions']) && !is_string($params['permissions'])) {
             throw new \Files\Exception\InvalidParameterException('$permissions must be of type string; received ' . gettype(@$params['permissions']));
         }
 
-        if (!empty($params['clickwrap_id']) && !is_int($params['clickwrap_id'])) {
+        if (isset($params['require_registration']) && !is_scalar($params['require_registration'])) {
+            throw new \Files\Exception\InvalidParameterException('$require_registration must be of type boolean; received ' . gettype(@$params['require_registration']));
+        }
+
+        if (isset($params['clickwrap_id']) && !is_int($params['clickwrap_id'])) {
             throw new \Files\Exception\InvalidParameterException('$clickwrap_id must be of type int; received ' . gettype(@$params['clickwrap_id']));
         }
 
-        if (!empty($params['inbox_id']) && !is_int($params['inbox_id'])) {
+        if (isset($params['inbox_id']) && !is_int($params['inbox_id'])) {
             throw new \Files\Exception\InvalidParameterException('$inbox_id must be of type int; received ' . gettype(@$params['inbox_id']));
         }
 
-        if (!empty($params['start_access_on_date']) && !is_string($params['start_access_on_date'])) {
+        if (isset($params['require_share_recipient']) && !is_scalar($params['require_share_recipient'])) {
+            throw new \Files\Exception\InvalidParameterException('$require_share_recipient must be of type boolean; received ' . gettype(@$params['require_share_recipient']));
+        }
+
+        if (isset($params['send_one_time_password_to_recipient_at_registration']) && !is_scalar($params['send_one_time_password_to_recipient_at_registration'])) {
+            throw new \Files\Exception\InvalidParameterException('$send_one_time_password_to_recipient_at_registration must be of type boolean; received ' . gettype(@$params['send_one_time_password_to_recipient_at_registration']));
+        }
+
+        if (isset($params['send_email_receipt_to_uploader']) && !is_scalar($params['send_email_receipt_to_uploader'])) {
+            throw new \Files\Exception\InvalidParameterException('$send_email_receipt_to_uploader must be of type boolean; received ' . gettype(@$params['send_email_receipt_to_uploader']));
+        }
+
+        if (isset($params['skip_email']) && !is_scalar($params['skip_email'])) {
+            throw new \Files\Exception\InvalidParameterException('$skip_email must be of type boolean; received ' . gettype(@$params['skip_email']));
+        }
+
+        if (isset($params['skip_name']) && !is_scalar($params['skip_name'])) {
+            throw new \Files\Exception\InvalidParameterException('$skip_name must be of type boolean; received ' . gettype(@$params['skip_name']));
+        }
+
+        if (isset($params['skip_company']) && !is_scalar($params['skip_company'])) {
+            throw new \Files\Exception\InvalidParameterException('$skip_company must be of type boolean; received ' . gettype(@$params['skip_company']));
+        }
+
+        if (isset($params['start_access_on_date']) && !is_string($params['start_access_on_date'])) {
             throw new \Files\Exception\InvalidParameterException('$start_access_on_date must be of type string; received ' . gettype(@$params['start_access_on_date']));
         }
 
-        if (!empty($params['snapshot_id']) && !is_int($params['snapshot_id'])) {
+        if (isset($params['snapshot_id']) && !is_int($params['snapshot_id'])) {
             throw new \Files\Exception\InvalidParameterException('$snapshot_id must be of type int; received ' . gettype(@$params['snapshot_id']));
         }
 
-        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
+        if (isset($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
         $response = Api::sendRequest('/bundles', 'POST', $params, $options);
 
-        return new Bundle((array) (@$response->data ?: []), $options);
+        return new Bundle(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
 }

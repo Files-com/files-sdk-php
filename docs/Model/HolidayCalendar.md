@@ -63,9 +63,11 @@
 ## List Holiday Calendars
 
 ```
-$holiday_calendar = new \Files\Model\HolidayCalendar();
-$holiday_calendar->list
+\Files\Model\HolidayCalendar::all();
 ```
+
+`\Files\Model\HolidayCalendar::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -79,8 +81,7 @@ $holiday_calendar->list
 ## Show Holiday Calendar
 
 ```
-$holiday_calendar = new \Files\Model\HolidayCalendar();
-$holiday_calendar->find($id);
+\Files\Model\HolidayCalendar::find($id);
 ```
 
 
@@ -93,8 +94,7 @@ $holiday_calendar->find($id);
 ## Create Holiday Calendar
 
 ```
-$holiday_calendar = new \Files\Model\HolidayCalendar();
-$holiday_calendar->create(, [
+\Files\Model\HolidayCalendar::create([
   'definition' => {"months":{"0":[{"name":"Good Friday","function":"easter(year)","function_modifier":-2}],"1":[{"name":"New Year's Day","mday":1,"observed":"to_weekday_if_weekend(date)"},{"name":"Third Monday","week":3,"wday":1}],"11":[{"name":"Thanksgiving","week":4,"wday":4}],"12":[{"name":"Christmas Eve Early Close","mday":24,"start_time":"13:00","end_time":"17:00","year_ranges":{"from":2026}}]}},
   'name' => "Company Holidays",
 ]);
@@ -118,6 +118,9 @@ $holiday_calendar->update([
   'name' => "Company Holidays",
 ]);
 ```
+
+`update()` refreshes `$holiday_calendar` with the saved attributes, and also returns them as a separate
+`\Files\Model\HolidayCalendar`.
 
 ### Parameters
 

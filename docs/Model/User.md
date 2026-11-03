@@ -205,12 +205,14 @@
 ## List Users
 
 ```
-$user = new \Files\Model\User();
-$user->list(, [
+\Files\Model\User::all([
   'include_parent_site_users' => false,
   'include_default_workspace_users' => false,
 ]);
 ```
+
+`\Files\Model\User::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -234,8 +236,7 @@ $user->list(, [
 ## Show User
 
 ```
-$user = new \Files\Model\User();
-$user->find($id);
+\Files\Model\User::find($id);
 ```
 
 
@@ -248,8 +249,7 @@ $user->find($id);
 ## Create User
 
 ```
-$user = new \Files\Model\User();
-$user->create(, [
+\Files\Model\User::create([
   'avatar_delete' => false,
   'email' => "john.doe@files.com",
   'group_id' => 1,
@@ -507,6 +507,9 @@ $user->update([
   'convert_to_partner_user' => false,
 ]);
 ```
+
+`update()` refreshes `$user` with the saved attributes, and also returns them as a separate
+`\Files\Model\User`.
 
 ### Parameters
 

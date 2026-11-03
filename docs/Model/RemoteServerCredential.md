@@ -71,9 +71,11 @@
 ## List Remote Server Credentials
 
 ```
-$remote_server_credential = new \Files\Model\RemoteServerCredential();
-$remote_server_credential->list
+\Files\Model\RemoteServerCredential::all();
 ```
+
+`\Files\Model\RemoteServerCredential::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -89,8 +91,7 @@ $remote_server_credential->list
 ## Show Remote Server Credential
 
 ```
-$remote_server_credential = new \Files\Model\RemoteServerCredential();
-$remote_server_credential->find($id);
+\Files\Model\RemoteServerCredential::find($id);
 ```
 
 
@@ -103,8 +104,7 @@ $remote_server_credential->find($id);
 ## Create Remote Server Credential
 
 ```
-$remote_server_credential = new \Files\Model\RemoteServerCredential();
-$remote_server_credential->create(, [
+\Files\Model\RemoteServerCredential::create([
   'name' => "My Credential",
   'description' => "More information or notes about this credential.",
   'server_type' => "s3",
@@ -190,6 +190,9 @@ $remote_server_credential->update([
   'wasabi_access_key' => "example",
 ]);
 ```
+
+`update()` refreshes `$remote_server_credential` with the saved attributes, and also returns them as a separate
+`\Files\Model\RemoteServerCredential`.
 
 ### Parameters
 

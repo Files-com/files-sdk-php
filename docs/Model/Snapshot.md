@@ -28,9 +28,11 @@
 ## List Snapshots
 
 ```
-$snapshot = new \Files\Model\Snapshot();
-$snapshot->list
+\Files\Model\Snapshot::all();
 ```
+
+`\Files\Model\Snapshot::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -43,8 +45,7 @@ $snapshot->list
 ## Show Snapshot
 
 ```
-$snapshot = new \Files\Model\Snapshot();
-$snapshot->find($id);
+\Files\Model\Snapshot::find($id);
 ```
 
 
@@ -57,8 +58,7 @@ $snapshot->find($id);
 ## Create Snapshot
 
 ```
-$snapshot = new \Files\Model\Snapshot();
-$snapshot->create(, [
+\Files\Model\Snapshot::create([
   'expires_at' => "2000-01-01T01:00:00Z",
   'name' => "My Snapshot",
   'workspace_id' => 0,
@@ -100,6 +100,9 @@ $snapshot->update([
   'name' => "My Snapshot",
 ]);
 ```
+
+`update()` refreshes `$snapshot` with the saved attributes, and also returns them as a separate
+`\Files\Model\Snapshot`.
 
 ### Parameters
 

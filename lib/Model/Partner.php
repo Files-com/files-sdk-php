@@ -526,6 +526,10 @@ class Partner
         return $this->attributes['user_ids'] = $value;
     }
 
+    // Saves the changes, then refreshes this object with the saved attributes, which it also returns as a separate
+    // Partner with this object's options. A response that is not a JSON object raises
+    // ApiBadResponseException and leaves this object unchanged.
+    //
     /**
      * Update Partner
      *
@@ -566,52 +570,78 @@ class Partner
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (!empty($params['ai_assistant_personality_id']) && !is_int($params['ai_assistant_personality_id'])) {
+        if (isset($params['ai_assistant_personality_id']) && !is_int($params['ai_assistant_personality_id'])) {
             throw new \Files\Exception\InvalidParameterException('$ai_assistant_personality_id must be of type int; received ' . gettype(@$params['ai_assistant_personality_id']));
         }
 
-        if (!empty($params['allowed_ips']) && !is_string($params['allowed_ips'])) {
+        if (isset($params['allowed_ips']) && !is_string($params['allowed_ips'])) {
             throw new \Files\Exception\InvalidParameterException('$allowed_ips must be of type string; received ' . gettype(@$params['allowed_ips']));
         }
 
-        if (!empty($params['notes']) && !is_string($params['notes'])) {
+        if (isset($params['allow_bypassing_2fa_policies']) && !is_scalar($params['allow_bypassing_2fa_policies'])) {
+            throw new \Files\Exception\InvalidParameterException('$allow_bypassing_2fa_policies must be of type boolean; received ' . gettype(@$params['allow_bypassing_2fa_policies']));
+        }
+
+        if (isset($params['allow_credential_changes']) && !is_scalar($params['allow_credential_changes'])) {
+            throw new \Files\Exception\InvalidParameterException('$allow_credential_changes must be of type boolean; received ' . gettype(@$params['allow_credential_changes']));
+        }
+
+        if (isset($params['allow_providing_gpg_keys']) && !is_scalar($params['allow_providing_gpg_keys'])) {
+            throw new \Files\Exception\InvalidParameterException('$allow_providing_gpg_keys must be of type boolean; received ' . gettype(@$params['allow_providing_gpg_keys']));
+        }
+
+        if (isset($params['allow_user_creation']) && !is_scalar($params['allow_user_creation'])) {
+            throw new \Files\Exception\InvalidParameterException('$allow_user_creation must be of type boolean; received ' . gettype(@$params['allow_user_creation']));
+        }
+
+        if (isset($params['cc_emails_to_responsible_party']) && !is_scalar($params['cc_emails_to_responsible_party'])) {
+            throw new \Files\Exception\InvalidParameterException('$cc_emails_to_responsible_party must be of type boolean; received ' . gettype(@$params['cc_emails_to_responsible_party']));
+        }
+
+        if (isset($params['notes']) && !is_string($params['notes'])) {
             throw new \Files\Exception\InvalidParameterException('$notes must be of type string; received ' . gettype(@$params['notes']));
         }
 
-        if (!empty($params['partner_channel_template_id']) && !is_int($params['partner_channel_template_id'])) {
+        if (isset($params['partner_channel_template_id']) && !is_int($params['partner_channel_template_id'])) {
             throw new \Files\Exception\InvalidParameterException('$partner_channel_template_id must be of type int; received ' . gettype(@$params['partner_channel_template_id']));
         }
 
-        if (!empty($params['responsible_group_id']) && !is_int($params['responsible_group_id'])) {
+        if (isset($params['responsible_group_id']) && !is_int($params['responsible_group_id'])) {
             throw new \Files\Exception\InvalidParameterException('$responsible_group_id must be of type int; received ' . gettype(@$params['responsible_group_id']));
         }
 
-        if (!empty($params['responsible_user_id']) && !is_int($params['responsible_user_id'])) {
+        if (isset($params['responsible_user_id']) && !is_int($params['responsible_user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$responsible_user_id must be of type int; received ' . gettype(@$params['responsible_user_id']));
         }
 
-        if (!empty($params['tags']) && !is_string($params['tags'])) {
+        if (isset($params['show_partner_channel_home_page']) && !is_scalar($params['show_partner_channel_home_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$show_partner_channel_home_page must be of type boolean; received ' . gettype(@$params['show_partner_channel_home_page']));
+        }
+
+        if (isset($params['tags']) && !is_string($params['tags'])) {
             throw new \Files\Exception\InvalidParameterException('$tags must be of type string; received ' . gettype(@$params['tags']));
         }
 
-        if (!empty($params['name']) && !is_string($params['name'])) {
+        if (isset($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (!empty($params['partnership_role']) && !is_string($params['partnership_role'])) {
+        if (isset($params['partnership_role']) && !is_string($params['partnership_role'])) {
             throw new \Files\Exception\InvalidParameterException('$partnership_role must be of type string; received ' . gettype(@$params['partnership_role']));
         }
 
-        if (!empty($params['root_folder']) && !is_string($params['root_folder'])) {
+        if (isset($params['root_folder']) && !is_string($params['root_folder'])) {
             throw new \Files\Exception\InvalidParameterException('$root_folder must be of type string; received ' . gettype(@$params['root_folder']));
         }
 
         $response = Api::sendRequest('/partners/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
-        return new Partner((array) (@$response->data ?: []), $this->options);
+        $updated = new Partner(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $this->options);
+        $this->attributes = $updated->attributes;
+        return $updated;
     }
 
     /**
@@ -638,7 +668,7 @@ class Partner
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -700,11 +730,11 @@ class Partner
      */
     public static function all($params = [], $options = [])
     {
-        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -712,11 +742,31 @@ class Partner
 
         $return_array = [];
 
-        foreach ($response->data as $obj) {
-            $return_array[] = new Partner((array) $obj, $options);
+        foreach (Api::listEntries(isset($response->data) ? $response->data : null, $response->status) as $obj) {
+            $return_array[] = new Partner(Api::modelAttributes($obj, $response->status), $options);
         }
 
         return $return_array;
+    }
+
+    /**
+     * Fetches one page of all()'s results, with the same parameters and options,
+     * whatever Files::$autoPaginate is. Iterate the page, step with nextPage(), or read every result lazily with
+     * autoPagingIterator(). A 'cursor' parameter starts from a page saved with getNextCursor().
+     *
+     * @return \Files\Page
+     */
+    public static function listPage($params = [], $options = [])
+    {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        return \Files\Page::fetch('/partners', $params, $options, Partner::class);
     }
 
     /**
@@ -742,13 +792,13 @@ class Partner
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
         $response = Api::sendRequest('/partners/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
-        return new Partner((array) (@$response->data ?: []), $options);
+        return new Partner(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
     /**
      * Show Partner
@@ -804,48 +854,72 @@ class Partner
             throw new \Files\Exception\MissingParameterException('Parameter missing: root_folder');
         }
 
-        if (!empty($params['ai_assistant_personality_id']) && !is_int($params['ai_assistant_personality_id'])) {
+        if (isset($params['ai_assistant_personality_id']) && !is_int($params['ai_assistant_personality_id'])) {
             throw new \Files\Exception\InvalidParameterException('$ai_assistant_personality_id must be of type int; received ' . gettype(@$params['ai_assistant_personality_id']));
         }
 
-        if (!empty($params['allowed_ips']) && !is_string($params['allowed_ips'])) {
+        if (isset($params['allowed_ips']) && !is_string($params['allowed_ips'])) {
             throw new \Files\Exception\InvalidParameterException('$allowed_ips must be of type string; received ' . gettype(@$params['allowed_ips']));
         }
 
-        if (!empty($params['notes']) && !is_string($params['notes'])) {
+        if (isset($params['allow_bypassing_2fa_policies']) && !is_scalar($params['allow_bypassing_2fa_policies'])) {
+            throw new \Files\Exception\InvalidParameterException('$allow_bypassing_2fa_policies must be of type boolean; received ' . gettype(@$params['allow_bypassing_2fa_policies']));
+        }
+
+        if (isset($params['allow_credential_changes']) && !is_scalar($params['allow_credential_changes'])) {
+            throw new \Files\Exception\InvalidParameterException('$allow_credential_changes must be of type boolean; received ' . gettype(@$params['allow_credential_changes']));
+        }
+
+        if (isset($params['allow_providing_gpg_keys']) && !is_scalar($params['allow_providing_gpg_keys'])) {
+            throw new \Files\Exception\InvalidParameterException('$allow_providing_gpg_keys must be of type boolean; received ' . gettype(@$params['allow_providing_gpg_keys']));
+        }
+
+        if (isset($params['allow_user_creation']) && !is_scalar($params['allow_user_creation'])) {
+            throw new \Files\Exception\InvalidParameterException('$allow_user_creation must be of type boolean; received ' . gettype(@$params['allow_user_creation']));
+        }
+
+        if (isset($params['cc_emails_to_responsible_party']) && !is_scalar($params['cc_emails_to_responsible_party'])) {
+            throw new \Files\Exception\InvalidParameterException('$cc_emails_to_responsible_party must be of type boolean; received ' . gettype(@$params['cc_emails_to_responsible_party']));
+        }
+
+        if (isset($params['notes']) && !is_string($params['notes'])) {
             throw new \Files\Exception\InvalidParameterException('$notes must be of type string; received ' . gettype(@$params['notes']));
         }
 
-        if (!empty($params['partner_channel_template_id']) && !is_int($params['partner_channel_template_id'])) {
+        if (isset($params['partner_channel_template_id']) && !is_int($params['partner_channel_template_id'])) {
             throw new \Files\Exception\InvalidParameterException('$partner_channel_template_id must be of type int; received ' . gettype(@$params['partner_channel_template_id']));
         }
 
-        if (!empty($params['responsible_group_id']) && !is_int($params['responsible_group_id'])) {
+        if (isset($params['responsible_group_id']) && !is_int($params['responsible_group_id'])) {
             throw new \Files\Exception\InvalidParameterException('$responsible_group_id must be of type int; received ' . gettype(@$params['responsible_group_id']));
         }
 
-        if (!empty($params['responsible_user_id']) && !is_int($params['responsible_user_id'])) {
+        if (isset($params['responsible_user_id']) && !is_int($params['responsible_user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$responsible_user_id must be of type int; received ' . gettype(@$params['responsible_user_id']));
         }
 
-        if (!empty($params['tags']) && !is_string($params['tags'])) {
+        if (isset($params['show_partner_channel_home_page']) && !is_scalar($params['show_partner_channel_home_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$show_partner_channel_home_page must be of type boolean; received ' . gettype(@$params['show_partner_channel_home_page']));
+        }
+
+        if (isset($params['tags']) && !is_string($params['tags'])) {
             throw new \Files\Exception\InvalidParameterException('$tags must be of type string; received ' . gettype(@$params['tags']));
         }
 
-        if (!empty($params['name']) && !is_string($params['name'])) {
+        if (isset($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (!empty($params['root_folder']) && !is_string($params['root_folder'])) {
+        if (isset($params['root_folder']) && !is_string($params['root_folder'])) {
             throw new \Files\Exception\InvalidParameterException('$root_folder must be of type string; received ' . gettype(@$params['root_folder']));
         }
 
-        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
+        if (isset($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
         $response = Api::sendRequest('/partners', 'POST', $params, $options);
 
-        return new Partner((array) (@$response->data ?: []), $options);
+        return new Partner(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
 }

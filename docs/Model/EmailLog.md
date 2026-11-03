@@ -33,9 +33,11 @@
 ## List Email Logs
 
 ```
-$email_log = new \Files\Model\EmailLog();
-$email_log->list
+\Files\Model\EmailLog::all();
 ```
+
+`\Files\Model\EmailLog::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters

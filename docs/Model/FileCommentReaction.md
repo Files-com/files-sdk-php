@@ -19,8 +19,7 @@
 ## Create File Comment Reaction
 
 ```
-$file_comment_reaction = new \Files\Model\FileCommentReaction();
-$file_comment_reaction->create(, [
+\Files\Model\FileCommentReaction::create([
   'user_id' => 1,
   'file_comment_id' => 1,
   'emoji' => "emoji",

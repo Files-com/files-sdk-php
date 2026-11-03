@@ -277,7 +277,7 @@ class Request
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -338,15 +338,19 @@ class Request
      */
     public static function all($params = [], $options = [])
     {
-        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
-        if (!empty($params['path']) && !is_string($params['path'])) {
+        if (isset($params['mine']) && !is_scalar($params['mine'])) {
+            throw new \Files\Exception\InvalidParameterException('$mine must be of type boolean; received ' . gettype(@$params['mine']));
+        }
+
+        if (isset($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
@@ -354,11 +358,39 @@ class Request
 
         $return_array = [];
 
-        foreach ($response->data as $obj) {
-            $return_array[] = new Request((array) $obj, $options);
+        foreach (Api::listEntries(isset($response->data) ? $response->data : null, $response->status) as $obj) {
+            $return_array[] = new Request(Api::modelAttributes($obj, $response->status), $options);
         }
 
         return $return_array;
+    }
+
+    /**
+     * Fetches one page of all()'s results, with the same parameters and options,
+     * whatever Files::$autoPaginate is. Iterate the page, step with nextPage(), or read every result lazily with
+     * autoPagingIterator(). A 'cursor' parameter starts from a page saved with getNextCursor().
+     *
+     * @return \Files\Page
+     */
+    public static function listPage($params = [], $options = [])
+    {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        if (isset($params['mine']) && !is_scalar($params['mine'])) {
+            throw new \Files\Exception\InvalidParameterException('$mine must be of type boolean; received ' . gettype(@$params['mine']));
+        }
+
+        if (isset($params['path']) && !is_string($params['path'])) {
+            throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
+        }
+
+        return \Files\Page::fetch('/requests', $params, $options, Request::class);
     }
 
     /**
@@ -388,15 +420,19 @@ class Request
             throw new \Files\Exception\MissingParameterException('Parameter missing: path');
         }
 
-        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
-        if (!empty($params['path']) && !is_string($params['path'])) {
+        if (isset($params['mine']) && !is_scalar($params['mine'])) {
+            throw new \Files\Exception\InvalidParameterException('$mine must be of type boolean; received ' . gettype(@$params['mine']));
+        }
+
+        if (isset($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
@@ -404,11 +440,49 @@ class Request
 
         $return_array = [];
 
-        foreach ($response->data as $obj) {
-            $return_array[] = new Request((array) $obj, $options);
+        foreach (Api::listEntries(isset($response->data) ? $response->data : null, $response->status) as $obj) {
+            $return_array[] = new Request(Api::modelAttributes($obj, $response->status), $options);
         }
 
         return $return_array;
+    }
+
+    /**
+     * Fetches one page of getFolder()'s results, with the same parameters and options,
+     * whatever Files::$autoPaginate is. Iterate the page, step with nextPage(), or read every result lazily with
+     * autoPagingIterator(). A 'cursor' parameter starts from a page saved with getNextCursor().
+     *
+     * @return \Files\Page
+     */
+    public static function getFolderPage($path, $params = [], $options = [])
+    {
+        if (!is_array($params)) {
+            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+        }
+
+        $params['path'] = $path;
+
+        if (empty($params['path'])) {
+            throw new \Files\Exception\MissingParameterException('Parameter missing: path');
+        }
+
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        if (isset($params['mine']) && !is_scalar($params['mine'])) {
+            throw new \Files\Exception\InvalidParameterException('$mine must be of type boolean; received ' . gettype(@$params['mine']));
+        }
+
+        if (isset($params['path']) && !is_string($params['path'])) {
+            throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
+        }
+
+        return \Files\Page::fetch('/requests/folders/' . rawurlencode(strval(@$params['path'])) . '', $params, $options, Request::class);
     }
 
     /**
@@ -435,24 +509,24 @@ class Request
             throw new \Files\Exception\MissingParameterException('Parameter missing: destination');
         }
 
-        if (!empty($params['path']) && !is_string($params['path'])) {
+        if (isset($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (!empty($params['destination']) && !is_string($params['destination'])) {
+        if (isset($params['destination']) && !is_string($params['destination'])) {
             throw new \Files\Exception\InvalidParameterException('$destination must be of type string; received ' . gettype(@$params['destination']));
         }
 
-        if (!empty($params['user_ids']) && !is_string($params['user_ids'])) {
+        if (isset($params['user_ids']) && !is_string($params['user_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$user_ids must be of type string; received ' . gettype(@$params['user_ids']));
         }
 
-        if (!empty($params['group_ids']) && !is_string($params['group_ids'])) {
+        if (isset($params['group_ids']) && !is_string($params['group_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$group_ids must be of type string; received ' . gettype(@$params['group_ids']));
         }
 
         $response = Api::sendRequest('/requests', 'POST', $params, $options);
 
-        return new Request((array) (@$response->data ?: []), $options);
+        return new Request(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
 }

@@ -382,7 +382,7 @@ class Permission
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -448,27 +448,31 @@ class Permission
      */
     public static function all($params = [], $options = [])
     {
-        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
-        if (!empty($params['path']) && !is_string($params['path'])) {
+        if (isset($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (!empty($params['group_id']) && !is_string($params['group_id'])) {
+        if (isset($params['include_groups']) && !is_scalar($params['include_groups'])) {
+            throw new \Files\Exception\InvalidParameterException('$include_groups must be of type boolean; received ' . gettype(@$params['include_groups']));
+        }
+
+        if (isset($params['group_id']) && !is_string($params['group_id'])) {
             throw new \Files\Exception\InvalidParameterException('$group_id must be of type string; received ' . gettype(@$params['group_id']));
         }
 
-        if (!empty($params['partner_id']) && !is_string($params['partner_id'])) {
+        if (isset($params['partner_id']) && !is_string($params['partner_id'])) {
             throw new \Files\Exception\InvalidParameterException('$partner_id must be of type string; received ' . gettype(@$params['partner_id']));
         }
 
-        if (!empty($params['user_id']) && !is_string($params['user_id'])) {
+        if (isset($params['user_id']) && !is_string($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type string; received ' . gettype(@$params['user_id']));
         }
 
@@ -476,11 +480,51 @@ class Permission
 
         $return_array = [];
 
-        foreach ($response->data as $obj) {
-            $return_array[] = new Permission((array) $obj, $options);
+        foreach (Api::listEntries(isset($response->data) ? $response->data : null, $response->status) as $obj) {
+            $return_array[] = new Permission(Api::modelAttributes($obj, $response->status), $options);
         }
 
         return $return_array;
+    }
+
+    /**
+     * Fetches one page of all()'s results, with the same parameters and options,
+     * whatever Files::$autoPaginate is. Iterate the page, step with nextPage(), or read every result lazily with
+     * autoPagingIterator(). A 'cursor' parameter starts from a page saved with getNextCursor().
+     *
+     * @return \Files\Page
+     */
+    public static function listPage($params = [], $options = [])
+    {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        if (isset($params['path']) && !is_string($params['path'])) {
+            throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
+        }
+
+        if (isset($params['include_groups']) && !is_scalar($params['include_groups'])) {
+            throw new \Files\Exception\InvalidParameterException('$include_groups must be of type boolean; received ' . gettype(@$params['include_groups']));
+        }
+
+        if (isset($params['group_id']) && !is_string($params['group_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$group_id must be of type string; received ' . gettype(@$params['group_id']));
+        }
+
+        if (isset($params['partner_id']) && !is_string($params['partner_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$partner_id must be of type string; received ' . gettype(@$params['partner_id']));
+        }
+
+        if (isset($params['user_id']) && !is_string($params['user_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$user_id must be of type string; received ' . gettype(@$params['user_id']));
+        }
+
+        return \Files\Page::fetch('/permissions', $params, $options, Permission::class);
     }
 
     /**
@@ -509,44 +553,48 @@ class Permission
             throw new \Files\Exception\MissingParameterException('Parameter missing: path');
         }
 
-        if (!empty($params['path']) && !is_string($params['path'])) {
+        if (isset($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (!empty($params['group_id']) && !is_int($params['group_id'])) {
+        if (isset($params['group_id']) && !is_int($params['group_id'])) {
             throw new \Files\Exception\InvalidParameterException('$group_id must be of type int; received ' . gettype(@$params['group_id']));
         }
 
-        if (!empty($params['group_ids']) && !is_string($params['group_ids'])) {
+        if (isset($params['group_ids']) && !is_string($params['group_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$group_ids must be of type string; received ' . gettype(@$params['group_ids']));
         }
 
-        if (!empty($params['permission']) && !is_string($params['permission'])) {
+        if (isset($params['permission']) && !is_string($params['permission'])) {
             throw new \Files\Exception\InvalidParameterException('$permission must be of type string; received ' . gettype(@$params['permission']));
         }
 
-        if (!empty($params['partner_id']) && !is_int($params['partner_id'])) {
+        if (isset($params['recursive']) && !is_scalar($params['recursive'])) {
+            throw new \Files\Exception\InvalidParameterException('$recursive must be of type boolean; received ' . gettype(@$params['recursive']));
+        }
+
+        if (isset($params['partner_id']) && !is_int($params['partner_id'])) {
             throw new \Files\Exception\InvalidParameterException('$partner_id must be of type int; received ' . gettype(@$params['partner_id']));
         }
 
-        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
+        if (isset($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (!empty($params['username']) && !is_string($params['username'])) {
+        if (isset($params['username']) && !is_string($params['username'])) {
             throw new \Files\Exception\InvalidParameterException('$username must be of type string; received ' . gettype(@$params['username']));
         }
 
-        if (!empty($params['group_name']) && !is_string($params['group_name'])) {
+        if (isset($params['group_name']) && !is_string($params['group_name'])) {
             throw new \Files\Exception\InvalidParameterException('$group_name must be of type string; received ' . gettype(@$params['group_name']));
         }
 
-        if (!empty($params['site_id']) && !is_int($params['site_id'])) {
+        if (isset($params['site_id']) && !is_int($params['site_id'])) {
             throw new \Files\Exception\InvalidParameterException('$site_id must be of type int; received ' . gettype(@$params['site_id']));
         }
 
         $response = Api::sendRequest('/permissions', 'POST', $params, $options);
 
-        return new Permission((array) (@$response->data ?: []), $options);
+        return new Permission(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
 }

@@ -45,9 +45,11 @@
 ## List Event Targets
 
 ```
-$event_target = new \Files\Model\EventTarget();
-$event_target->list
+\Files\Model\EventTarget::all();
 ```
+
+`\Files\Model\EventTarget::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -62,8 +64,7 @@ $event_target->list
 ## Show Event Target
 
 ```
-$event_target = new \Files\Model\EventTarget();
-$event_target->find($id);
+\Files\Model\EventTarget::find($id);
 ```
 
 
@@ -76,8 +77,7 @@ $event_target->find($id);
 ## Create Event Target
 
 ```
-$event_target = new \Files\Model\EventTarget();
-$event_target->create(, [
+\Files\Model\EventTarget::create([
   'name' => "example",
   'workspace_id' => 1,
   'apply_to_all_workspaces' => true,
@@ -115,6 +115,9 @@ $event_target->update([
   'delivery_policy' => {"max_attempts":3,"retry_delay_minutes":[1,10]},
 ]);
 ```
+
+`update()` refreshes `$event_target` with the saved attributes, and also returns them as a separate
+`\Files\Model\EventTarget`.
 
 ### Parameters
 

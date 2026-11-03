@@ -68,9 +68,11 @@
 ## List Scheduled Exports
 
 ```
-$scheduled_export = new \Files\Model\ScheduledExport();
-$scheduled_export->list
+\Files\Model\ScheduledExport::all();
 ```
+
+`\Files\Model\ScheduledExport::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -86,8 +88,7 @@ $scheduled_export->list
 ## Show Scheduled Export
 
 ```
-$scheduled_export = new \Files\Model\ScheduledExport();
-$scheduled_export->find($id);
+\Files\Model\ScheduledExport::find($id);
 ```
 
 
@@ -100,8 +101,7 @@ $scheduled_export->find($id);
 ## Create Scheduled Export
 
 ```
-$scheduled_export = new \Files\Model\ScheduledExport();
-$scheduled_export->create(, [
+\Files\Model\ScheduledExport::create([
   'name' => "Monthly access review",
   'export_type' => "permission_audit",
   'export_options' => {"group_by":"user"},
@@ -161,6 +161,9 @@ $scheduled_export->update([
   'holiday_region' => "us",
 ]);
 ```
+
+`update()` refreshes `$scheduled_export` with the saved attributes, and also returns them as a separate
+`\Files\Model\ScheduledExport`.
 
 ### Parameters
 

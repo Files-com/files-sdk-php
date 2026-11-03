@@ -70,9 +70,11 @@ try {
 
   # You may also specify the API key on a per-request basis in the final parameter to static methods.
   \Files\Model\User::find($id, $params, array('api_key' => 'YOUR_API_KEY'));
-} catch (\Files\NotAuthenticated\InvalidUsernameOrPasswordException $e) {
+
+  # An api_key given either way is used instead of a session set with setSessionId().
+} catch (\Files\Exception\NotAuthenticatedException $e) {
   echo 'Authentication Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
-} catch (\Files\FilesException $e) {
+} catch (\Files\Exception\FilesException $e) {
   echo 'Unknown Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
 }
 ```
@@ -98,9 +100,9 @@ This returns a session object that can be used to authenticate SDK method calls.
 ```php title="Example Request"
 try {
   $session = \Files\Model\Session::create(['username' => 'motor', 'password' => 'vroom']);
-} catch (\Files\NotAuthenticated\InvalidUsernameOrPasswordException $e) {
+} catch (\Files\Exception\NotAuthenticatedException $e) {
   echo 'Authentication Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
-} catch (\Files\FilesException $e) {
+} catch (\Files\Exception\FilesException $e) {
   echo 'Unknown Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
 }
 ```
@@ -119,9 +121,14 @@ try {
 
   # You may also specify the session ID on a per-request basis in the final parameter to static methods.
   \Files\Model\User::find($id, $params, array('session_id' => $session->id));
-} catch (\Files\NotAuthenticated\InvalidUsernameOrPasswordException $e) {
+
+  # A session_id given either way is used before an api_key given with it, and an api_key given either way instead of
+  # the session set with setSessionId(); without either, that session is used before the API key set with setApiKey().
+  # One that PHP reads as false (null, '', 0, '0', false) is ignored. A request given a session_id or api_key sends only
+  # that credential, and no X-FilesAPI-Auth or X-FilesAPI-Key header of its 'headers' option, in any letter case.
+} catch (\Files\Exception\NotAuthenticatedException $e) {
   echo 'Authentication Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
-} catch (\Files\FilesException $e) {
+} catch (\Files\Exception\FilesException $e) {
   echo 'Unknown Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
 }
 ```
@@ -133,9 +140,9 @@ User sessions can be ended by calling the `Session::destroy` method.
 ```php title="Example Request"
 try {
   \Files\Model\Session::destroy();
-} catch (\Files\NotAuthenticated\InvalidUsernameOrPasswordException $e) {
+} catch (\Files\Exception\NotAuthenticatedException $e) {
   echo 'Authentication Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
-} catch (\Files\FilesException $e) {
+} catch (\Files\Exception\FilesException $e) {
   echo 'Unknown Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
 }
 ```
@@ -148,7 +155,9 @@ Global configuration is performed by setting properties directly on the `\Files\
 
 #### Auto Paginate
 
-Auto-fetch all pages when results span multiple pages. The default value is `true`.
+When `true`, list methods such as `Folder::listFor()` fetch every page and return one array; when `false`, they
+return only the first page. The default value is `true`. Page methods such as `Folder::listForPage()` fetch one page
+at a time, whatever this setting is; see Pagination.
 ```php title="Example setting"
 \Files\Files::$autoPaginate = false
 ```
@@ -261,9 +270,9 @@ try {
   $users = \Files\Model\User::list(array(
     'sort_by' => array("username" => "asc")
   ));
-} catch (\Files\NotAuthenticated\InvalidUsernameOrPasswordException $e) {
+} catch (\Files\Exception\NotAuthenticatedException $e) {
   echo 'Authentication Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
-} catch (\Files\FilesException $e) {
+} catch (\Files\Exception\FilesException $e) {
   echo 'Unknown Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
 }
 ```
@@ -301,9 +310,9 @@ try {
   foreach ($users as $value) {
     print("User username: " . $value->getUserName() . "\n");
   }
-} catch (\Files\NotAuthenticated\InvalidUsernameOrPasswordException $e) {
+} catch (\Files\Exception\NotAuthenticatedException $e) {
   echo 'Authentication Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
-} catch (\Files\FilesException $e) {
+} catch (\Files\Exception\FilesException $e) {
   echo 'Unknown Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
 }
 ```
@@ -318,9 +327,9 @@ try {
   foreach ($users as $value) {
     print("User username: " . $value->getUserName() . "\n");
   }
-} catch (\Files\NotAuthenticated\InvalidUsernameOrPasswordException $e) {
+} catch (\Files\Exception\NotAuthenticatedException $e) {
   echo 'Authentication Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
-} catch (\Files\FilesException $e) {
+} catch (\Files\Exception\FilesException $e) {
   echo 'Unknown Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
 }
 ```
@@ -335,9 +344,9 @@ try {
   foreach ($users as $value) {
     print("User username: " . $value->getUserName() . "\n");
   }
-} catch (\Files\NotAuthenticated\InvalidUsernameOrPasswordException $e) {
+} catch (\Files\Exception\NotAuthenticatedException $e) {
   echo 'Authentication Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
-} catch (\Files\FilesException $e) {
+} catch (\Files\Exception\FilesException $e) {
   echo 'Unknown Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
 }
 ```
@@ -354,9 +363,9 @@ try {
   foreach ($users as $value) {
     print("User username: " . $value->getUserName() . "\n");
   }
-} catch (\Files\NotAuthenticated\InvalidUsernameOrPasswordException $e) {
+} catch (\Files\Exception\NotAuthenticatedException $e) {
   echo 'Authentication Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
-} catch (\Files\FilesException $e) {
+} catch (\Files\Exception\FilesException $e) {
   echo 'Unknown Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
 }
 ```
@@ -531,18 +540,21 @@ The raised exceptions come from two categories:
 2.  API Exceptions - errors that occur due to the response from the Files.com API.  These errors are grouped into common error types.
 
 There are several types of exceptions within each category.  Exception classes indicate different types of errors and are named in a
-fashion that describe the general premise of the originating error.  More details can be found in the exception object message using the
-`php getMessage()` method call.
+fashion that describe the general premise of the originating error.  The message of an exception for an HTTP error
+response, from `getMessage()`, names the request's method and HTTP status, and for an API error its type; it never
+quotes the response body or the request URL, which can contain credentials.  The message of a transport error has
+the request URL replaced with `[redacted]`.  API exceptions provide the API's own error message and details through
+`getError()`, `getTitle()` and the other getters listed below.
 
 Use standard PHP exception handling to detect and deal with errors.  It is generally recommended to catch specific errors first, then
-catch the general `Files\FilesException` exception as a catch-all.
+catch the general `Files\Exception\FilesException` exception as a catch-all.
 
 ```php title="Example Error Handling"
 try {
   $session = Files\Model\Session::create(['username' => 'USERNAME', 'password' => 'BADPASSWORD']);
-} catch (\Files\NotAuthenticated\InvalidUsernameOrPasswordException $e) {
+} catch (\Files\Exception\NotAuthenticatedException $e) {
   echo 'Authentication Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
-} catch (\Files\FilesException $e) {
+} catch (\Files\Exception\FilesException $e) {
   echo 'Unknown Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
 }
 ```
@@ -554,8 +566,13 @@ try {
 SDK errors are general errors that occur within the SDK code.  These errors generate exceptions.  Each of these
 exception classes inherit from a standard `Exception` base class.
 
+The `Api*` exceptions below extend `ApiConnectionException`, which classifies how a request the SDK sent failed,
+apart from an API error: the API could not be reached, the HTTP client failed, the API answered with a 5xx status,
+or the SDK could not use the response.
+
 ```shell title="Example SDK Exception Class Inheritance Structure"
 Files\Exception\ApiConnectException ->
+Files\Exception\ApiConnectionException ->
 Files\Exception\FilesException ->
 Exception
 ```
@@ -563,11 +580,13 @@ Exception
 
 | Exception Class Name| Description |
 | --------------- | ------------ |
-| `ApiBadResponseException`| A bad formed response came back from the API |
-| `ApiConnectException`| The Files.com API cannot be reached |
-| `ApiRequestException`| There was an issue with the API request itself |
-| `ApiServerException`| The API service responded with a bad response (ie, 5xx) |
+| `ApiConnectionException`| The parent of the `Api*` exceptions below |
+| `ApiBadResponseException`| The SDK could not use the response, such as an HTTP error status below 500 without a readable Files.com error object, a model that is not a JSON object, a list that is not a JSON array, or a list cursor that was already followed |
+| `ApiConnectException`| The Files.com API cannot be reached, or the request timed out |
+| `ApiRequestException`| The HTTP client could not complete the request, for example because of a TLS error |
+| `ApiServerException`| The API service answered with a 5xx status, whatever the response body holds |
 | `ApiTooManyRedirectsException`| The API service redirected too many times |
+| `ApiTransferException`| The HTTP client failed to transfer the request |
 | `ConfigurationException`| Invalid SDK configuration parameters |
 | `EmptyPropertyException`| An required property was empty |
 | `InvalidParameterException`| A passed in parameter is invalid |
@@ -579,8 +598,13 @@ Exception
 API errors are errors returned by the Files.com API.  Each exception class inherits from an error group base class.
 The error group base class indicates a particular type of error.
 
+An HTTP error response with a status below 500 whose body is a Files.com error object raises the exception class its
+`type` names, or `ApiException` itself for a `type` the SDK does not recognize.  The getters `getType()`,
+`getError()`, `getTitle()`, `getHttpCode()`, `getDetail()`, `getErrors()` and `getData()` return the error object's
+fields, or `null` for a field it does not include.
+
 ```shell title="Example API Exception Class Inheritance Structure"
-Files\Exception\NotAuthorizedException\FolderAdminPermissionRequiredException ->
+Files\Exception\NotAuthorized\FolderAdminPermissionRequiredException ->
 Files\Exception\NotAuthorizedException ->
 Files\Exception\ApiException ->
 Files\Exception\FilesException ->
@@ -807,11 +831,98 @@ Exception
 Certain API operations return lists of objects. When the number of objects in the list is large,
 the API will paginate the results.
 
-The Files.com PHP SDK automatically paginates through lists of objects by default.
+Each list method that pages through its results with a cursor has a page counterpart that fetches
+one page at a time: `Folder::listFor()` has `Folder::listForPage()`, `User::all()` has
+`User::listPage()`, and so on. A page method takes the same parameters and options as its list
+method and returns a `\Files\Page`.
+
+### Automatic Pagination
+
+`autoPagingIterator()` yields every item from a page onward. It requests each following page only
+when the loop reaches it, so a `break` sends no further requests. Pages can be empty and still be
+followed by more items; the iterator keeps going until the API reports the last page.
+
+```php title="Example Request"
+try {
+  $files = \Files\Model\Folder::listForPage($path, ['per_page' => 1000])->autoPagingIterator();
+  foreach ($files as $file) {
+    // Operate on $file
+  }
+} catch (\Files\Exception\NotAuthenticatedException $e) {
+  echo 'Authentication Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
+} catch (\Files\Exception\FilesException $e) {
+  echo 'Unknown Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
+}
+```
+
+### Manual Pagination
+
+A `foreach` over a page visits only the items on that page. `nextPage()` fetches the next page and
+returns `null`, without a request, once `hasNextPage()` is `false`. A page never changes after it is
+fetched, so if fetching the next page fails, the current page is still usable and `nextPage()` can be
+called again. If the API returns a cursor that already led to that page or an earlier one,
+`nextPage()` raises `\Files\Exception\ApiBadResponseException` instead of repeating pages.
+
+Every page is requested with the parameters and options given to the page method, without an added
+page number. Settings those options do not override, such as the API key set with
+`\Files\Files::setApiKey()`, are read as each page is requested.
+
+```php title="Example Request"
+try {
+  $page = \Files\Model\Folder::listForPage($path, ['per_page' => 1000]);
+  while ($page !== null) {
+    foreach ($page as $file) {
+      // Operate on $file
+    }
+    $page = $page->nextPage();
+  }
+} catch (\Files\Exception\NotAuthenticatedException $e) {
+  echo 'Authentication Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
+} catch (\Files\Exception\FilesException $e) {
+  echo 'Unknown Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
+}
+```
+
+### Resuming and Restarting
+
+`getNextCursor()` returns the opaque cursor for the next page, or `null` on the last page, where
+there is nothing to continue. Pass a cursor back unchanged, as the `cursor` parameter of the same
+page method, to continue from there later, for example in another process.
+
+`restart()` fetches the first page again with the original parameters and options, without any
+cursor.
+
+```php title="Example Request"
+try {
+  $page = \Files\Model\Folder::listForPage($path, ['per_page' => 1000]);
+  $cursor = $page->getNextCursor();
+
+  // Later: continue with the page after $page, if there is one
+  if ($cursor !== null) {
+    $next = \Files\Model\Folder::listForPage($path, ['per_page' => 1000, 'cursor' => $cursor]);
+  }
+
+  // At any time: start over from the first page
+  $first = $page->restart();
+} catch (\Files\Exception\NotAuthenticatedException $e) {
+  echo 'Authentication Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
+} catch (\Files\Exception\FilesException $e) {
+  echo 'Unknown Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
+}
+```
+
+### Lists as Arrays
+
+The list methods themselves return an array. With `\Files\Files::$autoPaginate` set to `true`, the
+default, they fetch every page before returning, holding the entire list in memory. With `false`,
+they return only the first page. Page methods are not affected by this setting.
+
+A list method stops with `\Files\Exception\ApiBadResponseException` when a page is not a list, or
+when the API returns a cursor the list already sent, instead of requesting pages without end.
 
 ```php title="Example Request" hasDataFormatSelector
 // true by default
-Files::$autoPaginate = true;
+\Files\Files::$autoPaginate = true;
 
 try {
   $files = \Files\Model\Folder::listFor($path, [
@@ -820,9 +931,9 @@ try {
   foreach ($files as $file) {
     // Operate on $file
   }
-} catch (\Files\NotAuthenticated\InvalidUsernameOrPasswordException $e) {
+} catch (\Files\Exception\NotAuthenticatedException $e) {
   echo 'Authentication Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
-} catch (\Files\FilesException $e) {
+} catch (\Files\Exception\FilesException $e) {
   echo 'Unknown Error Occurred (' . get_class($e) . '): ', $e->getMessage(), "\n";
 }
 ```
@@ -943,6 +1054,68 @@ FILES_MOCK_MODE=simulation bundle exec puma
 ```
 
 ## Upgrading
+
+### Errors, Models and Lists
+
+Every 5xx response still raises `ApiServerException`, whatever its body, and transport failures raise the same
+exception classes as before. These responses and calls behave differently now:
+
+| Response or call | Earlier releases | Now |
+|----------|------------------|-----|
+| A 4xx response without a Files.com error object, such as `null`, `[]`, HTML or malformed JSON | `FilesException` or `ApiException` | `ApiBadResponseException` |
+| A 4xx error object whose `type` is unknown, malformed, not a string, or names an SDK exception | A PHP `Error` or `TypeError`, or `FilesException` | `ApiException` |
+| A 4xx response written to a stream that cannot be read | A `RuntimeException` | `ApiBadResponseException` |
+| An `ApiException` getter for a field the error object does not include | A PHP notice or warning, and `null` | `null` |
+
+`ApiBadResponseException`, `ApiServerException` and the other `Api*` exceptions now extend the new
+`ApiConnectionException`, which extends `FilesException`, so code that catches them needs no change.
+
+The message of an exception for an HTTP error response now names the request, as in
+`The GET request failed with HTTP 404 Not Found (not-found).`, instead of repeating the HTTP client's
+message with the start of the response body. Read the API's own error message with `getError()`.
+
+A method that returns a model, such as `create()`, `find()` or `update()`, now raises
+`ApiBadResponseException` when the response is not a JSON object, where earlier releases returned an
+empty model. `save()` then leaves the object as it was, instead of replacing its attributes and
+returning `true`. A list response that is not a JSON array, or an entry of a list of models that is not
+a JSON object, raises it too.
+
+`update()` now also refreshes the object it is called on with the saved attributes, and still returns
+them as a separate model.
+
+A method without parameters, such as `ApiKey::findCurrent()`, now uses its options, such as `api_key`
+and `workspace_id`, for its request, where earlier releases sent them as request parameters.
+
+An auto-paginated list method now reads the next page's cursor from `X-Files-Cursor-Next` whenever the
+response has that header, and from `X-Files-Cursor` otherwise, and follows a cursor of `0`. A list that
+returns a cursor it already sent raises `ApiBadResponseException` instead of requesting pages without end.
+List methods that page with a cursor also have page counterparts, such as `Folder::listForPage()`; see
+Pagination.
+
+### Credentials and Parameters
+
+An `api_key` option, given to a model object or a method, now takes the place of a session set with
+`Files::setSessionId()` as well as the API key set with `Files::setApiKey()`; earlier releases sent that
+session instead. A `session_id` option is still used before an `api_key` option, and without either the
+configured session is still used before the configured API key. An option that PHP reads as false, such
+as `null`, `''` or `'0'`, is ignored, as before.
+
+A request given a `session_id` or `api_key` option no longer also sends an `X-FilesAPI-Auth` or
+`X-FilesAPI-Key` header of its `headers` option, in any letter case. Without such an option, the `headers`
+option is sent as before. Creating a session still sends no API key of the SDK's own; given an `api_key`
+option, it no longer sends the configured session either.
+
+A `TransferJob`'s `api_key`, `session_id` and `workspace_id` options still replace the job's copy of those
+settings whenever they are given, `null` and `false` included. A job's `api_key` that PHP reads as true now
+also takes the place of the session the job copied from `Files::setSessionId()`, unless the job is given
+such a `session_id` as well. A transfer's own options choose as a request's options do.
+
+A model method now raises `InvalidParameterException`, before it sends anything, for an integer, string
+or array parameter given `false`, or another empty value of the wrong type such as `''` for an integer,
+where earlier releases sent it. A required parameter other than a boolean that is missing or empty still
+raises `MissingParameterException`. A required boolean parameter now accepts `false`, including from the
+model object's own attribute, and a boolean parameter raises `InvalidParameterException` for an array or
+object.
 
 ### Upgrading to Files.com PHP SDK 2.0? Learn about namespace changes for exception classes to comply with PSR-4 and PSR-12 standards.
 

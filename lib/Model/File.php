@@ -628,8 +628,31 @@ class File
         $rangeStart = ftell($readStream);
         fclose($readStream);
 
+        // The append handle is the SDK's own, closed before this returns or throws, even while the caller keeps the
+        // exception (Guzzle usually closes it itself once the download completes). A failure to close it is thrown only
+        // when the download succeeded: it never replaces the download's own failure, nor passes for success.
         $stream = fopen($destinationPath, 'a');
-        return self::downloadToStream($remoteFilePath, $stream, $rangeStart);
+        $completed = false;
+        try {
+            $result = self::downloadToStream($remoteFilePath, $stream, $rangeStart);
+            $completed = true;
+        } finally {
+            if (is_resource($stream)) {
+                if ($completed) {
+                    fclose($stream);
+                } else {
+                    try {
+                        fclose($stream);
+                    } catch (\Exception $closeFailure) {
+                        // The download's own failure is reported instead.
+                    } catch (\Throwable $closeFailure) {
+                        // As above, for an error from PHP 7 or later.
+                    }
+                }
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -1815,22 +1838,38 @@ class File
             }
         }
 
-        if (!empty($params['path']) && !is_string($params['path'])) {
+        if (isset($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (!empty($params['action']) && !is_string($params['action'])) {
+        if (isset($params['action']) && !is_string($params['action'])) {
             throw new \Files\Exception\InvalidParameterException('$action must be of type string; received ' . gettype(@$params['action']));
         }
 
-        if (!empty($params['preview_size']) && !is_string($params['preview_size'])) {
+        if (isset($params['preview_size']) && !is_string($params['preview_size'])) {
             throw new \Files\Exception\InvalidParameterException('$preview_size must be of type string; received ' . gettype(@$params['preview_size']));
         }
 
+        if (isset($params['with_previews']) && !is_scalar($params['with_previews'])) {
+            throw new \Files\Exception\InvalidParameterException('$with_previews must be of type boolean; received ' . gettype(@$params['with_previews']));
+        }
+
+        if (isset($params['with_priority_color']) && !is_scalar($params['with_priority_color'])) {
+            throw new \Files\Exception\InvalidParameterException('$with_priority_color must be of type boolean; received ' . gettype(@$params['with_priority_color']));
+        }
+
+        if (isset($params['with_direct_connection_info']) && !is_scalar($params['with_direct_connection_info'])) {
+            throw new \Files\Exception\InvalidParameterException('$with_direct_connection_info must be of type boolean; received ' . gettype(@$params['with_direct_connection_info']));
+        }
+
         $response = Api::sendRequest('/files/' . rawurlencode(strval(@$params['path'])) . '', 'GET', $params, $this->options);
-        return new File((array) (@$response->data ?: []), $this->options);
+        return new File(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $this->options);
     }
 
+    // Saves the changes, then refreshes this object with the saved attributes, which it also returns as a separate
+    // File with this object's options. A response that is not a JSON object raises
+    // ApiBadResponseException and leaves this object unchanged.
+    //
     /**
      * Update File/Folder Metadata
      *
@@ -1858,20 +1897,22 @@ class File
             }
         }
 
-        if (!empty($params['path']) && !is_string($params['path'])) {
+        if (isset($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (!empty($params['provided_mtime']) && !is_string($params['provided_mtime'])) {
+        if (isset($params['provided_mtime']) && !is_string($params['provided_mtime'])) {
             throw new \Files\Exception\InvalidParameterException('$provided_mtime must be of type string; received ' . gettype(@$params['provided_mtime']));
         }
 
-        if (!empty($params['priority_color']) && !is_string($params['priority_color'])) {
+        if (isset($params['priority_color']) && !is_string($params['priority_color'])) {
             throw new \Files\Exception\InvalidParameterException('$priority_color must be of type string; received ' . gettype(@$params['priority_color']));
         }
 
         $response = Api::sendRequest('/files/' . rawurlencode(strval(@$params['path'])) . '', 'PATCH', $params, $this->options);
-        return new File((array) (@$response->data ?: []), $this->options);
+        $updated = new File(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $this->options);
+        $this->attributes = $updated->attributes;
+        return $updated;
     }
 
     /**
@@ -1899,8 +1940,12 @@ class File
             }
         }
 
-        if (!empty($params['path']) && !is_string($params['path'])) {
+        if (isset($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
+        }
+
+        if (isset($params['recursive']) && !is_scalar($params['recursive'])) {
+            throw new \Files\Exception\InvalidParameterException('$recursive must be of type boolean; received ' . gettype(@$params['recursive']));
         }
 
         $response = Api::sendRequest('/files/' . rawurlencode(strval(@$params['path'])) . '', 'DELETE', $params, $this->options);
@@ -1950,15 +1995,15 @@ class File
             }
         }
 
-        if (!empty($params['path']) && !is_string($params['path'])) {
+        if (isset($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
         $response = Api::sendRequest('/file_actions/zip_list/' . rawurlencode(strval(@$params['path'])) . '', 'GET', $params, $this->options);
         $return_array = [];
 
-        foreach ($response->data as $obj) {
-            $return_array[] = new ZipListEntry((array) $obj, $this->options);
+        foreach (Api::listEntries(isset($response->data) ? $response->data : null, $response->status) as $obj) {
+            $return_array[] = new ZipListEntry(Api::modelAttributes($obj, $response->status), $this->options);
         }
 
         return $return_array;
@@ -1989,12 +2034,16 @@ class File
             }
         }
 
-        if (!empty($params['path']) && !is_string($params['path'])) {
+        if (isset($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
+        if (isset($params['recursive']) && !is_scalar($params['recursive'])) {
+            throw new \Files\Exception\InvalidParameterException('$recursive must be of type boolean; received ' . gettype(@$params['recursive']));
+        }
+
         $response = Api::sendRequest('/file_actions/delete/' . rawurlencode(strval(@$params['path'])) . '', 'POST', $params, $this->options);
-        return new FileAction((array) (@$response->data ?: []), $this->options);
+        return new FileAction(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $this->options);
     }
 
     /**
@@ -2033,16 +2082,28 @@ class File
             }
         }
 
-        if (!empty($params['path']) && !is_string($params['path'])) {
+        if (isset($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (!empty($params['destination']) && !is_string($params['destination'])) {
+        if (isset($params['destination']) && !is_string($params['destination'])) {
             throw new \Files\Exception\InvalidParameterException('$destination must be of type string; received ' . gettype(@$params['destination']));
         }
 
+        if (isset($params['copy_behaviors']) && !is_scalar($params['copy_behaviors'])) {
+            throw new \Files\Exception\InvalidParameterException('$copy_behaviors must be of type boolean; received ' . gettype(@$params['copy_behaviors']));
+        }
+
+        if (isset($params['structure']) && !is_scalar($params['structure'])) {
+            throw new \Files\Exception\InvalidParameterException('$structure must be of type boolean; received ' . gettype(@$params['structure']));
+        }
+
+        if (isset($params['overwrite']) && !is_scalar($params['overwrite'])) {
+            throw new \Files\Exception\InvalidParameterException('$overwrite must be of type boolean; received ' . gettype(@$params['overwrite']));
+        }
+
         $response = Api::sendRequest('/file_actions/copy/' . rawurlencode(strval(@$params['path'])) . '', 'POST', $params, $this->options);
-        return new FileAction((array) (@$response->data ?: []), $this->options);
+        return new FileAction(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $this->options);
     }
 
     /**
@@ -2079,16 +2140,20 @@ class File
             }
         }
 
-        if (!empty($params['path']) && !is_string($params['path'])) {
+        if (isset($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (!empty($params['destination']) && !is_string($params['destination'])) {
+        if (isset($params['destination']) && !is_string($params['destination'])) {
             throw new \Files\Exception\InvalidParameterException('$destination must be of type string; received ' . gettype(@$params['destination']));
         }
 
+        if (isset($params['overwrite']) && !is_scalar($params['overwrite'])) {
+            throw new \Files\Exception\InvalidParameterException('$overwrite must be of type boolean; received ' . gettype(@$params['overwrite']));
+        }
+
         $response = Api::sendRequest('/file_actions/move/' . rawurlencode(strval(@$params['path'])) . '', 'POST', $params, $this->options);
-        return new FileAction((array) (@$response->data ?: []), $this->options);
+        return new FileAction(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $this->options);
     }
 
     /**
@@ -2146,36 +2211,40 @@ class File
             }
         }
 
-        if (!empty($params['path']) && !is_string($params['path'])) {
+        if (isset($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (!empty($params['destination']) && !is_string($params['destination'])) {
+        if (isset($params['destination']) && !is_string($params['destination'])) {
             throw new \Files\Exception\InvalidParameterException('$destination must be of type string; received ' . gettype(@$params['destination']));
         }
 
-        if (!empty($params['transform_type']) && !is_string($params['transform_type'])) {
+        if (isset($params['transform_type']) && !is_string($params['transform_type'])) {
             throw new \Files\Exception\InvalidParameterException('$transform_type must be of type string; received ' . gettype(@$params['transform_type']));
         }
 
-        if (!empty($params['target_format']) && !is_string($params['target_format'])) {
+        if (isset($params['target_format']) && !is_string($params['target_format'])) {
             throw new \Files\Exception\InvalidParameterException('$target_format must be of type string; received ' . gettype(@$params['target_format']));
         }
 
-        if (!empty($params['script']) && !is_string($params['script'])) {
+        if (isset($params['script']) && !is_string($params['script'])) {
             throw new \Files\Exception\InvalidParameterException('$script must be of type string; received ' . gettype(@$params['script']));
         }
 
-        if (!empty($params['width']) && !is_int($params['width'])) {
+        if (isset($params['width']) && !is_int($params['width'])) {
             throw new \Files\Exception\InvalidParameterException('$width must be of type int; received ' . gettype(@$params['width']));
         }
 
-        if (!empty($params['height']) && !is_int($params['height'])) {
+        if (isset($params['height']) && !is_int($params['height'])) {
             throw new \Files\Exception\InvalidParameterException('$height must be of type int; received ' . gettype(@$params['height']));
         }
 
+        if (isset($params['overwrite']) && !is_scalar($params['overwrite'])) {
+            throw new \Files\Exception\InvalidParameterException('$overwrite must be of type boolean; received ' . gettype(@$params['overwrite']));
+        }
+
         $response = Api::sendRequest('/file_actions/transform/' . rawurlencode(strval(@$params['path'])) . '', 'POST', $params, $this->options);
-        return new FileAction((array) (@$response->data ?: []), $this->options);
+        return new FileAction(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $this->options);
     }
 
     /**
@@ -2216,24 +2285,36 @@ class File
             }
         }
 
-        if (!empty($params['path']) && !is_string($params['path'])) {
+        if (isset($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (!empty($params['destination']) && !is_string($params['destination'])) {
+        if (isset($params['destination']) && !is_string($params['destination'])) {
             throw new \Files\Exception\InvalidParameterException('$destination must be of type string; received ' . gettype(@$params['destination']));
         }
 
-        if (!empty($params['gpg_key_ids']) && !is_array($params['gpg_key_ids'])) {
+        if (isset($params['gpg_key_ids']) && !is_array($params['gpg_key_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$gpg_key_ids must be of type array; received ' . gettype(@$params['gpg_key_ids']));
         }
 
-        if (!empty($params['gpg_key_partner_id']) && !is_int($params['gpg_key_partner_id'])) {
+        if (isset($params['gpg_key_partner_id']) && !is_int($params['gpg_key_partner_id'])) {
             throw new \Files\Exception\InvalidParameterException('$gpg_key_partner_id must be of type int; received ' . gettype(@$params['gpg_key_partner_id']));
         }
 
+        if (isset($params['use_all_private_keys']) && !is_scalar($params['use_all_private_keys'])) {
+            throw new \Files\Exception\InvalidParameterException('$use_all_private_keys must be of type boolean; received ' . gettype(@$params['use_all_private_keys']));
+        }
+
+        if (isset($params['ignore_mdc_error']) && !is_scalar($params['ignore_mdc_error'])) {
+            throw new \Files\Exception\InvalidParameterException('$ignore_mdc_error must be of type boolean; received ' . gettype(@$params['ignore_mdc_error']));
+        }
+
+        if (isset($params['overwrite']) && !is_scalar($params['overwrite'])) {
+            throw new \Files\Exception\InvalidParameterException('$overwrite must be of type boolean; received ' . gettype(@$params['overwrite']));
+        }
+
         $response = Api::sendRequest('/file_actions/gpg_decrypt/' . rawurlencode(strval(@$params['path'])) . '', 'POST', $params, $this->options);
-        return new FileAction((array) (@$response->data ?: []), $this->options);
+        return new FileAction(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $this->options);
     }
 
     /**
@@ -2274,28 +2355,36 @@ class File
             }
         }
 
-        if (!empty($params['path']) && !is_string($params['path'])) {
+        if (isset($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (!empty($params['destination']) && !is_string($params['destination'])) {
+        if (isset($params['destination']) && !is_string($params['destination'])) {
             throw new \Files\Exception\InvalidParameterException('$destination must be of type string; received ' . gettype(@$params['destination']));
         }
 
-        if (!empty($params['gpg_key_ids']) && !is_array($params['gpg_key_ids'])) {
+        if (isset($params['gpg_key_ids']) && !is_array($params['gpg_key_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$gpg_key_ids must be of type array; received ' . gettype(@$params['gpg_key_ids']));
         }
 
-        if (!empty($params['gpg_key_partner_id']) && !is_int($params['gpg_key_partner_id'])) {
+        if (isset($params['gpg_key_partner_id']) && !is_int($params['gpg_key_partner_id'])) {
             throw new \Files\Exception\InvalidParameterException('$gpg_key_partner_id must be of type int; received ' . gettype(@$params['gpg_key_partner_id']));
         }
 
-        if (!empty($params['signing_key_id']) && !is_int($params['signing_key_id'])) {
+        if (isset($params['signing_key_id']) && !is_int($params['signing_key_id'])) {
             throw new \Files\Exception\InvalidParameterException('$signing_key_id must be of type int; received ' . gettype(@$params['signing_key_id']));
         }
 
+        if (isset($params['armor']) && !is_scalar($params['armor'])) {
+            throw new \Files\Exception\InvalidParameterException('$armor must be of type boolean; received ' . gettype(@$params['armor']));
+        }
+
+        if (isset($params['overwrite']) && !is_scalar($params['overwrite'])) {
+            throw new \Files\Exception\InvalidParameterException('$overwrite must be of type boolean; received ' . gettype(@$params['overwrite']));
+        }
+
         $response = Api::sendRequest('/file_actions/gpg_encrypt/' . rawurlencode(strval(@$params['path'])) . '', 'POST', $params, $this->options);
-        return new FileAction((array) (@$response->data ?: []), $this->options);
+        return new FileAction(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $this->options);
     }
 
     /**
@@ -2333,20 +2422,24 @@ class File
             }
         }
 
-        if (!empty($params['path']) && !is_string($params['path'])) {
+        if (isset($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (!empty($params['destination']) && !is_string($params['destination'])) {
+        if (isset($params['destination']) && !is_string($params['destination'])) {
             throw new \Files\Exception\InvalidParameterException('$destination must be of type string; received ' . gettype(@$params['destination']));
         }
 
-        if (!empty($params['filename']) && !is_string($params['filename'])) {
+        if (isset($params['filename']) && !is_string($params['filename'])) {
             throw new \Files\Exception\InvalidParameterException('$filename must be of type string; received ' . gettype(@$params['filename']));
         }
 
+        if (isset($params['overwrite']) && !is_scalar($params['overwrite'])) {
+            throw new \Files\Exception\InvalidParameterException('$overwrite must be of type boolean; received ' . gettype(@$params['overwrite']));
+        }
+
         $response = Api::sendRequest('/file_actions/unzip', 'POST', $params, $this->options);
-        return new FileAction((array) (@$response->data ?: []), $this->options);
+        return new FileAction(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $this->options);
     }
 
     /**
@@ -2382,35 +2475,51 @@ class File
             }
         }
 
-        if (!empty($params['path']) && !is_string($params['path'])) {
+        if (isset($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (!empty($params['part']) && !is_int($params['part'])) {
+        if (isset($params['mkdir_parents']) && !is_scalar($params['mkdir_parents'])) {
+            throw new \Files\Exception\InvalidParameterException('$mkdir_parents must be of type boolean; received ' . gettype(@$params['mkdir_parents']));
+        }
+
+        if (isset($params['part']) && !is_int($params['part'])) {
             throw new \Files\Exception\InvalidParameterException('$part must be of type int; received ' . gettype(@$params['part']));
         }
 
-        if (!empty($params['parts']) && !is_int($params['parts'])) {
+        if (isset($params['parts']) && !is_int($params['parts'])) {
             throw new \Files\Exception\InvalidParameterException('$parts must be of type int; received ' . gettype(@$params['parts']));
         }
 
-        if (!empty($params['ref']) && !is_string($params['ref'])) {
+        if (isset($params['ref']) && !is_string($params['ref'])) {
             throw new \Files\Exception\InvalidParameterException('$ref must be of type string; received ' . gettype(@$params['ref']));
         }
 
-        if (!empty($params['restart']) && !is_int($params['restart'])) {
+        if (isset($params['restart']) && !is_int($params['restart'])) {
             throw new \Files\Exception\InvalidParameterException('$restart must be of type int; received ' . gettype(@$params['restart']));
         }
 
-        if (!empty($params['size']) && !is_int($params['size'])) {
+        if (isset($params['size']) && !is_int($params['size'])) {
             throw new \Files\Exception\InvalidParameterException('$size must be of type int; received ' . gettype(@$params['size']));
+        }
+
+        if (isset($params['with_rename']) && !is_scalar($params['with_rename'])) {
+            throw new \Files\Exception\InvalidParameterException('$with_rename must be of type boolean; received ' . gettype(@$params['with_rename']));
+        }
+
+        if (isset($params['buffered_upload']) && !is_scalar($params['buffered_upload'])) {
+            throw new \Files\Exception\InvalidParameterException('$buffered_upload must be of type boolean; received ' . gettype(@$params['buffered_upload']));
+        }
+
+        if (isset($params['with_direct_connection_info']) && !is_scalar($params['with_direct_connection_info'])) {
+            throw new \Files\Exception\InvalidParameterException('$with_direct_connection_info must be of type boolean; received ' . gettype(@$params['with_direct_connection_info']));
         }
 
         $response = Api::sendRequest('/file_actions/begin_upload/' . rawurlencode(strval(@$params['path'])) . '', 'POST', $params, $this->options);
         $return_array = [];
 
-        foreach ($response->data as $obj) {
-            $return_array[] = new FileUploadPart((array) $obj, $this->options);
+        foreach (Api::listEntries(isset($response->data) ? $response->data : null, $response->status) as $obj) {
+            $return_array[] = new FileUploadPart(Api::modelAttributes($obj, $response->status), $this->options);
         }
 
         return $return_array;
@@ -2471,49 +2580,69 @@ class File
             throw new \Files\Exception\MissingParameterException('Parameter missing: path');
         }
 
-        if (!empty($params['path']) && !is_string($params['path'])) {
+        if (isset($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (!empty($params['action']) && !is_string($params['action'])) {
+        if (isset($params['action']) && !is_string($params['action'])) {
             throw new \Files\Exception\InvalidParameterException('$action must be of type string; received ' . gettype(@$params['action']));
         }
 
-        if (!empty($params['length']) && !is_int($params['length'])) {
+        if (isset($params['length']) && !is_int($params['length'])) {
             throw new \Files\Exception\InvalidParameterException('$length must be of type int; received ' . gettype(@$params['length']));
         }
 
-        if (!empty($params['part']) && !is_int($params['part'])) {
+        if (isset($params['mkdir_parents']) && !is_scalar($params['mkdir_parents'])) {
+            throw new \Files\Exception\InvalidParameterException('$mkdir_parents must be of type boolean; received ' . gettype(@$params['mkdir_parents']));
+        }
+
+        if (isset($params['part']) && !is_int($params['part'])) {
             throw new \Files\Exception\InvalidParameterException('$part must be of type int; received ' . gettype(@$params['part']));
         }
 
-        if (!empty($params['parts']) && !is_int($params['parts'])) {
+        if (isset($params['parts']) && !is_int($params['parts'])) {
             throw new \Files\Exception\InvalidParameterException('$parts must be of type int; received ' . gettype(@$params['parts']));
         }
 
-        if (!empty($params['provided_mtime']) && !is_string($params['provided_mtime'])) {
+        if (isset($params['provided_mtime']) && !is_string($params['provided_mtime'])) {
             throw new \Files\Exception\InvalidParameterException('$provided_mtime must be of type string; received ' . gettype(@$params['provided_mtime']));
         }
 
-        if (!empty($params['ref']) && !is_string($params['ref'])) {
+        if (isset($params['ref']) && !is_string($params['ref'])) {
             throw new \Files\Exception\InvalidParameterException('$ref must be of type string; received ' . gettype(@$params['ref']));
         }
 
-        if (!empty($params['restart']) && !is_int($params['restart'])) {
+        if (isset($params['restart']) && !is_int($params['restart'])) {
             throw new \Files\Exception\InvalidParameterException('$restart must be of type int; received ' . gettype(@$params['restart']));
         }
 
-        if (!empty($params['size']) && !is_int($params['size'])) {
+        if (isset($params['size']) && !is_int($params['size'])) {
             throw new \Files\Exception\InvalidParameterException('$size must be of type int; received ' . gettype(@$params['size']));
         }
 
-        if (!empty($params['structure']) && !is_string($params['structure'])) {
+        if (isset($params['copy_behaviors']) && !is_scalar($params['copy_behaviors'])) {
+            throw new \Files\Exception\InvalidParameterException('$copy_behaviors must be of type boolean; received ' . gettype(@$params['copy_behaviors']));
+        }
+
+        if (isset($params['structure']) && !is_string($params['structure'])) {
             throw new \Files\Exception\InvalidParameterException('$structure must be of type string; received ' . gettype(@$params['structure']));
+        }
+
+        if (isset($params['with_rename']) && !is_scalar($params['with_rename'])) {
+            throw new \Files\Exception\InvalidParameterException('$with_rename must be of type boolean; received ' . gettype(@$params['with_rename']));
+        }
+
+        if (isset($params['buffered_upload']) && !is_scalar($params['buffered_upload'])) {
+            throw new \Files\Exception\InvalidParameterException('$buffered_upload must be of type boolean; received ' . gettype(@$params['buffered_upload']));
+        }
+
+        if (isset($params['with_direct_connection_info']) && !is_scalar($params['with_direct_connection_info'])) {
+            throw new \Files\Exception\InvalidParameterException('$with_direct_connection_info must be of type boolean; received ' . gettype(@$params['with_direct_connection_info']));
         }
 
         $response = Api::sendRequest('/files/' . rawurlencode(strval(@$params['path'])) . '', 'POST', $params, $options);
 
-        return new File((array) (@$response->data ?: []), $options);
+        return new File(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
 
     /**
@@ -2542,17 +2671,25 @@ class File
             throw new \Files\Exception\MissingParameterException('Parameter missing: path');
         }
 
-        if (!empty($params['path']) && !is_string($params['path'])) {
+        if (isset($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (!empty($params['preview_size']) && !is_string($params['preview_size'])) {
+        if (isset($params['preview_size']) && !is_string($params['preview_size'])) {
             throw new \Files\Exception\InvalidParameterException('$preview_size must be of type string; received ' . gettype(@$params['preview_size']));
+        }
+
+        if (isset($params['with_previews']) && !is_scalar($params['with_previews'])) {
+            throw new \Files\Exception\InvalidParameterException('$with_previews must be of type boolean; received ' . gettype(@$params['with_previews']));
+        }
+
+        if (isset($params['with_priority_color']) && !is_scalar($params['with_priority_color'])) {
+            throw new \Files\Exception\InvalidParameterException('$with_priority_color must be of type boolean; received ' . gettype(@$params['with_priority_color']));
         }
 
         $response = Api::sendRequest('/file_actions/metadata/' . rawurlencode(strval(@$params['path'])) . '', 'GET', $params, $options);
 
-        return new File((array) (@$response->data ?: []), $options);
+        return new File(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
     /**
      * Find File/Folder by Path
@@ -2599,20 +2736,24 @@ class File
             throw new \Files\Exception\MissingParameterException('Parameter missing: destination');
         }
 
-        if (!empty($params['paths']) && !is_array($params['paths'])) {
+        if (isset($params['paths']) && !is_array($params['paths'])) {
             throw new \Files\Exception\InvalidParameterException('$paths must be of type array; received ' . gettype(@$params['paths']));
         }
 
-        if (!empty($params['destination']) && !is_string($params['destination'])) {
+        if (isset($params['destination']) && !is_string($params['destination'])) {
             throw new \Files\Exception\InvalidParameterException('$destination must be of type string; received ' . gettype(@$params['destination']));
         }
 
-        if (!empty($params['archive_format']) && !is_string($params['archive_format'])) {
+        if (isset($params['archive_format']) && !is_string($params['archive_format'])) {
             throw new \Files\Exception\InvalidParameterException('$archive_format must be of type string; received ' . gettype(@$params['archive_format']));
+        }
+
+        if (isset($params['overwrite']) && !is_scalar($params['overwrite'])) {
+            throw new \Files\Exception\InvalidParameterException('$overwrite must be of type boolean; received ' . gettype(@$params['overwrite']));
         }
 
         $response = Api::sendRequest('/file_actions/zip', 'POST', $params, $options);
 
-        return new FileAction((array) (@$response->data ?: []), $options);
+        return new FileAction(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
 }

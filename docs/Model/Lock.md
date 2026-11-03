@@ -38,11 +38,13 @@
 ## List Locks by Path
 
 ```
-$lock = new \Files\Model\Lock();
-$lock->listFor($path, [
+\Files\Model\Lock::listFor($path, [
   'include_children' => false,
 ]);
 ```
+
+`\Files\Model\Lock::listForPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -57,8 +59,7 @@ $lock->listFor($path, [
 ## Create Lock
 
 ```
-$lock = new \Files\Model\Lock();
-$lock->create($path, [
+\Files\Model\Lock::create($path, [
   'token' => "17c54824e9931a4688ca032d03f6663c",
   'allow_access_by_any_user' => false,
   'exclusive' => false,

@@ -316,6 +316,10 @@ class FormFieldSet
         return $this->attributes['workspace_id'] = $value;
     }
 
+    // Saves the changes, then refreshes this object with the saved attributes, which it also returns as a separate
+    // FormFieldSet with this object's options. A response that is not a JSON object raises
+    // ApiBadResponseException and leaves this object unchanged.
+    //
     /**
      * Update Form Field Set
      *
@@ -347,24 +351,42 @@ class FormFieldSet
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (!empty($params['title']) && !is_string($params['title'])) {
+        if (isset($params['title']) && !is_string($params['title'])) {
             throw new \Files\Exception\InvalidParameterException('$title must be of type string; received ' . gettype(@$params['title']));
         }
 
-        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
+        if (isset($params['require_complete_metadata_capture']) && !is_scalar($params['require_complete_metadata_capture'])) {
+            throw new \Files\Exception\InvalidParameterException('$require_complete_metadata_capture must be of type boolean; received ' . gettype(@$params['require_complete_metadata_capture']));
+        }
+
+        if (isset($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
-        if (!empty($params['form_fields']) && !is_array($params['form_fields'])) {
+        if (isset($params['skip_email']) && !is_scalar($params['skip_email'])) {
+            throw new \Files\Exception\InvalidParameterException('$skip_email must be of type boolean; received ' . gettype(@$params['skip_email']));
+        }
+
+        if (isset($params['skip_name']) && !is_scalar($params['skip_name'])) {
+            throw new \Files\Exception\InvalidParameterException('$skip_name must be of type boolean; received ' . gettype(@$params['skip_name']));
+        }
+
+        if (isset($params['skip_company']) && !is_scalar($params['skip_company'])) {
+            throw new \Files\Exception\InvalidParameterException('$skip_company must be of type boolean; received ' . gettype(@$params['skip_company']));
+        }
+
+        if (isset($params['form_fields']) && !is_array($params['form_fields'])) {
             throw new \Files\Exception\InvalidParameterException('$form_fields must be of type array; received ' . gettype(@$params['form_fields']));
         }
 
         $response = Api::sendRequest('/form_field_sets/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
-        return new FormFieldSet((array) (@$response->data ?: []), $this->options);
+        $updated = new FormFieldSet(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $this->options);
+        $this->attributes = $updated->attributes;
+        return $updated;
     }
 
     /**
@@ -391,7 +413,7 @@ class FormFieldSet
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -452,15 +474,15 @@ class FormFieldSet
      */
     public static function all($params = [], $options = [])
     {
-        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
+        if (isset($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -468,11 +490,35 @@ class FormFieldSet
 
         $return_array = [];
 
-        foreach ($response->data as $obj) {
-            $return_array[] = new FormFieldSet((array) $obj, $options);
+        foreach (Api::listEntries(isset($response->data) ? $response->data : null, $response->status) as $obj) {
+            $return_array[] = new FormFieldSet(Api::modelAttributes($obj, $response->status), $options);
         }
 
         return $return_array;
+    }
+
+    /**
+     * Fetches one page of all()'s results, with the same parameters and options,
+     * whatever Files::$autoPaginate is. Iterate the page, step with nextPage(), or read every result lazily with
+     * autoPagingIterator(). A 'cursor' parameter starts from a page saved with getNextCursor().
+     *
+     * @return \Files\Page
+     */
+    public static function listPage($params = [], $options = [])
+    {
+        if (isset($params['user_id']) && !is_int($params['user_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
+        }
+
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        return \Files\Page::fetch('/form_field_sets', $params, $options, FormFieldSet::class);
     }
 
     /**
@@ -498,13 +544,13 @@ class FormFieldSet
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
         $response = Api::sendRequest('/form_field_sets/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
-        return new FormFieldSet((array) (@$response->data ?: []), $options);
+        return new FormFieldSet(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
     /**
      * Show Form Field Set
@@ -544,24 +590,40 @@ class FormFieldSet
      */
     public static function create($params = [], $options = [])
     {
-        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
+        if (isset($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (!empty($params['title']) && !is_string($params['title'])) {
+        if (isset($params['title']) && !is_string($params['title'])) {
             throw new \Files\Exception\InvalidParameterException('$title must be of type string; received ' . gettype(@$params['title']));
         }
 
-        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
+        if (isset($params['require_complete_metadata_capture']) && !is_scalar($params['require_complete_metadata_capture'])) {
+            throw new \Files\Exception\InvalidParameterException('$require_complete_metadata_capture must be of type boolean; received ' . gettype(@$params['require_complete_metadata_capture']));
+        }
+
+        if (isset($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
-        if (!empty($params['form_fields']) && !is_array($params['form_fields'])) {
+        if (isset($params['skip_email']) && !is_scalar($params['skip_email'])) {
+            throw new \Files\Exception\InvalidParameterException('$skip_email must be of type boolean; received ' . gettype(@$params['skip_email']));
+        }
+
+        if (isset($params['skip_name']) && !is_scalar($params['skip_name'])) {
+            throw new \Files\Exception\InvalidParameterException('$skip_name must be of type boolean; received ' . gettype(@$params['skip_name']));
+        }
+
+        if (isset($params['skip_company']) && !is_scalar($params['skip_company'])) {
+            throw new \Files\Exception\InvalidParameterException('$skip_company must be of type boolean; received ' . gettype(@$params['skip_company']));
+        }
+
+        if (isset($params['form_fields']) && !is_array($params['form_fields'])) {
             throw new \Files\Exception\InvalidParameterException('$form_fields must be of type array; received ' . gettype(@$params['form_fields']));
         }
 
         $response = Api::sendRequest('/form_field_sets', 'POST', $params, $options);
 
-        return new FormFieldSet((array) (@$response->data ?: []), $options);
+        return new FormFieldSet(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
 }

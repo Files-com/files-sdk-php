@@ -211,6 +211,10 @@ class Style
         return $this->attributes['file'] = $value;
     }
 
+    // Saves the changes, then refreshes this object with the saved attributes, which it also returns as a separate
+    // Style with this object's options. A response that is not a JSON object raises
+    // ApiBadResponseException and leaves this object unchanged.
+    //
     /**
      * Update Style
      *
@@ -237,16 +241,18 @@ class Style
             }
         }
 
-        if (!empty($params['path']) && !is_string($params['path'])) {
+        if (isset($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (!empty($params['logo_click_href']) && !is_string($params['logo_click_href'])) {
+        if (isset($params['logo_click_href']) && !is_string($params['logo_click_href'])) {
             throw new \Files\Exception\InvalidParameterException('$logo_click_href must be of type string; received ' . gettype(@$params['logo_click_href']));
         }
 
         $response = Api::sendRequest('/styles/' . rawurlencode(strval(@$params['path'])) . '', 'PATCH', $params, $this->options);
-        return new Style((array) (@$response->data ?: []), $this->options);
+        $updated = new Style(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $this->options);
+        $this->attributes = $updated->attributes;
+        return $updated;
     }
 
     /**
@@ -273,7 +279,7 @@ class Style
             }
         }
 
-        if (!empty($params['path']) && !is_string($params['path'])) {
+        if (isset($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
@@ -335,13 +341,13 @@ class Style
             throw new \Files\Exception\MissingParameterException('Parameter missing: path');
         }
 
-        if (!empty($params['path']) && !is_string($params['path'])) {
+        if (isset($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
         $response = Api::sendRequest('/styles/' . rawurlencode(strval(@$params['path'])) . '', 'GET', $params, $options);
 
-        return new Style((array) (@$response->data ?: []), $options);
+        return new Style(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
     /**
      * Show Style

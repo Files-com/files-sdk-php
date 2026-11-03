@@ -484,6 +484,10 @@ class GpgKey
         return $this->attributes['generate_email'] = $value;
     }
 
+    // Saves the changes, then refreshes this object with the saved attributes, which it also returns as a separate
+    // GpgKey with this object's options. A response that is not a JSON object raises
+    // ApiBadResponseException and leaves this object unchanged.
+    //
     /**
      * Update GPG Key
      *
@@ -513,32 +517,34 @@ class GpgKey
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (!empty($params['partner_id']) && !is_int($params['partner_id'])) {
+        if (isset($params['partner_id']) && !is_int($params['partner_id'])) {
             throw new \Files\Exception\InvalidParameterException('$partner_id must be of type int; received ' . gettype(@$params['partner_id']));
         }
 
-        if (!empty($params['public_key']) && !is_string($params['public_key'])) {
+        if (isset($params['public_key']) && !is_string($params['public_key'])) {
             throw new \Files\Exception\InvalidParameterException('$public_key must be of type string; received ' . gettype(@$params['public_key']));
         }
 
-        if (!empty($params['private_key']) && !is_string($params['private_key'])) {
+        if (isset($params['private_key']) && !is_string($params['private_key'])) {
             throw new \Files\Exception\InvalidParameterException('$private_key must be of type string; received ' . gettype(@$params['private_key']));
         }
 
-        if (!empty($params['private_key_password']) && !is_string($params['private_key_password'])) {
+        if (isset($params['private_key_password']) && !is_string($params['private_key_password'])) {
             throw new \Files\Exception\InvalidParameterException('$private_key_password must be of type string; received ' . gettype(@$params['private_key_password']));
         }
 
-        if (!empty($params['name']) && !is_string($params['name'])) {
+        if (isset($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
         $response = Api::sendRequest('/gpg_keys/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
-        return new GpgKey((array) (@$response->data ?: []), $this->options);
+        $updated = new GpgKey(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $this->options);
+        $this->attributes = $updated->attributes;
+        return $updated;
     }
 
     /**
@@ -565,7 +571,7 @@ class GpgKey
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -632,15 +638,15 @@ class GpgKey
      */
     public static function all($params = [], $options = [])
     {
-        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
+        if (isset($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -648,11 +654,35 @@ class GpgKey
 
         $return_array = [];
 
-        foreach ($response->data as $obj) {
-            $return_array[] = new GpgKey((array) $obj, $options);
+        foreach (Api::listEntries(isset($response->data) ? $response->data : null, $response->status) as $obj) {
+            $return_array[] = new GpgKey(Api::modelAttributes($obj, $response->status), $options);
         }
 
         return $return_array;
+    }
+
+    /**
+     * Fetches one page of all()'s results, with the same parameters and options,
+     * whatever Files::$autoPaginate is. Iterate the page, step with nextPage(), or read every result lazily with
+     * autoPagingIterator(). A 'cursor' parameter starts from a page saved with getNextCursor().
+     *
+     * @return \Files\Page
+     */
+    public static function listPage($params = [], $options = [])
+    {
+        if (isset($params['user_id']) && !is_int($params['user_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
+        }
+
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        return \Files\Page::fetch('/gpg_keys', $params, $options, GpgKey::class);
     }
 
     /**
@@ -678,13 +708,13 @@ class GpgKey
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
         $response = Api::sendRequest('/gpg_keys/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
-        return new GpgKey((array) (@$response->data ?: []), $options);
+        return new GpgKey(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
     /**
      * Show GPG Key
@@ -731,48 +761,52 @@ class GpgKey
             throw new \Files\Exception\MissingParameterException('Parameter missing: name');
         }
 
-        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
+        if (isset($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (!empty($params['partner_id']) && !is_int($params['partner_id'])) {
+        if (isset($params['partner_id']) && !is_int($params['partner_id'])) {
             throw new \Files\Exception\InvalidParameterException('$partner_id must be of type int; received ' . gettype(@$params['partner_id']));
         }
 
-        if (!empty($params['public_key']) && !is_string($params['public_key'])) {
+        if (isset($params['public_key']) && !is_string($params['public_key'])) {
             throw new \Files\Exception\InvalidParameterException('$public_key must be of type string; received ' . gettype(@$params['public_key']));
         }
 
-        if (!empty($params['private_key']) && !is_string($params['private_key'])) {
+        if (isset($params['private_key']) && !is_string($params['private_key'])) {
             throw new \Files\Exception\InvalidParameterException('$private_key must be of type string; received ' . gettype(@$params['private_key']));
         }
 
-        if (!empty($params['private_key_password']) && !is_string($params['private_key_password'])) {
+        if (isset($params['private_key_password']) && !is_string($params['private_key_password'])) {
             throw new \Files\Exception\InvalidParameterException('$private_key_password must be of type string; received ' . gettype(@$params['private_key_password']));
         }
 
-        if (!empty($params['name']) && !is_string($params['name'])) {
+        if (isset($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
+        if (isset($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
-        if (!empty($params['generate_expires_at']) && !is_string($params['generate_expires_at'])) {
+        if (isset($params['generate_expires_at']) && !is_string($params['generate_expires_at'])) {
             throw new \Files\Exception\InvalidParameterException('$generate_expires_at must be of type string; received ' . gettype(@$params['generate_expires_at']));
         }
 
-        if (!empty($params['generate_full_name']) && !is_string($params['generate_full_name'])) {
+        if (isset($params['generate_keypair']) && !is_scalar($params['generate_keypair'])) {
+            throw new \Files\Exception\InvalidParameterException('$generate_keypair must be of type boolean; received ' . gettype(@$params['generate_keypair']));
+        }
+
+        if (isset($params['generate_full_name']) && !is_string($params['generate_full_name'])) {
             throw new \Files\Exception\InvalidParameterException('$generate_full_name must be of type string; received ' . gettype(@$params['generate_full_name']));
         }
 
-        if (!empty($params['generate_email']) && !is_string($params['generate_email'])) {
+        if (isset($params['generate_email']) && !is_string($params['generate_email'])) {
             throw new \Files\Exception\InvalidParameterException('$generate_email must be of type string; received ' . gettype(@$params['generate_email']));
         }
 
         $response = Api::sendRequest('/gpg_keys', 'POST', $params, $options);
 
-        return new GpgKey((array) (@$response->data ?: []), $options);
+        return new GpgKey(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
 }

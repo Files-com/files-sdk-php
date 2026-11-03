@@ -190,6 +190,10 @@ class ShareGroup
         return $this->attributes['members'] = $value;
     }
 
+    // Saves the changes, then refreshes this object with the saved attributes, which it also returns as a separate
+    // ShareGroup with this object's options. A response that is not a JSON object raises
+    // ApiBadResponseException and leaves this object unchanged.
+    //
     /**
      * Update Share Group
      *
@@ -217,24 +221,26 @@ class ShareGroup
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (!empty($params['notes']) && !is_string($params['notes'])) {
+        if (isset($params['notes']) && !is_string($params['notes'])) {
             throw new \Files\Exception\InvalidParameterException('$notes must be of type string; received ' . gettype(@$params['notes']));
         }
 
-        if (!empty($params['name']) && !is_string($params['name'])) {
+        if (isset($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (!empty($params['members']) && !is_array($params['members'])) {
+        if (isset($params['members']) && !is_array($params['members'])) {
             throw new \Files\Exception\InvalidParameterException('$members must be of type array; received ' . gettype(@$params['members']));
         }
 
         $response = Api::sendRequest('/share_groups/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
-        return new ShareGroup((array) (@$response->data ?: []), $this->options);
+        $updated = new ShareGroup(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $this->options);
+        $this->attributes = $updated->attributes;
+        return $updated;
     }
 
     /**
@@ -261,7 +267,7 @@ class ShareGroup
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -322,15 +328,15 @@ class ShareGroup
      */
     public static function all($params = [], $options = [])
     {
-        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
+        if (isset($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -338,11 +344,35 @@ class ShareGroup
 
         $return_array = [];
 
-        foreach ($response->data as $obj) {
-            $return_array[] = new ShareGroup((array) $obj, $options);
+        foreach (Api::listEntries(isset($response->data) ? $response->data : null, $response->status) as $obj) {
+            $return_array[] = new ShareGroup(Api::modelAttributes($obj, $response->status), $options);
         }
 
         return $return_array;
+    }
+
+    /**
+     * Fetches one page of all()'s results, with the same parameters and options,
+     * whatever Files::$autoPaginate is. Iterate the page, step with nextPage(), or read every result lazily with
+     * autoPagingIterator(). A 'cursor' parameter starts from a page saved with getNextCursor().
+     *
+     * @return \Files\Page
+     */
+    public static function listPage($params = [], $options = [])
+    {
+        if (isset($params['user_id']) && !is_int($params['user_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
+        }
+
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        return \Files\Page::fetch('/share_groups', $params, $options, ShareGroup::class);
     }
 
     /**
@@ -368,13 +398,13 @@ class ShareGroup
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
         $response = Api::sendRequest('/share_groups/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
-        return new ShareGroup((array) (@$response->data ?: []), $options);
+        return new ShareGroup(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
     /**
      * Show Share Group
@@ -418,24 +448,24 @@ class ShareGroup
             throw new \Files\Exception\MissingParameterException('Parameter missing: members');
         }
 
-        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
+        if (isset($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (!empty($params['notes']) && !is_string($params['notes'])) {
+        if (isset($params['notes']) && !is_string($params['notes'])) {
             throw new \Files\Exception\InvalidParameterException('$notes must be of type string; received ' . gettype(@$params['notes']));
         }
 
-        if (!empty($params['name']) && !is_string($params['name'])) {
+        if (isset($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (!empty($params['members']) && !is_array($params['members'])) {
+        if (isset($params['members']) && !is_array($params['members'])) {
             throw new \Files\Exception\InvalidParameterException('$members must be of type array; received ' . gettype(@$params['members']));
         }
 
         $response = Api::sendRequest('/share_groups', 'POST', $params, $options);
 
-        return new ShareGroup((array) (@$response->data ?: []), $options);
+        return new ShareGroup(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
 }

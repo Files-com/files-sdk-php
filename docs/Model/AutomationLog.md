@@ -45,9 +45,11 @@
 ## List Automation Logs
 
 ```
-$automation_log = new \Files\Model\AutomationLog();
-$automation_log->list
+\Files\Model\AutomationLog::all();
 ```
+
+`\Files\Model\AutomationLog::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters

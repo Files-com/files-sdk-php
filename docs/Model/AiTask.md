@@ -72,9 +72,11 @@
 ## List Ai Tasks
 
 ```
-$ai_task = new \Files\Model\AiTask();
-$ai_task->list
+\Files\Model\AiTask::all();
 ```
+
+`\Files\Model\AiTask::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -89,8 +91,7 @@ $ai_task->list
 ## Show Ai Task
 
 ```
-$ai_task = new \Files\Model\AiTask();
-$ai_task->find($id);
+\Files\Model\AiTask::find($id);
 ```
 
 
@@ -103,8 +104,7 @@ $ai_task->find($id);
 ## Create Ai Task
 
 ```
-$ai_task = new \Files\Model\AiTask();
-$ai_task->create(, [
+\Files\Model\AiTask::create([
   'description' => "Summarizes files uploaded by the accounting team.",
   'disabled' => true,
   'holiday_region' => "us",
@@ -191,6 +191,9 @@ $ai_task->update([
   'workspace_id' => 0,
 ]);
 ```
+
+`update()` refreshes `$ai_task` with the saved attributes, and also returns them as a separate
+`\Files\Model\AiTask`.
 
 ### Parameters
 

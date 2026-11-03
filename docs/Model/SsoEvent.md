@@ -43,9 +43,11 @@
 ## List SSO Events
 
 ```
-$sso_event = new \Files\Model\SsoEvent();
-$sso_event->list
+\Files\Model\SsoEvent::all();
 ```
+
+`\Files\Model\SsoEvent::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -65,8 +67,7 @@ $sso_event->list
 ## Show SSO Event
 
 ```
-$sso_event = new \Files\Model\SsoEvent();
-$sso_event->find($id);
+\Files\Model\SsoEvent::find($id);
 ```
 
 

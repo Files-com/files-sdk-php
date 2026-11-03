@@ -29,9 +29,11 @@
 ## List User Security Events
 
 ```
-$user_security_event = new \Files\Model\UserSecurityEvent();
-$user_security_event->list
+\Files\Model\UserSecurityEvent::all();
 ```
+
+`\Files\Model\UserSecurityEvent::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -50,8 +52,7 @@ $user_security_event->list
 ## Show User Security Event
 
 ```
-$user_security_event = new \Files\Model\UserSecurityEvent();
-$user_security_event->find($id);
+\Files\Model\UserSecurityEvent::find($id);
 ```
 
 

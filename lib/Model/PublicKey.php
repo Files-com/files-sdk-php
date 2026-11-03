@@ -473,6 +473,10 @@ class PublicKey
         return $this->attributes['generate_length'] = $value;
     }
 
+    // Saves the changes, then refreshes this object with the saved attributes, which it also returns as a separate
+    // PublicKey with this object's options. A response that is not a JSON object raises
+    // ApiBadResponseException and leaves this object unchanged.
+    //
     /**
      * Update Public Key
      *
@@ -506,16 +510,18 @@ class PublicKey
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (!empty($params['title']) && !is_string($params['title'])) {
+        if (isset($params['title']) && !is_string($params['title'])) {
             throw new \Files\Exception\InvalidParameterException('$title must be of type string; received ' . gettype(@$params['title']));
         }
 
         $response = Api::sendRequest('/public_keys/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
-        return new PublicKey((array) (@$response->data ?: []), $this->options);
+        $updated = new PublicKey(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $this->options);
+        $this->attributes = $updated->attributes;
+        return $updated;
     }
 
     /**
@@ -542,7 +548,7 @@ class PublicKey
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -609,15 +615,15 @@ class PublicKey
      */
     public static function all($params = [], $options = [])
     {
-        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
+        if (isset($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -625,11 +631,35 @@ class PublicKey
 
         $return_array = [];
 
-        foreach ($response->data as $obj) {
-            $return_array[] = new PublicKey((array) $obj, $options);
+        foreach (Api::listEntries(isset($response->data) ? $response->data : null, $response->status) as $obj) {
+            $return_array[] = new PublicKey(Api::modelAttributes($obj, $response->status), $options);
         }
 
         return $return_array;
+    }
+
+    /**
+     * Fetches one page of all()'s results, with the same parameters and options,
+     * whatever Files::$autoPaginate is. Iterate the page, step with nextPage(), or read every result lazily with
+     * autoPagingIterator(). A 'cursor' parameter starts from a page saved with getNextCursor().
+     *
+     * @return \Files\Page
+     */
+    public static function listPage($params = [], $options = [])
+    {
+        if (isset($params['user_id']) && !is_int($params['user_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
+        }
+
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        return \Files\Page::fetch('/public_keys', $params, $options, PublicKey::class);
     }
 
     /**
@@ -655,13 +685,13 @@ class PublicKey
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
         $response = Api::sendRequest('/public_keys/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
-        return new PublicKey((array) (@$response->data ?: []), $options);
+        return new PublicKey(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
     /**
      * Show Public Key
@@ -704,32 +734,36 @@ class PublicKey
             throw new \Files\Exception\MissingParameterException('Parameter missing: title');
         }
 
-        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
+        if (isset($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (!empty($params['title']) && !is_string($params['title'])) {
+        if (isset($params['title']) && !is_string($params['title'])) {
             throw new \Files\Exception\InvalidParameterException('$title must be of type string; received ' . gettype(@$params['title']));
         }
 
-        if (!empty($params['public_key']) && !is_string($params['public_key'])) {
+        if (isset($params['public_key']) && !is_string($params['public_key'])) {
             throw new \Files\Exception\InvalidParameterException('$public_key must be of type string; received ' . gettype(@$params['public_key']));
         }
 
-        if (!empty($params['generate_private_key_password']) && !is_string($params['generate_private_key_password'])) {
+        if (isset($params['generate_keypair']) && !is_scalar($params['generate_keypair'])) {
+            throw new \Files\Exception\InvalidParameterException('$generate_keypair must be of type boolean; received ' . gettype(@$params['generate_keypair']));
+        }
+
+        if (isset($params['generate_private_key_password']) && !is_string($params['generate_private_key_password'])) {
             throw new \Files\Exception\InvalidParameterException('$generate_private_key_password must be of type string; received ' . gettype(@$params['generate_private_key_password']));
         }
 
-        if (!empty($params['generate_algorithm']) && !is_string($params['generate_algorithm'])) {
+        if (isset($params['generate_algorithm']) && !is_string($params['generate_algorithm'])) {
             throw new \Files\Exception\InvalidParameterException('$generate_algorithm must be of type string; received ' . gettype(@$params['generate_algorithm']));
         }
 
-        if (!empty($params['generate_length']) && !is_int($params['generate_length'])) {
+        if (isset($params['generate_length']) && !is_int($params['generate_length'])) {
             throw new \Files\Exception\InvalidParameterException('$generate_length must be of type int; received ' . gettype(@$params['generate_length']));
         }
 
         $response = Api::sendRequest('/public_keys', 'POST', $params, $options);
 
-        return new PublicKey((array) (@$response->data ?: []), $options);
+        return new PublicKey(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
 }

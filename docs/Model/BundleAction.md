@@ -58,13 +58,15 @@
 ## List Bundle Actions
 
 ```
-$bundle_action = new \Files\Model\BundleAction();
-$bundle_action->list(, [
+\Files\Model\BundleAction::all([
   'user_id' => 1,
   'bundle_id' => 1,
   'bundle_registration_id' => 1,
 ]);
 ```
+
+`\Files\Model\BundleAction::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters

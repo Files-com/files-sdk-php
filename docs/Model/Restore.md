@@ -59,9 +59,11 @@
 ## List Restores
 
 ```
-$restore = new \Files\Model\Restore();
-$restore->list
+\Files\Model\Restore::all();
 ```
+
+`\Files\Model\Restore::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -76,8 +78,7 @@ $restore->list
 ## Create Restore
 
 ```
-$restore = new \Files\Model\Restore();
-$restore->create(, [
+\Files\Model\Restore::create([
   'earliest_date' => "2000-01-01T01:00:00Z",
   'prefix' => "foo/bar/baz.txt",
   'restoration_type' => "files",

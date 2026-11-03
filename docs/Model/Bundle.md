@@ -165,12 +165,14 @@
 ## List Share Links
 
 ```
-$bundle = new \Files\Model\Bundle();
-$bundle->list(, [
+\Files\Model\Bundle::all([
   'user_id' => 1,
   'deleted' => false,
 ]);
 ```
+
+`\Files\Model\Bundle::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -192,8 +194,7 @@ $bundle->list(, [
 ## Show Share Link
 
 ```
-$bundle = new \Files\Model\Bundle();
-$bundle->find($id, [
+\Files\Model\Bundle::find($id, [
   'deleted' => false,
 ]);
 ```
@@ -209,8 +210,7 @@ $bundle->find($id, [
 ## Create Share Link
 
 ```
-$bundle = new \Files\Model\Bundle();
-$bundle->create(, [
+\Files\Model\Bundle::create([
   'user_id' => 1,
   'paths' => ["file.txt"],
   'password' => "Password",
@@ -344,6 +344,9 @@ $bundle->update([
   'workspace_id' => 1,
 ]);
 ```
+
+`update()` refreshes `$bundle` with the saved attributes, and also returns them as a separate
+`\Files\Model\Bundle`.
 
 ### Parameters
 

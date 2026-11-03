@@ -563,8 +563,7 @@
 ## Show Site Settings
 
 ```
-$site = new \Files\Model\Site();
-$site->get
+\Files\Model\Site::get();
 ```
 
 
@@ -573,8 +572,7 @@ $site->get
 ## Get the most recent usage snapshot (usage data for billing purposes) for a Site
 
 ```
-$site = new \Files\Model\Site();
-$site->getUsage
+\Files\Model\Site::getUsage();
 ```
 
 
@@ -583,8 +581,7 @@ $site->getUsage
 ## Extend the Automations conversion window by up to six weeks beyond its originally announced end date
 
 ```
-$site = new \Files\Model\Site();
-$site->extendAutomationMigrationWindow(, [
+\Files\Model\Site::extendAutomationMigrationWindow([
   'end_date' => "end_date",
 ]);
 ```
@@ -599,8 +596,7 @@ $site->extendAutomationMigrationWindow(, [
 ## Update Site Settings
 
 ```
-$site = new \Files\Model\Site();
-$site->update(, [
+\Files\Model\Site::update([
   'name' => "My Site",
   'subdomain' => "mysite",
   'domain' => "my-custom-domain.com",

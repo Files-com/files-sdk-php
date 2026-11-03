@@ -568,6 +568,10 @@ class As2Partner
         return $this->attributes['pkcs12_password'] = $value;
     }
 
+    // Saves the changes, then refreshes this object with the saved attributes, which it also returns as a separate
+    // As2Partner with this object's options. A response that is not a JSON object raises
+    // ApiBadResponseException and leaves this object unchanged.
+    //
     /**
      * Update AS2 Partner
      *
@@ -605,56 +609,62 @@ class As2Partner
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (!empty($params['http_auth_username']) && !is_string($params['http_auth_username'])) {
+        if (isset($params['enable_dedicated_ips']) && !is_scalar($params['enable_dedicated_ips'])) {
+            throw new \Files\Exception\InvalidParameterException('$enable_dedicated_ips must be of type boolean; received ' . gettype(@$params['enable_dedicated_ips']));
+        }
+
+        if (isset($params['http_auth_username']) && !is_string($params['http_auth_username'])) {
             throw new \Files\Exception\InvalidParameterException('$http_auth_username must be of type string; received ' . gettype(@$params['http_auth_username']));
         }
 
-        if (!empty($params['http_auth_password']) && !is_string($params['http_auth_password'])) {
+        if (isset($params['http_auth_password']) && !is_string($params['http_auth_password'])) {
             throw new \Files\Exception\InvalidParameterException('$http_auth_password must be of type string; received ' . gettype(@$params['http_auth_password']));
         }
 
-        if (!empty($params['mdn_validation_level']) && !is_string($params['mdn_validation_level'])) {
+        if (isset($params['mdn_validation_level']) && !is_string($params['mdn_validation_level'])) {
             throw new \Files\Exception\InvalidParameterException('$mdn_validation_level must be of type string; received ' . gettype(@$params['mdn_validation_level']));
         }
 
-        if (!empty($params['signature_validation_level']) && !is_string($params['signature_validation_level'])) {
+        if (isset($params['signature_validation_level']) && !is_string($params['signature_validation_level'])) {
             throw new \Files\Exception\InvalidParameterException('$signature_validation_level must be of type string; received ' . gettype(@$params['signature_validation_level']));
         }
 
-        if (!empty($params['server_certificate']) && !is_string($params['server_certificate'])) {
+        if (isset($params['server_certificate']) && !is_string($params['server_certificate'])) {
             throw new \Files\Exception\InvalidParameterException('$server_certificate must be of type string; received ' . gettype(@$params['server_certificate']));
         }
 
-        if (!empty($params['default_mime_type']) && !is_string($params['default_mime_type'])) {
+        if (isset($params['default_mime_type']) && !is_string($params['default_mime_type'])) {
             throw new \Files\Exception\InvalidParameterException('$default_mime_type must be of type string; received ' . gettype(@$params['default_mime_type']));
         }
 
-        if (!empty($params['name']) && !is_string($params['name'])) {
+        if (isset($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (!empty($params['uri']) && !is_string($params['uri'])) {
+        if (isset($params['uri']) && !is_string($params['uri'])) {
             throw new \Files\Exception\InvalidParameterException('$uri must be of type string; received ' . gettype(@$params['uri']));
         }
 
-        if (!empty($params['public_certificate']) && !is_string($params['public_certificate'])) {
+        if (isset($params['public_certificate']) && !is_string($params['public_certificate'])) {
             throw new \Files\Exception\InvalidParameterException('$public_certificate must be of type string; received ' . gettype(@$params['public_certificate']));
         }
 
-        if (!empty($params['pkcs12']) && !is_string($params['pkcs12'])) {
+        if (isset($params['pkcs12']) && !is_string($params['pkcs12'])) {
             throw new \Files\Exception\InvalidParameterException('$pkcs12 must be of type string; received ' . gettype(@$params['pkcs12']));
         }
 
-        if (!empty($params['pkcs12_password']) && !is_string($params['pkcs12_password'])) {
+        if (isset($params['pkcs12_password']) && !is_string($params['pkcs12_password'])) {
             throw new \Files\Exception\InvalidParameterException('$pkcs12_password must be of type string; received ' . gettype(@$params['pkcs12_password']));
         }
 
         $response = Api::sendRequest('/as2_partners/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
-        return new As2Partner((array) (@$response->data ?: []), $this->options);
+        $updated = new As2Partner(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $this->options);
+        $this->attributes = $updated->attributes;
+        return $updated;
     }
 
     /**
@@ -681,7 +691,7 @@ class As2Partner
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -743,11 +753,11 @@ class As2Partner
      */
     public static function all($params = [], $options = [])
     {
-        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -755,11 +765,31 @@ class As2Partner
 
         $return_array = [];
 
-        foreach ($response->data as $obj) {
-            $return_array[] = new As2Partner((array) $obj, $options);
+        foreach (Api::listEntries(isset($response->data) ? $response->data : null, $response->status) as $obj) {
+            $return_array[] = new As2Partner(Api::modelAttributes($obj, $response->status), $options);
         }
 
         return $return_array;
+    }
+
+    /**
+     * Fetches one page of all()'s results, with the same parameters and options,
+     * whatever Files::$autoPaginate is. Iterate the page, step with nextPage(), or read every result lazily with
+     * autoPagingIterator(). A 'cursor' parameter starts from a page saved with getNextCursor().
+     *
+     * @return \Files\Page
+     */
+    public static function listPage($params = [], $options = [])
+    {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        return \Files\Page::fetch('/as2_partners', $params, $options, As2Partner::class);
     }
 
     /**
@@ -785,13 +815,13 @@ class As2Partner
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
         $response = Api::sendRequest('/as2_partners/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
-        return new As2Partner((array) (@$response->data ?: []), $options);
+        return new As2Partner(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
     /**
      * Show AS2 Partner
@@ -849,56 +879,60 @@ class As2Partner
             throw new \Files\Exception\MissingParameterException('Parameter missing: uri');
         }
 
-        if (!empty($params['http_auth_username']) && !is_string($params['http_auth_username'])) {
+        if (isset($params['enable_dedicated_ips']) && !is_scalar($params['enable_dedicated_ips'])) {
+            throw new \Files\Exception\InvalidParameterException('$enable_dedicated_ips must be of type boolean; received ' . gettype(@$params['enable_dedicated_ips']));
+        }
+
+        if (isset($params['http_auth_username']) && !is_string($params['http_auth_username'])) {
             throw new \Files\Exception\InvalidParameterException('$http_auth_username must be of type string; received ' . gettype(@$params['http_auth_username']));
         }
 
-        if (!empty($params['http_auth_password']) && !is_string($params['http_auth_password'])) {
+        if (isset($params['http_auth_password']) && !is_string($params['http_auth_password'])) {
             throw new \Files\Exception\InvalidParameterException('$http_auth_password must be of type string; received ' . gettype(@$params['http_auth_password']));
         }
 
-        if (!empty($params['mdn_validation_level']) && !is_string($params['mdn_validation_level'])) {
+        if (isset($params['mdn_validation_level']) && !is_string($params['mdn_validation_level'])) {
             throw new \Files\Exception\InvalidParameterException('$mdn_validation_level must be of type string; received ' . gettype(@$params['mdn_validation_level']));
         }
 
-        if (!empty($params['signature_validation_level']) && !is_string($params['signature_validation_level'])) {
+        if (isset($params['signature_validation_level']) && !is_string($params['signature_validation_level'])) {
             throw new \Files\Exception\InvalidParameterException('$signature_validation_level must be of type string; received ' . gettype(@$params['signature_validation_level']));
         }
 
-        if (!empty($params['server_certificate']) && !is_string($params['server_certificate'])) {
+        if (isset($params['server_certificate']) && !is_string($params['server_certificate'])) {
             throw new \Files\Exception\InvalidParameterException('$server_certificate must be of type string; received ' . gettype(@$params['server_certificate']));
         }
 
-        if (!empty($params['default_mime_type']) && !is_string($params['default_mime_type'])) {
+        if (isset($params['default_mime_type']) && !is_string($params['default_mime_type'])) {
             throw new \Files\Exception\InvalidParameterException('$default_mime_type must be of type string; received ' . gettype(@$params['default_mime_type']));
         }
 
-        if (!empty($params['as2_station_id']) && !is_int($params['as2_station_id'])) {
+        if (isset($params['as2_station_id']) && !is_int($params['as2_station_id'])) {
             throw new \Files\Exception\InvalidParameterException('$as2_station_id must be of type int; received ' . gettype(@$params['as2_station_id']));
         }
 
-        if (!empty($params['name']) && !is_string($params['name'])) {
+        if (isset($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (!empty($params['uri']) && !is_string($params['uri'])) {
+        if (isset($params['uri']) && !is_string($params['uri'])) {
             throw new \Files\Exception\InvalidParameterException('$uri must be of type string; received ' . gettype(@$params['uri']));
         }
 
-        if (!empty($params['public_certificate']) && !is_string($params['public_certificate'])) {
+        if (isset($params['public_certificate']) && !is_string($params['public_certificate'])) {
             throw new \Files\Exception\InvalidParameterException('$public_certificate must be of type string; received ' . gettype(@$params['public_certificate']));
         }
 
-        if (!empty($params['pkcs12']) && !is_string($params['pkcs12'])) {
+        if (isset($params['pkcs12']) && !is_string($params['pkcs12'])) {
             throw new \Files\Exception\InvalidParameterException('$pkcs12 must be of type string; received ' . gettype(@$params['pkcs12']));
         }
 
-        if (!empty($params['pkcs12_password']) && !is_string($params['pkcs12_password'])) {
+        if (isset($params['pkcs12_password']) && !is_string($params['pkcs12_password'])) {
             throw new \Files\Exception\InvalidParameterException('$pkcs12_password must be of type string; received ' . gettype(@$params['pkcs12_password']));
         }
 
         $response = Api::sendRequest('/as2_partners', 'POST', $params, $options);
 
-        return new As2Partner((array) (@$response->data ?: []), $options);
+        return new As2Partner(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
 }

@@ -17,9 +17,11 @@
 ## List Workspaces
 
 ```
-$workspace = new \Files\Model\Workspace();
-$workspace->list
+\Files\Model\Workspace::all();
 ```
+
+`\Files\Model\Workspace::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -35,8 +37,7 @@ $workspace->list
 ## Show Workspace
 
 ```
-$workspace = new \Files\Model\Workspace();
-$workspace->find($id);
+\Files\Model\Workspace::find($id);
 ```
 
 
@@ -49,8 +50,7 @@ $workspace->find($id);
 ## Create Workspace
 
 ```
-$workspace = new \Files\Model\Workspace();
-$workspace->create(, [
+\Files\Model\Workspace::create([
   'name' => "Project Alpha",
 ]);
 ```
@@ -71,6 +71,9 @@ $workspace->update([
   'name' => "Project Alpha",
 ]);
 ```
+
+`update()` refreshes `$workspace` with the saved attributes, and also returns them as a separate
+`\Files\Model\Workspace`.
 
 ### Parameters
 

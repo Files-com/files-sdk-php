@@ -47,9 +47,11 @@
 ## List Outbound Connection Logs
 
 ```
-$outbound_connection_log = new \Files\Model\OutboundConnectionLog();
-$outbound_connection_log->list
+\Files\Model\OutboundConnectionLog::all();
 ```
+
+`\Files\Model\OutboundConnectionLog::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters

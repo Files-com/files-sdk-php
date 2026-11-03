@@ -47,9 +47,11 @@
 ## List AS2 Stations
 
 ```
-$as2_station = new \Files\Model\As2Station();
-$as2_station->list
+\Files\Model\As2Station::all();
 ```
+
+`\Files\Model\As2Station::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -64,8 +66,7 @@ $as2_station->list
 ## Show AS2 Station
 
 ```
-$as2_station = new \Files\Model\As2Station();
-$as2_station->find($id);
+\Files\Model\As2Station::find($id);
 ```
 
 
@@ -78,8 +79,7 @@ $as2_station->find($id);
 ## Create AS2 Station
 
 ```
-$as2_station = new \Files\Model\As2Station();
-$as2_station->create(, [
+\Files\Model\As2Station::create([
   'name' => "AS2 Station Name",
   'workspace_id' => 1,
   'public_certificate' => "example",
@@ -109,6 +109,9 @@ $as2_station->update([
   'public_certificate' => "example",
 ]);
 ```
+
+`update()` refreshes `$as2_station` with the saved attributes, and also returns them as a separate
+`\Files\Model\As2Station`.
 
 ### Parameters
 

@@ -253,6 +253,10 @@ class SftpHostKey
         return $this->attributes['private_key'] = $value;
     }
 
+    // Saves the changes, then refreshes this object with the saved attributes, which it also returns as a separate
+    // SftpHostKey with this object's options. A response that is not a JSON object raises
+    // ApiBadResponseException and leaves this object unchanged.
+    //
     /**
      * Update SFTP Host Key
      *
@@ -281,24 +285,30 @@ class SftpHostKey
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (!empty($params['custom_domain_id']) && !is_int($params['custom_domain_id'])) {
+        if (isset($params['active']) && !is_scalar($params['active'])) {
+            throw new \Files\Exception\InvalidParameterException('$active must be of type boolean; received ' . gettype(@$params['active']));
+        }
+
+        if (isset($params['custom_domain_id']) && !is_int($params['custom_domain_id'])) {
             throw new \Files\Exception\InvalidParameterException('$custom_domain_id must be of type int; received ' . gettype(@$params['custom_domain_id']));
         }
 
-        if (!empty($params['name']) && !is_string($params['name'])) {
+        if (isset($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (!empty($params['private_key']) && !is_string($params['private_key'])) {
+        if (isset($params['private_key']) && !is_string($params['private_key'])) {
             throw new \Files\Exception\InvalidParameterException('$private_key must be of type string; received ' . gettype(@$params['private_key']));
         }
 
         $response = Api::sendRequest('/sftp_host_keys/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
-        return new SftpHostKey((array) (@$response->data ?: []), $this->options);
+        $updated = new SftpHostKey(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $this->options);
+        $this->attributes = $updated->attributes;
+        return $updated;
     }
 
     /**
@@ -325,7 +335,7 @@ class SftpHostKey
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -385,11 +395,11 @@ class SftpHostKey
      */
     public static function all($params = [], $options = [])
     {
-        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -397,11 +407,31 @@ class SftpHostKey
 
         $return_array = [];
 
-        foreach ($response->data as $obj) {
-            $return_array[] = new SftpHostKey((array) $obj, $options);
+        foreach (Api::listEntries(isset($response->data) ? $response->data : null, $response->status) as $obj) {
+            $return_array[] = new SftpHostKey(Api::modelAttributes($obj, $response->status), $options);
         }
 
         return $return_array;
+    }
+
+    /**
+     * Fetches one page of all()'s results, with the same parameters and options,
+     * whatever Files::$autoPaginate is. Iterate the page, step with nextPage(), or read every result lazily with
+     * autoPagingIterator(). A 'cursor' parameter starts from a page saved with getNextCursor().
+     *
+     * @return \Files\Page
+     */
+    public static function listPage($params = [], $options = [])
+    {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        return \Files\Page::fetch('/sftp_host_keys', $params, $options, SftpHostKey::class);
     }
 
     /**
@@ -427,13 +457,13 @@ class SftpHostKey
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
         $response = Api::sendRequest('/sftp_host_keys/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
-        return new SftpHostKey((array) (@$response->data ?: []), $options);
+        return new SftpHostKey(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
     /**
      * Show SFTP Host Key
@@ -469,20 +499,24 @@ class SftpHostKey
      */
     public static function create($params = [], $options = [])
     {
-        if (!empty($params['custom_domain_id']) && !is_int($params['custom_domain_id'])) {
+        if (isset($params['active']) && !is_scalar($params['active'])) {
+            throw new \Files\Exception\InvalidParameterException('$active must be of type boolean; received ' . gettype(@$params['active']));
+        }
+
+        if (isset($params['custom_domain_id']) && !is_int($params['custom_domain_id'])) {
             throw new \Files\Exception\InvalidParameterException('$custom_domain_id must be of type int; received ' . gettype(@$params['custom_domain_id']));
         }
 
-        if (!empty($params['name']) && !is_string($params['name'])) {
+        if (isset($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (!empty($params['private_key']) && !is_string($params['private_key'])) {
+        if (isset($params['private_key']) && !is_string($params['private_key'])) {
             throw new \Files\Exception\InvalidParameterException('$private_key must be of type string; received ' . gettype(@$params['private_key']));
         }
 
         $response = Api::sendRequest('/sftp_host_keys', 'POST', $params, $options);
 
-        return new SftpHostKey((array) (@$response->data ?: []), $options);
+        return new SftpHostKey(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
 }

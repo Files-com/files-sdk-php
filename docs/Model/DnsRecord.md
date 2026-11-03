@@ -21,9 +21,11 @@
 ## Show Site DNS Configuration
 
 ```
-$dns_record = new \Files\Model\DnsRecord();
-$dns_record->list
+\Files\Model\DnsRecord::all();
 ```
+
+`\Files\Model\DnsRecord::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters

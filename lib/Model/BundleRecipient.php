@@ -314,19 +314,19 @@ class BundleRecipient
             throw new \Files\Exception\MissingParameterException('Parameter missing: bundle_id');
         }
 
-        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
+        if (isset($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
-        if (!empty($params['bundle_id']) && !is_int($params['bundle_id'])) {
+        if (isset($params['bundle_id']) && !is_int($params['bundle_id'])) {
             throw new \Files\Exception\InvalidParameterException('$bundle_id must be of type int; received ' . gettype(@$params['bundle_id']));
         }
 
@@ -334,11 +334,43 @@ class BundleRecipient
 
         $return_array = [];
 
-        foreach ($response->data as $obj) {
-            $return_array[] = new BundleRecipient((array) $obj, $options);
+        foreach (Api::listEntries(isset($response->data) ? $response->data : null, $response->status) as $obj) {
+            $return_array[] = new BundleRecipient(Api::modelAttributes($obj, $response->status), $options);
         }
 
         return $return_array;
+    }
+
+    /**
+     * Fetches one page of all()'s results, with the same parameters and options,
+     * whatever Files::$autoPaginate is. Iterate the page, step with nextPage(), or read every result lazily with
+     * autoPagingIterator(). A 'cursor' parameter starts from a page saved with getNextCursor().
+     *
+     * @return \Files\Page
+     */
+    public static function listPage($params = [], $options = [])
+    {
+        if (empty($params['bundle_id'])) {
+            throw new \Files\Exception\MissingParameterException('Parameter missing: bundle_id');
+        }
+
+        if (isset($params['user_id']) && !is_int($params['user_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
+        }
+
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        if (isset($params['bundle_id']) && !is_int($params['bundle_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$bundle_id must be of type int; received ' . gettype(@$params['bundle_id']));
+        }
+
+        return \Files\Page::fetch('/bundle_recipients', $params, $options, BundleRecipient::class);
     }
 
     /**
@@ -368,32 +400,36 @@ class BundleRecipient
             throw new \Files\Exception\MissingParameterException('Parameter missing: recipient');
         }
 
-        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
+        if (isset($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (!empty($params['bundle_id']) && !is_int($params['bundle_id'])) {
+        if (isset($params['bundle_id']) && !is_int($params['bundle_id'])) {
             throw new \Files\Exception\InvalidParameterException('$bundle_id must be of type int; received ' . gettype(@$params['bundle_id']));
         }
 
-        if (!empty($params['recipient']) && !is_string($params['recipient'])) {
+        if (isset($params['recipient']) && !is_string($params['recipient'])) {
             throw new \Files\Exception\InvalidParameterException('$recipient must be of type string; received ' . gettype(@$params['recipient']));
         }
 
-        if (!empty($params['name']) && !is_string($params['name'])) {
+        if (isset($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (!empty($params['company']) && !is_string($params['company'])) {
+        if (isset($params['company']) && !is_string($params['company'])) {
             throw new \Files\Exception\InvalidParameterException('$company must be of type string; received ' . gettype(@$params['company']));
         }
 
-        if (!empty($params['note']) && !is_string($params['note'])) {
+        if (isset($params['note']) && !is_string($params['note'])) {
             throw new \Files\Exception\InvalidParameterException('$note must be of type string; received ' . gettype(@$params['note']));
+        }
+
+        if (isset($params['share_after_create']) && !is_scalar($params['share_after_create'])) {
+            throw new \Files\Exception\InvalidParameterException('$share_after_create must be of type boolean; received ' . gettype(@$params['share_after_create']));
         }
 
         $response = Api::sendRequest('/bundle_recipients', 'POST', $params, $options);
 
-        return new BundleRecipient((array) (@$response->data ?: []), $options);
+        return new BundleRecipient(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
 }

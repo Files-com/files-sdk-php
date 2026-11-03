@@ -60,9 +60,11 @@
 ## List Event Subscriptions
 
 ```
-$event_subscription = new \Files\Model\EventSubscription();
-$event_subscription->list
+\Files\Model\EventSubscription::all();
 ```
+
+`\Files\Model\EventSubscription::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -77,8 +79,7 @@ $event_subscription->list
 ## Show Event Subscription
 
 ```
-$event_subscription = new \Files\Model\EventSubscription();
-$event_subscription->find($id);
+\Files\Model\EventSubscription::find($id);
 ```
 
 
@@ -91,8 +92,7 @@ $event_subscription->find($id);
 ## Create Event Subscription
 
 ```
-$event_subscription = new \Files\Model\EventSubscription();
-$event_subscription->create(, [
+\Files\Model\EventSubscription::create([
   'event_channel_id' => 1,
   'workspace_id' => 1,
   'apply_to_all_workspaces' => true,
@@ -146,6 +146,9 @@ $event_subscription->update([
   'event_target_ids' => [1],
 ]);
 ```
+
+`update()` refreshes `$event_subscription` with the saved attributes, and also returns them as a separate
+`\Files\Model\EventSubscription`.
 
 ### Parameters
 

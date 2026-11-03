@@ -31,9 +31,11 @@
 ## List Email Incoming Messages
 
 ```
-$email_incoming_message = new \Files\Model\EmailIncomingMessage();
-$email_incoming_message->list
+\Files\Model\EmailIncomingMessage::all();
 ```
+
+`\Files\Model\EmailIncomingMessage::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters

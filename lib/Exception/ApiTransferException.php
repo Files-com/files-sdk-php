@@ -2,6 +2,9 @@
 
 namespace Files\Exception;
 
-class ApiTransferException extends FilesException
+/**
+ * The HTTP client failed to transfer the request.
+ */
+class ApiTransferException extends ApiConnectionException
 {
 }

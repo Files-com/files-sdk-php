@@ -204,11 +204,13 @@
 ## List Remote Servers
 
 ```
-$remote_server = new \Files\Model\RemoteServer();
-$remote_server->list(, [
+\Files\Model\RemoteServer::all([
   'user_id' => 1,
 ]);
 ```
+
+`\Files\Model\RemoteServer::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -225,8 +227,7 @@ $remote_server->list(, [
 ## Show Remote Server
 
 ```
-$remote_server = new \Files\Model\RemoteServer();
-$remote_server->find($id);
+\Files\Model\RemoteServer::find($id);
 ```
 
 
@@ -239,8 +240,7 @@ $remote_server->find($id);
 ## Download configuration file (required for some Remote Server integrations, such as the Files.com Agent)
 
 ```
-$remote_server = new \Files\Model\RemoteServer();
-$remote_server->findConfigurationFile($id);
+\Files\Model\RemoteServer::findConfigurationFile($id);
 ```
 
 
@@ -253,8 +253,7 @@ $remote_server->findConfigurationFile($id);
 ## Create Remote Server
 
 ```
-$remote_server = new \Files\Model\RemoteServer();
-$remote_server->create(, [
+\Files\Model\RemoteServer::create([
   'user_id' => 1,
   'reset_authentication' => false,
   'allow_relative_paths' => true,
@@ -562,6 +561,9 @@ $remote_server->update([
   'wasabi_region' => "us-west-1",
 ]);
 ```
+
+`update()` refreshes `$remote_server` with the saved attributes, and also returns them as a separate
+`\Files\Model\RemoteServer`.
 
 ### Parameters
 

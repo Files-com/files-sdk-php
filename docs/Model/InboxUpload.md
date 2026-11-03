@@ -34,9 +34,11 @@
 ## List Inbox Uploads
 
 ```
-$inbox_upload = new \Files\Model\InboxUpload();
-$inbox_upload->list
+\Files\Model\InboxUpload::all();
 ```
+
+`\Files\Model\InboxUpload::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters

@@ -23,9 +23,11 @@
 ## List Remote Bandwidth Snapshots
 
 ```
-$remote_bandwidth_snapshot = new \Files\Model\RemoteBandwidthSnapshot();
-$remote_bandwidth_snapshot->list
+\Files\Model\RemoteBandwidthSnapshot::all();
 ```
+
+`\Files\Model\RemoteBandwidthSnapshot::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters

@@ -4,6 +4,7 @@
       "type": "path",
       "url": "../",
       "options": {
+          "symlink": false,
           "versions": {
               "files.com/files-php-sdk": "dev-local"
           }
@@ -12,8 +13,7 @@
           "branch-alias": {
               "dev-local": "0.0.1"
           }
-      },
-      "symlink": false
+      }
     }
   ],
   "require": {

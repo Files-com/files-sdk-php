@@ -473,6 +473,10 @@ class ApiKey
         return $this->attributes['path'] = $value;
     }
 
+    // Saves the changes, then refreshes this object with the saved attributes, which it also returns as a separate
+    // ApiKey with this object's options. A response that is not a JSON object raises
+    // ApiBadResponseException and leaves this object unchanged.
+    //
     /**
      * Update API Key
      *
@@ -500,24 +504,26 @@ class ApiKey
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (!empty($params['description']) && !is_string($params['description'])) {
+        if (isset($params['description']) && !is_string($params['description'])) {
             throw new \Files\Exception\InvalidParameterException('$description must be of type string; received ' . gettype(@$params['description']));
         }
 
-        if (!empty($params['expires_at']) && !is_string($params['expires_at'])) {
+        if (isset($params['expires_at']) && !is_string($params['expires_at'])) {
             throw new \Files\Exception\InvalidParameterException('$expires_at must be of type string; received ' . gettype(@$params['expires_at']));
         }
 
-        if (!empty($params['name']) && !is_string($params['name'])) {
+        if (isset($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
         $response = Api::sendRequest('/api_keys/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
-        return new ApiKey((array) (@$response->data ?: []), $this->options);
+        $updated = new ApiKey(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $this->options);
+        $this->attributes = $updated->attributes;
+        return $updated;
     }
 
     /**
@@ -544,7 +550,7 @@ class ApiKey
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -611,15 +617,15 @@ class ApiKey
      */
     public static function all($params = [], $options = [])
     {
-        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
+        if (isset($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -627,11 +633,35 @@ class ApiKey
 
         $return_array = [];
 
-        foreach ($response->data as $obj) {
-            $return_array[] = new ApiKey((array) $obj, $options);
+        foreach (Api::listEntries(isset($response->data) ? $response->data : null, $response->status) as $obj) {
+            $return_array[] = new ApiKey(Api::modelAttributes($obj, $response->status), $options);
         }
 
         return $return_array;
+    }
+
+    /**
+     * Fetches one page of all()'s results, with the same parameters and options,
+     * whatever Files::$autoPaginate is. Iterate the page, step with nextPage(), or read every result lazily with
+     * autoPagingIterator(). A 'cursor' parameter starts from a page saved with getNextCursor().
+     *
+     * @return \Files\Page
+     */
+    public static function listPage($params = [], $options = [])
+    {
+        if (isset($params['user_id']) && !is_int($params['user_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
+        }
+
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        return \Files\Page::fetch('/api_keys', $params, $options, ApiKey::class);
     }
 
     /**
@@ -646,9 +676,9 @@ class ApiKey
      */
     public static function findCurrent($params = [], $options = [])
     {
-        $response = Api::sendRequest('/api_key', 'GET', $options);
+        $response = Api::sendRequest('/api_key', 'GET', null, $options);
 
-        return new ApiKey((array) (@$response->data ?: []), $options);
+        return new ApiKey(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
 
     /**
@@ -674,13 +704,13 @@ class ApiKey
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
         $response = Api::sendRequest('/api_keys/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
-        return new ApiKey((array) (@$response->data ?: []), $options);
+        return new ApiKey(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
     /**
      * Show API Key
@@ -724,37 +754,41 @@ class ApiKey
             throw new \Files\Exception\MissingParameterException('Parameter missing: name');
         }
 
-        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
+        if (isset($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (!empty($params['description']) && !is_string($params['description'])) {
+        if (isset($params['description']) && !is_string($params['description'])) {
             throw new \Files\Exception\InvalidParameterException('$description must be of type string; received ' . gettype(@$params['description']));
         }
 
-        if (!empty($params['expires_at']) && !is_string($params['expires_at'])) {
+        if (isset($params['expires_at']) && !is_string($params['expires_at'])) {
             throw new \Files\Exception\InvalidParameterException('$expires_at must be of type string; received ' . gettype(@$params['expires_at']));
         }
 
-        if (!empty($params['name']) && !is_string($params['name'])) {
+        if (isset($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (!empty($params['path']) && !is_string($params['path'])) {
+        if (isset($params['aws_style_credentials']) && !is_scalar($params['aws_style_credentials'])) {
+            throw new \Files\Exception\InvalidParameterException('$aws_style_credentials must be of type boolean; received ' . gettype(@$params['aws_style_credentials']));
+        }
+
+        if (isset($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (!empty($params['permission_set']) && !is_string($params['permission_set'])) {
+        if (isset($params['permission_set']) && !is_string($params['permission_set'])) {
             throw new \Files\Exception\InvalidParameterException('$permission_set must be of type string; received ' . gettype(@$params['permission_set']));
         }
 
-        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
+        if (isset($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
         $response = Api::sendRequest('/api_keys', 'POST', $params, $options);
 
-        return new ApiKey((array) (@$response->data ?: []), $options);
+        return new ApiKey(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
 
     /**
@@ -772,21 +806,21 @@ class ApiKey
      */
     public static function updateCurrent($params = [], $options = [])
     {
-        if (!empty($params['expires_at']) && !is_string($params['expires_at'])) {
+        if (isset($params['expires_at']) && !is_string($params['expires_at'])) {
             throw new \Files\Exception\InvalidParameterException('$expires_at must be of type string; received ' . gettype(@$params['expires_at']));
         }
 
-        if (!empty($params['name']) && !is_string($params['name'])) {
+        if (isset($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (!empty($params['permission_set']) && !is_string($params['permission_set'])) {
+        if (isset($params['permission_set']) && !is_string($params['permission_set'])) {
             throw new \Files\Exception\InvalidParameterException('$permission_set must be of type string; received ' . gettype(@$params['permission_set']));
         }
 
         $response = Api::sendRequest('/api_key', 'PATCH', $params, $options);
 
-        return new ApiKey((array) (@$response->data ?: []), $options);
+        return new ApiKey(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
 
     /**
@@ -801,7 +835,7 @@ class ApiKey
      */
     public static function deleteCurrent($params = [], $options = [])
     {
-        $response = Api::sendRequest('/api_key', 'DELETE', $options);
+        $response = Api::sendRequest('/api_key', 'DELETE', null, $options);
 
         return;
     }

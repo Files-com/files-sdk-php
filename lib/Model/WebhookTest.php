@@ -444,32 +444,40 @@ class WebhookTest
             throw new \Files\Exception\MissingParameterException('Parameter missing: url');
         }
 
-        if (!empty($params['url']) && !is_string($params['url'])) {
+        if (isset($params['url']) && !is_string($params['url'])) {
             throw new \Files\Exception\InvalidParameterException('$url must be of type string; received ' . gettype(@$params['url']));
         }
 
-        if (!empty($params['method']) && !is_string($params['method'])) {
+        if (isset($params['method']) && !is_string($params['method'])) {
             throw new \Files\Exception\InvalidParameterException('$method must be of type string; received ' . gettype(@$params['method']));
         }
 
-        if (!empty($params['encoding']) && !is_string($params['encoding'])) {
+        if (isset($params['encoding']) && !is_string($params['encoding'])) {
             throw new \Files\Exception\InvalidParameterException('$encoding must be of type string; received ' . gettype(@$params['encoding']));
         }
 
-        if (!empty($params['raw_body']) && !is_string($params['raw_body'])) {
+        if (isset($params['raw_body']) && !is_string($params['raw_body'])) {
             throw new \Files\Exception\InvalidParameterException('$raw_body must be of type string; received ' . gettype(@$params['raw_body']));
         }
 
-        if (!empty($params['file_form_field']) && !is_string($params['file_form_field'])) {
+        if (isset($params['file_as_body']) && !is_scalar($params['file_as_body'])) {
+            throw new \Files\Exception\InvalidParameterException('$file_as_body must be of type boolean; received ' . gettype(@$params['file_as_body']));
+        }
+
+        if (isset($params['file_form_field']) && !is_string($params['file_form_field'])) {
             throw new \Files\Exception\InvalidParameterException('$file_form_field must be of type string; received ' . gettype(@$params['file_form_field']));
         }
 
-        if (!empty($params['action']) && !is_string($params['action'])) {
+        if (isset($params['action']) && !is_string($params['action'])) {
             throw new \Files\Exception\InvalidParameterException('$action must be of type string; received ' . gettype(@$params['action']));
+        }
+
+        if (isset($params['use_dedicated_ips']) && !is_scalar($params['use_dedicated_ips'])) {
+            throw new \Files\Exception\InvalidParameterException('$use_dedicated_ips must be of type boolean; received ' . gettype(@$params['use_dedicated_ips']));
         }
 
         $response = Api::sendRequest('/webhook_tests', 'POST', $params, $options);
 
-        return new WebhookTest((array) (@$response->data ?: []), $options);
+        return new WebhookTest(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
 }

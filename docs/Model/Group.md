@@ -47,12 +47,14 @@
 ## List Groups
 
 ```
-$group = new \Files\Model\Group();
-$group->list(, [
+\Files\Model\Group::all([
   'include_parent_site_groups' => false,
   'include_default_workspace_groups' => false,
 ]);
 ```
+
+`\Files\Model\Group::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -71,8 +73,7 @@ $group->list(, [
 ## Show Group
 
 ```
-$group = new \Files\Model\Group();
-$group->find($id);
+\Files\Model\Group::find($id);
 ```
 
 
@@ -85,8 +86,7 @@ $group->find($id);
 ## Create Group
 
 ```
-$group = new \Files\Model\Group();
-$group->create(, [
+\Files\Model\Group::create([
   'notes' => "example",
   'user_ids' => "1",
   'admin_ids' => "1",
@@ -145,6 +145,9 @@ $group->update([
   'name' => "owners",
 ]);
 ```
+
+`update()` refreshes `$group` with the saved attributes, and also returns them as a separate
+`\Files\Model\Group`.
 
 ### Parameters
 

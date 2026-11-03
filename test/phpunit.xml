@@ -6,8 +6,9 @@
     stopOnIncomplete="false"
     stopOnSkipped="false"
     backupGlobals="false"
-    bootstrap="./vendor/autoload.php">
+    bootstrap="./bootstrap.php">
     <testsuites>
+        <!-- bootstrap.php guards the default suite; api-scenarios.sh gives the scenario tests ./vendor/autoload.php. -->
         <testsuite name="default">
             <directory suffix='.php'>./tests</directory>
         </testsuite>

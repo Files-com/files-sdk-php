@@ -39,9 +39,11 @@
 ## List Schedules
 
 ```
-$schedule = new \Files\Model\Schedule();
-$schedule->list
+\Files\Model\Schedule::all();
 ```
+
+`\Files\Model\Schedule::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -55,8 +57,7 @@ $schedule->list
 ## Show Schedule
 
 ```
-$schedule = new \Files\Model\Schedule();
-$schedule->find($id);
+\Files\Model\Schedule::find($id);
 ```
 
 
@@ -69,8 +70,7 @@ $schedule->find($id);
 ## Create Schedule
 
 ```
-$schedule = new \Files\Model\Schedule();
-$schedule->create(, [
+\Files\Model\Schedule::create([
   'name' => "Weekday overnight",
   'schedule_days_of_week' => [1,2,3,4,5],
   'schedule_times_of_day' => ["01:00"],
@@ -103,6 +103,9 @@ $schedule->update([
   'holiday_region' => "us",
 ]);
 ```
+
+`update()` refreshes `$schedule` with the saved attributes, and also returns them as a separate
+`\Files\Model\Schedule`.
 
 ### Parameters
 

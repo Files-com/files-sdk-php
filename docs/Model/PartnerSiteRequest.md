@@ -29,9 +29,11 @@
 ## List Partner Site Requests
 
 ```
-$partner_site_request = new \Files\Model\PartnerSiteRequest();
-$partner_site_request->list
+\Files\Model\PartnerSiteRequest::all();
 ```
+
+`\Files\Model\PartnerSiteRequest::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -46,8 +48,7 @@ $partner_site_request->list
 ## Find partner site request by pairing key
 
 ```
-$partner_site_request = new \Files\Model\PartnerSiteRequest();
-$partner_site_request->findByPairingKey(, [
+\Files\Model\PartnerSiteRequest::findByPairingKey([
   'pairing_key' => "pairing_key",
 ]);
 ```
@@ -62,8 +63,7 @@ $partner_site_request->findByPairingKey(, [
 ## Create Partner Site Request
 
 ```
-$partner_site_request = new \Files\Model\PartnerSiteRequest();
-$partner_site_request->create(, [
+\Files\Model\PartnerSiteRequest::create([
   'host_partner_id' => 1,
   'guest_site_url' => "guest_site_url",
 ]);
@@ -80,8 +80,7 @@ $partner_site_request->create(, [
 ## Reject partner site request
 
 ```
-$partner_site_request = new \Files\Model\PartnerSiteRequest();
-$partner_site_request->reject(, [
+\Files\Model\PartnerSiteRequest::reject([
   'pairing_key' => "pairing_key",
 ]);
 ```
@@ -96,8 +95,7 @@ $partner_site_request->reject(, [
 ## Approve partner site request
 
 ```
-$partner_site_request = new \Files\Model\PartnerSiteRequest();
-$partner_site_request->approve(, [
+\Files\Model\PartnerSiteRequest::approve([
   'pairing_key' => "pairing_key",
   'partner_id' => 1,
 ]);

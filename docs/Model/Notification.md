@@ -76,12 +76,14 @@
 ## List Notifications
 
 ```
-$notification = new \Files\Model\Notification();
-$notification->list(, [
+\Files\Model\Notification::all([
   'include_ancestors' => false,
   'group_id' => 1,
 ]);
 ```
+
+`\Files\Model\Notification::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -100,8 +102,7 @@ $notification->list(, [
 ## Show Notification
 
 ```
-$notification = new \Files\Model\Notification();
-$notification->find($id);
+\Files\Model\Notification::find($id);
 ```
 
 
@@ -114,8 +115,7 @@ $notification->find($id);
 ## Create Notification
 
 ```
-$notification = new \Files\Model\Notification();
-$notification->create(, [
+\Files\Model\Notification::create([
   'user_id' => 1,
   'notify_on_copy' => false,
   'notify_on_delete' => true,
@@ -187,6 +187,9 @@ $notification->update([
   'workspace_id' => 1,
 ]);
 ```
+
+`update()` refreshes `$notification` with the saved attributes, and also returns them as a separate
+`\Files\Model\Notification`.
 
 ### Parameters
 

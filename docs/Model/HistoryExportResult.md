@@ -65,12 +65,14 @@
 ## List History Export Results
 
 ```
-$history_export_result = new \Files\Model\HistoryExportResult();
-$history_export_result->list(, [
+\Files\Model\HistoryExportResult::all([
   'user_id' => 1,
   'history_export_id' => 1,
 ]);
 ```
+
+`\Files\Model\HistoryExportResult::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters

@@ -169,6 +169,10 @@ class MetadataCategory
         return $this->attributes['default_columns'] = $value;
     }
 
+    // Saves the changes, then refreshes this object with the saved attributes, which it also returns as a separate
+    // MetadataCategory with this object's options. A response that is not a JSON object raises
+    // ApiBadResponseException and leaves this object unchanged.
+    //
     /**
      * Update Metadata Category
      *
@@ -195,20 +199,22 @@ class MetadataCategory
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (!empty($params['name']) && !is_string($params['name'])) {
+        if (isset($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (!empty($params['default_columns']) && !is_array($params['default_columns'])) {
+        if (isset($params['default_columns']) && !is_array($params['default_columns'])) {
             throw new \Files\Exception\InvalidParameterException('$default_columns must be of type array; received ' . gettype(@$params['default_columns']));
         }
 
         $response = Api::sendRequest('/metadata_categories/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
-        return new MetadataCategory((array) (@$response->data ?: []), $this->options);
+        $updated = new MetadataCategory(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $this->options);
+        $this->attributes = $updated->attributes;
+        return $updated;
     }
 
     /**
@@ -235,7 +241,7 @@ class MetadataCategory
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -296,11 +302,11 @@ class MetadataCategory
      */
     public static function all($params = [], $options = [])
     {
-        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -308,11 +314,31 @@ class MetadataCategory
 
         $return_array = [];
 
-        foreach ($response->data as $obj) {
-            $return_array[] = new MetadataCategory((array) $obj, $options);
+        foreach (Api::listEntries(isset($response->data) ? $response->data : null, $response->status) as $obj) {
+            $return_array[] = new MetadataCategory(Api::modelAttributes($obj, $response->status), $options);
         }
 
         return $return_array;
+    }
+
+    /**
+     * Fetches one page of all()'s results, with the same parameters and options,
+     * whatever Files::$autoPaginate is. Iterate the page, step with nextPage(), or read every result lazily with
+     * autoPagingIterator(). A 'cursor' parameter starts from a page saved with getNextCursor().
+     *
+     * @return \Files\Page
+     */
+    public static function listPage($params = [], $options = [])
+    {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        return \Files\Page::fetch('/metadata_categories', $params, $options, MetadataCategory::class);
     }
 
     /**
@@ -338,13 +364,13 @@ class MetadataCategory
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
         $response = Api::sendRequest('/metadata_categories/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
-        return new MetadataCategory((array) (@$response->data ?: []), $options);
+        return new MetadataCategory(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
     /**
      * Show Metadata Category
@@ -389,15 +415,15 @@ class MetadataCategory
             throw new \Files\Exception\MissingParameterException('Parameter missing: path');
         }
 
-        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
-        if (!empty($params['path']) && !is_string($params['path'])) {
+        if (isset($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
@@ -405,11 +431,45 @@ class MetadataCategory
 
         $return_array = [];
 
-        foreach ($response->data as $obj) {
-            $return_array[] = new MetadataCategory((array) $obj, $options);
+        foreach (Api::listEntries(isset($response->data) ? $response->data : null, $response->status) as $obj) {
+            $return_array[] = new MetadataCategory(Api::modelAttributes($obj, $response->status), $options);
         }
 
         return $return_array;
+    }
+
+    /**
+     * Fetches one page of listFor()'s results, with the same parameters and options,
+     * whatever Files::$autoPaginate is. Iterate the page, step with nextPage(), or read every result lazily with
+     * autoPagingIterator(). A 'cursor' parameter starts from a page saved with getNextCursor().
+     *
+     * @return \Files\Page
+     */
+    public static function listForPage($path, $params = [], $options = [])
+    {
+        if (!is_array($params)) {
+            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+        }
+
+        $params['path'] = $path;
+
+        if (empty($params['path'])) {
+            throw new \Files\Exception\MissingParameterException('Parameter missing: path');
+        }
+
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        if (isset($params['path']) && !is_string($params['path'])) {
+            throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
+        }
+
+        return \Files\Page::fetch('/metadata_categories/list_by_path/' . rawurlencode(strval(@$params['path'])) . '', $params, $options, MetadataCategory::class);
     }
 
     /**
@@ -430,16 +490,16 @@ class MetadataCategory
             throw new \Files\Exception\MissingParameterException('Parameter missing: name');
         }
 
-        if (!empty($params['name']) && !is_string($params['name'])) {
+        if (isset($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (!empty($params['default_columns']) && !is_array($params['default_columns'])) {
+        if (isset($params['default_columns']) && !is_array($params['default_columns'])) {
             throw new \Files\Exception\InvalidParameterException('$default_columns must be of type array; received ' . gettype(@$params['default_columns']));
         }
 
         $response = Api::sendRequest('/metadata_categories', 'POST', $params, $options);
 
-        return new MetadataCategory((array) (@$response->data ?: []), $options);
+        return new MetadataCategory(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
 }

@@ -336,6 +336,10 @@ class CustomDomain
         return isset($this->attributes['updated_at']) ? $this->attributes['updated_at'] : null;
     }
 
+    // Saves the changes, then refreshes this object with the saved attributes, which it also returns as a separate
+    // CustomDomain with this object's options. A response that is not a JSON object raises
+    // ApiBadResponseException and leaves this object unchanged.
+    //
     /**
      * Update Custom Domain
      *
@@ -366,32 +370,38 @@ class CustomDomain
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
+        if (isset($params['available_to_all_workspaces']) && !is_scalar($params['available_to_all_workspaces'])) {
+            throw new \Files\Exception\InvalidParameterException('$available_to_all_workspaces must be of type boolean; received ' . gettype(@$params['available_to_all_workspaces']));
+        }
+
+        if (isset($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
-        if (!empty($params['destination']) && !is_string($params['destination'])) {
+        if (isset($params['destination']) && !is_string($params['destination'])) {
             throw new \Files\Exception\InvalidParameterException('$destination must be of type string; received ' . gettype(@$params['destination']));
         }
 
-        if (!empty($params['folder_behavior_id']) && !is_int($params['folder_behavior_id'])) {
+        if (isset($params['folder_behavior_id']) && !is_int($params['folder_behavior_id'])) {
             throw new \Files\Exception\InvalidParameterException('$folder_behavior_id must be of type int; received ' . gettype(@$params['folder_behavior_id']));
         }
 
-        if (!empty($params['ssl_certificate_id']) && !is_int($params['ssl_certificate_id'])) {
+        if (isset($params['ssl_certificate_id']) && !is_int($params['ssl_certificate_id'])) {
             throw new \Files\Exception\InvalidParameterException('$ssl_certificate_id must be of type int; received ' . gettype(@$params['ssl_certificate_id']));
         }
 
-        if (!empty($params['domain']) && !is_string($params['domain'])) {
+        if (isset($params['domain']) && !is_string($params['domain'])) {
             throw new \Files\Exception\InvalidParameterException('$domain must be of type string; received ' . gettype(@$params['domain']));
         }
 
         $response = Api::sendRequest('/custom_domains/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
-        return new CustomDomain((array) (@$response->data ?: []), $this->options);
+        $updated = new CustomDomain(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $this->options);
+        $this->attributes = $updated->attributes;
+        return $updated;
     }
 
     /**
@@ -418,7 +428,7 @@ class CustomDomain
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -480,11 +490,11 @@ class CustomDomain
      */
     public static function all($params = [], $options = [])
     {
-        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -492,11 +502,31 @@ class CustomDomain
 
         $return_array = [];
 
-        foreach ($response->data as $obj) {
-            $return_array[] = new CustomDomain((array) $obj, $options);
+        foreach (Api::listEntries(isset($response->data) ? $response->data : null, $response->status) as $obj) {
+            $return_array[] = new CustomDomain(Api::modelAttributes($obj, $response->status), $options);
         }
 
         return $return_array;
+    }
+
+    /**
+     * Fetches one page of all()'s results, with the same parameters and options,
+     * whatever Files::$autoPaginate is. Iterate the page, step with nextPage(), or read every result lazily with
+     * autoPagingIterator(). A 'cursor' parameter starts from a page saved with getNextCursor().
+     *
+     * @return \Files\Page
+     */
+    public static function listPage($params = [], $options = [])
+    {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        return \Files\Page::fetch('/custom_domains', $params, $options, CustomDomain::class);
     }
 
     /**
@@ -522,13 +552,13 @@ class CustomDomain
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
         $response = Api::sendRequest('/custom_domains/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
-        return new CustomDomain((array) (@$response->data ?: []), $options);
+        return new CustomDomain(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
     /**
      * Show Custom Domain
@@ -576,17 +606,17 @@ class CustomDomain
             throw new \Files\Exception\MissingParameterException('Parameter missing: count');
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (!empty($params['count']) && !is_int($params['count'])) {
+        if (isset($params['count']) && !is_int($params['count'])) {
             throw new \Files\Exception\InvalidParameterException('$count must be of type int; received ' . gettype(@$params['count']));
         }
 
         $response = Api::sendRequest('/custom_domains/' . rawurlencode(strval(@$params['id'])) . '/allocate_ips', 'POST', $params, $options);
 
-        return new CustomDomain((array) (@$response->data ?: []), $options);
+        return new CustomDomain(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
 
     /**
@@ -611,28 +641,32 @@ class CustomDomain
             throw new \Files\Exception\MissingParameterException('Parameter missing: domain');
         }
 
-        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
+        if (isset($params['available_to_all_workspaces']) && !is_scalar($params['available_to_all_workspaces'])) {
+            throw new \Files\Exception\InvalidParameterException('$available_to_all_workspaces must be of type boolean; received ' . gettype(@$params['available_to_all_workspaces']));
+        }
+
+        if (isset($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
-        if (!empty($params['destination']) && !is_string($params['destination'])) {
+        if (isset($params['destination']) && !is_string($params['destination'])) {
             throw new \Files\Exception\InvalidParameterException('$destination must be of type string; received ' . gettype(@$params['destination']));
         }
 
-        if (!empty($params['folder_behavior_id']) && !is_int($params['folder_behavior_id'])) {
+        if (isset($params['folder_behavior_id']) && !is_int($params['folder_behavior_id'])) {
             throw new \Files\Exception\InvalidParameterException('$folder_behavior_id must be of type int; received ' . gettype(@$params['folder_behavior_id']));
         }
 
-        if (!empty($params['ssl_certificate_id']) && !is_int($params['ssl_certificate_id'])) {
+        if (isset($params['ssl_certificate_id']) && !is_int($params['ssl_certificate_id'])) {
             throw new \Files\Exception\InvalidParameterException('$ssl_certificate_id must be of type int; received ' . gettype(@$params['ssl_certificate_id']));
         }
 
-        if (!empty($params['domain']) && !is_string($params['domain'])) {
+        if (isset($params['domain']) && !is_string($params['domain'])) {
             throw new \Files\Exception\InvalidParameterException('$domain must be of type string; received ' . gettype(@$params['domain']));
         }
 
         $response = Api::sendRequest('/custom_domains', 'POST', $params, $options);
 
-        return new CustomDomain((array) (@$response->data ?: []), $options);
+        return new CustomDomain(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
 }

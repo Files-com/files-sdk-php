@@ -25,11 +25,13 @@
 ## List Inbox Recipients
 
 ```
-$inbox_recipient = new \Files\Model\InboxRecipient();
-$inbox_recipient->list(, [
+\Files\Model\InboxRecipient::all([
   'inbox_id' => 1,
 ]);
 ```
+
+`\Files\Model\InboxRecipient::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -45,8 +47,7 @@ $inbox_recipient->list(, [
 ## Create Inbox Recipient
 
 ```
-$inbox_recipient = new \Files\Model\InboxRecipient();
-$inbox_recipient->create(, [
+\Files\Model\InboxRecipient::create([
   'inbox_id' => 1,
   'recipient' => "johndoe@gmail.com",
   'name' => "John Smith",

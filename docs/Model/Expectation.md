@@ -87,9 +87,11 @@
 ## List Expectations
 
 ```
-$expectation = new \Files\Model\Expectation();
-$expectation->list
+\Files\Model\Expectation::all();
 ```
+
+`\Files\Model\Expectation::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -104,8 +106,7 @@ $expectation->list
 ## Show Expectation
 
 ```
-$expectation = new \Files\Model\Expectation();
-$expectation->find($id);
+\Files\Model\Expectation::find($id);
 ```
 
 
@@ -118,8 +119,7 @@ $expectation->find($id);
 ## Create Expectation
 
 ```
-$expectation = new \Files\Model\Expectation();
-$expectation->create(, [
+\Files\Model\Expectation::create([
   'name' => "Daily Vendor Feed",
   'description' => "Wait for the vendor CSV every morning.",
   'path' => "incoming/vendor_a",
@@ -246,6 +246,9 @@ $expectation->update([
   'workspace_id' => 0,
 ]);
 ```
+
+`update()` refreshes `$expectation` with the saved attributes, and also returns them as a separate
+`\Files\Model\Expectation`.
 
 ### Parameters
 

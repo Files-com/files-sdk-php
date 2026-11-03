@@ -45,9 +45,11 @@
 ## List Partner Channel Templates
 
 ```
-$partner_channel_template = new \Files\Model\PartnerChannelTemplate();
-$partner_channel_template->list
+\Files\Model\PartnerChannelTemplate::all();
 ```
+
+`\Files\Model\PartnerChannelTemplate::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -62,8 +64,7 @@ $partner_channel_template->list
 ## Show Partner Channel Template
 
 ```
-$partner_channel_template = new \Files\Model\PartnerChannelTemplate();
-$partner_channel_template->find($id);
+\Files\Model\PartnerChannelTemplate::find($id);
 ```
 
 
@@ -76,8 +77,7 @@ $partner_channel_template->find($id);
 ## Create Partner Channel Template
 
 ```
-$partner_channel_template = new \Files\Model\PartnerChannelTemplate();
-$partner_channel_template->create(, [
+\Files\Model\PartnerChannelTemplate::create([
   'direction' => "two_way",
   'use_channel_root' => false,
   'from_partner_folder_name' => "incoming",
@@ -127,6 +127,9 @@ $partner_channel_template->update([
   'path' => "claims/medical",
 ]);
 ```
+
+`update()` refreshes `$partner_channel_template` with the saved attributes, and also returns them as a separate
+`\Files\Model\PartnerChannelTemplate`.
 
 ### Parameters
 

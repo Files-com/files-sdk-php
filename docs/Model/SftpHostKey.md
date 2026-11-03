@@ -28,9 +28,11 @@
 ## List SFTP Host Keys
 
 ```
-$sftp_host_key = new \Files\Model\SftpHostKey();
-$sftp_host_key->list
+\Files\Model\SftpHostKey::all();
 ```
+
+`\Files\Model\SftpHostKey::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -43,8 +45,7 @@ $sftp_host_key->list
 ## Show SFTP Host Key
 
 ```
-$sftp_host_key = new \Files\Model\SftpHostKey();
-$sftp_host_key->find($id);
+\Files\Model\SftpHostKey::find($id);
 ```
 
 
@@ -57,8 +58,7 @@ $sftp_host_key->find($id);
 ## Create SFTP Host Key
 
 ```
-$sftp_host_key = new \Files\Model\SftpHostKey();
-$sftp_host_key->create(, [
+\Files\Model\SftpHostKey::create([
   'active' => true,
   'custom_domain_id' => 1,
   'name' => "My Key",
@@ -86,6 +86,9 @@ $sftp_host_key->update([
   'name' => "My Key",
 ]);
 ```
+
+`update()` refreshes `$sftp_host_key` with the saved attributes, and also returns them as a separate
+`\Files\Model\SftpHostKey`.
 
 ### Parameters
 

@@ -365,19 +365,19 @@ class HistoryExportResult
             throw new \Files\Exception\MissingParameterException('Parameter missing: history_export_id');
         }
 
-        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
+        if (isset($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
-        if (!empty($params['history_export_id']) && !is_int($params['history_export_id'])) {
+        if (isset($params['history_export_id']) && !is_int($params['history_export_id'])) {
             throw new \Files\Exception\InvalidParameterException('$history_export_id must be of type int; received ' . gettype(@$params['history_export_id']));
         }
 
@@ -385,10 +385,42 @@ class HistoryExportResult
 
         $return_array = [];
 
-        foreach ($response->data as $obj) {
-            $return_array[] = new HistoryExportResult((array) $obj, $options);
+        foreach (Api::listEntries(isset($response->data) ? $response->data : null, $response->status) as $obj) {
+            $return_array[] = new HistoryExportResult(Api::modelAttributes($obj, $response->status), $options);
         }
 
         return $return_array;
+    }
+
+    /**
+     * Fetches one page of all()'s results, with the same parameters and options,
+     * whatever Files::$autoPaginate is. Iterate the page, step with nextPage(), or read every result lazily with
+     * autoPagingIterator(). A 'cursor' parameter starts from a page saved with getNextCursor().
+     *
+     * @return \Files\Page
+     */
+    public static function listPage($params = [], $options = [])
+    {
+        if (empty($params['history_export_id'])) {
+            throw new \Files\Exception\MissingParameterException('Parameter missing: history_export_id');
+        }
+
+        if (isset($params['user_id']) && !is_int($params['user_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
+        }
+
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        if (isset($params['history_export_id']) && !is_int($params['history_export_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$history_export_id must be of type int; received ' . gettype(@$params['history_export_id']));
+        }
+
+        return \Files\Page::fetch('/history_export_results', $params, $options, HistoryExportResult::class);
     }
 }

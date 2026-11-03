@@ -23,9 +23,11 @@
 ## List IP Addresses associated with the current site
 
 ```
-$ip_address = new \Files\Model\IpAddress();
-$ip_address->list
+\Files\Model\IpAddress::all();
 ```
+
+`\Files\Model\IpAddress::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -38,9 +40,11 @@ $ip_address->list
 ## List all possible public SmartFile IP addresses
 
 ```
-$ip_address = new \Files\Model\IpAddress();
-$ip_address->getSmartfileReserved
+\Files\Model\IpAddress::getSmartfileReserved();
 ```
+
+`\Files\Model\IpAddress::getSmartfileReservedPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -53,9 +57,11 @@ $ip_address->getSmartfileReserved
 ## List all possible public ExaVault IP addresses
 
 ```
-$ip_address = new \Files\Model\IpAddress();
-$ip_address->getExavaultReserved
+\Files\Model\IpAddress::getExavaultReserved();
 ```
+
+`\Files\Model\IpAddress::getExavaultReservedPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -68,9 +74,11 @@ $ip_address->getExavaultReserved
 ## List all possible public IP addresses
 
 ```
-$ip_address = new \Files\Model\IpAddress();
-$ip_address->getReserved
+\Files\Model\IpAddress::getReserved();
 ```
+
+`\Files\Model\IpAddress::getReservedPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters

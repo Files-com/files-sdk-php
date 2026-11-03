@@ -31,9 +31,11 @@
 ## List File Migration Logs
 
 ```
-$file_migration_log = new \Files\Model\FileMigrationLog();
-$file_migration_log->list
+\Files\Model\FileMigrationLog::all();
 ```
+
+`\Files\Model\FileMigrationLog::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters

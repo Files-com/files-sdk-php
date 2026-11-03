@@ -35,9 +35,11 @@
 ## List Inbound S3 Logs
 
 ```
-$inbound_s3_log = new \Files\Model\InboundS3Log();
-$inbound_s3_log->list
+\Files\Model\InboundS3Log::all();
 ```
+
+`\Files\Model\InboundS3Log::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters

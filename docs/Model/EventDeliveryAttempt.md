@@ -45,9 +45,11 @@
 ## List Event Delivery Attempts
 
 ```
-$event_delivery_attempt = new \Files\Model\EventDeliveryAttempt();
-$event_delivery_attempt->list
+\Files\Model\EventDeliveryAttempt::all();
 ```
+
+`\Files\Model\EventDeliveryAttempt::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -62,8 +64,7 @@ $event_delivery_attempt->list
 ## Show Event Delivery Attempt
 
 ```
-$event_delivery_attempt = new \Files\Model\EventDeliveryAttempt();
-$event_delivery_attempt->find($id);
+\Files\Model\EventDeliveryAttempt::find($id);
 ```
 
 

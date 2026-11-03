@@ -9,6 +9,7 @@ use Files\Exception\ApiConnectException;
 use Files\Exception\ApiServerException;
 use Files\Exception\ConfigurationException;
 use Files\Exception\NotImplementedException;
+use Files\Test\UnboundTransportGuard;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Promise\Create;
 use GuzzleHttp\Psr7\Response;
@@ -16,6 +17,8 @@ use PHPUnit\Framework\TestCase;
 
 class StreamWrapperTest extends TestCase
 {
+    use UnboundTransportGuard;
+
     private $previous;
     private $files;
     private $requests;
@@ -30,6 +33,8 @@ class StreamWrapperTest extends TestCase
     /** @before */
     public function initializeService()
     {
+        // The guarded state first, which this test then keeps to restore, whichever before method PHPUnit runs first.
+        $this->bindRefusingTransport();
         $this->previous = [Files::getBaseUrl(), Files::getApiKey(), Files::getSessionId(), Files::getWorkspaceId(), Files::getHandler()];
         Files::setBaseUrl('https://api.example.test');
         Files::setApiKey('global-key');
@@ -60,6 +65,8 @@ class StreamWrapperTest extends TestCase
         Files::setWorkspaceId($workspace);
         Files::setHandler($handler);
         clearstatcache();
+        // Checked again once the settings are restored, whichever after method PHPUnit runs first.
+        $this->assertNoUnboundRequest();
     }
 
     public function testNativeReadsSeekStatAndSplUseVersionBoundRanges()

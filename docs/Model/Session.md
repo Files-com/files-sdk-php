@@ -25,8 +25,7 @@
 ## Create user session (log in)
 
 ```
-$session = new \Files\Model\Session();
-$session->create(, [
+\Files\Model\Session::create([
   'username' => "username",
   'password' => "password",
   'otp' => "123456",
@@ -46,7 +45,6 @@ $session->create(, [
 ## Delete user session (log out)
 
 ```
-$session = new \Files\Model\Session();
-$session->delete
+\Files\Model\Session::delete();
 ```
 

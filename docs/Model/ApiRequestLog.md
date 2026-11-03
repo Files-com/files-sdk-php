@@ -55,9 +55,11 @@
 ## List API Request Logs
 
 ```
-$api_request_log = new \Files\Model\ApiRequestLog();
-$api_request_log->list
+\Files\Model\ApiRequestLog::all();
 ```
+
+`\Files\Model\ApiRequestLog::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters

@@ -47,9 +47,11 @@
 ## List Event Records
 
 ```
-$event_record = new \Files\Model\EventRecord();
-$event_record->list
+\Files\Model\EventRecord::all();
 ```
+
+`\Files\Model\EventRecord::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -69,8 +71,7 @@ $event_record->list
 ## Show Event Record
 
 ```
-$event_record = new \Files\Model\EventRecord();
-$event_record->find($id);
+\Files\Model\EventRecord::find($id);
 ```
 
 

@@ -81,9 +81,11 @@
 ## List AS2 Outgoing Messages
 
 ```
-$as2_outgoing_message = new \Files\Model\As2OutgoingMessage();
-$as2_outgoing_message->list
+\Files\Model\As2OutgoingMessage::all();
 ```
+
+`\Files\Model\As2OutgoingMessage::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters

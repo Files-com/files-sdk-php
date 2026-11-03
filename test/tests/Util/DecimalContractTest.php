@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Files;
 
+use Files\Test\UnboundTransportGuard;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
@@ -12,6 +13,8 @@ use PHPUnit\Framework\TestCase;
 
 class DecimalContractTest extends TestCase
 {
+    use UnboundTransportGuard;
+
     public function testJsonBodyPreservesDecimalStringAndDoubleNumber()
     {
         Files::setApiKey('test-key');

@@ -29,9 +29,11 @@
 ## List Settings Changes
 
 ```
-$settings_change = new \Files\Model\SettingsChange();
-$settings_change->list
+\Files\Model\SettingsChange::all();
 ```
+
+`\Files\Model\SettingsChange::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters

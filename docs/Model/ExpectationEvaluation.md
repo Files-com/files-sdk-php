@@ -56,9 +56,11 @@
 ## List Expectation Evaluations
 
 ```
-$expectation_evaluation = new \Files\Model\ExpectationEvaluation();
-$expectation_evaluation->list
+\Files\Model\ExpectationEvaluation::all();
 ```
+
+`\Files\Model\ExpectationEvaluation::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -73,8 +75,7 @@ $expectation_evaluation->list
 ## Show Expectation Evaluation
 
 ```
-$expectation_evaluation = new \Files\Model\ExpectationEvaluation();
-$expectation_evaluation->find($id);
+\Files\Model\ExpectationEvaluation::find($id);
 ```
 
 

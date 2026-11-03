@@ -45,9 +45,11 @@
 ## List Custom Domains
 
 ```
-$custom_domain = new \Files\Model\CustomDomain();
-$custom_domain->list
+\Files\Model\CustomDomain::all();
 ```
+
+`\Files\Model\CustomDomain::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -62,8 +64,7 @@ $custom_domain->list
 ## Show Custom Domain
 
 ```
-$custom_domain = new \Files\Model\CustomDomain();
-$custom_domain->find($id);
+\Files\Model\CustomDomain::find($id);
 ```
 
 
@@ -76,8 +77,7 @@ $custom_domain->find($id);
 ## Allocate dedicated IP addresses to this Custom Domain
 
 ```
-$custom_domain = new \Files\Model\CustomDomain();
-$custom_domain->createAllocateIp($id, [
+\Files\Model\CustomDomain::createAllocateIp($id, [
   'count' => 1,
 ]);
 ```
@@ -93,8 +93,7 @@ $custom_domain->createAllocateIp($id, [
 ## Create Custom Domain
 
 ```
-$custom_domain = new \Files\Model\CustomDomain();
-$custom_domain->create(, [
+\Files\Model\CustomDomain::create([
   'available_to_all_workspaces' => false,
   'workspace_id' => 0,
   'destination' => "site_alias",
@@ -130,6 +129,9 @@ $custom_domain->update([
   'domain' => "files.example.com",
 ]);
 ```
+
+`update()` refreshes `$custom_domain` with the saved attributes, and also returns them as a separate
+`\Files\Model\CustomDomain`.
 
 ### Parameters
 

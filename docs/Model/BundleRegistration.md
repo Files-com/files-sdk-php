@@ -43,12 +43,14 @@
 ## List Share Link Registrations
 
 ```
-$bundle_registration = new \Files\Model\BundleRegistration();
-$bundle_registration->list(, [
+\Files\Model\BundleRegistration::all([
   'user_id' => 1,
   'bundle_id' => 1,
 ]);
 ```
+
+`\Files\Model\BundleRegistration::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters

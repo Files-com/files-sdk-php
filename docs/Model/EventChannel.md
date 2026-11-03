@@ -29,9 +29,11 @@
 ## List Event Channels
 
 ```
-$event_channel = new \Files\Model\EventChannel();
-$event_channel->list
+\Files\Model\EventChannel::all();
 ```
+
+`\Files\Model\EventChannel::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -46,8 +48,7 @@ $event_channel->list
 ## Show Event Channel
 
 ```
-$event_channel = new \Files\Model\EventChannel();
-$event_channel->find($id);
+\Files\Model\EventChannel::find($id);
 ```
 
 
@@ -60,8 +61,7 @@ $event_channel->find($id);
 ## Create Event Channel
 
 ```
-$event_channel = new \Files\Model\EventChannel();
-$event_channel->create(, [
+\Files\Model\EventChannel::create([
   'name' => "example",
   'workspace_id' => 1,
   'description' => "example",
@@ -94,6 +94,9 @@ $event_channel->update([
   'default_channel' => true,
 ]);
 ```
+
+`update()` refreshes `$event_channel` with the saved attributes, and also returns them as a separate
+`\Files\Model\EventChannel`.
 
 ### Parameters
 

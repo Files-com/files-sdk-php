@@ -78,12 +78,14 @@
 ## List Automation Runs
 
 ```
-$automation_run = new \Files\Model\AutomationRun();
-$automation_run->list(, [
+\Files\Model\AutomationRun::all([
   'user_id' => 1,
   'automation_id' => 1,
 ]);
 ```
+
+`\Files\Model\AutomationRun::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -100,8 +102,7 @@ $automation_run->list(, [
 ## Show Automation Run
 
 ```
-$automation_run = new \Files\Model\AutomationRun();
-$automation_run->find($id);
+\Files\Model\AutomationRun::find($id);
 ```
 
 
@@ -114,8 +115,7 @@ $automation_run->find($id);
 ## Show Automation Run Node
 
 ```
-$automation_run = new \Files\Model\AutomationRun();
-$automation_run->findNode($id, [
+\Files\Model\AutomationRun::findNode($id, [
   'node_id' => "node_id",
 ]);
 ```

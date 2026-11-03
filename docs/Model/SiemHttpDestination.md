@@ -132,9 +132,11 @@
 ## List SIEM HTTP Destinations
 
 ```
-$siem_http_destination = new \Files\Model\SiemHttpDestination();
-$siem_http_destination->list
+\Files\Model\SiemHttpDestination::all();
 ```
+
+`\Files\Model\SiemHttpDestination::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -147,8 +149,7 @@ $siem_http_destination->list
 ## Show SIEM HTTP Destination
 
 ```
-$siem_http_destination = new \Files\Model\SiemHttpDestination();
-$siem_http_destination->find($id);
+\Files\Model\SiemHttpDestination::find($id);
 ```
 
 
@@ -161,8 +162,7 @@ $siem_http_destination->find($id);
 ## Create SIEM HTTP Destination
 
 ```
-$siem_http_destination = new \Files\Model\SiemHttpDestination();
-$siem_http_destination->create(, [
+\Files\Model\SiemHttpDestination::create([
   'name' => "example",
   'additional_headers' => {"Authorization":"Bearer YOUR_TOKEN"},
   'sending_active' => true,
@@ -234,8 +234,7 @@ $siem_http_destination->create(, [
 ## send_test_entry SIEM HTTP Destination
 
 ```
-$siem_http_destination = new \Files\Model\SiemHttpDestination();
-$siem_http_destination->sendTestEntry(, [
+\Files\Model\SiemHttpDestination::sendTestEntry([
   'siem_http_destination_id' => 1,
   'destination_type' => "example",
   'destination_url' => "example",
@@ -340,6 +339,9 @@ $siem_http_destination->update([
   'destination_url' => "example",
 ]);
 ```
+
+`update()` refreshes `$siem_http_destination` with the saved attributes, and also returns them as a separate
+`\Files\Model\SiemHttpDestination`.
 
 ### Parameters
 

@@ -27,9 +27,11 @@
 ## List Desktop Configuration Profiles
 
 ```
-$desktop_configuration_profile = new \Files\Model\DesktopConfigurationProfile();
-$desktop_configuration_profile->list
+\Files\Model\DesktopConfigurationProfile::all();
 ```
+
+`\Files\Model\DesktopConfigurationProfile::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -44,8 +46,7 @@ $desktop_configuration_profile->list
 ## Show Desktop Configuration Profile
 
 ```
-$desktop_configuration_profile = new \Files\Model\DesktopConfigurationProfile();
-$desktop_configuration_profile->find($id);
+\Files\Model\DesktopConfigurationProfile::find($id);
 ```
 
 
@@ -58,8 +59,7 @@ $desktop_configuration_profile->find($id);
 ## Create Desktop Configuration Profile
 
 ```
-$desktop_configuration_profile = new \Files\Model\DesktopConfigurationProfile();
-$desktop_configuration_profile->create(, [
+\Files\Model\DesktopConfigurationProfile::create([
   'name' => "North America Desktop Profile",
   'mount_mappings' => {"W":"Americas"},
   'workspace_id' => 1,
@@ -92,6 +92,9 @@ $desktop_configuration_profile->update([
   'disable_drive_mounting' => false,
 ]);
 ```
+
+`update()` refreshes `$desktop_configuration_profile` with the saved attributes, and also returns them as a separate
+`\Files\Model\DesktopConfigurationProfile`.
 
 ### Parameters
 

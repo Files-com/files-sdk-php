@@ -17,9 +17,11 @@
 ## List all possible holiday regions
 
 ```
-$holiday_region = new \Files\Model\HolidayRegion();
-$holiday_region->getSupported
+\Files\Model\HolidayRegion::getSupported();
 ```
+
+`\Files\Model\HolidayRegion::getSupportedPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters

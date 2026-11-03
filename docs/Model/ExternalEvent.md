@@ -27,9 +27,11 @@
 ## List External Events
 
 ```
-$external_event = new \Files\Model\ExternalEvent();
-$external_event->list
+\Files\Model\ExternalEvent::all();
 ```
+
+`\Files\Model\ExternalEvent::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -48,8 +50,7 @@ $external_event->list
 ## Show External Event
 
 ```
-$external_event = new \Files\Model\ExternalEvent();
-$external_event->find($id);
+\Files\Model\ExternalEvent::find($id);
 ```
 
 
@@ -62,8 +63,7 @@ $external_event->find($id);
 ## Create External Event
 
 ```
-$external_event = new \Files\Model\ExternalEvent();
-$external_event->create(, [
+\Files\Model\ExternalEvent::create([
   'status' => "example",
   'body' => "example",
 ]);

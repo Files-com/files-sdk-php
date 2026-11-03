@@ -47,9 +47,11 @@
 ## List User Lifecycle Rules
 
 ```
-$user_lifecycle_rule = new \Files\Model\UserLifecycleRule();
-$user_lifecycle_rule->list
+\Files\Model\UserLifecycleRule::all();
 ```
+
+`\Files\Model\UserLifecycleRule::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -64,8 +66,7 @@ $user_lifecycle_rule->list
 ## Show User Lifecycle Rule
 
 ```
-$user_lifecycle_rule = new \Files\Model\UserLifecycleRule();
-$user_lifecycle_rule->find($id);
+\Files\Model\UserLifecycleRule::find($id);
 ```
 
 
@@ -78,8 +79,7 @@ $user_lifecycle_rule->find($id);
 ## Create User Lifecycle Rule
 
 ```
-$user_lifecycle_rule = new \Files\Model\UserLifecycleRule();
-$user_lifecycle_rule->create(, [
+\Files\Model\UserLifecycleRule::create([
   'apply_to_all_workspaces' => true,
   'authentication_method' => "all_non_sso",
   'group_ids' => [1,2,3],
@@ -134,6 +134,9 @@ $user_lifecycle_rule->update([
   'workspace_id' => 0,
 ]);
 ```
+
+`update()` refreshes `$user_lifecycle_rule` with the saved attributes, and also returns them as a separate
+`\Files\Model\UserLifecycleRule`.
 
 ### Parameters
 

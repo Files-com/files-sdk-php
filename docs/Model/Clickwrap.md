@@ -25,9 +25,11 @@
 ## List Clickwraps
 
 ```
-$clickwrap = new \Files\Model\Clickwrap();
-$clickwrap->list
+\Files\Model\Clickwrap::all();
 ```
+
+`\Files\Model\Clickwrap::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -41,8 +43,7 @@ $clickwrap->list
 ## Show Clickwrap
 
 ```
-$clickwrap = new \Files\Model\Clickwrap();
-$clickwrap->find($id);
+\Files\Model\Clickwrap::find($id);
 ```
 
 
@@ -55,8 +56,7 @@ $clickwrap->find($id);
 ## Create Clickwrap
 
 ```
-$clickwrap = new \Files\Model\Clickwrap();
-$clickwrap->create(, [
+\Files\Model\Clickwrap::create([
   'name' => "Example Site NDA for Files.com Use",
   'body' => "[Legal body text]",
   'use_with_bundles' => "example",
@@ -89,6 +89,9 @@ $clickwrap->update([
   'use_with_users' => "example",
 ]);
 ```
+
+`update()` refreshes `$clickwrap` with the saved attributes, and also returns them as a separate
+`\Files\Model\Clickwrap`.
 
 ### Parameters
 

@@ -29,9 +29,11 @@
 ## List Scim Logs
 
 ```
-$scim_log = new \Files\Model\ScimLog();
-$scim_log->list
+\Files\Model\ScimLog::all();
 ```
+
+`\Files\Model\ScimLog::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -45,8 +47,7 @@ $scim_log->list
 ## Show Scim Log
 
 ```
-$scim_log = new \Files\Model\ScimLog();
-$scim_log->find($id);
+\Files\Model\ScimLog::find($id);
 ```
 
 

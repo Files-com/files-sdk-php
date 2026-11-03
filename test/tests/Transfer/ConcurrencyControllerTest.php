@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Files\Transfer;
 
+use Files\Test\UnboundTransportGuard;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -13,6 +14,8 @@ use PHPUnit\Framework\TestCase;
  */
 class ConcurrencyControllerTest extends TestCase
 {
+    use UnboundTransportGuard;
+
     const MIB = 1048576;
 
     // The PHP mapping of the scaled S3 policy: S = min(150, cap), counts scaled by S / 150, the rest unchanged.

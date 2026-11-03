@@ -379,6 +379,10 @@ class PartnerChannelTemplate
         return $this->attributes['effective_from_partner_folder_name'] = $value;
     }
 
+    // Saves the changes, then refreshes this object with the saved attributes, which it also returns as a separate
+    // PartnerChannelTemplate with this object's options. A response that is not a JSON object raises
+    // ApiBadResponseException and leaves this object unchanged.
+    //
     /**
      * Update Partner Channel Template
      *
@@ -413,48 +417,54 @@ class PartnerChannelTemplate
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (!empty($params['direction']) && !is_string($params['direction'])) {
+        if (isset($params['direction']) && !is_string($params['direction'])) {
             throw new \Files\Exception\InvalidParameterException('$direction must be of type string; received ' . gettype(@$params['direction']));
         }
 
-        if (!empty($params['from_partner_folder_name']) && !is_string($params['from_partner_folder_name'])) {
+        if (isset($params['use_channel_root']) && !is_scalar($params['use_channel_root'])) {
+            throw new \Files\Exception\InvalidParameterException('$use_channel_root must be of type boolean; received ' . gettype(@$params['use_channel_root']));
+        }
+
+        if (isset($params['from_partner_folder_name']) && !is_string($params['from_partner_folder_name'])) {
             throw new \Files\Exception\InvalidParameterException('$from_partner_folder_name must be of type string; received ' . gettype(@$params['from_partner_folder_name']));
         }
 
-        if (!empty($params['from_partner_managed_folder_paths']) && !is_array($params['from_partner_managed_folder_paths'])) {
+        if (isset($params['from_partner_managed_folder_paths']) && !is_array($params['from_partner_managed_folder_paths'])) {
             throw new \Files\Exception\InvalidParameterException('$from_partner_managed_folder_paths must be of type array; received ' . gettype(@$params['from_partner_managed_folder_paths']));
         }
 
-        if (!empty($params['from_partner_route_path_pattern']) && !is_string($params['from_partner_route_path_pattern'])) {
+        if (isset($params['from_partner_route_path_pattern']) && !is_string($params['from_partner_route_path_pattern'])) {
             throw new \Files\Exception\InvalidParameterException('$from_partner_route_path_pattern must be of type string; received ' . gettype(@$params['from_partner_route_path_pattern']));
         }
 
-        if (!empty($params['to_partner_folder_name']) && !is_string($params['to_partner_folder_name'])) {
+        if (isset($params['to_partner_folder_name']) && !is_string($params['to_partner_folder_name'])) {
             throw new \Files\Exception\InvalidParameterException('$to_partner_folder_name must be of type string; received ' . gettype(@$params['to_partner_folder_name']));
         }
 
-        if (!empty($params['to_partner_managed_folder_paths']) && !is_array($params['to_partner_managed_folder_paths'])) {
+        if (isset($params['to_partner_managed_folder_paths']) && !is_array($params['to_partner_managed_folder_paths'])) {
             throw new \Files\Exception\InvalidParameterException('$to_partner_managed_folder_paths must be of type array; received ' . gettype(@$params['to_partner_managed_folder_paths']));
         }
 
-        if (!empty($params['to_partner_route_path_pattern']) && !is_string($params['to_partner_route_path_pattern'])) {
+        if (isset($params['to_partner_route_path_pattern']) && !is_string($params['to_partner_route_path_pattern'])) {
             throw new \Files\Exception\InvalidParameterException('$to_partner_route_path_pattern must be of type string; received ' . gettype(@$params['to_partner_route_path_pattern']));
         }
 
-        if (!empty($params['name']) && !is_string($params['name'])) {
+        if (isset($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (!empty($params['path']) && !is_string($params['path'])) {
+        if (isset($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
         $response = Api::sendRequest('/partner_channel_templates/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
-        return new PartnerChannelTemplate((array) (@$response->data ?: []), $this->options);
+        $updated = new PartnerChannelTemplate(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $this->options);
+        $this->attributes = $updated->attributes;
+        return $updated;
     }
 
     /**
@@ -481,7 +491,7 @@ class PartnerChannelTemplate
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -543,11 +553,11 @@ class PartnerChannelTemplate
      */
     public static function all($params = [], $options = [])
     {
-        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -555,11 +565,31 @@ class PartnerChannelTemplate
 
         $return_array = [];
 
-        foreach ($response->data as $obj) {
-            $return_array[] = new PartnerChannelTemplate((array) $obj, $options);
+        foreach (Api::listEntries(isset($response->data) ? $response->data : null, $response->status) as $obj) {
+            $return_array[] = new PartnerChannelTemplate(Api::modelAttributes($obj, $response->status), $options);
         }
 
         return $return_array;
+    }
+
+    /**
+     * Fetches one page of all()'s results, with the same parameters and options,
+     * whatever Files::$autoPaginate is. Iterate the page, step with nextPage(), or read every result lazily with
+     * autoPagingIterator(). A 'cursor' parameter starts from a page saved with getNextCursor().
+     *
+     * @return \Files\Page
+     */
+    public static function listPage($params = [], $options = [])
+    {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        return \Files\Page::fetch('/partner_channel_templates', $params, $options, PartnerChannelTemplate::class);
     }
 
     /**
@@ -585,13 +615,13 @@ class PartnerChannelTemplate
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
         $response = Api::sendRequest('/partner_channel_templates/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
-        return new PartnerChannelTemplate((array) (@$response->data ?: []), $options);
+        return new PartnerChannelTemplate(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
     /**
      * Show Partner Channel Template
@@ -642,48 +672,52 @@ class PartnerChannelTemplate
             throw new \Files\Exception\MissingParameterException('Parameter missing: path');
         }
 
-        if (!empty($params['direction']) && !is_string($params['direction'])) {
+        if (isset($params['direction']) && !is_string($params['direction'])) {
             throw new \Files\Exception\InvalidParameterException('$direction must be of type string; received ' . gettype(@$params['direction']));
         }
 
-        if (!empty($params['from_partner_folder_name']) && !is_string($params['from_partner_folder_name'])) {
+        if (isset($params['use_channel_root']) && !is_scalar($params['use_channel_root'])) {
+            throw new \Files\Exception\InvalidParameterException('$use_channel_root must be of type boolean; received ' . gettype(@$params['use_channel_root']));
+        }
+
+        if (isset($params['from_partner_folder_name']) && !is_string($params['from_partner_folder_name'])) {
             throw new \Files\Exception\InvalidParameterException('$from_partner_folder_name must be of type string; received ' . gettype(@$params['from_partner_folder_name']));
         }
 
-        if (!empty($params['from_partner_managed_folder_paths']) && !is_array($params['from_partner_managed_folder_paths'])) {
+        if (isset($params['from_partner_managed_folder_paths']) && !is_array($params['from_partner_managed_folder_paths'])) {
             throw new \Files\Exception\InvalidParameterException('$from_partner_managed_folder_paths must be of type array; received ' . gettype(@$params['from_partner_managed_folder_paths']));
         }
 
-        if (!empty($params['from_partner_route_path_pattern']) && !is_string($params['from_partner_route_path_pattern'])) {
+        if (isset($params['from_partner_route_path_pattern']) && !is_string($params['from_partner_route_path_pattern'])) {
             throw new \Files\Exception\InvalidParameterException('$from_partner_route_path_pattern must be of type string; received ' . gettype(@$params['from_partner_route_path_pattern']));
         }
 
-        if (!empty($params['to_partner_folder_name']) && !is_string($params['to_partner_folder_name'])) {
+        if (isset($params['to_partner_folder_name']) && !is_string($params['to_partner_folder_name'])) {
             throw new \Files\Exception\InvalidParameterException('$to_partner_folder_name must be of type string; received ' . gettype(@$params['to_partner_folder_name']));
         }
 
-        if (!empty($params['to_partner_managed_folder_paths']) && !is_array($params['to_partner_managed_folder_paths'])) {
+        if (isset($params['to_partner_managed_folder_paths']) && !is_array($params['to_partner_managed_folder_paths'])) {
             throw new \Files\Exception\InvalidParameterException('$to_partner_managed_folder_paths must be of type array; received ' . gettype(@$params['to_partner_managed_folder_paths']));
         }
 
-        if (!empty($params['to_partner_route_path_pattern']) && !is_string($params['to_partner_route_path_pattern'])) {
+        if (isset($params['to_partner_route_path_pattern']) && !is_string($params['to_partner_route_path_pattern'])) {
             throw new \Files\Exception\InvalidParameterException('$to_partner_route_path_pattern must be of type string; received ' . gettype(@$params['to_partner_route_path_pattern']));
         }
 
-        if (!empty($params['name']) && !is_string($params['name'])) {
+        if (isset($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (!empty($params['path']) && !is_string($params['path'])) {
+        if (isset($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
+        if (isset($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
         $response = Api::sendRequest('/partner_channel_templates', 'POST', $params, $options);
 
-        return new PartnerChannelTemplate((array) (@$response->data ?: []), $options);
+        return new PartnerChannelTemplate(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
 }

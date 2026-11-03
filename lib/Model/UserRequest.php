@@ -214,7 +214,7 @@ class UserRequest
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -272,11 +272,11 @@ class UserRequest
      */
     public static function all($params = [], $options = [])
     {
-        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -284,11 +284,31 @@ class UserRequest
 
         $return_array = [];
 
-        foreach ($response->data as $obj) {
-            $return_array[] = new UserRequest((array) $obj, $options);
+        foreach (Api::listEntries(isset($response->data) ? $response->data : null, $response->status) as $obj) {
+            $return_array[] = new UserRequest(Api::modelAttributes($obj, $response->status), $options);
         }
 
         return $return_array;
+    }
+
+    /**
+     * Fetches one page of all()'s results, with the same parameters and options,
+     * whatever Files::$autoPaginate is. Iterate the page, step with nextPage(), or read every result lazily with
+     * autoPagingIterator(). A 'cursor' parameter starts from a page saved with getNextCursor().
+     *
+     * @return \Files\Page
+     */
+    public static function listPage($params = [], $options = [])
+    {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        return \Files\Page::fetch('/user_requests', $params, $options, UserRequest::class);
     }
 
     /**
@@ -314,13 +334,13 @@ class UserRequest
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
         $response = Api::sendRequest('/user_requests/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
-        return new UserRequest((array) (@$response->data ?: []), $options);
+        return new UserRequest(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
     /**
      * Show User Request
@@ -368,24 +388,24 @@ class UserRequest
             throw new \Files\Exception\MissingParameterException('Parameter missing: details');
         }
 
-        if (!empty($params['name']) && !is_string($params['name'])) {
+        if (isset($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (!empty($params['email']) && !is_string($params['email'])) {
+        if (isset($params['email']) && !is_string($params['email'])) {
             throw new \Files\Exception\InvalidParameterException('$email must be of type string; received ' . gettype(@$params['email']));
         }
 
-        if (!empty($params['details']) && !is_string($params['details'])) {
+        if (isset($params['details']) && !is_string($params['details'])) {
             throw new \Files\Exception\InvalidParameterException('$details must be of type string; received ' . gettype(@$params['details']));
         }
 
-        if (!empty($params['company']) && !is_string($params['company'])) {
+        if (isset($params['company']) && !is_string($params['company'])) {
             throw new \Files\Exception\InvalidParameterException('$company must be of type string; received ' . gettype(@$params['company']));
         }
 
         $response = Api::sendRequest('/user_requests', 'POST', $params, $options);
 
-        return new UserRequest((array) (@$response->data ?: []), $options);
+        return new UserRequest(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
 }

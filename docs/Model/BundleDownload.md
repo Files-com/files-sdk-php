@@ -40,12 +40,14 @@
 ## List Share Link Downloads
 
 ```
-$bundle_download = new \Files\Model\BundleDownload();
-$bundle_download->list(, [
+\Files\Model\BundleDownload::all([
   'bundle_id' => 1,
   'bundle_registration_id' => 1,
 ]);
 ```
+
+`\Files\Model\BundleDownload::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters

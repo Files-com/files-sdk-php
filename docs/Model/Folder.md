@@ -102,8 +102,7 @@
 ## List Folders by Path
 
 ```
-$folder = new \Files\Model\Folder();
-$folder->listFor($path, [
+\Files\Model\Folder::listFor($path, [
   'search' => "some-partial-filename",
   'search_custom_metadata_key' => "some-metadata-key",
   'search_all' => false,
@@ -112,6 +111,9 @@ $folder->listFor($path, [
   'type' => "file",
 ]);
 ```
+
+`\Files\Model\Folder::listForPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -134,8 +136,7 @@ $folder->listFor($path, [
 ## Create Folder
 
 ```
-$folder = new \Files\Model\Folder();
-$folder->create($path, [
+\Files\Model\Folder::create($path, [
   'mkdir_parents' => false,
   'provided_mtime' => "2000-01-01T01:00:00Z",
 ]);

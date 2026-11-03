@@ -441,13 +441,13 @@ class ActionNotificationExport
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
         $response = Api::sendRequest('/action_notification_exports/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
-        return new ActionNotificationExport((array) (@$response->data ?: []), $options);
+        return new ActionNotificationExport(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
     /**
      * Show Action Notification Export
@@ -490,48 +490,52 @@ class ActionNotificationExport
      */
     public static function create($params = [], $options = [])
     {
-        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
+        if (isset($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
+        if (isset($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
-        if (!empty($params['start_at']) && !is_string($params['start_at'])) {
+        if (isset($params['start_at']) && !is_string($params['start_at'])) {
             throw new \Files\Exception\InvalidParameterException('$start_at must be of type string; received ' . gettype(@$params['start_at']));
         }
 
-        if (!empty($params['end_at']) && !is_string($params['end_at'])) {
+        if (isset($params['end_at']) && !is_string($params['end_at'])) {
             throw new \Files\Exception\InvalidParameterException('$end_at must be of type string; received ' . gettype(@$params['end_at']));
         }
 
-        if (!empty($params['query_message']) && !is_string($params['query_message'])) {
+        if (isset($params['query_message']) && !is_string($params['query_message'])) {
             throw new \Files\Exception\InvalidParameterException('$query_message must be of type string; received ' . gettype(@$params['query_message']));
         }
 
-        if (!empty($params['query_request_method']) && !is_string($params['query_request_method'])) {
+        if (isset($params['query_request_method']) && !is_string($params['query_request_method'])) {
             throw new \Files\Exception\InvalidParameterException('$query_request_method must be of type string; received ' . gettype(@$params['query_request_method']));
         }
 
-        if (!empty($params['query_request_url']) && !is_string($params['query_request_url'])) {
+        if (isset($params['query_request_url']) && !is_string($params['query_request_url'])) {
             throw new \Files\Exception\InvalidParameterException('$query_request_url must be of type string; received ' . gettype(@$params['query_request_url']));
         }
 
-        if (!empty($params['query_status']) && !is_string($params['query_status'])) {
+        if (isset($params['query_status']) && !is_string($params['query_status'])) {
             throw new \Files\Exception\InvalidParameterException('$query_status must be of type string; received ' . gettype(@$params['query_status']));
         }
 
-        if (!empty($params['query_path']) && !is_string($params['query_path'])) {
+        if (isset($params['query_success']) && !is_scalar($params['query_success'])) {
+            throw new \Files\Exception\InvalidParameterException('$query_success must be of type boolean; received ' . gettype(@$params['query_success']));
+        }
+
+        if (isset($params['query_path']) && !is_string($params['query_path'])) {
             throw new \Files\Exception\InvalidParameterException('$query_path must be of type string; received ' . gettype(@$params['query_path']));
         }
 
-        if (!empty($params['query_folder']) && !is_string($params['query_folder'])) {
+        if (isset($params['query_folder']) && !is_string($params['query_folder'])) {
             throw new \Files\Exception\InvalidParameterException('$query_folder must be of type string; received ' . gettype(@$params['query_folder']));
         }
 
         $response = Api::sendRequest('/action_notification_exports', 'POST', $params, $options);
 
-        return new ActionNotificationExport((array) (@$response->data ?: []), $options);
+        return new ActionNotificationExport(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
 }

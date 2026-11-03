@@ -23,11 +23,13 @@
 ## List User Additional Email Recipients
 
 ```
-$user_additional_email_recipient = new \Files\Model\UserAdditionalEmailRecipient();
-$user_additional_email_recipient->list(, [
+\Files\Model\UserAdditionalEmailRecipient::all([
   'user_id' => 1,
 ]);
 ```
+
+`\Files\Model\UserAdditionalEmailRecipient::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -44,8 +46,7 @@ $user_additional_email_recipient->list(, [
 ## Show User Additional Email Recipient
 
 ```
-$user_additional_email_recipient = new \Files\Model\UserAdditionalEmailRecipient();
-$user_additional_email_recipient->find($id);
+\Files\Model\UserAdditionalEmailRecipient::find($id);
 ```
 
 
@@ -58,8 +59,7 @@ $user_additional_email_recipient->find($id);
 ## Create User Additional Email Recipient
 
 ```
-$user_additional_email_recipient = new \Files\Model\UserAdditionalEmailRecipient();
-$user_additional_email_recipient->create(, [
+\Files\Model\UserAdditionalEmailRecipient::create([
   'user_id' => 1,
   'email' => "user-copy@example.com",
 ]);
@@ -82,6 +82,9 @@ $user_additional_email_recipient->update([
   'email' => "user-copy@example.com",
 ]);
 ```
+
+`update()` refreshes `$user_additional_email_recipient` with the saved attributes, and also returns them as a separate
+`\Files\Model\UserAdditionalEmailRecipient`.
 
 ### Parameters
 

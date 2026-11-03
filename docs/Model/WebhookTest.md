@@ -33,8 +33,7 @@
 ## Create Webhook Test
 
 ```
-$webhook_test = new \Files\Model\WebhookTest();
-$webhook_test->create(, [
+\Files\Model\WebhookTest::create([
   'url' => "https://www.site.com/...",
   'method' => "GET",
   'encoding' => "RAW",

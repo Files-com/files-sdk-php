@@ -27,9 +27,11 @@
 ## List Key Lifecycle Rules
 
 ```
-$key_lifecycle_rule = new \Files\Model\KeyLifecycleRule();
-$key_lifecycle_rule->list
+\Files\Model\KeyLifecycleRule::all();
 ```
+
+`\Files\Model\KeyLifecycleRule::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -44,8 +46,7 @@ $key_lifecycle_rule->list
 ## Show Key Lifecycle Rule
 
 ```
-$key_lifecycle_rule = new \Files\Model\KeyLifecycleRule();
-$key_lifecycle_rule->find($id);
+\Files\Model\KeyLifecycleRule::find($id);
 ```
 
 
@@ -58,8 +59,7 @@ $key_lifecycle_rule->find($id);
 ## Create Key Lifecycle Rule
 
 ```
-$key_lifecycle_rule = new \Files\Model\KeyLifecycleRule();
-$key_lifecycle_rule->create(, [
+\Files\Model\KeyLifecycleRule::create([
   'apply_to_all_workspaces' => true,
   'expiration_days' => 365,
   'key_type' => "gpg",
@@ -95,6 +95,9 @@ $key_lifecycle_rule->update([
   'workspace_id' => 12,
 ]);
 ```
+
+`update()` refreshes `$key_lifecycle_rule` with the saved attributes, and also returns them as a separate
+`\Files\Model\KeyLifecycleRule`.
 
 ### Parameters
 

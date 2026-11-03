@@ -400,6 +400,10 @@ class UserLifecycleRule
         return $this->attributes['user_tag'] = $value;
     }
 
+    // Saves the changes, then refreshes this object with the saved attributes, which it also returns as a separate
+    // UserLifecycleRule with this object's options. A response that is not a JSON object raises
+    // ApiBadResponseException and leaves this object unchanged.
+    //
     /**
      * Update User Lifecycle Rule
      *
@@ -437,48 +441,66 @@ class UserLifecycleRule
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (!empty($params['action']) && !is_string($params['action'])) {
+        if (isset($params['action']) && !is_string($params['action'])) {
             throw new \Files\Exception\InvalidParameterException('$action must be of type string; received ' . gettype(@$params['action']));
         }
 
-        if (!empty($params['authentication_method']) && !is_string($params['authentication_method'])) {
+        if (isset($params['apply_to_all_workspaces']) && !is_scalar($params['apply_to_all_workspaces'])) {
+            throw new \Files\Exception\InvalidParameterException('$apply_to_all_workspaces must be of type boolean; received ' . gettype(@$params['apply_to_all_workspaces']));
+        }
+
+        if (isset($params['authentication_method']) && !is_string($params['authentication_method'])) {
             throw new \Files\Exception\InvalidParameterException('$authentication_method must be of type string; received ' . gettype(@$params['authentication_method']));
         }
 
-        if (!empty($params['group_ids']) && !is_array($params['group_ids'])) {
+        if (isset($params['group_ids']) && !is_array($params['group_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$group_ids must be of type array; received ' . gettype(@$params['group_ids']));
         }
 
-        if (!empty($params['inactivity_days']) && !is_int($params['inactivity_days'])) {
+        if (isset($params['inactivity_days']) && !is_int($params['inactivity_days'])) {
             throw new \Files\Exception\InvalidParameterException('$inactivity_days must be of type int; received ' . gettype(@$params['inactivity_days']));
         }
 
-        if (!empty($params['name']) && !is_string($params['name'])) {
+        if (isset($params['include_site_admins']) && !is_scalar($params['include_site_admins'])) {
+            throw new \Files\Exception\InvalidParameterException('$include_site_admins must be of type boolean; received ' . gettype(@$params['include_site_admins']));
+        }
+
+        if (isset($params['include_folder_admins']) && !is_scalar($params['include_folder_admins'])) {
+            throw new \Files\Exception\InvalidParameterException('$include_folder_admins must be of type boolean; received ' . gettype(@$params['include_folder_admins']));
+        }
+
+        if (isset($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (!empty($params['partner_tag']) && !is_string($params['partner_tag'])) {
+        if (isset($params['notify_users']) && !is_scalar($params['notify_users'])) {
+            throw new \Files\Exception\InvalidParameterException('$notify_users must be of type boolean; received ' . gettype(@$params['notify_users']));
+        }
+
+        if (isset($params['partner_tag']) && !is_string($params['partner_tag'])) {
             throw new \Files\Exception\InvalidParameterException('$partner_tag must be of type string; received ' . gettype(@$params['partner_tag']));
         }
 
-        if (!empty($params['user_state']) && !is_string($params['user_state'])) {
+        if (isset($params['user_state']) && !is_string($params['user_state'])) {
             throw new \Files\Exception\InvalidParameterException('$user_state must be of type string; received ' . gettype(@$params['user_state']));
         }
 
-        if (!empty($params['user_tag']) && !is_string($params['user_tag'])) {
+        if (isset($params['user_tag']) && !is_string($params['user_tag'])) {
             throw new \Files\Exception\InvalidParameterException('$user_tag must be of type string; received ' . gettype(@$params['user_tag']));
         }
 
-        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
+        if (isset($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
         $response = Api::sendRequest('/user_lifecycle_rules/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
-        return new UserLifecycleRule((array) (@$response->data ?: []), $this->options);
+        $updated = new UserLifecycleRule(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $this->options);
+        $this->attributes = $updated->attributes;
+        return $updated;
     }
 
     /**
@@ -505,7 +527,7 @@ class UserLifecycleRule
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -567,11 +589,11 @@ class UserLifecycleRule
      */
     public static function all($params = [], $options = [])
     {
-        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -579,11 +601,31 @@ class UserLifecycleRule
 
         $return_array = [];
 
-        foreach ($response->data as $obj) {
-            $return_array[] = new UserLifecycleRule((array) $obj, $options);
+        foreach (Api::listEntries(isset($response->data) ? $response->data : null, $response->status) as $obj) {
+            $return_array[] = new UserLifecycleRule(Api::modelAttributes($obj, $response->status), $options);
         }
 
         return $return_array;
+    }
+
+    /**
+     * Fetches one page of all()'s results, with the same parameters and options,
+     * whatever Files::$autoPaginate is. Iterate the page, step with nextPage(), or read every result lazily with
+     * autoPagingIterator(). A 'cursor' parameter starts from a page saved with getNextCursor().
+     *
+     * @return \Files\Page
+     */
+    public static function listPage($params = [], $options = [])
+    {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        return \Files\Page::fetch('/user_lifecycle_rules', $params, $options, UserLifecycleRule::class);
     }
 
     /**
@@ -609,13 +651,13 @@ class UserLifecycleRule
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
         $response = Api::sendRequest('/user_lifecycle_rules/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
-        return new UserLifecycleRule((array) (@$response->data ?: []), $options);
+        return new UserLifecycleRule(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
     /**
      * Show User Lifecycle Rule
@@ -660,44 +702,60 @@ class UserLifecycleRule
      */
     public static function create($params = [], $options = [])
     {
-        if (!empty($params['action']) && !is_string($params['action'])) {
+        if (isset($params['action']) && !is_string($params['action'])) {
             throw new \Files\Exception\InvalidParameterException('$action must be of type string; received ' . gettype(@$params['action']));
         }
 
-        if (!empty($params['authentication_method']) && !is_string($params['authentication_method'])) {
+        if (isset($params['apply_to_all_workspaces']) && !is_scalar($params['apply_to_all_workspaces'])) {
+            throw new \Files\Exception\InvalidParameterException('$apply_to_all_workspaces must be of type boolean; received ' . gettype(@$params['apply_to_all_workspaces']));
+        }
+
+        if (isset($params['authentication_method']) && !is_string($params['authentication_method'])) {
             throw new \Files\Exception\InvalidParameterException('$authentication_method must be of type string; received ' . gettype(@$params['authentication_method']));
         }
 
-        if (!empty($params['group_ids']) && !is_array($params['group_ids'])) {
+        if (isset($params['group_ids']) && !is_array($params['group_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$group_ids must be of type array; received ' . gettype(@$params['group_ids']));
         }
 
-        if (!empty($params['inactivity_days']) && !is_int($params['inactivity_days'])) {
+        if (isset($params['inactivity_days']) && !is_int($params['inactivity_days'])) {
             throw new \Files\Exception\InvalidParameterException('$inactivity_days must be of type int; received ' . gettype(@$params['inactivity_days']));
         }
 
-        if (!empty($params['name']) && !is_string($params['name'])) {
+        if (isset($params['include_site_admins']) && !is_scalar($params['include_site_admins'])) {
+            throw new \Files\Exception\InvalidParameterException('$include_site_admins must be of type boolean; received ' . gettype(@$params['include_site_admins']));
+        }
+
+        if (isset($params['include_folder_admins']) && !is_scalar($params['include_folder_admins'])) {
+            throw new \Files\Exception\InvalidParameterException('$include_folder_admins must be of type boolean; received ' . gettype(@$params['include_folder_admins']));
+        }
+
+        if (isset($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (!empty($params['partner_tag']) && !is_string($params['partner_tag'])) {
+        if (isset($params['notify_users']) && !is_scalar($params['notify_users'])) {
+            throw new \Files\Exception\InvalidParameterException('$notify_users must be of type boolean; received ' . gettype(@$params['notify_users']));
+        }
+
+        if (isset($params['partner_tag']) && !is_string($params['partner_tag'])) {
             throw new \Files\Exception\InvalidParameterException('$partner_tag must be of type string; received ' . gettype(@$params['partner_tag']));
         }
 
-        if (!empty($params['user_state']) && !is_string($params['user_state'])) {
+        if (isset($params['user_state']) && !is_string($params['user_state'])) {
             throw new \Files\Exception\InvalidParameterException('$user_state must be of type string; received ' . gettype(@$params['user_state']));
         }
 
-        if (!empty($params['user_tag']) && !is_string($params['user_tag'])) {
+        if (isset($params['user_tag']) && !is_string($params['user_tag'])) {
             throw new \Files\Exception\InvalidParameterException('$user_tag must be of type string; received ' . gettype(@$params['user_tag']));
         }
 
-        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
+        if (isset($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
         $response = Api::sendRequest('/user_lifecycle_rules', 'POST', $params, $options);
 
-        return new UserLifecycleRule((array) (@$response->data ?: []), $options);
+        return new UserLifecycleRule(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
 }

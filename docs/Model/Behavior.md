@@ -47,9 +47,11 @@
 ## List Behaviors
 
 ```
-$behavior = new \Files\Model\Behavior();
-$behavior->list
+\Files\Model\Behavior::all();
 ```
+
+`\Files\Model\Behavior::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -64,8 +66,7 @@ $behavior->list
 ## Show Behavior
 
 ```
-$behavior = new \Files\Model\Behavior();
-$behavior->find($id);
+\Files\Model\Behavior::find($id);
 ```
 
 
@@ -78,11 +79,13 @@ $behavior->find($id);
 ## List Behaviors by Path
 
 ```
-$behavior = new \Files\Model\Behavior();
-$behavior->listFor($path, [
+\Files\Model\Behavior::listFor($path, [
   'ancestor_behaviors' => false,
 ]);
 ```
+
+`\Files\Model\Behavior::listForPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -99,8 +102,7 @@ $behavior->listFor($path, [
 ## Create Behavior
 
 ```
-$behavior = new \Files\Model\Behavior();
-$behavior->create(, [
+\Files\Model\Behavior::create([
   'value' => {"urls":["https://example.com/webhook"],"method":"POST","encoding":"JSON"},
   'disable_parent_folder_behavior' => true,
   'recursive' => false,
@@ -128,8 +130,7 @@ $behavior->create(, [
 ## Test Webhook
 
 ```
-$behavior = new \Files\Model\Behavior();
-$behavior->webhookTest(, [
+\Files\Model\Behavior::webhookTest([
   'url' => "https://www.site.com/...",
   'method' => "GET",
   'encoding' => "RAW",
@@ -164,6 +165,9 @@ $behavior->update([
   'attachment_delete' => false,
 ]);
 ```
+
+`update()` refreshes `$behavior` with the saved attributes, and also returns them as a separate
+`\Files\Model\Behavior`.
 
 ### Parameters
 

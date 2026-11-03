@@ -62,9 +62,11 @@
 ## List Invoices
 
 ```
-$invoice = new \Files\Model\Invoice();
-$invoice->list
+\Files\Model\Invoice::all();
 ```
+
+`\Files\Model\Invoice::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -77,8 +79,7 @@ $invoice->list
 ## Show Invoice
 
 ```
-$invoice = new \Files\Model\Invoice();
-$invoice->find($id);
+\Files\Model\Invoice::find($id);
 ```
 
 

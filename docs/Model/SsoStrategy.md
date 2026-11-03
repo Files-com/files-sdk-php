@@ -119,9 +119,11 @@
 ## List SSO Strategies
 
 ```
-$sso_strategy = new \Files\Model\SsoStrategy();
-$sso_strategy->list
+\Files\Model\SsoStrategy::all();
 ```
+
+`\Files\Model\SsoStrategy::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -135,8 +137,7 @@ $sso_strategy->list
 ## Show SSO Strategy
 
 ```
-$sso_strategy = new \Files\Model\SsoStrategy();
-$sso_strategy->find($id);
+\Files\Model\SsoStrategy::find($id);
 ```
 
 

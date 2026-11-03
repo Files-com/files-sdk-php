@@ -42,8 +42,7 @@
 ## Show Action Notification Export
 
 ```
-$action_notification_export = new \Files\Model\ActionNotificationExport();
-$action_notification_export->find($id);
+\Files\Model\ActionNotificationExport::find($id);
 ```
 
 
@@ -56,8 +55,7 @@ $action_notification_export->find($id);
 ## Create Action Notification Export
 
 ```
-$action_notification_export = new \Files\Model\ActionNotificationExport();
-$action_notification_export->create(, [
+\Files\Model\ActionNotificationExport::create([
   'user_id' => 1,
   'workspace_id' => 1,
   'start_at' => "2000-01-01T01:00:00Z",

@@ -208,13 +208,13 @@ class FileMigration
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
         $response = Api::sendRequest('/file_migrations/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
-        return new FileMigration((array) (@$response->data ?: []), $options);
+        return new FileMigration(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
     /**
      * Show File Migration

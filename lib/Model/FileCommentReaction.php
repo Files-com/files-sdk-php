@@ -193,7 +193,7 @@ class FileCommentReaction
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -260,20 +260,20 @@ class FileCommentReaction
             throw new \Files\Exception\MissingParameterException('Parameter missing: emoji');
         }
 
-        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
+        if (isset($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (!empty($params['file_comment_id']) && !is_int($params['file_comment_id'])) {
+        if (isset($params['file_comment_id']) && !is_int($params['file_comment_id'])) {
             throw new \Files\Exception\InvalidParameterException('$file_comment_id must be of type int; received ' . gettype(@$params['file_comment_id']));
         }
 
-        if (!empty($params['emoji']) && !is_string($params['emoji'])) {
+        if (isset($params['emoji']) && !is_string($params['emoji'])) {
             throw new \Files\Exception\InvalidParameterException('$emoji must be of type string; received ' . gettype(@$params['emoji']));
         }
 
         $response = Api::sendRequest('/file_comment_reactions', 'POST', $params, $options);
 
-        return new FileCommentReaction((array) (@$response->data ?: []), $options);
+        return new FileCommentReaction(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
 }

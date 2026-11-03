@@ -581,11 +581,11 @@ class Restore
      */
     public static function all($params = [], $options = [])
     {
-        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -593,11 +593,31 @@ class Restore
 
         $return_array = [];
 
-        foreach ($response->data as $obj) {
-            $return_array[] = new Restore((array) $obj, $options);
+        foreach (Api::listEntries(isset($response->data) ? $response->data : null, $response->status) as $obj) {
+            $return_array[] = new Restore(Api::modelAttributes($obj, $response->status), $options);
         }
 
         return $return_array;
+    }
+
+    /**
+     * Fetches one page of all()'s results, with the same parameters and options,
+     * whatever Files::$autoPaginate is. Iterate the page, step with nextPage(), or read every result lazily with
+     * autoPagingIterator(). A 'cursor' parameter starts from a page saved with getNextCursor().
+     *
+     * @return \Files\Page
+     */
+    public static function listPage($params = [], $options = [])
+    {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        return \Files\Page::fetch('/restores', $params, $options, Restore::class);
     }
 
     /**
@@ -623,24 +643,36 @@ class Restore
             throw new \Files\Exception\MissingParameterException('Parameter missing: earliest_date');
         }
 
-        if (!empty($params['earliest_date']) && !is_string($params['earliest_date'])) {
+        if (isset($params['earliest_date']) && !is_string($params['earliest_date'])) {
             throw new \Files\Exception\InvalidParameterException('$earliest_date must be of type string; received ' . gettype(@$params['earliest_date']));
         }
 
-        if (!empty($params['prefix']) && !is_string($params['prefix'])) {
+        if (isset($params['prefix']) && !is_string($params['prefix'])) {
             throw new \Files\Exception\InvalidParameterException('$prefix must be of type string; received ' . gettype(@$params['prefix']));
         }
 
-        if (!empty($params['restoration_type']) && !is_string($params['restoration_type'])) {
+        if (isset($params['restoration_type']) && !is_string($params['restoration_type'])) {
             throw new \Files\Exception\InvalidParameterException('$restoration_type must be of type string; received ' . gettype(@$params['restoration_type']));
         }
 
-        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
+        if (isset($params['restore_deleted_permissions']) && !is_scalar($params['restore_deleted_permissions'])) {
+            throw new \Files\Exception\InvalidParameterException('$restore_deleted_permissions must be of type boolean; received ' . gettype(@$params['restore_deleted_permissions']));
+        }
+
+        if (isset($params['restore_in_place']) && !is_scalar($params['restore_in_place'])) {
+            throw new \Files\Exception\InvalidParameterException('$restore_in_place must be of type boolean; received ' . gettype(@$params['restore_in_place']));
+        }
+
+        if (isset($params['update_timestamps']) && !is_scalar($params['update_timestamps'])) {
+            throw new \Files\Exception\InvalidParameterException('$update_timestamps must be of type boolean; received ' . gettype(@$params['update_timestamps']));
+        }
+
+        if (isset($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
         $response = Api::sendRequest('/restores', 'POST', $params, $options);
 
-        return new Restore((array) (@$response->data ?: []), $options);
+        return new Restore(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
 }

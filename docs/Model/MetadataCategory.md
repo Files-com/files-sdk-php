@@ -32,9 +32,11 @@
 ## List Metadata Categories
 
 ```
-$metadata_category = new \Files\Model\MetadataCategory();
-$metadata_category->list
+\Files\Model\MetadataCategory::all();
 ```
+
+`\Files\Model\MetadataCategory::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -48,8 +50,7 @@ $metadata_category->list
 ## Show Metadata Category
 
 ```
-$metadata_category = new \Files\Model\MetadataCategory();
-$metadata_category->find($id);
+\Files\Model\MetadataCategory::find($id);
 ```
 
 
@@ -62,9 +63,11 @@ $metadata_category->find($id);
 ## List Metadata Categories by Path
 
 ```
-$metadata_category = new \Files\Model\MetadataCategory();
-$metadata_category->listFor($path);
+\Files\Model\MetadataCategory::listFor($path);
 ```
+
+`\Files\Model\MetadataCategory::listForPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -78,8 +81,7 @@ $metadata_category->listFor($path);
 ## Create Metadata Category
 
 ```
-$metadata_category = new \Files\Model\MetadataCategory();
-$metadata_category->create(, [
+\Files\Model\MetadataCategory::create([
   'name' => "Approval Workflow",
   'default_columns' => ["Approval Status"],
 ]);
@@ -103,6 +105,9 @@ $metadata_category->update([
   'default_columns' => ["Approval Status"],
 ]);
 ```
+
+`update()` refreshes `$metadata_category` with the saved attributes, and also returns them as a separate
+`\Files\Model\MetadataCategory`.
 
 ### Parameters
 

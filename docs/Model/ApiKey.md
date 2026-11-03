@@ -50,11 +50,13 @@
 ## List API Keys
 
 ```
-$api_key = new \Files\Model\ApiKey();
-$api_key->list(, [
+\Files\Model\ApiKey::all([
   'user_id' => 1,
 ]);
 ```
+
+`\Files\Model\ApiKey::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -74,8 +76,7 @@ $api_key->list(, [
 ## Show information about current API key.  (Requires current API connection to be using an API key.)
 
 ```
-$api_key = new \Files\Model\ApiKey();
-$api_key->findCurrent
+\Files\Model\ApiKey::findCurrent();
 ```
 
 
@@ -84,8 +85,7 @@ $api_key->findCurrent
 ## Show API Key
 
 ```
-$api_key = new \Files\Model\ApiKey();
-$api_key->find($id);
+\Files\Model\ApiKey::find($id);
 ```
 
 
@@ -98,8 +98,7 @@ $api_key->find($id);
 ## Create API Key
 
 ```
-$api_key = new \Files\Model\ApiKey();
-$api_key->create(, [
+\Files\Model\ApiKey::create([
   'user_id' => 1,
   'description' => "example",
   'expires_at' => "2000-01-01T01:00:00Z",
@@ -128,8 +127,7 @@ $api_key->create(, [
 ## Update current API key.  (Requires current API connection to be using an API key.)
 
 ```
-$api_key = new \Files\Model\ApiKey();
-$api_key->updateCurrent(, [
+\Files\Model\ApiKey::updateCurrent([
   'expires_at' => "2000-01-01T01:00:00Z",
   'name' => "My Main API Key",
   'permission_set' => "full",
@@ -148,8 +146,7 @@ $api_key->updateCurrent(, [
 ## Delete current API key.  (Requires current API connection to be using an API key.)
 
 ```
-$api_key = new \Files\Model\ApiKey();
-$api_key->deleteCurrent
+\Files\Model\ApiKey::deleteCurrent();
 ```
 
 
@@ -166,6 +163,9 @@ $api_key->update([
   'name' => "My Main API Key",
 ]);
 ```
+
+`update()` refreshes `$api_key` with the saved attributes, and also returns them as a separate
+`\Files\Model\ApiKey`.
 
 ### Parameters
 

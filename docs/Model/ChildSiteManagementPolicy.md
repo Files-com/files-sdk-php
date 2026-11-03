@@ -54,9 +54,11 @@
 ## List Child Site Management Policies. On a Child Site, returns only the policy covering that site. Its value contains managed setting names with null values
 
 ```
-$child_site_management_policy = new \Files\Model\ChildSiteManagementPolicy();
-$child_site_management_policy->list
+\Files\Model\ChildSiteManagementPolicy::all();
 ```
+
+`\Files\Model\ChildSiteManagementPolicy::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -69,8 +71,7 @@ $child_site_management_policy->list
 ## Show Child Site Management Policy
 
 ```
-$child_site_management_policy = new \Files\Model\ChildSiteManagementPolicy();
-$child_site_management_policy->find($id);
+\Files\Model\ChildSiteManagementPolicy::find($id);
 ```
 
 
@@ -83,8 +84,7 @@ $child_site_management_policy->find($id);
 ## Create Child Site Management Policy
 
 ```
-$child_site_management_policy = new \Files\Model\ChildSiteManagementPolicy();
-$child_site_management_policy->create(, [
+\Files\Model\ChildSiteManagementPolicy::create([
   'value' => {"color2_left":"#000000","folder_behaviors":[{"behavior":"file_expiration","value":{"days_to_retain":30}}]},
   'skip_child_site_ids' => [1,2],
   'child_site_ids' => [1,2],
@@ -123,6 +123,9 @@ $child_site_management_policy->update([
   'description' => "example",
 ]);
 ```
+
+`update()` refreshes `$child_site_management_policy` with the saved attributes, and also returns them as a separate
+`\Files\Model\ChildSiteManagementPolicy`.
 
 ### Parameters
 

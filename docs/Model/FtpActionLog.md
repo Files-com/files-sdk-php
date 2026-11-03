@@ -53,9 +53,11 @@
 ## List FTP Action Logs
 
 ```
-$ftp_action_log = new \Files\Model\FtpActionLog();
-$ftp_action_log->list
+\Files\Model\FtpActionLog::all();
 ```
+
+`\Files\Model\FtpActionLog::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters

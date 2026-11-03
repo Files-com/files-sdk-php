@@ -7,6 +7,7 @@ namespace Files;
 use Files\Exception\FilesException;
 use Files\Exception\NotAuthenticated\LockoutRegionMismatchException;
 use Files\Model\ApiKey;
+use Files\Test\UnboundTransportGuard;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
@@ -20,6 +21,8 @@ use PHPUnit\Framework\TestCase;
 
 class RegionRoutingTest extends TestCase
 {
+    use UnboundTransportGuard;
+
     private function configured($run)
     {
         $original = [Files::getBaseUrl(), Files::getApiKey(), Files::getSessionId(), Files::getWorkspaceId(),

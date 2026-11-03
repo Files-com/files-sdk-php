@@ -287,25 +287,25 @@ class Session
      */
     public static function create($params = [], $options = [])
     {
-        if (!empty($params['username']) && !is_string($params['username'])) {
+        if (isset($params['username']) && !is_string($params['username'])) {
             throw new \Files\Exception\InvalidParameterException('$username must be of type string; received ' . gettype(@$params['username']));
         }
 
-        if (!empty($params['password']) && !is_string($params['password'])) {
+        if (isset($params['password']) && !is_string($params['password'])) {
             throw new \Files\Exception\InvalidParameterException('$password must be of type string; received ' . gettype(@$params['password']));
         }
 
-        if (!empty($params['otp']) && !is_string($params['otp'])) {
+        if (isset($params['otp']) && !is_string($params['otp'])) {
             throw new \Files\Exception\InvalidParameterException('$otp must be of type string; received ' . gettype(@$params['otp']));
         }
 
-        if (!empty($params['partial_session_id']) && !is_string($params['partial_session_id'])) {
+        if (isset($params['partial_session_id']) && !is_string($params['partial_session_id'])) {
             throw new \Files\Exception\InvalidParameterException('$partial_session_id must be of type string; received ' . gettype(@$params['partial_session_id']));
         }
 
         $response = Api::sendRequest('/sessions', 'POST', $params, $options);
 
-        return new Session((array) (@$response->data ?: []), $options);
+        return new Session(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
 
     /**
@@ -320,7 +320,7 @@ class Session
      */
     public static function delete($params = [], $options = [])
     {
-        $response = Api::sendRequest('/sessions', 'DELETE', $options);
+        $response = Api::sendRequest('/sessions', 'DELETE', null, $options);
 
         return;
     }

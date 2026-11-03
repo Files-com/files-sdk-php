@@ -29,9 +29,11 @@
 ## List Ai Assistant Personalities
 
 ```
-$ai_assistant_personality = new \Files\Model\AiAssistantPersonality();
-$ai_assistant_personality->list
+\Files\Model\AiAssistantPersonality::all();
 ```
+
+`\Files\Model\AiAssistantPersonality::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -46,8 +48,7 @@ $ai_assistant_personality->list
 ## Show Ai Assistant Personality
 
 ```
-$ai_assistant_personality = new \Files\Model\AiAssistantPersonality();
-$ai_assistant_personality->find($id);
+\Files\Model\AiAssistantPersonality::find($id);
 ```
 
 
@@ -60,8 +61,7 @@ $ai_assistant_personality->find($id);
 ## Create Ai Assistant Personality
 
 ```
-$ai_assistant_personality = new \Files\Model\AiAssistantPersonality();
-$ai_assistant_personality->create(, [
+\Files\Model\AiAssistantPersonality::create([
   'apply_to_all_workspaces' => false,
   'name' => "Concise Assistant",
   'system_prompt' => "Respond as a concise operations assistant.",
@@ -94,6 +94,9 @@ $ai_assistant_personality->update([
   'workspace_id' => 0,
 ]);
 ```
+
+`update()` refreshes `$ai_assistant_personality` with the saved attributes, and also returns them as a separate
+`\Files\Model\AiAssistantPersonality`.
 
 ### Parameters
 

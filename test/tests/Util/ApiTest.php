@@ -6,16 +6,22 @@ namespace Files;
 
 use Files\Exception\ApiBadResponseException;
 use Files\Exception\ApiConnectException;
+use Files\Exception\ApiConnectionException;
+use Files\Exception\ApiException;
 use Files\Exception\ApiRequestException;
 use Files\Exception\ApiServerException;
+use Files\Exception\BadRequestException;
+use Files\Exception\FilesException;
 use Files\Exception\InvalidParameterException;
 use Files\Exception\MissingParameterException;
+use Files\Exception\NotFoundException;
 use Files\Exception\NotImplementedException;
 use Files\Model\ApiKey;
 use Files\Model\Bundle;
 use Files\Model\File;
 use Files\Model\FileUploadPart;
 use Files\Model\Folder;
+use Files\Test\UnboundTransportGuard;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Handler\MockHandler;
@@ -24,10 +30,13 @@ use GuzzleHttp\Middleware;
 use GuzzleHttp\Promise\Create;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Psr7\Stream;
 use PHPUnit\Framework\TestCase;
 
 class ApiTest extends TestCase
 {
+    use UnboundTransportGuard;
+
     public function testTransferConnectionErrorsHideSignedUrls()
     {
         $url = 'https://transfer.example.test/private-part?X-Amz-Credential=credential&X-Amz-Signature=signature';
@@ -230,6 +239,373 @@ class ApiTest extends TestCase
         }
     }
 
+    // A method without parameters uses its options for its request rather than sending them as request parameters.
+    public function testParameterlessOperationsUsePerCallOptionsForTheRequest()
+    {
+        Files::setApiKey('test-key');
+        $history = [];
+        $stack = HandlerStack::create(new MockHandler([
+            new Response(200, ['Content-Type' => 'application/json'], '{"id": 5}'),
+        ]));
+        $stack->push(Middleware::history($history));
+        Files::setHandler($stack);
+
+        $apiKey = ApiKey::findCurrent([], ['api_key' => 'per-call-key', 'workspace_id' => 456]);
+
+        $this->assertSame(5, $apiKey->id);
+        $this->assertCount(1, $history);
+        $request = $history[0]['request'];
+        $this->assertSame('', $request->getUri()->getQuery());
+        $this->assertSame('per-call-key', $request->getHeaderLine('X-FilesAPI-Key'));
+        $this->assertSame('456', $request->getHeaderLine('X-Files-Workspace-Id'));
+    }
+
+    public function clientErrorResponses()
+    {
+        $errorObject = function ($type) {
+            return json_encode(['type' => $type, 'error' => 'sentinel']);
+        };
+
+        return [
+            'group type' => [400, $errorObject('bad-request'), BadRequestException::class],
+            'error object in an array' => [404, '[' . $errorObject('not-found') . ']', NotFoundException::class],
+            'unknown type' => [422, $errorObject('bad-request/not-a-real-error'), ApiException::class],
+            'type of an SDK exception' => [400, $errorObject('configuration'), ApiException::class],
+            'malformed type' => [400, $errorObject('Not Found!'), ApiException::class],
+            'missing type' => [400, '{"error": "sentinel"}', ApiException::class],
+            'null type' => [400, $errorObject(null), ApiException::class],
+            'blank type' => [400, $errorObject(''), ApiException::class],
+            'numeric type' => [400, $errorObject(404), ApiException::class],
+            'boolean type' => [400, $errorObject(true), ApiException::class],
+            'object type' => [400, $errorObject(['name' => 'not-found']), ApiException::class],
+            'JSON null' => [400, 'null', ApiBadResponseException::class],
+            'empty array' => [400, '[]', ApiBadResponseException::class],
+            'array without an object' => [400, '["sentinel"]', ApiBadResponseException::class],
+            'JSON string' => [400, '"sentinel"', ApiBadResponseException::class],
+            'malformed JSON' => [400, '{"type": "not-found", ', ApiBadResponseException::class],
+            'empty body' => [404, '', ApiBadResponseException::class],
+            'HTML at 403' => [403, '<html>Forbidden</html>', ApiBadResponseException::class],
+        ];
+    }
+
+    /**
+     * @dataProvider clientErrorResponses
+     */
+    public function testClientErrorResponsesAreClassifiedByTheirBody($status, $body, $expectedClass)
+    {
+        Files::setApiKey('test-key');
+        Files::setHandler(new MockHandler([new Response($status, ['Content-Type' => 'application/json'], $body)]));
+
+        try {
+            ApiKey::all();
+            $this->fail('Expected exception was not thrown');
+        } catch (FilesException $error) {
+            $this->assertSame($expectedClass, get_class($error));
+            $this->assertSame($status, $error->getCode());
+            $this->assertNotFalse(strpos($error->getMessage(), "GET request failed with HTTP $status"));
+            $this->assertFalse(strpos($error->getMessage(), 'sentinel'));
+        }
+
+        if ($error instanceof ApiException) {
+            $this->assertNotInstanceOf(ApiConnectionException::class, $error);
+            $sent = json_decode($body);
+            $sent = is_array($sent) ? $sent[0] : $sent;
+            $this->assertSame('sentinel', $error->getError());
+            $this->assertEquals(isset($sent->type) ? $sent->type : null, $error->getType());
+            foreach (['getDetail', 'getErrors', 'getHttpCode', 'instance', 'modelErrors', 'getTitle', 'getData'] as $getter) {
+                $this->assertNull($error->$getter());
+            }
+        } else {
+            $this->assertInstanceOf(ApiConnectionException::class, $error);
+        }
+    }
+
+    public function serverErrorResponses()
+    {
+        return [
+            'a Files.com error object' => [503, '{"type": "service-unavailable", "error": "sentinel"}'],
+            'an error object in an array' => [503, '[{"type": "service-unavailable", "error": "sentinel"}]'],
+            'HTML' => [502, '<html>sentinel</html>'],
+            'an empty body' => [500, ''],
+        ];
+    }
+
+    /**
+     * @dataProvider serverErrorResponses
+     */
+    public function testEveryServerErrorResponseIsAnApiServerException($status, $body)
+    {
+        Files::setApiKey('test-key');
+        Files::setHandler(new MockHandler([new Response($status, ['Content-Type' => 'application/json'], $body)]));
+
+        try {
+            ApiKey::all();
+            $this->fail('Expected exception was not thrown');
+        } catch (ApiServerException $error) {
+            $this->assertSame(ApiServerException::class, get_class($error));
+            $this->assertInstanceOf(ApiConnectionException::class, $error);
+            $this->assertSame($status, $error->getCode());
+            $this->assertNotFalse(strpos($error->getMessage(), "GET request failed with HTTP $status"));
+            $this->assertFalse(strpos($error->getMessage(), 'sentinel'));
+        }
+    }
+
+    public function responsesEchoingASignedUrl()
+    {
+        $url = 'https://download.example.test/file?secret=SYNTHETIC-SECRET';
+
+        return [
+            'typed error object' => [404, json_encode(['type' => 'not-found', 'error' => $url]), NotFoundException::class, $url],
+            'error object without a type' => [400, json_encode(['error' => $url]), ApiException::class, $url],
+            'HTML page' => [400, "<html>bad response from $url</html>", ApiBadResponseException::class, null],
+            'server error page' => [502, "<html>bad response from $url</html>", ApiServerException::class, null],
+            'echo cut off by a summary' => [500, str_repeat(' ', 90) . $url, ApiServerException::class, null],
+        ];
+    }
+
+    /**
+     * @dataProvider responsesEchoingASignedUrl
+     */
+    public function testHttpErrorMessagesQuoteNeitherTheResponseNorTheRequestUrl($status, $body, $class, $errorField)
+    {
+        $url = 'https://download.example.test/file?secret=SYNTHETIC-SECRET';
+        $originalLogLevel = Files::$logLevel;
+        $originalOutput = Logger::getOutputStream();
+        $log = fopen('php://memory', 'w+');
+        Logger::setOutputStream($log);
+        Files::$logLevel = LogLevel::DEBUG;
+        Files::setHandler(new MockHandler([new Response($status, [], $body)]));
+
+        try {
+            Api::sendRequest($url, 'GET');
+            $this->fail('Expected exception was not thrown');
+        } catch (FilesException $caught) {
+            foreach ([$caught->getMessage(), (string) $caught] as $shown) {
+                $this->assertFalse(strpos($shown, 'SYNTHETIC-SECRET'), $shown);
+                $this->assertFalse(strpos($shown, 'download.example'), $shown);
+            }
+            $this->assertNull($caught->getPrevious());
+            $this->assertSame($class, get_class($caught));
+            $this->assertSame($status, $caught->getCode());
+            $this->assertNotFalse(strpos($caught->getMessage(), "GET request failed with HTTP $status"));
+            if ($errorField !== null) {
+                $this->assertSame($errorField, $caught->getError());
+            }
+        } finally {
+            Files::$logLevel = $originalLogLevel;
+            Logger::setOutputStream($originalOutput);
+        }
+
+        // DEBUG logging deliberately keeps the full request URL.
+        rewind($log);
+        $this->assertNotFalse(strpos(stream_get_contents($log), $url));
+        fclose($log);
+    }
+
+    // cURL writes a response's body into the sink it was given, which can be a stream the SDK cannot read; an error
+    // response is then classified without its body, and one that can be read is classified by it.
+    public function testAnErrorResponseIsReadOnlyFromABodyThatCanBeRead()
+    {
+        $path = tempnam(sys_get_temp_dir(), 'files-error-body');
+        $bodies = [
+            'a stream open for writing only' => [function () use ($path) {
+                return new Stream(fopen($path, 'wb'));
+            }, ApiBadResponseException::class],
+            'a stream that can be read' => [function () {
+                $stream = new Stream(fopen('php://temp', 'w+'));
+                $stream->write('{"type": "not-found", "error": "sentinel"}');
+                $stream->rewind();
+                return $stream;
+            }, NotFoundException::class],
+        ];
+
+        try {
+            foreach ($bodies as $case => list($body, $class)) {
+                Files::setHandler(function ($request, array $options) use ($body) {
+                    return Create::promiseFor(new Response(404, ['Content-Type' => 'application/json'], $body()));
+                });
+
+                try {
+                    Api::sendRequest('https://download.example.test/file', 'GET');
+                    $this->fail('Expected exception was not thrown: ' . $case);
+                } catch (FilesException $error) {
+                    $this->assertSame($class, get_class($error), $case);
+                    $this->assertSame(404, $error->getCode(), $case);
+                }
+            }
+        } finally {
+            unlink($path);
+        }
+    }
+
+    // Guzzle 7 prints a transport error's request URL with its password masked, which is hidden as well.
+    public function testTransferErrorsHideAUrlPrintedWithItsPasswordMasked()
+    {
+        $url = 'https://transfer-user:transfer-pass@transfer.example.test/private-part?X-Amz-Signature=signature';
+        $printed = 'https://transfer-user:***@transfer.example.test/private-part?X-Amz-Signature=signature';
+        $originalRetries = Files::$maxNetworkRetries;
+        $originalHandler = Files::getHandler();
+        Files::$maxNetworkRetries = 0;
+
+        try {
+            foreach (['PUT', 'GET'] as $method) {
+                $error = new ConnectException('cURL error 7: Failed to connect for ' . $printed, new Request($method, $url));
+                Files::setHandler(new MockHandler([$error]));
+
+                try {
+                    if ($method === 'PUT') {
+                        Api::sendFile($url, $method, 'part');
+                    } else {
+                        Api::sendRequest($url, $method);
+                    }
+                    $this->fail('Expected a transfer error');
+                } catch (ApiConnectException $caught) {
+                    $this->assertNotFalse(strpos($caught->getMessage(), 'cURL error 7'), $method);
+                    foreach (['transfer-user', 'transfer-pass', 'transfer.example.test', 'private-part', 'signature'] as $secret) {
+                        $this->assertFalse(strpos($caught->getMessage(), $secret), $method);
+                    }
+                }
+            }
+        } finally {
+            Files::$maxNetworkRetries = $originalRetries;
+            Files::setHandler($originalHandler);
+        }
+    }
+
+    public function nextCursorHeaders()
+    {
+        return [
+            'X-Files-Cursor-Next, in any case' => [['x-files-cursor-next' => 'next-2'], ['next-2']],
+            'X-Files-Cursor-Next rather than X-Files-Cursor' => [
+                ['X-Files-Cursor-Next' => 'next-2', 'X-Files-Cursor' => 'legacy-2'], ['next-2'],
+            ],
+            'an empty X-Files-Cursor-Next, ending the list' => [
+                ['X-Files-Cursor-Next' => '', 'X-Files-Cursor' => 'legacy-2'], [],
+            ],
+            'X-Files-Cursor without X-Files-Cursor-Next' => [['X-FILES-CURSOR' => 'legacy-2'], ['legacy-2']],
+            'the opaque cursor 0' => [['X-Files-Cursor-Next' => '0'], ['0']],
+        ];
+    }
+
+    /**
+     * @dataProvider nextCursorHeaders
+     */
+    public function testAutoPaginationFollowsTheNextCursorHeaderWheneverItIsPresent($headers, $followed)
+    {
+        Files::setApiKey('test-key');
+        $history = [];
+        $responses = [new Response(200, $headers + ['Content-Type' => 'application/json'], '[{"id": 1}]')];
+        foreach ($followed as $index => $cursor) {
+            $responses[] = new Response(200, ['Content-Type' => 'application/json'], json_encode([['id' => $index + 2]]));
+        }
+        // The page that following any other cursor would reach.
+        $responses[] = new Response(200, ['Content-Type' => 'application/json'], '[{"id": 99}]');
+        $mock = new MockHandler($responses);
+        $stack = HandlerStack::create($mock);
+        $stack->push(Middleware::history($history));
+        Files::setHandler($stack);
+
+        $items = ApiKey::all(['per_page' => 1], ['api_key' => 'per-call-key', 'workspace_id' => 456]);
+
+        $this->assertSame(range(1, count($followed) + 1), array_map(function ($apiKey) {
+            return $apiKey->id;
+        }, $items));
+        $expected = [['per_page' => '1']];
+        foreach ($followed as $index => $cursor) {
+            $expected[] = ['per_page' => '1', 'cursor' => $cursor, 'page' => (string) ($index + 2)];
+        }
+        $this->assertSame($expected, array_map(function ($transaction) {
+            parse_str($transaction['request']->getUri()->getQuery(), $query);
+            return $query;
+        }, $history));
+        foreach ($history as $transaction) {
+            $this->assertSame('per-call-key', $transaction['request']->getHeaderLine('X-FilesAPI-Key'));
+            $this->assertSame('456', $transaction['request']->getHeaderLine('X-Files-Workspace-Id'));
+        }
+        $this->assertCount(1, $mock);
+    }
+
+    // A response with X-Files-Cursor-Next but no value at all, as a PSR-7 implementation can report it, is a list's last
+    // page, whatever an older X-Files-Cursor says; without X-Files-Cursor-Next, X-Files-Cursor is followed. Header names
+    // match in any case.
+    public function testAPresentNextCursorHeaderWithoutAValueEndsTheList()
+    {
+        $headers = ['x-FILES-cursor-NEXT' => [], 'X-Files-Cursor' => ['stale-cursor']];
+
+        $this->assertNull(Api::nextCursor((object) ['status' => 200, 'headers' => $headers, 'data' => []]));
+        $this->assertSame('stale-cursor', Api::nextCursor((object) [
+            'status' => 200,
+            'headers' => ['X-Files-Cursor' => ['stale-cursor']],
+            'data' => [],
+        ]));
+    }
+
+    public function repeatedCursors()
+    {
+        return [
+            'the cursor it was sent' => [[], ['A', 'A'], 2],
+            'an earlier cursor' => [[], ['A', 'B', 'A'], 3],
+            'the starting cursor' => [['cursor' => 'S'], ['S'], 1],
+            'the opaque cursor 0, again' => [[], ['0', '0'], 2],
+        ];
+    }
+
+    /**
+     * @dataProvider repeatedCursors
+     */
+    public function testAutoPaginationStopsAtACursorTheListAlreadySent($params, $cursors, $requests)
+    {
+        Files::setApiKey('test-key');
+        $responses = [];
+        foreach ($cursors as $id => $cursor) {
+            $responses[] = new Response(200, ['X-Files-Cursor-Next' => $cursor], json_encode([['id' => $id]]));
+        }
+        // One more page than the list should reach, so repeating the cycle would show.
+        $responses[] = new Response(200, [], '[{"id": 99}]');
+        $mock = new MockHandler($responses);
+        Files::setHandler($mock);
+
+        try {
+            ApiKey::all($params);
+            $this->fail('Expected exception was not thrown');
+        } catch (ApiBadResponseException $error) {
+            $this->assertNotFalse(strpos($error->getMessage(), 'already returned'));
+        }
+        $this->assertCount(count($responses) - $requests, $mock);
+    }
+
+    public function malformedPagesWithACursor()
+    {
+        return [
+            'the first page' => [['null'], 1],
+            'a later page' => [['[{"id": 1}]', '{"id": 2}'], 2],
+        ];
+    }
+
+    /**
+     * @dataProvider malformedPagesWithACursor
+     */
+    public function testAutoPaginationRejectsAPageThatIsNotAListBeforeFollowingItsCursor($bodies, $requests)
+    {
+        Files::setApiKey('test-key');
+        $responses = [];
+        foreach ($bodies as $page => $body) {
+            $responses[] = new Response(200, ['X-Files-Cursor' => "cursor-$page"], $body);
+        }
+        // The page that following the malformed page's cursor would request.
+        $responses[] = new Response(200, [], '[]');
+        $mock = new MockHandler($responses);
+        Files::setHandler($mock);
+
+        try {
+            ApiKey::all();
+            $this->fail('Expected exception was not thrown');
+        } catch (ApiBadResponseException $error) {
+            $this->assertSame(200, $error->getCode());
+        }
+        $this->assertCount(count($responses) - $requests, $mock);
+    }
+
     public function testUsesConfiguredWorkspaceId()
     {
         Files::setApiKey('test-key');
@@ -294,6 +670,152 @@ class ApiTest extends TestCase
         $this->assertFalse($request->hasHeader('X-Files-Workspace-Id'));
 
         Files::setWorkspaceId(null);
+    }
+
+    // The one credential an API request carries among X-FilesAPI-Auth and X-FilesAPI-Key: a session_id option before
+    // an api_key option, an api_key option in place of the configured session as well as the configured key, and
+    // without either the configured session before the configured key. An option that PHP reads as false is ignored.
+    // Given a credential option, a header of either name in the headers option, in any case, is not sent; without
+    // one, the headers option is sent as it was. Other headers are sent as given, and the configuration is unchanged.
+    public function testCredentialOptionsChooseTheRequestsOnlyCredential()
+    {
+        $others = [
+            'Authorization' => 'Bearer caller',
+            'Cookie' => 'caller=1',
+            'Proxy-Authorization' => 'Basic caller',
+            'X-Custom' => 'kept',
+        ];
+        $cases = [
+            'the configured session' => ['session-a', [], ['x-filesapi-auth' => ['session-a']]],
+            'the configured key' => [null, [], ['x-filesapi-key' => ['key-a']]],
+            'an api_key option' => ['session-a', ['api_key' => 'key-b'], ['x-filesapi-key' => ['key-b']]],
+            'a session_id option' => [null, ['session_id' => 'session-b'], ['x-filesapi-auth' => ['session-b']]],
+            'both options' => [
+                'session-a',
+                ['session_id' => 'session-b', 'api_key' => 'key-b'],
+                ['x-filesapi-auth' => ['session-b']],
+            ],
+            'an empty session_id and an api_key' => [
+                'session-a',
+                ['session_id' => '', 'api_key' => 'key-b'],
+                ['x-filesapi-key' => ['key-b']],
+            ],
+            'an api_key over headers of both names' => [
+                'session-a',
+                ['api_key' => 'key-b', 'headers' => ['x-filesapi-key' => 'raw-key', 'X-FILESAPI-AUTH' => 'raw-session'] + $others],
+                ['x-filesapi-key' => ['key-b']],
+            ],
+            'a session_id over headers of both names' => [
+                null,
+                ['session_id' => 'session-b', 'headers' => ['X-FilesAPI-Key' => 'raw-key', 'x-filesapi-auth' => 'raw-session'] + $others],
+                ['x-filesapi-auth' => ['session-b']],
+            ],
+            'no credential option, with a header' => [
+                'session-a',
+                ['api_key' => '', 'headers' => ['X-FilesAPI-Key' => 'raw-key'] + $others],
+                ['x-filesapi-auth' => ['session-a'], 'x-filesapi-key' => ['raw-key']],
+            ],
+        ];
+        foreach ([null, '', false, 0, '0'] as $ignored) {
+            $cases['options of ' . var_export($ignored, true)] = [
+                'session-a',
+                ['session_id' => $ignored, 'api_key' => $ignored],
+                ['x-filesapi-auth' => ['session-a']],
+            ];
+        }
+        $credentials = function ($request) {
+            $sent = array_intersect_key(
+                array_change_key_case($request->getHeaders()),
+                ['x-filesapi-auth' => true, 'x-filesapi-key' => true]
+            );
+            ksort($sent);
+            return $sent;
+        };
+
+        try {
+            foreach ($cases as $case => list($session, $options, $expected)) {
+                Files::setApiKey('key-a');
+                Files::setSessionId($session);
+                $history = [];
+                $stack = HandlerStack::create(new MockHandler([
+                    new Response(200, ['Content-Type' => 'application/json'], '[]'),
+                ]));
+                $stack->push(Middleware::history($history));
+                Files::setHandler($stack);
+
+                Folder::listFor('/', [], $options);
+
+                $this->assertCount(1, $history, $case);
+                $request = $history[0]['request'];
+                $this->assertSame($expected, $credentials($request), $case);
+                $given = isset($options['headers']) ? array_intersect_key($options['headers'], $others) : [];
+                foreach ($given as $name => $value) {
+                    $this->assertSame($value, $request->getHeaderLine($name), "$case: $name");
+                }
+                $this->assertSame(['key-a', $session], [Files::getApiKey(), Files::getSessionId()], $case);
+            }
+
+            // A model object's own options choose the credential of its requests in the same way.
+            Files::setSessionId('session-a');
+            $history = [];
+            $stack = HandlerStack::create(new MockHandler([new Response(204)]));
+            $stack->push(Middleware::history($history));
+            Files::setHandler($stack);
+
+            (new ApiKey(['id' => 5], ['api_key' => 'key-b']))->delete();
+
+            $this->assertCount(1, $history);
+            $this->assertSame(['x-filesapi-key' => ['key-b']], $credentials($history[0]['request']));
+        } finally {
+            Files::setSessionId(null);
+        }
+    }
+
+    // Creating a session sends no API key of the SDK's own, configured or given as an option, and given an api_key
+    // option, no configured session or X-FilesAPI-Auth or X-FilesAPI-Key of the headers option either. Without a
+    // credential option, the headers option is sent as it was, an X-FilesAPI-Key of the caller's own included.
+    public function testCreatingASessionSendsNoApiKeyOfTheSdksOwn()
+    {
+        $cases = [
+            'the configured key' => [null, [], []],
+            'the configured session' => ['session-a', [], ['x-filesapi-auth' => ['session-a']]],
+            'an api_key option over headers of both names' => [
+                'session-a',
+                ['api_key' => 'key-b', 'headers' => ['X-FilesAPI-Auth' => 'raw-session', 'x-filesapi-key' => 'raw-key']],
+                [],
+            ],
+            'a session_id option' => [null, ['session_id' => 'session-b'], ['x-filesapi-auth' => ['session-b']]],
+            'no credential option, with a key header' => [
+                null,
+                ['headers' => ['X-FilesAPI-Key' => 'raw-key']],
+                ['x-filesapi-key' => ['raw-key']],
+            ],
+        ];
+
+        try {
+            foreach ($cases as $case => list($session, $options, $expected)) {
+                Files::setApiKey('key-a');
+                Files::setSessionId($session);
+                $history = [];
+                $stack = HandlerStack::create(new MockHandler([
+                    new Response(201, ['Content-Type' => 'application/json'], '{"id": "session-new"}'),
+                ]));
+                $stack->push(Middleware::history($history));
+                Files::setHandler($stack);
+
+                Api::sendRequest('/sessions', 'POST', ['username' => 'motor', 'password' => 'vroom'], $options);
+
+                $this->assertCount(1, $history, $case);
+                $sent = array_intersect_key(
+                    array_change_key_case($history[0]['request']->getHeaders()),
+                    ['x-filesapi-auth' => true, 'x-filesapi-key' => true]
+                );
+                ksort($sent);
+                $this->assertSame($expected, $sent, $case);
+            }
+        } finally {
+            Files::setSessionId(null);
+        }
     }
 
     // The SDK's own requests through sendRequest, to the API and to an external URL alike, carry its name and version

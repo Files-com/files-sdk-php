@@ -51,9 +51,11 @@
 ## List Usage Snapshots
 
 ```
-$usage_snapshot = new \Files\Model\UsageSnapshot();
-$usage_snapshot->list
+\Files\Model\UsageSnapshot::all();
 ```
+
+`\Files\Model\UsageSnapshot::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters

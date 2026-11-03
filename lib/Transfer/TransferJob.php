@@ -50,8 +50,12 @@ use Files\Files;
  *   diagnostics              A callable given each concurrency decision (its label, target, epoch, attempts in flight
  *                            and measurements, with units); it never sees a credential, header or URL.
  *   api_key, session_id, workspace_id
- *                            The API credentials and workspace of the job's API requests, as the generated methods'
- *                            options give them; each transfer's own options can give them too.
+ *                            The API credentials and workspace of the job's API requests. Each one given replaces the
+ *                            job's copy of that setting, even with null, false, 0 or '0', which leave a credential
+ *                            unset. An api_key that PHP reads as true also clears the copied session, unless a
+ *                            session_id that PHP reads as true is given too. Each transfer's own options can give
+ *                            them as well, as the generated methods' options do: a session_id first, else an api_key
+ *                            in place of the job's session; one that PHP reads as false leaves the job's in place.
  *
  * The job copies the SDK's configuration when it is made (Files::setApiKey, setBaseUrl, setWorkspaceId, setLanguage,
  * setHandler, timeouts and retries): later changes do not reach it. Its requests are pooled in a curl multi handle of
@@ -84,6 +88,12 @@ final class TransferJob
             if (array_key_exists($name, $options['api'])) {
                 $config[$name] = $options['api'][$name];
             }
+        }
+
+        // The job's api_key, when PHP reads it as true, takes the place of the copied session too, unless the job's
+        // session_id is also one that PHP reads as true.
+        if (!empty($options['api']['api_key']) && empty($options['api']['session_id'])) {
+            $config['session_id'] = null;
         }
 
         if ($options['max_retries'] === null) {

@@ -28,9 +28,11 @@
 ## List Integration Centric Profiles
 
 ```
-$integration_centric_profile = new \Files\Model\IntegrationCentricProfile();
-$integration_centric_profile->list
+\Files\Model\IntegrationCentricProfile::all();
 ```
+
+`\Files\Model\IntegrationCentricProfile::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -45,8 +47,7 @@ $integration_centric_profile->list
 ## Show Integration Centric Profile
 
 ```
-$integration_centric_profile = new \Files\Model\IntegrationCentricProfile();
-$integration_centric_profile->find($id);
+\Files\Model\IntegrationCentricProfile::find($id);
 ```
 
 
@@ -59,8 +60,7 @@ $integration_centric_profile->find($id);
 ## Create Integration Centric Profile
 
 ```
-$integration_centric_profile = new \Files\Model\IntegrationCentricProfile();
-$integration_centric_profile->create(, [
+\Files\Model\IntegrationCentricProfile::create([
   'name' => "Business Systems Onboarding",
   'expected_remote_servers' => [{"server_type":"dropbox","name":"Dropbox"}],
   'workspace_id' => 1,
@@ -90,6 +90,9 @@ $integration_centric_profile->update([
   'use_for_all_users' => false,
 ]);
 ```
+
+`update()` refreshes `$integration_centric_profile` with the saved attributes, and also returns them as a separate
+`\Files\Model\IntegrationCentricProfile`.
 
 ### Parameters
 

@@ -46,11 +46,13 @@
 ## List Public Keys
 
 ```
-$public_key = new \Files\Model\PublicKey();
-$public_key->list(, [
+\Files\Model\PublicKey::all([
   'user_id' => 1,
 ]);
 ```
+
+`\Files\Model\PublicKey::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -70,8 +72,7 @@ $public_key->list(, [
 ## Show Public Key
 
 ```
-$public_key = new \Files\Model\PublicKey();
-$public_key->find($id);
+\Files\Model\PublicKey::find($id);
 ```
 
 
@@ -84,8 +85,7 @@ $public_key->find($id);
 ## Create Public Key
 
 ```
-$public_key = new \Files\Model\PublicKey();
-$public_key->create(, [
+\Files\Model\PublicKey::create([
   'user_id' => 1,
   'title' => "My Main Key",
   'generate_keypair' => false,
@@ -117,6 +117,9 @@ $public_key->update([
   'title' => "My Main Key",
 ]);
 ```
+
+`update()` refreshes `$public_key` with the saved attributes, and also returns them as a separate
+`\Files\Model\PublicKey`.
 
 ### Parameters
 

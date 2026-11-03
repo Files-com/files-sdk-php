@@ -41,9 +41,11 @@
 ## List Action Logs
 
 ```
-$action_log = new \Files\Model\ActionLog();
-$action_log->list
+\Files\Model\ActionLog::all();
 ```
+
+`\Files\Model\ActionLog::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters

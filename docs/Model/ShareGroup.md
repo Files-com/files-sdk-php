@@ -29,11 +29,13 @@
 ## List Share Groups
 
 ```
-$share_group = new \Files\Model\ShareGroup();
-$share_group->list(, [
+\Files\Model\ShareGroup::all([
   'user_id' => 1,
 ]);
 ```
+
+`\Files\Model\ShareGroup::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -47,8 +49,7 @@ $share_group->list(, [
 ## Show Share Group
 
 ```
-$share_group = new \Files\Model\ShareGroup();
-$share_group->find($id);
+\Files\Model\ShareGroup::find($id);
 ```
 
 
@@ -61,8 +62,7 @@ $share_group->find($id);
 ## Create Share Group
 
 ```
-$share_group = new \Files\Model\ShareGroup();
-$share_group->create(, [
+\Files\Model\ShareGroup::create([
   'user_id' => 1,
   'notes' => "This group is defined for testing purposes",
   'name' => "Test group 1",
@@ -91,6 +91,9 @@ $share_group->update([
   'members' => [{"name":"John Doe","company":"Acme Ltd","email":"johndoe@example.com"}],
 ]);
 ```
+
+`update()` refreshes `$share_group` with the saved attributes, and also returns them as a separate
+`\Files\Model\ShareGroup`.
 
 ### Parameters
 

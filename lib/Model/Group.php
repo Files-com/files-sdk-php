@@ -442,6 +442,10 @@ class Group
         return $this->attributes['workspace_id'] = $value;
     }
 
+    // Saves the changes, then refreshes this object with the saved attributes, which it also returns as a separate
+    // Group with this object's options. A response that is not a JSON object raises
+    // ApiBadResponseException and leaves this object unchanged.
+    //
     /**
      * Update Group
      *
@@ -479,44 +483,66 @@ class Group
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (!empty($params['notes']) && !is_string($params['notes'])) {
+        if (isset($params['notes']) && !is_string($params['notes'])) {
             throw new \Files\Exception\InvalidParameterException('$notes must be of type string; received ' . gettype(@$params['notes']));
         }
 
-        if (!empty($params['user_ids']) && !is_string($params['user_ids'])) {
+        if (isset($params['user_ids']) && !is_string($params['user_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$user_ids must be of type string; received ' . gettype(@$params['user_ids']));
         }
 
-        if (!empty($params['admin_ids']) && !is_string($params['admin_ids'])) {
+        if (isset($params['admin_ids']) && !is_string($params['admin_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$admin_ids must be of type string; received ' . gettype(@$params['admin_ids']));
         }
 
-        if (!empty($params['ai_assistant_personality_id']) && !is_int($params['ai_assistant_personality_id'])) {
+        if (isset($params['ai_assistant_personality_id']) && !is_int($params['ai_assistant_personality_id'])) {
             throw new \Files\Exception\InvalidParameterException('$ai_assistant_personality_id must be of type int; received ' . gettype(@$params['ai_assistant_personality_id']));
         }
 
-        if (!empty($params['desktop_configuration_profile_id']) && !is_int($params['desktop_configuration_profile_id'])) {
+        if (isset($params['ftp_permission']) && !is_scalar($params['ftp_permission'])) {
+            throw new \Files\Exception\InvalidParameterException('$ftp_permission must be of type boolean; received ' . gettype(@$params['ftp_permission']));
+        }
+
+        if (isset($params['sftp_permission']) && !is_scalar($params['sftp_permission'])) {
+            throw new \Files\Exception\InvalidParameterException('$sftp_permission must be of type boolean; received ' . gettype(@$params['sftp_permission']));
+        }
+
+        if (isset($params['dav_permission']) && !is_scalar($params['dav_permission'])) {
+            throw new \Files\Exception\InvalidParameterException('$dav_permission must be of type boolean; received ' . gettype(@$params['dav_permission']));
+        }
+
+        if (isset($params['restapi_permission']) && !is_scalar($params['restapi_permission'])) {
+            throw new \Files\Exception\InvalidParameterException('$restapi_permission must be of type boolean; received ' . gettype(@$params['restapi_permission']));
+        }
+
+        if (isset($params['s3_compatible_endpoint_permission']) && !is_scalar($params['s3_compatible_endpoint_permission'])) {
+            throw new \Files\Exception\InvalidParameterException('$s3_compatible_endpoint_permission must be of type boolean; received ' . gettype(@$params['s3_compatible_endpoint_permission']));
+        }
+
+        if (isset($params['desktop_configuration_profile_id']) && !is_int($params['desktop_configuration_profile_id'])) {
             throw new \Files\Exception\InvalidParameterException('$desktop_configuration_profile_id must be of type int; received ' . gettype(@$params['desktop_configuration_profile_id']));
         }
 
-        if (!empty($params['integration_centric_profile_id']) && !is_int($params['integration_centric_profile_id'])) {
+        if (isset($params['integration_centric_profile_id']) && !is_int($params['integration_centric_profile_id'])) {
             throw new \Files\Exception\InvalidParameterException('$integration_centric_profile_id must be of type int; received ' . gettype(@$params['integration_centric_profile_id']));
         }
 
-        if (!empty($params['allowed_ips']) && !is_string($params['allowed_ips'])) {
+        if (isset($params['allowed_ips']) && !is_string($params['allowed_ips'])) {
             throw new \Files\Exception\InvalidParameterException('$allowed_ips must be of type string; received ' . gettype(@$params['allowed_ips']));
         }
 
-        if (!empty($params['name']) && !is_string($params['name'])) {
+        if (isset($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
         $response = Api::sendRequest('/groups/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
-        return new Group((array) (@$response->data ?: []), $this->options);
+        $updated = new Group(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $this->options);
+        $this->attributes = $updated->attributes;
+        return $updated;
     }
 
     /**
@@ -543,7 +569,7 @@ class Group
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -609,27 +635,67 @@ class Group
      */
     public static function all($params = [], $options = [])
     {
-        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
-        if (!empty($params['ids']) && !is_string($params['ids'])) {
+        if (isset($params['ids']) && !is_string($params['ids'])) {
             throw new \Files\Exception\InvalidParameterException('$ids must be of type string; received ' . gettype(@$params['ids']));
+        }
+
+        if (isset($params['include_parent_site_groups']) && !is_scalar($params['include_parent_site_groups'])) {
+            throw new \Files\Exception\InvalidParameterException('$include_parent_site_groups must be of type boolean; received ' . gettype(@$params['include_parent_site_groups']));
+        }
+
+        if (isset($params['include_default_workspace_groups']) && !is_scalar($params['include_default_workspace_groups'])) {
+            throw new \Files\Exception\InvalidParameterException('$include_default_workspace_groups must be of type boolean; received ' . gettype(@$params['include_default_workspace_groups']));
         }
 
         $response = Api::sendRequest('/groups', 'GET', $params, $options);
 
         $return_array = [];
 
-        foreach ($response->data as $obj) {
-            $return_array[] = new Group((array) $obj, $options);
+        foreach (Api::listEntries(isset($response->data) ? $response->data : null, $response->status) as $obj) {
+            $return_array[] = new Group(Api::modelAttributes($obj, $response->status), $options);
         }
 
         return $return_array;
+    }
+
+    /**
+     * Fetches one page of all()'s results, with the same parameters and options,
+     * whatever Files::$autoPaginate is. Iterate the page, step with nextPage(), or read every result lazily with
+     * autoPagingIterator(). A 'cursor' parameter starts from a page saved with getNextCursor().
+     *
+     * @return \Files\Page
+     */
+    public static function listPage($params = [], $options = [])
+    {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        if (isset($params['ids']) && !is_string($params['ids'])) {
+            throw new \Files\Exception\InvalidParameterException('$ids must be of type string; received ' . gettype(@$params['ids']));
+        }
+
+        if (isset($params['include_parent_site_groups']) && !is_scalar($params['include_parent_site_groups'])) {
+            throw new \Files\Exception\InvalidParameterException('$include_parent_site_groups must be of type boolean; received ' . gettype(@$params['include_parent_site_groups']));
+        }
+
+        if (isset($params['include_default_workspace_groups']) && !is_scalar($params['include_default_workspace_groups'])) {
+            throw new \Files\Exception\InvalidParameterException('$include_default_workspace_groups must be of type boolean; received ' . gettype(@$params['include_default_workspace_groups']));
+        }
+
+        return \Files\Page::fetch('/groups', $params, $options, Group::class);
     }
 
     /**
@@ -655,13 +721,13 @@ class Group
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
         $response = Api::sendRequest('/groups/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
-        return new Group((array) (@$response->data ?: []), $options);
+        return new Group(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
     /**
      * Show Group
@@ -711,44 +777,64 @@ class Group
             throw new \Files\Exception\MissingParameterException('Parameter missing: name');
         }
 
-        if (!empty($params['notes']) && !is_string($params['notes'])) {
+        if (isset($params['notes']) && !is_string($params['notes'])) {
             throw new \Files\Exception\InvalidParameterException('$notes must be of type string; received ' . gettype(@$params['notes']));
         }
 
-        if (!empty($params['user_ids']) && !is_string($params['user_ids'])) {
+        if (isset($params['user_ids']) && !is_string($params['user_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$user_ids must be of type string; received ' . gettype(@$params['user_ids']));
         }
 
-        if (!empty($params['admin_ids']) && !is_string($params['admin_ids'])) {
+        if (isset($params['admin_ids']) && !is_string($params['admin_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$admin_ids must be of type string; received ' . gettype(@$params['admin_ids']));
         }
 
-        if (!empty($params['ai_assistant_personality_id']) && !is_int($params['ai_assistant_personality_id'])) {
+        if (isset($params['ai_assistant_personality_id']) && !is_int($params['ai_assistant_personality_id'])) {
             throw new \Files\Exception\InvalidParameterException('$ai_assistant_personality_id must be of type int; received ' . gettype(@$params['ai_assistant_personality_id']));
         }
 
-        if (!empty($params['desktop_configuration_profile_id']) && !is_int($params['desktop_configuration_profile_id'])) {
+        if (isset($params['ftp_permission']) && !is_scalar($params['ftp_permission'])) {
+            throw new \Files\Exception\InvalidParameterException('$ftp_permission must be of type boolean; received ' . gettype(@$params['ftp_permission']));
+        }
+
+        if (isset($params['sftp_permission']) && !is_scalar($params['sftp_permission'])) {
+            throw new \Files\Exception\InvalidParameterException('$sftp_permission must be of type boolean; received ' . gettype(@$params['sftp_permission']));
+        }
+
+        if (isset($params['dav_permission']) && !is_scalar($params['dav_permission'])) {
+            throw new \Files\Exception\InvalidParameterException('$dav_permission must be of type boolean; received ' . gettype(@$params['dav_permission']));
+        }
+
+        if (isset($params['restapi_permission']) && !is_scalar($params['restapi_permission'])) {
+            throw new \Files\Exception\InvalidParameterException('$restapi_permission must be of type boolean; received ' . gettype(@$params['restapi_permission']));
+        }
+
+        if (isset($params['s3_compatible_endpoint_permission']) && !is_scalar($params['s3_compatible_endpoint_permission'])) {
+            throw new \Files\Exception\InvalidParameterException('$s3_compatible_endpoint_permission must be of type boolean; received ' . gettype(@$params['s3_compatible_endpoint_permission']));
+        }
+
+        if (isset($params['desktop_configuration_profile_id']) && !is_int($params['desktop_configuration_profile_id'])) {
             throw new \Files\Exception\InvalidParameterException('$desktop_configuration_profile_id must be of type int; received ' . gettype(@$params['desktop_configuration_profile_id']));
         }
 
-        if (!empty($params['integration_centric_profile_id']) && !is_int($params['integration_centric_profile_id'])) {
+        if (isset($params['integration_centric_profile_id']) && !is_int($params['integration_centric_profile_id'])) {
             throw new \Files\Exception\InvalidParameterException('$integration_centric_profile_id must be of type int; received ' . gettype(@$params['integration_centric_profile_id']));
         }
 
-        if (!empty($params['allowed_ips']) && !is_string($params['allowed_ips'])) {
+        if (isset($params['allowed_ips']) && !is_string($params['allowed_ips'])) {
             throw new \Files\Exception\InvalidParameterException('$allowed_ips must be of type string; received ' . gettype(@$params['allowed_ips']));
         }
 
-        if (!empty($params['name']) && !is_string($params['name'])) {
+        if (isset($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
+        if (isset($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
         $response = Api::sendRequest('/groups', 'POST', $params, $options);
 
-        return new Group((array) (@$response->data ?: []), $options);
+        return new Group(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
 }

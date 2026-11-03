@@ -28,12 +28,14 @@
 ## List Share Link Recipients
 
 ```
-$bundle_recipient = new \Files\Model\BundleRecipient();
-$bundle_recipient->list(, [
+\Files\Model\BundleRecipient::all([
   'user_id' => 1,
   'bundle_id' => 1,
 ]);
 ```
+
+`\Files\Model\BundleRecipient::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -50,8 +52,7 @@ $bundle_recipient->list(, [
 ## Create Share Link Recipient
 
 ```
-$bundle_recipient = new \Files\Model\BundleRecipient();
-$bundle_recipient->create(, [
+\Files\Model\BundleRecipient::create([
   'user_id' => 1,
   'bundle_id' => 1,
   'recipient' => "johndoe@gmail.com",

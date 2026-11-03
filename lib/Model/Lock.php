@@ -391,11 +391,11 @@ class Lock
             }
         }
 
-        if (!empty($params['path']) && !is_string($params['path'])) {
+        if (isset($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (!empty($params['token']) && !is_string($params['token'])) {
+        if (isset($params['token']) && !is_string($params['token'])) {
             throw new \Files\Exception\InvalidParameterException('$token must be of type string; received ' . gettype(@$params['token']));
         }
 
@@ -462,27 +462,69 @@ class Lock
             throw new \Files\Exception\MissingParameterException('Parameter missing: path');
         }
 
-        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
-        if (!empty($params['path']) && !is_string($params['path'])) {
+        if (isset($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
+        }
+
+        if (isset($params['include_children']) && !is_scalar($params['include_children'])) {
+            throw new \Files\Exception\InvalidParameterException('$include_children must be of type boolean; received ' . gettype(@$params['include_children']));
         }
 
         $response = Api::sendRequest('/locks/' . rawurlencode(strval(@$params['path'])) . '', 'GET', $params, $options);
 
         $return_array = [];
 
-        foreach ($response->data as $obj) {
-            $return_array[] = new Lock((array) $obj, $options);
+        foreach (Api::listEntries(isset($response->data) ? $response->data : null, $response->status) as $obj) {
+            $return_array[] = new Lock(Api::modelAttributes($obj, $response->status), $options);
         }
 
         return $return_array;
+    }
+
+    /**
+     * Fetches one page of listFor()'s results, with the same parameters and options,
+     * whatever Files::$autoPaginate is. Iterate the page, step with nextPage(), or read every result lazily with
+     * autoPagingIterator(). A 'cursor' parameter starts from a page saved with getNextCursor().
+     *
+     * @return \Files\Page
+     */
+    public static function listForPage($path, $params = [], $options = [])
+    {
+        if (!is_array($params)) {
+            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+        }
+
+        $params['path'] = $path;
+
+        if (empty($params['path'])) {
+            throw new \Files\Exception\MissingParameterException('Parameter missing: path');
+        }
+
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        if (isset($params['path']) && !is_string($params['path'])) {
+            throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
+        }
+
+        if (isset($params['include_children']) && !is_scalar($params['include_children'])) {
+            throw new \Files\Exception\InvalidParameterException('$include_children must be of type boolean; received ' . gettype(@$params['include_children']));
+        }
+
+        return \Files\Page::fetch('/locks/' . rawurlencode(strval(@$params['path'])) . '', $params, $options, Lock::class);
     }
 
     /**
@@ -515,28 +557,40 @@ class Lock
             throw new \Files\Exception\MissingParameterException('Parameter missing: path');
         }
 
-        if (!empty($params['path']) && !is_string($params['path'])) {
+        if (isset($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (!empty($params['token']) && !is_string($params['token'])) {
+        if (isset($params['token']) && !is_string($params['token'])) {
             throw new \Files\Exception\InvalidParameterException('$token must be of type string; received ' . gettype(@$params['token']));
         }
 
-        if (!empty($params['expected_token']) && !is_string($params['expected_token'])) {
+        if (isset($params['expected_token']) && !is_string($params['expected_token'])) {
             throw new \Files\Exception\InvalidParameterException('$expected_token must be of type string; received ' . gettype(@$params['expected_token']));
         }
 
-        if (!empty($params['owner']) && !is_string($params['owner'])) {
+        if (isset($params['allow_access_by_any_user']) && !is_scalar($params['allow_access_by_any_user'])) {
+            throw new \Files\Exception\InvalidParameterException('$allow_access_by_any_user must be of type boolean; received ' . gettype(@$params['allow_access_by_any_user']));
+        }
+
+        if (isset($params['exclusive']) && !is_scalar($params['exclusive'])) {
+            throw new \Files\Exception\InvalidParameterException('$exclusive must be of type boolean; received ' . gettype(@$params['exclusive']));
+        }
+
+        if (isset($params['recursive']) && !is_scalar($params['recursive'])) {
+            throw new \Files\Exception\InvalidParameterException('$recursive must be of type boolean; received ' . gettype(@$params['recursive']));
+        }
+
+        if (isset($params['owner']) && !is_string($params['owner'])) {
             throw new \Files\Exception\InvalidParameterException('$owner must be of type string; received ' . gettype(@$params['owner']));
         }
 
-        if (!empty($params['timeout']) && !is_int($params['timeout'])) {
+        if (isset($params['timeout']) && !is_int($params['timeout'])) {
             throw new \Files\Exception\InvalidParameterException('$timeout must be of type int; received ' . gettype(@$params['timeout']));
         }
 
         $response = Api::sendRequest('/locks/' . rawurlencode(strval(@$params['path'])) . '', 'POST', $params, $options);
 
-        return new Lock((array) (@$response->data ?: []), $options);
+        return new Lock(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
 }

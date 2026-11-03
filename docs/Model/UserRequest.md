@@ -23,9 +23,11 @@
 ## List User Requests
 
 ```
-$user_request = new \Files\Model\UserRequest();
-$user_request->list
+\Files\Model\UserRequest::all();
 ```
+
+`\Files\Model\UserRequest::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -38,8 +40,7 @@ $user_request->list
 ## Show User Request
 
 ```
-$user_request = new \Files\Model\UserRequest();
-$user_request->find($id);
+\Files\Model\UserRequest::find($id);
 ```
 
 
@@ -52,8 +53,7 @@ $user_request->find($id);
 ## Create User Request
 
 ```
-$user_request = new \Files\Model\UserRequest();
-$user_request->create(, [
+\Files\Model\UserRequest::create([
   'name' => "name",
   'email' => "email",
   'details' => "details",

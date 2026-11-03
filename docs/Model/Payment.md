@@ -62,9 +62,11 @@
 ## List Payments
 
 ```
-$payment = new \Files\Model\Payment();
-$payment->list
+\Files\Model\Payment::all();
 ```
+
+`\Files\Model\Payment::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -77,8 +79,7 @@ $payment->list
 ## Show Payment
 
 ```
-$payment = new \Files\Model\Payment();
-$payment->find($id);
+\Files\Model\Payment::find($id);
 ```
 
 

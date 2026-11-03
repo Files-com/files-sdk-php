@@ -31,9 +31,11 @@
 ## List Bandwidth Snapshots
 
 ```
-$bandwidth_snapshot = new \Files\Model\BandwidthSnapshot();
-$bandwidth_snapshot->list
+\Files\Model\BandwidthSnapshot::all();
 ```
+
+`\Files\Model\BandwidthSnapshot::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters

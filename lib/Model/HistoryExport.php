@@ -693,13 +693,13 @@ class HistoryExport
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
         $response = Api::sendRequest('/history_exports/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
-        return new HistoryExport((array) (@$response->data ?: []), $options);
+        return new HistoryExport(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
     /**
      * Show History Export
@@ -753,96 +753,96 @@ class HistoryExport
      */
     public static function create($params = [], $options = [])
     {
-        if (!empty($params['user_id']) && !is_int($params['user_id'])) {
+        if (isset($params['user_id']) && !is_int($params['user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
         }
 
-        if (!empty($params['start_at']) && !is_string($params['start_at'])) {
+        if (isset($params['start_at']) && !is_string($params['start_at'])) {
             throw new \Files\Exception\InvalidParameterException('$start_at must be of type string; received ' . gettype(@$params['start_at']));
         }
 
-        if (!empty($params['end_at']) && !is_string($params['end_at'])) {
+        if (isset($params['end_at']) && !is_string($params['end_at'])) {
             throw new \Files\Exception\InvalidParameterException('$end_at must be of type string; received ' . gettype(@$params['end_at']));
         }
 
-        if (!empty($params['query_action']) && !is_string($params['query_action'])) {
+        if (isset($params['query_action']) && !is_string($params['query_action'])) {
             throw new \Files\Exception\InvalidParameterException('$query_action must be of type string; received ' . gettype(@$params['query_action']));
         }
 
-        if (!empty($params['query_interface']) && !is_string($params['query_interface'])) {
+        if (isset($params['query_interface']) && !is_string($params['query_interface'])) {
             throw new \Files\Exception\InvalidParameterException('$query_interface must be of type string; received ' . gettype(@$params['query_interface']));
         }
 
-        if (!empty($params['query_user_id']) && !is_string($params['query_user_id'])) {
+        if (isset($params['query_user_id']) && !is_string($params['query_user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$query_user_id must be of type string; received ' . gettype(@$params['query_user_id']));
         }
 
-        if (!empty($params['query_file_id']) && !is_string($params['query_file_id'])) {
+        if (isset($params['query_file_id']) && !is_string($params['query_file_id'])) {
             throw new \Files\Exception\InvalidParameterException('$query_file_id must be of type string; received ' . gettype(@$params['query_file_id']));
         }
 
-        if (!empty($params['query_parent_id']) && !is_string($params['query_parent_id'])) {
+        if (isset($params['query_parent_id']) && !is_string($params['query_parent_id'])) {
             throw new \Files\Exception\InvalidParameterException('$query_parent_id must be of type string; received ' . gettype(@$params['query_parent_id']));
         }
 
-        if (!empty($params['query_path']) && !is_string($params['query_path'])) {
+        if (isset($params['query_path']) && !is_string($params['query_path'])) {
             throw new \Files\Exception\InvalidParameterException('$query_path must be of type string; received ' . gettype(@$params['query_path']));
         }
 
-        if (!empty($params['query_folder']) && !is_string($params['query_folder'])) {
+        if (isset($params['query_folder']) && !is_string($params['query_folder'])) {
             throw new \Files\Exception\InvalidParameterException('$query_folder must be of type string; received ' . gettype(@$params['query_folder']));
         }
 
-        if (!empty($params['query_src']) && !is_string($params['query_src'])) {
+        if (isset($params['query_src']) && !is_string($params['query_src'])) {
             throw new \Files\Exception\InvalidParameterException('$query_src must be of type string; received ' . gettype(@$params['query_src']));
         }
 
-        if (!empty($params['query_destination']) && !is_string($params['query_destination'])) {
+        if (isset($params['query_destination']) && !is_string($params['query_destination'])) {
             throw new \Files\Exception\InvalidParameterException('$query_destination must be of type string; received ' . gettype(@$params['query_destination']));
         }
 
-        if (!empty($params['query_ip']) && !is_string($params['query_ip'])) {
+        if (isset($params['query_ip']) && !is_string($params['query_ip'])) {
             throw new \Files\Exception\InvalidParameterException('$query_ip must be of type string; received ' . gettype(@$params['query_ip']));
         }
 
-        if (!empty($params['query_username']) && !is_string($params['query_username'])) {
+        if (isset($params['query_username']) && !is_string($params['query_username'])) {
             throw new \Files\Exception\InvalidParameterException('$query_username must be of type string; received ' . gettype(@$params['query_username']));
         }
 
-        if (!empty($params['query_failure_type']) && !is_string($params['query_failure_type'])) {
+        if (isset($params['query_failure_type']) && !is_string($params['query_failure_type'])) {
             throw new \Files\Exception\InvalidParameterException('$query_failure_type must be of type string; received ' . gettype(@$params['query_failure_type']));
         }
 
-        if (!empty($params['query_target_id']) && !is_string($params['query_target_id'])) {
+        if (isset($params['query_target_id']) && !is_string($params['query_target_id'])) {
             throw new \Files\Exception\InvalidParameterException('$query_target_id must be of type string; received ' . gettype(@$params['query_target_id']));
         }
 
-        if (!empty($params['query_target_name']) && !is_string($params['query_target_name'])) {
+        if (isset($params['query_target_name']) && !is_string($params['query_target_name'])) {
             throw new \Files\Exception\InvalidParameterException('$query_target_name must be of type string; received ' . gettype(@$params['query_target_name']));
         }
 
-        if (!empty($params['query_target_permission']) && !is_string($params['query_target_permission'])) {
+        if (isset($params['query_target_permission']) && !is_string($params['query_target_permission'])) {
             throw new \Files\Exception\InvalidParameterException('$query_target_permission must be of type string; received ' . gettype(@$params['query_target_permission']));
         }
 
-        if (!empty($params['query_target_user_id']) && !is_string($params['query_target_user_id'])) {
+        if (isset($params['query_target_user_id']) && !is_string($params['query_target_user_id'])) {
             throw new \Files\Exception\InvalidParameterException('$query_target_user_id must be of type string; received ' . gettype(@$params['query_target_user_id']));
         }
 
-        if (!empty($params['query_target_username']) && !is_string($params['query_target_username'])) {
+        if (isset($params['query_target_username']) && !is_string($params['query_target_username'])) {
             throw new \Files\Exception\InvalidParameterException('$query_target_username must be of type string; received ' . gettype(@$params['query_target_username']));
         }
 
-        if (!empty($params['query_target_platform']) && !is_string($params['query_target_platform'])) {
+        if (isset($params['query_target_platform']) && !is_string($params['query_target_platform'])) {
             throw new \Files\Exception\InvalidParameterException('$query_target_platform must be of type string; received ' . gettype(@$params['query_target_platform']));
         }
 
-        if (!empty($params['query_target_permission_set']) && !is_string($params['query_target_permission_set'])) {
+        if (isset($params['query_target_permission_set']) && !is_string($params['query_target_permission_set'])) {
             throw new \Files\Exception\InvalidParameterException('$query_target_permission_set must be of type string; received ' . gettype(@$params['query_target_permission_set']));
         }
 
         $response = Api::sendRequest('/history_exports', 'POST', $params, $options);
 
-        return new HistoryExport((array) (@$response->data ?: []), $options);
+        return new HistoryExport(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
 }

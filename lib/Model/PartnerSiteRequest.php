@@ -255,7 +255,7 @@ class PartnerSiteRequest
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -315,11 +315,11 @@ class PartnerSiteRequest
      */
     public static function all($params = [], $options = [])
     {
-        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -327,11 +327,31 @@ class PartnerSiteRequest
 
         $return_array = [];
 
-        foreach ($response->data as $obj) {
-            $return_array[] = new PartnerSiteRequest((array) $obj, $options);
+        foreach (Api::listEntries(isset($response->data) ? $response->data : null, $response->status) as $obj) {
+            $return_array[] = new PartnerSiteRequest(Api::modelAttributes($obj, $response->status), $options);
         }
 
         return $return_array;
+    }
+
+    /**
+     * Fetches one page of all()'s results, with the same parameters and options,
+     * whatever Files::$autoPaginate is. Iterate the page, step with nextPage(), or read every result lazily with
+     * autoPagingIterator(). A 'cursor' parameter starts from a page saved with getNextCursor().
+     *
+     * @return \Files\Page
+     */
+    public static function listPage($params = [], $options = [])
+    {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        return \Files\Page::fetch('/partner_site_requests', $params, $options, PartnerSiteRequest::class);
     }
 
     /**
@@ -351,7 +371,7 @@ class PartnerSiteRequest
             throw new \Files\Exception\MissingParameterException('Parameter missing: pairing_key');
         }
 
-        if (!empty($params['pairing_key']) && !is_string($params['pairing_key'])) {
+        if (isset($params['pairing_key']) && !is_string($params['pairing_key'])) {
             throw new \Files\Exception\InvalidParameterException('$pairing_key must be of type string; received ' . gettype(@$params['pairing_key']));
         }
 
@@ -382,17 +402,17 @@ class PartnerSiteRequest
             throw new \Files\Exception\MissingParameterException('Parameter missing: guest_site_url');
         }
 
-        if (!empty($params['host_partner_id']) && !is_int($params['host_partner_id'])) {
+        if (isset($params['host_partner_id']) && !is_int($params['host_partner_id'])) {
             throw new \Files\Exception\InvalidParameterException('$host_partner_id must be of type int; received ' . gettype(@$params['host_partner_id']));
         }
 
-        if (!empty($params['guest_site_url']) && !is_string($params['guest_site_url'])) {
+        if (isset($params['guest_site_url']) && !is_string($params['guest_site_url'])) {
             throw new \Files\Exception\InvalidParameterException('$guest_site_url must be of type string; received ' . gettype(@$params['guest_site_url']));
         }
 
         $response = Api::sendRequest('/partner_site_requests', 'POST', $params, $options);
 
-        return new PartnerSiteRequest((array) (@$response->data ?: []), $options);
+        return new PartnerSiteRequest(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
 
     /**
@@ -412,7 +432,7 @@ class PartnerSiteRequest
             throw new \Files\Exception\MissingParameterException('Parameter missing: pairing_key');
         }
 
-        if (!empty($params['pairing_key']) && !is_string($params['pairing_key'])) {
+        if (isset($params['pairing_key']) && !is_string($params['pairing_key'])) {
             throw new \Files\Exception\InvalidParameterException('$pairing_key must be of type string; received ' . gettype(@$params['pairing_key']));
         }
 
@@ -439,11 +459,11 @@ class PartnerSiteRequest
             throw new \Files\Exception\MissingParameterException('Parameter missing: pairing_key');
         }
 
-        if (!empty($params['pairing_key']) && !is_string($params['pairing_key'])) {
+        if (isset($params['pairing_key']) && !is_string($params['pairing_key'])) {
             throw new \Files\Exception\InvalidParameterException('$pairing_key must be of type string; received ' . gettype(@$params['pairing_key']));
         }
 
-        if (!empty($params['partner_id']) && !is_int($params['partner_id'])) {
+        if (isset($params['partner_id']) && !is_int($params['partner_id'])) {
             throw new \Files\Exception\InvalidParameterException('$partner_id must be of type int; received ' . gettype(@$params['partner_id']));
         }
 

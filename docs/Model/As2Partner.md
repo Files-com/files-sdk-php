@@ -58,9 +58,11 @@
 ## List AS2 Partners
 
 ```
-$as2_partner = new \Files\Model\As2Partner();
-$as2_partner->list
+\Files\Model\As2Partner::all();
 ```
+
+`\Files\Model\As2Partner::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -75,8 +77,7 @@ $as2_partner->list
 ## Show AS2 Partner
 
 ```
-$as2_partner = new \Files\Model\As2Partner();
-$as2_partner->find($id);
+\Files\Model\As2Partner::find($id);
 ```
 
 
@@ -89,8 +90,7 @@ $as2_partner->find($id);
 ## Create AS2 Partner
 
 ```
-$as2_partner = new \Files\Model\As2Partner();
-$as2_partner->create(, [
+\Files\Model\As2Partner::create([
   'enable_dedicated_ips' => true,
   'http_auth_username' => "username",
   'mdn_validation_level' => "none",
@@ -143,6 +143,9 @@ $as2_partner->update([
   'public_certificate' => "example",
 ]);
 ```
+
+`update()` refreshes `$as2_partner` with the saved attributes, and also returns them as a separate
+`\Files\Model\As2Partner`.
 
 ### Parameters
 

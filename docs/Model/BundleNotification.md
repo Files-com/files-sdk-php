@@ -28,12 +28,14 @@
 ## List Share Link Notifications
 
 ```
-$bundle_notification = new \Files\Model\BundleNotification();
-$bundle_notification->list(, [
+\Files\Model\BundleNotification::all([
   'user_id' => 1,
   'bundle_id' => 1,
 ]);
 ```
+
+`\Files\Model\BundleNotification::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -50,8 +52,7 @@ $bundle_notification->list(, [
 ## Show Share Link Notification
 
 ```
-$bundle_notification = new \Files\Model\BundleNotification();
-$bundle_notification->find($id);
+\Files\Model\BundleNotification::find($id);
 ```
 
 
@@ -64,8 +65,7 @@ $bundle_notification->find($id);
 ## Create Share Link Notification
 
 ```
-$bundle_notification = new \Files\Model\BundleNotification();
-$bundle_notification->create(, [
+\Files\Model\BundleNotification::create([
   'user_id' => 1,
   'bundle_id' => 1,
   'notify_user_id' => 1,
@@ -95,6 +95,9 @@ $bundle_notification->update([
   'notify_on_upload' => true,
 ]);
 ```
+
+`update()` refreshes `$bundle_notification` with the saved attributes, and also returns them as a separate
+`\Files\Model\BundleNotification`.
 
 ### Parameters
 

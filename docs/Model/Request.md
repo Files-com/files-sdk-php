@@ -27,12 +27,14 @@
 ## List Requests
 
 ```
-$request = new \Files\Model\Request();
-$request->list(, [
+\Files\Model\Request::all([
   'mine' => false,
   'path' => "example",
 ]);
 ```
+
+`\Files\Model\Request::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -48,11 +50,13 @@ $request->list(, [
 ## List Requests
 
 ```
-$request = new \Files\Model\Request();
-$request->getFolder($path, [
+\Files\Model\Request::getFolder($path, [
   'mine' => false,
 ]);
 ```
+
+`\Files\Model\Request::getFolderPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -68,8 +72,7 @@ $request->getFolder($path, [
 ## Create Request
 
 ```
-$request = new \Files\Model\Request();
-$request->create(, [
+\Files\Model\Request::create([
   'path' => "path",
   'destination' => "destination",
 ]);

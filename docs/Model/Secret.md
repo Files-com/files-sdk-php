@@ -35,9 +35,11 @@
 ## List Secrets
 
 ```
-$secret = new \Files\Model\Secret();
-$secret->list
+\Files\Model\Secret::all();
 ```
+
+`\Files\Model\Secret::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -53,8 +55,7 @@ $secret->list
 ## Show Secret
 
 ```
-$secret = new \Files\Model\Secret();
-$secret->find($id);
+\Files\Model\Secret::find($id);
 ```
 
 
@@ -67,8 +68,7 @@ $secret->find($id);
 ## Create Secret
 
 ```
-$secret = new \Files\Model\Secret();
-$secret->create(, [
+\Files\Model\Secret::create([
   'name' => "Production API token",
   'description' => "Used by production API integrations.",
   'secret_type' => "token",
@@ -100,6 +100,9 @@ $secret->update([
   'metadata' => {"header_name":"Authorization"},
 ]);
 ```
+
+`update()` refreshes `$secret` with the saved attributes, and also returns them as a separate
+`\Files\Model\Secret`.
 
 ### Parameters
 

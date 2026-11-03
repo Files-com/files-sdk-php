@@ -89,9 +89,11 @@
 ## List AS2 Incoming Messages
 
 ```
-$as2_incoming_message = new \Files\Model\As2IncomingMessage();
-$as2_incoming_message->list
+\Files\Model\As2IncomingMessage::all();
 ```
+
+`\Files\Model\As2IncomingMessage::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -110,8 +112,7 @@ $as2_incoming_message->list
 ## Show AS2 Incoming Message
 
 ```
-$as2_incoming_message = new \Files\Model\As2IncomingMessage();
-$as2_incoming_message->find($id);
+\Files\Model\As2IncomingMessage::find($id);
 ```
 
 

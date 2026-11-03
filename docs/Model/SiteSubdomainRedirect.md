@@ -21,9 +21,11 @@
 ## List Site Subdomain Redirects
 
 ```
-$site_subdomain_redirect = new \Files\Model\SiteSubdomainRedirect();
-$site_subdomain_redirect->list
+\Files\Model\SiteSubdomainRedirect::all();
 ```
+
+`\Files\Model\SiteSubdomainRedirect::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -37,8 +39,7 @@ $site_subdomain_redirect->list
 ## Show Site Subdomain Redirect
 
 ```
-$site_subdomain_redirect = new \Files\Model\SiteSubdomainRedirect();
-$site_subdomain_redirect->find($id);
+\Files\Model\SiteSubdomainRedirect::find($id);
 ```
 
 

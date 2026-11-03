@@ -129,9 +129,11 @@
 ## List Syncs
 
 ```
-$sync = new \Files\Model\Sync();
-$sync->list
+\Files\Model\Sync::all();
 ```
+
+`\Files\Model\Sync::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -146,8 +148,7 @@ $sync->list
 ## Show Sync
 
 ```
-$sync = new \Files\Model\Sync();
-$sync->find($id);
+\Files\Model\Sync::find($id);
 ```
 
 
@@ -160,8 +161,7 @@ $sync->find($id);
 ## Create Sync
 
 ```
-$sync = new \Files\Model\Sync();
-$sync->create(, [
+\Files\Model\Sync::create([
   'delete_empty_folders' => true,
   'description' => "example",
   'dest_path' => "example",
@@ -280,6 +280,9 @@ $sync->update([
   'always_write_trigger_file' => true,
 ]);
 ```
+
+`update()` refreshes `$sync` with the saved attributes, and also returns them as a separate
+`\Files\Model\Sync`.
 
 ### Parameters
 

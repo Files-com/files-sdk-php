@@ -378,6 +378,10 @@ class EventSubscription
         return isset($this->attributes['updated_at']) ? $this->attributes['updated_at'] : null;
     }
 
+    // Saves the changes, then refreshes this object with the saved attributes, which it also returns as a separate
+    // EventSubscription with this object's options. A response that is not a JSON object raises
+    // ApiBadResponseException and leaves this object unchanged.
+    //
     /**
      * Update Event Subscription
      *
@@ -414,40 +418,54 @@ class EventSubscription
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (!empty($params['event_channel_id']) && !is_int($params['event_channel_id'])) {
+        if (isset($params['event_channel_id']) && !is_int($params['event_channel_id'])) {
             throw new \Files\Exception\InvalidParameterException('$event_channel_id must be of type int; received ' . gettype(@$params['event_channel_id']));
         }
 
-        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
+        if (isset($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
-        if (!empty($params['name']) && !is_string($params['name'])) {
+        if (isset($params['apply_to_all_workspaces']) && !is_scalar($params['apply_to_all_workspaces'])) {
+            throw new \Files\Exception\InvalidParameterException('$apply_to_all_workspaces must be of type boolean; received ' . gettype(@$params['apply_to_all_workspaces']));
+        }
+
+        if (isset($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (!empty($params['subject']) && !is_string($params['subject'])) {
+        if (isset($params['subject']) && !is_string($params['subject'])) {
             throw new \Files\Exception\InvalidParameterException('$subject must be of type string; received ' . gettype(@$params['subject']));
         }
 
-        if (!empty($params['message']) && !is_string($params['message'])) {
+        if (isset($params['message']) && !is_string($params['message'])) {
             throw new \Files\Exception\InvalidParameterException('$message must be of type string; received ' . gettype(@$params['message']));
         }
 
-        if (!empty($params['event_types']) && !is_array($params['event_types'])) {
+        if (isset($params['message_only']) && !is_scalar($params['message_only'])) {
+            throw new \Files\Exception\InvalidParameterException('$message_only must be of type boolean; received ' . gettype(@$params['message_only']));
+        }
+
+        if (isset($params['enabled']) && !is_scalar($params['enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$enabled must be of type boolean; received ' . gettype(@$params['enabled']));
+        }
+
+        if (isset($params['event_types']) && !is_array($params['event_types'])) {
             throw new \Files\Exception\InvalidParameterException('$event_types must be of type array; received ' . gettype(@$params['event_types']));
         }
 
-        if (!empty($params['event_target_ids']) && !is_array($params['event_target_ids'])) {
+        if (isset($params['event_target_ids']) && !is_array($params['event_target_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$event_target_ids must be of type array; received ' . gettype(@$params['event_target_ids']));
         }
 
         $response = Api::sendRequest('/event_subscriptions/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
-        return new EventSubscription((array) (@$response->data ?: []), $this->options);
+        $updated = new EventSubscription(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $this->options);
+        $this->attributes = $updated->attributes;
+        return $updated;
     }
 
     /**
@@ -474,7 +492,7 @@ class EventSubscription
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -536,11 +554,11 @@ class EventSubscription
      */
     public static function all($params = [], $options = [])
     {
-        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -548,11 +566,31 @@ class EventSubscription
 
         $return_array = [];
 
-        foreach ($response->data as $obj) {
-            $return_array[] = new EventSubscription((array) $obj, $options);
+        foreach (Api::listEntries(isset($response->data) ? $response->data : null, $response->status) as $obj) {
+            $return_array[] = new EventSubscription(Api::modelAttributes($obj, $response->status), $options);
         }
 
         return $return_array;
+    }
+
+    /**
+     * Fetches one page of all()'s results, with the same parameters and options,
+     * whatever Files::$autoPaginate is. Iterate the page, step with nextPage(), or read every result lazily with
+     * autoPagingIterator(). A 'cursor' parameter starts from a page saved with getNextCursor().
+     *
+     * @return \Files\Page
+     */
+    public static function listPage($params = [], $options = [])
+    {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        return \Files\Page::fetch('/event_subscriptions', $params, $options, EventSubscription::class);
     }
 
     /**
@@ -578,13 +616,13 @@ class EventSubscription
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
         $response = Api::sendRequest('/event_subscriptions/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
-        return new EventSubscription((array) (@$response->data ?: []), $options);
+        return new EventSubscription(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
     /**
      * Show Event Subscription
@@ -632,36 +670,48 @@ class EventSubscription
             throw new \Files\Exception\MissingParameterException('Parameter missing: name');
         }
 
-        if (!empty($params['event_channel_id']) && !is_int($params['event_channel_id'])) {
+        if (isset($params['event_channel_id']) && !is_int($params['event_channel_id'])) {
             throw new \Files\Exception\InvalidParameterException('$event_channel_id must be of type int; received ' . gettype(@$params['event_channel_id']));
         }
 
-        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
+        if (isset($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
-        if (!empty($params['name']) && !is_string($params['name'])) {
+        if (isset($params['apply_to_all_workspaces']) && !is_scalar($params['apply_to_all_workspaces'])) {
+            throw new \Files\Exception\InvalidParameterException('$apply_to_all_workspaces must be of type boolean; received ' . gettype(@$params['apply_to_all_workspaces']));
+        }
+
+        if (isset($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (!empty($params['subject']) && !is_string($params['subject'])) {
+        if (isset($params['subject']) && !is_string($params['subject'])) {
             throw new \Files\Exception\InvalidParameterException('$subject must be of type string; received ' . gettype(@$params['subject']));
         }
 
-        if (!empty($params['message']) && !is_string($params['message'])) {
+        if (isset($params['message']) && !is_string($params['message'])) {
             throw new \Files\Exception\InvalidParameterException('$message must be of type string; received ' . gettype(@$params['message']));
         }
 
-        if (!empty($params['event_types']) && !is_array($params['event_types'])) {
+        if (isset($params['message_only']) && !is_scalar($params['message_only'])) {
+            throw new \Files\Exception\InvalidParameterException('$message_only must be of type boolean; received ' . gettype(@$params['message_only']));
+        }
+
+        if (isset($params['enabled']) && !is_scalar($params['enabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$enabled must be of type boolean; received ' . gettype(@$params['enabled']));
+        }
+
+        if (isset($params['event_types']) && !is_array($params['event_types'])) {
             throw new \Files\Exception\InvalidParameterException('$event_types must be of type array; received ' . gettype(@$params['event_types']));
         }
 
-        if (!empty($params['event_target_ids']) && !is_array($params['event_target_ids'])) {
+        if (isset($params['event_target_ids']) && !is_array($params['event_target_ids'])) {
             throw new \Files\Exception\InvalidParameterException('$event_target_ids must be of type array; received ' . gettype(@$params['event_target_ids']));
         }
 
         $response = Api::sendRequest('/event_subscriptions', 'POST', $params, $options);
 
-        return new EventSubscription((array) (@$response->data ?: []), $options);
+        return new EventSubscription(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
 }

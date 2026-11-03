@@ -48,11 +48,13 @@
 ## List Form Field Sets
 
 ```
-$form_field_set = new \Files\Model\FormFieldSet();
-$form_field_set->list(, [
+\Files\Model\FormFieldSet::all([
   'user_id' => 1,
 ]);
 ```
+
+`\Files\Model\FormFieldSet::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -66,8 +68,7 @@ $form_field_set->list(, [
 ## Show Form Field Set
 
 ```
-$form_field_set = new \Files\Model\FormFieldSet();
-$form_field_set->find($id);
+\Files\Model\FormFieldSet::find($id);
 ```
 
 
@@ -80,8 +81,7 @@ $form_field_set->find($id);
 ## Create Form Field Set
 
 ```
-$form_field_set = new \Files\Model\FormFieldSet();
-$form_field_set->create(, [
+\Files\Model\FormFieldSet::create([
   'user_id' => 1,
   'title' => "Sample Form Title",
   'require_complete_metadata_capture' => false,
@@ -122,6 +122,9 @@ $form_field_set->update([
   'form_fields' => [{"label":"Department","field_type":"dropdown","required":true,"options_for_select":["Finance","Sales"]}],
 ]);
 ```
+
+`update()` refreshes `$form_field_set` with the saved attributes, and also returns them as a separate
+`\Files\Model\FormFieldSet`.
 
 ### Parameters
 

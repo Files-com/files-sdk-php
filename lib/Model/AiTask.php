@@ -591,7 +591,7 @@ class AiTask
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -599,6 +599,10 @@ class AiTask
         return;
     }
 
+    // Saves the changes, then refreshes this object with the saved attributes, which it also returns as a separate
+    // AiTask with this object's options. A response that is not a JSON object raises
+    // ApiBadResponseException and leaves this object unchanged.
+    //
     /**
      * Update Ai Task
      *
@@ -641,80 +645,86 @@ class AiTask
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        if (!empty($params['description']) && !is_string($params['description'])) {
+        if (isset($params['description']) && !is_string($params['description'])) {
             throw new \Files\Exception\InvalidParameterException('$description must be of type string; received ' . gettype(@$params['description']));
         }
 
-        if (!empty($params['holiday_region']) && !is_string($params['holiday_region'])) {
+        if (isset($params['disabled']) && !is_scalar($params['disabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$disabled must be of type boolean; received ' . gettype(@$params['disabled']));
+        }
+
+        if (isset($params['holiday_region']) && !is_string($params['holiday_region'])) {
             throw new \Files\Exception\InvalidParameterException('$holiday_region must be of type string; received ' . gettype(@$params['holiday_region']));
         }
 
-        if (!empty($params['interval']) && !is_string($params['interval'])) {
+        if (isset($params['interval']) && !is_string($params['interval'])) {
             throw new \Files\Exception\InvalidParameterException('$interval must be of type string; received ' . gettype(@$params['interval']));
         }
 
-        if (!empty($params['name']) && !is_string($params['name'])) {
+        if (isset($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (!empty($params['path']) && !is_string($params['path'])) {
+        if (isset($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (!empty($params['permission_set']) && !is_string($params['permission_set'])) {
+        if (isset($params['permission_set']) && !is_string($params['permission_set'])) {
             throw new \Files\Exception\InvalidParameterException('$permission_set must be of type string; received ' . gettype(@$params['permission_set']));
         }
 
-        if (!empty($params['prompt']) && !is_string($params['prompt'])) {
+        if (isset($params['prompt']) && !is_string($params['prompt'])) {
             throw new \Files\Exception\InvalidParameterException('$prompt must be of type string; received ' . gettype(@$params['prompt']));
         }
 
-        if (!empty($params['recurring_day']) && !is_int($params['recurring_day'])) {
+        if (isset($params['recurring_day']) && !is_int($params['recurring_day'])) {
             throw new \Files\Exception\InvalidParameterException('$recurring_day must be of type int; received ' . gettype(@$params['recurring_day']));
         }
 
-        if (!empty($params['recurring_days']) && !is_array($params['recurring_days'])) {
+        if (isset($params['recurring_days']) && !is_array($params['recurring_days'])) {
             throw new \Files\Exception\InvalidParameterException('$recurring_days must be of type array; received ' . gettype(@$params['recurring_days']));
         }
 
-        if (!empty($params['schedule_id']) && !is_int($params['schedule_id'])) {
+        if (isset($params['schedule_id']) && !is_int($params['schedule_id'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_id must be of type int; received ' . gettype(@$params['schedule_id']));
         }
 
-        if (!empty($params['schedule_days_of_week']) && !is_array($params['schedule_days_of_week'])) {
+        if (isset($params['schedule_days_of_week']) && !is_array($params['schedule_days_of_week'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_days_of_week must be of type array; received ' . gettype(@$params['schedule_days_of_week']));
         }
 
-        if (!empty($params['schedule_time_zone']) && !is_string($params['schedule_time_zone'])) {
+        if (isset($params['schedule_time_zone']) && !is_string($params['schedule_time_zone'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_time_zone must be of type string; received ' . gettype(@$params['schedule_time_zone']));
         }
 
-        if (!empty($params['schedule_times_of_day']) && !is_array($params['schedule_times_of_day'])) {
+        if (isset($params['schedule_times_of_day']) && !is_array($params['schedule_times_of_day'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_times_of_day must be of type array; received ' . gettype(@$params['schedule_times_of_day']));
         }
 
-        if (!empty($params['source']) && !is_string($params['source'])) {
+        if (isset($params['source']) && !is_string($params['source'])) {
             throw new \Files\Exception\InvalidParameterException('$source must be of type string; received ' . gettype(@$params['source']));
         }
 
-        if (!empty($params['trigger']) && !is_string($params['trigger'])) {
+        if (isset($params['trigger']) && !is_string($params['trigger'])) {
             throw new \Files\Exception\InvalidParameterException('$trigger must be of type string; received ' . gettype(@$params['trigger']));
         }
 
-        if (!empty($params['trigger_actions']) && !is_array($params['trigger_actions'])) {
+        if (isset($params['trigger_actions']) && !is_array($params['trigger_actions'])) {
             throw new \Files\Exception\InvalidParameterException('$trigger_actions must be of type array; received ' . gettype(@$params['trigger_actions']));
         }
 
-        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
+        if (isset($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
         $response = Api::sendRequest('/ai_tasks/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);
-        return new AiTask((array) (@$response->data ?: []), $this->options);
+        $updated = new AiTask(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $this->options);
+        $this->attributes = $updated->attributes;
+        return $updated;
     }
 
     /**
@@ -741,7 +751,7 @@ class AiTask
             }
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
@@ -803,11 +813,11 @@ class AiTask
      */
     public static function all($params = [], $options = [])
     {
-        if (!empty($params['cursor']) && !is_string($params['cursor'])) {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
-        if (!empty($params['per_page']) && !is_int($params['per_page'])) {
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
@@ -815,11 +825,31 @@ class AiTask
 
         $return_array = [];
 
-        foreach ($response->data as $obj) {
-            $return_array[] = new AiTask((array) $obj, $options);
+        foreach (Api::listEntries(isset($response->data) ? $response->data : null, $response->status) as $obj) {
+            $return_array[] = new AiTask(Api::modelAttributes($obj, $response->status), $options);
         }
 
         return $return_array;
+    }
+
+    /**
+     * Fetches one page of all()'s results, with the same parameters and options,
+     * whatever Files::$autoPaginate is. Iterate the page, step with nextPage(), or read every result lazily with
+     * autoPagingIterator(). A 'cursor' parameter starts from a page saved with getNextCursor().
+     *
+     * @return \Files\Page
+     */
+    public static function listPage($params = [], $options = [])
+    {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        return \Files\Page::fetch('/ai_tasks', $params, $options, AiTask::class);
     }
 
     /**
@@ -845,13 +875,13 @@ class AiTask
             throw new \Files\Exception\MissingParameterException('Parameter missing: id');
         }
 
-        if (!empty($params['id']) && !is_int($params['id'])) {
+        if (isset($params['id']) && !is_int($params['id'])) {
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
         $response = Api::sendRequest('/ai_tasks/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
 
-        return new AiTask((array) (@$response->data ?: []), $options);
+        return new AiTask(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
     /**
      * Show Ai Task
@@ -909,76 +939,80 @@ class AiTask
             throw new \Files\Exception\MissingParameterException('Parameter missing: prompt');
         }
 
-        if (!empty($params['description']) && !is_string($params['description'])) {
+        if (isset($params['description']) && !is_string($params['description'])) {
             throw new \Files\Exception\InvalidParameterException('$description must be of type string; received ' . gettype(@$params['description']));
         }
 
-        if (!empty($params['holiday_region']) && !is_string($params['holiday_region'])) {
+        if (isset($params['disabled']) && !is_scalar($params['disabled'])) {
+            throw new \Files\Exception\InvalidParameterException('$disabled must be of type boolean; received ' . gettype(@$params['disabled']));
+        }
+
+        if (isset($params['holiday_region']) && !is_string($params['holiday_region'])) {
             throw new \Files\Exception\InvalidParameterException('$holiday_region must be of type string; received ' . gettype(@$params['holiday_region']));
         }
 
-        if (!empty($params['interval']) && !is_string($params['interval'])) {
+        if (isset($params['interval']) && !is_string($params['interval'])) {
             throw new \Files\Exception\InvalidParameterException('$interval must be of type string; received ' . gettype(@$params['interval']));
         }
 
-        if (!empty($params['name']) && !is_string($params['name'])) {
+        if (isset($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
         }
 
-        if (!empty($params['path']) && !is_string($params['path'])) {
+        if (isset($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (!empty($params['permission_set']) && !is_string($params['permission_set'])) {
+        if (isset($params['permission_set']) && !is_string($params['permission_set'])) {
             throw new \Files\Exception\InvalidParameterException('$permission_set must be of type string; received ' . gettype(@$params['permission_set']));
         }
 
-        if (!empty($params['prompt']) && !is_string($params['prompt'])) {
+        if (isset($params['prompt']) && !is_string($params['prompt'])) {
             throw new \Files\Exception\InvalidParameterException('$prompt must be of type string; received ' . gettype(@$params['prompt']));
         }
 
-        if (!empty($params['recurring_day']) && !is_int($params['recurring_day'])) {
+        if (isset($params['recurring_day']) && !is_int($params['recurring_day'])) {
             throw new \Files\Exception\InvalidParameterException('$recurring_day must be of type int; received ' . gettype(@$params['recurring_day']));
         }
 
-        if (!empty($params['recurring_days']) && !is_array($params['recurring_days'])) {
+        if (isset($params['recurring_days']) && !is_array($params['recurring_days'])) {
             throw new \Files\Exception\InvalidParameterException('$recurring_days must be of type array; received ' . gettype(@$params['recurring_days']));
         }
 
-        if (!empty($params['schedule_id']) && !is_int($params['schedule_id'])) {
+        if (isset($params['schedule_id']) && !is_int($params['schedule_id'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_id must be of type int; received ' . gettype(@$params['schedule_id']));
         }
 
-        if (!empty($params['schedule_days_of_week']) && !is_array($params['schedule_days_of_week'])) {
+        if (isset($params['schedule_days_of_week']) && !is_array($params['schedule_days_of_week'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_days_of_week must be of type array; received ' . gettype(@$params['schedule_days_of_week']));
         }
 
-        if (!empty($params['schedule_time_zone']) && !is_string($params['schedule_time_zone'])) {
+        if (isset($params['schedule_time_zone']) && !is_string($params['schedule_time_zone'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_time_zone must be of type string; received ' . gettype(@$params['schedule_time_zone']));
         }
 
-        if (!empty($params['schedule_times_of_day']) && !is_array($params['schedule_times_of_day'])) {
+        if (isset($params['schedule_times_of_day']) && !is_array($params['schedule_times_of_day'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_times_of_day must be of type array; received ' . gettype(@$params['schedule_times_of_day']));
         }
 
-        if (!empty($params['source']) && !is_string($params['source'])) {
+        if (isset($params['source']) && !is_string($params['source'])) {
             throw new \Files\Exception\InvalidParameterException('$source must be of type string; received ' . gettype(@$params['source']));
         }
 
-        if (!empty($params['trigger']) && !is_string($params['trigger'])) {
+        if (isset($params['trigger']) && !is_string($params['trigger'])) {
             throw new \Files\Exception\InvalidParameterException('$trigger must be of type string; received ' . gettype(@$params['trigger']));
         }
 
-        if (!empty($params['trigger_actions']) && !is_array($params['trigger_actions'])) {
+        if (isset($params['trigger_actions']) && !is_array($params['trigger_actions'])) {
             throw new \Files\Exception\InvalidParameterException('$trigger_actions must be of type array; received ' . gettype(@$params['trigger_actions']));
         }
 
-        if (!empty($params['workspace_id']) && !is_int($params['workspace_id'])) {
+        if (isset($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
         }
 
         $response = Api::sendRequest('/ai_tasks', 'POST', $params, $options);
 
-        return new AiTask((array) (@$response->data ?: []), $options);
+        return new AiTask(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }
 }

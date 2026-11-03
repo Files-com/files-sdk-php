@@ -42,11 +42,13 @@
 ## List history for specific file
 
 ```
-$history = new \Files\Model\History();
-$history->listForFile($path, [
+\Files\Model\History::listForFile($path, [
   'display' => "Actual text of the action here.",
 ]);
 ```
+
+`\Files\Model\History::listForFilePage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -64,11 +66,13 @@ $history->listForFile($path, [
 ## List history for specific folder
 
 ```
-$history = new \Files\Model\History();
-$history->listForFolder($path, [
+\Files\Model\History::listForFolder($path, [
   'display' => "Actual text of the action here.",
 ]);
 ```
+
+`\Files\Model\History::listForFolderPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -86,11 +90,13 @@ $history->listForFolder($path, [
 ## List history for specific user
 
 ```
-$history = new \Files\Model\History();
-$history->listForUser($user_id, [
+\Files\Model\History::listForUser($user_id, [
   'display' => "Actual text of the action here.",
 ]);
 ```
+
+`\Files\Model\History::listForUserPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -108,11 +114,13 @@ $history->listForUser($user_id, [
 ## List site login history
 
 ```
-$history = new \Files\Model\History();
-$history->listLogins(, [
+\Files\Model\History::listLogins([
   'display' => "Actual text of the action here.",
 ]);
 ```
+
+`\Files\Model\History::listLoginsPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -129,11 +137,13 @@ $history->listLogins(, [
 ## List site full action history
 
 ```
-$history = new \Files\Model\History();
-$history->list(, [
+\Files\Model\History::all([
   'display' => "Actual text of the action here.",
 ]);
 ```
+
+`\Files\Model\History::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters

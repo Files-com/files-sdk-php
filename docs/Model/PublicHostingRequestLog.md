@@ -35,9 +35,11 @@
 ## List Public Hosting Request Logs
 
 ```
-$public_hosting_request_log = new \Files\Model\PublicHostingRequestLog();
-$public_hosting_request_log->list
+\Files\Model\PublicHostingRequestLog::all();
 ```
+
+`\Files\Model\PublicHostingRequestLog::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters

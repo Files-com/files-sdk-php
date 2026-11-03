@@ -178,9 +178,11 @@
 ## List Automations
 
 ```
-$automation = new \Files\Model\Automation();
-$automation->list
+\Files\Model\Automation::all();
 ```
+
+`\Files\Model\Automation::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -199,8 +201,7 @@ $automation->list
 ## Show Automation
 
 ```
-$automation = new \Files\Model\Automation();
-$automation->find($id);
+\Files\Model\Automation::find($id);
 ```
 
 
@@ -213,8 +214,7 @@ $automation->find($id);
 ## Show the Automation v2 authoring schema and active node catalog
 
 ```
-$automation = new \Files\Model\Automation();
-$automation->getAuthoringSchema
+\Files\Model\Automation::getAuthoringSchema();
 ```
 
 
@@ -223,8 +223,7 @@ $automation->getAuthoringSchema
 ## Create Automation
 
 ```
-$automation = new \Files\Model\Automation();
-$automation->create(, [
+\Files\Model\Automation::create([
   'source' => "example",
   'destinations' => ["folder_a/file_a.txt","folder_b/","./relative-folder/"],
   'destination_replace_from' => "example",
@@ -506,6 +505,9 @@ $automation->update([
   'automation' => "create_folder",
 ]);
 ```
+
+`update()` refreshes `$automation` with the saved attributes, and also returns them as a separate
+`\Files\Model\Automation`.
 
 ### Parameters
 

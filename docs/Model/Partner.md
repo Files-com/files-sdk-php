@@ -71,9 +71,11 @@
 ## List Partners
 
 ```
-$partner = new \Files\Model\Partner();
-$partner->list
+\Files\Model\Partner::all();
 ```
+
+`\Files\Model\Partner::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
@@ -88,8 +90,7 @@ $partner->list
 ## Show Partner
 
 ```
-$partner = new \Files\Model\Partner();
-$partner->find($id);
+\Files\Model\Partner::find($id);
 ```
 
 
@@ -102,8 +103,7 @@ $partner->find($id);
 ## Create Partner
 
 ```
-$partner = new \Files\Model\Partner();
-$partner->create(, [
+\Files\Model\Partner::create([
   'ai_assistant_personality_id' => 1,
   'allowed_ips' => "10.0.0.0/8\n127.0.0.1",
   'allow_bypassing_2fa_policies' => false,
@@ -169,6 +169,9 @@ $partner->update([
   'root_folder' => "/AcmeCorp",
 ]);
 ```
+
+`update()` refreshes `$partner` with the saved attributes, and also returns them as a separate
+`\Files\Model\Partner`.
 
 ### Parameters
 

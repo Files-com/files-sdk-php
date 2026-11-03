@@ -9,6 +9,7 @@ use Files\Exception\ApiServerException;
 use Files\Exception\ConfigurationException;
 use Files\Exception\NotFoundException;
 use Files\Exception\NotImplementedException;
+use Files\Test\UnboundTransportGuard;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
@@ -18,6 +19,8 @@ use PHPUnit\Framework\TestCase;
 
 class DirectoryTest extends TestCase
 {
+    use UnboundTransportGuard;
+
     public function testNativeReadsFollowEmptyPagesAndPreserveZeroNamedEntries()
     {
         $responses = [

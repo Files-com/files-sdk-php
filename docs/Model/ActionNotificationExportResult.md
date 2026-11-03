@@ -33,12 +33,14 @@
 ## List Action Notification Export Results
 
 ```
-$action_notification_export_result = new \Files\Model\ActionNotificationExportResult();
-$action_notification_export_result->list(, [
+\Files\Model\ActionNotificationExportResult::all([
   'user_id' => 1,
   'action_notification_export_id' => 1,
 ]);
 ```
+
+`\Files\Model\ActionNotificationExportResult::listPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters

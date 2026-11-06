@@ -49,7 +49,7 @@ use Files\Model\User;
 require_once dirname(__FILE__) . '/../../vendor/autoload.php';
 
 // With no argument, every test below runs against the Files.com site that FILES_API_KEY and FILES_API_DOMAIN name.
-// api-scenarios.sh also runs the four tests sharedSimulatorTests() names against a simulator it starts with the mock
+// api-scenarios.sh also runs the tests sharedSimulatorTests() names against a simulator it starts with the mock
 // server's launcher, with-scenario.rb, and then checks that run:
 //
 //   php test-file.php --shared-simulator
@@ -66,7 +66,7 @@ if (!isset($argumentCounts[$mode]) || count($arguments) !== $argumentCounts[$mod
 }
 
 // any user count that will require multiple page requests to fetch all users
-define('USER_COUNT_TO_TRIGGER_PAGINATION', getenv('USER_COUNT_TO_TRIGGER_PAGINATION') ?: 1);
+define('USER_COUNT_TO_TRIGGER_PAGINATION', $mode === 'live' ? (getenv('USER_COUNT_TO_TRIGGER_PAGINATION') ?: 1) : 1);
 
 if ($mode === 'live') {
     // name of an existing folder in your root to create/delete test files and folders (a --shared-simulator run makes
@@ -616,9 +616,12 @@ function testLanguage()
 function sharedSimulatorTests()
 {
     return [
+        'testAutoPaginate',
+        'testUserListAndUpdate',
         'testUserCreateAndDelete',
         'testUserStaticCreateAndDelete',
         'testFolderCreateListAndDelete',
+        'testFileUploadFindCopyAndDelete',
         'testUploadWithParams',
     ];
 }
@@ -679,6 +682,15 @@ function runOnSharedSimulator()
 
     $resetBody = $preset['reset'];
     $resetBody['profile']['site_policy']['always_mkdir_parents'] = false;
+    // The existing list/update and pagination assertions need known records and more than one page. These are
+    // simulator fixtures, never accounts on a Files.com site. A pending copy supplies the migration ID the copy
+    // assertion requires without changing the SDK's copyTo call.
+    $resetBody['fixtures']['users'] = [
+        ['username' => 'shared-user-one', 'name' => 'Shared User One'],
+        ['username' => 'shared-user-two', 'name' => 'Shared User Two'],
+        ['username' => 'shared-user-three', 'name' => 'Shared User Three'],
+    ];
+    $resetBody['profile']['file_actions'] = 'pending';
 
     $report = [
         'format' => 'files-php-shared-simulator/1',

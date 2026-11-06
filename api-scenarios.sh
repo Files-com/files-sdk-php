@@ -16,9 +16,10 @@
 # The scenario tests load test/vendor/autoload.php (--bootstrap) instead of the default suite's bootstrap.php, which
 # would clear the FILES_* settings the launcher gives them.
 #
-# Then, with the same PHP, launcher and preset, it runs four of the manual integration tests against a simulator of
-# their own (test/integration/test-file.php --shared-simulator: creating, finding and deleting a user both ways,
-# creating, listing and deleting a folder, and uploading a file and data with mkdir_parents into missing folders) and
+# Then, with the same PHP, launcher and preset, it runs seven of the manual integration tests against a simulator of
+# their own (test/integration/test-file.php --shared-simulator: user pagination and list/update, creating, finding and
+# deleting a user both ways, creating, listing and deleting a folder, uploading/finding/copying/deleting a file and
+# data, and uploading a file and data with mkdir_parents into missing folders) and
 # checks that run (test-file.php --check-shared-simulator). OUT-integration, which must not exist either, receives that
 # launcher's evidence and the tests' report (integration.json).
 #

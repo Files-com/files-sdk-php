@@ -757,38 +757,6 @@ class Sync
     }
 
     /**
-     * Dry Run Sync
-     *
-     * POST /syncs/{id}/dry_run
-     *
-     * @param array $params Request parameters.
-     *     - `id` (int, optional when set on this model): Sync ID.
-     * @return void
-     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
-     */
-    public function dryRun($params = [])
-    {
-        if (!is_array($params)) {
-            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
-        }
-
-        if (empty($params['id'])) {
-            if (@$this->id) {
-                $params['id'] = $this->id;
-            } else {
-                throw new \Files\Exception\MissingParameterException('Parameter missing: id');
-            }
-        }
-
-        if (isset($params['id']) && !is_int($params['id'])) {
-            throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
-        }
-
-        $response = Api::sendRequest('/syncs/' . rawurlencode(strval(@$params['id'])) . '/dry_run', 'POST', $params, $this->options);
-        return;
-    }
-
-    /**
      * Manually Run Sync
      *
      * POST /syncs/{id}/manual_run
@@ -817,6 +785,38 @@ class Sync
         }
 
         $response = Api::sendRequest('/syncs/' . rawurlencode(strval(@$params['id'])) . '/manual_run', 'POST', $params, $this->options);
+        return;
+    }
+
+    /**
+     * Dry Run Sync
+     *
+     * POST /syncs/{id}/dry_run
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Sync ID.
+     * @return void
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
+    public function dryRun($params = [])
+    {
+        if (!is_array($params)) {
+            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+        }
+
+        if (empty($params['id'])) {
+            if (@$this->id) {
+                $params['id'] = $this->id;
+            } else {
+                throw new \Files\Exception\MissingParameterException('Parameter missing: id');
+            }
+        }
+
+        if (isset($params['id']) && !is_int($params['id'])) {
+            throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
+        }
+
+        $response = Api::sendRequest('/syncs/' . rawurlencode(strval(@$params['id'])) . '/dry_run', 'POST', $params, $this->options);
         return;
     }
 

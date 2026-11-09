@@ -342,6 +342,88 @@ class MetadataCategory
     }
 
     /**
+     * List Metadata Categories by Path
+     *
+     * GET /metadata_categories/list_by_path/{path}
+     *
+     * @param string $path Path to operate on.
+     * @param array $params Request parameters.
+     *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+     *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\MetadataCategory[]
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
+    public static function listFor($path, $params = [], $options = [])
+    {
+        if (!is_array($params)) {
+            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+        }
+
+        $params['path'] = $path;
+
+        if (empty($params['path'])) {
+            throw new \Files\Exception\MissingParameterException('Parameter missing: path');
+        }
+
+        if (isset($params['path']) && !is_string($params['path'])) {
+            throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
+        }
+
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        $response = Api::sendRequest('/metadata_categories/list_by_path/' . rawurlencode(strval(@$params['path'])) . '', 'GET', $params, $options);
+
+        $return_array = [];
+
+        foreach (Api::listEntries(isset($response->data) ? $response->data : null, $response->status) as $obj) {
+            $return_array[] = new MetadataCategory(Api::modelAttributes($obj, $response->status), $options);
+        }
+
+        return $return_array;
+    }
+
+    /**
+     * Fetches one page of listFor()'s results, with the same parameters and options,
+     * whatever Files::$autoPaginate is. Iterate the page, step with nextPage(), or read every result lazily with
+     * autoPagingIterator(). A 'cursor' parameter starts from a page saved with getNextCursor().
+     *
+     * @return \Files\Page
+     */
+    public static function listForPage($path, $params = [], $options = [])
+    {
+        if (!is_array($params)) {
+            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+        }
+
+        $params['path'] = $path;
+
+        if (empty($params['path'])) {
+            throw new \Files\Exception\MissingParameterException('Parameter missing: path');
+        }
+
+        if (isset($params['path']) && !is_string($params['path'])) {
+            throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
+        }
+
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        return \Files\Page::fetch('/metadata_categories/list_by_path/' . rawurlencode(strval(@$params['path'])) . '', $params, $options, MetadataCategory::class);
+    }
+
+    /**
      * Show Metadata Category
      *
      * GET /metadata_categories/{id}
@@ -388,88 +470,6 @@ class MetadataCategory
     public static function get($id, $params = [], $options = [])
     {
         return self::find($id, $params, $options);
-    }
-
-    /**
-     * List Metadata Categories by Path
-     *
-     * GET /metadata_categories/list_by_path/{path}
-     *
-     * @param string $path Path to operate on.
-     * @param array $params Request parameters.
-     *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-     *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
-     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
-     * @return \Files\Model\MetadataCategory[]
-     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
-     */
-    public static function listFor($path, $params = [], $options = [])
-    {
-        if (!is_array($params)) {
-            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
-        }
-
-        $params['path'] = $path;
-
-        if (empty($params['path'])) {
-            throw new \Files\Exception\MissingParameterException('Parameter missing: path');
-        }
-
-        if (isset($params['cursor']) && !is_string($params['cursor'])) {
-            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
-        }
-
-        if (isset($params['per_page']) && !is_int($params['per_page'])) {
-            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
-        }
-
-        if (isset($params['path']) && !is_string($params['path'])) {
-            throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
-        }
-
-        $response = Api::sendRequest('/metadata_categories/list_by_path/' . rawurlencode(strval(@$params['path'])) . '', 'GET', $params, $options);
-
-        $return_array = [];
-
-        foreach (Api::listEntries(isset($response->data) ? $response->data : null, $response->status) as $obj) {
-            $return_array[] = new MetadataCategory(Api::modelAttributes($obj, $response->status), $options);
-        }
-
-        return $return_array;
-    }
-
-    /**
-     * Fetches one page of listFor()'s results, with the same parameters and options,
-     * whatever Files::$autoPaginate is. Iterate the page, step with nextPage(), or read every result lazily with
-     * autoPagingIterator(). A 'cursor' parameter starts from a page saved with getNextCursor().
-     *
-     * @return \Files\Page
-     */
-    public static function listForPage($path, $params = [], $options = [])
-    {
-        if (!is_array($params)) {
-            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
-        }
-
-        $params['path'] = $path;
-
-        if (empty($params['path'])) {
-            throw new \Files\Exception\MissingParameterException('Parameter missing: path');
-        }
-
-        if (isset($params['cursor']) && !is_string($params['cursor'])) {
-            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
-        }
-
-        if (isset($params['per_page']) && !is_int($params['per_page'])) {
-            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
-        }
-
-        if (isset($params['path']) && !is_string($params['path'])) {
-            throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
-        }
-
-        return \Files\Page::fetch('/metadata_categories/list_by_path/' . rawurlencode(strval(@$params['path'])) . '', $params, $options, MetadataCategory::class);
     }
 
     /**

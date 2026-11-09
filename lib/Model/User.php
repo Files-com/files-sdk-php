@@ -2196,16 +2196,16 @@ class User
     }
 
     /**
-     * Unlock user who has been locked out due to failed logins
+     * Trigger 2FA Reset process for user who has lost access to their existing 2FA methods
      *
-     * POST /users/{id}/unlock
+     * POST /users/{id}/2fa/reset
      *
      * @param array $params Request parameters.
      *     - `id` (int, optional when set on this model): User ID.
      * @return void
      * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
      */
-    public function unlock($params = [])
+    public function user2faReset($params = [])
     {
         if (!is_array($params)) {
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
@@ -2223,7 +2223,7 @@ class User
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/users/' . rawurlencode(strval(@$params['id'])) . '/unlock', 'POST', $params, $this->options);
+        $response = Api::sendRequest('/users/' . rawurlencode(strval(@$params['id'])) . '/2fa/reset', 'POST', $params, $this->options);
         return;
     }
 
@@ -2260,16 +2260,16 @@ class User
     }
 
     /**
-     * Trigger 2FA Reset process for user who has lost access to their existing 2FA methods
+     * Unlock user who has been locked out due to failed logins
      *
-     * POST /users/{id}/2fa/reset
+     * POST /users/{id}/unlock
      *
      * @param array $params Request parameters.
      *     - `id` (int, optional when set on this model): User ID.
      * @return void
      * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
      */
-    public function user2faReset($params = [])
+    public function unlock($params = [])
     {
         if (!is_array($params)) {
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
@@ -2287,7 +2287,7 @@ class User
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/users/' . rawurlencode(strval(@$params['id'])) . '/2fa/reset', 'POST', $params, $this->options);
+        $response = Api::sendRequest('/users/' . rawurlencode(strval(@$params['id'])) . '/unlock', 'POST', $params, $this->options);
         return;
     }
 

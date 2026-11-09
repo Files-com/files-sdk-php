@@ -416,32 +416,6 @@ class PartnerSiteRequest
     }
 
     /**
-     * Reject partner site request
-     *
-     * POST /partner_site_requests/reject
-     *
-     * @param array $params Request parameters.
-     *     - `pairing_key` (string, required): Pairing key for the partner site request
-     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
-     * @return void
-     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
-     */
-    public static function reject($params = [], $options = [])
-    {
-        if (empty($params['pairing_key'])) {
-            throw new \Files\Exception\MissingParameterException('Parameter missing: pairing_key');
-        }
-
-        if (isset($params['pairing_key']) && !is_string($params['pairing_key'])) {
-            throw new \Files\Exception\InvalidParameterException('$pairing_key must be of type string; received ' . gettype(@$params['pairing_key']));
-        }
-
-        $response = Api::sendRequest('/partner_site_requests/reject', 'POST', $params, $options);
-
-        return;
-    }
-
-    /**
      * Approve partner site request
      *
      * POST /partner_site_requests/approve
@@ -468,6 +442,32 @@ class PartnerSiteRequest
         }
 
         $response = Api::sendRequest('/partner_site_requests/approve', 'POST', $params, $options);
+
+        return;
+    }
+
+    /**
+     * Reject partner site request
+     *
+     * POST /partner_site_requests/reject
+     *
+     * @param array $params Request parameters.
+     *     - `pairing_key` (string, required): Pairing key for the partner site request
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return void
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
+    public static function reject($params = [], $options = [])
+    {
+        if (empty($params['pairing_key'])) {
+            throw new \Files\Exception\MissingParameterException('Parameter missing: pairing_key');
+        }
+
+        if (isset($params['pairing_key']) && !is_string($params['pairing_key'])) {
+            throw new \Files\Exception\InvalidParameterException('$pairing_key must be of type string; received ' . gettype(@$params['pairing_key']));
+        }
+
+        $response = Api::sendRequest('/partner_site_requests/reject', 'POST', $params, $options);
 
         return;
     }

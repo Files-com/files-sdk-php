@@ -221,6 +221,16 @@ class RemoteTestEnv
         unlink($tempPath);
     }
 
+    // A --shared-simulator run's counterpart of init(): the file every test may use, in the run's own folder, which
+    // each test's reset leaves empty.
+    public static function initShared($root)
+    {
+        self::$workingFolderPath = $root . '/';
+        self::$remoteFilePath = self::$workingFolderPath . 'RemoteTestEnv.txt';
+
+        File::uploadData(self::$remoteFilePath, rand() . "\n" . date('Y-m-d H:i:s'));
+    }
+
     public static function deinit()
     {
         File::deletePath(self::$remoteFilePath);
@@ -232,8 +242,10 @@ class RemoteTestEnv
 
 function testErrors()
 {
-    global $api_key;
-    global $api_domain;
+    // The configuration to restore after the invalid one below: the site FILES_API_KEY and FILES_API_DOMAIN name in a
+    // live run, or the simulator a --shared-simulator run uses.
+    $savedApiKey = Files::getApiKey();
+    $savedBaseUrl = Files::getBaseUrl();
 
     //
     // invalid configuration
@@ -252,8 +264,8 @@ function testErrors()
 
     assert_or_throw($caughtExpectedException === true);
 
-    Files::setApiKey($api_key);
-    Files::setBaseUrl('https://' . $api_domain);
+    Files::setApiKey($savedApiKey);
+    Files::setBaseUrl($savedBaseUrl);
 
     //
     // deleting a folder with no path specified
@@ -612,17 +624,22 @@ function testLanguage()
 // shared simulator
 //
 
-// The tests a --shared-simulator run carries out, each once, in this order.
+// The tests a --shared-simulator run carries out, each once, in this order: every test above but testSession, whose
+// sign-in and session API keys need a real site's authentication, which the simulator does not model.
 function sharedSimulatorTests()
 {
     return [
+        'testErrors',
         'testAutoPaginate',
         'testUserListAndUpdate',
         'testUserCreateAndDelete',
         'testUserStaticCreateAndDelete',
         'testFolderCreateListAndDelete',
         'testFileUploadFindCopyAndDelete',
+        'testUploadDownloadFileAndDelete',
         'testUploadWithParams',
+        'testFileObjectMethods',
+        'testLanguage',
     ];
 }
 
@@ -630,8 +647,11 @@ function sharedSimulatorTests()
 // simulator with-scenario.rb started for this run, which the FILES_MOCK_* variables name, and writes the run's report
 // to FILES_MOCK_OUT/integration.json. Before each test the simulator is reset to the launcher's preset with only the
 // site's "always create parent folders" setting turned off, so a folder or upload whose parent is missing needs
-// mkdir_parents, and the run's own folder is made, outside the test. After it, whatever is left of that folder is
-// deleted. A test passes only when it, that cleanup and its epoch's complete journal did. Returns the exit status.
+// mkdir_parents, and the run's own folder and RemoteTestEnv's file in it are made through the SDK, outside the test,
+// as a live run's RemoteTestEnv::init makes them. After it, whatever is left of that folder is deleted. A test passes
+// only when it, that cleanup and its epoch's complete journal did. testErrors restores the API key and base URL it
+// clears, and testLanguage its log level and output stream; it leaves Spanish set, as a live run's last test does, so
+// the language is reset to the SDK's default before each test. Returns the exit status.
 function runOnSharedSimulator()
 {
     $environment = [];
@@ -678,7 +698,6 @@ function runOnSharedSimulator()
     // The run's own folder, named for its run ID, in which the tests make their folders and files.
     $root = 'sdk-test-' . trim(preg_replace('/[^0-9A-Za-z]+/', '-', $environment['FILES_MOCK_RUN_ID']), '-');
     define('SDK_TEST_ROOT_FOLDER', $root);
-    RemoteTestEnv::$workingFolderPath = $root . '/';
 
     $resetBody = $preset['reset'];
     $resetBody['profile']['site_policy']['always_mkdir_parents'] = false;
@@ -745,8 +764,10 @@ function runSharedSimulatorTest($launcher, $resetBody, $root, $test)
     $stage = 'reset';
     try {
         $result['epoch'] = resetSharedSimulator($launcher, $resetBody);
+        Files::setLanguage(null);
         $stage = 'making ' . $root;
         Folder::create($root);
+        RemoteTestEnv::initShared($root);
         $stage = 'test';
         call_user_func(__NAMESPACE__ . '\\' . $test);
     } catch (\Exception $e) {

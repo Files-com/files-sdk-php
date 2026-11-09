@@ -236,16 +236,16 @@ class ExpectationIncident
     }
 
     /**
-     * Resolve an expectation incident
+     * Acknowledge an expectation incident
      *
-     * POST /expectation_incidents/{id}/resolve
+     * POST /expectation_incidents/{id}/acknowledge
      *
      * @param array $params Request parameters.
      *     - `id` (int, optional when set on this model): Expectation Incident ID.
      * @return \Files\Model\ExpectationIncident
      * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
      */
-    public function resolve($params = [])
+    public function acknowledge($params = [])
     {
         if (!is_array($params)) {
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
@@ -263,7 +263,7 @@ class ExpectationIncident
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/expectation_incidents/' . rawurlencode(strval(@$params['id'])) . '/resolve', 'POST', $params, $this->options);
+        $response = Api::sendRequest('/expectation_incidents/' . rawurlencode(strval(@$params['id'])) . '/acknowledge', 'POST', $params, $this->options);
         return new ExpectationIncident(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $this->options);
     }
 
@@ -313,16 +313,16 @@ class ExpectationIncident
     }
 
     /**
-     * Acknowledge an expectation incident
+     * Resolve an expectation incident
      *
-     * POST /expectation_incidents/{id}/acknowledge
+     * POST /expectation_incidents/{id}/resolve
      *
      * @param array $params Request parameters.
      *     - `id` (int, optional when set on this model): Expectation Incident ID.
      * @return \Files\Model\ExpectationIncident
      * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
      */
-    public function acknowledge($params = [])
+    public function resolve($params = [])
     {
         if (!is_array($params)) {
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
@@ -340,7 +340,7 @@ class ExpectationIncident
             throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
         }
 
-        $response = Api::sendRequest('/expectation_incidents/' . rawurlencode(strval(@$params['id'])) . '/acknowledge', 'POST', $params, $this->options);
+        $response = Api::sendRequest('/expectation_incidents/' . rawurlencode(strval(@$params['id'])) . '/resolve', 'POST', $params, $this->options);
         return new ExpectationIncident(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $this->options);
     }
 

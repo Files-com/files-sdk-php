@@ -315,16 +315,16 @@ class FileComment
             throw new \Files\Exception\MissingParameterException('Parameter missing: path');
         }
 
+        if (isset($params['path']) && !is_string($params['path'])) {
+            throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
+        }
+
         if (isset($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
         if (isset($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
-        }
-
-        if (isset($params['path']) && !is_string($params['path'])) {
-            throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
         $response = Api::sendRequest('/file_comments/files/' . rawurlencode(strval(@$params['path'])) . '', 'GET', $params, $options);
@@ -357,16 +357,16 @@ class FileComment
             throw new \Files\Exception\MissingParameterException('Parameter missing: path');
         }
 
+        if (isset($params['path']) && !is_string($params['path'])) {
+            throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
+        }
+
         if (isset($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
         if (isset($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
-        }
-
-        if (isset($params['path']) && !is_string($params['path'])) {
-            throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
         return \Files\Page::fetch('/file_comments/files/' . rawurlencode(strval(@$params['path'])) . '', $params, $options, FileComment::class);

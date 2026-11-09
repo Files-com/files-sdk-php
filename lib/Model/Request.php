@@ -420,6 +420,10 @@ class Request
             throw new \Files\Exception\MissingParameterException('Parameter missing: path');
         }
 
+        if (isset($params['path']) && !is_string($params['path'])) {
+            throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
+        }
+
         if (isset($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
@@ -430,10 +434,6 @@ class Request
 
         if (isset($params['mine']) && !is_scalar($params['mine'])) {
             throw new \Files\Exception\InvalidParameterException('$mine must be of type boolean; received ' . gettype(@$params['mine']));
-        }
-
-        if (isset($params['path']) && !is_string($params['path'])) {
-            throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
         $response = Api::sendRequest('/requests/folders/' . rawurlencode(strval(@$params['path'])) . '', 'GET', $params, $options);
@@ -466,6 +466,10 @@ class Request
             throw new \Files\Exception\MissingParameterException('Parameter missing: path');
         }
 
+        if (isset($params['path']) && !is_string($params['path'])) {
+            throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
+        }
+
         if (isset($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
@@ -476,10 +480,6 @@ class Request
 
         if (isset($params['mine']) && !is_scalar($params['mine'])) {
             throw new \Files\Exception\InvalidParameterException('$mine must be of type boolean; received ' . gettype(@$params['mine']));
-        }
-
-        if (isset($params['path']) && !is_string($params['path'])) {
-            throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
         return \Files\Page::fetch('/requests/folders/' . rawurlencode(strval(@$params['path'])) . '', $params, $options, Request::class);

@@ -2010,57 +2010,19 @@ class File
     }
 
     /**
-     * Delete File/Folder and return its File Action.  A pending or processing deletion continues in the background after this returns; check its File Migration for completion.  Waiting for the File Migration does not cancel the deletion
+     * Extract a ZIP file to a destination folder
      *
-     * POST /file_actions/delete/{path}
+     * POST /file_actions/unzip
      *
      * @param array $params Request parameters.
-     *     - `path` (string, optional when set on this model): Path to operate on.
-     *     - `recursive` (bool, optional): If true, will recursively delete folders.  Otherwise, will error on non-empty folders.
+     *     - `path` (string, optional when set on this model): ZIP file path to extract.
+     *     - `destination` (string, required): Destination folder path for extracted files.
+     *     - `filename` (string, optional): Optional single entry filename to extract.
+     *     - `overwrite` (bool, optional): Overwrite existing files in the destination?
      * @return \Files\Model\FileAction
      * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
      */
-    public function beginDelete($params = [])
-    {
-        if (!is_array($params)) {
-            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
-        }
-
-        if (empty($params['path'])) {
-            if (@$this->path) {
-                $params['path'] = $this->path;
-            } else {
-                throw new \Files\Exception\MissingParameterException('Parameter missing: path');
-            }
-        }
-
-        if (isset($params['path']) && !is_string($params['path'])) {
-            throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
-        }
-
-        if (isset($params['recursive']) && !is_scalar($params['recursive'])) {
-            throw new \Files\Exception\InvalidParameterException('$recursive must be of type boolean; received ' . gettype(@$params['recursive']));
-        }
-
-        $response = Api::sendRequest('/file_actions/delete/' . rawurlencode(strval(@$params['path'])) . '', 'POST', $params, $this->options);
-        return new FileAction(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $this->options);
-    }
-
-    /**
-     * Copy File/Folder
-     *
-     * POST /file_actions/copy/{path}
-     *
-     * @param array $params Request parameters.
-     *     - `path` (string, optional when set on this model): Path to operate on.
-     *     - `destination` (string, required): Copy destination path.
-     *     - `copy_behaviors` (bool, optional): If copying a folder, also copy supported behaviors, email notification subscriptions, and per-folder branding to the destination folder tree?
-     *     - `structure` (bool, optional): Copy structure only?
-     *     - `overwrite` (bool, optional): Overwrite existing file(s) in the destination?
-     * @return \Files\Model\FileAction
-     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
-     */
-    public function copy($params = [])
+    public function unzip($params = [])
     {
         if (!is_array($params)) {
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
@@ -2090,35 +2052,35 @@ class File
             throw new \Files\Exception\InvalidParameterException('$destination must be of type string; received ' . gettype(@$params['destination']));
         }
 
-        if (isset($params['copy_behaviors']) && !is_scalar($params['copy_behaviors'])) {
-            throw new \Files\Exception\InvalidParameterException('$copy_behaviors must be of type boolean; received ' . gettype(@$params['copy_behaviors']));
-        }
-
-        if (isset($params['structure']) && !is_scalar($params['structure'])) {
-            throw new \Files\Exception\InvalidParameterException('$structure must be of type boolean; received ' . gettype(@$params['structure']));
+        if (isset($params['filename']) && !is_string($params['filename'])) {
+            throw new \Files\Exception\InvalidParameterException('$filename must be of type string; received ' . gettype(@$params['filename']));
         }
 
         if (isset($params['overwrite']) && !is_scalar($params['overwrite'])) {
             throw new \Files\Exception\InvalidParameterException('$overwrite must be of type boolean; received ' . gettype(@$params['overwrite']));
         }
 
-        $response = Api::sendRequest('/file_actions/copy/' . rawurlencode(strval(@$params['path'])) . '', 'POST', $params, $this->options);
+        $response = Api::sendRequest('/file_actions/unzip', 'POST', $params, $this->options);
         return new FileAction(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $this->options);
     }
 
     /**
-     * Move File/Folder
+     * Encrypt a file with GPG and save it to a destination path
      *
-     * POST /file_actions/move/{path}
+     * POST /file_actions/gpg_encrypt/{path}
      *
      * @param array $params Request parameters.
      *     - `path` (string, optional when set on this model): Path to operate on.
-     *     - `destination` (string, required): Move destination path.
-     *     - `overwrite` (bool, optional): Overwrite existing file(s) in the destination?
+     *     - `destination` (string, required): Destination file path for the encrypted file.
+     *     - `gpg_key_ids` (int[], optional): GPG Key IDs to encrypt with.
+     *     - `gpg_key_partner_id` (int, optional): Partner ID whose GPG keys should be used for encryption.
+     *     - `signing_key_id` (int, optional): Optional GPG Key ID to sign with.
+     *     - `armor` (bool, optional): Output ASCII-armored encrypted data.
+     *     - `overwrite` (bool, optional): Overwrite existing file in the destination?
      * @return \Files\Model\FileAction
      * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
      */
-    public function move($params = [])
+    public function gpgEncrypt($params = [])
     {
         if (!is_array($params)) {
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
@@ -2148,11 +2110,97 @@ class File
             throw new \Files\Exception\InvalidParameterException('$destination must be of type string; received ' . gettype(@$params['destination']));
         }
 
+        if (isset($params['gpg_key_ids']) && !is_array($params['gpg_key_ids'])) {
+            throw new \Files\Exception\InvalidParameterException('$gpg_key_ids must be of type array; received ' . gettype(@$params['gpg_key_ids']));
+        }
+
+        if (isset($params['gpg_key_partner_id']) && !is_int($params['gpg_key_partner_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$gpg_key_partner_id must be of type int; received ' . gettype(@$params['gpg_key_partner_id']));
+        }
+
+        if (isset($params['signing_key_id']) && !is_int($params['signing_key_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$signing_key_id must be of type int; received ' . gettype(@$params['signing_key_id']));
+        }
+
+        if (isset($params['armor']) && !is_scalar($params['armor'])) {
+            throw new \Files\Exception\InvalidParameterException('$armor must be of type boolean; received ' . gettype(@$params['armor']));
+        }
+
         if (isset($params['overwrite']) && !is_scalar($params['overwrite'])) {
             throw new \Files\Exception\InvalidParameterException('$overwrite must be of type boolean; received ' . gettype(@$params['overwrite']));
         }
 
-        $response = Api::sendRequest('/file_actions/move/' . rawurlencode(strval(@$params['path'])) . '', 'POST', $params, $this->options);
+        $response = Api::sendRequest('/file_actions/gpg_encrypt/' . rawurlencode(strval(@$params['path'])) . '', 'POST', $params, $this->options);
+        return new FileAction(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $this->options);
+    }
+
+    /**
+     * Decrypt a GPG-encrypted file and save it to a destination path
+     *
+     * POST /file_actions/gpg_decrypt/{path}
+     *
+     * @param array $params Request parameters.
+     *     - `path` (string, optional when set on this model): Path to operate on.
+     *     - `destination` (string, required): Destination file path for the decrypted file.
+     *     - `gpg_key_ids` (int[], optional): GPG Key IDs to decrypt with. If omitted, every accessible private GPG key in the source workspace is used.
+     *     - `gpg_key_partner_id` (int, optional): Partner ID whose GPG keys should be used for decryption.
+     *     - `use_all_private_keys` (bool, optional): Use every accessible private GPG key in the source workspace for decryption.
+     *     - `ignore_mdc_error` (bool, optional): Ignore errors from the MDC (modification detection code) check.
+     *     - `overwrite` (bool, optional): Overwrite existing file in the destination?
+     * @return \Files\Model\FileAction
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
+    public function gpgDecrypt($params = [])
+    {
+        if (!is_array($params)) {
+            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+        }
+
+        if (empty($params['path'])) {
+            if (@$this->path) {
+                $params['path'] = $this->path;
+            } else {
+                throw new \Files\Exception\MissingParameterException('Parameter missing: path');
+            }
+        }
+
+        if (empty($params['destination'])) {
+            if (@$this->destination) {
+                $params['destination'] = $this->destination;
+            } else {
+                throw new \Files\Exception\MissingParameterException('Parameter missing: destination');
+            }
+        }
+
+        if (isset($params['path']) && !is_string($params['path'])) {
+            throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
+        }
+
+        if (isset($params['destination']) && !is_string($params['destination'])) {
+            throw new \Files\Exception\InvalidParameterException('$destination must be of type string; received ' . gettype(@$params['destination']));
+        }
+
+        if (isset($params['gpg_key_ids']) && !is_array($params['gpg_key_ids'])) {
+            throw new \Files\Exception\InvalidParameterException('$gpg_key_ids must be of type array; received ' . gettype(@$params['gpg_key_ids']));
+        }
+
+        if (isset($params['gpg_key_partner_id']) && !is_int($params['gpg_key_partner_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$gpg_key_partner_id must be of type int; received ' . gettype(@$params['gpg_key_partner_id']));
+        }
+
+        if (isset($params['use_all_private_keys']) && !is_scalar($params['use_all_private_keys'])) {
+            throw new \Files\Exception\InvalidParameterException('$use_all_private_keys must be of type boolean; received ' . gettype(@$params['use_all_private_keys']));
+        }
+
+        if (isset($params['ignore_mdc_error']) && !is_scalar($params['ignore_mdc_error'])) {
+            throw new \Files\Exception\InvalidParameterException('$ignore_mdc_error must be of type boolean; received ' . gettype(@$params['ignore_mdc_error']));
+        }
+
+        if (isset($params['overwrite']) && !is_scalar($params['overwrite'])) {
+            throw new \Files\Exception\InvalidParameterException('$overwrite must be of type boolean; received ' . gettype(@$params['overwrite']));
+        }
+
+        $response = Api::sendRequest('/file_actions/gpg_decrypt/' . rawurlencode(strval(@$params['path'])) . '', 'POST', $params, $this->options);
         return new FileAction(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $this->options);
     }
 
@@ -2248,22 +2296,18 @@ class File
     }
 
     /**
-     * Decrypt a GPG-encrypted file and save it to a destination path
+     * Move File/Folder
      *
-     * POST /file_actions/gpg_decrypt/{path}
+     * POST /file_actions/move/{path}
      *
      * @param array $params Request parameters.
      *     - `path` (string, optional when set on this model): Path to operate on.
-     *     - `destination` (string, required): Destination file path for the decrypted file.
-     *     - `gpg_key_ids` (int[], optional): GPG Key IDs to decrypt with. If omitted, every accessible private GPG key in the source workspace is used.
-     *     - `gpg_key_partner_id` (int, optional): Partner ID whose GPG keys should be used for decryption.
-     *     - `use_all_private_keys` (bool, optional): Use every accessible private GPG key in the source workspace for decryption.
-     *     - `ignore_mdc_error` (bool, optional): Ignore errors from the MDC (modification detection code) check.
-     *     - `overwrite` (bool, optional): Overwrite existing file in the destination?
+     *     - `destination` (string, required): Move destination path.
+     *     - `overwrite` (bool, optional): Overwrite existing file(s) in the destination?
      * @return \Files\Model\FileAction
      * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
      */
-    public function gpgDecrypt($params = [])
+    public function move($params = [])
     {
         if (!is_array($params)) {
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
@@ -2293,47 +2337,29 @@ class File
             throw new \Files\Exception\InvalidParameterException('$destination must be of type string; received ' . gettype(@$params['destination']));
         }
 
-        if (isset($params['gpg_key_ids']) && !is_array($params['gpg_key_ids'])) {
-            throw new \Files\Exception\InvalidParameterException('$gpg_key_ids must be of type array; received ' . gettype(@$params['gpg_key_ids']));
-        }
-
-        if (isset($params['gpg_key_partner_id']) && !is_int($params['gpg_key_partner_id'])) {
-            throw new \Files\Exception\InvalidParameterException('$gpg_key_partner_id must be of type int; received ' . gettype(@$params['gpg_key_partner_id']));
-        }
-
-        if (isset($params['use_all_private_keys']) && !is_scalar($params['use_all_private_keys'])) {
-            throw new \Files\Exception\InvalidParameterException('$use_all_private_keys must be of type boolean; received ' . gettype(@$params['use_all_private_keys']));
-        }
-
-        if (isset($params['ignore_mdc_error']) && !is_scalar($params['ignore_mdc_error'])) {
-            throw new \Files\Exception\InvalidParameterException('$ignore_mdc_error must be of type boolean; received ' . gettype(@$params['ignore_mdc_error']));
-        }
-
         if (isset($params['overwrite']) && !is_scalar($params['overwrite'])) {
             throw new \Files\Exception\InvalidParameterException('$overwrite must be of type boolean; received ' . gettype(@$params['overwrite']));
         }
 
-        $response = Api::sendRequest('/file_actions/gpg_decrypt/' . rawurlencode(strval(@$params['path'])) . '', 'POST', $params, $this->options);
+        $response = Api::sendRequest('/file_actions/move/' . rawurlencode(strval(@$params['path'])) . '', 'POST', $params, $this->options);
         return new FileAction(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $this->options);
     }
 
     /**
-     * Encrypt a file with GPG and save it to a destination path
+     * Copy File/Folder
      *
-     * POST /file_actions/gpg_encrypt/{path}
+     * POST /file_actions/copy/{path}
      *
      * @param array $params Request parameters.
      *     - `path` (string, optional when set on this model): Path to operate on.
-     *     - `destination` (string, required): Destination file path for the encrypted file.
-     *     - `gpg_key_ids` (int[], optional): GPG Key IDs to encrypt with.
-     *     - `gpg_key_partner_id` (int, optional): Partner ID whose GPG keys should be used for encryption.
-     *     - `signing_key_id` (int, optional): Optional GPG Key ID to sign with.
-     *     - `armor` (bool, optional): Output ASCII-armored encrypted data.
-     *     - `overwrite` (bool, optional): Overwrite existing file in the destination?
+     *     - `destination` (string, required): Copy destination path.
+     *     - `copy_behaviors` (bool, optional): If copying a folder, also copy supported behaviors, email notification subscriptions, and per-folder branding to the destination folder tree?
+     *     - `structure` (bool, optional): Copy structure only?
+     *     - `overwrite` (bool, optional): Overwrite existing file(s) in the destination?
      * @return \Files\Model\FileAction
      * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
      */
-    public function gpgEncrypt($params = [])
+    public function copy($params = [])
     {
         if (!is_array($params)) {
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
@@ -2363,44 +2389,34 @@ class File
             throw new \Files\Exception\InvalidParameterException('$destination must be of type string; received ' . gettype(@$params['destination']));
         }
 
-        if (isset($params['gpg_key_ids']) && !is_array($params['gpg_key_ids'])) {
-            throw new \Files\Exception\InvalidParameterException('$gpg_key_ids must be of type array; received ' . gettype(@$params['gpg_key_ids']));
+        if (isset($params['copy_behaviors']) && !is_scalar($params['copy_behaviors'])) {
+            throw new \Files\Exception\InvalidParameterException('$copy_behaviors must be of type boolean; received ' . gettype(@$params['copy_behaviors']));
         }
 
-        if (isset($params['gpg_key_partner_id']) && !is_int($params['gpg_key_partner_id'])) {
-            throw new \Files\Exception\InvalidParameterException('$gpg_key_partner_id must be of type int; received ' . gettype(@$params['gpg_key_partner_id']));
-        }
-
-        if (isset($params['signing_key_id']) && !is_int($params['signing_key_id'])) {
-            throw new \Files\Exception\InvalidParameterException('$signing_key_id must be of type int; received ' . gettype(@$params['signing_key_id']));
-        }
-
-        if (isset($params['armor']) && !is_scalar($params['armor'])) {
-            throw new \Files\Exception\InvalidParameterException('$armor must be of type boolean; received ' . gettype(@$params['armor']));
+        if (isset($params['structure']) && !is_scalar($params['structure'])) {
+            throw new \Files\Exception\InvalidParameterException('$structure must be of type boolean; received ' . gettype(@$params['structure']));
         }
 
         if (isset($params['overwrite']) && !is_scalar($params['overwrite'])) {
             throw new \Files\Exception\InvalidParameterException('$overwrite must be of type boolean; received ' . gettype(@$params['overwrite']));
         }
 
-        $response = Api::sendRequest('/file_actions/gpg_encrypt/' . rawurlencode(strval(@$params['path'])) . '', 'POST', $params, $this->options);
+        $response = Api::sendRequest('/file_actions/copy/' . rawurlencode(strval(@$params['path'])) . '', 'POST', $params, $this->options);
         return new FileAction(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $this->options);
     }
 
     /**
-     * Extract a ZIP file to a destination folder
+     * Delete File/Folder and return its File Action.  A pending or processing deletion continues in the background after this returns; check its File Migration for completion.  Waiting for the File Migration does not cancel the deletion
      *
-     * POST /file_actions/unzip
+     * POST /file_actions/delete/{path}
      *
      * @param array $params Request parameters.
-     *     - `path` (string, optional when set on this model): ZIP file path to extract.
-     *     - `destination` (string, required): Destination folder path for extracted files.
-     *     - `filename` (string, optional): Optional single entry filename to extract.
-     *     - `overwrite` (bool, optional): Overwrite existing files in the destination?
+     *     - `path` (string, optional when set on this model): Path to operate on.
+     *     - `recursive` (bool, optional): If true, will recursively delete folders.  Otherwise, will error on non-empty folders.
      * @return \Files\Model\FileAction
      * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
      */
-    public function unzip($params = [])
+    public function beginDelete($params = [])
     {
         if (!is_array($params)) {
             throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
@@ -2414,31 +2430,15 @@ class File
             }
         }
 
-        if (empty($params['destination'])) {
-            if (@$this->destination) {
-                $params['destination'] = $this->destination;
-            } else {
-                throw new \Files\Exception\MissingParameterException('Parameter missing: destination');
-            }
-        }
-
         if (isset($params['path']) && !is_string($params['path'])) {
             throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
-        if (isset($params['destination']) && !is_string($params['destination'])) {
-            throw new \Files\Exception\InvalidParameterException('$destination must be of type string; received ' . gettype(@$params['destination']));
+        if (isset($params['recursive']) && !is_scalar($params['recursive'])) {
+            throw new \Files\Exception\InvalidParameterException('$recursive must be of type boolean; received ' . gettype(@$params['recursive']));
         }
 
-        if (isset($params['filename']) && !is_string($params['filename'])) {
-            throw new \Files\Exception\InvalidParameterException('$filename must be of type string; received ' . gettype(@$params['filename']));
-        }
-
-        if (isset($params['overwrite']) && !is_scalar($params['overwrite'])) {
-            throw new \Files\Exception\InvalidParameterException('$overwrite must be of type boolean; received ' . gettype(@$params['overwrite']));
-        }
-
-        $response = Api::sendRequest('/file_actions/unzip', 'POST', $params, $this->options);
+        $response = Api::sendRequest('/file_actions/delete/' . rawurlencode(strval(@$params['path'])) . '', 'POST', $params, $this->options);
         return new FileAction(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $this->options);
     }
 

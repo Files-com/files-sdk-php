@@ -579,47 +579,6 @@ class CustomDomain
     }
 
     /**
-     * Allocate dedicated IP addresses to this Custom Domain
-     *
-     * POST /custom_domains/{id}/allocate_ips
-     *
-     * @param int $id Custom Domain ID.
-     * @param array $params Request parameters.
-     *     - `count` (int, required): Number of dedicated IP addresses to allocate. Allowed values: 1, 2.
-     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
-     * @return \Files\Model\CustomDomain
-     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
-     */
-    public static function createAllocateIp($id, $params = [], $options = [])
-    {
-        if (!is_array($params)) {
-            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
-        }
-
-        $params['id'] = $id;
-
-        if (empty($params['id'])) {
-            throw new \Files\Exception\MissingParameterException('Parameter missing: id');
-        }
-
-        if (empty($params['count'])) {
-            throw new \Files\Exception\MissingParameterException('Parameter missing: count');
-        }
-
-        if (isset($params['id']) && !is_int($params['id'])) {
-            throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
-        }
-
-        if (isset($params['count']) && !is_int($params['count'])) {
-            throw new \Files\Exception\InvalidParameterException('$count must be of type int; received ' . gettype(@$params['count']));
-        }
-
-        $response = Api::sendRequest('/custom_domains/' . rawurlencode(strval(@$params['id'])) . '/allocate_ips', 'POST', $params, $options);
-
-        return new CustomDomain(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
-    }
-
-    /**
      * Create Custom Domain
      *
      * POST /custom_domains
@@ -666,6 +625,47 @@ class CustomDomain
         }
 
         $response = Api::sendRequest('/custom_domains', 'POST', $params, $options);
+
+        return new CustomDomain(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
+    }
+
+    /**
+     * Allocate dedicated IP addresses to this Custom Domain
+     *
+     * POST /custom_domains/{id}/allocate_ips
+     *
+     * @param int $id Custom Domain ID.
+     * @param array $params Request parameters.
+     *     - `count` (int, required): Number of dedicated IP addresses to allocate. Allowed values: 1, 2.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\CustomDomain
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
+    public static function createAllocateIp($id, $params = [], $options = [])
+    {
+        if (!is_array($params)) {
+            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+        }
+
+        $params['id'] = $id;
+
+        if (empty($params['id'])) {
+            throw new \Files\Exception\MissingParameterException('Parameter missing: id');
+        }
+
+        if (empty($params['count'])) {
+            throw new \Files\Exception\MissingParameterException('Parameter missing: count');
+        }
+
+        if (isset($params['id']) && !is_int($params['id'])) {
+            throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
+        }
+
+        if (isset($params['count']) && !is_int($params['count'])) {
+            throw new \Files\Exception\InvalidParameterException('$count must be of type int; received ' . gettype(@$params['count']));
+        }
+
+        $response = Api::sendRequest('/custom_domains/' . rawurlencode(strval(@$params['id'])) . '/allocate_ips', 'POST', $params, $options);
 
         return new CustomDomain(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
     }

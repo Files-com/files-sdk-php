@@ -128,17 +128,20 @@ one `\Files\Page` at a time, requesting each later page only when it is asked fo
 
 ---
 
-## Cancel Automation Run
+## Re-run Automation from Node
 
 ```
 $automation_run = \Files\Model\AutomationRun::find($id);
 
-$automation_run->cancel();
+$automation_run->rerun([
+  'node_id' => "node_id",
+]);
 ```
 
 ### Parameters
 
 * `id` (int64): Required - Automation Run ID.
+* `node_id` (string): Required - Node ID at which execution should resume.
 
 ### Example Response
 
@@ -191,20 +194,17 @@ $automation_run->cancel();
 
 ---
 
-## Re-run Automation from Node
+## Cancel Automation Run
 
 ```
 $automation_run = \Files\Model\AutomationRun::find($id);
 
-$automation_run->rerun([
-  'node_id' => "node_id",
-]);
+$automation_run->cancel();
 ```
 
 ### Parameters
 
 * `id` (int64): Required - Automation Run ID.
-* `node_id` (string): Required - Node ID at which execution should resume.
 
 ### Example Response
 

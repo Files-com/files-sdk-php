@@ -390,12 +390,12 @@ one `\Files\Page` at a time, requesting each later page only when it is asked fo
 
 ---
 
-## Unlock user who has been locked out due to failed logins
+## Trigger 2FA Reset process for user who has lost access to their existing 2FA methods
 
 ```
 $user = \Files\Model\User::find($id);
 
-$user->unlock();
+$user->user_2fa_reset();
 ```
 
 ### Parameters
@@ -420,12 +420,12 @@ $user->resend_welcome_email();
 
 ---
 
-## Trigger 2FA Reset process for user who has lost access to their existing 2FA methods
+## Unlock user who has been locked out due to failed logins
 
 ```
 $user = \Files\Model\User::find($id);
 
-$user->user_2fa_reset();
+$user->unlock();
 ```
 
 ### Parameters

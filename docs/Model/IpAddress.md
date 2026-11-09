@@ -37,13 +37,13 @@ one `\Files\Page` at a time, requesting each later page only when it is asked fo
 
 ---
 
-## List all possible public SmartFile IP addresses
+## List all possible public IP addresses
 
 ```
-\Files\Model\IpAddress::getSmartfileReserved();
+\Files\Model\IpAddress::getReserved();
 ```
 
-`\Files\Model\IpAddress::getSmartfileReservedPage()` takes the same parameters and returns the results
+`\Files\Model\IpAddress::getReservedPage()` takes the same parameters and returns the results
 one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
@@ -71,13 +71,13 @@ one `\Files\Page` at a time, requesting each later page only when it is asked fo
 
 ---
 
-## List all possible public IP addresses
+## List all possible public SmartFile IP addresses
 
 ```
-\Files\Model\IpAddress::getReserved();
+\Files\Model\IpAddress::getSmartfileReserved();
 ```
 
-`\Files\Model\IpAddress::getReservedPage()` takes the same parameters and returns the results
+`\Files\Model\IpAddress::getSmartfileReservedPage()` takes the same parameters and returns the results
 one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 

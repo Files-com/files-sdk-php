@@ -417,7 +417,7 @@ class Behavior
      *     - `recursive` (bool, optional): Whether the behavior should apply to child folders. This is only configurable for behavior types whose recursion mode is `sometimes`; `always` behaviors stay recursive and `never` behaviors stay non-recursive.
      *     - `name` (string, optional): Name for this behavior.
      *     - `description` (string, optional): Description for this behavior.
-     *     - `attachment_delete` (array|object|string|int, optional): If `true`, delete the file stored in `attachment`.
+     *     - `attachment_delete` (bool, optional): If `true`, delete the file stored in `attachment`.
      * @return \Files\Model\Behavior
      * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
      */
@@ -591,55 +591,6 @@ class Behavior
     }
 
     /**
-     * Show Behavior
-     *
-     * GET /behaviors/{id}
-     *
-     * @param int $id Behavior ID.
-     * @param array $params Request parameters.
-     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
-     * @return \Files\Model\Behavior
-     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
-     */
-    public static function find($id, $params = [], $options = [])
-    {
-        if (!is_array($params)) {
-            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
-        }
-
-        $params['id'] = $id;
-
-        if (empty($params['id'])) {
-            throw new \Files\Exception\MissingParameterException('Parameter missing: id');
-        }
-
-        if (isset($params['id']) && !is_int($params['id'])) {
-            throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
-        }
-
-        $response = Api::sendRequest('/behaviors/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
-
-        return new Behavior(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
-    }
-    /**
-     * Show Behavior
-     *
-     * GET /behaviors/{id}
-     *
-     * Alias of find().
-     *
-     * @param int $id Behavior ID.
-     * @param array $params Request parameters.
-     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
-     * @return \Files\Model\Behavior
-     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
-     */
-    public static function get($id, $params = [], $options = [])
-    {
-        return self::find($id, $params, $options);
-    }
-
-    /**
      * List Behaviors by Path
      *
      * GET /behaviors/folders/{path}
@@ -667,16 +618,16 @@ class Behavior
             throw new \Files\Exception\MissingParameterException('Parameter missing: path');
         }
 
+        if (isset($params['path']) && !is_string($params['path'])) {
+            throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
+        }
+
         if (isset($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
 
         if (isset($params['per_page']) && !is_int($params['per_page'])) {
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
-        }
-
-        if (isset($params['path']) && !is_string($params['path'])) {
-            throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
         }
 
         if (isset($params['ancestor_behaviors']) && !is_scalar($params['ancestor_behaviors'])) {
@@ -713,6 +664,10 @@ class Behavior
             throw new \Files\Exception\MissingParameterException('Parameter missing: path');
         }
 
+        if (isset($params['path']) && !is_string($params['path'])) {
+            throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
+        }
+
         if (isset($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
         }
@@ -721,15 +676,60 @@ class Behavior
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
-        if (isset($params['path']) && !is_string($params['path'])) {
-            throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
-        }
-
         if (isset($params['ancestor_behaviors']) && !is_scalar($params['ancestor_behaviors'])) {
             throw new \Files\Exception\InvalidParameterException('$ancestor_behaviors must be of type boolean; received ' . gettype(@$params['ancestor_behaviors']));
         }
 
         return \Files\Page::fetch('/behaviors/folders/' . rawurlencode(strval(@$params['path'])) . '', $params, $options, Behavior::class);
+    }
+
+    /**
+     * Show Behavior
+     *
+     * GET /behaviors/{id}
+     *
+     * @param array|object|string|int $id Behavior ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\Behavior
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
+    public static function find($id, $params = [], $options = [])
+    {
+        if (!is_array($params)) {
+            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+        }
+
+        $params['id'] = $id;
+
+        if (empty($params['id'])) {
+            throw new \Files\Exception\MissingParameterException('Parameter missing: id');
+        }
+
+        if (isset($params['id']) && !is_int($params['id'])) {
+            throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
+        }
+
+        $response = Api::sendRequest('/behaviors/' . rawurlencode(strval(@$params['id'])) . '', 'GET', $params, $options);
+
+        return new Behavior(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $options);
+    }
+    /**
+     * Show Behavior
+     *
+     * GET /behaviors/{id}
+     *
+     * Alias of find().
+     *
+     * @param array|object|string|int $id Behavior ID.
+     * @param array $params Request parameters.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\Behavior
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
+    public static function get($id, $params = [], $options = [])
+    {
+        return self::find($id, $params, $options);
     }
 
     /**

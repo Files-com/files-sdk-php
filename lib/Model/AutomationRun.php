@@ -316,38 +316,6 @@ class AutomationRun
     }
 
     /**
-     * Cancel Automation Run
-     *
-     * POST /automation_runs/{id}/cancel
-     *
-     * @param array $params Request parameters.
-     *     - `id` (int, optional when set on this model): Automation Run ID.
-     * @return \Files\Model\AutomationRun
-     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
-     */
-    public function cancel($params = [])
-    {
-        if (!is_array($params)) {
-            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
-        }
-
-        if (empty($params['id'])) {
-            if (@$this->id) {
-                $params['id'] = $this->id;
-            } else {
-                throw new \Files\Exception\MissingParameterException('Parameter missing: id');
-            }
-        }
-
-        if (isset($params['id']) && !is_int($params['id'])) {
-            throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
-        }
-
-        $response = Api::sendRequest('/automation_runs/' . rawurlencode(strval(@$params['id'])) . '/cancel', 'POST', $params, $this->options);
-        return new AutomationRun(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $this->options);
-    }
-
-    /**
      * Re-run Automation from Node
      *
      * POST /automation_runs/{id}/rerun
@@ -389,6 +357,38 @@ class AutomationRun
         }
 
         $response = Api::sendRequest('/automation_runs/' . rawurlencode(strval(@$params['id'])) . '/rerun', 'POST', $params, $this->options);
+        return new AutomationRun(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $this->options);
+    }
+
+    /**
+     * Cancel Automation Run
+     *
+     * POST /automation_runs/{id}/cancel
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Automation Run ID.
+     * @return \Files\Model\AutomationRun
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
+    public function cancel($params = [])
+    {
+        if (!is_array($params)) {
+            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+        }
+
+        if (empty($params['id'])) {
+            if (@$this->id) {
+                $params['id'] = $this->id;
+            } else {
+                throw new \Files\Exception\MissingParameterException('Parameter missing: id');
+            }
+        }
+
+        if (isset($params['id']) && !is_int($params['id'])) {
+            throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
+        }
+
+        $response = Api::sendRequest('/automation_runs/' . rawurlencode(strval(@$params['id'])) . '/cancel', 'POST', $params, $this->options);
         return new AutomationRun(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $this->options);
     }
 

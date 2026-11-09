@@ -39,15 +39,15 @@
 
 ---
 
-## List history for specific file
+## List site full action history
 
 ```
-\Files\Model\History::listForFile($path, [
+\Files\Model\History::all([
   'display' => "Actual text of the action here.",
 ]);
 ```
 
-`\Files\Model\History::listForFilePage()` takes the same parameters and returns the results
+`\Files\Model\History::listPage()` takes the same parameters and returns the results
 one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
@@ -59,55 +59,8 @@ one `\Files\Page` at a time, requesting each later page only when it is asked fo
 * `cursor` (string): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
 * `per_page` (int64): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
 * `sort_by` (object): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `created_at`.
-* `path` (string): Required - Path to operate on.
-
----
-
-## List history for specific folder
-
-```
-\Files\Model\History::listForFolder($path, [
-  'display' => "Actual text of the action here.",
-]);
-```
-
-`\Files\Model\History::listForFolderPage()` takes the same parameters and returns the results
-one `\Files\Page` at a time, requesting each later page only when it is asked for.
-
-
-### Parameters
-
-* `start_at` (string): Leave blank or set to a date/time to filter earlier entries.
-* `end_at` (string): Leave blank or set to a date/time to filter later entries.
-* `display` (string): Display format. Leave blank or set to `full` or `parent`.
-* `cursor` (string): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-* `per_page` (int64): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
-* `sort_by` (object): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `created_at`.
-* `path` (string): Required - Path to operate on.
-
----
-
-## List history for specific user
-
-```
-\Files\Model\History::listForUser($user_id, [
-  'display' => "Actual text of the action here.",
-]);
-```
-
-`\Files\Model\History::listForUserPage()` takes the same parameters and returns the results
-one `\Files\Page` at a time, requesting each later page only when it is asked for.
-
-
-### Parameters
-
-* `start_at` (string): Leave blank or set to a date/time to filter earlier entries.
-* `end_at` (string): Leave blank or set to a date/time to filter later entries.
-* `display` (string): Display format. Leave blank or set to `full` or `parent`.
-* `cursor` (string): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-* `per_page` (int64): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
-* `sort_by` (object): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `created_at`.
-* `user_id` (int64): Required - User ID.
+* `filter` (object): If set, return records where the specified field is equal to the supplied value. Valid fields are `user_id`, `folder` or `path`. Valid field combinations are `[  ]`, `[ path ]`, `[ path ]` or `[ path ]`.
+* `filter_prefix` (object): If set, return records where the specified field is prefixed by the supplied value. Valid fields are `path`.
 
 ---
 
@@ -134,25 +87,72 @@ one `\Files\Page` at a time, requesting each later page only when it is asked fo
 
 ---
 
-## List site full action history
+## List history for specific user
 
 ```
-\Files\Model\History::all([
+\Files\Model\History::listForUser($user_id, [
   'display' => "Actual text of the action here.",
 ]);
 ```
 
-`\Files\Model\History::listPage()` takes the same parameters and returns the results
+`\Files\Model\History::listForUserPage()` takes the same parameters and returns the results
 one `\Files\Page` at a time, requesting each later page only when it is asked for.
 
 
 ### Parameters
 
+* `user_id` (int64): Required - User ID.
 * `start_at` (string): Leave blank or set to a date/time to filter earlier entries.
 * `end_at` (string): Leave blank or set to a date/time to filter later entries.
 * `display` (string): Display format. Leave blank or set to `full` or `parent`.
 * `cursor` (string): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
 * `per_page` (int64): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
 * `sort_by` (object): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `created_at`.
-* `filter` (object): If set, return records where the specified field is equal to the supplied value. Valid fields are `user_id`, `folder` or `path`. Valid field combinations are `[  ]`, `[ path ]`, `[ path ]` or `[ path ]`.
-* `filter_prefix` (object): If set, return records where the specified field is prefixed by the supplied value. Valid fields are `path`.
+
+---
+
+## List history for specific folder
+
+```
+\Files\Model\History::listForFolder($path, [
+  'display' => "Actual text of the action here.",
+]);
+```
+
+`\Files\Model\History::listForFolderPage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
+
+
+### Parameters
+
+* `path` (string): Required - Path to operate on.
+* `start_at` (string): Leave blank or set to a date/time to filter earlier entries.
+* `end_at` (string): Leave blank or set to a date/time to filter later entries.
+* `display` (string): Display format. Leave blank or set to `full` or `parent`.
+* `cursor` (string): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+* `per_page` (int64): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+* `sort_by` (object): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `created_at`.
+
+---
+
+## List history for specific file
+
+```
+\Files\Model\History::listForFile($path, [
+  'display' => "Actual text of the action here.",
+]);
+```
+
+`\Files\Model\History::listForFilePage()` takes the same parameters and returns the results
+one `\Files\Page` at a time, requesting each later page only when it is asked for.
+
+
+### Parameters
+
+* `path` (string): Required - Path to operate on.
+* `start_at` (string): Leave blank or set to a date/time to filter earlier entries.
+* `end_at` (string): Leave blank or set to a date/time to filter later entries.
+* `display` (string): Display format. Leave blank or set to `full` or `parent`.
+* `cursor` (string): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+* `per_page` (int64): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+* `sort_by` (object): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `created_at`.

@@ -179,9 +179,9 @@ class IpAddress
     }
 
     /**
-     * List all possible public SmartFile IP addresses
+     * List all possible public IP addresses
      *
-     * GET /ip_addresses/smartfile-reserved
+     * GET /ip_addresses/reserved
      *
      * @param array $params Request parameters.
      *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
@@ -190,7 +190,7 @@ class IpAddress
      * @return \Files\Model\PublicIpAddress[]
      * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
      */
-    public static function getSmartfileReserved($params = [], $options = [])
+    public static function getReserved($params = [], $options = [])
     {
         if (isset($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
@@ -200,7 +200,7 @@ class IpAddress
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
-        $response = Api::sendRequest('/ip_addresses/smartfile-reserved', 'GET', $params, $options);
+        $response = Api::sendRequest('/ip_addresses/reserved', 'GET', $params, $options);
 
         $return_array = [];
 
@@ -212,13 +212,13 @@ class IpAddress
     }
 
     /**
-     * Fetches one page of getSmartfileReserved()'s results, with the same parameters and options,
+     * Fetches one page of getReserved()'s results, with the same parameters and options,
      * whatever Files::$autoPaginate is. Iterate the page, step with nextPage(), or read every result lazily with
      * autoPagingIterator(). A 'cursor' parameter starts from a page saved with getNextCursor().
      *
      * @return \Files\Page
      */
-    public static function getSmartfileReservedPage($params = [], $options = [])
+    public static function getReservedPage($params = [], $options = [])
     {
         if (isset($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
@@ -228,7 +228,7 @@ class IpAddress
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
-        return \Files\Page::fetch('/ip_addresses/smartfile-reserved', $params, $options, PublicIpAddress::class);
+        return \Files\Page::fetch('/ip_addresses/reserved', $params, $options, PublicIpAddress::class);
     }
 
     /**
@@ -285,9 +285,9 @@ class IpAddress
     }
 
     /**
-     * List all possible public IP addresses
+     * List all possible public SmartFile IP addresses
      *
-     * GET /ip_addresses/reserved
+     * GET /ip_addresses/smartfile-reserved
      *
      * @param array $params Request parameters.
      *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
@@ -296,7 +296,7 @@ class IpAddress
      * @return \Files\Model\PublicIpAddress[]
      * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
      */
-    public static function getReserved($params = [], $options = [])
+    public static function getSmartfileReserved($params = [], $options = [])
     {
         if (isset($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
@@ -306,7 +306,7 @@ class IpAddress
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
-        $response = Api::sendRequest('/ip_addresses/reserved', 'GET', $params, $options);
+        $response = Api::sendRequest('/ip_addresses/smartfile-reserved', 'GET', $params, $options);
 
         $return_array = [];
 
@@ -318,13 +318,13 @@ class IpAddress
     }
 
     /**
-     * Fetches one page of getReserved()'s results, with the same parameters and options,
+     * Fetches one page of getSmartfileReserved()'s results, with the same parameters and options,
      * whatever Files::$autoPaginate is. Iterate the page, step with nextPage(), or read every result lazily with
      * autoPagingIterator(). A 'cursor' parameter starts from a page saved with getNextCursor().
      *
      * @return \Files\Page
      */
-    public static function getReservedPage($params = [], $options = [])
+    public static function getSmartfileReservedPage($params = [], $options = [])
     {
         if (isset($params['cursor']) && !is_string($params['cursor'])) {
             throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
@@ -334,6 +334,6 @@ class IpAddress
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
-        return \Files\Page::fetch('/ip_addresses/reserved', $params, $options, PublicIpAddress::class);
+        return \Files\Page::fetch('/ip_addresses/smartfile-reserved', $params, $options, PublicIpAddress::class);
     }
 }

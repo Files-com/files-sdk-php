@@ -16,17 +16,28 @@
 # The scenario tests load test/vendor/autoload.php (--bootstrap) instead of the default suite's bootstrap.php, which
 # would clear the FILES_* settings the launcher gives them.
 #
-# Then, with the same PHP, launcher and preset, it runs seven of the manual integration tests against a simulator of
-# their own (test/integration/test-file.php --shared-simulator: user pagination and list/update, creating, finding and
-# deleting a user both ways, creating, listing and deleting a folder, uploading/finding/copying/deleting a file and
-# data, and uploading a file and data with mkdir_parents into missing folders) and
-# checks that run (test-file.php --check-shared-simulator). OUT-integration, which must not exist either, receives that
+# Then, with the same PHP, launcher and preset, it runs the eleven manual integration tests other than testSession
+# against a simulator of their own (test/integration/test-file.php --shared-simulator: configuration, missing-path and
+# root-folder errors, user pagination and list/update, creating, finding and deleting a user both ways, creating,
+# listing and deleting a folder, uploading/finding/copying/deleting a file and data, ranged and resumed downloads with
+# download options and a metadata update, uploading a file and data with mkdir_parents into missing folders, a file's
+# priority color readback, and the Accept-Language header of a Spanish API key listing) and checks that run
+# (test-file.php --check-shared-simulator). OUT-integration, which must not exist either, receives that
 # launcher's evidence and the tests' report (integration.json).
 #
 # Last, with the same PHP and launcher, it runs test/shared-mock-users-find.php against the users-find preset, with
 # FILES_SESSION_ENV unset so that the SDK loads from test/vendor as an installed copy does: it finds the preset's user
 # through the public User::find and compares its id, username and name. OUT-users-find, which must not exist either,
 # receives that launcher's evidence and the consumer's receipt (users-find-receipt.json).
+#
+# Then the shared failure-case matrix (the mock server's scenarios/failure-cases.json): with the same PHP and launcher,
+# test/failure-cases.php makes each case's calls (enum and date-time validation errors, a dropped connection retried,
+# retries spent on dropped connections, and a seeded random sequence of HTTP 422 faults, which no SDK retries) against
+# a simulator that the launcher resets to
+# the scenario's users and gives its fault rules. The launcher's failure cases check requires every case reported as
+# passed, once and in order, and each case's journaled attempts and fault decisions to be exactly the expected ones.
+# OUT-failure-cases, which must not exist either, receives that launcher's evidence, the fault rules' state
+# (faults.json) and the consumer's results (failure-cases.json).
 #
 # This fails when any run or check does, with the first failure's status.
 
@@ -55,6 +66,11 @@ if [[ -e "${users_find_out}" ]]; then
   echo "${users_find_out} already exists; give a new directory." >&2
   exit 1
 fi
+failure_cases_out="${out}-failure-cases"
+if [[ -e "${failure_cases_out}" ]]; then
+  echo "${failure_cases_out} already exists; give a new directory." >&2
+  exit 1
+fi
 
 cd "${DIR}/test" || exit 1
 status=0
@@ -68,4 +84,7 @@ FILES_SESSION_ENV="development" "${php_bin}" integration/test-file.php --check-s
 env -u FILES_SESSION_ENV ruby "${mock}/with-scenario.rb" --scenario users-find --out "${users_find_out}" \
   --startup-timeout 30 --consumer-timeout 180 --settle-timeout 5 -- \
   "${php_bin}" shared-mock-users-find.php || status=$((status == 0 ? $? : status))
+FILES_SESSION_ENV="development" ruby "${mock}/with-scenario.rb" --scenario failure-cases --out "${failure_cases_out}" \
+  --startup-timeout 30 --consumer-timeout 120 --settle-timeout 5 --failure-variant sdk-network-retries -- \
+  "${php_bin}" failure-cases.php || status=$((status == 0 ? $? : status))
 exit "${status}"

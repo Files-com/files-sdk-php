@@ -226,11 +226,10 @@ class History
     }
 
     /**
-     * List history for specific file
+     * List site full action history
      *
-     * GET /history/files/{path}
+     * GET /history
      *
-     * @param string $path Path to operate on.
      * @param array $params Request parameters.
      *     - `start_at` (string, optional): Leave blank or set to a date/time to filter earlier entries.
      *     - `end_at` (string, optional): Leave blank or set to a date/time to filter later entries.
@@ -238,22 +237,14 @@ class History
      *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
      *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
      *     - `sort_by` (array|object, optional): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `created_at`.
+     *     - `filter` (array|object, optional): If set, return records where the specified field is equal to the supplied value. Valid fields are `user_id`, `folder` or `path`. Valid field combinations are `[  ]`, `[ path ]`, `[ path ]` or `[ path ]`.
+     *     - `filter_prefix` (array|object, optional): If set, return records where the specified field is prefixed by the supplied value. Valid fields are `path`.
      * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
      * @return \Files\Model\Action[]
      * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
      */
-    public static function listForFile($path, $params = [], $options = [])
+    public static function all($params = [], $options = [])
     {
-        if (!is_array($params)) {
-            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
-        }
-
-        $params['path'] = $path;
-
-        if (empty($params['path'])) {
-            throw new \Files\Exception\MissingParameterException('Parameter missing: path');
-        }
-
         if (isset($params['start_at']) && !is_string($params['start_at'])) {
             throw new \Files\Exception\InvalidParameterException('$start_at must be of type string; received ' . gettype(@$params['start_at']));
         }
@@ -274,11 +265,7 @@ class History
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
-        if (isset($params['path']) && !is_string($params['path'])) {
-            throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
-        }
-
-        $response = Api::sendRequest('/history/files/' . rawurlencode(strval(@$params['path'])) . '', 'GET', $params, $options);
+        $response = Api::sendRequest('/history', 'GET', $params, $options);
 
         $return_array = [];
 
@@ -290,24 +277,14 @@ class History
     }
 
     /**
-     * Fetches one page of listForFile()'s results, with the same parameters and options,
+     * Fetches one page of all()'s results, with the same parameters and options,
      * whatever Files::$autoPaginate is. Iterate the page, step with nextPage(), or read every result lazily with
      * autoPagingIterator(). A 'cursor' parameter starts from a page saved with getNextCursor().
      *
      * @return \Files\Page
      */
-    public static function listForFilePage($path, $params = [], $options = [])
+    public static function listPage($params = [], $options = [])
     {
-        if (!is_array($params)) {
-            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
-        }
-
-        $params['path'] = $path;
-
-        if (empty($params['path'])) {
-            throw new \Files\Exception\MissingParameterException('Parameter missing: path');
-        }
-
         if (isset($params['start_at']) && !is_string($params['start_at'])) {
             throw new \Files\Exception\InvalidParameterException('$start_at must be of type string; received ' . gettype(@$params['start_at']));
         }
@@ -328,231 +305,7 @@ class History
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
-        if (isset($params['path']) && !is_string($params['path'])) {
-            throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
-        }
-
-        return \Files\Page::fetch('/history/files/' . rawurlencode(strval(@$params['path'])) . '', $params, $options, Action::class);
-    }
-
-    /**
-     * List history for specific folder
-     *
-     * GET /history/folders/{path}
-     *
-     * @param string $path Path to operate on.
-     * @param array $params Request parameters.
-     *     - `start_at` (string, optional): Leave blank or set to a date/time to filter earlier entries.
-     *     - `end_at` (string, optional): Leave blank or set to a date/time to filter later entries.
-     *     - `display` (string, optional): Display format. Leave blank or set to `full` or `parent`.
-     *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-     *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
-     *     - `sort_by` (array|object, optional): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `created_at`.
-     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
-     * @return \Files\Model\Action[]
-     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
-     */
-    public static function listForFolder($path, $params = [], $options = [])
-    {
-        if (!is_array($params)) {
-            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
-        }
-
-        $params['path'] = $path;
-
-        if (empty($params['path'])) {
-            throw new \Files\Exception\MissingParameterException('Parameter missing: path');
-        }
-
-        if (isset($params['start_at']) && !is_string($params['start_at'])) {
-            throw new \Files\Exception\InvalidParameterException('$start_at must be of type string; received ' . gettype(@$params['start_at']));
-        }
-
-        if (isset($params['end_at']) && !is_string($params['end_at'])) {
-            throw new \Files\Exception\InvalidParameterException('$end_at must be of type string; received ' . gettype(@$params['end_at']));
-        }
-
-        if (isset($params['display']) && !is_string($params['display'])) {
-            throw new \Files\Exception\InvalidParameterException('$display must be of type string; received ' . gettype(@$params['display']));
-        }
-
-        if (isset($params['cursor']) && !is_string($params['cursor'])) {
-            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
-        }
-
-        if (isset($params['per_page']) && !is_int($params['per_page'])) {
-            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
-        }
-
-        if (isset($params['path']) && !is_string($params['path'])) {
-            throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
-        }
-
-        $response = Api::sendRequest('/history/folders/' . rawurlencode(strval(@$params['path'])) . '', 'GET', $params, $options);
-
-        $return_array = [];
-
-        foreach (Api::listEntries(isset($response->data) ? $response->data : null, $response->status) as $obj) {
-            $return_array[] = new Action(Api::modelAttributes($obj, $response->status), $options);
-        }
-
-        return $return_array;
-    }
-
-    /**
-     * Fetches one page of listForFolder()'s results, with the same parameters and options,
-     * whatever Files::$autoPaginate is. Iterate the page, step with nextPage(), or read every result lazily with
-     * autoPagingIterator(). A 'cursor' parameter starts from a page saved with getNextCursor().
-     *
-     * @return \Files\Page
-     */
-    public static function listForFolderPage($path, $params = [], $options = [])
-    {
-        if (!is_array($params)) {
-            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
-        }
-
-        $params['path'] = $path;
-
-        if (empty($params['path'])) {
-            throw new \Files\Exception\MissingParameterException('Parameter missing: path');
-        }
-
-        if (isset($params['start_at']) && !is_string($params['start_at'])) {
-            throw new \Files\Exception\InvalidParameterException('$start_at must be of type string; received ' . gettype(@$params['start_at']));
-        }
-
-        if (isset($params['end_at']) && !is_string($params['end_at'])) {
-            throw new \Files\Exception\InvalidParameterException('$end_at must be of type string; received ' . gettype(@$params['end_at']));
-        }
-
-        if (isset($params['display']) && !is_string($params['display'])) {
-            throw new \Files\Exception\InvalidParameterException('$display must be of type string; received ' . gettype(@$params['display']));
-        }
-
-        if (isset($params['cursor']) && !is_string($params['cursor'])) {
-            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
-        }
-
-        if (isset($params['per_page']) && !is_int($params['per_page'])) {
-            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
-        }
-
-        if (isset($params['path']) && !is_string($params['path'])) {
-            throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
-        }
-
-        return \Files\Page::fetch('/history/folders/' . rawurlencode(strval(@$params['path'])) . '', $params, $options, Action::class);
-    }
-
-    /**
-     * List history for specific user
-     *
-     * GET /history/users/{user_id}
-     *
-     * @param int $user_id User ID.
-     * @param array $params Request parameters.
-     *     - `start_at` (string, optional): Leave blank or set to a date/time to filter earlier entries.
-     *     - `end_at` (string, optional): Leave blank or set to a date/time to filter later entries.
-     *     - `display` (string, optional): Display format. Leave blank or set to `full` or `parent`.
-     *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
-     *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
-     *     - `sort_by` (array|object, optional): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `created_at`.
-     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
-     * @return \Files\Model\Action[]
-     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
-     */
-    public static function listForUser($user_id, $params = [], $options = [])
-    {
-        if (!is_array($params)) {
-            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
-        }
-
-        $params['user_id'] = $user_id;
-
-        if (empty($params['user_id'])) {
-            throw new \Files\Exception\MissingParameterException('Parameter missing: user_id');
-        }
-
-        if (isset($params['start_at']) && !is_string($params['start_at'])) {
-            throw new \Files\Exception\InvalidParameterException('$start_at must be of type string; received ' . gettype(@$params['start_at']));
-        }
-
-        if (isset($params['end_at']) && !is_string($params['end_at'])) {
-            throw new \Files\Exception\InvalidParameterException('$end_at must be of type string; received ' . gettype(@$params['end_at']));
-        }
-
-        if (isset($params['display']) && !is_string($params['display'])) {
-            throw new \Files\Exception\InvalidParameterException('$display must be of type string; received ' . gettype(@$params['display']));
-        }
-
-        if (isset($params['cursor']) && !is_string($params['cursor'])) {
-            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
-        }
-
-        if (isset($params['per_page']) && !is_int($params['per_page'])) {
-            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
-        }
-
-        if (isset($params['user_id']) && !is_int($params['user_id'])) {
-            throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
-        }
-
-        $response = Api::sendRequest('/history/users/' . rawurlencode(strval(@$params['user_id'])) . '', 'GET', $params, $options);
-
-        $return_array = [];
-
-        foreach (Api::listEntries(isset($response->data) ? $response->data : null, $response->status) as $obj) {
-            $return_array[] = new Action(Api::modelAttributes($obj, $response->status), $options);
-        }
-
-        return $return_array;
-    }
-
-    /**
-     * Fetches one page of listForUser()'s results, with the same parameters and options,
-     * whatever Files::$autoPaginate is. Iterate the page, step with nextPage(), or read every result lazily with
-     * autoPagingIterator(). A 'cursor' parameter starts from a page saved with getNextCursor().
-     *
-     * @return \Files\Page
-     */
-    public static function listForUserPage($user_id, $params = [], $options = [])
-    {
-        if (!is_array($params)) {
-            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
-        }
-
-        $params['user_id'] = $user_id;
-
-        if (empty($params['user_id'])) {
-            throw new \Files\Exception\MissingParameterException('Parameter missing: user_id');
-        }
-
-        if (isset($params['start_at']) && !is_string($params['start_at'])) {
-            throw new \Files\Exception\InvalidParameterException('$start_at must be of type string; received ' . gettype(@$params['start_at']));
-        }
-
-        if (isset($params['end_at']) && !is_string($params['end_at'])) {
-            throw new \Files\Exception\InvalidParameterException('$end_at must be of type string; received ' . gettype(@$params['end_at']));
-        }
-
-        if (isset($params['display']) && !is_string($params['display'])) {
-            throw new \Files\Exception\InvalidParameterException('$display must be of type string; received ' . gettype(@$params['display']));
-        }
-
-        if (isset($params['cursor']) && !is_string($params['cursor'])) {
-            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
-        }
-
-        if (isset($params['per_page']) && !is_int($params['per_page'])) {
-            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
-        }
-
-        if (isset($params['user_id']) && !is_int($params['user_id'])) {
-            throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
-        }
-
-        return \Files\Page::fetch('/history/users/' . rawurlencode(strval(@$params['user_id'])) . '', $params, $options, Action::class);
+        return \Files\Page::fetch('/history', $params, $options, Action::class);
     }
 
     /**
@@ -637,10 +390,11 @@ class History
     }
 
     /**
-     * List site full action history
+     * List history for specific user
      *
-     * GET /history
+     * GET /history/users/{user_id}
      *
+     * @param int $user_id User ID.
      * @param array $params Request parameters.
      *     - `start_at` (string, optional): Leave blank or set to a date/time to filter earlier entries.
      *     - `end_at` (string, optional): Leave blank or set to a date/time to filter later entries.
@@ -648,14 +402,26 @@ class History
      *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
      *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
      *     - `sort_by` (array|object, optional): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `created_at`.
-     *     - `filter` (array|object, optional): If set, return records where the specified field is equal to the supplied value. Valid fields are `user_id`, `folder` or `path`. Valid field combinations are `[  ]`, `[ path ]`, `[ path ]` or `[ path ]`.
-     *     - `filter_prefix` (array|object, optional): If set, return records where the specified field is prefixed by the supplied value. Valid fields are `path`.
      * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
      * @return \Files\Model\Action[]
      * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
      */
-    public static function all($params = [], $options = [])
+    public static function listForUser($user_id, $params = [], $options = [])
     {
+        if (!is_array($params)) {
+            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+        }
+
+        $params['user_id'] = $user_id;
+
+        if (empty($params['user_id'])) {
+            throw new \Files\Exception\MissingParameterException('Parameter missing: user_id');
+        }
+
+        if (isset($params['user_id']) && !is_int($params['user_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
+        }
+
         if (isset($params['start_at']) && !is_string($params['start_at'])) {
             throw new \Files\Exception\InvalidParameterException('$start_at must be of type string; received ' . gettype(@$params['start_at']));
         }
@@ -676,7 +442,7 @@ class History
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
-        $response = Api::sendRequest('/history', 'GET', $params, $options);
+        $response = Api::sendRequest('/history/users/' . rawurlencode(strval(@$params['user_id'])) . '', 'GET', $params, $options);
 
         $return_array = [];
 
@@ -688,14 +454,28 @@ class History
     }
 
     /**
-     * Fetches one page of all()'s results, with the same parameters and options,
+     * Fetches one page of listForUser()'s results, with the same parameters and options,
      * whatever Files::$autoPaginate is. Iterate the page, step with nextPage(), or read every result lazily with
      * autoPagingIterator(). A 'cursor' parameter starts from a page saved with getNextCursor().
      *
      * @return \Files\Page
      */
-    public static function listPage($params = [], $options = [])
+    public static function listForUserPage($user_id, $params = [], $options = [])
     {
+        if (!is_array($params)) {
+            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+        }
+
+        $params['user_id'] = $user_id;
+
+        if (empty($params['user_id'])) {
+            throw new \Files\Exception\MissingParameterException('Parameter missing: user_id');
+        }
+
+        if (isset($params['user_id']) && !is_int($params['user_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$user_id must be of type int; received ' . gettype(@$params['user_id']));
+        }
+
         if (isset($params['start_at']) && !is_string($params['start_at'])) {
             throw new \Files\Exception\InvalidParameterException('$start_at must be of type string; received ' . gettype(@$params['start_at']));
         }
@@ -716,6 +496,226 @@ class History
             throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
         }
 
-        return \Files\Page::fetch('/history', $params, $options, Action::class);
+        return \Files\Page::fetch('/history/users/' . rawurlencode(strval(@$params['user_id'])) . '', $params, $options, Action::class);
+    }
+
+    /**
+     * List history for specific folder
+     *
+     * GET /history/folders/{path}
+     *
+     * @param string $path Path to operate on.
+     * @param array $params Request parameters.
+     *     - `start_at` (string, optional): Leave blank or set to a date/time to filter earlier entries.
+     *     - `end_at` (string, optional): Leave blank or set to a date/time to filter later entries.
+     *     - `display` (string, optional): Display format. Leave blank or set to `full` or `parent`.
+     *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+     *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+     *     - `sort_by` (array|object, optional): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `created_at`.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\Action[]
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
+    public static function listForFolder($path, $params = [], $options = [])
+    {
+        if (!is_array($params)) {
+            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+        }
+
+        $params['path'] = $path;
+
+        if (empty($params['path'])) {
+            throw new \Files\Exception\MissingParameterException('Parameter missing: path');
+        }
+
+        if (isset($params['path']) && !is_string($params['path'])) {
+            throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
+        }
+
+        if (isset($params['start_at']) && !is_string($params['start_at'])) {
+            throw new \Files\Exception\InvalidParameterException('$start_at must be of type string; received ' . gettype(@$params['start_at']));
+        }
+
+        if (isset($params['end_at']) && !is_string($params['end_at'])) {
+            throw new \Files\Exception\InvalidParameterException('$end_at must be of type string; received ' . gettype(@$params['end_at']));
+        }
+
+        if (isset($params['display']) && !is_string($params['display'])) {
+            throw new \Files\Exception\InvalidParameterException('$display must be of type string; received ' . gettype(@$params['display']));
+        }
+
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        $response = Api::sendRequest('/history/folders/' . rawurlencode(strval(@$params['path'])) . '', 'GET', $params, $options);
+
+        $return_array = [];
+
+        foreach (Api::listEntries(isset($response->data) ? $response->data : null, $response->status) as $obj) {
+            $return_array[] = new Action(Api::modelAttributes($obj, $response->status), $options);
+        }
+
+        return $return_array;
+    }
+
+    /**
+     * Fetches one page of listForFolder()'s results, with the same parameters and options,
+     * whatever Files::$autoPaginate is. Iterate the page, step with nextPage(), or read every result lazily with
+     * autoPagingIterator(). A 'cursor' parameter starts from a page saved with getNextCursor().
+     *
+     * @return \Files\Page
+     */
+    public static function listForFolderPage($path, $params = [], $options = [])
+    {
+        if (!is_array($params)) {
+            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+        }
+
+        $params['path'] = $path;
+
+        if (empty($params['path'])) {
+            throw new \Files\Exception\MissingParameterException('Parameter missing: path');
+        }
+
+        if (isset($params['path']) && !is_string($params['path'])) {
+            throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
+        }
+
+        if (isset($params['start_at']) && !is_string($params['start_at'])) {
+            throw new \Files\Exception\InvalidParameterException('$start_at must be of type string; received ' . gettype(@$params['start_at']));
+        }
+
+        if (isset($params['end_at']) && !is_string($params['end_at'])) {
+            throw new \Files\Exception\InvalidParameterException('$end_at must be of type string; received ' . gettype(@$params['end_at']));
+        }
+
+        if (isset($params['display']) && !is_string($params['display'])) {
+            throw new \Files\Exception\InvalidParameterException('$display must be of type string; received ' . gettype(@$params['display']));
+        }
+
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        return \Files\Page::fetch('/history/folders/' . rawurlencode(strval(@$params['path'])) . '', $params, $options, Action::class);
+    }
+
+    /**
+     * List history for specific file
+     *
+     * GET /history/files/{path}
+     *
+     * @param string $path Path to operate on.
+     * @param array $params Request parameters.
+     *     - `start_at` (string, optional): Leave blank or set to a date/time to filter earlier entries.
+     *     - `end_at` (string, optional): Leave blank or set to a date/time to filter later entries.
+     *     - `display` (string, optional): Display format. Leave blank or set to `full` or `parent`.
+     *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+     *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+     *     - `sort_by` (array|object, optional): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `created_at`.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\Action[]
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
+    public static function listForFile($path, $params = [], $options = [])
+    {
+        if (!is_array($params)) {
+            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+        }
+
+        $params['path'] = $path;
+
+        if (empty($params['path'])) {
+            throw new \Files\Exception\MissingParameterException('Parameter missing: path');
+        }
+
+        if (isset($params['path']) && !is_string($params['path'])) {
+            throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
+        }
+
+        if (isset($params['start_at']) && !is_string($params['start_at'])) {
+            throw new \Files\Exception\InvalidParameterException('$start_at must be of type string; received ' . gettype(@$params['start_at']));
+        }
+
+        if (isset($params['end_at']) && !is_string($params['end_at'])) {
+            throw new \Files\Exception\InvalidParameterException('$end_at must be of type string; received ' . gettype(@$params['end_at']));
+        }
+
+        if (isset($params['display']) && !is_string($params['display'])) {
+            throw new \Files\Exception\InvalidParameterException('$display must be of type string; received ' . gettype(@$params['display']));
+        }
+
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        $response = Api::sendRequest('/history/files/' . rawurlencode(strval(@$params['path'])) . '', 'GET', $params, $options);
+
+        $return_array = [];
+
+        foreach (Api::listEntries(isset($response->data) ? $response->data : null, $response->status) as $obj) {
+            $return_array[] = new Action(Api::modelAttributes($obj, $response->status), $options);
+        }
+
+        return $return_array;
+    }
+
+    /**
+     * Fetches one page of listForFile()'s results, with the same parameters and options,
+     * whatever Files::$autoPaginate is. Iterate the page, step with nextPage(), or read every result lazily with
+     * autoPagingIterator(). A 'cursor' parameter starts from a page saved with getNextCursor().
+     *
+     * @return \Files\Page
+     */
+    public static function listForFilePage($path, $params = [], $options = [])
+    {
+        if (!is_array($params)) {
+            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+        }
+
+        $params['path'] = $path;
+
+        if (empty($params['path'])) {
+            throw new \Files\Exception\MissingParameterException('Parameter missing: path');
+        }
+
+        if (isset($params['path']) && !is_string($params['path'])) {
+            throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
+        }
+
+        if (isset($params['start_at']) && !is_string($params['start_at'])) {
+            throw new \Files\Exception\InvalidParameterException('$start_at must be of type string; received ' . gettype(@$params['start_at']));
+        }
+
+        if (isset($params['end_at']) && !is_string($params['end_at'])) {
+            throw new \Files\Exception\InvalidParameterException('$end_at must be of type string; received ' . gettype(@$params['end_at']));
+        }
+
+        if (isset($params['display']) && !is_string($params['display'])) {
+            throw new \Files\Exception\InvalidParameterException('$display must be of type string; received ' . gettype(@$params['display']));
+        }
+
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        return \Files\Page::fetch('/history/files/' . rawurlencode(strval(@$params['path'])) . '', $params, $options, Action::class);
     }
 }

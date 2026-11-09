@@ -73,12 +73,12 @@ one `\Files\Page` at a time, requesting each later page only when it is asked fo
 
 ---
 
-## Resolve an expectation incident
+## Acknowledge an expectation incident
 
 ```
 $expectation_incident = \Files\Model\ExpectationIncident::find($id);
 
-$expectation_incident->resolve();
+$expectation_incident->acknowledge();
 ```
 
 ### Parameters
@@ -150,12 +150,12 @@ $expectation_incident->snooze([
 
 ---
 
-## Acknowledge an expectation incident
+## Resolve an expectation incident
 
 ```
 $expectation_incident = \Files\Model\ExpectationIncident::find($id);
 
-$expectation_incident->acknowledge();
+$expectation_incident->resolve();
 ```
 
 ### Parameters

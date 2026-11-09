@@ -219,12 +219,12 @@ one `\Files\Page` at a time, requesting each later page only when it is asked fo
 
 ---
 
-## Dry Run Sync
+## Manually Run Sync
 
 ```
 $sync = \Files\Model\Sync::find($id);
 
-$sync->dry_run();
+$sync->manual_run();
 ```
 
 ### Parameters
@@ -234,12 +234,12 @@ $sync->dry_run();
 
 ---
 
-## Manually Run Sync
+## Dry Run Sync
 
 ```
 $sync = \Files\Model\Sync::find($id);
 
-$sync->manual_run();
+$sync->dry_run();
 ```
 
 ### Parameters

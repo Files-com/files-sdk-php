@@ -82,6 +82,21 @@ class NativeFile
 
         $start = $this->position;
         $length = min($count, self::READ_SIZE, $this->metadata->getSize() - $start);
+        // Storage's word that the URL expired renews it (renewDownloadUrl) and asks for the same range again, its
+        // connection retries and renewals sharing Files::$maxNetworkRetries; the position moves only once a range is read.
+        $renewal = new Util\ExpiryRenewal();
+        while (($bytes = $this->readRange($start, $length, $renewal)) === null) {
+            $this->renewDownloadUrl();
+            $renewal->renewed($this->url);
+        }
+
+        $this->position += strlen($bytes);
+        return $bytes;
+    }
+
+    // The exact range of $length bytes from $start, or null when storage said the URL expired and $renewal may renew it.
+    private function readRange($start, $length, $renewal)
+    {
         $end = $start + $length - 1;
         $headers = ['Range' => 'bytes=' . $start . '-' . $end, 'Accept-Encoding' => 'identity'];
         if ($this->etag !== null) {
@@ -107,33 +122,51 @@ class NativeFile
                 return $written;
             },
         ]);
-        $validate = function ($response) use ($start, $end, $length, &$acceptBody) {
-            if (in_array($response->getStatusCode(), [301, 302, 303, 307, 308], true)) {
+        $validate = function ($response) use ($start, $end, $length, &$acceptBody, $renewal) {
+            $status = $response->getStatusCode();
+            // A redirect's body, and a refusal that may be renewed, judged by its body once it has arrived (Api), are no
+            // part of the range.
+            if (in_array($status, [301, 302, 303, 307, 308], true) || (($status === 400 || $status === 403) && $renewal->renewable())) {
                 $acceptBody = false;
                 return;
             }
-            $this->validateRange($response->getStatusCode(), $response->getHeaders(), $start, $end, $length);
+            $this->validateRange($status, $response->getHeaders(), $start, $end, $length);
             $acceptBody = true;
         };
         try {
-            $response = Api::sendRequest($this->url, 'GET', null, [
+            $response = Api::sendSingleRequest($this->url, 'GET', null, [
                 'headers' => $headers,
                 'sink' => $sink,
                 'decode_content' => false,
                 'on_headers' => $validate,
-            ]);
+            ], $renewal);
+            if ($response === null) {
+                return null;
+            }
             // Custom SDK handlers may not implement on_headers. Validate their response as well.
             $this->validateRange($response->status, $response->headers, $start, $end, $length);
             if ($received !== $length) {
                 throw new ApiBadResponseException('The Files stream received an incomplete download range');
             }
             $buffer->rewind();
-            $bytes = $buffer->getContents();
-            $this->position += strlen($bytes);
-            return $bytes;
+            return $buffer->getContents();
         } finally {
             $sink->close();
         }
+    }
+
+    // A new download URL for the open file after storage said its URL expired, looked up with the handle's pinned
+    // context. The file must still be one of the size the handle opened; the version the handle bound, if any, is still
+    // asked for (If-Match), so a changed file is refused before any of its bytes are returned.
+    private function renewDownloadUrl()
+    {
+        $metadata = (new File(['path' => $this->path], $this->requestContext->options()))->download();
+        if ($metadata->getType() !== 'file' || $metadata->getSize() !== $this->metadata->getSize()) {
+            throw new ApiBadResponseException('The remote file changed while its Files stream was open');
+        }
+        $url = $metadata->getDownloadUri();
+        self::requireHttpUrl($url);
+        $this->url = $url;
     }
 
     private function validateRange($status, $headers, $start, $end, $length)
@@ -259,19 +292,24 @@ class NativeFile
         rewind($this->buffer);
         $body = new \GuzzleHttp\Psr7\Stream($this->buffer);
         try {
-            $retries = 0;
+            // A connection failure, and storage's word that the part's URL expired (renewPart), send the part's same
+            // bytes again, unless its grant says retry_parts false; both share Files::$maxNetworkRetries.
+            $renewal = new Util\ExpiryRenewal($this->part->getRetryParts() !== false);
             while (true) {
                 $body->rewind();
                 try {
                     $this->requestContext->options();
-                    $response = Api::sendFile($this->part->getUploadUri(), $method, $body, $headers, false);
-                    break;
+                    $response = Api::sendFile($this->part->getUploadUri(), $method, $body, $headers, false, $renewal);
+                    if ($response !== null) {
+                        break;
+                    }
+                    $this->renewPart();
+                    $renewal->renewed($this->part->getUploadUri(), $this->part->getExpires());
                 } catch (\Files\Exception\ApiConnectException $error) {
-                    if ($this->part->getRetryParts() === false || $retries >= Files::$maxNetworkRetries) {
+                    if ($this->part->getRetryParts() === false || !$renewal->retry()) {
                         throw $error;
                     }
-                    $retries++;
-                    usleep((int) (min(($retries + 1) * Files::$minNetworkRetryDelay, Files::$maxNetworkRetryDelay) * 1000000));
+                    usleep((int) (min(($renewal->retries() + 1) * Files::$minNetworkRetryDelay, Files::$maxNetworkRetryDelay) * 1000000));
                 }
             }
         } finally {
@@ -286,6 +324,26 @@ class NativeFile
         fclose($this->buffer);
         $this->buffer = null;
         $this->part = null;
+    }
+
+    // A new grant for the part being sent, by the upload's ref and the part's number, after storage said its URL expired.
+    // It must be for the same part of the same upload, with the same size, method, headers, parameters and send
+    // instructions, and must not say retry_parts false, or the upload fails before the part is sent again.
+    private function renewPart()
+    {
+        $parts = (new File(['path' => $this->path], $this->requestContext->options()))->beginUpload(['part' => $this->partNumber, 'parts' => 1, 'ref' => $this->ref]);
+        $part = count($parts) === 1 ? $parts[0] : null;
+        $identity = function ($grant) {
+            return json_encode([
+                $grant->getRef(), $grant->getPartNumber(), $grant->getPartsize(), $grant->getHttpMethod(),
+                $grant->getHeaders(), $grant->getParameters(), $grant->getSend(),
+            ]);
+        };
+        if (!$part || $identity($part) !== $identity($this->part) || $part->getRetryParts() === false) {
+            throw new ApiBadResponseException('The renewed Files stream upload grant changed');
+        }
+        self::requireHttpUrl($part->getUploadUri());
+        $this->part = $part;
     }
 
     public function tell()

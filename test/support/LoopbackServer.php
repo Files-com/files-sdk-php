@@ -63,6 +63,8 @@ final class LoopbackServer
             'upload' => [
                 'partsize' => 4, 'parallel_parts' => true, 'retry_parts' => true, 'available_parts' => 10000, 'expired_first_grant' => false,
                 'direct' => false, 'fail' => [], 'request_timeout' => [], 'request_timeout_padded' => [], 'no_etag' => [],
+                // A part number => [status, body] answering the first URL given for that part, whatever its expiry.
+                'said_expired' => [],
             ],
             // mode: ranged, ignore_range, ranges_once (the first range request honored, later ones answered whole),
             // no_etag or weak_etag.
@@ -70,6 +72,8 @@ final class LoopbackServer
                 'files' => [], 'mode' => 'ranged', 'change_after' => null, 'truncate' => [], 'wrong_range' => [], 'frontend' => false,
                 'redirect_metadata' => false, 'expired_first_url' => false, 'omit_range_etag' => false, 'expiring_url' => null,
                 'unsigned' => false, 'forbidden' => false, 'timeout_padded' => [],
+                // A range's first byte => [status, body] answering that range sent with the first URL given for the file.
+                'said_expired' => [],
             ],
             'hold' => null,
             'api_stall' => [],
@@ -382,6 +386,10 @@ final class LoopbackServer
             return [403, ['Content-Type' => 'application/xml'], '<Error><Code>AccessDenied</Code><Message>Request has expired</Message></Error>', null];
         }
 
+        if (isset($settings['said_expired'][$part], $query['gen']) && $query['gen'] === '1') {
+            return [(int) $settings['said_expired'][$part][0], [], $settings['said_expired'][$part][1], null];
+        }
+
         if (isset($settings['request_timeout'][$part]) && $attempt <= $settings['request_timeout'][$part]) {
             return [400, ['Content-Type' => 'application/xml'], self::timeoutXml(), null];
         }
@@ -452,6 +460,11 @@ final class LoopbackServer
 
         if (self::expired($query)) {
             return [403, ['Content-Type' => 'application/xml'], '<Error><Code>AccessDenied</Code><Message>Request has expired</Message></Error>', null];
+        }
+
+        $firstByte = $range !== null && preg_match('/\Abytes=([0-9]+)-/', $range, $begins) ? $begins[1] : null;
+        if ($firstByte !== null && isset($settings['said_expired'][$firstByte], $query['gen']) && $query['gen'] === '1') {
+            return [(int) $settings['said_expired'][$firstByte][0], [], $settings['said_expired'][$firstByte][1], null];
         }
 
         if ($settings['frontend']) {

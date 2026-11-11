@@ -19,6 +19,8 @@ class StreamWrapperTest extends TestCase
 {
     use UnboundTransportGuard;
 
+    const EXPIRED = '<Error><Code>AccessDenied</Code><Message>Request has expired</Message></Error>';
+
     private $previous;
     private $files;
     private $requests;
@@ -29,6 +31,9 @@ class StreamWrapperTest extends TestCase
     private $partRetryAllowed = true;
     private $redirectDownload = false;
     private $uploadThrowable;
+    private $expiredUploads = 0;
+    private $renewedGrant = [];
+    private $granted = [];
 
     /** @before */
     public function initializeService()
@@ -49,6 +54,9 @@ class StreamWrapperTest extends TestCase
         $this->partRetryAllowed = true;
         $this->redirectDownload = false;
         $this->uploadThrowable = null;
+        $this->expiredUploads = 0;
+        $this->renewedGrant = [];
+        $this->granted = [];
         Files::setHandler($this->service());
         StreamWrapper::register();
         clearstatcache();
@@ -337,6 +345,105 @@ class StreamWrapperTest extends TestCase
         }
     }
 
+    // Storage's word that a read's URL expired renews it with the handle's pinned context and reads the same range
+    // again, the position unmoved until it has; a file of another size, or a renewal with no retry left, ends the read
+    // with nothing returned.
+    public function testAnExpiredRangeUrlIsRenewedAndTheSameRangeReadAgain()
+    {
+        $saved = Files::$maxNetworkRetries;
+        $cases = [
+            'renewed' => [3, false, 'one', 2],
+            'a changed file' => [3, true, null, 2],
+            'no retry left' => [0, false, null, 1],
+        ];
+        try {
+            foreach ($cases as $case => list($retries, $change, $expected, $lookups)) {
+                Files::$maxNetworkRetries = $retries;
+                $this->requests = [];
+                $this->files = ['reports/data.bin' => "one\ntwo\nthree\0four"];
+                $expired = 1;
+                $this->storageResponse = function ($response) use (&$expired, $change) {
+                    if ($expired-- !== 1) {
+                        return $response;
+                    }
+                    if ($change) {
+                        $this->files['reports/data.bin'] .= 'more';
+                    }
+                    return new Response(403, ['Content-Type' => 'application/xml'], self::EXPIRED);
+                };
+                $stream = fopen('files://reports/data.bin', 'rb');
+                try {
+                    $read = null;
+                    try {
+                        $read = fread($stream, 3);
+                    } catch (ApiBadResponseException $error) {
+                        $this->assertSame(0, ftell($stream), $case);
+                    }
+                    $this->assertSame($expected, $read, $case);
+                } finally {
+                    fclose($stream);
+                }
+                $storage = array_values(array_filter($this->requests, function ($request) {
+                    return $request['host'] === 'storage.example.test';
+                }));
+                $this->assertSame($lookups, count($this->requests) - count($storage), $case);
+                $ranges = array_map(function ($request) {
+                    return $request['headers']['Range'][0];
+                }, $storage);
+                // PHP reads a stream a chunk at a time: here the whole 18-byte file, of which fread returns 3 bytes.
+                $this->assertSame(array_fill(0, $expected === null ? 1 : 2, 'bytes=0-17'), $ranges, $case);
+            }
+        } finally {
+            Files::$maxNetworkRetries = $saved;
+        }
+    }
+
+    // Storage's word that a part's URL expired renews it, by the upload's ref and the part's number, and sends the
+    // part's same bytes again; a renewed grant saying retry_parts false, or no retry left, fails the upload uncommitted.
+    public function testAnExpiredPartUrlIsRenewedAndTheSamePartSentAgain()
+    {
+        $saved = Files::$maxNetworkRetries;
+        $cases = [
+            'renewed' => [3, [], ['hel', 'hel', 'lo']],
+            'a renewed grant saying retry_parts false' => [3, ['retry_parts' => false], ['hel']],
+            'no retry left' => [0, [], ['hel']],
+        ];
+        try {
+            foreach ($cases as $case => list($retries, $renewedGrant, $sent)) {
+                Files::$maxNetworkRetries = $retries;
+                $this->requests = [];
+                $this->expiredUploads = 1;
+                $this->renewedGrant = $renewedGrant;
+                $name = 'renew-' . $retries . count($renewedGrant) . '.bin';
+                $error = null;
+                try {
+                    file_put_contents('files://' . $name, 'hello');
+                } catch (ApiBadResponseException $caught) {
+                    $error = $caught;
+                }
+                $storage = array_values(array_filter($this->requests, function ($request) {
+                    return $request['host'] === 'storage.example.test';
+                }));
+                $this->assertSame($sent, array_column($storage, 'body'), $case);
+                if (count($sent) === 3) {
+                    $this->assertNull($error, $case);
+                    $this->assertSame('hello', $this->files[$name], $case);
+                    $begins = array_values(array_filter($this->requests, function ($request) {
+                        return $request['host'] === 'api.example.test' && isset($request['json']['part']);
+                    }));
+                    $this->assertSame([[1, null], [1, 'upload-ref'], [2, 'upload-ref']], array_map(function ($request) {
+                        return [$request['json']['part'], isset($request['json']['ref']) ? $request['json']['ref'] : null];
+                    }, $begins), $case);
+                } else {
+                    $this->assertInstanceOf(ApiBadResponseException::class, $error, $case);
+                    $this->assertArrayNotHasKey($name, $this->files, $case);
+                }
+            }
+        } finally {
+            Files::$maxNetworkRetries = $saved;
+        }
+    }
+
     public function testOpenWriteHandlesKeepTheirAccountAndWorkspaceAndRejectAChangedSite()
     {
         Files::setWorkspaceId(10);
@@ -430,6 +537,10 @@ class StreamWrapperTest extends TestCase
                 if ($this->failUpload) {
                     return Create::promiseFor(new Response(500));
                 }
+                if ($this->expiredUploads > 0) {
+                    $this->expiredUploads--;
+                    return Create::promiseFor(new Response(403, ['Content-Type' => 'application/xml'], self::EXPIRED));
+                }
                 $number = (int) basename($path);
                 $this->parts[$number] = $body;
                 return Create::promiseFor(new Response(200, ['ETag' => '"part-' . $number . '"']));
@@ -459,12 +570,16 @@ class StreamWrapperTest extends TestCase
             if (strpos($path, '/file_actions/begin_upload/') !== false) {
                 if (!isset($json['ref'])) {
                     $this->parts = [];
+                    $this->granted = [];
                 }
-                return Create::promiseFor(new Response(200, [], json_encode([[
+                // A part granted again is a renewal, which renewedGrant changes.
+                $renewal = isset($this->granted[$json['part']]);
+                $this->granted[$json['part']] = true;
+                return Create::promiseFor(new Response(200, [], json_encode([array_merge([
                     'part_number' => $json['part'], 'partsize' => 3, 'ref' => 'upload-ref',
                     'upload_uri' => 'https://storage.example.test/upload/' . $json['part'], 'http_method' => 'PUT',
                     'retry_parts' => $this->partRetryAllowed,
-                ]])));
+                ], $renewal ? $this->renewedGrant : [])])));
             }
             $prefix = strpos($path, '/file_actions/metadata/') !== false ? '/api/rest/v1/file_actions/metadata/' : '/api/rest/v1/files/';
             $name = ltrim(substr($path, strlen($prefix)), '/');

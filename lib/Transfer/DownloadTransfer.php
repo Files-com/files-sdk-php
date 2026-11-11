@@ -456,9 +456,12 @@ final class DownloadTransfer
         if ($mode === 'discard') {
             $status = $state['status'];
             $error = RetryPolicy::storageError($what, $status);
-            if ($status === 403 && RetryPolicy::isExpired($state['expires_at'])) {
-                // The URL this attempt was sent with had expired: the range is retried with the newer URL already given,
-                // when there is one, and otherwise with the URL a renewal gives.
+            // The kept body is all of it only when the response ended normally and nothing past the kept bytes came.
+            $captured = $ok && $state['capture_complete'];
+            $expired = $status === 403 && RetryPolicy::isExpired($state['expires_at']);
+            if ($expired || RetryPolicy::isExpiryResponse($status, $state['capture'], $captured)) {
+                // The URL this attempt was sent with had expired, by its own expiry or by storage's word: the range is
+                // retried with the newer URL already given, when there is one, and otherwise with the URL a renewal gives.
                 if ($this->retryLater($unit, 0.0, $error, $now) && $state['generation'] === $this->generation) {
                     $this->wantRenewal($unit);
                 }
@@ -466,8 +469,6 @@ final class DownloadTransfer
                 return [ConcurrencyController::ENDED];
             }
 
-            // The kept body is all of it only when the response ended normally and nothing past the kept bytes came.
-            $captured = $ok && $state['capture_complete'];
             list($decision, $delay) = RetryPolicy::storageResponse($status, $state['headers'], $state['capture'], $captured);
             if ($decision === 'fail') {
                 $this->engine->failTransfer($this, $error);
@@ -898,14 +899,16 @@ final class DownloadTransfer
     // it is longer is refused unread. It is accepted only once it shows its end there (bodyEnded), never on what it
     // declared alone. A range for a caller's stream is staged meanwhile in a temporary file and taken into memory only
     // once its end is shown (loadStaged), so that its reservation never holds its bytes and a byte more at once. The
-    // body of an error response that may be S3's RequestTimeout (a 400) is kept as storage's is (captureBody), to
-    // classify it. True when the body was read here, which then took the time the reading took.
+    // body of an error response that may be S3's RequestTimeout (a 400) or say its URL has expired (a 400 or 403) is
+    // kept as storage's is (captureBody), to classify it. True when the body was read here, which then took the time the
+    // reading took.
     private function copyUnwritten($attempt, $response)
     {
         $state = $this->attempts[$attempt];
         $mode = $state['mode'];
         $copied = $mode === 'range' || $mode === 'whole';
-        if ((!$copied && !($mode === 'discard' && $state['status'] === 400)) || $state['written'] > 0 || $state['capture'] !== '') {
+        $classified = $mode === 'discard' && ($state['status'] === 400 || $state['status'] === 403);
+        if ((!$copied && !$classified) || $state['written'] > 0 || $state['capture'] !== '') {
             return false;
         }
 

@@ -38,8 +38,11 @@ most 1 MiB and validates the returned range and byte count. A backend that ignor
 Range requests fails with an SDK exception before returning file bytes; the
 wrapper does not preload the entire file. A strong storage ETag, when provided,
 is sent in `If-Match` on later reads. Backends without that validator do not
-provide a snapshot guarantee during concurrent changes. Download URLs are not
-renewed after expiration; reopen the stream to obtain a new grant.
+provide a snapshot guarantee during concurrent changes. A read whose download URL
+storage says has expired renews the URL with the handle's own account, workspace
+and options and requests the same range again, without moving the position; the
+file must still have the size it had when opened, and its version once it has one
+(see [expired transfer URLs](README.md#expired-transfer-urls-without-adaptive-transfers)).
 
 Use `w` or `wb` for a sequential overwrite:
 
@@ -95,6 +98,9 @@ descriptor for `stream_select` or native descriptor consumers. Transports remain
 blocking and use the SDK's configured timeouts and retry policy.
 The default `maxNetworkRetries` of 3 allows 4 total attempts for a retryable
 connection failure; a grant with `retry_parts=false` permits only one attempt.
+A part whose upload URL storage says has expired is sent again, with its same
+bytes, under a grant renewed for the same upload and part, as one of those
+attempts.
 PHP rejects some unsupported arguments before invoking a wrapper:
 `file_put_contents` with `LOCK_EX` warns and returns false before opening a file.
 

@@ -147,6 +147,43 @@ class AdaptiveTransferTest extends TestCase
         foreach ($others as $body) {
             $this->assertSame(['fail', 0.0], RetryPolicy::storageResponse(400, [], $body), $body);
         }
+
+        // Storage's word that a URL has expired: S3's, ExpiredToken, Azure's and Files.com's two JSON types, a marker in
+        // the first 4 KiB of a body kept only in part. Not another denial, a marker past them or on another status, nor
+        // JSON nested, past 4 KiB, not seen whole or of another type, whatever text it holds.
+        $expired = '<Error><Code>AccessDenied</Code><Message>Request has expired</Message></Error>';
+        $saysExpired = [
+            [403, '<?xml version="1.0" encoding="UTF-8"?>' . "\n" . $expired, true],
+            [400, '<Error><Code>ExpiredToken</Code><Message>The provided token has expired.</Message></Error>', true],
+            [403, '<Error><Code>AuthenticationFailed</Code><AuthenticationErrorDetail>SIGNATURE NOT VALID IN THE SPECIFIED TIME FRAME</AuthenticationErrorDetail></Error>', true],
+            [403, '{"type":"download_request_expired","http-code":403}', true],
+            [400, '{"type":"upload_request_expired"}', true],
+            [403, str_pad($expired, RetryPolicy::BODY_LIMIT), false],
+        ];
+        foreach ($saysExpired as $case) {
+            $this->assertTrue(RetryPolicy::isExpiryResponse($case[0], $case[1], $case[2]), $case[1]);
+        }
+
+        $notExpired = [
+            [403, '<Error><Code>AccessDenied</Code><Message>Access Denied</Message></Error>', true],
+            [403, '<Error><Code>SignatureDoesNotMatch</Code><Message>The signature has expired or does not match</Message></Error>', true],
+            [403, '{"type":"not-authorized/expired","error":"Upload request expired"}', true],
+            [403, '{"error":{"type":"download_request_expired"}}', true],
+            // JSON is judged by its type alone, never by an expiry's words inside it, even when it is not well formed.
+            [403, '{"type":"not_authorized","error":"Request has expired"}', true],
+            [400, '{"type":"other","data":"<Code>ExpiredToken</Code>"}', true],
+            [403, '[{"Message":"Request has expired"}]', true],
+            [403, '"Request has expired"', true],
+            [403, '  {"error":"Request has expired"', true],
+            [403, '{"type":"not_authorized","error":"Request has expired"}', false],
+            [403, str_repeat(' ', RetryPolicy::EXPIRY_SCAN_BYTES) . $expired, true],
+            [403, str_pad('{"type":"upload_request_expired"}', RetryPolicy::EXPIRY_SCAN_BYTES + 1), true],
+            [403, '{"type":"upload_request_expired"}', false],
+            [200, $expired, true], [404, $expired, true], [500, $expired, true],
+        ];
+        foreach ($notExpired as $case) {
+            $this->assertFalse(RetryPolicy::isExpiryResponse($case[0], $case[1], $case[2]), $case[0] . ' ' . substr($case[1], 0, 80));
+        }
     }
 
     // Only one ordinary multipart upload straight to Amazon S3, signed for its host alone and binding no checksum,
@@ -1132,6 +1169,96 @@ class AdaptiveTransferTest extends TestCase
         }
     }
 
+    // Storage's word that a URL has expired, though the URL states an expiry an hour away, or none, renews it as one of
+    // the attempt's retries: a part is sent again with its same bytes (never when its grant forbids retries), a
+    // download's first request again, and two ranges held until both were sent with the first URL share one renewal,
+    // each written once.
+    public function testStorageSayingAUrlExpiredRenewsItWhateverExpiryItStates()
+    {
+        if (!$this->adaptive()) {
+            return;
+        }
+
+        $json = '{"type":"upload_request_expired","http-code":403}';
+        $this->withServer(['upload' => ['partsize' => 4, 'said_expired' => [2 => [403, $json]]]], function ($server) use ($json) {
+            $data = self::content(12);
+            $job = new TransferJob(['concurrency' => 1]);
+            $job->uploadData('loop/said.bin', $data);
+            $job->wait();
+
+            $journal = $this->journal($server);
+            $sent = [];
+            foreach ($this->entries($journal, 'storage') as $part) {
+                parse_str($part['query'], $query);
+                $sent[(int) $query['part']][] = [$part['status'], $query['gen'], $part['body_sha256']];
+            }
+
+            $sha = hash('sha256', substr($data, 4, 4));
+            $this->assertSame([[403, '1', $sha], [200, '2', $sha]], $sent[2]);
+            $statistics = $job->statistics();
+            $this->assertSame([1, 1, 1], [$statistics['renewals'], $statistics['retries'], count($this->entries($journal, 'end'))]);
+
+            $this->control($server, 'reset', ['upload' => ['partsize' => 4, 'retry_parts' => false, 'said_expired' => [1 => [403, $json]]]]);
+            $job = new TransferJob(['concurrency' => 1]);
+            $handle = $job->uploadData('loop/once.bin', self::content(4));
+            try {
+                $job->wait();
+                $this->fail('A part whose grant forbids retries was sent again');
+            } catch (ApiBadResponseException $e) {
+                $this->assertSame(403, $e->getCode());
+            }
+
+            $journal = $this->journal($server);
+            $this->assertSame(
+                [1, 0, 0, 'failed'],
+                [count($this->entries($journal, 'storage')), $job->statistics()['renewals'], count($this->entries($journal, 'end')), $handle->status()]
+            );
+        });
+
+        $data = self::content(40);
+        $destinations = [$this->localPath(), $this->localPath()];
+        $token = '<Error><Code>ExpiredToken</Code><Message>The provided token has expired.</Message></Error>';
+        $azure = '<Error><Code>AuthenticationFailed</Code><AuthenticationErrorDetail>Signature not valid in the specified time frame</AuthenticationErrorDetail></Error>';
+        try {
+            $this->withServer($this->downloadConfig($data, ['download' => ['unsigned' => true, 'said_expired' => ['0' => [400, $token]]]]), function ($server) use ($data, $destinations, $azure) {
+                $job = new TransferJob(['download_part_bytes' => 8]);
+                $job->downloadToFile('loop/d.bin', $destinations[0]);
+                $job->wait();
+
+                $journal = $this->journal($server);
+                $first = array_slice($this->entries($journal, 'download'), 0, 2);
+                $this->assertSame([[400, 'bytes=0-7'], [206, 'bytes=0-7']], [[$first[0]['status'], $first[0]['headers']['range']], [$first[1]['status'], $first[1]['headers']['range']]]);
+                $statistics = $job->statistics();
+                $this->assertSame([$data, 2, 1, 1], [file_get_contents($destinations[0]), count($this->entries($journal, 'metadata')), $statistics['renewals'], $statistics['retries']]);
+
+                $said = ['8' => [403, $azure], '16' => [403, $azure]];
+                $this->control($server, 'reset', $this->downloadConfig($data, ['download' => ['said_expired' => $said], 'hold' => ['kind' => 'download', 'until_open' => 2, 'timeout' => 5, 'after' => 1]]));
+                $job = new TransferJob(['concurrency' => 2, 'download_part_bytes' => 8]);
+                $job->downloadToFile('loop/d.bin', $destinations[1]);
+                $job->wait();
+
+                $journal = $this->journal($server);
+                $attempts = [];
+                foreach ($this->entries($journal, 'download') as $entry) {
+                    parse_str($entry['query'], $query);
+                    $attempts[$entry['headers']['range']][] = [$entry['status'], $query['gen']];
+                }
+
+                ksort($attempts);
+                $this->assertSame([
+                    'bytes=0-7' => [[206, '1']], 'bytes=16-23' => [[403, '1'], [206, '2']], 'bytes=24-31' => [[206, '2']],
+                    'bytes=32-39' => [[206, '2']], 'bytes=8-15' => [[403, '1'], [206, '2']],
+                ], $attempts);
+                $statistics = $job->statistics();
+                $this->assertSame([$data, 2, 1, 2], [file_get_contents($destinations[1]), count($this->entries($journal, 'metadata')), $statistics['renewals'], $statistics['retries']]);
+            });
+        } finally {
+            foreach ($destinations as $destination) {
+                @unlink($destination);
+            }
+        }
+    }
+
     // A download is published only after its own final report returns. A final report that throws or cancels leaves
     // the existing destination as it was and removes the staging file; one that pauses keeps the verified staging file,
     // which resuming moves into place without fetching anything again.
@@ -1569,7 +1696,8 @@ class AdaptiveTransferTest extends TestCase
 
     // Through a handler set with Files::setHandler that answers with bodies of its own, writing nothing to the sink:
     // storage's whole, well-formed RequestTimeout error for a range is read from its body to classify it, and retried,
-    // and the file arrives exactly; the same error naming a character XML does not allow (&#0;) is not retried.
+    // and the file arrives exactly; the same error naming a character XML does not allow (&#0;) is not retried. A 403
+    // whose body says its URL expired renews the URL.
     public function testACustomHandlersErrorBodyIsReadWholeToClassifyIt()
     {
         if (!$this->adaptive()) {
@@ -1578,14 +1706,17 @@ class AdaptiveTransferTest extends TestCase
 
         $saved = Files::snapshot();
         $data = self::content(16);
-        $destinations = [$this->localPath(), $this->localPath()];
+        $destinations = [$this->localPath(), $this->localPath(), $this->localPath()];
         try {
             Files::setBaseUrl('https://app.files.com');
             Files::setApiKey('test-key');
             $message = 'Idle';
+            $refusal = null;
             $ranges = [];
-            Files::setHandler(function ($request) use ($data, &$message, &$ranges) {
+            $lookups = 0;
+            Files::setHandler(function ($request) use ($data, &$message, &$refusal, &$ranges, &$lookups) {
                 if ($request->getUri()->getHost() === 'app.files.com') {
+                    $lookups++;
                     $metadata = ['path' => 'timeout.bin', 'download_uri' => 'https://storage.example.test/timeout.bin'];
                     return Create::promiseFor(new Response(200, ['Content-Type' => 'application/json'], json_encode($metadata)));
                 }
@@ -1593,6 +1724,10 @@ class AdaptiveTransferTest extends TestCase
                 $range = $request->getHeaderLine('Range');
                 $ranges[] = $range;
                 if ($range === 'bytes=8-15' && count(array_keys($ranges, $range, true)) === 1) {
+                    if ($refusal !== null) {
+                        return Create::promiseFor(new Response($refusal[0], ['Content-Type' => 'application/json'], $refusal[1]));
+                    }
+
                     $xml = '<?xml version="1.0" encoding="UTF-8"?>' . "\n" . '<Error><Code>RequestTimeout</Code><Message>' . $message . '</Message></Error>';
                     return Create::promiseFor(new Response(400, ['Content-Type' => 'application/xml'], $xml));
                 }
@@ -1626,6 +1761,19 @@ class AdaptiveTransferTest extends TestCase
             $this->assertSame(
                 [400, ['bytes=0-7', 'bytes=8-15'], 0, 'failed', false],
                 [$failure->getCode(), $ranges, $job->statistics()['retries'], $handle->status(), file_exists($destinations[1])]
+            );
+
+            // A 403 whose returned body says the URL expired is read to classify it too: renewed, and sent again.
+            $refusal = [403, '{"type":"download_request_expired","http-code":403}'];
+            $ranges = [];
+            $lookups = 0;
+            $job = new TransferJob(['download_part_bytes' => 8]);
+            $job->downloadToFile('timeout.bin', $destinations[2]);
+            $job->wait();
+            $statistics = $job->statistics();
+            $this->assertSame(
+                [$data, ['bytes=0-7', 'bytes=8-15', 'bytes=8-15'], 2, 1, 1],
+                [file_get_contents($destinations[2]), $ranges, $lookups, $statistics['renewals'], $statistics['retries']]
             );
         } finally {
             $this->restore($saved);

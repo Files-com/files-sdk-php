@@ -225,6 +225,29 @@ class File
         return $part;
     }
 
+    // A new grant for part $number of the upload by its $ref, the first part's too, after storage said $part's URL had
+    // expired. It must be for the same part of the same upload, with the same size, method, headers, parameters and send
+    // instructions, and must not say retry_parts false, or the upload stops before it is used.
+    private static function renewUploadPart($path, $number, $ref, $part, $options)
+    {
+        $parts = (new File(['path' => $path], $options))->beginUpload(['ref' => $ref, 'part' => $number, 'parts' => 1]);
+        $renewed = count($parts) === 1 ? $parts[0] : null;
+        $identity = function ($grant) {
+            return json_encode([
+                $grant->getRef(), $grant->getPartNumber(), $grant->getPartsize(), $grant->getHttpMethod(),
+                $grant->getHeaders(), $grant->getParameters(), $grant->getSend(),
+            ]);
+        };
+        if (
+            !$renewed || $identity($renewed) !== $identity($part) || $renewed->getRetryParts() === false
+            || !is_string($renewed->getUploadUri()) || $renewed->getUploadUri() === ''
+        ) {
+            throw new \Files\Exception\ApiBadResponseException('The renewed instructions for part ' . $number . ' of the upload to ' . $path . ' changed');
+        }
+
+        return $renewed;
+    }
+
     // How a granted part is sent: with its http_method (PUT, the usual one, when it gives none) and exactly the headers
     // it gives, each a string. Form parameters and a form body, which a grant can also ask for, have no meaning this
     // helper knows, so a grant asking for either is refused before the part is read or sent.
@@ -346,8 +369,15 @@ class File
 
             // A part whose grant says it cannot be retried (retry_parts false) is sent once. Otherwise a connection
             // failure is retried as for any request; a grant without retry_parts keeps that policy, which is the SDK's,
-            // not a service guarantee.
-            $response = Api::sendFile($part->getUploadUri(), $method, $bytes, $headers, $part->getRetryParts() !== false);
+            // not a service guarantee. Storage's word that the part's URL expired renews it (renewUploadPart) and sends
+            // the same bytes again, its connection retries and renewals sharing Files::$maxNetworkRetries.
+            $retry = $part->getRetryParts() !== false;
+            $renewal = new \Files\Util\ExpiryRenewal($retry);
+            while (($response = Api::sendFile($part->getUploadUri(), $method, $bytes, $headers, $retry, $renewal)) === null) {
+                $part = self::renewUploadPart($path, $number, $ref, $part, $options);
+                $renewal->renewed($part->getUploadUri(), $part->getExpires());
+            }
+
             $etags[] = ['etag' => self::uploadPartReceipt($response, $number), 'part' => $number];
             $acknowledged += strlen($bytes);
 
@@ -566,6 +596,14 @@ class File
      */
     public static function downloadToStream($remoteFilePath, $destinationStream, $startOffset = null, $endOffset = null)
     {
+        return self::downloadAttempt($remoteFilePath, $destinationStream, $startOffset, $endOffset, new \Files\Util\ExpiryRenewal());
+    }
+
+    // downloadToStream's download, its connection retries and URL renewals counted by $renewal (Util\ExpiryRenewal).
+    // Storage's word that the URL expired, none of which reaches the destination, renews the URL by $remoteFilePath, as
+    // it was first looked up, and asks for the same range again.
+    private static function downloadAttempt($remoteFilePath, $destinationStream, $startOffset, $endOffset, $renewal)
+    {
         $downloadUrl = self::getDownloadUrl($remoteFilePath);
 
         $options = [
@@ -583,7 +621,10 @@ class File
             ];
         }
 
-        $response = Api::sendRequest($downloadUrl, 'GET', null, $options);
+        while (($response = Api::sendSingleRequest($downloadUrl, 'GET', null, $options, $renewal)) === null) {
+            $downloadUrl = self::getDownloadUrl($remoteFilePath);
+            $renewal->renewed($downloadUrl);
+        }
 
         // Header names are case-insensitive. A whole response has no Content-Range; one without Content-Length (a
         // chunked body) reports 0 received, as before.
@@ -623,18 +664,24 @@ class File
      */
     public static function resumeDownloadToFile($remoteFilePath, $destinationPath)
     {
+        return self::resumeAttempt($remoteFilePath, $destinationPath, new \Files\Util\ExpiryRenewal());
+    }
+
+    // resumeDownloadToFile's download, its retries and renewals counted by $renewal, as for downloadAttempt.
+    private static function resumeAttempt($remoteFilePath, $destinationPath, $renewal)
+    {
         $readStream = fopen($destinationPath, 'r');
         fseek($readStream, 0, SEEK_END);
         $rangeStart = ftell($readStream);
         fclose($readStream);
 
         // The append handle is the SDK's own, closed before this returns or throws, even while the caller keeps the
-        // exception (Guzzle usually closes it itself once the download completes). A failure to close it is thrown only
-        // when the download succeeded: it never replaces the download's own failure, nor passes for success.
+        // exception. A failure to close it is thrown only when the download succeeded: it never replaces the download's own
+        // failure, nor passes for success.
         $stream = fopen($destinationPath, 'a');
         $completed = false;
         try {
-            $result = self::downloadToStream($remoteFilePath, $stream, $rangeStart);
+            $result = self::downloadAttempt($remoteFilePath, $stream, $rangeStart, null, $renewal);
             $completed = true;
         } finally {
             if (is_resource($stream)) {
@@ -663,7 +710,10 @@ class File
      * the download runs adaptively instead: version-bound ranges fetched concurrently and verified, or a whole response
      * restarted from its first byte, written to a staging file that replaces $destinationPath only once complete, on
      * 64-bit PHP with a native monotonic clock only. Its other options are progress and the generated methods' options
-     * for its API request; $enableRetry false allows no retries. Returns the bytes received and the total.
+     * for its API request; $enableRetry false allows no retries. Returns the bytes received and the total. Without
+     * transfer, a URL storage says has expired is renewed and the download asked for again (downloadAttempt), and the
+     * download's retries, connection retries and renewals share Files::$maxNetworkRetries; $enableRetry false renews
+     * nothing.
      *
      * @param string $remoteFilePath Path on Files.com.
      * @param string $destinationPath Local destination path.
@@ -690,21 +740,27 @@ class File
             return $handle->result();
         }
 
+        // One count of Files::$maxNetworkRetries for the whole download: its connection retries, its URL's renewals
+        // (none when !$enableRetry) and its retries from the bytes already written.
+        $renewal = new \Files\Util\ExpiryRenewal($enableRetry);
         $retries = 0;
 
         while (true) {
             try {
-                if (!$retries || !file_exists($destinationPath)) {
-                    $response = self::downloadToStream($remoteFilePath, $destinationPath);
+                // Only bytes this download wrote are resumed after: until a response's body has reached the destination,
+                // what the file holds is its earlier contents, and the download starts again from the first byte.
+                if (!$renewal->wroteContent() || !file_exists($destinationPath)) {
+                    $response = self::downloadAttempt($remoteFilePath, $destinationPath, null, null, $renewal);
                 } else {
-                    $response = self::resumeDownloadToFile($remoteFilePath, $destinationPath);
+                    $response = self::resumeAttempt($remoteFilePath, $destinationPath, $renewal);
                 }
 
                 break;
             } catch (\Exception $error) {
                 ++$retries;
 
-                if (!$enableRetry || $retries > \Files\Files::$maxNetworkRetries) {
+                // Storage's word that the URL expired, once no renewal is left, is not retried as any failure is.
+                if (!$enableRetry || $renewal->refusedExpired() || !$renewal->retry()) {
                     Logger::info('Retries exhausted - giving up on this file download');
                     throw $error;
                 } else {

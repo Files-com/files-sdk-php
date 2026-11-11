@@ -77,6 +77,15 @@ class DownloadFileSink implements StreamInterface
     }
 
     /**
+     * Closes the file a transfer opened, as before each call, for a transfer that starts within one call once its headers
+     * arrive (ExpiryRenewal): a handler of the caller's may send again within a call. The next write opens a new file.
+     */
+    public function nextTransfer()
+    {
+        $this->closeFile();
+    }
+
+    /**
      * Closes the file if a transfer opened it, never opening it to do so. The sink cannot be used afterwards.
      *
      * A failure to close is thrown, unless $requestFailed: the request's own failure is then the one to report, and a

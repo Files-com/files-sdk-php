@@ -2,7 +2,13 @@
 
 // Loopback Files.com API and download endpoints for FileTransferTest, run by `php -S`. The remote path of each SDK
 // call names the scenario to serve; a scenario ending in "-once" is served for the first metadata request, and every
-// later one downloads the full file. Each request's method, path and Range header are recorded in requests.jsonl.
+// later one downloads the full file. A download "expired-N-<scenario>" is refused as S3 refuses an expired URL for its
+// first N requests, and then served as <scenario>; "shortxml-N-<scenario>" and "shortjson-N-<scenario>" the same, with S3's
+// text or Files.com's JSON in a body 10 bytes shorter than its Content-Length says. "denied" is refused as S3 denies
+// access. A download "steps-<a>.<b>..." serves its first request as <a>, its next as <b>, and so on, the last step for
+// every later one; a step "expired" is refused as an expired URL. The metadata of "flakyN-<scenario>" fails with a 503 at
+// its Nth request, and otherwise names <scenario>. Each request's method, path and Range header are recorded in
+// requests.jsonl.
 
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $payload = str_repeat("known transfer bytes\n", 1024);
@@ -19,8 +25,43 @@ $respondWithJson = function ($status, $data) {
     echo json_encode($data);
 };
 
-$serveDownload = function ($scenario) use ($payload) {
-    if (preg_match('/^redirect-to-(.+)$/', $scenario, $match)) {
+$serveDownload = function ($scenario) use ($payload, $stateDir) {
+    $refusal = function ($message, $short = false, $json = false) {
+        http_response_code(403);
+        header('Content-Type: application/' . ($json ? 'json' : 'xml'));
+        $body = $json ? '{"type":"download_request_expired"}' : "<Error><Code>AccessDenied</Code><Message>$message</Message></Error>";
+        if ($short) {
+            header('Content-Length: ' . (strlen($body) + 10));
+        }
+        echo $body;
+    };
+    if (preg_match('/^steps-(.+)$/', $scenario, $match)) {
+        $steps = explode('.', $match[1]);
+        $counter = "$stateDir/served-$scenario";
+        $served = file_exists($counter) ? intval(file_get_contents($counter)) : 0;
+        file_put_contents($counter, (string) ($served + 1));
+        $scenario = $steps[min($served, count($steps) - 1)];
+        if ($scenario === 'expired') {
+            $refusal('Request has expired');
+            return;
+        }
+    }
+
+    if (preg_match('/^(expired|shortxml|shortjson)-(\d+)-(.+)$/', $scenario, $match)) {
+        $counter = "$stateDir/served-$scenario";
+        $served = file_exists($counter) ? intval(file_get_contents($counter)) : 0;
+        file_put_contents($counter, (string) ($served + 1));
+        if ($served < intval($match[2])) {
+            $refusal('Request has expired', $match[1] !== 'expired', $match[1] === 'shortjson');
+            return;
+        }
+
+        $scenario = $match[3];
+    }
+
+    if ($scenario === 'denied') {
+        $refusal('Access Denied');
+    } elseif (preg_match('/^redirect-to-(.+)$/', $scenario, $match)) {
         // Guzzle writes this body to the sink too, before it follows the redirect.
         header("Location: /download/{$match[1]}", true, 302);
         echo 'redirect body';
@@ -50,6 +91,13 @@ $serveDownload = function ($scenario) use ($payload) {
 if (preg_match('@^/api/rest/v1/files/(.+)$@', $path, $match)) {
     // A file's metadata, naming the download to serve.
     $scenario = rawurldecode($match[1]);
+    if (preg_match('/^flaky(\d+)-(.+)$/', $scenario, $flaky)) {
+        $counter = "$stateDir/looked-up-$scenario";
+        $lookups = (file_exists($counter) ? intval(file_get_contents($counter)) : 0) + 1;
+        file_put_contents($counter, (string) $lookups);
+        $scenario = $lookups === intval($flaky[1]) ? 'metadata-error' : $flaky[2];
+    }
+
     if ($scenario === 'metadata-error') {
         $respondWithJson(503, ['type' => 'service-unavailable', 'error' => 'Fixture failure']);
     } else {

@@ -1297,6 +1297,15 @@ web app (`X-Files-Frontend-App`) fails the download before anything is written. 
 beside its destination, which replaces the destination only once every byte is verified; a stream is written in order,
 never twice.
 
+Expiry: a signed URL due to expire within 15 seconds is renewed before it is sent, and one that storage refuses with
+a 403 once it has expired, or with a 400 or 403 that says it has expired whatever expiry it states, is renewed and
+sent again as one of its retries, at most three times for each part or range (an upload's part only when its grant
+allows retries). Storage says so with S3's `Request has expired`, `<Code>ExpiredToken</Code>` (Amazon and Google) or
+Azure's `Signature not valid in the specified time frame`, found without regard to case in the first 4 KiB of its
+body, or with a Files.com JSON error of at most 4 KiB whose `type` is `download_request_expired` or
+`upload_request_expired`; a body that begins as JSON (`{`, `[` or `"`) is judged by that `type` alone, never by text
+inside it. Any other 403 fails the transfer.
+
 `wait()` throws the first failure, or the first exception a callback throws, as it was, after stopping everything in
 flight; `cancel()` makes it throw a `TransferCancelledException`. `pause()`, from a callback or between waits, stops the
 job keeping everything accepted, and `resume()` then `wait()` continue it without sending accepted bytes again. A paused
@@ -1304,6 +1313,29 @@ job lives in its process: keep the job, its files and streams open and unchanged
 another process or after a crash.
 
 These defaults are starting choices of this SDK, not measured performance.
+
+## Expired transfer URLs without adaptive transfers
+
+The upload and download helpers without the `transfer` option (`uploadFile`, `uploadData` and the `uploadTo...`
+helpers, `downloadToStream`, `partialDownloadToFile`, `resumeDownloadToFile` and `downloadToFile`) and `files://` handles
+treat storage's word that a signed URL has expired, as described above, the same way, on every PHP and Guzzle they
+support and with any handler set through `Files::setHandler`. The URL is renewed by the file's path, with the request
+context the call (or the handle) began with, and the same part is sent again with its same bytes, by the upload's `ref`
+and the part's number, or the same range is asked for again: at most three renewals for each part, download or range,
+each one of the `Files::$maxNetworkRetries` retries that its connection retries, and `downloadToFile`'s retries, also
+take. Nothing is renewed when no retry is left, for `downloadToFile` with `$enableRetry` false, or for a part whose grant
+says `retry_parts` is false; a renewed grant that changes the part (its `ref`, number, size, method, headers, parameters
+or send instructions) or says `retry_parts` is false fails the upload before the part is sent again, and a renewed URL
+that has already expired by its own query is not sent. A `files://` read must find the file of the size it opened, and
+of its version once it has one. Nothing of a refusal that says the URL expired reaches a download's destination, renewed
+or not; another refusal's body reaches it as before. Only the first 4 KiB and a byte more of a refusal are held in
+memory, and bytes a handler writes before giving the response's status (to `on_headers`) wait in a temporary stream that
+spills to disk past 1 MiB. A Files.com JSON refusal counts only when all of it arrived, every byte its `Content-Length`
+gave; storage's text counts in whatever part of it arrived. Once `downloadToFile` has spent its three renewals, it does
+not retry that refusal as it retries other failures, and it resumes only after bytes it wrote itself: until a response's
+body has reached the destination, a retry starts again from the first byte, whatever the file held before. A stream resource given as a download's destination stays open,
+yours to close, whatever handler sends the download. A URL alone, as `Api::sendFile` or `getDownloadUrl` gives it, has no
+path to renew it by.
 
 ## Native file and directory handles
 

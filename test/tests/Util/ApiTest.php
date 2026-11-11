@@ -1290,6 +1290,66 @@ class ApiTest extends TestCase
         }
     }
 
+    // Storage's word that a part's URL expired renews it: begin_upload for the same part of the same upload, by its ref
+    // (the first part's too), and the same bytes sent again, unless the part's grant or its renewed one says retry_parts
+    // false, or the renewed one changes the part. The part's renewals, at most three, and its connection retries share
+    // Files::$maxNetworkRetries; another refusal is not renewed. Rows: Files::$maxNetworkRetries, storage's answers to
+    // the part before it acknowledges it, the first and the renewed grant, and the part's sends and grants.
+    public function testUploadRenewsAPartWhoseUrlStorageSaysExpired()
+    {
+        $expired = new Response(403, ['Content-Type' => 'application/xml'], '<Error><Code>AccessDenied</Code><Message>Request has expired</Message></Error>');
+        $expiredJson = new Response(403, ['Content-Type' => 'application/json'], '{"type":"upload_request_expired"}');
+        $denied = new Response(403, ['Content-Type' => 'application/xml'], '<Error><Code>AccessDenied</Code><Message>Access Denied</Message></Error>');
+        $unreachable = 'unreachable';
+        $rows = [
+            'renewed' => [3, [$expired], [], [], 2, 2, null],
+            'renewed for Files.com JSON' => [3, [$expiredJson], [], [], 2, 2, null],
+            'renewed at most three times' => [3, [$expired, $expired, $expired, $expired], [], [], 4, 4, ApiBadResponseException::class],
+            'renewed as one of the retries a connection failure also takes' => [1, [$expired, $unreachable], [], [], 2, 2, ApiConnectException::class],
+            'not renewed without a retry left' => [0, [$expired], [], [], 1, 1, ApiBadResponseException::class],
+            'not renewed for a grant saying retry_parts false' => [3, [$expired], ['retry_parts' => false], [], 1, 1, ApiBadResponseException::class],
+            'not sent under a renewed grant saying retry_parts false' => [3, [$expired], [], ['retry_parts' => false], 1, 2, ApiBadResponseException::class],
+            'not sent under a renewed grant for another size' => [3, [$expired], [], ['partsize' => 4], 1, 2, ApiBadResponseException::class],
+            'not renewed for another denial' => [3, [$denied], [], [], 1, 1, ApiBadResponseException::class],
+        ];
+        $saved = [Files::$maxNetworkRetries, Files::$minNetworkRetryDelay, Files::$maxNetworkRetryDelay];
+        Files::$minNetworkRetryDelay = 0;
+        Files::$maxNetworkRetryDelay = 0;
+        try {
+            foreach ($rows as $case => list($retries, $answers, $first, $renewed, $sends, $grants, $expectedError)) {
+                Files::$maxNetworkRetries = $retries;
+                $granted = 0;
+                $service = [
+                    'grant' => $first,
+                    'parts' => function ($number, $part) use (&$granted, $renewed) {
+                        return [++$granted > 1 ? array_merge($part, $renewed) : $part];
+                    },
+                    'storage' => function ($request, $attempt) use ($answers, $unreachable) {
+                        if (!isset($answers[$attempt - 1])) {
+                            return new Response(200, ['ETag' => '"etag-' . $attempt . '"']);
+                        }
+
+                        return $answers[$attempt - 1] === $unreachable ? new ConnectException('cURL error 7: Failed to connect', $request) : $answers[$attempt - 1];
+                    },
+                ];
+                list($requests, $error) = $this->uploadAgainst($service, function () {
+                    File::uploadData('reports/daily.csv', 'hi');
+                });
+
+                $this->assertSame($expectedError, $error ? get_class($error) : null, $case);
+                $begins = self::requestsOf($requests, 'begin');
+                $this->assertSame(array_fill(0, $sends, 'hi'), array_column(self::requestsOf($requests, 'storage'), 'body'), $case);
+                $this->assertCount($grants, $begins, $case);
+                foreach (array_slice($begins, 1) as $renewal) {
+                    $this->assertSame(['upload-ref', 1, 1], [$renewal['json']['ref'], $renewal['json']['part'], $renewal['json']['parts']], $case);
+                }
+                $this->assertCount($expectedError ? 0 : 1, self::requestsOf($requests, 'end'), $case);
+            }
+        } finally {
+            list(Files::$maxNetworkRetries, Files::$minNetworkRetryDelay, Files::$maxNetworkRetryDelay) = $saved;
+        }
+    }
+
     // provided_mtime and custom_metadata, which only the end of an upload takes, go to its end as given (by key, so a
     // null provided_mtime goes as null) and to no begin_upload; the other parameters go with the first part's request.
     public function testUploadSendsTheParametersOfItsEndToItsEnd()

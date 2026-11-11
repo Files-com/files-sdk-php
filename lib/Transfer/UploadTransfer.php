@@ -478,7 +478,11 @@ final class UploadTransfer
         }
 
         $error = RetryPolicy::storageError($what, $status);
-        if ($status === 403 && RetryPolicy::isExpired($part['grant']['expires_at'])) {
+        list($body, $complete) = self::limitedBody($value);
+        $expired = $status === 403 && RetryPolicy::isExpired($part['grant']['expires_at']);
+        if ($expired || RetryPolicy::isExpiryResponse($status, $body, $complete)) {
+            // The part's URL had expired, by its grant's expiry or by storage's word: it is sent again, when its grant
+            // allows, with the URL a renewal gives.
             if ($this->retryLater($number, 0.0, $error, $now)) {
                 $this->requestRenewal($number);
             }
@@ -486,7 +490,6 @@ final class UploadTransfer
             return [ConcurrencyController::ENDED];
         }
 
-        list($body, $complete) = self::limitedBody($value);
         list($decision, $delay) = RetryPolicy::storageResponse($status, $value->getHeaders(), $body, $complete);
         if ($decision === 'fail') {
             $this->engine->failTransfer($this, $error);

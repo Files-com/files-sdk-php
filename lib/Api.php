@@ -24,7 +24,7 @@ function middlewareRemoveHeader($header)
  */
 class Api
 {
-    const VERSION = "2.0.757";
+    const VERSION = "2.0.758";
 
     const REPEATED_CURSOR_MESSAGE = 'The list returned a cursor it already returned, so following it would repeat pages.';
 
@@ -233,15 +233,21 @@ class Api
         }, 'files_api_retry');
     }
 
-    private static function pushRetryHandler($handlerStack)
+    // A retry of a request that could not connect, within Files::$maxNetworkRetries: counted by $renewal, when the request
+    // has one, together with its URL's renewals (Util\ExpiryRenewal), and otherwise by this request alone.
+    private static function pushRetryHandler($handlerStack, $renewal = null)
     {
-        $shouldRetry = function ($retries, $request, $response, $exception) {
-            if ($retries >= Files::$maxNetworkRetries) {
+        $shouldRetry = function ($retries, $request, $response, $exception) use ($renewal) {
+            if (($renewal !== null ? $renewal->retries() : $retries) >= Files::$maxNetworkRetries) {
                 Logger::info('Retries exhausted - giving up on this request');
                 return false;
             }
 
             if (is_a($exception, 'GuzzleHttp\\Exception\\ConnectException')) {
+                if ($renewal !== null) {
+                    $renewal->retry();
+                }
+
                 Logger::info('Retrying request (retry #' . ($retries + 1) . ')');
                 return true;
             }
@@ -372,7 +378,10 @@ class Api
         return [$requestPath, $options];
     }
 
-    private static function sendVerbatim($path, $verb, $options, $retryConnectErrors = true, $apiRequest = true)
+    // $renewal, for a storage request of a transfer without adaptive transfers (Util\ExpiryRenewal), holds back a refusal's
+    // body from the sink and counts the request's connection retries; a refusal that storage says came because the URL
+    // expired, and that it may renew, returns null instead of throwing.
+    private static function sendVerbatim($path, $verb, $options, $retryConnectErrors = true, $apiRequest = true, $renewal = null)
     {
         if (!is_string($path) || !is_string($verb)) {
             throw new Exception\InvalidParameterException('Request paths and HTTP methods must be strings.');
@@ -415,13 +424,21 @@ class Api
         // of that handler's transfers.
         $requestOptions = $options;
         $ownedSink = null;
+        // A transfer helper's request ($renewal) holds a refusal's body back beneath the start of each transfer's new file,
+        // and owns its destination path with any handler: a transfer within one of its calls starts a new file once its
+        // headers arrive (Util\ExpiryRenewal).
+        $transport = $renewal !== null ? $renewal->transport($handler) : $handler;
         if (
             isset($options['sink']) && !array_key_exists('handler', $options)
-            && Util\DownloadFileSink::canOwn($options['sink'], $handler)
+            && ($renewal !== null
+                ? is_string($options['sink']) && is_dir(dirname($options['sink']))
+                : Util\DownloadFileSink::canOwn($options['sink'], $handler))
         ) {
             $ownedSink = new Util\DownloadFileSink($options['sink']);
             $requestOptions['sink'] = $ownedSink;
-            $handler = Util\DownloadFileSink::newFilePerTransfer($handler);
+            $handler = Util\DownloadFileSink::newFilePerTransfer($transport);
+        } else {
+            $handler = $transport;
         }
         if ($operation && $handler instanceof HandlerStack) {
             $handler = clone $handler;
@@ -437,7 +454,7 @@ class Api
         if ($operation) {
             self::pushApiRetryHandler($handlerStack, $operation);
         } elseif ($retryConnectErrors) {
-            self::pushRetryHandler($handlerStack);
+            self::pushRetryHandler($handlerStack, $renewal);
         }
 
         // for security, Content-Length is disallowed on GET requests
@@ -459,6 +476,10 @@ class Api
             try {
                 $response = $client->request($verb, $url, $requestOptions);
             } catch (\Exception $error) {
+                if ($renewal !== null && ($error = $renewal->settle($error)) === null) {
+                    return null;
+                }
+
                 handleErrorResponse($error);
             }
 
@@ -487,6 +508,9 @@ class Api
             if ($ownedSink) {
                 $ownedSink->release(!$completed);
             }
+            if ($renewal !== null) {
+                $renewal->finish();
+            }
         }
 
         return $result;
@@ -502,10 +526,12 @@ class Api
      * @param string|resource $body Request body.
      * @param array $headers Request headers.
      * @param bool $retryConnectErrors Retry connection failures when true.
-     * @return \stdClass Object containing status, reason, headers and decoded data.
+     * @param \Files\Util\ExpiryRenewal|null $renewal @internal For an upload helper's part: its retries and URL renewals.
+     * @return \stdClass|null Object containing status, reason, headers and decoded data; null, only with $renewal, when
+     *   storage said the URL expired and it is to be renewed.
      * @throws \Files\Exception\FilesException When the request fails.
      */
-    public static function sendFile($url, $verb, $body, $headers = [], $retryConnectErrors = true)
+    public static function sendFile($url, $verb, $body, $headers = [], $retryConnectErrors = true, $renewal = null)
     {
         $params = ['body' => $body];
 
@@ -513,7 +539,7 @@ class Api
             $params['headers'] = $headers;
         }
 
-        return self::sendVerbatim($url, $verb, $params, $retryConnectErrors, false);
+        return self::sendVerbatim($url, $verb, $params, $retryConnectErrors, false, $renewal);
     }
 
     /**
@@ -727,9 +753,11 @@ class Api
     /**
      * Sends one request without following list cursors, regardless of Files::$autoPaginate.
      *
-     * @internal Page and native directory handles fetch one page at a time with this.
+     * @internal Page and native directory handles fetch one page at a time with this. The download helpers and native
+     * file handles pass $renewal (Util\ExpiryRenewal) for a storage URL: null is then returned when storage said the URL
+     * expired and it is to be renewed.
      */
-    public static function sendSingleRequest($path, $verb, $params = null, $options = [])
+    public static function sendSingleRequest($path, $verb, $params = null, $options = [], $renewal = null)
     {
         if (!is_string($path) || !is_string($verb)) {
             throw new Exception\InvalidParameterException('Request paths and HTTP methods must be strings.');
@@ -793,7 +821,7 @@ class Api
             );
         }
 
-        $response = self::sendVerbatim($requestPath, $verb, $options);
+        $response = self::sendVerbatim($requestPath, $verb, $options, true, true, $renewal);
 
         return $response;
     }

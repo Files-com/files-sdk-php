@@ -29,6 +29,7 @@ require_once __DIR__ . '/../Files.php';
  * @property string|null $schedule_time_zone Time zone used by the Expectation schedule.
  * @property string|null $holiday_region Optional holiday region used by the Expectation schedule.
  * @property int|null $lookback_interval How many seconds before the due boundary the window starts.
+ * @property object[]|null $schedule_time_exceptions Calendar-based replacement due times. Matching dates replace all normal times; holiday exclusions still apply. Calendars specifying different times on the same date conflict.
  * @property int|null $late_acceptance_interval How many seconds a schedule-driven window may remain eligible to close as late.
  * @property int|null $inactivity_interval How many quiet seconds are required before final closure.
  * @property int|null $max_open_interval Hard-stop duration in seconds for unscheduled expectations.
@@ -494,6 +495,26 @@ class Expectation
         return $this->attributes['lookback_interval'] = $value;
     }
     /**
+     * Calendar-based replacement due times. Matching dates replace all normal times; holiday exclusions still apply. Calendars specifying different times on the same date conflict.
+     *
+     * @return object[]|null
+     */
+    public function getScheduleTimeExceptions()
+    {
+        return isset($this->attributes['schedule_time_exceptions']) ? $this->attributes['schedule_time_exceptions'] : null;
+    }
+
+    /**
+     * Calendar-based replacement due times. Matching dates replace all normal times; holiday exclusions still apply. Calendars specifying different times on the same date conflict.
+     *
+     * @param object[]|null $value
+     * @return object[]|null The assigned value.
+     */
+    public function setScheduleTimeExceptions($value)
+    {
+        return $this->attributes['schedule_time_exceptions'] = $value;
+    }
+    /**
      * How many seconds a schedule-driven window may remain eligible to close as late.
      *
      * @return int|null
@@ -730,6 +751,7 @@ class Expectation
      *     - `schedule_times_of_day` (string[], optional): Times of day in HH:MM format for the Expectation schedule.
      *     - `schedule_time_zone` (string, optional): Time zone used by the Expectation schedule.
      *     - `holiday_region` (string, optional): Optional holiday region used by the Expectation schedule.
+     *     - `schedule_time_exceptions` ((array|object)[], optional): Calendar-based replacement due times. Matching dates replace all normal times; holiday exclusions still apply. Calendars specifying different times on the same date conflict.
      *     - `lookback_interval` (int, optional): How many seconds before the due boundary the window starts.
      *     - `late_acceptance_interval` (int, optional): How many seconds a schedule-driven window may remain eligible to close as late.
      *     - `inactivity_interval` (int, optional): How many quiet seconds are required before final closure.
@@ -815,6 +837,10 @@ class Expectation
 
         if (isset($params['holiday_region']) && !is_string($params['holiday_region'])) {
             throw new \Files\Exception\InvalidParameterException('$holiday_region must be of type string; received ' . gettype(@$params['holiday_region']));
+        }
+
+        if (isset($params['schedule_time_exceptions']) && !is_array($params['schedule_time_exceptions'])) {
+            throw new \Files\Exception\InvalidParameterException('$schedule_time_exceptions must be of type array; received ' . gettype(@$params['schedule_time_exceptions']));
         }
 
         if (isset($params['lookback_interval']) && !is_int($params['lookback_interval'])) {
@@ -1038,6 +1064,7 @@ class Expectation
      *     - `schedule_times_of_day` (string[], optional): Times of day in HH:MM format for the Expectation schedule.
      *     - `schedule_time_zone` (string, optional): Time zone used by the Expectation schedule.
      *     - `holiday_region` (string, optional): Optional holiday region used by the Expectation schedule.
+     *     - `schedule_time_exceptions` ((array|object)[], optional): Calendar-based replacement due times. Matching dates replace all normal times; holiday exclusions still apply. Calendars specifying different times on the same date conflict.
      *     - `lookback_interval` (int, optional): How many seconds before the due boundary the window starts.
      *     - `late_acceptance_interval` (int, optional): How many seconds a schedule-driven window may remain eligible to close as late.
      *     - `inactivity_interval` (int, optional): How many quiet seconds are required before final closure.
@@ -1108,6 +1135,10 @@ class Expectation
 
         if (isset($params['holiday_region']) && !is_string($params['holiday_region'])) {
             throw new \Files\Exception\InvalidParameterException('$holiday_region must be of type string; received ' . gettype(@$params['holiday_region']));
+        }
+
+        if (isset($params['schedule_time_exceptions']) && !is_array($params['schedule_time_exceptions'])) {
+            throw new \Files\Exception\InvalidParameterException('$schedule_time_exceptions must be of type array; received ' . gettype(@$params['schedule_time_exceptions']));
         }
 
         if (isset($params['lookback_interval']) && !is_int($params['lookback_interval'])) {

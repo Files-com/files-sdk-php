@@ -8,6 +8,7 @@ use Files\Exception\ApiBadResponseException;
 use Files\Exception\InvalidParameterException;
 use Files\Exception\NotImplementedException;
 use Files\Logger;
+use Files\Util\UploadFinalization;
 use GuzzleHttp\Psr7\LimitStream;
 use GuzzleHttp\Psr7\Stream;
 
@@ -31,8 +32,11 @@ use GuzzleHttp\Psr7\Stream;
  * expired after it was sent) and pauses. A part counts as acknowledged only for a 2xx response with exactly one
  * nonempty ETag, once, and is never sent again. A malformed acknowledgment, a changed source or changed instructions
  * fail the upload; a part whose grant says retry_parts false is not retried. The upload ends (POST /files/{path},
- * action end, as File::create) only after every part is acknowledged and every progress report has returned, never
- * after a failure.
+ * action end, as File::create, with async_finalize) only after every part is acknowledged and every progress report has
+ * returned, never after a failure. It completes with Files.com's File; while Files.com answers 202, finishing the
+ * upload in the background (a remote server mount or an Agent), the same end is sent again one, two, then three
+ * seconds after each answer (Util\UploadFinalization::pollSeconds), each answer reported as the last part's report
+ * with part_bytes 0, finalizing and finalization_progress.
  *
  * Sources: a local file is opened once to fix its identity (device, inode, size and modification time), which must
  * still hold before each part and before the end; each attempt streams its part from a handle of its own, reserving
@@ -83,10 +87,16 @@ final class UploadTransfer
     private $nextRead = 1;
     private $sourceEnded = false;
     private $finalizing = false;
+    // The upload's end once it was first sent (finishItem), every later request for its outcome the same; and, once
+    // Files.com has answered that it is finishing the upload in the background, when the next of them may go.
+    private $finishRequest = null;
+    private $pollAt = null;
+    private $pendingAnswers = 0;
     private $accepted = 0;
     private $callAccepted = 0;
     private $callStarted = 0.0;
     private $reports = [];
+    private $lastReport = null;
 
     // $kind is FILE ($source a path), DATA ($source a string) or STREAM ($source a caller's stream, of $size bytes or,
     // with $size null, of a size unknown).
@@ -311,6 +321,10 @@ final class UploadTransfer
             return null;
         }
 
+        if ($this->pollAt !== null) {
+            return !$this->finalizing && !$this->reports && $now >= $this->pollAt ? $this->pollItem() : null;
+        }
+
         if ($this->renewals) {
             $number = array_shift($this->renewals);
             $this->renewing[$number] = true;
@@ -339,7 +353,8 @@ final class UploadTransfer
         return null;
     }
 
-    public function apiDone(array $item, $data, $now)
+    // An API request's 2xx answer: its decoded body $data and its $status.
+    public function apiDone(array $item, $data, $now, $status = null)
     {
         if ($this->state !== 'active') {
             return;
@@ -353,6 +368,21 @@ final class UploadTransfer
             $this->acceptRenewal($item['number'], $data);
         } else {
             $this->finalizing = false;
+            // A 202 that is not this upload's pending finalization throws, which fails the upload with nothing sent
+            // again; a pending one is asked about again one, two, then three seconds after it (pollSeconds), with one
+            // more report of the bytes as they were. Only another answer completes the upload.
+            $pending = UploadFinalization::pending($status, $data, $this->ref, $this->destination);
+            if ($pending !== null) {
+                $this->pendingAnswers++;
+                $this->pollAt = $now + UploadFinalization::pollSeconds($this->pendingAnswers);
+                if ($this->progress !== null) {
+                    $this->reports[] = [$this->progress, $this->finalizationReport($pending['progress'])];
+                }
+
+                return;
+            }
+
+            $this->pollAt = null;
             $this->state = 'completed';
             $this->releaseResources();
         }
@@ -522,6 +552,10 @@ final class UploadTransfer
 
     public function wakeAt($now)
     {
+        if ($this->pollAt !== null) {
+            return !$this->finalizing && $this->pollAt > $now ? $this->pollAt : null;
+        }
+
         $wake = null;
         foreach ($this->parts as $part) {
             if ($part['state'] === 'ready' && $part['ready_at'] > $now && ($wake === null || $part['ready_at'] < $wake)) {
@@ -564,10 +598,17 @@ final class UploadTransfer
         $this->releaseResources();
     }
 
+    // Stops the upload. Once Files.com has answered that it is finishing the upload, cancelling stops only the wait for
+    // its outcome, so this returns what the job's TransferCancelledException says of it; otherwise null.
     public function cancel()
     {
         $this->state = 'cancelled';
         $this->releaseResources();
+        if ($this->pollAt === null) {
+            return null;
+        }
+
+        return 'the upload to ' . $this->destination . ' (ref ' . $this->ref . ') was no longer waited for: ' . UploadFinalization::MAY_STILL_COMPLETE;
     }
 
     private function moreSource()
@@ -666,6 +707,8 @@ final class UploadTransfer
         ];
     }
 
+    // The upload's end, with async_finalize: retried only when it could not have reached a server, as Files.com may
+    // have completed the upload when an answer is lost. Built once; sent again only after such a failure.
     private function finishItem()
     {
         $this->checkSource();
@@ -673,26 +716,58 @@ final class UploadTransfer
             fclose($this->source);
         }
 
-        $etags = [];
-        ksort($this->parts);
-        foreach ($this->parts as $number => $part) {
-            $etags[] = ['etag' => $part['etag'], 'part' => $number];
+        if ($this->finishRequest === null) {
+            $etags = [];
+            ksort($this->parts);
+            foreach ($this->parts as $number => $part) {
+                $etags[] = ['etag' => $part['etag'], 'part' => $number];
+            }
+
+            $params = array_merge([
+                'action' => 'end',
+                'ref' => $this->ref,
+                'etags' => $etags,
+                'provided_mtime' => date('c', $this->kind === self::FILE ? $this->identity['mtime'] : time()),
+                'size' => $this->kind === self::FILE ? $this->identity['size'] : $this->accepted,
+            ], $this->end);
+            $params['path'] = $this->destination;
+            $params['async_finalize'] = true;
+            $this->finishRequest = [
+                'type' => 'api', 'transfer' => $this, 'tag' => 'finish', 'method' => 'POST', 'path' => '/files/' . rawurlencode($this->destination),
+                'params' => $params, 'options' => $this->apiOptions, 'retry' => 'connect', 'attempt' => 0,
+                'describe' => 'the end of the upload to ' . $this->destination, 'number' => 0, 'count' => 0,
+            ];
         }
 
-        $params = array_merge([
-            'action' => 'end',
-            'ref' => $this->ref,
-            'etags' => $etags,
-            'provided_mtime' => date('c', $this->kind === self::FILE ? $this->identity['mtime'] : time()),
-            'size' => $this->kind === self::FILE ? $this->identity['size'] : $this->accepted,
-        ], $this->end);
-        $params['path'] = $this->destination;
         $this->finalizing = true;
-        return [
-            'type' => 'api', 'transfer' => $this, 'tag' => 'finish', 'method' => 'POST', 'path' => '/files/' . rawurlencode($this->destination),
-            'params' => $params, 'options' => $this->apiOptions, 'retry' => 'connect', 'attempt' => 0,
-            'describe' => 'the end of the upload to ' . $this->destination, 'number' => 0, 'count' => 0,
-        ];
+        return $this->finishRequest;
+    }
+
+    // The upload's end sent again for its outcome, after Files.com answered that it is finishing the upload: the same
+    // request, safe to repeat, so retried as the job's other repeatable API requests are. A failure that is not
+    // Files.com's answer, once its retries are spent, says the outcome is unknown (UploadFinalization::pollFailure).
+    private function pollItem()
+    {
+        $item = $this->finishRequest;
+        $item['retry'] = 'idempotent';
+        $item['describe'] = 'the request for the outcome of the upload to ' . $this->destination;
+        $destination = $this->destination;
+        $ref = $this->ref;
+        $item['failure'] = function ($error) use ($destination, $ref) {
+            return UploadFinalization::pollFailure($error, $destination, $ref);
+        };
+        $this->finalizing = true;
+        return $item;
+    }
+
+    // The report made for an answer that Files.com is still finishing the upload: the last part's (every upload ends
+    // after at least one), its total and acknowledged bytes, part number, time and rate unchanged and its part_bytes 0
+    // (no more bytes were sent), with finalizing true and finalization_progress, Files.com's percentage or null.
+    private function finalizationReport($progress)
+    {
+        $report = $this->lastReport;
+        $report['part_bytes'] = 0;
+        return $report + ['finalizing' => true, 'finalization_progress' => $progress];
     }
 
     private function acceptGrants(array $item, $data)
@@ -980,12 +1055,13 @@ final class UploadTransfer
         }
 
         $this->accepted += $length;
+        $elapsed = max(0.0, $now - $this->callStarted);
+        $this->lastReport = [
+            'total_bytes' => $this->size, 'acknowledged_bytes' => $this->accepted, 'part_number' => $number, 'part_bytes' => $length,
+            'elapsed_seconds' => $elapsed, 'bytes_per_second' => $elapsed > 0 ? ($this->accepted - $this->callAccepted) / $elapsed : 0.0,
+        ];
         if ($this->progress !== null) {
-            $elapsed = max(0.0, $now - $this->callStarted);
-            $this->reports[] = [$this->progress, [
-                'total_bytes' => $this->size, 'acknowledged_bytes' => $this->accepted, 'part_number' => $number, 'part_bytes' => $length,
-                'elapsed_seconds' => $elapsed, 'bytes_per_second' => $elapsed > 0 ? ($this->accepted - $this->callAccepted) / $elapsed : 0.0,
-            ]];
+            $this->reports[] = [$this->progress, $this->lastReport];
         }
     }
 

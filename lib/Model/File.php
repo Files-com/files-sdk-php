@@ -335,10 +335,10 @@ class File
     }
 
     // Uploads what $io holds to $path, a part at a time as the API grants each, and returns the upload's ref, each
-    // part's ETag and the bytes acknowledged. Each part is filled from as many reads as it takes, and the upload ends
-    // with the part during which the source ends (so a source ending exactly where a part ends sends one more, empty,
-    // part). $progress, when given, is called after each part is acknowledged; anything it throws stops the upload
-    // there, before any later part or the end.
+    // part's ETag, the bytes acknowledged and the progress report of the last part. Each part is filled from as many
+    // reads as it takes, and the upload ends with the part during which the source ends (so a source ending exactly
+    // where a part ends sends one more, empty, part). $progress, when given, is called after each part is acknowledged;
+    // anything it throws stops the upload there, before any later part or the end.
     private static function uploadParts($io, $path, $first, $options, $total, $progress)
     {
         $ref = null;
@@ -380,20 +380,37 @@ class File
 
             $etags[] = ['etag' => self::uploadPartReceipt($response, $number), 'part' => $number];
             $acknowledged += strlen($bytes);
+            $report = [
+                'total_bytes' => $total,
+                'acknowledged_bytes' => $acknowledged,
+                'part_number' => $number,
+                'part_bytes' => strlen($bytes),
+            ];
 
             if ($progress !== null) {
-                call_user_func($progress, [
-                    'total_bytes' => $total,
-                    'acknowledged_bytes' => $acknowledged,
-                    'part_number' => $number,
-                    'part_bytes' => strlen($bytes),
-                ]);
+                call_user_func($progress, $report);
             }
 
             if (feof($io)) {
-                return [$ref, $etags, $acknowledged];
+                return [$ref, $etags, $acknowledged, $report];
             }
         }
+    }
+
+    // Ends the upload to $path with $params and waits until Files.com has completed it (Util\UploadFinalization):
+    // at once for its own storage, and, for a remote server mount or an Agent it completes in the background, with the
+    // same request repeated each second until the File or an error comes back. While Files.com finishes it, $progress
+    // (when given) is called with each answer: the last part's report, its total and acknowledged bytes and part number
+    // unchanged and its part_bytes 0 (no more bytes were sent), with finalizing true and finalization_progress,
+    // Files.com's percentage (an integer from 0 to 100) or null when it gave none. Anything $progress throws stops the
+    // wait and is thrown here; Files.com may still complete the upload.
+    private static function finishUpload($path, array $params, array $options, $progress, array $lastReport)
+    {
+        $lastReport['part_bytes'] = 0;
+        $report = $progress === null ? null : function ($finalizationProgress) use ($progress, $lastReport) {
+            call_user_func($progress, $lastReport + ['finalizing' => true, 'finalization_progress' => $finalizationProgress]);
+        };
+        \Files\Util\UploadFinalization::finish($path, $params, $options, $report);
     }
 
     private static function underscoreDestinationPath($root, $id, $relativePath = null)
@@ -404,13 +421,15 @@ class File
     /**
      * Upload a local file to a Files.com path.
      *
-     * Uploads the file at $sourceFilePath to $destinationPath part by part (uploadParts), and returns nothing. The
-     * upload ends at $destinationPath: the path a part reports is the API's own, which need not resolve in the caller's
-     * context (in a workspace it can be the site path, _/Workspaces/<id>/...). $params: see splitUploadParams;
-     * provided_mtime defaults to the file's modification time. $options: those of the generated methods, for the
-     * upload's API requests, and progress, a callable given an array of total_bytes (the file's size),
-     * acknowledged_bytes, part_number and part_bytes after each part is acknowledged; anything it throws stops the
-     * upload and is thrown here. The file is closed on every path. With transfer, the upload runs adaptively
+     * Uploads the file at $sourceFilePath to $destinationPath part by part (uploadParts), and returns nothing once
+     * Files.com has completed it (finishUpload), which for a remote server mount or an Agent can take a while after
+     * the last part. The upload ends at $destinationPath: the path a part reports is the API's own, which need not
+     * resolve in the caller's context (in a workspace it can be the site path, _/Workspaces/<id>/...). $params: see
+     * splitUploadParams; provided_mtime defaults to the file's modification time. $options: those of the generated
+     * methods, for the upload's API requests, and progress, a callable given an array of total_bytes (the file's size),
+     * acknowledged_bytes, part_number and part_bytes after each part is acknowledged, then, while Files.com finishes
+     * the upload, the last of those with part_bytes 0, finalizing true and finalization_progress; anything it throws
+     * stops the upload and is thrown here. The file is closed on every path. With transfer, the upload runs adaptively
      * (uploadAdaptively), and progress also gets elapsed_seconds and bytes_per_second.
      *
      * @param string $destinationPath Destination path on Files.com.
@@ -442,20 +461,20 @@ class File
         $sourceFileHandle = fopen($sourceFilePath, 'rb');
         try {
             $filesize = filesize($sourceFilePath);
-            list($ref, $etags, $bytesWritten) = self::uploadParts($sourceFileHandle, $destinationPath, $first, $apiOptions, $filesize, $progress);
+            list($ref, $etags, $bytesWritten, $lastReport) = self::uploadParts($sourceFileHandle, $destinationPath, $first, $apiOptions, $filesize, $progress);
         } finally {
             if (is_resource($sourceFileHandle)) {
                 fclose($sourceFileHandle);
             }
         }
 
-        self::create($destinationPath, array_merge([
+        self::finishUpload($destinationPath, array_merge([
             'action' => 'end',
             'ref' => $ref,
             'etags' => $etags,
             'provided_mtime' => date('c', filemtime($sourceFilePath)),
             'size' => $filesize
-        ], $end), $apiOptions);
+        ], $end), $apiOptions, $progress, $lastReport);
 
         return null;
     }
@@ -510,11 +529,11 @@ class File
      * Upload a string or readable stream to a Files.com path.
      *
      * Uploads $data, a string or a stream read from where it stands, to $destinationPath as uploadFile does, and
-     * returns nothing; provided_mtime defaults to now, and progress gives total_bytes for a string only (null for a
-     * stream). A caller's stream is closed once every part is acknowledged and progress has returned, before the upload
-     * ends, so a failure of the end leaves it closed; any earlier failure leaves it open. A string's own stream is
-     * closed on every path. With transfer, the upload runs adaptively (uploadAdaptively), a stream's parts concurrently
-     * only when transfer gives its size.
+     * returns nothing once Files.com has completed it; provided_mtime defaults to now, and progress gives total_bytes
+     * for a string only (null for a stream). A caller's stream is closed once every part is acknowledged and progress
+     * has returned, before the upload ends, so a failure of the end leaves it closed; any earlier failure leaves it
+     * open. A string's own stream is closed on every path. With transfer, the upload runs adaptively
+     * (uploadAdaptively), a stream's parts concurrently only when transfer gives its size.
      *
      * @param string $destinationPath Destination path on Files.com.
      * @param string|resource $data Source bytes, or a stream read from its current position.
@@ -548,7 +567,7 @@ class File
         }
 
         try {
-            list($ref, $etags, $bytesWritten) = self::uploadParts($stream, $destinationPath, $first, $apiOptions, $owned ? strlen($data) : null, $progress);
+            list($ref, $etags, $bytesWritten, $lastReport) = self::uploadParts($stream, $destinationPath, $first, $apiOptions, $owned ? strlen($data) : null, $progress);
         } finally {
             if ($owned) {
                 fclose($stream);
@@ -559,13 +578,13 @@ class File
             fclose($stream);
         }
 
-        self::create($destinationPath, array_merge([
+        self::finishUpload($destinationPath, array_merge([
             'action' => 'end',
             'ref' => $ref,
             'etags' => $etags,
             'provided_mtime' => date('c', time()),
             'size' => $bytesWritten
-        ], $end), $apiOptions);
+        ], $end), $apiOptions, $progress, $lastReport);
 
         return null;
     }

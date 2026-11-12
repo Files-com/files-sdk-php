@@ -17,7 +17,9 @@ namespace Files\Test;
  * asks for, or after its timeout. Some answers are deferred instead until what they wait for has happened (checked as
  * it serves): a range sent with a download's first, short-lived URL (expiring_url), whenever it comes, until that URL
  * has expired and a later one was given; and the first begin_upload for a path in api_stall, or the first end of an
- * upload to a path in end_stall, which takes effect and then stalls until stall_seconds have passed.
+ * upload to a path in end_stall, which takes effect and then stalls until stall_seconds have passed. The ends of an
+ * upload to a path in finalize are answered with its replies, in order (202 pending, as Files.com answers while it
+ * finishes an upload in the background, or another status and body), and then with the File.
  */
 final class LoopbackServer
 {
@@ -41,6 +43,7 @@ final class LoopbackServer
     private $arrivals = [];
     private $deferred = [];
     private $stalled = [];
+    private $finalizes = [];
 
     public static function main()
     {
@@ -79,6 +82,8 @@ final class LoopbackServer
             'api_stall' => [],
             'end_stall' => [],
             'stall_seconds' => 30,
+            // By destination path, how its ends are answered before the File (finalizeAnswer).
+            'finalize' => [],
         ];
     }
 
@@ -300,7 +305,7 @@ final class LoopbackServer
                 $this->uploads[$ref]['ended'] = $json;
             }
 
-            $answer = [201, ['Content-Type' => 'application/json'], json_encode(['path' => $destination]), null];
+            $answer = $this->finalizeAnswer($destination, $ref);
             if (in_array($destination, $this->config['end_stall'], true)) {
                 $this->stall($id, $entry, 'end:' . $destination, $answer);
             } else {
@@ -328,7 +333,7 @@ final class LoopbackServer
             $this->held = [];
             $this->holdDone = false;
             $this->issued = $this->attempts = $this->uploads = $this->downloadRequests = $this->urls = $this->arrivals = $this->deferred = [];
-            $this->stalled = [];
+            $this->stalled = $this->finalizes = [];
         } elseif ($head['path'] === '/__control/release') {
             $this->releaseHeld();
         } elseif ($head['path'] !== '/__control/journal') {
@@ -338,6 +343,30 @@ final class LoopbackServer
 
         $answer = ['entries' => $this->journal, 'max_open' => $this->maxOpen, 'uploads' => $this->uploads];
         $this->send($id, [200, ['Content-Type' => 'application/json'], json_encode($answer), null]);
+    }
+
+    // The answer to the next end of an upload to $destination: the next of its finalize replies, in order, each
+    // {"pending": progress} (202 {"status": "pending", "ref", "progress"}, progress left out when null) or {"status",
+    // "json"} (that status and body); once they are used up, 201 with the File.
+    private function finalizeAnswer($destination, $ref)
+    {
+        $replies = isset($this->config['finalize'][$destination]) ? $this->config['finalize'][$destination] : [];
+        $count = $this->finalizes[$destination] = (isset($this->finalizes[$destination]) ? $this->finalizes[$destination] : 0) + 1;
+        if ($count > count($replies)) {
+            return [201, ['Content-Type' => 'application/json'], json_encode(['path' => $destination]), null];
+        }
+
+        $reply = $replies[$count - 1];
+        if (array_key_exists('pending', $reply)) {
+            $body = ['status' => 'pending', 'ref' => $ref];
+            if ($reply['pending'] !== null) {
+                $body['progress'] = $reply['pending'];
+            }
+
+            return [202, ['Content-Type' => 'application/json'], json_encode($body), null];
+        }
+
+        return [(int) $reply['status'], ['Content-Type' => 'application/json'], json_encode($reply['json']), null];
     }
 
     private function beginUpload($path, array $params)
@@ -702,8 +731,9 @@ final class LoopbackServer
     private static function reason($status)
     {
         $reasons = [
-            100 => 'Continue', 200 => 'OK', 201 => 'Created', 206 => 'Partial Content', 302 => 'Found', 400 => 'Bad Request', 403 => 'Forbidden',
-            404 => 'Not Found', 412 => 'Precondition Failed', 416 => 'Range Not Satisfiable', 429 => 'Too Many Requests',
+            100 => 'Continue', 200 => 'OK', 201 => 'Created', 202 => 'Accepted', 206 => 'Partial Content', 302 => 'Found', 400 => 'Bad Request',
+            403 => 'Forbidden', 404 => 'Not Found', 412 => 'Precondition Failed', 416 => 'Range Not Satisfiable', 422 => 'Unprocessable Entity',
+            429 => 'Too Many Requests',
             500 => 'Internal Server Error', 503 => 'Service Unavailable',
         ];
         return isset($reasons[$status]) ? $reasons[$status] : 'Status';

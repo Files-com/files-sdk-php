@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Files\Transfer;
 
 use Files\Exception\ApiBadResponseException;
+use Files\Exception\ApiException;
 use Files\Exception\ApiServerException;
 use Files\Exception\ConfigurationException;
 use Files\Exception\FilesException;
@@ -590,6 +591,175 @@ class AdaptiveTransferTest extends TestCase
                 $this->assertTrue(strpos($e->getMessage(), 'stopped') !== false);
             }
         });
+    }
+
+    // Files.com can finish an upload to a remote server mount or an Agent in the background, answering its end 202
+    // pending. The upload stays active, the same end goes again one, two, then three seconds after each such answer,
+    // and another upload's waits start again from one second (the job serving its
+    // other work meanwhile), each answer is reported as the last part's report, bytes, time and rate unchanged and
+    // part_bytes 0, with finalizing and finalization_progress (pending at 100 is still pending), and only the File
+    // completes it.
+    public function testAnUploadCompletesOnlyOnceFilesComHasFinishedIt()
+    {
+        if (!$this->adaptive()) {
+            return;
+        }
+
+        $config = ['upload' => ['partsize' => 4], 'finalize' => [
+            'loop/remote.bin' => [['pending' => null], ['pending' => 42], ['pending' => 100], ['pending' => 100]],
+            'loop/again.bin' => [['pending' => null]],
+        ]];
+        $this->withServer($config, function ($server) {
+            $reports = [];
+            $handle = null;
+            $job = new TransferJob(['concurrency' => 1]);
+            $handle = $job->uploadData('loop/remote.bin', self::content(8), [], ['progress' => function ($report) use (&$reports, &$handle) {
+                $reports[] = [$report, $handle->status()];
+            }]);
+            $job->wait();
+
+            $this->assertSame(['completed', 8], [$handle->status(), $handle->transferredBytes()]);
+            $this->assertCount(6, $reports);
+            list($last) = $reports[1];
+            $this->assertSame([8, 8, 2], [$last['total_bytes'], $last['acknowledged_bytes'], $last['part_number']]);
+            // The last part's report again, its bytes, time and rate unchanged, but no part's bytes: part_bytes is 0.
+            $last['part_bytes'] = 0;
+            foreach ([null, 42, 100, 100] as $index => $progress) {
+                $this->assertSame([$last + ['finalizing' => true, 'finalization_progress' => $progress], 'active'], $reports[2 + $index]);
+            }
+
+            $again = new TransferJob(['concurrency' => 1]);
+            $again->uploadData('loop/again.bin', self::content(8));
+            $again->wait();
+
+            $journal = $this->journal($server);
+            $ends = array_values(array_filter($this->entries($journal, 'end'), function ($end) {
+                return strpos($end['path'], 'again.bin') === false;
+            }));
+            $this->assertCount(5, $ends);
+            $this->assertSame([true, 'end', 8], [$ends[0]['json']['async_finalize'], $ends[0]['json']['action'], $ends[0]['json']['size']]);
+            $identity = array_intersect_key($ends[0]['headers'], ['x-filesapi-key' => true, 'x-filesapi-auth' => true, 'x-files-workspace-id' => true, 'user-agent' => true]);
+            $names = array_keys($identity);
+            sort($names);
+            $this->assertSame(['user-agent', 'x-filesapi-key'], $names);
+            foreach ($ends as $index => $end) {
+                $this->assertSame([$ends[0]['path'], $ends[0]['json'], $identity], [$end['path'], $end['json'], array_intersect_key($end['headers'], $identity)], 'end #' . ($index + 1));
+                if ($index > 0) {
+                    // A pending 100 is still pending, and the waits keep growing to three seconds.
+                    $this->assertWaitedMs([1000, 2000, 3000, 3000][$index - 1], $end['received_ms'] - $ends[$index - 1]['answered_ms'], 'The wait before end #' . ($index + 1));
+                }
+            }
+            $next = array_values(array_filter($this->entries($journal, 'end'), function ($end) {
+                return strpos($end['path'], 'again.bin') !== false;
+            }));
+            $this->assertCount(2, $next);
+            $this->assertWaitedMs(1000, $next[1]['received_ms'] - $next[0]['answered_ms'], 'The first wait of another upload');
+        });
+    }
+
+    // $gap, in milliseconds, is at least $wait and well short of the next wait.
+    private function assertWaitedMs($wait, $gap, $message)
+    {
+        $this->assertTrue($gap >= $wait - 50 && $gap < $wait + 900, $message . ': ' . $gap . ' ms, not ' . $wait . ' ms');
+    }
+
+    // Once the end is answered 202, what follows decides: a 202 that is not this upload's pending finalization (here
+    // another ref) fails the upload with its outcome unknown and nothing sent again; an error Files.com answers is the
+    // upload's outcome; a 503 is retried as the job's repeatable API requests are, and once max_retries are spent the
+    // failure says the outcome is unknown.
+    public function testWhatFollowsAPendingEndDecidesTheUpload()
+    {
+        if (!$this->adaptive()) {
+            return;
+        }
+
+        $unavailable = ['status' => 503, 'json' => ['type' => 'service-unavailable', 'http-code' => 503]];
+        $cases = [
+            'another ref' => [[['status' => 202, 'json' => ['status' => 'pending', 'ref' => 'another-ref']]], 1, ApiBadResponseException::class, true],
+            'an error answer' => [[['pending' => 7], ['status' => 422, 'json' => ['type' => 'processing-failure', 'http-code' => 422, 'error' => 'Failed']]], 2, ApiException::class, false],
+            'a 503, then the File' => [[['pending' => 7], $unavailable], 3, null, false],
+            'a 503 each time' => [[['pending' => 7], $unavailable, $unavailable], 3, ApiServerException::class, true],
+        ];
+        foreach ($cases as $case => list($replies, $ends, $class, $unknown)) {
+            $this->withServer(['upload' => ['partsize' => 4], 'finalize' => ['loop/decided.bin' => $replies]], function ($server) use ($case, $ends, $class, $unknown) {
+                $job = new TransferJob(['concurrency' => 1, 'max_retries' => 1]);
+                $handle = $job->uploadData('loop/decided.bin', self::content(4));
+                $failure = null;
+                try {
+                    $job->wait();
+                } catch (\Exception $e) {
+                    $failure = $e;
+                }
+
+                $this->assertCount($ends, $this->entries($this->journal($server), 'end'), $case);
+                if ($class === null) {
+                    $this->assertSame([null, 'completed'], [$failure, $handle->status()], $case);
+                    return;
+                }
+
+                $this->assertInstanceOf($class, $failure, $case);
+                $this->assertSame([$failure, 'failed'], [$handle->error(), $handle->status()], $case);
+                $this->assertSame($unknown, strpos($failure->getMessage(), 'may still complete') !== false, $case);
+            });
+        }
+    }
+
+    // Cancelling the job, a callback's exception or a pause while Files.com finishes an upload stops only the wait: the
+    // end is not sent again, cancel's TransferCancelledException says Files.com may still complete that upload (its
+    // path and ref), a callback's exception is thrown as it was, and a paused upload asks again once resumed.
+    public function testStoppingAJobWhileFilesComFinishesAnUploadStopsOnlyTheWait()
+    {
+        if (!$this->adaptive()) {
+            return;
+        }
+
+        $thrown = new \RuntimeException('stop waiting');
+        foreach (['cancel', 'throw', 'pause'] as $stop) {
+            $this->withServer(['upload' => ['partsize' => 4], 'finalize' => ['loop/stopped.bin' => [['pending' => 42]]]], function ($server) use ($stop, $thrown) {
+                $job = null;
+                $job = new TransferJob(['concurrency' => 1]);
+                $handle = $job->uploadData('loop/stopped.bin', self::content(4), [], ['progress' => function ($report) use (&$job, $stop, $thrown) {
+                    if (!isset($report['finalizing'])) {
+                        return;
+                    }
+
+                    if ($stop === 'throw') {
+                        throw $thrown;
+                    }
+
+                    $job->$stop();
+                }]);
+                $failure = null;
+                try {
+                    $job->wait();
+                } catch (\Exception $e) {
+                    $failure = $e;
+                }
+
+                $ends = $this->entries($this->journal($server), 'end');
+                $this->assertCount(1, $ends, $stop);
+                $checkpoint = $handle->checkpoint();
+                $this->assertSame([true], array_values(array_unique(array_column($checkpoint['parts'], 'acknowledged'))), $stop);
+                if ($stop === 'pause') {
+                    $this->assertSame([null, 'paused'], [$failure, $handle->status()]);
+                    $job->resume();
+                    $job->wait();
+                    $this->assertSame('completed', $handle->status());
+                    $this->assertCount(2, $this->entries($this->journal($server), 'end'));
+                    return;
+                }
+
+                $this->assertSame('cancelled', $handle->status(), $stop);
+                if ($stop === 'throw') {
+                    $this->assertSame($thrown, $failure);
+                } else {
+                    $this->assertInstanceOf(TransferCancelledException::class, $failure);
+                    $ref = $ends[0]['json']['ref'];
+                    $this->assertNotFalse(strpos($failure->getMessage(), 'the upload to loop/stopped.bin (ref ' . $ref . ')'), $failure->getMessage());
+                    $this->assertNotFalse(strpos($failure->getMessage(), 'may still complete'), $failure->getMessage());
+                }
+            });
+        }
     }
 
     // Pausing from a progress callback returns from wait with the caller's stream where it was read to; resuming sends

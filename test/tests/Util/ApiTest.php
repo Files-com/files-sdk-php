@@ -1047,6 +1047,9 @@ class ApiTest extends TestCase
 
                 $completion = json_decode((string) $history[4]['request']->getBody(), true);
                 $this->assertSame('end', $completion['action'], $upload);
+                // Every helper asks Files.com to finish the upload in the background where it can; its own storage
+                // answers with the File at once, which completes the upload.
+                $this->assertTrue($completion['async_finalize'], $upload);
                 $this->assertSame('upload-ref', $completion['ref'], $upload);
                 $this->assertSame([
                     ['etag' => '"etag-1"', 'part' => 1],
@@ -1684,6 +1687,232 @@ class ApiTest extends TestCase
         }
     }
 
+    // Files.com can finish an upload to a remote server mount or an Agent in the background: it answers the end 202
+    // pending, with or without a percentage, and the helper sends the same end again one, two, then three seconds after
+    // each answer until the File comes back, and only then returns; another upload's waits start again from one second. Each pending answer is reported as the last part's report, its byte
+    // counts unchanged and part_bytes 0, with finalizing and finalization_progress; pending at 100 is still pending.
+    // Every repeat is the first end as it was sent: its body, credential, site, handler and timeouts, though the
+    // progress callback changed the SDK's settings meanwhile.
+    public function testUploadWaitsWhileFilesComFinishesItInTheBackground()
+    {
+        $sourceFilePath = $this->uploadSource('hello');
+        $readTimeout = Files::$readTimeout;
+        $reports = [];
+        try {
+            Files::setWorkspaceId(7);
+            list($requests, $error) = $this->uploadAgainst(['end' => self::finalizingEnd([['pending' => null], ['pending' => 42], ['pending' => 100], ['pending' => 100]])], function () use ($sourceFilePath, &$reports) {
+                File::uploadFile('reports/daily.csv', $sourceFilePath, [], ['progress' => function ($report) use (&$reports) {
+                    $reports[] = $report;
+                    if (isset($report['finalizing'])) {
+                        Files::setApiKey('changed-key');
+                        Files::setWorkspaceId(8);
+                        Files::setBaseUrl('https://elsewhere.example.test');
+                        Files::$readTimeout = 7.0;
+                        Files::setHandler(function () {
+                            throw new \LogicException('A repeat of the end went through a handler set while the upload finished');
+                        });
+                    }
+                }]);
+            });
+        } finally {
+            Files::$readTimeout = $readTimeout;
+            Files::setWorkspaceId(null);
+            unlink($sourceFilePath);
+        }
+
+        $this->assertNull($error);
+        // A finalizing report repeats the last part's byte counts and number, but no part's bytes: part_bytes is 0.
+        $finalizing = ['total_bytes' => 5, 'acknowledged_bytes' => 5, 'part_number' => 2, 'part_bytes' => 0, 'finalizing' => true];
+        $this->assertSame([
+            ['total_bytes' => 5, 'acknowledged_bytes' => 3, 'part_number' => 1, 'part_bytes' => 3],
+            ['total_bytes' => 5, 'acknowledged_bytes' => 5, 'part_number' => 2, 'part_bytes' => 2],
+            $finalizing + ['finalization_progress' => null],
+            $finalizing + ['finalization_progress' => 42],
+            $finalizing + ['finalization_progress' => 100],
+            $finalizing + ['finalization_progress' => 100],
+        ], $reports);
+
+        $ends = self::requestsOf($requests, 'end');
+        $this->assertCount(5, $ends);
+        $this->assertSame(['end', 'upload-ref', 5, true], [$ends[0]['json']['action'], $ends[0]['json']['ref'], $ends[0]['json']['size'], $ends[0]['json']['async_finalize']]);
+        $identity = function ($request) {
+            return array_intersect_key(array_change_key_case($request['headers']), ['x-filesapi-key' => true, 'x-filesapi-auth' => true, 'x-files-workspace-id' => true, 'user-agent' => true]);
+        };
+        $this->assertSame(['test-key'], $identity($ends[0])['x-filesapi-key']);
+        $this->assertSame(['7'], $identity($ends[0])['x-files-workspace-id']);
+        $this->assertSame(['app.files.com', (float) $readTimeout], [$ends[0]['host'], (float) $ends[0]['read_timeout']]);
+        foreach ($ends as $index => $end) {
+            $sent = [$end['host'], $end['path'], $end['body'], $identity($end), $end['read_timeout']];
+            $this->assertSame([$ends[0]['host'], $ends[0]['path'], $ends[0]['body'], $identity($ends[0]), $ends[0]['read_timeout']], $sent, 'end #' . ($index + 1));
+            if ($index > 0) {
+                // A pending 100 is still pending, and the waits keep growing to three seconds.
+                $this->assertWaited([1, 2, 3, 3][$index - 1], $end['at'] - $ends[$index - 1]['at'], 'The wait before end #' . ($index + 1));
+            }
+        }
+
+        list($again, $error) = $this->uploadAgainst(['end' => self::finalizingEnd([['pending' => null]])], function () {
+            File::uploadData('reports/again.csv', 'hi');
+        });
+        $this->assertNull($error);
+        $next = self::requestsOf($again, 'end');
+        $this->assertCount(2, $next);
+        $this->assertWaited(1, $next[1]['at'] - $next[0]['at'], 'The first wait of another upload');
+    }
+
+    // $gap, in seconds, is at least $seconds and well short of the next wait.
+    private function assertWaited($seconds, $gap, $message)
+    {
+        $this->assertTrue($gap >= $seconds - 0.05 && $gap < $seconds + 0.9, $message . ': ' . $gap . ' s, not ' . $seconds . ' s');
+    }
+
+    // Files.com's progress counts only as a whole percentage, a JSON integer from 0 to 100; anything else is reported as
+    // null and does not stop the wait.
+    public function testUploadReportsOnlyAWholePercentageOfFilesComsProgress()
+    {
+        $finalizations = [];
+        list($requests, $error) = $this->uploadAgainst(['end' => self::finalizingEnd([['pending' => '42'], ['pending' => 42.5], ['pending' => -1], ['pending' => 101]])], function () use (&$finalizations) {
+            File::uploadData('reports/daily.csv', 'hi', [], ['progress' => function ($report) use (&$finalizations) {
+                if (isset($report['finalizing'])) {
+                    $finalizations[] = [$report['finalizing'], $report['finalization_progress'], $report['acknowledged_bytes']];
+                }
+            }]);
+        });
+
+        $this->assertNull($error);
+        $this->assertSame(array_fill(0, 4, [true, null, 2]), $finalizations);
+        $this->assertCount(5, self::requestsOf($requests, 'end'));
+    }
+
+    // A 202 that is not the pending finalization of the upload's ref breaks the protocol after Files.com accepted the
+    // end: the outcome is unknown, so the helper throws an ApiBadResponseException saying so and sends nothing again.
+    // A first end that fails is not repeated either.
+    public function testAnEndAnsweredWithoutItsPendingUploadStopsWithNothingSentAgain()
+    {
+        $accepted = function ($body) {
+            return new Response(202, ['Content-Type' => 'application/json'], $body);
+        };
+        $answers = [
+            'a JSON list' => [$accepted('[]'), ApiBadResponseException::class],
+            'a JSON string' => [$accepted('"pending"'), ApiBadResponseException::class],
+            'no body' => [$accepted(''), ApiBadResponseException::class],
+            'another status' => [$accepted('{"status":"completed","ref":"upload-ref"}'), ApiBadResponseException::class],
+            'no status' => [$accepted('{"ref":"upload-ref"}'), ApiBadResponseException::class],
+            'no ref' => [$accepted('{"status":"pending","progress":5}'), ApiBadResponseException::class],
+            'another ref' => [$accepted('{"status":"pending","ref":"another-ref"}'), ApiBadResponseException::class],
+            'a ref that is not a string' => [$accepted('{"status":"pending","ref":7}'), ApiBadResponseException::class],
+            'a server error' => [new Response(500), ApiServerException::class],
+        ];
+
+        foreach ($answers as $case => list($answer, $class)) {
+            $reports = 0;
+            list($requests, $error) = $this->uploadAgainst(['end' => function () use ($answer) {
+                return $answer;
+            }], function () use (&$reports) {
+                File::uploadData('reports/daily.csv', 'hi', [], ['progress' => function () use (&$reports) {
+                    $reports++;
+                }]);
+            });
+
+            $this->assertInstanceOf($class, $error, $case);
+            $this->assertSame([1, 1], [count(self::requestsOf($requests, 'end')), $reports], $case);
+            if ($class === ApiBadResponseException::class) {
+                $this->assertSame(202, $error->getCode(), $case);
+                $this->assertNotFalse(strpos($error->getMessage(), 'may still complete'), $case);
+            }
+        }
+    }
+
+    // Once Files.com has answered pending, an error it answers with is the upload's outcome, thrown as for any request.
+    public function testUploadEndsWithTheErrorFilesComAnswersWhileFinishingIt()
+    {
+        $notFound = new Response(404, ['Content-Type' => 'application/json'], '{"type":"not-found","http-code":404,"error":"Not Found"}');
+        list($requests, $error) = $this->uploadAgainst(['end' => self::finalizingEnd([['pending' => 42], $notFound])], function () {
+            File::uploadData('reports/daily.csv', 'hi');
+        });
+
+        $this->assertInstanceOf(NotFoundException::class, $error);
+        $this->assertSame([404, false], [$error->getCode(), strpos($error->getMessage(), 'may still complete')]);
+        $this->assertCount(2, self::requestsOf($requests, 'end'));
+    }
+
+    // A request for the outcome that fails without an answer, or with a 429 or a 5xx, is sent again within the SDK's
+    // network retries; once they are spent, the failure says the outcome is unknown and Files.com may still complete
+    // the upload, as the class of exception it would have been.
+    public function testARequestForTheOutcomeIsRetriedAndThenLeavesItUnknown()
+    {
+        $saved = [Files::$maxNetworkRetries, Files::$minNetworkRetryDelay, Files::$maxNetworkRetryDelay];
+        list(Files::$maxNetworkRetries, Files::$minNetworkRetryDelay, Files::$maxNetworkRetryDelay) = [3, 0, 0];
+        $unreachable = function () {
+            return new ConnectException('cURL error 7: Failed to connect', new Request('POST', 'https://app.files.com/api/rest/v1/files/x'));
+        };
+        $pending = ['pending' => null];
+        $cases = [
+            'a 503, a 429 and a lost connection, then the File' => [[$pending, new Response(503), new Response(429), $unreachable()], null, 5],
+            'a 503 each time' => [array_merge([$pending], array_fill(0, 4, new Response(503))), ApiServerException::class, 5],
+            'no connection each time' => [array_merge([$pending], array_fill(0, 4, $unreachable())), ApiConnectException::class, 5],
+        ];
+
+        try {
+            foreach ($cases as $case => list($answers, $class, $ends)) {
+                list($requests, $error) = $this->uploadAgainst(['end' => self::finalizingEnd($answers)], function () {
+                    File::uploadData('reports/daily.csv', 'hi');
+                });
+
+                $this->assertCount($ends, self::requestsOf($requests, 'end'), $case);
+                if ($class === null) {
+                    $this->assertNull($error, $case);
+                } else {
+                    $this->assertSame($class, get_class($error), $case);
+                    $this->assertNotFalse(strpos($error->getMessage(), 'ref upload-ref'), $case);
+                    $this->assertNotFalse(strpos($error->getMessage(), 'may still complete'), $case);
+                    $this->assertInstanceOf($class, $error->getPrevious(), $case);
+                }
+            }
+        } finally {
+            list(Files::$maxNetworkRetries, Files::$minNetworkRetryDelay, Files::$maxNetworkRetryDelay) = $saved;
+        }
+    }
+
+    // What the progress callback throws while Files.com finishes the upload stops the wait at once and is thrown as it
+    // was; nothing more is sent.
+    public function testAProgressCallbackThrowingWhileFilesComFinishesTheUploadStopsTheWait()
+    {
+        $stop = new \RuntimeException('stop waiting');
+        list($requests, $error) = $this->uploadAgainst(['end' => self::finalizingEnd([['pending' => 42], ['pending' => 43]])], function () use ($stop) {
+            File::uploadData('reports/daily.csv', 'hi', [], ['progress' => function ($report) use ($stop) {
+                if (isset($report['finalizing'])) {
+                    throw $stop;
+                }
+            }]);
+        });
+
+        $this->assertSame($stop, $error);
+        $this->assertCount(1, self::requestsOf($requests, 'end'));
+    }
+
+    // An end answered with $answers in order, one an attempt: ['pending' => progress] for 202 pending (progress left
+    // out when null), or a Response or an exception as given; after them, 201 with the File.
+    private static function finalizingEnd(array $answers)
+    {
+        return function ($request, $attempt) use ($answers) {
+            if ($attempt > count($answers)) {
+                return new Response(201, ['Content-Type' => 'application/json'], '{"path": "reports/daily.csv"}');
+            }
+
+            $answer = $answers[$attempt - 1];
+            if (is_array($answer)) {
+                $body = ['status' => 'pending', 'ref' => 'upload-ref'];
+                if ($answer['pending'] !== null) {
+                    $body['progress'] = $answer['pending'];
+                }
+
+                return new Response(202, ['Content-Type' => 'application/json'], json_encode($body));
+            }
+
+            return $answer;
+        };
+    }
+
     // A local file holding $data, for an upload test to remove.
     private function uploadSource($data)
     {
@@ -1742,6 +1971,9 @@ class ApiTest extends TestCase
                 'body' => $body,
                 'json' => $json,
                 'options' => array_keys($options),
+                'host' => $request->getUri()->getHost(),
+                'read_timeout' => isset($options['read_timeout']) ? $options['read_timeout'] : null,
+                'at' => microtime(true),
             ];
             $attempt = ++$attempts[$kind];
             if ($attempt === 1 && in_array($kind, $service['fail_first'], true)) {

@@ -1237,6 +1237,19 @@ Example of SiteConfiguration Classes moved.
 |------------------------------|------------------|
 | `\Files\SiteConfiguration\AccountAlreadyExistsException` | `Files\Exception\SiteConfiguration\AccountAlreadyExistsException`  |
 
+## Upload Completion
+
+The upload helpers (`File::uploadFile`, `File::uploadData`, the `uploadTo...` helpers, adaptive transfers and
+`files://` write streams) return only once Files.com has completed the upload. For a remote server mount or a
+Files.com Agent, Files.com can finish an upload in the background after its last part. The helper then asks again each
+second until the upload is complete or has failed. A `progress` callback gets one more report for each answer: the last
+part's report with `part_bytes` 0, `finalizing` set to true and `finalization_progress`, Files.com's percentage or null
+when it gave none. Byte counts do not change while it waits, and a report at 100 does not mean the upload is complete.
+
+Stopping the wait (a callback that throws, or cancelling a transfer job) does not stop Files.com, which may still
+complete the upload. Neither does a wait that ends because Files.com's answer could not be used or the requests for it
+kept failing; the SDK's errors for those cases say so. An error that Files.com answers with is the upload's outcome.
+
 ## Adaptive Transfers (64-bit PHP)
 
 The upload and download helpers send one request at a time unless they are given the `transfer` option. With it, they
@@ -1283,7 +1296,7 @@ set there is used one request at a time (`statistics()['transport']` is then `se
 
 Uploads: every part is acknowledged by exactly one ETag, retried with its exact bytes when it fails (never when its grant
 says `retry_parts` is false), and never sent again once acknowledged; the upload ends only after every part and every
-progress report. Where the API's first answer shows an ordinary multipart upload straight to Amazon S3, the SDK sizes
+progress report, and completes only once Files.com has completed it (see Upload Completion). Where the API's first answer shows an ordinary multipart upload straight to Amazon S3, the SDK sizes
 the parts itself (8 MiB, larger when a file needs more than 10,000 parts); everywhere else the API sizes them. A stream
 without a known size is sent one part at a time.
 

@@ -24,7 +24,7 @@ function middlewareRemoveHeader($header)
  */
 class Api
 {
-    const VERSION = "2.0.759";
+    const VERSION = "2.0.760";
 
     const REPEATED_CURSOR_MESSAGE = 'The list returned a cursor it already returned, so following it would repeat pages.';
 
@@ -378,16 +378,19 @@ class Api
         return [$requestPath, $options];
     }
 
+    // Sends one request with the site, handler, network retries and timeouts of $config (Files::snapshot(), as they
+    // stand now when it is null), so that requests that must repeat one another can keep the configuration of the first.
     // $renewal, for a storage request of a transfer without adaptive transfers (Util\ExpiryRenewal), holds back a refusal's
     // body from the sink and counts the request's connection retries; a refusal that storage says came because the URL
     // expired, and that it may renew, returns null instead of throwing.
-    private static function sendVerbatim($path, $verb, $options, $retryConnectErrors = true, $apiRequest = true, $renewal = null)
+    private static function sendVerbatim($path, $verb, $options, $retryConnectErrors = true, $apiRequest = true, $renewal = null, $config = null)
     {
         if (!is_string($path) || !is_string($verb)) {
             throw new Exception\InvalidParameterException('Request paths and HTTP methods must be strings.');
         }
+        $config = $config === null ? Files::snapshot() : $config;
         $isExternal = preg_match('@^[a-zA-Z]+://@', $path);
-        $baseUrl = Files::getBaseUrl();
+        $baseUrl = $config['base_url'];
 
         if (!$isExternal && (!is_string($baseUrl) || !$baseUrl)) {
             throw new Exception\ConfigurationException('Site URL has not been set. Set your site URL using Files::setBaseUrl(<BASE-URL>).');
@@ -395,7 +398,7 @@ class Api
 
         $url = $isExternal
           ? $path
-          : $baseUrl . Files::getEndpointPrefix() . $path;
+          : $baseUrl . $config['endpoint_prefix'] . $path;
 
         Logger::debug("Sending request: " . $verb . " $url");
 
@@ -408,15 +411,16 @@ class Api
             'bodyPosition' => null,
             'relocationAuth' => null,
             'retries' => 0,
-            'maxRetries' => Files::$maxNetworkRetries,
-            'minDelay' => Files::$minNetworkRetryDelay,
-            'maxDelay' => Files::$maxNetworkRetryDelay,
+            'maxRetries' => $config['max_network_retries'],
+            'minDelay' => $config['min_network_retry_delay'],
+            'maxDelay' => $config['max_network_retry_delay'],
             'policy' => array_key_exists('region_relocation', $options) ? $options['region_relocation'] : Files::getRegionRelocation(),
         ];
         if ($operation && !is_bool($operation->policy) && !is_callable($operation->policy)) {
             throw new Exception\ConfigurationException('Region relocation must be a boolean or callable.');
         }
-        $handler = Files::getHandler();
+        // The handler Files::setHandler gave, or else a new CurlHandler, as Files::getHandler gives them.
+        $handler = $config['handler'] === null ? new \GuzzleHttp\Handler\CurlHandler() : $config['handler'];
         // A destination path given as the sink is opened by the SDK rather than by Guzzle (Util\DownloadFileSink), so
         // that the file is closed before this returns or throws, even while the caller keeps the exception. $options
         // keeps the caller's sink, which still decides whether the result includes the response data. A request that
@@ -463,9 +467,9 @@ class Api
         }
 
         $client = new Client([
-            'connect_timeout' => Files::$connectTimeout,
+            'connect_timeout' => $config['connect_timeout'],
             'handler' => $handlerStack,
-            'read_timeout' => Files::$readTimeout,
+            'read_timeout' => $config['read_timeout'],
         ]);
 
         // An owned file is released once the request has ended, after any error body or response data has been read from
@@ -753,19 +757,20 @@ class Api
     /**
      * Sends one request without following list cursors, regardless of Files::$autoPaginate.
      *
-     * @internal Page and native directory handles fetch one page at a time with this. The download helpers and native
-     * file handles pass $renewal (Util\ExpiryRenewal) for a storage URL: null is then returned when storage said the URL
-     * expired and it is to be renewed.
+     * @internal Page and native directory handles fetch one page at a time with this. Upload finalization passes
+     *     $config, the Files::snapshot() taken for the first request, to preserve its settings across polls.
+     *     Storage download helpers pass $renewal (Util\ExpiryRenewal) to renew expired URLs.
      */
-    public static function sendSingleRequest($path, $verb, $params = null, $options = [], $renewal = null)
+    public static function sendSingleRequest($path, $verb, $params = null, $options = [], $renewal = null, $config = null)
     {
         if (!is_string($path) || !is_string($verb)) {
             throw new Exception\InvalidParameterException('Request paths and HTTP methods must be strings.');
         }
+        $config = $config === null ? Files::snapshot() : $config;
         $options = $options ?: [];
         $headers = array_merge(
-            Files::getLanguage()
-              ? ['Accept-Language' => Files::getLanguage()]
+            $config['language']
+              ? ['Accept-Language' => $config['language']]
               : [],
             !empty($options['headers']) ? $options['headers'] : [],
             ['User-Agent' => self::userAgentWithMetadata("Files.com PHP SDK v" . self::VERSION)]
@@ -778,15 +783,15 @@ class Api
             $headers = self::withCredential(
                 $headers,
                 $options,
-                Files::getSessionId(),
-                Files::getApiKey(),
+                $config['session_id'],
+                $config['api_key'],
                 $path,
                 $verb
             );
 
             $workspaceId = array_key_exists('workspace_id', $options)
               ? $options['workspace_id']
-              : Files::getWorkspaceId();
+              : $config['workspace_id'];
 
             if ($workspaceId !== null && $workspaceId !== '') {
                 $headers['X-Files-Workspace-Id'] = (string) $workspaceId;
@@ -821,7 +826,7 @@ class Api
             );
         }
 
-        $response = self::sendVerbatim($requestPath, $verb, $options, true, true, $renewal);
+        $response = self::sendVerbatim($requestPath, $verb, $options, true, true, $renewal, $config);
 
         return $response;
     }

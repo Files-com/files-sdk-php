@@ -6,6 +6,7 @@ use Files\Exception\ApiBadResponseException;
 use Files\Exception\InvalidParameterException;
 use Files\Exception\NotImplementedException;
 use Files\Model\File;
+use Files\Util\UploadFinalization;
 
 /** @internal The bounded file engine used by StreamWrapper. */
 class NativeFile
@@ -402,7 +403,8 @@ class NativeFile
                 }
                 $this->sendPart();
                 $params = array_intersect_key($this->uploadParams, ['provided_mtime' => true, 'custom_metadata' => true]);
-                File::create($this->path, $params + ['action' => 'end', 'ref' => $this->ref, 'size' => $this->position, 'etags' => $this->etags], $this->requestContext->options());
+                // Returns once Files.com has completed the upload, for a destination it completes in the background too.
+                UploadFinalization::finish($this->path, $params + ['action' => 'end', 'ref' => $this->ref, 'size' => $this->position, 'etags' => $this->etags], $this->requestContext->options(), null);
             }
         } finally {
             if (is_resource($this->buffer)) {

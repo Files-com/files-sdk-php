@@ -19,7 +19,8 @@ use Files\Model\Folder;
  *
  * The client actions (intents) are this SDK's own public calls, which the generated test passes in by role, each bound
  * to an operation the definition gives the intent: an upload is File::uploadFile or File::uploadData, which begin each
- * part with File#beginUpload and end the upload with File::create; a download is File::downloadToFile; a directory's
+ * part with File#beginUpload and end the upload with File::create's request, repeated while it is answered pending (202,
+ * the simulator finishing the upload in the background); a download is File::downloadToFile; a directory's
  * folders are made with Folder::create and listed with Folder::listFor; a copy or move is waited for with
  * FileMigration::find.
  */
@@ -540,6 +541,12 @@ class ScenarioRun
         $this->test->assertTrue($accepted >= $minParts, 'The simulator accepted ' . $accepted . ' parts of the upload, fewer than ' . $minParts . '.');
         $transfer = ['step' => $this->current, 'upload' => $path, 'source' => $source, 'size' => strlen($data), 'sha256' => hash('sha256', $data), 'parts' => $parts];
         if ($finalProgress) {
+            // While the simulator finishes the upload in the background, each of its pending answers is reported after
+            // the parts' reports: the last part's report, its bytes unchanged and part_bytes 0, with finalizing and the
+            // answer's progress.
+            $pending = $this->pendingProgress($first);
+            $finalizing = array_slice($reports, count($parts));
+            $reports = array_slice($reports, 0, count($parts));
             $this->test->assertSame(count($parts), count($reports), 'The upload reported progress ' . count($reports) . ' times, not once for each of its ' . count($parts) . ' parts.');
             $acknowledged = 0;
             foreach ($reports as $index => $report) {
@@ -549,7 +556,14 @@ class ScenarioRun
             }
             $last = $reports[count($reports) - 1];
             $this->test->assertSame([strlen($data), strlen($data)], [$last['total_bytes'], $last['acknowledged_bytes']], 'The final progress (total and acknowledged bytes)');
+            $this->test->assertSame(count($pending), count($finalizing), 'The upload reported ' . count($finalizing) . ' times after its parts, not once for each of its ' . count($pending) . ' pending answers.');
+            $again = $last;
+            $again['part_bytes'] = 0;
+            foreach ($finalizing as $index => $report) {
+                $this->test->assertSame($again + ['finalizing' => true, 'finalization_progress' => $pending[$index]], $report, 'Progress report ' . ($index + 1) . ' while the upload was finished');
+            }
             $transfer['progress_final'] = $last;
+            $transfer['finalizing_reports'] = $finalizing;
         }
         $this->transfers[] = $transfer;
     }
@@ -659,9 +673,32 @@ class ScenarioRun
             return $parts;
         }
         $this->test->assertSame(strlen($data), $offset, 'The parts of the upload of ' . $path . ' hold ' . $offset . ' bytes, not ' . strlen($data) . '.');
-        $this->test->assertSame(1, count($ends), 'The simulator journaled ' . count($ends) . ' finalizes of the upload of ' . $path . ', not one.');
+        // A finalize the simulator completes in the background (its remote upload_finalization profile) is first
+        // answered 202 pending, as often as the profile says, and the helper sends it again each time: those answers
+        // come first, each for this upload, and then the one finalize that completed it.
+        $pending = 0;
+        while ($pending < count($ends) && $ends[$pending]['status'] === 202) {
+            $this->test->assertSame([$ends[0]['upload'], 'pending'], [$ends[$pending]['upload'], $ends[$pending]['finalization']], 'The pending finalize the simulator journaled (seq ' . $ends[$pending]['seq'] . ': upload, finalization)');
+            $pending++;
+        }
+        $ends = array_slice($ends, $pending);
+        $this->test->assertSame(1, count($ends), 'The simulator journaled ' . count($ends) . ' finalizes of the upload of ' . $path . ' after ' . $pending . ' pending ones, not one.');
         $this->test->assertSame([true, strlen($data), hash('sha256', $data)], [$ends[0]['status'] >= 200 && $ends[0]['status'] < 300, $ends[0]['bytes'], $ends[0]['sha256']], 'The finalize the simulator journaled (seq ' . $ends[0]['seq'] . ': succeeded, bytes, SHA-256)');
         return $parts;
+    }
+
+    // The progress of each 202 pending answer to a finalize among the responses from index $first on, in order: an
+    // integer, or null when the answer gave none.
+    private function pendingProgress($first)
+    {
+        $progress = [];
+        foreach (array_slice($this->responses, $first) as $response) {
+            if ($response['method'] === 'POST' && $response['status'] === 202 && strpos($response['path'], self::API_PATH . 'files/') === 0) {
+                $body = json_decode((string) $response['body'], true);
+                $progress[] = is_array($body) && isset($body['progress']) ? $body['progress'] : null;
+            }
+        }
+        return $progress;
     }
 
     /**

@@ -31,6 +31,7 @@ class StreamWrapperTest extends TestCase
     private $partRetryAllowed = true;
     private $redirectDownload = false;
     private $uploadThrowable;
+    private $finalizeAnswers;
     private $expiredUploads = 0;
     private $renewedGrant = [];
     private $granted = [];
@@ -54,6 +55,7 @@ class StreamWrapperTest extends TestCase
         $this->partRetryAllowed = true;
         $this->redirectDownload = false;
         $this->uploadThrowable = null;
+        $this->finalizeAnswers = [];
         $this->expiredUploads = 0;
         $this->renewedGrant = [];
         $this->granted = [];
@@ -144,9 +146,43 @@ class StreamWrapperTest extends TestCase
         }
         $this->assertSame(['kind' => 'native'], $end['custom_metadata']);
         $this->assertSame(6, $end['size']);
+        $this->assertTrue($end['async_finalize']);
         $this->assertSame('global-key', Files::getApiKey());
         $this->assertSame(0, file_put_contents('files://empty.bin', ''));
         $this->assertSame('', $this->files['empty.bin']);
+    }
+
+    // Closing a write stream returns once Files.com has completed the upload: for a remote server mount or an Agent
+    // that it finishes in the background, after the same end, sent again after each 202 pending answer, gets
+    // the File. A 202 that is not the upload's pending finalization fails the close with its outcome unknown, and
+    // nothing is sent again.
+    public function testNativeCloseWaitsWhileFilesComFinishesTheUpload()
+    {
+        $pending = new Response(202, [], '{"status":"pending","ref":"upload-ref","progress":42}');
+        $this->finalizeAnswers = [$pending];
+        $this->assertSame(5, file_put_contents('files://remote/finished.bin', 'hello'));
+        $this->assertSame('hello', $this->files['remote/finished.bin']);
+        $ends = array_values(array_filter($this->requests, function ($request) {
+            return isset($request['json']['action']) && $request['json']['action'] === 'end';
+        }));
+        $this->assertCount(2, $ends);
+        $this->assertSame([true, 'upload-ref'], [$ends[0]['json']['async_finalize'], $ends[0]['json']['ref']]);
+        $this->assertSame([$ends[0]['body'], $ends[0]['headers']], [$ends[1]['body'], $ends[1]['headers']]);
+
+        $this->requests = [];
+        $this->finalizeAnswers = [new Response(202, [], '{"status":"pending","ref":"another-ref"}')];
+        $stream = fopen('files://remote/unknown.bin', 'wb');
+        fwrite($stream, 'hello');
+        try {
+            fclose($stream);
+            $this->fail('Expected the close to fail with the outcome unknown');
+        } catch (ApiBadResponseException $error) {
+            $this->assertNotFalse(strpos($error->getMessage(), 'may still complete'));
+        }
+        $this->assertArrayNotHasKey('remote/unknown.bin', $this->files);
+        $this->assertCount(1, array_filter($this->requests, function ($request) {
+            return isset($request['json']['action']) && $request['json']['action'] === 'end';
+        }));
     }
 
     public function testUnsafeNativeOperationsFailBeforeChangingTheRemoteFile()
@@ -584,6 +620,9 @@ class StreamWrapperTest extends TestCase
             $prefix = strpos($path, '/file_actions/metadata/') !== false ? '/api/rest/v1/file_actions/metadata/' : '/api/rest/v1/files/';
             $name = ltrim(substr($path, strlen($prefix)), '/');
             if ($request->getMethod() === 'POST') {
+                if ($this->finalizeAnswers) {
+                    return Create::promiseFor(array_shift($this->finalizeAnswers));
+                }
                 $this->files[$name] = implode('', $this->parts);
                 return Create::promiseFor(new Response(201, [], '{}'));
             }

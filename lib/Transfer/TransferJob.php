@@ -114,7 +114,11 @@ final class TransferJob
     // first part's parameters, and provided_mtime and custom_metadata for its end; provided_mtime defaults to the file's
     // modification time). $options are the generated methods' options for its API requests, and progress: a callable
     // given total_bytes, acknowledged_bytes, part_number, part_bytes, elapsed_seconds and bytes_per_second (this wait's
-    // acknowledged bytes over its time) after each part is acknowledged, in the order they are.
+    // acknowledged bytes over its time) after each part is acknowledged, in the order they are. The upload completes
+    // once Files.com has completed it: for a remote server mount or an Agent that it finishes in the background, after
+    // as many answers that it is still finishing as it takes, one a second, each reported to progress as the last
+    // part's report with part_bytes 0, finalizing true and finalization_progress (Files.com's percentage, or null when
+    // it gave none).
     public function uploadFile($destinationPath, $sourceFilePath, $params = [], $options = [])
     {
         if (!$destinationPath) {

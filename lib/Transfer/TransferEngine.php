@@ -42,9 +42,11 @@ use GuzzleHttp\Psr7\FnStream;
  *
  * The first failure, or the first exception a callback throws, stops the job: no new request is admitted, those in
  * flight are cancelled and settled, no upload is finalized, and wait throws that exception as it was. cancel stops the
- * job the same way and throws a TransferCancelledException unless something failed first. pause stops admitting work,
- * cancels content requests in flight (their transfers keep their completed work, and a caller's stream's part keeps
- * its bytes and reservation), lets API requests in flight finish, and returns from wait; resume and wait continue.
+ * job the same way and throws a TransferCancelledException unless something failed first; it names each upload that
+ * Files.com was finishing in the background, whose wait alone it stopped (Files.com may still complete it). pause stops
+ * admitting work, cancels content requests in flight (their transfers keep their completed work, and a caller's
+ * stream's part keeps its bytes and reservation), lets API requests in flight finish, and returns from wait; resume and
+ * wait continue.
  */
 final class TransferEngine
 {
@@ -588,15 +590,20 @@ final class TransferEngine
         }
 
         $this->delayedApi = [];
+        // What a cancelled transfer says of work Files.com may still complete (an upload it was finishing).
+        $remote = [];
         foreach ($this->transfers as $transfer) {
             $state = $transfer->state();
             if ($state === 'queued' || $state === 'active' || $state === 'paused') {
-                $transfer->cancel();
+                $note = $transfer->cancel();
+                if (is_string($note)) {
+                    $remote[] = $note;
+                }
             }
         }
 
         if ($this->error === null) {
-            $this->error = new TransferCancelledException('The transfer job was cancelled before every transfer ended');
+            $this->error = new TransferCancelledException('The transfer job was cancelled before every transfer ended' . ($remote ? '; ' . implode('; ', $remote) : ''));
         }
 
         $this->paused = false;
@@ -708,7 +715,7 @@ final class TransferEngine
         $transfer = $item['transfer'];
         if ($ok) {
             $body = (string) $value->getBody();
-            $transfer->apiDone($item, $body === '' ? null : json_decode($body, true), $now);
+            $transfer->apiDone($item, $body === '' ? null : json_decode($body, true), $now, $value->getStatusCode());
             return;
         }
 
@@ -750,7 +757,13 @@ final class TransferEngine
             Logger::info('Retries exhausted - giving up on ' . $item['describe']);
         }
 
-        $this->failTransfer($transfer, self::apiError($error));
+        // An item can say what its failure means for its transfer (an upload's request for its outcome).
+        $failure = self::apiError($error);
+        if (isset($item['failure'])) {
+            $failure = call_user_func($item['failure'], $failure);
+        }
+
+        $this->failTransfer($transfer, $failure);
     }
 
     // The SDK's exception for a failed API request, as the generated methods throw it.

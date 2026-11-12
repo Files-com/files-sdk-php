@@ -3,7 +3,10 @@
 /**
  * Checks one api-scenarios.sh run against the generated cases (ApiScenarioTest::cases()) and writes OUT/account.json:
  *
- *   php account.php OUT MOCK_GENERATION_JSON
+ *   php account.php OUT MOCK_GENERATION_JSON [SCENARIO CASE]
+ *
+ * The run is of the api-scenarios-canonical preset and every case, or of the preset SCENARIO (a name with-scenario.rb
+ * takes) and the one case CASE (a test method of ApiScenarioTest), which is then the only case it may report.
  *
  * It fails unless the simulator was generated from the schema these tests were (MOCK_GENERATION_JSON, the mock server's
  * lib/simulation/generation.json), the launcher's run.json shows a run with no setup error, interruption, missing
@@ -23,14 +26,23 @@ require_once __DIR__ . '/ApiScenarioTest.php';
 
 $out = isset($argv[1]) ? $argv[1] : '';
 $generationFile = isset($argv[2]) ? $argv[2] : '';
-if ($out === '' || $generationFile === '') {
-    fwrite(STDERR, "usage: php account.php OUT MOCK_GENERATION_JSON\n");
+$scenarioName = isset($argv[3]) ? $argv[3] : 'api-scenarios-canonical';
+$onlyCase = isset($argv[4]) ? $argv[4] : null;
+if ($out === '' || $generationFile === '' || (isset($argv[3]) && ($scenarioName === '' || $onlyCase === null || $onlyCase === ''))) {
+    fwrite(STDERR, "usage: php account.php OUT MOCK_GENERATION_JSON [SCENARIO CASE]\n");
     exit(2);
 }
 
 $problems = [];
 $cases = ApiScenarioTest::cases();
 $class = ApiScenarioTest::class;
+if ($onlyCase !== null) {
+    if (!isset($cases[$onlyCase])) {
+        fwrite(STDERR, 'api-scenarios: ' . $onlyCase . " is not a generated case\n");
+        exit(2);
+    }
+    $cases = [$onlyCase => $cases[$onlyCase]];
+}
 
 $generation = json_decode((string) @file_get_contents($generationFile), true);
 $generatedFrom = isset($generation['swagger']['sha256']) ? $generation['swagger']['sha256'] : null;
@@ -129,7 +141,7 @@ if (!is_string($simulatorSchema) || preg_match('/\A[0-9a-f]{64}\z/', $simulatorS
     $simulatorSchema = null;
 }
 
-$same($typed($runRecord, 'run.json', 'scenario', 'string'), 'api-scenarios-canonical', 'run.json scenario');
+$same($typed($runRecord, 'run.json', 'scenario', 'string'), $scenarioName, 'run.json scenario');
 $origin = $typed($server, 'run.json server', 'url', 'string');
 $instance = $typed($server, 'run.json server', 'instance', 'string');
 foreach (['url' => $origin, 'instance' => $instance] as $key => $value) {

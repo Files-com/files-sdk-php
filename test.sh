@@ -7,7 +7,8 @@ ran_php_style=()
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 # For each PHP below, the generated API scenario tests run after the unit tests (api-scenarios.sh), against the simulator
-# generated from the same schema. FILES_API_SCENARIOS_MOCK_SERVER names the generated mock-server directory, with its
+# generated from the same schema: every case under the canonical preset, and files.owned-binary-roundtrip again under
+# api-scenarios-remote-finalize, whose uploads the simulator finishes in the background. FILES_API_SCENARIOS_MOCK_SERVER names the generated mock-server directory, with its
 # bundle installed; without it the run fails before anything else runs. The results go to FILES_API_SCENARIOS_OUT, one
 # folder for each PHP, or else to a new temporary folder that is removed when the run passes and kept, and named, when
 # it fails.

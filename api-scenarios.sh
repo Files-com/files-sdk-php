@@ -16,6 +16,12 @@
 # The scenario tests load test/vendor/autoload.php (--bootstrap) instead of the default suite's bootstrap.php, which
 # would clear the FILES_* settings the launcher gives them.
 #
+# Next, with the same PHP and launcher, the files.owned-binary-roundtrip case alone runs against the
+# api-scenarios-remote-finalize preset, a simulator that finishes every upload in the background as Files.com does for
+# a remote server mount or an Agent (202 pending, then the File), and its journal check, files.finalize_upload
+# background, must pass: every upload was answered pending and then completed, the same identity every time.
+# account.php checks that one case. OUT-remote-finalize, which must not exist either, receives that run's evidence.
+#
 # Then, with the same PHP, launcher and preset, it runs the eleven manual integration tests other than testSession
 # against a simulator of their own (test/integration/test-file.php --shared-simulator: configuration, missing-path and
 # root-folder errors, user pagination and list/update, creating, finding and deleting a user both ways, creating,
@@ -66,6 +72,11 @@ if [[ -e "${users_find_out}" ]]; then
   echo "${users_find_out} already exists; give a new directory." >&2
   exit 1
 fi
+remote_finalize_out="${out}-remote-finalize"
+if [[ -e "${remote_finalize_out}" ]]; then
+  echo "${remote_finalize_out} already exists; give a new directory." >&2
+  exit 1
+fi
 failure_cases_out="${out}-failure-cases"
 if [[ -e "${failure_cases_out}" ]]; then
   echo "${failure_cases_out} already exists; give a new directory." >&2
@@ -77,6 +88,11 @@ status=0
 FILES_SESSION_ENV="development" ruby "${mock}/with-scenario.rb" --scenario api-scenarios-canonical --out "${out}" --consumer-timeout 900 -- \
   "${php_bin}" ./vendor/bin/phpunit --bootstrap ./vendor/autoload.php --testsuite api-scenarios --log-junit "${out}/phpunit.junit.xml" || status=$?
 FILES_SESSION_ENV="development" "${php_bin}" scenarios/account.php "${out}" "${mock}/lib/simulation/generation.json" || status=$((status == 0 ? 1 : status))
+FILES_SESSION_ENV="development" ruby "${mock}/with-scenario.rb" --scenario api-scenarios-remote-finalize --out "${remote_finalize_out}" --consumer-timeout 900 -- \
+  "${php_bin}" ./vendor/bin/phpunit --bootstrap ./vendor/autoload.php --testsuite api-scenarios --filter testFilesOwnedBinaryRoundtrip \
+  --log-junit "${remote_finalize_out}/phpunit.junit.xml" || status=$((status == 0 ? $? : status))
+FILES_SESSION_ENV="development" "${php_bin}" scenarios/account.php "${remote_finalize_out}" "${mock}/lib/simulation/generation.json" \
+  api-scenarios-remote-finalize testFilesOwnedBinaryRoundtrip || status=$((status == 0 ? 1 : status))
 FILES_SESSION_ENV="development" ruby "${mock}/with-scenario.rb" --scenario api-scenarios-canonical --out "${integration_out}" \
   --startup-timeout 30 --consumer-timeout 180 --settle-timeout 5 -- \
   "${php_bin}" integration/test-file.php --shared-simulator || status=$((status == 0 ? $? : status))

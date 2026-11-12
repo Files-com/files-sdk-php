@@ -67,8 +67,10 @@ are sent as they fill. Only one granted part is retained locally, using at most
 The API grant controls the part's maximum size. `fflush` flushes that temporary
 storage; it does not complete the remote upload. Further writes remain supported.
 `fclose` sends the final part, including an empty final part when needed, and
-completes the upload. Close is required to publish the result and observe a
-completion error. Closing an empty write stream creates an empty file. A failed
+completes the upload. It returns once Files.com has completed the upload; for a
+remote server mount or an Agent, Files.com can finish it in the background, and
+`fclose` then waits, asking again one, two, then three seconds after each answer that it is still finishing it. Close is required to publish the
+result and observe a completion error. Closing an empty write stream creates an empty file. A failed
 write sends no upload completion request; remote staging and cleanup follow the
 backend's upload semantics. The SDK removes its owned local temporary storage.
 

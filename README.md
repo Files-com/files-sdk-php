@@ -1386,3 +1386,20 @@ reference. To generate and build the reference in one SDK Generator command,
 set `PHPDOC_BIN` to an absolute tool path outside `generated/php` and run
 `bundle exec ruby files-sdk-generator.rb --target php --build-args=--docs`.
 Regeneration replaces the generated SDK, including locally installed tools.
+
+### Modification dates during downloads
+
+`Files::$checkDownloadModificationTime` defaults to `true`. A transfer job snapshots the global setting and can override it; a download's local option wins over the job default:
+
+```php
+Files::$checkDownloadModificationTime = false;
+$job = new \Files\Transfer\TransferJob(['check_download_modification_time' => false]);
+$job->downloadToFile('remote.bin', 'local.bin', ['check_download_modification_time' => true]);
+$job->wait();
+```
+
+For ordinary downloads, use `File::downloadToFile($remote, $local, true, ['check_download_modification_time' => false])`. `downloadToStream` and `partialDownloadToFile` take the same options as their fifth argument, and `resumeDownloadToFile` as its third. Native `files://` handles accept it in `files.options` of the stream context. Each download/read handle retains the effective boolean through retries and renewal.
+
+Disabling this option suppresses automatic date preconditions and newer-date checks. Source changes detectable only by timestamps can then go undetected; strong ETag/version, size, byte and HTTP error checks remain enabled.
+
+When storage supplies a valid `Last-Modified` HTTP date, downloads keep that first date and send it as `If-Unmodified-Since` on subsequent requests, retries and signed URL renewals when no stronger version protection applies. A `412` response, or a successful response with a newer valid date, stops that attempt before its body is used. Missing or invalid dates remain compatible. This check has one-second precision: it cannot detect preserved timestamps, same-second edits or changes during one response, and it does not establish a strong version, enable parallel downloads or authorize persistent resume. Files dated in the future can be refused even when unchanged; correct the source machine's clock and file modification time before retrying. Adaptive downloads fail when the source changes and leave the destination file unchanged. The ordinary `downloadToFile` helper keeps the same date while continuing after an interrupted response; it fails on a source change and can leave a partial file. Retry the complete download after the source is stable. Stream downloads do not replay bytes already delivered. The `files://` stream wrapper retains its date baseline across the open read handle's ranges and URL renewals. `resumeDownloadToFile` invoked separately has no date from the earlier call and cannot validate those retained bytes by modification time; a returned download URL alone sends no content request.

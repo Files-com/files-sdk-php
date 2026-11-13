@@ -74,7 +74,7 @@ final class TransferJob
 
     private static $optionNames = [
         'startup', 'concurrency', 'initial_target', 'max_concurrent_requests', 'max_concurrent_files', 'max_buffer_bytes', 'max_retries',
-        'download_part_bytes', 'diagnostics', 'api_key', 'session_id', 'workspace_id',
+        'download_part_bytes', 'diagnostics', 'check_download_modification_time', 'api_key', 'session_id', 'workspace_id',
     ];
 
     private $engine;
@@ -84,7 +84,7 @@ final class TransferJob
         $clock = MonotonicClock::detect();
         $options = self::validate($options);
         $config = Files::snapshot();
-        foreach (['api_key', 'session_id', 'workspace_id'] as $name) {
+        foreach (['api_key', 'session_id', 'workspace_id', 'check_download_modification_time'] as $name) {
             if (array_key_exists($name, $options['api'])) {
                 $config[$name] = $options['api'][$name];
             }
@@ -279,8 +279,11 @@ final class TransferJob
             $retries = $options['max_retries'];
         }
 
+        if (array_key_exists('check_download_modification_time', $options)) {
+            Files::downloadModificationTimeCheck($options);
+        }
         $api = [];
-        foreach (['api_key', 'session_id', 'workspace_id'] as $name) {
+        foreach (['api_key', 'session_id', 'workspace_id', 'check_download_modification_time'] as $name) {
             if (array_key_exists($name, $options)) {
                 $api[$name] = $options[$name];
             }

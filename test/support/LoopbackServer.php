@@ -56,7 +56,7 @@ final class LoopbackServer
 
     private function __construct()
     {
-        $this->started = microtime(true);
+        $this->started = self::clock();
         $this->config = self::defaults();
     }
 
@@ -75,6 +75,7 @@ final class LoopbackServer
                 'files' => [], 'mode' => 'ranged', 'change_after' => null, 'truncate' => [], 'wrong_range' => [], 'frontend' => false,
                 'redirect_metadata' => false, 'expired_first_url' => false, 'omit_range_etag' => false, 'expiring_url' => null,
                 'unsigned' => false, 'forbidden' => false, 'timeout_padded' => [],
+                'last_modified' => null, 'newer_date_after' => null, 'ignore_date' => false,
                 // A range's first byte => [status, body] answering that range sent with the first URL given for the file.
                 'said_expired' => [],
             ],
@@ -466,7 +467,7 @@ final class LoopbackServer
         $lifetime = $generation === 1 && $settings['expiring_url'] !== null ? (int) $settings['expiring_url'] : 3600;
         $signature = $settings['unsigned'] ? '' : '&' . self::signature($expired, $lifetime);
         $uri = 'http://127.0.0.1:' . $this->ports[0] . '/download?name=' . rawurlencode($name) . '&gen=' . $generation . $signature;
-        return [200, ['Content-Type' => 'application/json'], json_encode(['path' => $name, 'download_uri' => $uri]), null];
+        return [200, ['Content-Type' => 'application/json'], json_encode(['path' => $name, 'type' => 'file', 'size' => strlen(base64_decode($settings['files'][$name]['content'])), 'download_uri' => $uri]), null];
     }
 
     private function download(array $query, array $headers)
@@ -512,6 +513,14 @@ final class LoopbackServer
             $content = strrev($content);
         }
 
+        $modified = $settings['last_modified'];
+        if ($settings['newer_date_after'] !== null && $count > $settings['newer_date_after']) {
+            $modified = 'Wed, 21 Oct 2015 07:28:01 GMT';
+        }
+        if (!isset($headers['if-match']) && isset($headers['if-unmodified-since']) && !$settings['ignore_date'] && $modified !== null && strtotime($modified) !== false && strtotime($modified) > strtotime($headers['if-unmodified-since'])) {
+            return [412, [], '', null];
+        }
+
         $total = strlen($content);
         $sent = $settings['mode'] === 'no_etag' ? null : ($settings['mode'] === 'weak_etag' ? 'W/' . $etag : $etag);
         if (isset($headers['if-match']) && $headers['if-match'] !== $etag) {
@@ -521,6 +530,9 @@ final class LoopbackServer
         $whole = $settings['mode'] === 'ignore_range' || ($settings['mode'] === 'ranges_once' && $count > 1);
         if ($range === null || $whole || !preg_match('/\Abytes=([0-9]+)-([0-9]*)\z/', $range, $match)) {
             $answer = ['Content-Type' => 'application/octet-stream'];
+            if ($modified !== null) {
+                $answer['Last-Modified'] = $modified;
+            }
             if ($sent !== null) {
                 $answer['ETag'] = $sent;
             }
@@ -540,7 +552,8 @@ final class LoopbackServer
             return [400, ['Content-Type' => 'application/xml'], self::paddedTimeout(), null];
         }
 
-        $answer = ['Content-Type' => 'application/octet-stream', 'Content-Range' => 'bytes ' . $start . '-' . $end . '/' . $total];
+        $answer = $modified === null ? [] : ['Last-Modified' => $modified];
+        $answer += ['Content-Type' => 'application/octet-stream', 'Content-Range' => 'bytes ' . $start . '-' . $end . '/' . $total];
         if (isset($settings['wrong_range'][(string) $start]) && $this->attempts[$key] <= $settings['wrong_range'][(string) $start]) {
             $answer['Content-Range'] = 'bytes ' . ($start + 1) . '-' . $end . '/' . $total;
         }
@@ -678,9 +691,15 @@ final class LoopbackServer
         $this->clients[$id]['entry'] = 'sent';
     }
 
+    // Journal gaps measure request delays; a wall-clock correction must not shorten those elapsed intervals.
+    private static function clock()
+    {
+        return function_exists('hrtime') ? hrtime(true) / 1e9 : microtime(true);
+    }
+
     private function elapsed()
     {
-        return round((microtime(true) - $this->started) * 1000, 3);
+        return round((self::clock() - $this->started) * 1000, 3);
     }
 
     // The SigV4-style expiry of a URL this server signs: current for $lifetime seconds (an hour unless said), or expired

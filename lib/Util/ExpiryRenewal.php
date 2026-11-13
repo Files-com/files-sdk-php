@@ -49,6 +49,10 @@ final class ExpiryRenewal
     const COPY_BYTES = 65536;
 
     private $renew;
+    private $downloadDate = null;
+    private $checkModificationTime;
+    private $dateCondition = false;
+    private $sourceChanged = false;
     private $retries = 0;
     private $renewals = 0;
     // The current transfer: its status; what its body's bytes do (pending until the status is known, then pass, capture
@@ -78,14 +82,17 @@ final class ExpiryRenewal
     private $resource = null;
     private $resourceStream = null;
 
-    public function __construct($renew = true)
+    // A read handle can share its date while each range keeps an independent retry budget.
+    public function __construct($renew = true, $downloadDate = null)
     {
+        $this->downloadDate = $downloadDate;
+        $this->checkModificationTime = Files::downloadModificationTimeCheck();
         $this->renew = (bool) $renew;
     }
 
     public function renewable()
     {
-        return $this->renew && $this->renewals < self::RENEWALS && $this->retries < Files::$maxNetworkRetries;
+        return !$this->sourceChanged && $this->renew && $this->renewals < self::RENEWALS && $this->retries < Files::$maxNetworkRetries;
     }
 
     public function retries()
@@ -129,7 +136,7 @@ final class ExpiryRenewal
     // Counts a retry when one is left, and says whether it was.
     public function retry()
     {
-        if ($this->retries >= Files::$maxNetworkRetries) {
+        if ($this->sourceChanged || $this->retries >= Files::$maxNetworkRetries) {
             return false;
         }
 
@@ -153,6 +160,15 @@ final class ExpiryRenewal
     public function transport(callable $handler)
     {
         return function ($request, array $options) use ($handler) {
+            if ($request->getMethod() === 'GET' && isset($options['sink'])) {
+                if ($this->downloadDate === null) {
+                    $this->downloadDate = new DownloadDate($this->checkModificationTime);
+                }
+                $this->dateCondition = !$request->hasHeader('If-Match');
+                if ($this->dateCondition && $this->downloadDate->header() !== null) {
+                    $request = $request->withHeader('If-Unmodified-Since', $this->downloadDate->header());
+                }
+            }
             return $handler($request, $this->divert($options))->then(
                 function ($response) {
                     $this->decide($response, true);
@@ -170,6 +186,9 @@ final class ExpiryRenewal
     // report, after a refusal's body held back has been written to the sink, unless storage said the URL expired.
     public function settle(\Exception $error)
     {
+        if ($this->sourceChanged) {
+            return new \Files\Exception\ApiBadResponseException('The file changed during its download', 412);
+        }
         $this->refusedExpired = false;
         $response = $error instanceof BadResponseException ? $error->getResponse() : null;
         // A handler that answered with a body of its own, writing none of it to the sink, is judged by that body below.
@@ -283,6 +302,7 @@ final class ExpiryRenewal
     // a 400 or 403, whose body is held back until it is judged.
     private function headers(ResponseInterface $response)
     {
+        $this->checkDownloadDate($response);
         $this->flushStaged();
         $status = $response->getStatusCode();
         $this->status = $status;
@@ -303,6 +323,9 @@ final class ExpiryRenewal
             return;
         }
 
+        if ($response instanceof ResponseInterface) {
+            $this->checkDownloadDate($response);
+        }
         $status = $response instanceof ResponseInterface ? $response->getStatusCode() : null;
         $this->status = $status;
         if (($status === 400 || $status === 403) && $this->staged !== null) {
@@ -321,6 +344,19 @@ final class ExpiryRenewal
         $this->flushStaged();
         if ($status !== 400 && $status !== 403) {
             $this->mode = 'pass';
+        }
+    }
+
+    private function checkDownloadDate(ResponseInterface $response)
+    {
+        if ($this->downloadDate === null) {
+            return;
+        }
+        $status = $response->getStatusCode();
+        if ($status === 412 || (($status === 200 || $status === 206) && $this->dateCondition && !$this->downloadDate->accept($response))) {
+            $this->sourceChanged = true;
+            $this->mode = 'changed';
+            throw new \Files\Exception\ApiBadResponseException('The file changed during its download', 412);
         }
     }
 

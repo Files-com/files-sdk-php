@@ -84,6 +84,7 @@ final class DownloadTransfer
     private $probe = ['state' => 'ready', 'failures' => 0, 'renewals' => 0, 'ready_at' => 0.0];
     private $whole = null;
     private $etag = null;
+    private $downloadDate = null;
     private $total = null;
     private $ranges = [];
     private $nextWrite = 0;
@@ -112,6 +113,8 @@ final class DownloadTransfer
 
     public function setEngine(TransferEngine $engine, $id)
     {
+        $this->downloadDate = new \Files\Util\DownloadDate(\Files\Files::downloadModificationTimeCheck($this->apiOptions, $engine->config()['check_download_modification_time']));
+        unset($this->apiOptions['check_download_modification_time']);
         $this->engine = $engine;
         $this->id = $id;
         $this->partBytes = $engine->downloadPartBytes();
@@ -342,6 +345,10 @@ final class DownloadTransfer
             $expected = $range['end'] - $range['start'] + 1;
             $headers['Range'] = 'bytes=' . $range['start'] . '-' . $range['end'];
             $headers['If-Match'] = $this->etag;
+        }
+
+        if (!isset($headers['If-Match']) && $this->downloadDate->header() !== null) {
+            $headers['If-Unmodified-Since'] = $this->downloadDate->header();
         }
 
         // The attempt keeps the URL it is sent with, that URL's generation and expiry, and the bytes the job reserved for
@@ -651,6 +658,13 @@ final class DownloadTransfer
 
         if ($status >= 300 && $status < 400) {
             return;
+        }
+
+        if ($status === 412) {
+            $this->reject($attempt, 'identity');
+        }
+        if (($status === 200 || $status === 206) && $this->etag === null && !$this->downloadDate->accept($response)) {
+            $this->reject($attempt, 'identity');
         }
 
         $unit = $this->attempts[$attempt]['unit'];

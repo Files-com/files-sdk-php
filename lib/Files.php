@@ -45,6 +45,8 @@ class Files
 
     /** @var int Maximum retries after the initial network request; defaults to 3. */
     public static $maxNetworkRetries = 3;
+    /** @var bool Check Last-Modified during downloads; stronger checks are independent. */
+    public static $checkDownloadModificationTime = true;
     /** @var float Linear network retry delay factor in seconds; defaults to 0.5, capped by maxNetworkRetryDelay. */
     public static $minNetworkRetryDelay = 0.5;
     /** @var float Maximum network retry delay in seconds; defaults to 1.5. */
@@ -140,11 +142,26 @@ class Files
             'language' => self::$language,
             'handler' => self::$handler,
             'max_network_retries' => self::$maxNetworkRetries,
+            'check_download_modification_time' => self::downloadModificationTimeCheck(),
             'min_network_retry_delay' => self::$minNetworkRetryDelay,
             'max_network_retry_delay' => self::$maxNetworkRetryDelay,
             'connect_timeout' => self::$connectTimeout,
             'read_timeout' => self::$readTimeout,
         ];
+    }
+
+    /** @internal Resolve a local option against the captured job setting or current global default. */
+    public static function downloadModificationTimeCheck($options = [], $default = null)
+    {
+        if (!is_array($options)) {
+            throw new \Files\Exception\InvalidParameterException('$options must be an array');
+        }
+        $value = array_key_exists('check_download_modification_time', $options)
+            ? $options['check_download_modification_time'] : ($default === null ? self::$checkDownloadModificationTime : $default);
+        if (!is_bool($value)) {
+            throw new \Files\Exception\InvalidParameterException('check_download_modification_time must be a boolean');
+        }
+        return $value;
     }
 
     /**

@@ -22,6 +22,7 @@ class NativeFile
     private $metadata;
     private $url;
     private $etag;
+    private $downloadDate;
     private $buffer;
     private $part;
     private $partBytes = 0;
@@ -38,6 +39,8 @@ class NativeFile
         }
 
         $this->path = StreamWrapper::apiPath($path);
+        $checkModificationTime = Files::downloadModificationTimeCheck($options);
+        unset($options['check_download_modification_time']);
         $this->requestContext = new Stream\RequestContext($options);
         $this->uploadParams = $uploadParams;
         $this->writing = $mode[0] === 'w';
@@ -50,6 +53,7 @@ class NativeFile
             }
             $this->beginPart();
         } else {
+            $this->downloadDate = new Util\DownloadDate($checkModificationTime);
             $this->metadata = (new File(['path' => $this->path], $this->requestContext->options()))->download();
             if ($this->metadata->getType() !== 'file') {
                 throw new InvalidParameterException('The Files stream path is not a file');
@@ -85,7 +89,7 @@ class NativeFile
         $length = min($count, self::READ_SIZE, $this->metadata->getSize() - $start);
         // Storage's word that the URL expired renews it (renewDownloadUrl) and asks for the same range again, its
         // connection retries and renewals sharing Files::$maxNetworkRetries; the position moves only once a range is read.
-        $renewal = new Util\ExpiryRenewal();
+        $renewal = new Util\ExpiryRenewal(true, $this->downloadDate);
         while (($bytes = $this->readRange($start, $length, $renewal)) === null) {
             $this->renewDownloadUrl();
             $renewal->renewed($this->url);

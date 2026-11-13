@@ -847,7 +847,7 @@ class AdaptiveTransferTest extends TestCase
 
         $data = self::content(40);
         $destination = $this->localPath();
-        $config = $this->downloadConfig($data, ['hold' => ['kind' => 'download', 'until_open' => 4, 'timeout' => 5, 'after' => 1]]);
+        $config = $this->downloadConfig($data, ['download' => ['last_modified' => 'Wed, 21 Oct 2015 07:28:00 GMT', 'newer_date_after' => 1], 'hold' => ['kind' => 'download', 'until_open' => 4, 'timeout' => 5, 'after' => 1]]);
         try {
             $this->withServer($config, function ($server) use ($data, $destination) {
                 $reports = [];
@@ -865,6 +865,7 @@ class AdaptiveTransferTest extends TestCase
                 $this->assertSame(['bytes=0-7', false], [$downloads[0]['headers']['range'], isset($downloads[0]['headers']['if-match'])]);
                 for ($index = 1; $index < 5; $index++) {
                     $this->assertSame('"v1"', $downloads[$index]['headers']['if-match']);
+                    $this->assertFalse(isset($downloads[$index]['headers']['if-unmodified-since']));
                 }
 
                 $this->assertSame(4, $journal['max_open']);
@@ -878,6 +879,154 @@ class AdaptiveTransferTest extends TestCase
 
     // Range responses that are wrong or cut short are fetched again; storage that ignores the range, gives no strong
     // ETag or cuts a whole response short is downloaded whole, from its first byte each time.
+    public function testNativeReadHandleSnapshotsItsTimestampOption()
+    {
+        $data = self::content(40);
+        $saved = Files::$checkDownloadModificationTime;
+        try {
+            $this->withServer([], function ($server) use ($data) {
+                foreach ([null, true] as $local) {
+                    Files::$checkDownloadModificationTime = false;
+                    $this->control($server, 'reset', $this->downloadConfig($data, ['download' => ['mode' => 'no_etag', 'last_modified' => 'Wed, 21 Oct 2015 07:28:00 GMT', 'newer_date_after' => 1, 'change_after' => 1, 'ignore_date' => true]]));
+                    $options = $local === null ? [] : ['check_download_modification_time' => $local];
+                    $file = new \Files\NativeFile('loop/d.bin', 'rb', $options);
+                    try {
+                        $this->assertSame(substr($data, 0, 8), $file->read(8));
+                        Files::$checkDownloadModificationTime = true;
+                        try {
+                            $next = $file->read(8);
+                            $this->assertNull($local, 'An enabled local guard accepted a changed stream');
+                            $this->assertSame(substr(strrev($data), 8, 8), $next);
+                        } catch (ApiBadResponseException $error) {
+                            $this->assertTrue($local, $error->getMessage());
+                        }
+                        $requests = $this->entries($this->journal($server), 'download');
+                        $this->assertSame($local === true, isset($requests[1]['headers']['if-unmodified-since']));
+                    } finally {
+                        $file->close();
+                    }
+                }
+            });
+        } finally {
+            Files::$checkDownloadModificationTime = $saved;
+        }
+    }
+
+    public function testJobAndDownloadTimestampOverridesPreserveStrongVersions()
+    {
+        if (!$this->adaptive()) {
+            return;
+        }
+        $data = self::content(40);
+        $this->withServer([], function ($server) use ($data) {
+            foreach ([[null, false, false], [true, false, false], [null, true, false], [null, false, true]] as $case) {
+                list($local, $strong, $helper) = $case;
+                $destination = $this->localFile('prior contents');
+                try {
+                    $this->control($server, 'reset', $this->downloadConfig($data, ['download' => ['mode' => $strong ? 'ranged' : 'no_etag', 'last_modified' => 'Wed, 21 Oct 2015 07:28:00 GMT', 'newer_date_after' => 1, 'change_after' => 1, 'ignore_date' => true]]));
+                    try {
+                        if ($helper) {
+                            File::downloadToFile('loop/d.bin', $destination, true, ['transfer' => ['download_part_bytes' => 8, 'check_download_modification_time' => false]]);
+                        } else {
+                            $job = new TransferJob(['download_part_bytes' => 8, 'check_download_modification_time' => false]);
+                            $job->downloadToFile('loop/d.bin', $destination, $local === null ? [] : ['check_download_modification_time' => $local]);
+                            $job->wait();
+                        }
+                        $this->assertFalse($local === true || $strong, 'A version change was accepted');
+                        $this->assertSame(strrev($data), file_get_contents($destination));
+                    } catch (ApiBadResponseException $error) {
+                        $this->assertTrue($local === true || $strong, $error->getMessage());
+                        $this->assertSame('prior contents', file_get_contents($destination));
+                    }
+                    $requests = $this->entries($this->journal($server), 'download');
+                    $this->assertSame($local === true, isset($requests[1]['headers']['if-unmodified-since']));
+                } finally {
+                    @unlink($destination);
+                }
+            }
+        });
+    }
+
+    public function testNativeReadRangesShareOneDateWithoutAFileVersion()
+    {
+        $data = self::content(40);
+        $baseline = 'Wed, 21 Oct 2015 07:28:00 GMT';
+        $this->withServer([], function ($server) use ($data, $baseline) {
+            foreach (['stable', 'changed', 'strong'] as $case) {
+                $changed = $case === 'changed';
+                $strong = $case === 'strong';
+                $this->control($server, 'reset', $this->downloadConfig($data, ['download' => ['mode' => $strong ? 'ranged' : 'no_etag', 'last_modified' => $baseline, 'newer_date_after' => $changed || $strong ? 1 : null, 'change_after' => $changed ? 1 : null]]));
+                $file = new \Files\NativeFile('loop/d.bin', 'rb');
+                try {
+                    $this->assertSame(substr($data, 0, 8), $file->read(8));
+                    try {
+                        $next = $file->read(8);
+                        $this->assertFalse($changed, 'A changed native stream returned bytes');
+                        $this->assertSame(substr($data, 8, 8), $next);
+                    } catch (ApiBadResponseException $error) {
+                        $this->assertTrue($changed, $error->getMessage());
+                    }
+                    $requests = $this->entries($this->journal($server), 'download');
+                    $this->assertCount(2, $requests);
+                    if ($strong) {
+                        $this->assertSame('"v1"', $requests[1]['headers']['if-match']);
+                        $this->assertFalse(isset($requests[1]['headers']['if-unmodified-since']));
+                    } else {
+                        $this->assertSame($baseline, $requests[1]['headers']['if-unmodified-since']);
+                        $this->assertFalse(isset($requests[1]['headers']['if-match']));
+                    }
+                } finally {
+                    $file->close();
+                }
+            }
+        });
+    }
+
+    public function testDownloadDatesGuardFallbacksWithoutGrantingParallelRanges()
+    {
+        if (!$this->adaptive()) {
+            return;
+        }
+        $data = self::content(40);
+        $baseline = 'Wed, 21 Oct 2015 07:28:00 GMT';
+        $this->withServer([], function ($server) use ($data, $baseline) {
+            foreach ([$baseline, 'invalid date', null] as $modified) {
+                $destination = $this->localPath();
+                try {
+                    $this->control($server, 'reset', $this->downloadConfig($data, ['download' => ['mode' => 'no_etag', 'last_modified' => $modified]]));
+                    $job = new TransferJob(['download_part_bytes' => 8]);
+                    $job->downloadToFile('loop/d.bin', $destination);
+                    $job->wait();
+                    $this->assertSame($data, file_get_contents($destination));
+                    $requests = $this->entries($this->journal($server), 'download');
+                    $this->assertCount(2, $requests);
+                    $this->assertFalse(isset($requests[1]['headers']['range']));
+                    $this->assertSame($modified === $baseline ? $baseline : null, isset($requests[1]['headers']['if-unmodified-since']) ? $requests[1]['headers']['if-unmodified-since'] : null);
+                } finally {
+                    @unlink($destination);
+                }
+            }
+            foreach ([false, true] as $ignored) {
+                $destination = $this->localFile('prior contents');
+                try {
+                    $this->control($server, 'reset', $this->downloadConfig($data, ['download' => ['mode' => 'no_etag', 'last_modified' => $baseline, 'newer_date_after' => 1, 'ignore_date' => $ignored]]));
+                    $job = new TransferJob(['download_part_bytes' => 8]);
+                    $job->downloadToFile('loop/d.bin', $destination);
+                    try {
+                        $job->wait();
+                        $this->fail('A newer date was published');
+                    } catch (ApiBadResponseException $error) {
+                        $this->assertTrue(strpos($error->getMessage(), 'changed during') !== false);
+                    }
+                    $this->assertSame('prior contents', file_get_contents($destination));
+                    $this->assertSame([], $this->staging($destination));
+                } finally {
+                    @unlink($destination);
+                }
+            }
+        });
+    }
+
     public function testDownloadsRetryBadRangesAndRestartWholeResponsesFromTheirFirstByte()
     {
         if (!$this->adaptive()) {

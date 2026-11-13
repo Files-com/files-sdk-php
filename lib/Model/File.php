@@ -611,11 +611,12 @@ class File
      * @param resource|string $destinationStream Writable stream or local destination path.
      * @param int|null $startOffset First byte to download, inclusive.
      * @param int|null $endOffset Last byte to download, inclusive.
+     * @param array $options Local check_download_modification_time override.
      * @return \stdClass Object with received and total byte counts.
      */
-    public static function downloadToStream($remoteFilePath, $destinationStream, $startOffset = null, $endOffset = null)
+    public static function downloadToStream($remoteFilePath, $destinationStream, $startOffset = null, $endOffset = null, $options = [])
     {
-        return self::downloadAttempt($remoteFilePath, $destinationStream, $startOffset, $endOffset, new \Files\Util\ExpiryRenewal());
+        return self::downloadAttempt($remoteFilePath, $destinationStream, $startOffset, $endOffset, new \Files\Util\ExpiryRenewal(true, new \Files\Util\DownloadDate(\Files\Files::downloadModificationTimeCheck($options))));
     }
 
     // downloadToStream's download, its connection retries and URL renewals counted by $renewal (Util\ExpiryRenewal).
@@ -667,11 +668,12 @@ class File
      * @param string $destinationPath Local destination path.
      * @param int|null $startOffset First byte to download, inclusive.
      * @param int|null $endOffset Last byte to download, inclusive.
+     * @param array $options Local check_download_modification_time override.
      * @return \stdClass Object with received and total byte counts.
      */
-    public static function partialDownloadToFile($remoteFilePath, $destinationPath, $startOffset = null, $endOffset = null)
+    public static function partialDownloadToFile($remoteFilePath, $destinationPath, $startOffset = null, $endOffset = null, $options = [])
     {
-        return self::downloadToStream($remoteFilePath, $destinationPath, $startOffset, $endOffset);
+        return self::downloadToStream($remoteFilePath, $destinationPath, $startOffset, $endOffset, $options);
     }
 
     /**
@@ -679,11 +681,12 @@ class File
      *
      * @param string $remoteFilePath Path on Files.com.
      * @param string $destinationPath Local file to append to.
+     * @param array $options Local check_download_modification_time override.
      * @return \stdClass Object with received and total byte counts.
      */
-    public static function resumeDownloadToFile($remoteFilePath, $destinationPath)
+    public static function resumeDownloadToFile($remoteFilePath, $destinationPath, $options = [])
     {
-        return self::resumeAttempt($remoteFilePath, $destinationPath, new \Files\Util\ExpiryRenewal());
+        return self::resumeAttempt($remoteFilePath, $destinationPath, new \Files\Util\ExpiryRenewal(true, new \Files\Util\DownloadDate(\Files\Files::downloadModificationTimeCheck($options))));
     }
 
     // resumeDownloadToFile's download, its retries and renewals counted by $renewal, as for downloadAttempt.
@@ -737,11 +740,14 @@ class File
      * @param string $remoteFilePath Path on Files.com.
      * @param string $destinationPath Local destination path.
      * @param bool $enableRetry Enable retries; false disables them, including adaptive transfers.
-     * @param array $options Adaptive transfer and request options; requires a transfer array when nonempty.
+     * @param array $options check_download_modification_time overrides the default-on date check; other options require transfer.
      * @return \stdClass Object with received and total byte counts.
      */
     public static function downloadToFile($remoteFilePath, $destinationPath, $enableRetry = true, $options = [])
     {
+        $hasLocalModificationCheck = is_array($options) && array_key_exists('check_download_modification_time', $options);
+        $checkModificationTime = \Files\Files::downloadModificationTimeCheck($options);
+        unset($options['check_download_modification_time']);
         if ($options !== []) {
             if (!is_array($options) || !array_key_exists('transfer', $options) || !is_array($options['transfer'])) {
                 throw new \Files\Exception\InvalidParameterException('$options apply to downloadToFile only with $options[\'transfer\'], an array of transfer options');
@@ -754,6 +760,9 @@ class File
             }
 
             $job = new \Files\Transfer\TransferJob($transfer);
+            if ($hasLocalModificationCheck) {
+                $options['check_download_modification_time'] = $checkModificationTime;
+            }
             $handle = $job->downloadToFile($remoteFilePath, $destinationPath, $options);
             $job->wait();
             return $handle->result();
@@ -761,7 +770,7 @@ class File
 
         // One count of Files::$maxNetworkRetries for the whole download: its connection retries, its URL's renewals
         // (none when !$enableRetry) and its retries from the bytes already written.
-        $renewal = new \Files\Util\ExpiryRenewal($enableRetry);
+        $renewal = new \Files\Util\ExpiryRenewal($enableRetry, new \Files\Util\DownloadDate($checkModificationTime));
         $retries = 0;
 
         while (true) {

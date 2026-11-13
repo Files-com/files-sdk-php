@@ -17,6 +17,7 @@ $stateDir = getenv('FILES_TEST_STATE_DIR');
 file_put_contents("$stateDir/requests.jsonl", json_encode([
     'line' => $_SERVER['REQUEST_METHOD'] . ' ' . $path,
     'range' => isset($_SERVER['HTTP_RANGE']) ? $_SERVER['HTTP_RANGE'] : null,
+    'if_unmodified_since' => isset($_SERVER['HTTP_IF_UNMODIFIED_SINCE']) ? $_SERVER['HTTP_IF_UNMODIFIED_SINCE'] : null,
 ]) . "\n", FILE_APPEND);
 
 $respondWithJson = function ($status, $data) {
@@ -35,6 +36,25 @@ $serveDownload = function ($scenario) use ($payload, $stateDir) {
         }
         echo $body;
     };
+    if (strpos($scenario, 'date-') === 0) {
+        $counter = "$stateDir/served-$scenario";
+        $count = (file_exists($counter) ? intval(file_get_contents($counter)) : 0) + 1;
+        file_put_contents($counter, (string) $count);
+        $modified = $scenario === 'date-invalid' ? 'tomorrow' : ($count > 1 && ($scenario === 'date-changed' || $scenario === 'date-ignored' || $scenario === 'date-local-ignored')
+            ? 'Wed, 21 Oct 2015 07:28:01 GMT' : 'Wed, 21 Oct 2015 07:28:00 GMT');
+        if ($scenario === 'date-renew' && $count === 2) {
+            $refusal('Request has expired');
+            return;
+        }
+        if ($scenario === 'date-changed' && isset($_SERVER['HTTP_IF_UNMODIFIED_SINCE']) && strtotime($modified) > strtotime($_SERVER['HTTP_IF_UNMODIFIED_SINCE'])) {
+            http_response_code(412);
+            echo 'source changed';
+            return;
+        }
+        header('Last-Modified: ' . $modified);
+        $scenario = $count === 1 ? 'truncated' : 'full';
+    }
+
     if (preg_match('/^steps-(.+)$/', $scenario, $match)) {
         $steps = explode('.', $match[1]);
         $counter = "$stateDir/served-$scenario";

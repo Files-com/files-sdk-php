@@ -274,6 +274,65 @@ class FileTransferTest extends TestCase
     }
 
     // downloadToFile resumes a download cut off part way from the bytes already written, and ends with every byte.
+    public function testLegacyDownloadCanDisableDatesAndOverrideTheGlobalDefault()
+    {
+        $saved = Files::$checkDownloadModificationTime;
+        try {
+            $this->withServer(function () {
+                Files::$maxNetworkRetries = 2;
+                Files::$checkDownloadModificationTime = false;
+                foreach (['date-ignored', 'date-local-ignored'] as $scenario) {
+                    $local = $scenario === 'date-local-ignored';
+                    $destination = $this->fixtureFile($scenario . '.bin', null);
+                    try {
+                        File::downloadToFile($scenario, $destination, true, $local ? ['check_download_modification_time' => true] : []);
+                        $this->assertFalse($local, 'The local date guard was not enabled');
+                        $this->assertSame(self::payload(), self::contents($destination));
+                    } catch (ApiBadResponseException $error) {
+                        $this->assertTrue($local, $error->getMessage());
+                    }
+                    $requests = array_values(array_filter($this->requests(), function ($request) use ($scenario) {
+                        return $request['line'] === 'GET /download/' . $scenario;
+                    }));
+                    $this->assertCount(2, $requests);
+                    $this->assertSame($local ? 'Wed, 21 Oct 2015 07:28:00 GMT' : null, $requests[1]['if_unmodified_since']);
+                }
+            });
+        } finally {
+            Files::$checkDownloadModificationTime = $saved;
+        }
+    }
+
+    public function testDownloadRetriesAndRenewalsKeepTheFirstValidModificationDate()
+    {
+        $this->withServer(function () {
+            $baseline = 'Wed, 21 Oct 2015 07:28:00 GMT';
+            Files::$maxNetworkRetries = 3;
+            foreach (['date-stable', 'date-invalid', 'date-renew', 'date-changed', 'date-ignored'] as $scenario) {
+                $destination = $this->fixtureFile($scenario . '.bin', null);
+                $changed = $scenario === 'date-changed' || $scenario === 'date-ignored';
+                try {
+                    File::downloadToFile($scenario, $destination);
+                    $this->assertFalse($changed, 'A newer source was accepted');
+                    $this->assertSame(self::payload(), self::contents($destination));
+                } catch (ApiBadResponseException $error) {
+                    $this->assertTrue($changed, $error->getMessage());
+                    $this->assertTrue(strpos($error->getMessage(), 'changed during') !== false);
+                    $this->assertSame(substr(self::payload(), 0, 4096), self::contents($destination));
+                }
+                $requests = array_values(array_filter($this->requests(), function ($request) use ($scenario) {
+                    return $request['line'] === 'GET /download/' . $scenario;
+                }));
+                $this->assertCount($scenario === 'date-renew' ? 3 : 2, $requests);
+                $this->assertNull($requests[0]['if_unmodified_since']);
+                foreach (array_slice($requests, 1) as $request) {
+                    $this->assertSame($scenario === 'date-invalid' ? null : $baseline, $request['if_unmodified_since']);
+                }
+                $this->assertNoHandleOpenOn($destination);
+            }
+        });
+    }
+
     public function testDownloadToFileResumesFromTheBytesAlreadyWritten()
     {
         $this->withServer(function () {

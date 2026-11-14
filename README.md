@@ -1286,8 +1286,9 @@ Options of a `TransferJob` (and of the `transfer` option):
 * `max_concurrent_requests` (default 64, at most 1024): every request in flight counts, API requests included.
 * `max_concurrent_files` (default 128) and `max_buffer_bytes` (default 64 MiB, or half the memory PHP reports free
   under its `memory_limit` when that is less): a hard limit on the bytes held for parts and ranges.
-* `max_retries` (default `Files::$maxNetworkRetries`), `download_part_bytes` (default 8 MiB), `diagnostics` (a
-  callable given each concurrency decision), and `api_key`, `session_id` and `workspace_id`.
+* `max_retries` (default `Files::$maxNetworkRetries`; it also bounds the restarts of a download whose file changed),
+  `download_part_bytes` (default 8 MiB), `diagnostics` (a callable given each concurrency decision), and `api_key`,
+  `session_id` and `workspace_id`.
 
 A job copies the SDK's configuration when it is made; later changes do not reach it. Its requests are pooled in its own
 curl multi handle, or in the `GuzzleHttp\Handler\CurlMultiHandler` you set with `Files::setHandler`. Any other handler
@@ -1302,9 +1303,14 @@ without a known size is sent one part at a time.
 
 Downloads: a download is bound to the file's version (a strong ETag, sent back as `If-Match`). A range that comes back
 with other bytes than its own (fewer, more, or another range) is never accepted: it is fetched again, within
-`max_retries`, and the download fails once those are spent. A changed version (another or a weak ETag, another total,
-or a 412), a response from the web app, and a failure that a retry cannot fix fail the download at once, so versions
-never mix. Storage that does not serve
+`max_retries`, and the download fails once those are spent. A changed file (another or a weak ETag, another total, a
+412, a newer `Last-Modified`, or storage's 409 whose whole JSON body, of at most 4 KiB, has the `type`
+`download_source_changed`) starts the download over from its first byte, once the requests it has in flight, a URL
+renewal included, have been cancelled and have settled, with a new download URL from the API and nothing kept of the file as it was, so versions never mix. Each
+restart is one of `max_retries`, counted for the whole download however far it got, so a file that keeps changing
+fails, and with `max_retries` 0 a change fails at once; a download to a stream that has been written to fails instead
+of writing the file again. A response from the web app and a failure that a retry cannot fix, such as any other 409,
+fail the download at once. Storage that does not serve
 version-bound ranges is downloaded whole, restarted from its first byte when interrupted. A response from the Files.com
 web app (`X-Files-Frontend-App`) fails the download before anything is written. A file is written to a staging file
 beside its destination, which replaces the destination only once every byte is verified; a stream is written in order,
@@ -1402,4 +1408,4 @@ For ordinary downloads, use `File::downloadToFile($remote, $local, true, ['check
 
 Disabling this option suppresses automatic date preconditions and newer-date checks. Source changes detectable only by timestamps can then go undetected; strong ETag/version, size, byte and HTTP error checks remain enabled.
 
-When storage supplies a valid `Last-Modified` HTTP date, downloads keep that first date and send it as `If-Unmodified-Since` on subsequent requests, retries and signed URL renewals when no stronger version protection applies. A `412` response, or a successful response with a newer valid date, stops that attempt before its body is used. Missing or invalid dates remain compatible. This check has one-second precision: it cannot detect preserved timestamps, same-second edits or changes during one response, and it does not establish a strong version, enable parallel downloads or authorize persistent resume. Files dated in the future can be refused even when unchanged; correct the source machine's clock and file modification time before retrying. Adaptive downloads fail when the source changes and leave the destination file unchanged. The ordinary `downloadToFile` helper keeps the same date while continuing after an interrupted response; it fails on a source change and can leave a partial file. Retry the complete download after the source is stable. Stream downloads do not replay bytes already delivered. The `files://` stream wrapper retains its date baseline across the open read handle's ranges and URL renewals. `resumeDownloadToFile` invoked separately has no date from the earlier call and cannot validate those retained bytes by modification time; a returned download URL alone sends no content request.
+When storage supplies a valid `Last-Modified` HTTP date, downloads keep that first date and send it as `If-Unmodified-Since` on subsequent requests, retries and signed URL renewals when no stronger version protection applies. A `412` response, or a successful response with a newer valid date, stops that attempt before its body is used. Missing or invalid dates remain compatible. This check has one-second precision: it cannot detect preserved timestamps, same-second edits or changes during one response, and it does not establish a strong version, enable parallel downloads or authorize persistent resume. Files dated in the future can be refused even when unchanged; correct the source machine's clock and file modification time before retrying. Adaptive downloads start over from the first byte when the source changes, within the job's `max_retries` (see Adaptive Transfers), and leave the destination file unchanged unless a complete download of one version replaces it; a source that keeps changing fails. The ordinary `downloadToFile` helper keeps the same date while continuing after an interrupted response; it fails on a source change and can leave a partial file. Retry the complete download after the source is stable. Stream downloads do not replay bytes already delivered. The `files://` stream wrapper retains its date baseline across the open read handle's ranges and URL renewals. `resumeDownloadToFile` invoked separately has no date from the earlier call and cannot validate those retained bytes by modification time; a returned download URL alone sends no content request.

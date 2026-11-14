@@ -926,9 +926,9 @@ class AdaptiveTransferTest extends TestCase
                     $this->control($server, 'reset', $this->downloadConfig($data, ['download' => ['mode' => $strong ? 'ranged' : 'no_etag', 'last_modified' => 'Wed, 21 Oct 2015 07:28:00 GMT', 'newer_date_after' => 1, 'change_after' => 1, 'ignore_date' => true]]));
                     try {
                         if ($helper) {
-                            File::downloadToFile('loop/d.bin', $destination, true, ['transfer' => ['download_part_bytes' => 8, 'check_download_modification_time' => false]]);
+                            File::downloadToFile('loop/d.bin', $destination, true, ['transfer' => ['download_part_bytes' => 8, 'check_download_modification_time' => false, 'max_retries' => 0]]);
                         } else {
-                            $job = new TransferJob(['download_part_bytes' => 8, 'check_download_modification_time' => false]);
+                            $job = new TransferJob(['download_part_bytes' => 8, 'check_download_modification_time' => false, 'max_retries' => 0]);
                             $job->downloadToFile('loop/d.bin', $destination, $local === null ? [] : ['check_download_modification_time' => $local]);
                             $job->wait();
                         }
@@ -1010,7 +1010,7 @@ class AdaptiveTransferTest extends TestCase
                 $destination = $this->localFile('prior contents');
                 try {
                     $this->control($server, 'reset', $this->downloadConfig($data, ['download' => ['mode' => 'no_etag', 'last_modified' => $baseline, 'newer_date_after' => 1, 'ignore_date' => $ignored]]));
-                    $job = new TransferJob(['download_part_bytes' => 8]);
+                    $job = new TransferJob(['download_part_bytes' => 8, 'max_retries' => 0]);
                     $job->downloadToFile('loop/d.bin', $destination);
                     try {
                         $job->wait();
@@ -1063,8 +1063,8 @@ class AdaptiveTransferTest extends TestCase
         });
     }
 
-    // A file that changes during its download (a 412 for If-Match) and a response from the Files.com web app fail the
-    // download before the destination is written; its staging file is removed.
+    // A file that changes during its download (a 412 for If-Match) with no retries, and a response from the Files.com web
+    // app, fail the download before the destination is written; its staging file is removed.
     public function testADownloadFailsBeforeWritingWhenTheFileChangesOrTheWebAppAnswers()
     {
         if (!$this->adaptive()) {
@@ -1080,7 +1080,7 @@ class AdaptiveTransferTest extends TestCase
             foreach ($cases as $case => list($change, $message)) {
                 $this->control($server, 'reset', $this->downloadConfig($data, $change));
                 $destination = $this->localPath();
-                $job = new TransferJob(['max_concurrent_requests' => 4, 'download_part_bytes' => 8]);
+                $job = new TransferJob(['max_concurrent_requests' => 4, 'download_part_bytes' => 8, 'max_retries' => 0]);
                 $handle = $job->downloadToFile('loop/d.bin', $destination);
                 try {
                     $job->wait();
@@ -1092,6 +1092,275 @@ class AdaptiveTransferTest extends TestCase
                 $this->assertSame(['failed', false, []], [$handle->status(), file_exists($destination), $this->staging($destination)], $case);
             }
         });
+    }
+
+    // Four ranges are in flight when the file changes (a new version, 24 bytes, a second later): the first range of
+    // them refused (412 for If-Match) starts the download over, the others are given up, and the API is asked for a new
+    // URL, under which the new version's size, ETag and date are learned afresh. Only the new bytes are published.
+    public function testAChangedFileStartsOverWithANewUrlAndPublishesOnlyItsNewBytes()
+    {
+        if (!$this->adaptive()) {
+            return;
+        }
+
+        $data = self::content(40);
+        $changed = self::content(24, 'changed');
+        $destination = $this->localFile('prior contents');
+        $config = $this->downloadConfig($data, [
+            'download' => ['change_after' => 2, 'changed_content' => base64_encode($changed), 'last_modified' => 'Wed, 21 Oct 2015 07:28:00 GMT', 'newer_date_after' => 2],
+            'hold' => ['kind' => 'download', 'until_open' => 4, 'timeout' => 5, 'after' => 1],
+        ]);
+        try {
+            $this->withServer($config, function ($server) use ($changed, $destination) {
+                $job = new TransferJob(['max_concurrent_requests' => 4, 'concurrency' => 4, 'download_part_bytes' => 8, 'max_retries' => 1]);
+                $handle = $job->downloadToFile('loop/d.bin', $destination);
+                $job->wait();
+
+                $this->assertSame($changed, file_get_contents($destination));
+                $this->assertEquals((object) ['received' => 24, 'total' => 24], $handle->result());
+                $this->assertSame([1, 0, []], [$job->statistics()['retries'], $job->statistics()['reserved_bytes'], $this->staging($destination)]);
+                $journal = $this->journal($server);
+                $this->assertCount(2, $this->entries($journal, 'metadata'));
+                $after = array_values(array_filter($this->entries($journal, 'download'), function ($entry) {
+                    return strpos($entry['query'], 'gen=2') !== false;
+                }));
+                $this->assertCount(3, $after);
+                $first = $after[0]['headers'];
+                $this->assertSame(['bytes=0-7', false, false], [$first['range'], isset($first['if-match']), isset($first['if-unmodified-since'])]);
+                foreach (array_slice($after, 1) as $entry) {
+                    $this->assertSame('"changed"', $entry['headers']['if-match']);
+                }
+            });
+        } finally {
+            @unlink($destination);
+        }
+    }
+
+    // A range refused for its expired URL starts a renewal. While that lookup is unanswered a sibling range is refused
+    // (412) and the download starts over. The old renewal, which storage's API answers only with a 404 once a later
+    // lookup has come (or after 5 s), is cancelled with the attempt it belonged to: it neither fails the download nor
+    // holds back the new lookup, and only the new file is published, with nothing left in flight or reserved.
+    public function testAnObsoleteUrlRenewalNeitherFailsNorHoldsBackTheRestartedDownload()
+    {
+        if (!$this->adaptive()) {
+            return;
+        }
+
+        $data = self::content(40);
+        $changed = self::content(24, 'changed');
+        $expired = '<Error><Code>AccessDenied</Code><Message>Request has expired</Message></Error>';
+        $config = $this->downloadConfig($data, ['download' => [
+            'said_expired' => ['8' => [403, $expired]], 'refuse_after_lookup' => ['16' => 2], 'held_lookups' => [2],
+            'changed_from_gen' => 3, 'changed_content' => base64_encode($changed),
+        ]]);
+        $destination = $this->localPath();
+        try {
+            $this->withServer($config, function ($server) use ($changed, $destination) {
+                $job = new TransferJob(['max_concurrent_requests' => 4, 'concurrency' => 4, 'download_part_bytes' => 8, 'max_retries' => 2]);
+                $handle = $job->downloadToFile('loop/d.bin', $destination);
+                $job->wait();
+
+                $this->assertSame($changed, file_get_contents($destination));
+                $statistics = $job->statistics();
+                $this->assertSame(['completed', 0, 0, 1, 2], [$handle->status(), $statistics['in_flight'], $statistics['reserved_bytes'], $statistics['renewals'], $statistics['retries']]);
+                $journal = $this->journal($server);
+                $this->assertCount(3, $this->entries($journal, 'metadata'));
+                $after = array_values(array_filter($this->entries($journal, 'download'), function ($entry) {
+                    return strpos($entry['query'], 'gen=3') !== false;
+                }));
+                $this->assertCount(3, $after);
+                $this->assertSame(['bytes=0-7', false], [$after[0]['headers']['range'], isset($after[0]['headers']['if-match'])]);
+                $this->assertSame([], $this->staging($destination));
+            });
+        } finally {
+            @unlink($destination);
+        }
+    }
+
+    // A file that changes again on every request: each restart is counted, however far its attempt got, and the
+    // download fails once max_retries are spent (at once with none), leaving the destination as it was.
+    public function testAFileThatKeepsChangingFailsAfterExactlyMaxRetriesRestarts()
+    {
+        if (!$this->adaptive()) {
+            return;
+        }
+
+        $data = self::content(40);
+        $this->withServer([], function ($server) use ($data) {
+            foreach ([0, 2] as $retries) {
+                $this->control($server, 'reset', $this->downloadConfig($data, ['download' => ['change_every' => 1]]));
+                $destination = $this->localFile('prior contents');
+                try {
+                    $job = new TransferJob(['max_concurrent_requests' => 4, 'download_part_bytes' => 8, 'max_retries' => $retries]);
+                    $job->downloadToFile('loop/d.bin', $destination);
+                    try {
+                        $job->wait();
+                        $this->fail('A file that kept changing was published');
+                    } catch (ApiBadResponseException $e) {
+                        $this->assertTrue(strpos($e->getMessage(), 'changed during its download') !== false, $e->getMessage());
+                    }
+
+                    $this->assertSame([$retries, $retries + 1], [$job->statistics()['retries'], count($this->entries($this->journal($server), 'metadata'))], 'max_retries ' . $retries);
+                    $this->assertSame(['prior contents', []], [file_get_contents($destination), $this->staging($destination)]);
+                } finally {
+                    @unlink($destination);
+                }
+            }
+        });
+    }
+
+    // Storage's 409 download_source_changed, refusing every request made with the URL given before the change, starts
+    // the download over with a new URL, even for a caller's stream when its first request is refused, before anything
+    // was written to it. Any other 409 fails the download as storage's refusal.
+    public function testStoragesSourceChangedConflictStartsOverAndAnyOtherConflictFails()
+    {
+        if (!$this->adaptive()) {
+            return;
+        }
+
+        $data = self::content(40);
+        $changed = self::content(24, 'changed');
+        $typed = ['application/json', json_encode(['type' => 'download_source_changed', 'error' => 'The source file changed while it was being downloaded.', 'http-code' => 409])];
+        $this->withServer([], function ($server) use ($data, $changed, $typed) {
+            foreach (['file' => 1, 'stream' => 0] as $kind => $changeAfter) {
+                $this->control($server, 'reset', $this->downloadConfig($data, ['download' => ['change_after' => $changeAfter, 'changed_content' => base64_encode($changed), 'source_conflict' => $typed]]));
+                $job = new TransferJob(['max_concurrent_requests' => 4, 'download_part_bytes' => 8, 'max_retries' => 1]);
+                if ($kind === 'file') {
+                    $destination = $this->localPath();
+                    $job->downloadToFile('loop/d.bin', $destination);
+                    $job->wait();
+                    $received = file_get_contents($destination);
+                    unlink($destination);
+                } else {
+                    $stream = fopen('php://temp', 'w+b');
+                    $job->downloadToStream('loop/d.bin', $stream);
+                    $job->wait();
+                    rewind($stream);
+                    $received = stream_get_contents($stream);
+                    fclose($stream);
+                }
+
+                $this->assertSame($changed, $received, $kind);
+                $this->assertCount(2, $this->entries($this->journal($server), 'metadata'), $kind);
+            }
+
+            $others = [
+                ['application/json', json_encode(['type' => 'processing-failure/conflict', 'error' => 'download_source_changed mentioned in another error', 'http-code' => 409])],
+                ['text/plain', 'download_source_changed'],
+            ];
+            foreach ($others as $other) {
+                $this->control($server, 'reset', $this->downloadConfig($data, ['download' => ['change_after' => 1, 'source_conflict' => $other]]));
+                $destination = $this->localPath();
+                $job = new TransferJob(['max_concurrent_requests' => 4, 'download_part_bytes' => 8, 'max_retries' => 2]);
+                $job->downloadToFile('loop/d.bin', $destination);
+                try {
+                    $job->wait();
+                    $this->fail('A ' . $other[0] . ' conflict was published');
+                } catch (ApiBadResponseException $e) {
+                    $this->assertSame(409, $e->getCode(), $e->getMessage());
+                    $this->assertTrue(strpos($e->getMessage(), 'refused by storage (status 409)') !== false, $e->getMessage());
+                }
+
+                $this->assertSame([false, []], [file_exists($destination), $this->staging($destination)], $other[0]);
+                $this->assertCount(1, $this->entries($this->journal($server), 'metadata'), $other[0]);
+            }
+        });
+    }
+
+    // Storage that ignores If-Unmodified-Since and answers the whole file with a newer Last-Modified: the download starts
+    // over and takes the newer date as its baseline, rather than refusing the new file against the old one.
+    public function testANewerDateDespiteAnIgnoredConditionStartsOverFromThatDate()
+    {
+        if (!$this->adaptive()) {
+            return;
+        }
+
+        $data = self::content(40);
+        $changed = self::content(24, 'changed');
+        $baseline = 'Wed, 21 Oct 2015 07:28:00 GMT';
+        $newer = 'Wed, 21 Oct 2015 07:28:01 GMT';
+        $config = $this->downloadConfig($data, ['download' => [
+            'mode' => 'no_etag', 'last_modified' => $baseline, 'newer_date_after' => 1, 'ignore_date' => true, 'change_after' => 1, 'changed_content' => base64_encode($changed),
+        ]]);
+        $destination = $this->localPath();
+        try {
+            $this->withServer($config, function ($server) use ($changed, $destination, $baseline, $newer) {
+                $job = new TransferJob(['download_part_bytes' => 8, 'max_retries' => 1]);
+                $job->downloadToFile('loop/d.bin', $destination);
+                $job->wait();
+
+                $this->assertSame($changed, file_get_contents($destination));
+                $sent = array_map(function ($entry) {
+                    return [isset($entry['headers']['range']), isset($entry['headers']['if-unmodified-since']) ? $entry['headers']['if-unmodified-since'] : null];
+                }, $this->entries($this->journal($server), 'download'));
+                $this->assertSame([[true, null], [false, $baseline], [true, null], [false, $newer]], $sent);
+            });
+        } finally {
+            @unlink($destination);
+        }
+    }
+
+    // A caller's stream that has been written to is never written again: a change found after its first range was
+    // written fails the download, whatever max_retries allows, and leaves the stream open with what it was given.
+    public function testAChangeAfterAStreamWasWrittenToFails()
+    {
+        if (!$this->adaptive()) {
+            return;
+        }
+
+        $data = self::content(40);
+        $this->withServer($this->downloadConfig($data, ['download' => ['change_after' => 1]]), function ($server) use ($data) {
+            $stream = fopen('php://temp', 'w+b');
+            $job = new TransferJob(['max_concurrent_requests' => 4, 'download_part_bytes' => 8, 'max_retries' => 3]);
+            $job->downloadToStream('loop/d.bin', $stream);
+            try {
+                $job->wait();
+                $this->fail('A stream was written again');
+            } catch (ApiBadResponseException $e) {
+                $this->assertTrue(strpos($e->getMessage(), 'changed during its download') !== false, $e->getMessage());
+            }
+
+            $this->assertTrue(is_resource($stream));
+            rewind($stream);
+            $this->assertSame(substr($data, 0, 8), stream_get_contents($stream));
+            $this->assertCount(1, $this->entries($this->journal($server), 'metadata'));
+            fclose($stream);
+        });
+    }
+
+    // Cancelling the job from the report of a restarted download's first range stops it: no further restart follows,
+    // although the file goes on changing and retries remain.
+    public function testCancellingStopsAChangedDownloadFromStartingOverAgain()
+    {
+        if (!$this->adaptive()) {
+            return;
+        }
+
+        $data = self::content(40);
+        $destination = $this->localPath();
+        try {
+            $this->withServer($this->downloadConfig($data, ['download' => ['change_every' => 1]]), function ($server) use ($destination) {
+                $job = null;
+                $reports = 0;
+                $job = new TransferJob(['max_concurrent_requests' => 4, 'download_part_bytes' => 8, 'max_retries' => 5]);
+                $job->downloadToFile('loop/d.bin', $destination, ['progress' => function () use (&$job, &$reports) {
+                    if (++$reports === 2) {
+                        $job->cancel();
+                    }
+                }]);
+                try {
+                    $job->wait();
+                    $this->fail('A cancelled download completed');
+                } catch (TransferCancelledException $e) {
+                    $this->assertSame(2, $reports);
+                }
+
+                $this->assertCount(2, $this->entries($this->journal($server), 'metadata'));
+                $this->assertSame([false, []], [file_exists($destination), $this->staging($destination)]);
+            });
+        } finally {
+            @unlink($destination);
+        }
     }
 
     // A download to a caller's stream writes its ranges in order, after what the stream held, and leaves it open: five

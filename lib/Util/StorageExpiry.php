@@ -50,12 +50,19 @@ final class StorageExpiry
             return false;
         }
 
-        if ($complete !== true || strlen($body) > self::SCAN_BYTES) {
-            return false;
+        return in_array(self::errorType($body, $complete), self::$types, true);
+    }
+
+    // The type of the Files.com JSON error that is the whole of $body: a JSON object of at most SCAN_BYTES, all of it
+    // seen ($complete), whose type is a string; null for any other body.
+    public static function errorType($body, $complete = true)
+    {
+        if ($complete !== true || !is_string($body) || strlen($body) > self::SCAN_BYTES) {
+            return null;
         }
 
-        $error = json_decode($scanned, true);
-        return is_array($error) && isset($error['type']) && in_array($error['type'], self::$types, true);
+        $error = json_decode($body, true);
+        return is_array($error) && isset($error['type']) && is_string($error['type']) ? $error['type'] : null;
     }
 
     // When a signed URL stops working, as a Unix time, by the earlier of what its own query states and $apiExpires (the

@@ -17,9 +17,12 @@ use GuzzleHttp\Psr7\FnStream;
  * request asks for the first part's bytes (Range: bytes=0-, download_part_bytes of them). A 206 whose Content-Range
  * gives exactly that range and the file's total, with a strong ETag, binds the download to that version: every other
  * range is asked for with If-Match: that ETag, and must come back 206 with exactly its range and the same total, with
- * that ETag or none; a weak or different ETag, a different total or HTTP 412 fails the download, as the file changed.
- * Bound ranges are fetched concurrently under the job's download controller, and each must bring exactly its bytes
- * before it is accepted; one that brings fewer or more, or another range, is fetched again from its start.
+ * that ETag or none. A weak or different ETag, a different total, HTTP 412, a newer Last-Modified (DownloadDate) or
+ * storage's 409 download_source_changed (RetryPolicy::isSourceChangedResponse) means the file changed, before any of
+ * that response is used: the download starts over (restartChanged), as one of the job's max_retries counted for the
+ * whole download, however far it got, and fails once they are spent, or at once for a caller's stream that has been
+ * written to. Bound ranges are fetched concurrently under the job's download controller, and each must bring exactly
+ * its bytes before it is accepted; one that brings fewer or more, or another range, is fetched again from its start.
  *
  * Storage that does not bind a version (no strong ETag), answers the first request whole (200), or later ignores a
  * range (200), is downloaded whole instead, as one response, restarted from its first byte when it is interrupted. A
@@ -84,7 +87,12 @@ final class DownloadTransfer
     private $probe = ['state' => 'ready', 'failures' => 0, 'renewals' => 0, 'ready_at' => 0.0];
     private $whole = null;
     private $etag = null;
+    private $checkDates = true;
     private $downloadDate = null;
+    // Times the download started over because the file changed (restartChanged), and the attempts each restart left in
+    // flight, by number, until they settle.
+    private $restarts = 0;
+    private $retired = [];
     private $total = null;
     private $ranges = [];
     private $nextWrite = 0;
@@ -113,7 +121,8 @@ final class DownloadTransfer
 
     public function setEngine(TransferEngine $engine, $id)
     {
-        $this->downloadDate = new \Files\Util\DownloadDate(\Files\Files::downloadModificationTimeCheck($this->apiOptions, $engine->config()['check_download_modification_time']));
+        $this->checkDates = \Files\Files::downloadModificationTimeCheck($this->apiOptions, $engine->config()['check_download_modification_time']);
+        $this->downloadDate = new \Files\Util\DownloadDate($this->checkDates);
         unset($this->apiOptions['check_download_modification_time']);
         $this->engine = $engine;
         $this->id = $id;
@@ -257,9 +266,11 @@ final class DownloadTransfer
         }
     }
 
+    // The download's URL, asked for as it starts, when it is to be renewed, and once more after it started over, only
+    // when every attempt it then had in flight has settled.
     public function nextApi($now)
     {
-        if ($this->state !== 'active' || $this->metadataInFlight || ($this->url !== null && !$this->renewalWanted)) {
+        if ($this->state !== 'active' || $this->metadataInFlight || $this->retired || ($this->url !== null && !$this->renewalWanted)) {
             return null;
         }
 
@@ -267,14 +278,16 @@ final class DownloadTransfer
         return [
             'type' => 'api', 'transfer' => $this, 'tag' => 'metadata', 'method' => 'GET', 'path' => '/files/' . rawurlencode($this->remote),
             'params' => ['path' => $this->remote], 'options' => $this->apiOptions, 'retry' => 'idempotent', 'attempt' => 0,
-            'describe' => 'the download URL of ' . $this->remote, 'number' => 0, 'count' => 0,
+            'describe' => 'the download URL of ' . $this->remote, 'number' => 0, 'count' => 0, 'restarts' => $this->restarts,
         ];
     }
 
+    // A URL asked for before the download started over (restartChanged cancels that request, but its answer may have
+    // come already) may be for the file as it was: it is not used, and nextApi asks again.
     public function apiDone(array $item, $data, $now)
     {
         $this->metadataInFlight = false;
-        if ($this->state !== 'active') {
+        if ($this->state !== 'active' || $item['restarts'] !== $this->restarts) {
             return;
         }
 
@@ -377,6 +390,7 @@ final class DownloadTransfer
     {
         $attempt = $item['request']['attempt'];
         if (!isset($this->attempts[$attempt])) {
+            unset($this->retired[$attempt]);
             return [ConcurrencyController::ENDED];
         }
 
@@ -442,8 +456,7 @@ final class DownloadTransfer
         }
 
         if ($mode === 'identity') {
-            $this->engine->failTransfer($this, new ApiBadResponseException('The file ' . $this->remote . ' changed during its download'));
-            return [ConcurrencyController::ENDED];
+            return $this->restartChanged(new ApiBadResponseException('The file ' . $this->remote . ' changed during its download'), $now);
         }
 
         if ($mode === 'unbound') {
@@ -465,6 +478,10 @@ final class DownloadTransfer
             $error = RetryPolicy::storageError($what, $status);
             // The kept body is all of it only when the response ended normally and nothing past the kept bytes came.
             $captured = $ok && $state['capture_complete'];
+            if (RetryPolicy::isSourceChangedResponse($status, $state['capture'], $captured)) {
+                return $this->restartChanged(new ApiBadResponseException('The file ' . $this->remote . ' changed during its download (storage answered 409 download_source_changed)', $status), $now);
+            }
+
             $expired = $status === 403 && RetryPolicy::isExpired($state['expires_at']);
             if ($expired || RetryPolicy::isExpiryResponse($status, $state['capture'], $captured)) {
                 // The URL this attempt was sent with had expired, by its own expiry or by storage's word: the range is
@@ -502,6 +519,12 @@ final class DownloadTransfer
     public function contentAborted(array $item, $now)
     {
         $attempt = $item['request']['attempt'];
+        if (isset($this->retired[$attempt])) {
+            // An attempt of the file as it was before the download started over: its unit is not the one there now.
+            unset($this->retired[$attempt]);
+            return;
+        }
+
         if (isset($this->attempts[$attempt])) {
             $state = $this->attempts[$attempt];
             $this->closeAttempt($state);
@@ -913,15 +936,15 @@ final class DownloadTransfer
     // it is longer is refused unread. It is accepted only once it shows its end there (bodyEnded), never on what it
     // declared alone. A range for a caller's stream is staged meanwhile in a temporary file and taken into memory only
     // once its end is shown (loadStaged), so that its reservation never holds its bytes and a byte more at once. The
-    // body of an error response that may be S3's RequestTimeout (a 400) or say its URL has expired (a 400 or 403) is
-    // kept as storage's is (captureBody), to classify it. True when the body was read here, which then took the time the
-    // reading took.
+    // body of an error response that may be S3's RequestTimeout (a 400), say its URL has expired (a 400 or 403) or say
+    // the file changed (a 409) is kept as storage's is (captureBody), to classify it. True when the body was read here,
+    // which then took the time the reading took.
     private function copyUnwritten($attempt, $response)
     {
         $state = $this->attempts[$attempt];
         $mode = $state['mode'];
         $copied = $mode === 'range' || $mode === 'whole';
-        $classified = $mode === 'discard' && ($state['status'] === 400 || $state['status'] === 403);
+        $classified = $mode === 'discard' && in_array($state['status'], [400, 403, 409], true);
         if ((!$copied && !$classified) || $state['written'] > 0 || $state['capture'] !== '') {
             return false;
         }
@@ -1248,6 +1271,64 @@ final class DownloadTransfer
         // delivers them again, and adds only those beyond them.
         $this->probe['state'] = 'done';
         $this->whole = ['state' => 'ready', 'failures' => 0, 'renewals' => 0, 'ready_at' => (float) $now];
+    }
+
+    // The file changed during its download ($error says how): starts the download over from its first byte, as one of
+    // the job's max_retries, counted for the whole download however far it got; once they are spent, or when a caller's
+    // stream has been written to (bytes it may have read cannot be taken back), fails it with $error. The attempts still
+    // in flight are cancelled and retired at once, so none of them can write again, and nothing new is asked for until
+    // each has settled. A URL renewal in flight or waiting to be sent again is cancelled too: neither its answer nor its
+    // failure belongs to the download any more (apiDone). Everything of the file as it was is given up: its ranges and
+    // the bytes they hold, what the staging file holds, its version, total and date, and its URL, for which the API is
+    // asked again.
+    private function restartChanged($error, $now)
+    {
+        if ($this->restarts >= $this->engine->maxRetries() || ($this->kind === self::STREAM && $this->written > 0)) {
+            $this->engine->failTransfer($this, $error);
+            return [ConcurrencyController::ENDED];
+        }
+
+        $this->restarts++;
+        $this->engine->countRetry();
+        Logger::info('The file ' . $this->remote . ' changed during its download; downloading it again from its first byte (restart #' . $this->restarts . ')');
+        $this->engine->abortContent($this);
+        $this->engine->abortApi($this);
+        foreach ($this->attempts as $attempt => $state) {
+            $this->closeAttempt($state);
+            $this->retired[$attempt] = true;
+        }
+
+        $this->attempts = [];
+        foreach ($this->ranges as $range) {
+            if ($range['reserved'] > 0) {
+                $this->engine->release($range['reserved']);
+            }
+        }
+
+        $this->dropHolding();
+        $this->ranges = [];
+        $this->nextWrite = 0;
+        $this->mode = null;
+        $this->probe = ['state' => 'ready', 'failures' => 0, 'renewals' => 0, 'ready_at' => (float) $now];
+        $this->whole = null;
+        $this->etag = null;
+        $this->total = null;
+        $this->downloadDate = new \Files\Util\DownloadDate($this->checkDates);
+        $this->url = null;
+        $this->urlExpiresAt = null;
+        $this->renewalWanted = false;
+        $this->verified = false;
+        // Progress starts again from the first byte, with the call's rate over what this call received.
+        $this->received = 0;
+        $this->callReceived = 0;
+        $emptied = $this->staging === null ? true : @fopen($this->staging, 'wb');
+        if ($emptied === false) {
+            $this->engine->failTransfer($this, new InvalidParameterException('Writing the download of ' . $this->remote . ' to its destination failed'));
+        } elseif (is_resource($emptied)) {
+            fclose($emptied);
+        }
+
+        return [ConcurrencyController::ENDED];
     }
 
     private function report($start, $bytes, $now)

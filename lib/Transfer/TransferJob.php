@@ -45,7 +45,8 @@ use Files\Files;
  *   max_concurrent_files     At most this many transfers started at once, default 128.
  *   max_buffer_bytes         At most this many bytes held for parts and ranges, default 64 MiB or half the memory PHP
  *                            reports free under its memory_limit, when that is less.
- *   max_retries              Retries of each request, default Files::$maxNetworkRetries.
+ *   max_retries              Retries of each request, and restarts of each download whose file changed, default
+ *                            Files::$maxNetworkRetries.
  *   download_part_bytes      The size of a download's ranges, default 8 MiB.
  *   diagnostics              A callable given each concurrency decision (its label, target, epoch, attempts in flight
  *                            and measurements, with units); it never sees a credential, header or URL.

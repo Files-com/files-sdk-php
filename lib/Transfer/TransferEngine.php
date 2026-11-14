@@ -388,6 +388,28 @@ final class TransferEngine
         }
     }
 
+    // Cancels the API requests $transfer has in flight, each settling as aborted unless it was answered already, and gives
+    // up those waiting to be sent again (apiAborted): none of them is retried, nor fails the transfer.
+    public function abortApi($transfer)
+    {
+        foreach ($this->requests as $id => $record) {
+            if ($record['kind'] === 'api' && $record['item']['transfer'] === $transfer && !$record['aborted']) {
+                $this->requests[$id]['aborted'] = true;
+                if ($record['promise'] !== null) {
+                    $record['promise']->cancel();
+                }
+            }
+        }
+
+        $now = $this->clock->now();
+        foreach ($this->delayedApi as $index => $entry) {
+            if ($entry[0]['transfer'] === $transfer) {
+                unset($this->delayedApi[$index]);
+                $transfer->apiAborted($entry[0], $now);
+            }
+        }
+    }
+
     // A stream of $bytes, which an attempt sends without copying them again.
     public static function memoryStream($bytes)
     {

@@ -78,6 +78,16 @@ final class LoopbackServer
                 'last_modified' => null, 'newer_date_after' => null, 'ignore_date' => false,
                 // A range's first byte => [status, body] answering that range sent with the first URL given for the file.
                 'said_expired' => [],
+                // What the file holds once it changed (base64), instead of its content reversed; change_every makes it
+                // change (another ETag, the two contents in turn) every that many download requests; source_conflict
+                // ([content type, body]) answers a request sent after a change with the first URL given for the file
+                // with a 409, as Files.com refuses a URL given for the size its file had.
+                'changed_content' => null, 'change_every' => null, 'source_conflict' => null,
+                // changed_from_gen: the file changed when the API gave URL number this, which, and any later URL, gets the
+                // changed file. refuse_after_lookup: a range's first byte => the file's lookup by number, once that lookup
+                // came a 412 answers the range sent with the first URL. held_lookups: the file's lookups, by number,
+                // answered 404 only once a later lookup came, or 5 s after they came.
+                'changed_from_gen' => null, 'refuse_after_lookup' => [], 'held_lookups' => [],
             ],
             'hold' => null,
             'api_stall' => [],
@@ -313,7 +323,13 @@ final class LoopbackServer
                 $this->send($id, $answer);
             }
         } elseif ($head['method'] === 'GET' && strpos($path, '/api/rest/v1/files/') === 0) {
-            $this->send($id, $this->metadata($port, $path, $head['query']));
+            $answer = $this->metadata($port, $path, $head['query']);
+            if (isset($answer[4])) {
+                $this->journal[$entry]['deferred'] = true;
+                $this->deferred[$id] = ['response' => $answer, 'release' => $answer[4]];
+            } else {
+                $this->send($id, $answer);
+            }
         } elseif ($head['method'] === 'PUT' && $path === '/storage/up') {
             $this->arrive($id, 'storage', $this->storeUpload($query, $body));
         } elseif ($head['method'] === 'GET' && $path === '/download') {
@@ -463,6 +479,13 @@ final class LoopbackServer
         // that is set, and an unsigned URL states no expiry at all.
         $this->urls[$name] = (isset($this->urls[$name]) ? $this->urls[$name] : 0) + 1;
         $generation = $this->urls[$name];
+        if (in_array($generation, $settings['held_lookups'], true)) {
+            $asked = microtime(true);
+            return [404, ['Content-Type' => 'application/json'], '{"type":"not-found","http-code":404,"error":"Not Found"}', null, function () use ($name, $generation, $asked) {
+                return $this->urls[$name] > $generation || microtime(true) - $asked >= 5;
+            }];
+        }
+
         $expired = $settings['expired_first_url'] && $generation === 1;
         $lifetime = $generation === 1 && $settings['expiring_url'] !== null ? (int) $settings['expiring_url'] : 3600;
         $signature = $settings['unsigned'] ? '' : '&' . self::signature($expired, $lifetime);
@@ -497,6 +520,13 @@ final class LoopbackServer
             return [(int) $settings['said_expired'][$firstByte][0], [], $settings['said_expired'][$firstByte][1], null];
         }
 
+        if ($firstByte !== null && isset($settings['refuse_after_lookup'][$firstByte], $query['gen']) && $query['gen'] === '1') {
+            $lookup = (int) $settings['refuse_after_lookup'][$firstByte];
+            return [412, [], '', null, function () use ($name, $lookup) {
+                return isset($this->urls[$name]) && $this->urls[$name] >= $lookup;
+            }];
+        }
+
         if ($settings['frontend']) {
             return [200, ['Content-Type' => 'text/html', 'X-Files-Frontend-App' => 'true'], '<html><body>Files.com</body></html>', null];
         }
@@ -507,10 +537,22 @@ final class LoopbackServer
 
         $count = $this->downloadRequests[$name] = (isset($this->downloadRequests[$name]) ? $this->downloadRequests[$name] : 0) + 1;
         $content = base64_decode($settings['files'][$name]['content']);
+        $changed = $settings['changed_content'] === null ? strrev($content) : base64_decode($settings['changed_content']);
         $etag = $settings['files'][$name]['etag'];
-        if ($settings['change_after'] !== null && $count > $settings['change_after']) {
+        $fromGeneration = $settings['changed_from_gen'] !== null && isset($query['gen']) && (int) $query['gen'] >= $settings['changed_from_gen'];
+        if ($fromGeneration || ($settings['change_after'] !== null && $count > $settings['change_after'])) {
+            if ($settings['source_conflict'] !== null && isset($query['gen']) && $query['gen'] === '1') {
+                return [409, ['Content-Type' => $settings['source_conflict'][0]], $settings['source_conflict'][1], null];
+            }
+
             $etag = '"changed"';
-            $content = strrev($content);
+            $content = $changed;
+        }
+
+        if ($settings['change_every'] !== null) {
+            $version = (int) floor(($count - 1) / $settings['change_every']);
+            $etag = '"v' . ($version + 1) . '"';
+            $content = $version % 2 === 0 ? $content : $changed;
         }
 
         $modified = $settings['last_modified'];
@@ -751,7 +793,7 @@ final class LoopbackServer
     {
         $reasons = [
             100 => 'Continue', 200 => 'OK', 201 => 'Created', 202 => 'Accepted', 206 => 'Partial Content', 302 => 'Found', 400 => 'Bad Request',
-            403 => 'Forbidden', 404 => 'Not Found', 412 => 'Precondition Failed', 416 => 'Range Not Satisfiable', 422 => 'Unprocessable Entity',
+            403 => 'Forbidden', 404 => 'Not Found', 409 => 'Conflict', 412 => 'Precondition Failed', 416 => 'Range Not Satisfiable', 422 => 'Unprocessable Entity',
             429 => 'Too Many Requests',
             500 => 'Internal Server Error', 503 => 'Service Unavailable',
         ];

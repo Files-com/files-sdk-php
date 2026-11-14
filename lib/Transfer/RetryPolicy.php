@@ -20,7 +20,8 @@ namespace Files\Transfer;
  * MAX_DELAY_SECONDS fails the request instead of being shortened. A part whose grant says retry_parts false is never
  * retried. Every retry counts against Files::$maxNetworkRetries (or the job's max_retries). A 400 or 403 whose body says
  * its signed URL has expired (isExpiryResponse) is retried with a renewed URL instead, as one of those retries, as is a
- * 403 for a URL whose stated expiry has passed.
+ * 403 for a URL whose stated expiry has passed. A 409 whose body says a download's file changed (isSourceChangedResponse)
+ * is never sent again with its URL: the download starts over (DownloadTransfer).
  */
 final class RetryPolicy
 {
@@ -33,6 +34,8 @@ final class RetryPolicy
     const BODY_LIMIT = 65536;
     // The most of a refused response's body looked at for storage's word that its signed URL has expired.
     const EXPIRY_SCAN_BYTES = \Files\Util\StorageExpiry::SCAN_BYTES;
+    // The type of the JSON error storage refuses a download URL with, as a 409, once its file has changed.
+    const SOURCE_CHANGED_TYPE = 'download_source_changed';
 
     // cURL errors that a retry cannot fix: unsupported protocol, malformed URL, too many redirects and TLS failures.
     private static $permanentCurlErrors = [1, 3, 47, 35, 51, 53, 54, 58, 59, 60, 64, 66, 77, 80, 82, 83, 90, 91, 98];
@@ -70,6 +73,15 @@ final class RetryPolicy
     public static function isExpiryResponse($status, $body, $complete = true)
     {
         return \Files\Util\StorageExpiry::isExpiryResponse($status, $body, $complete);
+    }
+
+    // Whether storage refused a download because its file changed after the URL was given (such as a Files Agent file
+    // whose size no longer matches the size the URL was given for): a 409 whose whole body, within EXPIRY_SCAN_BYTES and
+    // all of it seen ($complete), is a JSON object whose type is download_source_changed. Judged by that type alone,
+    // never by text inside the body; any other 409 is not.
+    public static function isSourceChangedResponse($status, $body, $complete = true)
+    {
+        return $status === 409 && \Files\Util\StorageExpiry::errorType($body, $complete) === self::SOURCE_CHANGED_TYPE;
     }
 
     // Whether an API response of $status may be retried by a request that can be repeated safely.

@@ -658,6 +658,7 @@ Exception
 |`RequestParamsInvalidException`|  `BadRequestException` |
 |`RequestParamsRequiredException`|  `BadRequestException` |
 |`SearchAllOnChildPathException`|  `BadRequestException` |
+|`SearchQueryTooShortException`|  `BadRequestException` |
 |`UnrecognizedSortIndexException`|  `BadRequestException` |
 |`UnsupportedHttpResponseFormatException`|  `BadRequestException` |
 |`UnsupportedMediaTypeException`|  `BadRequestException` |
@@ -795,6 +796,7 @@ Exception
 |`RemoteServerErrorException`|  `ProcessingFailureException` |
 |`ResourceBelongsToParentSiteException`|  `ProcessingFailureException` |
 |`ResourceLockedException`|  `ProcessingFailureException` |
+|`SearchTimedOutException`|  `ProcessingFailureException` |
 |`SubfolderLockedException`|  `ProcessingFailureException` |
 |`SyncInProgressException`|  `ProcessingFailureException` |
 |`TwoFactorAuthenticationCodeAlreadySentException`|  `ProcessingFailureException` |

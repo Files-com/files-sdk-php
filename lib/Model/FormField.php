@@ -15,8 +15,8 @@ require_once __DIR__ . '/../Files.php';
  * @property bool|null $required Is this a required field?
  * @property string|null $help_text Help text to be displayed
  * @property string|null $field_type Type of Field
- * @property string[]|null $options_for_select Options to display for radio and dropdown
- * @property string|null $default_option Default option for radio and dropdown
+ * @property string[]|null $options_for_select Options to display for radio, dropdown, and multi_select
+ * @property string|null $default_option Default option for radio, dropdown, and multi_select
  * @property int|null $form_field_set_id Form field set id
  * @package Files
  */
@@ -138,7 +138,7 @@ class FormField
         return isset($this->attributes['field_type']) ? $this->attributes['field_type'] : null;
     }
     /**
-     * Options to display for radio and dropdown
+     * Options to display for radio, dropdown, and multi_select
      *
      * @return string[]|null
      */
@@ -147,7 +147,7 @@ class FormField
         return isset($this->attributes['options_for_select']) ? $this->attributes['options_for_select'] : null;
     }
     /**
-     * Default option for radio and dropdown
+     * Default option for radio, dropdown, and multi_select
      *
      * @return string|null
      */

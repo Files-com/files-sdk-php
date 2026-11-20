@@ -10,7 +10,7 @@ require_once __DIR__ . '/ScenarioRun.php';
 
 /**
  * Generated from verification/scenarios/api.json (SHA-256 5d9b8eff0ef0724a68a458db77dc85784bb7d24436f104b98c2a2fe67086bbe0), the Files.com API scenarios
- * every client shares, bound to swagger_doc-production.json (SHA-256 f870cdc40252860a087f18aaae40ca924afe483e98c479d4beca59d32d03e253). Each test runs
+ * every client shares, bound to swagger_doc-production.json (SHA-256 32202d02925b10694897c3a75e5cfd5573087d978c70ca70d5f8140bb764b677). Each test runs
  * one scenario's API operations and client actions through this SDK against the simulator api-scenarios.sh starts, in
  * a folder of its own (ScenarioRun). Steps only a Files.com site can answer are left out; a step this binding does not
  * carry out is named, and its test ends incomplete.
@@ -18,7 +18,7 @@ require_once __DIR__ . '/ScenarioRun.php';
 class ApiScenarioTest extends TestCase
 {
     const DEFINITION_SHA256 = '5d9b8eff0ef0724a68a458db77dc85784bb7d24436f104b98c2a2fe67086bbe0';
-    const SCHEMA_SHA256 = 'f870cdc40252860a087f18aaae40ca924afe483e98c479d4beca59d32d03e253';
+    const SCHEMA_SHA256 = '32202d02925b10694897c3a75e5cfd5573087d978c70ca70d5f8140bb764b677';
 
     /**
      * Each scenario's case, by test method: its scenario, its number of steps, the steps only a site answers, the steps

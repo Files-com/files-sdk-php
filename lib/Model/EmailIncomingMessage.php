@@ -12,10 +12,11 @@ require_once __DIR__ . '/../Files.php';
  *
  * @property int|null $id Id of the Email Incoming Message
  * @property int|null $inbox_id Id of the Inbox associated with this message
+ * @property int|null $workspace_id ID of the Workspace that owns the Inbox. The Default Workspace has ID 0.
  * @property string|null $sender Sender of the email
  * @property string|null $sender_name Sender name
  * @property string|null $status Status of the message
- * @property string|null $body Body of the email
+ * @property string|null $body Body of the email. Only available to Site Administrators.
  * @property string|null $message Message describing the failure
  * @property string|null $created_at Message creation date/time
  * @property string|null $inbox_title Title of the Inbox associated with this message
@@ -112,6 +113,15 @@ class EmailIncomingMessage
         return isset($this->attributes['inbox_id']) ? $this->attributes['inbox_id'] : null;
     }
     /**
+     * ID of the Workspace that owns the Inbox. The Default Workspace has ID 0.
+     *
+     * @return int|null
+     */
+    public function getWorkspaceId()
+    {
+        return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
+    }
+    /**
      * Sender of the email
      *
      * @return string|null
@@ -139,7 +149,7 @@ class EmailIncomingMessage
         return isset($this->attributes['status']) ? $this->attributes['status'] : null;
     }
     /**
-     * Body of the email
+     * Body of the email. Only available to Site Administrators.
      *
      * @return string|null
      */
@@ -183,8 +193,8 @@ class EmailIncomingMessage
      * @param array $params Request parameters.
      *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
      *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
-     *     - `sort_by` (array|object, optional): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `created_at`, `sender`, `status` or `inbox_id`.
-     *     - `filter` (array|object, optional): If set, return records where the specified field is equal to the supplied value. Valid fields are `created_at`, `inbox_id`, `sender` or `status`. Valid field combinations are `[ inbox_id, created_at ]`, `[ sender, created_at ]`, `[ status, created_at ]`, `[ inbox_id, status ]`, `[ status, sender ]`, `[ inbox_id, status, created_at ]`, `[ status, sender, created_at ]`, `[ inbox_id, status, sender ]` or `[ inbox_id, status, sender, created_at ]`.
+     *     - `sort_by` (array|object, optional): If set, sort records by the specified field in either `asc` or `desc` direction. Valid fields are `created_at`, `workspace_id`, `sender`, `status` or `inbox_id`.
+     *     - `filter` (array|object, optional): If set, return records where the specified field is equal to the supplied value. Valid fields are `created_at`, `inbox_id`, `sender`, `status` or `workspace_id`. Valid field combinations are `[ inbox_id, created_at ]`, `[ sender, created_at ]`, `[ status, created_at ]`, `[ workspace_id, created_at ]`, `[ inbox_id, status ]`, `[ workspace_id, inbox_id ]`, `[ status, sender ]`, `[ workspace_id, sender ]`, `[ workspace_id, status ]`, `[ inbox_id, status, created_at ]`, `[ workspace_id, inbox_id, created_at ]`, `[ status, sender, created_at ]`, `[ workspace_id, sender, created_at ]`, `[ workspace_id, status, created_at ]`, `[ inbox_id, status, sender ]`, `[ workspace_id, inbox_id, status ]`, `[ workspace_id, status, sender ]`, `[ inbox_id, status, sender, created_at ]`, `[ workspace_id, inbox_id, status, created_at ]`, `[ workspace_id, status, sender, created_at ]`, `[ workspace_id, inbox_id, status, sender ]` or `[ workspace_id, inbox_id, status, sender, created_at ]`.
      *     - `filter_gt` (array|object, optional): If set, return records where the specified field is greater than the supplied value. Valid fields are `created_at`.
      *     - `filter_gteq` (array|object, optional): If set, return records where the specified field is greater than or equal the supplied value. Valid fields are `created_at`.
      *     - `filter_prefix` (array|object, optional): If set, return records where the specified field is prefixed by the supplied value. Valid fields are `sender`.

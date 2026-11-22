@@ -15,7 +15,7 @@ require_once __DIR__ . '/../Files.php';
  * @property bool|null $allow_credential_changes Allow Partner Admins to change or reset credentials for users belonging to this Partner.
  * @property bool|null $allow_providing_gpg_keys Allow Partner Admins to provide GPG keys.
  * @property bool|null $allow_user_creation Allow Partner Admins to create users.
- * @property bool|null $cc_emails_to_responsible_party When `true`, emails sent to Partner users are copied to the responsible User or Group.
+ * @property bool|null $cc_emails_to_responsible_party When `true`, the responsible User or Group receives eligible email copies for Partner Users without their own Responsible Party. Welcome emails trigger a separate onboarding notice. Password recovery links, email verification codes, and signed export links go only to the primary email address.
  * @property object[]|null $connections Approved Connected Sites relationships for this Partner, in both directions. Empty when this Partner has no connections. Read-only.
  * @property int|null $id The unique ID of the Partner.
  * @property int|null $ai_assistant_personality_id AI Assistant Personality ID assigned to this Partner, if any. Users in the Partner inherit it unless a direct per-user assignment overrides it.
@@ -206,7 +206,7 @@ class Partner
         return $this->attributes['allow_user_creation'] = $value;
     }
     /**
-     * When `true`, emails sent to Partner users are copied to the responsible User or Group.
+     * When `true`, the responsible User or Group receives eligible email copies for Partner Users without their own Responsible Party. Welcome emails trigger a separate onboarding notice. Password recovery links, email verification codes, and signed export links go only to the primary email address.
      *
      * @return bool|null
      */
@@ -216,7 +216,7 @@ class Partner
     }
 
     /**
-     * When `true`, emails sent to Partner users are copied to the responsible User or Group.
+     * When `true`, the responsible User or Group receives eligible email copies for Partner Users without their own Responsible Party. Welcome emails trigger a separate onboarding notice. Password recovery links, email verification codes, and signed export links go only to the primary email address.
      *
      * @param bool|null $value
      * @return bool|null The assigned value.
@@ -543,7 +543,7 @@ class Partner
      *     - `allow_credential_changes` (bool, optional): Allow Partner Admins to change or reset credentials for users belonging to this Partner.
      *     - `allow_providing_gpg_keys` (bool, optional): Allow Partner Admins to provide GPG keys.
      *     - `allow_user_creation` (bool, optional): Allow Partner Admins to create users.
-     *     - `cc_emails_to_responsible_party` (bool, optional): When `true`, emails sent to Partner users are copied to the responsible User or Group.
+     *     - `cc_emails_to_responsible_party` (bool, optional): When `true`, the responsible User or Group receives eligible email copies for Partner Users without their own Responsible Party. Welcome emails trigger a separate onboarding notice. Password recovery links, email verification codes, and signed export links go only to the primary email address.
      *     - `notes` (string, optional): Notes about this Partner.
      *     - `partner_channel_template_id` (int, optional): ID of the Partner Channel Template assigned to this Partner.
      *     - `responsible_group_id` (int, optional): ID of the Group responsible for this Partner.
@@ -830,7 +830,7 @@ class Partner
      *     - `allow_credential_changes` (bool, optional): Allow Partner Admins to change or reset credentials for users belonging to this Partner.
      *     - `allow_providing_gpg_keys` (bool, optional): Allow Partner Admins to provide GPG keys.
      *     - `allow_user_creation` (bool, optional): Allow Partner Admins to create users.
-     *     - `cc_emails_to_responsible_party` (bool, optional): When `true`, emails sent to Partner users are copied to the responsible User or Group.
+     *     - `cc_emails_to_responsible_party` (bool, optional): When `true`, the responsible User or Group receives eligible email copies for Partner Users without their own Responsible Party. Welcome emails trigger a separate onboarding notice. Password recovery links, email verification codes, and signed export links go only to the primary email address.
      *     - `notes` (string, optional): Notes about this Partner.
      *     - `partner_channel_template_id` (int, optional): ID of the Partner Channel Template assigned to this Partner.
      *     - `responsible_group_id` (int, optional): ID of the Group responsible for this Partner.

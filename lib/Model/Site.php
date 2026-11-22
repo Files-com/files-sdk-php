@@ -196,7 +196,7 @@ require_once __DIR__ . '/../Files.php';
  * @property string|null $username_display How usernames are displayed in the web UI. Can be `username_only`, `full_name_only`, `full_name_username`, `full_name_company`, or `full_name_username_company`.
  * @property string|null $welcome_custom_text Custom text send in user welcome email
  * @property string|null $email_footer_custom_text Custom footer text for system-generated emails (as Markdown). Supports standard strftime date/time patterns like %Y (4-digit year), %m (month), %d (day).
- * @property string|null $welcome_email_cc Include this email in welcome emails if enabled
+ * @property string|null $welcome_email_cc Copy welcome emails to this address when the email contains neither a create-password link nor a password.
  * @property string|null $welcome_email_subject Include this email subject in welcome emails if enabled
  * @property bool|null $welcome_email_enabled Will the welcome email be sent to new users?
  * @property string|null $welcome_screen Does the welcome screen appear?
@@ -1950,7 +1950,7 @@ class Site
         return isset($this->attributes['email_footer_custom_text']) ? $this->attributes['email_footer_custom_text'] : null;
     }
     /**
-     * Include this email in welcome emails if enabled
+     * Copy welcome emails to this address when the email contains neither a create-password link nor a password.
      *
      * @return string|null
      */
@@ -2074,7 +2074,7 @@ class Site
      *     - `ask_about_overwrites` (bool, optional): If false, rename conflicting files instead of asking for overwrite confirmation.  Only applies to web interface.
      *     - `show_request_access_link` (bool, optional): Show request access link for users without access?  Currently unused.
      *     - `always_mkdir_parents` (bool, optional): Create parent directories if they do not exist during uploads?  This is primarily used to work around broken upload clients that assume servers will perform this step.
-     *     - `welcome_email_cc` (string, optional): Include this email in welcome emails if enabled
+     *     - `welcome_email_cc` (string, optional): Copy welcome emails to this address when the email contains neither a create-password link nor a password.
      *     - `welcome_email_subject` (string, optional): Include this email subject in welcome emails if enabled
      *     - `welcome_custom_text` (string, optional): Custom text send in user welcome email
      *     - `language` (string, optional): Site default language

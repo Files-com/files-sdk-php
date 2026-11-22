@@ -20,7 +20,7 @@ require_once __DIR__ . '/../Files.php';
  * @property string|null $fingerprint_sha256 Public key fingerprint (SHA256)
  * @property string|null $status Only returned when generating keys. Can be invalid, not_generated, generating, complete
  * @property string|null $last_login_at Key's most recent login time via SFTP
- * @property string|null $generated_private_key Only returned when generating keys. Private key generated for the user.
+ * @property string|null $generated_private_key Available for 60 minutes after key creation, only to the API key or login session that requested generation.
  * @property string|null $generated_public_key Only returned when generating keys. Public key generated for the user.
  * @property string|null $username Username of the user this public key is associated with
  * @property int|null $user_id User ID this public key is associated with
@@ -293,7 +293,7 @@ class PublicKey
         return $this->attributes['last_login_at'] = $value;
     }
     /**
-     * Only returned when generating keys. Private key generated for the user.
+     * Available for 60 minutes after key creation, only to the API key or login session that requested generation.
      *
      * @return string|null
      */
@@ -303,7 +303,7 @@ class PublicKey
     }
 
     /**
-     * Only returned when generating keys. Private key generated for the user.
+     * Available for 60 minutes after key creation, only to the API key or login session that requested generation.
      *
      * @param string|null $value
      * @return string|null The assigned value.

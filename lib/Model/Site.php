@@ -90,6 +90,7 @@ require_once __DIR__ . '/../Files.php';
  * @property bool|null $file_activity_events_enabled If true, file operations produce file_action.activity.v1 EventChannel events in all workspaces. Defaults to false; subscription filters and workspace access still control delivery.
  * @property bool|null $disable_password_reset Is password reset disabled?
  * @property string|null $domain Custom domain
+ * @property bool|null $dangerously_use_custom_domain_for_transfer_urls Allow eligible Remote Server Mount and Files.com Agent transfer URLs to use the Site's custom domain. Enabling can serve file content from the same hostname as the signed-in web app. Disabled by default.
  * @property bool|null $domain_hsts_header Send HSTS (HTTP Strict Transport Security) header when visitors access the site via a custom domain?
  * @property string|null $domain_letsencrypt_chain Letsencrypt chain to use when registering SSL Certificate for domain. No longer used as of 2026.
  * @property string|null $email Main email for this site
@@ -995,6 +996,15 @@ class Site
     public function getDomain()
     {
         return isset($this->attributes['domain']) ? $this->attributes['domain'] : null;
+    }
+    /**
+     * Allow eligible Remote Server Mount and Files.com Agent transfer URLs to use the Site's custom domain. Enabling can serve file content from the same hostname as the signed-in web app. Disabled by default.
+     *
+     * @return bool|null
+     */
+    public function getDangerouslyUseCustomDomainForTransferUrls()
+    {
+        return isset($this->attributes['dangerously_use_custom_domain_for_transfer_urls']) ? $this->attributes['dangerously_use_custom_domain_for_transfer_urls'] : null;
     }
     /**
      * Send HSTS (HTTP Strict Transport Security) header when visitors access the site via a custom domain?
@@ -2081,6 +2091,7 @@ class Site
      *     - `allow_bundle_names` (bool, optional): Are manual Bundle names allowed?
      *     - `bundle_expiration` (int, optional): Site-wide Bundle expiration in days
      *     - `bundle_max_uses` (int, optional): Maximum visitors per Share Link on this Site. Applies immediately to existing Share Links and across all Workspaces. Null disables the Site-wide cap.
+     *     - `dangerously_use_custom_domain_for_transfer_urls` (bool, optional): Allow eligible Remote Server Mount and Files.com Agent transfer URLs to use the Site's custom domain. Enabling can serve file content from the same hostname as the signed-in web app. Disabled by default.
      *     - `welcome_email_enabled` (bool, optional): Will the welcome email be sent to new users?
      *     - `ask_about_overwrites` (bool, optional): If false, rename conflicting files instead of asking for overwrite confirmation.  Only applies to web interface.
      *     - `show_request_access_link` (bool, optional): Show request access link for users without access?  Currently unused.
@@ -2298,6 +2309,10 @@ class Site
 
         if (isset($params['bundle_max_uses']) && !is_int($params['bundle_max_uses'])) {
             throw new \Files\Exception\InvalidParameterException('$bundle_max_uses must be of type int; received ' . gettype(@$params['bundle_max_uses']));
+        }
+
+        if (isset($params['dangerously_use_custom_domain_for_transfer_urls']) && !is_scalar($params['dangerously_use_custom_domain_for_transfer_urls'])) {
+            throw new \Files\Exception\InvalidParameterException('$dangerously_use_custom_domain_for_transfer_urls must be of type boolean; received ' . gettype(@$params['dangerously_use_custom_domain_for_transfer_urls']));
         }
 
         if (isset($params['welcome_email_enabled']) && !is_scalar($params['welcome_email_enabled'])) {

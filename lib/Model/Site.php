@@ -36,6 +36,7 @@ require_once __DIR__ . '/../Files.php';
  * @property bool|null $ask_about_overwrites If false, rename conflicting files instead of asking for overwrite confirmation. Only applies to web interface.
  * @property string|null $bundle_activity_notifications Do Bundle owners receive activity notifications?
  * @property int|null $bundle_expiration Site-wide Bundle expiration in days
+ * @property int|null $bundle_max_uses Maximum visitors per Share Link on this Site. Applies immediately to existing Share Links and across all Workspaces. Null disables the Site-wide cap.
  * @property string|null $bundle_not_found_message Custom error message to show when bundle is not found.
  * @property bool|null $bundle_password_required Do Bundles require password protection?
  * @property bool|null $bundles_default_owned_by_primary_group If true, new Share Links created by a user with a primary group will default to that group as owner.
@@ -508,6 +509,15 @@ class Site
     public function getBundleExpiration()
     {
         return isset($this->attributes['bundle_expiration']) ? $this->attributes['bundle_expiration'] : null;
+    }
+    /**
+     * Maximum visitors per Share Link on this Site. Applies immediately to existing Share Links and across all Workspaces. Null disables the Site-wide cap.
+     *
+     * @return int|null
+     */
+    public function getBundleMaxUses()
+    {
+        return isset($this->attributes['bundle_max_uses']) ? $this->attributes['bundle_max_uses'] : null;
     }
     /**
      * Custom error message to show when bundle is not found.
@@ -2070,6 +2080,7 @@ class Site
      *     - `reply_to_email` (string, optional): Reply-to email for this site
      *     - `allow_bundle_names` (bool, optional): Are manual Bundle names allowed?
      *     - `bundle_expiration` (int, optional): Site-wide Bundle expiration in days
+     *     - `bundle_max_uses` (int, optional): Maximum visitors per Share Link on this Site. Applies immediately to existing Share Links and across all Workspaces. Null disables the Site-wide cap.
      *     - `welcome_email_enabled` (bool, optional): Will the welcome email be sent to new users?
      *     - `ask_about_overwrites` (bool, optional): If false, rename conflicting files instead of asking for overwrite confirmation.  Only applies to web interface.
      *     - `show_request_access_link` (bool, optional): Show request access link for users without access?  Currently unused.
@@ -2283,6 +2294,10 @@ class Site
 
         if (isset($params['bundle_expiration']) && !is_int($params['bundle_expiration'])) {
             throw new \Files\Exception\InvalidParameterException('$bundle_expiration must be of type int; received ' . gettype(@$params['bundle_expiration']));
+        }
+
+        if (isset($params['bundle_max_uses']) && !is_int($params['bundle_max_uses'])) {
+            throw new \Files\Exception\InvalidParameterException('$bundle_max_uses must be of type int; received ' . gettype(@$params['bundle_max_uses']));
         }
 
         if (isset($params['welcome_email_enabled']) && !is_scalar($params['welcome_email_enabled'])) {

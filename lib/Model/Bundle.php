@@ -38,7 +38,8 @@ require_once __DIR__ . '/../Files.php';
  * @property string|null $deleted_at Bundle deleted at date/time
  * @property bool|null $dont_separate_submissions_by_folder Do not create subfolders for files uploaded to this share. Note: there are subtle security pitfalls with allowing anonymous uploads from multiple users to live in the same folder. We strongly discourage use of this option unless absolutely required.
  * @property string|null $effective_expires_at Read-only expiration date/time, using the explicit expiration or the site-wide setting when applicable. Null when the Share Link does not expire.
- * @property int|null $max_uses Maximum number of times bundle can be accessed
+ * @property int|null $max_uses Visitor limit configured for this Share Link. Null uses the Site-wide cap, if set. The configured limit cannot exceed the Site-wide cap.
+ * @property int|null $effective_max_uses Read-only visitor limit actually enforced for this Share Link. Uses the lower of the link limit and the Site-wide cap when both are set. Null means unlimited.
  * @property string|null $internal_name Internal name for identifying this Share Link.
  * @property string|null $note Bundle internal note
  * @property string|null $path_template Template for creating submission subfolders. Can use the uploader's name, email address, ip, company, `strftime` directives, and any custom form data.
@@ -689,7 +690,7 @@ class Bundle
         return $this->attributes['effective_expires_at'] = $value;
     }
     /**
-     * Maximum number of times bundle can be accessed
+     * Visitor limit configured for this Share Link. Null uses the Site-wide cap, if set. The configured limit cannot exceed the Site-wide cap.
      *
      * @return int|null
      */
@@ -699,7 +700,7 @@ class Bundle
     }
 
     /**
-     * Maximum number of times bundle can be accessed
+     * Visitor limit configured for this Share Link. Null uses the Site-wide cap, if set. The configured limit cannot exceed the Site-wide cap.
      *
      * @param int|null $value
      * @return int|null The assigned value.
@@ -707,6 +708,26 @@ class Bundle
     public function setMaxUses($value)
     {
         return $this->attributes['max_uses'] = $value;
+    }
+    /**
+     * Read-only visitor limit actually enforced for this Share Link. Uses the lower of the link limit and the Site-wide cap when both are set. Null means unlimited.
+     *
+     * @return int|null
+     */
+    public function getEffectiveMaxUses()
+    {
+        return isset($this->attributes['effective_max_uses']) ? $this->attributes['effective_max_uses'] : null;
+    }
+
+    /**
+     * Read-only visitor limit actually enforced for this Share Link. Uses the lower of the link limit and the Site-wide cap when both are set. Null means unlimited.
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
+    public function setEffectiveMaxUses($value)
+    {
+        return $this->attributes['effective_max_uses'] = $value;
     }
     /**
      * Internal name for identifying this Share Link.
@@ -1299,7 +1320,7 @@ class Bundle
      *     - `expires_at` (string, optional): Explicit Bundle expiration date/time. If not set, the site-wide expiration setting may apply.
      *     - `finalize_snapshot` (bool, optional): If true, finalize the snapshot of this bundle's contents. Note that `create_snapshot` must also be true.
      *     - `inbox_id` (int, optional): ID of the associated inbox, if available.
-     *     - `max_uses` (int, optional): Maximum number of times bundle can be accessed
+     *     - `max_uses` (int, optional): Visitor limit configured for this Share Link. Null uses the Site-wide cap, if set. The configured limit cannot exceed the Site-wide cap.
      *     - `group_id` (int, optional): Owning group ID. If set, members of this group can view, edit, and share this Share Link.
      *     - `internal_name` (string, optional): Internal name for identifying this Share Link.
      *     - `note` (string, optional): Bundle internal note
@@ -1684,7 +1705,7 @@ class Bundle
      *     - `dont_separate_submissions_by_folder` (bool, optional): Do not create subfolders for files uploaded to this share. Note: there are subtle security pitfalls with allowing anonymous uploads from multiple users to live in the same folder. We strongly discourage use of this option unless absolutely required.
      *     - `expires_at` (string, optional): Explicit Bundle expiration date/time. If not set, the site-wide expiration setting may apply.
      *     - `finalize_snapshot` (bool, optional): If true, finalize the snapshot of this bundle's contents. Note that `create_snapshot` must also be true.
-     *     - `max_uses` (int, optional): Maximum number of times bundle can be accessed
+     *     - `max_uses` (int, optional): Visitor limit configured for this Share Link. Null uses the Site-wide cap, if set. The configured limit cannot exceed the Site-wide cap.
      *     - `group_id` (int, optional): Owning group ID. If set, members of this group can view, edit, and share this Share Link.
      *     - `internal_name` (string, optional): Internal name for identifying this Share Link.
      *     - `description` (string, optional): Public description

@@ -25,6 +25,7 @@ require_once __DIR__ . '/../Files.php';
  * @property bool|null $s3_compatible_endpoint_permission If true, users in this group can access the S3-compatible endpoint. This will override a false value of `s3_compatible_endpoint_permission` on the user level. Defaults to false.
  * @property int|null $desktop_configuration_profile_id Desktop Configuration Profile ID assigned to this Group, if any. Users in the Group inherit it unless a direct per-user assignment overrides it.
  * @property int|null $integration_centric_profile_id Integration Centric Profile ID assigned to this Group, if any. Users in the Group inherit it unless a direct per-user assignment overrides it.
+ * @property int|null $preferred_workspace_id Custom Workspace a new Group member will use as their Preferred Workspace if they have no saved preference. The Group must have a Permission in that Workspace.
  * @property int|null $site_id Site ID
  * @property int|null $workspace_id Workspace ID
  * @package Files
@@ -402,6 +403,26 @@ class Group
         return $this->attributes['integration_centric_profile_id'] = $value;
     }
     /**
+     * Custom Workspace a new Group member will use as their Preferred Workspace if they have no saved preference. The Group must have a Permission in that Workspace.
+     *
+     * @return int|null
+     */
+    public function getPreferredWorkspaceId()
+    {
+        return isset($this->attributes['preferred_workspace_id']) ? $this->attributes['preferred_workspace_id'] : null;
+    }
+
+    /**
+     * Custom Workspace a new Group member will use as their Preferred Workspace if they have no saved preference. The Group must have a Permission in that Workspace.
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
+    public function setPreferredWorkspaceId($value)
+    {
+        return $this->attributes['preferred_workspace_id'] = $value;
+    }
+    /**
      * Site ID
      *
      * @return int|null
@@ -466,6 +487,7 @@ class Group
      *     - `integration_centric_profile_id` (int, optional): Integration Centric Profile ID assigned to this Group, if any. Users in the Group inherit it unless a direct per-user assignment overrides it.
      *     - `allowed_ips` (string, optional): A list of allowed IPs if applicable.  Newline delimited
      *     - `name` (string, optional): Group name.
+     *     - `preferred_workspace_id` (int, optional): Custom Workspace a new Group member will use as their Preferred Workspace if they have no saved preference. The Group must have a Permission in that Workspace.
      * @return \Files\Model\Group
      * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
      */
@@ -537,6 +559,10 @@ class Group
 
         if (isset($params['name']) && !is_string($params['name'])) {
             throw new \Files\Exception\InvalidParameterException('$name must be of type string; received ' . gettype(@$params['name']));
+        }
+
+        if (isset($params['preferred_workspace_id']) && !is_int($params['preferred_workspace_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$preferred_workspace_id must be of type int; received ' . gettype(@$params['preferred_workspace_id']));
         }
 
         $response = Api::sendRequest('/groups/' . rawurlencode(strval(@$params['id'])) . '', 'PATCH', $params, $this->options);

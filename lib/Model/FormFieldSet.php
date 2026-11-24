@@ -8,7 +8,7 @@ use Files\Logger;
 require_once __DIR__ . '/../Files.php';
 
 /**
- * A Form Field Set is a custom form to be used for bundle and inbox registrations.
+ * A Form Field Set is a custom form that can be used for Share Link and Inbox registrations, Partner Channel uploads, and Shared Workflows.
  *
  * @property int|null $id Form field set id
  * @property string|null $title Title to be displayed
@@ -18,7 +18,7 @@ require_once __DIR__ . '/../Files.php';
  * @property bool|null $skip_name Any associated InboxRegistrations or BundleRegistrations can be saved without providing name
  * @property bool|null $skip_email Any associated InboxRegistrations or BundleRegistrations can be saved without providing email
  * @property bool|null $skip_company Any associated InboxRegistrations or BundleRegistrations can be saved without providing company
- * @property bool|null $in_use Form Field Set is in use by an active Inbox / Bundle / Inbox Registration / Bundle Registration / Partner Channel upload destination
+ * @property bool|null $in_use Form Field Set is in use by an active Inbox, Share Link, Partner Channel upload destination, or Shared Trigger.
  * @property int|null $user_id User ID. Provide a value of `0` to operate the current session's user.
  * @property int|null $workspace_id Workspace ID
  * @package Files
@@ -256,7 +256,7 @@ class FormFieldSet
         return $this->attributes['skip_company'] = $value;
     }
     /**
-     * Form Field Set is in use by an active Inbox / Bundle / Inbox Registration / Bundle Registration / Partner Channel upload destination
+     * Form Field Set is in use by an active Inbox, Share Link, Partner Channel upload destination, or Shared Trigger.
      *
      * @return bool|null
      */
@@ -266,7 +266,7 @@ class FormFieldSet
     }
 
     /**
-     * Form Field Set is in use by an active Inbox / Bundle / Inbox Registration / Bundle Registration / Partner Channel upload destination
+     * Form Field Set is in use by an active Inbox, Share Link, Partner Channel upload destination, or Shared Trigger.
      *
      * @param bool|null $value
      * @return bool|null The assigned value.

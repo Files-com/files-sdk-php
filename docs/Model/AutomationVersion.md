@@ -202,6 +202,15 @@ $automation_version->restore();
   ],
   "schedule_time_zone": "Eastern Time (US & Canada)",
   "source": "example",
+  "shared_trigger_user_ids": [
+    1
+  ],
+  "shared_trigger_group_ids": [
+    1
+  ],
+  "shared_trigger_partner_ids": [
+    1
+  ],
   "sync_ids": [
     1,
     2

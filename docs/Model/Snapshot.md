@@ -10,7 +10,8 @@
   "name": "My Snapshot",
   "user_id": 1,
   "bundle_id": 1,
-  "workspace_id": 1
+  "workspace_id": 1,
+  "shared_workflow_id": 1
 }
 ```
 
@@ -21,6 +22,7 @@
 * `user_id` (int64): The user that created this snapshot, if applicable.
 * `bundle_id` (int64): The bundle using this snapshot, if applicable.
 * `workspace_id` (int64): Workspace ID. `0` means the default workspace.
+* `shared_workflow_id` (int64): Shared Workflow for which the Snapshot was created.
 * `paths` (array(string)): An array of paths to add to the snapshot.
 
 ---
@@ -62,6 +64,7 @@ one `\Files\Page` at a time, requesting each later page only when it is asked fo
   'expires_at' => "2000-01-01T01:00:00Z",
   'name' => "My Snapshot",
   'workspace_id' => 0,
+  'shared_workflow_id' => 1,
 ]);
 ```
 
@@ -72,6 +75,7 @@ one `\Files\Page` at a time, requesting each later page only when it is asked fo
 * `name` (string): A name for the snapshot.
 * `paths` (array(string)): An array of paths to add to the snapshot.
 * `workspace_id` (int64): Workspace ID. `0` means the default workspace.
+* `shared_workflow_id` (int64): Shared Workflow for which the Snapshot was created.
 
 ---
 
@@ -121,7 +125,8 @@ $snapshot->update([
   "name": "My Snapshot",
   "user_id": 1,
   "bundle_id": 1,
-  "workspace_id": 1
+  "workspace_id": 1,
+  "shared_workflow_id": 1
 }
 ```
 

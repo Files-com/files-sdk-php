@@ -17,6 +17,7 @@ require_once __DIR__ . '/../Files.php';
  * @property int|null $user_id The user that created this snapshot, if applicable.
  * @property int|null $bundle_id The bundle using this snapshot, if applicable.
  * @property int|null $workspace_id Workspace ID. `0` means the default workspace.
+ * @property int|null $shared_workflow_id Shared Workflow for which the Snapshot was created.
  * @property string[]|null $paths An array of paths to add to the snapshot.
  * @package Files
  */
@@ -231,6 +232,26 @@ class Snapshot
     public function setWorkspaceId($value)
     {
         return $this->attributes['workspace_id'] = $value;
+    }
+    /**
+     * Shared Workflow for which the Snapshot was created.
+     *
+     * @return int|null
+     */
+    public function getSharedWorkflowId()
+    {
+        return isset($this->attributes['shared_workflow_id']) ? $this->attributes['shared_workflow_id'] : null;
+    }
+
+    /**
+     * Shared Workflow for which the Snapshot was created.
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
+    public function setSharedWorkflowId($value)
+    {
+        return $this->attributes['shared_workflow_id'] = $value;
     }
     /**
      * An array of paths to add to the snapshot.
@@ -520,6 +541,7 @@ class Snapshot
      *     - `name` (string, optional): A name for the snapshot.
      *     - `paths` (string[], optional): An array of paths to add to the snapshot.
      *     - `workspace_id` (int, optional): Workspace ID. `0` means the default workspace.
+     *     - `shared_workflow_id` (int, optional): Shared Workflow for which the Snapshot was created.
      * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
      * @return \Files\Model\Snapshot
      * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
@@ -540,6 +562,10 @@ class Snapshot
 
         if (isset($params['workspace_id']) && !is_int($params['workspace_id'])) {
             throw new \Files\Exception\InvalidParameterException('$workspace_id must be of type int; received ' . gettype(@$params['workspace_id']));
+        }
+
+        if (isset($params['shared_workflow_id']) && !is_int($params['shared_workflow_id'])) {
+            throw new \Files\Exception\InvalidParameterException('$shared_workflow_id must be of type int; received ' . gettype(@$params['shared_workflow_id']));
         }
 
         $response = Api::sendRequest('/snapshots', 'POST', $params, $options);

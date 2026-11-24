@@ -11,13 +11,16 @@ require_once __DIR__ . '/../Files.php';
  * An AutomationRun is a record with information about a single execution of a given Automation.
  *
  * @property int|null $id ID.
+ * @property string|null $completed_at Automation run completion/failure date/time.
+ * @property string|null $created_at Automation run start date/time.
+ * @property string|null $status The status of the AutomationRun. One of `queued`, `running`, `success`, `partial_failure`, `failure`, `skipped`, or `canceled`.
  * @property int|null $automation_id ID of the associated Automation.
  * @property int|null $automation_version_id ID of the immutable Automation version pinned by this run.
  * @property int|null $version Pinned Automation v2 definition version.
  * @property int|null $workspace_id Workspace ID.
+ * @property int|null $initiating_user_id User who initiated a Shared Workflow run.
+ * @property string|null $initiating_interface Interface from which the Shared Workflow was started.
  * @property string|null $cancel_requested_at Date/time at which cancellation was requested.
- * @property string|null $completed_at Automation run completion/failure date/time.
- * @property string|null $created_at Automation run start date/time.
  * @property string|null $retry_at If set, this automation will be retried at this date/time due to `failure` or `partial_failure`.
  * @property string|null $retried_at If set, this Automation run was retried due to `failure` or `partial_failure`.
  * @property int|null $retried_in_run_id ID of the run that is or will be retrying this run.
@@ -25,7 +28,6 @@ require_once __DIR__ . '/../Files.php';
  * @property int|null $rerun_of_run_id ID of the run whose persisted node outputs this run reused.
  * @property string|null $rerun_from_node_id Node at which this run resumed execution.
  * @property float|null $runtime Automation run runtime.
- * @property string|null $status The status of the AutomationRun. One of `queued`, `running`, `success`, `partial_failure`, `failure`, `skipped`, or `canceled`.
  * @property int|null $successful_operations Count of successful operations.
  * @property int|null $failed_operations Count of failed operations.
  * @property object|null $definition Automation definition snapshot pinned by this run. For performance reasons, this is not provided when listing Automation runs.
@@ -117,6 +119,33 @@ class AutomationRun
         return isset($this->attributes['id']) ? $this->attributes['id'] : null;
     }
     /**
+     * Automation run completion/failure date/time.
+     *
+     * @return string|null
+     */
+    public function getCompletedAt()
+    {
+        return isset($this->attributes['completed_at']) ? $this->attributes['completed_at'] : null;
+    }
+    /**
+     * Automation run start date/time.
+     *
+     * @return string|null
+     */
+    public function getCreatedAt()
+    {
+        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
+    }
+    /**
+     * The status of the AutomationRun. One of `queued`, `running`, `success`, `partial_failure`, `failure`, `skipped`, or `canceled`.
+     *
+     * @return string|null
+     */
+    public function getStatus()
+    {
+        return isset($this->attributes['status']) ? $this->attributes['status'] : null;
+    }
+    /**
      * ID of the associated Automation.
      *
      * @return int|null
@@ -153,6 +182,24 @@ class AutomationRun
         return isset($this->attributes['workspace_id']) ? $this->attributes['workspace_id'] : null;
     }
     /**
+     * User who initiated a Shared Workflow run.
+     *
+     * @return int|null
+     */
+    public function getInitiatingUserId()
+    {
+        return isset($this->attributes['initiating_user_id']) ? $this->attributes['initiating_user_id'] : null;
+    }
+    /**
+     * Interface from which the Shared Workflow was started.
+     *
+     * @return string|null
+     */
+    public function getInitiatingInterface()
+    {
+        return isset($this->attributes['initiating_interface']) ? $this->attributes['initiating_interface'] : null;
+    }
+    /**
      * Date/time at which cancellation was requested.
      *
      * @return string|null
@@ -160,24 +207,6 @@ class AutomationRun
     public function getCancelRequestedAt()
     {
         return isset($this->attributes['cancel_requested_at']) ? $this->attributes['cancel_requested_at'] : null;
-    }
-    /**
-     * Automation run completion/failure date/time.
-     *
-     * @return string|null
-     */
-    public function getCompletedAt()
-    {
-        return isset($this->attributes['completed_at']) ? $this->attributes['completed_at'] : null;
-    }
-    /**
-     * Automation run start date/time.
-     *
-     * @return string|null
-     */
-    public function getCreatedAt()
-    {
-        return isset($this->attributes['created_at']) ? $this->attributes['created_at'] : null;
     }
     /**
      * If set, this automation will be retried at this date/time due to `failure` or `partial_failure`.
@@ -241,15 +270,6 @@ class AutomationRun
     public function getRuntime()
     {
         return isset($this->attributes['runtime']) ? $this->attributes['runtime'] : null;
-    }
-    /**
-     * The status of the AutomationRun. One of `queued`, `running`, `success`, `partial_failure`, `failure`, `skipped`, or `canceled`.
-     *
-     * @return string|null
-     */
-    public function getStatus()
-    {
-        return isset($this->attributes['status']) ? $this->attributes['status'] : null;
     }
     /**
      * Count of successful operations.

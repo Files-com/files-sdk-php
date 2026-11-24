@@ -50,6 +50,9 @@ require_once __DIR__ . '/../Files.php';
  * @property string[]|null $schedule_times_of_day Times of day to run in HH:MM format (24-hour). For `custom_schedule`, run at these times on specified days of week. For `daily`, run at these times on the scheduled interval date.
  * @property string|null $schedule_time_zone Time zone for the schedule. If not set, times are interpreted as UTC.
  * @property string|null $source Source path/glob. See Automation docs for exact description, but this is used to filter for files in the `path` to find files to operate on. Supports globs, except on remote mounts.
+ * @property int[]|null $shared_trigger_user_ids Users who can start this Shared Workflow.
+ * @property int[]|null $shared_trigger_group_ids Groups whose members can start this Shared Workflow.
+ * @property int[]|null $shared_trigger_partner_ids Partners whose users can start this Shared Workflow.
  * @property int[]|null $sync_ids IDs of Syncs to run by this Automation.
  * @property string[]|null $trigger_actions If trigger is `action`, this is the list of action types on which to trigger the automation. Valid actions are create, copy, move, archived_delete, update, read, destroy
  * @property string|null $trigger How this automation is triggered to run.
@@ -933,6 +936,66 @@ class Automation
         return $this->attributes['source'] = $value;
     }
     /**
+     * Users who can start this Shared Workflow.
+     *
+     * @return int[]|null
+     */
+    public function getSharedTriggerUserIds()
+    {
+        return isset($this->attributes['shared_trigger_user_ids']) ? $this->attributes['shared_trigger_user_ids'] : null;
+    }
+
+    /**
+     * Users who can start this Shared Workflow.
+     *
+     * @param int[]|null $value
+     * @return int[]|null The assigned value.
+     */
+    public function setSharedTriggerUserIds($value)
+    {
+        return $this->attributes['shared_trigger_user_ids'] = $value;
+    }
+    /**
+     * Groups whose members can start this Shared Workflow.
+     *
+     * @return int[]|null
+     */
+    public function getSharedTriggerGroupIds()
+    {
+        return isset($this->attributes['shared_trigger_group_ids']) ? $this->attributes['shared_trigger_group_ids'] : null;
+    }
+
+    /**
+     * Groups whose members can start this Shared Workflow.
+     *
+     * @param int[]|null $value
+     * @return int[]|null The assigned value.
+     */
+    public function setSharedTriggerGroupIds($value)
+    {
+        return $this->attributes['shared_trigger_group_ids'] = $value;
+    }
+    /**
+     * Partners whose users can start this Shared Workflow.
+     *
+     * @return int[]|null
+     */
+    public function getSharedTriggerPartnerIds()
+    {
+        return isset($this->attributes['shared_trigger_partner_ids']) ? $this->attributes['shared_trigger_partner_ids'] : null;
+    }
+
+    /**
+     * Partners whose users can start this Shared Workflow.
+     *
+     * @param int[]|null $value
+     * @return int[]|null The assigned value.
+     */
+    public function setSharedTriggerPartnerIds($value)
+    {
+        return $this->attributes['shared_trigger_partner_ids'] = $value;
+    }
+    /**
      * IDs of Syncs to run by this Automation.
      *
      * @return int[]|null
@@ -1183,6 +1246,9 @@ class Automation
      *     - `user_ids` (string, optional): A list of user IDs the automation is associated with. If sent as a string, it should be comma-delimited.
      *     - `group_ids` (string, optional): A list of group IDs the automation is associated with. If sent as a string, it should be comma-delimited.
      *     - `schedule_id` (int, optional): If trigger is `custom_schedule`, the reusable Schedule used instead of the automation's schedule fields.
+     *     - `shared_trigger_user_ids` (int[], optional): Users who can start this Shared Workflow.
+     *     - `shared_trigger_group_ids` (int[], optional): Groups whose members can start this Shared Workflow.
+     *     - `shared_trigger_partner_ids` (int[], optional): Partners whose users can start this Shared Workflow.
      *     - `schedule_days_of_week` (int[], optional): If trigger is `custom_schedule` without `schedule_id`, a list of days of the week to run this automation. 0 is Sunday, 1 is Monday, etc.
      *     - `schedule_interval_minutes` (int, optional): Run every N minutes (1–59, subject to the Site plan minimum). Use by itself with `custom_schedule`. For v2 Automations, set this field in the Scheduled trigger's definition.
      *     - `schedule_times_of_day` (string[], optional): Times of day to run in HH:MM format (24-hour). Required for `custom_schedule` without `schedule_id` or `schedule_interval_minutes`. For `daily` triggers, the default is midnight UTC.
@@ -1203,7 +1269,7 @@ class Automation
      *     - `path_time_zone` (string, optional): Timezone to use when rendering timestamps in paths.
      *     - `retry_on_failure_interval_in_minutes` (int, optional): If the Automation fails, retry at this interval (in minutes).  Acceptable values are 5 through 1440 (one day).  Set to null to disable.
      *     - `retry_on_failure_number_of_attempts` (int, optional): If the Automation fails, retry at most this many times.  Maximum allowed value: 10.  Set to null to disable.
-     *     - `trigger` (string, optional): How this automation is triggered to run. Allowed values: manual, daily, custom_schedule, webhook, email, action.
+     *     - `trigger` (string, optional): How this automation is triggered to run. Allowed values: manual, daily, custom_schedule, webhook, email, action, shared.
      *     - `trigger_actions` (string[], optional): If trigger is `action`, this is the list of action types on which to trigger the automation. Valid actions are create, copy, move, archived_delete, update, read, destroy
      *     - `value` (array|object, optional): A Hash of attributes specific to the automation type.
      *     - `recurring_day` (int, optional): If trigger type is `daily`, this specifies a day number to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
@@ -1268,6 +1334,18 @@ class Automation
 
         if (isset($params['schedule_id']) && !is_int($params['schedule_id'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_id must be of type int; received ' . gettype(@$params['schedule_id']));
+        }
+
+        if (isset($params['shared_trigger_user_ids']) && !is_array($params['shared_trigger_user_ids'])) {
+            throw new \Files\Exception\InvalidParameterException('$shared_trigger_user_ids must be of type array; received ' . gettype(@$params['shared_trigger_user_ids']));
+        }
+
+        if (isset($params['shared_trigger_group_ids']) && !is_array($params['shared_trigger_group_ids'])) {
+            throw new \Files\Exception\InvalidParameterException('$shared_trigger_group_ids must be of type array; received ' . gettype(@$params['shared_trigger_group_ids']));
+        }
+
+        if (isset($params['shared_trigger_partner_ids']) && !is_array($params['shared_trigger_partner_ids'])) {
+            throw new \Files\Exception\InvalidParameterException('$shared_trigger_partner_ids must be of type array; received ' . gettype(@$params['shared_trigger_partner_ids']));
         }
 
         if (isset($params['schedule_days_of_week']) && !is_array($params['schedule_days_of_week'])) {
@@ -1583,6 +1661,9 @@ class Automation
      *     - `user_ids` (string, optional): A list of user IDs the automation is associated with. If sent as a string, it should be comma-delimited.
      *     - `group_ids` (string, optional): A list of group IDs the automation is associated with. If sent as a string, it should be comma-delimited.
      *     - `schedule_id` (int, optional): If trigger is `custom_schedule`, the reusable Schedule used instead of the automation's schedule fields.
+     *     - `shared_trigger_user_ids` (int[], optional): Users who can start this Shared Workflow.
+     *     - `shared_trigger_group_ids` (int[], optional): Groups whose members can start this Shared Workflow.
+     *     - `shared_trigger_partner_ids` (int[], optional): Partners whose users can start this Shared Workflow.
      *     - `schedule_days_of_week` (int[], optional): If trigger is `custom_schedule` without `schedule_id`, a list of days of the week to run this automation. 0 is Sunday, 1 is Monday, etc.
      *     - `schedule_interval_minutes` (int, optional): Run every N minutes (1–59, subject to the Site plan minimum). Use by itself with `custom_schedule`. For v2 Automations, set this field in the Scheduled trigger's definition.
      *     - `schedule_times_of_day` (string[], optional): Times of day to run in HH:MM format (24-hour). Required for `custom_schedule` without `schedule_id` or `schedule_interval_minutes`. For `daily` triggers, the default is midnight UTC.
@@ -1603,7 +1684,7 @@ class Automation
      *     - `path_time_zone` (string, optional): Timezone to use when rendering timestamps in paths.
      *     - `retry_on_failure_interval_in_minutes` (int, optional): If the Automation fails, retry at this interval (in minutes).  Acceptable values are 5 through 1440 (one day).  Set to null to disable.
      *     - `retry_on_failure_number_of_attempts` (int, optional): If the Automation fails, retry at most this many times.  Maximum allowed value: 10.  Set to null to disable.
-     *     - `trigger` (string, optional): How this automation is triggered to run. Allowed values: manual, daily, custom_schedule, webhook, email, action.
+     *     - `trigger` (string, optional): How this automation is triggered to run. Allowed values: manual, daily, custom_schedule, webhook, email, action, shared.
      *     - `trigger_actions` (string[], optional): If trigger is `action`, this is the list of action types on which to trigger the automation. Valid actions are create, copy, move, archived_delete, update, read, destroy
      *     - `value` (array|object, optional): A Hash of attributes specific to the automation type.
      *     - `recurring_day` (int, optional): If trigger type is `daily`, this specifies a day number to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
@@ -1658,6 +1739,18 @@ class Automation
 
         if (isset($params['schedule_id']) && !is_int($params['schedule_id'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_id must be of type int; received ' . gettype(@$params['schedule_id']));
+        }
+
+        if (isset($params['shared_trigger_user_ids']) && !is_array($params['shared_trigger_user_ids'])) {
+            throw new \Files\Exception\InvalidParameterException('$shared_trigger_user_ids must be of type array; received ' . gettype(@$params['shared_trigger_user_ids']));
+        }
+
+        if (isset($params['shared_trigger_group_ids']) && !is_array($params['shared_trigger_group_ids'])) {
+            throw new \Files\Exception\InvalidParameterException('$shared_trigger_group_ids must be of type array; received ' . gettype(@$params['shared_trigger_group_ids']));
+        }
+
+        if (isset($params['shared_trigger_partner_ids']) && !is_array($params['shared_trigger_partner_ids'])) {
+            throw new \Files\Exception\InvalidParameterException('$shared_trigger_partner_ids must be of type array; received ' . gettype(@$params['shared_trigger_partner_ids']));
         }
 
         if (isset($params['schedule_days_of_week']) && !is_array($params['schedule_days_of_week'])) {

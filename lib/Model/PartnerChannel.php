@@ -23,6 +23,7 @@ require_once __DIR__ . '/../Files.php';
  * @property string|null $to_partner_route_path Optional route path for files delivered to the Partner.
  * @property string[]|null $to_partner_managed_folder_paths Managed folder paths inside the to-Partner folder.
  * @property string[]|null $from_partner_managed_folder_paths Managed folder paths inside the from-Partner folder.
+ * @property object[]|null $from_partner_upload_forms Form Field Sets attached to From Partner upload destinations.
  * @property string|null $effective_to_partner_folder_name Resolved to-Partner subfolder name. Null when the direction is disabled or uses the Channel folder directly.
  * @property string|null $effective_from_partner_folder_name Resolved from-Partner subfolder name. Null when the direction is disabled or uses the Channel folder directly.
  * @property string|null $channel_path Resolved Channel folder path.
@@ -363,6 +364,26 @@ class PartnerChannel
         return $this->attributes['from_partner_managed_folder_paths'] = $value;
     }
     /**
+     * Form Field Sets attached to From Partner upload destinations.
+     *
+     * @return object[]|null
+     */
+    public function getFromPartnerUploadForms()
+    {
+        return isset($this->attributes['from_partner_upload_forms']) ? $this->attributes['from_partner_upload_forms'] : null;
+    }
+
+    /**
+     * Form Field Sets attached to From Partner upload destinations.
+     *
+     * @param object[]|null $value
+     * @return object[]|null The assigned value.
+     */
+    public function setFromPartnerUploadForms($value)
+    {
+        return $this->attributes['from_partner_upload_forms'] = $value;
+    }
+    /**
      * Resolved to-Partner subfolder name. Null when the direction is disabled or uses the Channel folder directly.
      *
      * @return string|null
@@ -478,6 +499,7 @@ class PartnerChannel
      *     - `use_channel_root` (bool, optional): Use the Channel folder directly for a one-way exchange. Defaults to false. Cannot be changed after creation. Folder name overrides must be blank when enabled, and the Channel must remain one-way.
      *     - `from_partner_folder_name` (string, optional): Optional Channel-level from-Partner folder name override.
      *     - `from_partner_managed_folder_paths` (string[], optional): Managed folder paths inside the from-Partner folder.
+     *     - `from_partner_upload_forms` ((array|object)[], optional): Form Field Sets for From Partner upload destinations. Each entry has a `path` relative to the From Partner folder and a `form_field_set_id`. Use an empty `path` when the Channel has no managed folders. Providing this replaces all assignments, and an empty array removes them.
      *     - `from_partner_route_path` (string, optional): Optional route path for files uploaded by the Partner.
      *     - `to_partner_folder_name` (string, optional): Optional Channel-level to-Partner folder name override.
      *     - `to_partner_managed_folder_paths` (string[], optional): Managed folder paths inside the to-Partner folder.
@@ -518,6 +540,10 @@ class PartnerChannel
 
         if (isset($params['from_partner_managed_folder_paths']) && !is_array($params['from_partner_managed_folder_paths'])) {
             throw new \Files\Exception\InvalidParameterException('$from_partner_managed_folder_paths must be of type array; received ' . gettype(@$params['from_partner_managed_folder_paths']));
+        }
+
+        if (isset($params['from_partner_upload_forms']) && !is_array($params['from_partner_upload_forms'])) {
+            throw new \Files\Exception\InvalidParameterException('$from_partner_upload_forms must be of type array; received ' . gettype(@$params['from_partner_upload_forms']));
         }
 
         if (isset($params['from_partner_route_path']) && !is_string($params['from_partner_route_path'])) {
@@ -730,6 +756,7 @@ class PartnerChannel
      *     - `use_channel_root` (bool, optional): Use the Channel folder directly for a one-way exchange. Defaults to false. Cannot be changed after creation. Folder name overrides must be blank when enabled, and the Channel must remain one-way.
      *     - `from_partner_folder_name` (string, optional): Optional Channel-level from-Partner folder name override.
      *     - `from_partner_managed_folder_paths` (string[], optional): Managed folder paths inside the from-Partner folder.
+     *     - `from_partner_upload_forms` ((array|object)[], optional): Form Field Sets for From Partner upload destinations. Each entry has a `path` relative to the From Partner folder and a `form_field_set_id`. Use an empty `path` when the Channel has no managed folders. Providing this replaces all assignments, and an empty array removes them.
      *     - `from_partner_route_path` (string, optional): Optional route path for files uploaded by the Partner.
      *     - `to_partner_folder_name` (string, optional): Optional Channel-level to-Partner folder name override.
      *     - `to_partner_managed_folder_paths` (string[], optional): Managed folder paths inside the to-Partner folder.
@@ -765,6 +792,10 @@ class PartnerChannel
 
         if (isset($params['from_partner_managed_folder_paths']) && !is_array($params['from_partner_managed_folder_paths'])) {
             throw new \Files\Exception\InvalidParameterException('$from_partner_managed_folder_paths must be of type array; received ' . gettype(@$params['from_partner_managed_folder_paths']));
+        }
+
+        if (isset($params['from_partner_upload_forms']) && !is_array($params['from_partner_upload_forms'])) {
+            throw new \Files\Exception\InvalidParameterException('$from_partner_upload_forms must be of type array; received ' . gettype(@$params['from_partner_upload_forms']));
         }
 
         if (isset($params['from_partner_route_path']) && !is_string($params['from_partner_route_path'])) {

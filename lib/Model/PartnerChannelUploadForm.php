@@ -1,0 +1,107 @@
+<?php
+
+namespace Files\Model;
+
+use Files\Api;
+use Files\Logger;
+
+require_once __DIR__ . '/../Files.php';
+
+/**
+ * A Partner Channel Upload Form attaches a Form Field Set to one From Partner upload destination.
+ *
+ * @property string|null $path Upload destination path relative to the From Partner folder. Must be a configured leaf managed folder path, or an empty string for the From Partner folder when no managed folders are configured. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
+ * @property int|null $form_field_set_id ID of the Form Field Set answered for uploads to this destination. Must be in the same Workspace and contain at least one custom field.
+ * @package Files
+ */
+class PartnerChannelUploadForm
+{
+    private $attributes = [];
+    private $options = [];
+    private static $static_mapped_functions = [
+        'list' => 'all',
+    ];
+
+    /**
+     * Build a model from API attributes and retain its request options.
+     *
+     * @param array $attributes Initial model attributes, keyed by property name.
+     * @param array $options Request options used by this model's operations.
+     */
+    public function __construct($attributes = [], $options = [])
+    {
+        foreach ($attributes as $key => $value) {
+            $this->attributes[str_replace('?', '', $key)] = $value;
+        }
+
+        $this->options = $options;
+    }
+
+    /**
+     * Set a model attribute locally; call save() to persist supported changes.
+     *
+     * @param string $name Attribute name.
+     * @param mixed $value Attribute value.
+     * @return void
+     */
+    public function __set($name, $value)
+    {
+        $this->attributes[$name] = $value;
+    }
+
+    /**
+     * Read a model attribute.
+     *
+     * @param string $name Attribute name.
+     * @return mixed The attribute value, or null when it is not set.
+     */
+    public function __get($name)
+    {
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
+    }
+
+    /**
+     * Dispatch a legacy static alias, including list() to all().
+     *
+     * @param string $name Alias name.
+     * @param array $arguments Arguments passed to the canonical method.
+     * @return mixed The canonical method's result, or null for an unknown alias.
+     */
+    public static function __callStatic($name, $arguments)
+    {
+        if (in_array($name, array_keys(self::$static_mapped_functions))) {
+            $method = self::$static_mapped_functions[$name];
+            if (method_exists(__CLASS__, $method)) {
+                return @self::$method(...$arguments);
+            }
+        }
+    }
+
+    /**
+     * Whether this model has a nonempty primary key.
+     *
+     * @return bool
+     */
+    public function isLoaded()
+    {
+        return !!@$this->attributes['id'];
+    }
+    /**
+     * Upload destination path relative to the From Partner folder. Must be a configured leaf managed folder path, or an empty string for the From Partner folder when no managed folders are configured. This must be slash-delimited, but it must neither start nor end with a slash. Maximum of 5000 characters.
+     *
+     * @return string|null
+     */
+    public function getPath()
+    {
+        return isset($this->attributes['path']) ? $this->attributes['path'] : null;
+    }
+    /**
+     * ID of the Form Field Set answered for uploads to this destination. Must be in the same Workspace and contain at least one custom field.
+     *
+     * @return int|null
+     */
+    public function getFormFieldSetId()
+    {
+        return isset($this->attributes['form_field_set_id']) ? $this->attributes['form_field_set_id'] : null;
+    }
+}

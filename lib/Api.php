@@ -24,7 +24,7 @@ function middlewareRemoveHeader($header)
  */
 class Api
 {
-    const VERSION = "2.0.775";
+    const VERSION = "2.0.776";
 
     const REPEATED_CURSOR_MESSAGE = 'The list returned a cursor it already returned, so following it would repeat pages.';
 

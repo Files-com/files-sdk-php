@@ -519,7 +519,7 @@ class EventTarget
      *     - `enabled` (bool, optional): Whether this Event Target can receive events.
      *     - `config` (array|object, required): Event Target configuration. Fields depend on target_type.
      *     - `delivery_policy` (array|object, optional): Event Target delivery policy. Email and folder targets support batch_interval in seconds, between 600 and 86400. Slack and Teams support delivery_mode (immediate or subfolder_summary), summary_path (empty string means root), and summary_delay (15–300 seconds, default 60). The summary applies to matching file activity under summary_path; other matching events retain immediate delivery.
-     *     - `target_type` (string, required): Event Target type. Allowed values: email, webhook, slack_webhook, teams_webhook, amazon_sns, google_pubsub, folder.
+     *     - `target_type` (string, required): Event Target type. Allowed values: email, webhook, slack_webhook, teams_webhook, amazon_sns, google_pubsub, folder, amazon_sqs, azure_service_bus.
      * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
      * @return \Files\Model\EventTarget
      * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.

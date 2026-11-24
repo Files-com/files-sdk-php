@@ -56,7 +56,7 @@ require_once __DIR__ . '/../Files.php';
  * @property int|null $user_id User ID of the Automation's creator.
  * @property int[]|null $user_ids IDs of Users for the Automation (i.e. who to Request File from)
  * @property object|null $value A Hash of attributes specific to the automation type.
- * @property string|null $webhook_url If trigger is `webhook`, this is the URL of the webhook to trigger the Automation.
+ * @property string|null $webhook_url If trigger is `webhook`, this is the URL to start the Automation. For a v2 webhook configured to upload a file, POST multipart form data with a single `file` part or send a raw body with the `X-Files-Filename` header. A JSON body is saved as `payload.json` when the header is omitted.
  * @property string|null $holiday_region Skip the automation if there is a formal, observed holiday for this region.
  * @package Files
  */
@@ -1053,7 +1053,7 @@ class Automation
         return $this->attributes['value'] = $value;
     }
     /**
-     * If trigger is `webhook`, this is the URL of the webhook to trigger the Automation.
+     * If trigger is `webhook`, this is the URL to start the Automation. For a v2 webhook configured to upload a file, POST multipart form data with a single `file` part or send a raw body with the `X-Files-Filename` header. A JSON body is saved as `payload.json` when the header is omitted.
      *
      * @return string|null
      */
@@ -1063,7 +1063,7 @@ class Automation
     }
 
     /**
-     * If trigger is `webhook`, this is the URL of the webhook to trigger the Automation.
+     * If trigger is `webhook`, this is the URL to start the Automation. For a v2 webhook configured to upload a file, POST multipart form data with a single `file` part or send a raw body with the `X-Files-Filename` header. A JSON body is saved as `payload.json` when the header is omitted.
      *
      * @param string|null $value
      * @return string|null The assigned value.

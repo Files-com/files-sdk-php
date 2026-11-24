@@ -23,6 +23,7 @@ require_once __DIR__ . '/../Files.php';
  * @property int[]|null $recurring_days If trigger is `daily`, this selects one or more day numbers inside a `week`, `month`, `quarter`, or `year` interval.
  * @property int|null $schedule_id If trigger is `custom_schedule`, the reusable Schedule used instead of the scheduled export's schedule fields.
  * @property int[]|null $schedule_days_of_week If trigger is `custom_schedule`, the 0-based weekdays used by the schedule.
+ * @property int|null $schedule_interval_minutes Run every N minutes (1–59, subject to the Site plan minimum). Use by itself with `custom_schedule`.
  * @property string[]|null $schedule_times_of_day Times of day in HH:MM format for the scheduled export schedule.
  * @property string|null $schedule_time_zone Time zone used by the scheduled export schedule.
  * @property string|null $holiday_region Optional holiday region used by the scheduled export schedule.
@@ -367,6 +368,26 @@ class ScheduledExport
         return $this->attributes['schedule_days_of_week'] = $value;
     }
     /**
+     * Run every N minutes (1–59, subject to the Site plan minimum). Use by itself with `custom_schedule`.
+     *
+     * @return int|null
+     */
+    public function getScheduleIntervalMinutes()
+    {
+        return isset($this->attributes['schedule_interval_minutes']) ? $this->attributes['schedule_interval_minutes'] : null;
+    }
+
+    /**
+     * Run every N minutes (1–59, subject to the Site plan minimum). Use by itself with `custom_schedule`.
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
+    public function setScheduleIntervalMinutes($value)
+    {
+        return $this->attributes['schedule_interval_minutes'] = $value;
+    }
+    /**
      * Times of day in HH:MM format for the scheduled export schedule.
      *
      * @return string[]|null
@@ -547,6 +568,7 @@ class ScheduledExport
      *     - `recurring_days` (int[], optional): If trigger is `daily`, this selects one or more day numbers inside a `week`, `month`, `quarter`, or `year` interval.
      *     - `schedule_id` (int, optional): If trigger is `custom_schedule`, the reusable Schedule used instead of the scheduled export's schedule fields.
      *     - `schedule_days_of_week` (int[], optional): If trigger is `custom_schedule`, the 0-based weekdays used by the schedule.
+     *     - `schedule_interval_minutes` (int, optional): Run every N minutes (1–59, subject to the Site plan minimum). Use by itself with `custom_schedule`.
      *     - `schedule_times_of_day` (string[], optional): Times of day in HH:MM format for the scheduled export schedule.
      *     - `schedule_time_zone` (string, optional): Time zone used by the scheduled export schedule.
      *     - `holiday_region` (string, optional): Optional holiday region used by the scheduled export schedule.
@@ -609,6 +631,10 @@ class ScheduledExport
 
         if (isset($params['schedule_days_of_week']) && !is_array($params['schedule_days_of_week'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_days_of_week must be of type array; received ' . gettype(@$params['schedule_days_of_week']));
+        }
+
+        if (isset($params['schedule_interval_minutes']) && !is_int($params['schedule_interval_minutes'])) {
+            throw new \Files\Exception\InvalidParameterException('$schedule_interval_minutes must be of type int; received ' . gettype(@$params['schedule_interval_minutes']));
         }
 
         if (isset($params['schedule_times_of_day']) && !is_array($params['schedule_times_of_day'])) {
@@ -821,6 +847,7 @@ class ScheduledExport
      *     - `recurring_days` (int[], optional): If trigger is `daily`, this selects one or more day numbers inside a `week`, `month`, `quarter`, or `year` interval.
      *     - `schedule_id` (int, optional): If trigger is `custom_schedule`, the reusable Schedule used instead of the scheduled export's schedule fields.
      *     - `schedule_days_of_week` (int[], optional): If trigger is `custom_schedule`, the 0-based weekdays used by the schedule.
+     *     - `schedule_interval_minutes` (int, optional): Run every N minutes (1–59, subject to the Site plan minimum). Use by itself with `custom_schedule`.
      *     - `schedule_times_of_day` (string[], optional): Times of day in HH:MM format for the scheduled export schedule.
      *     - `schedule_time_zone` (string, optional): Time zone used by the scheduled export schedule.
      *     - `holiday_region` (string, optional): Optional holiday region used by the scheduled export schedule.
@@ -876,6 +903,10 @@ class ScheduledExport
 
         if (isset($params['schedule_days_of_week']) && !is_array($params['schedule_days_of_week'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_days_of_week must be of type array; received ' . gettype(@$params['schedule_days_of_week']));
+        }
+
+        if (isset($params['schedule_interval_minutes']) && !is_int($params['schedule_interval_minutes'])) {
+            throw new \Files\Exception\InvalidParameterException('$schedule_interval_minutes must be of type int; received ' . gettype(@$params['schedule_interval_minutes']));
         }
 
         if (isset($params['schedule_times_of_day']) && !is_array($params['schedule_times_of_day'])) {

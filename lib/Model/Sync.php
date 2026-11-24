@@ -39,6 +39,7 @@ require_once __DIR__ . '/../Files.php';
  * @property int[]|null $recurring_days If trigger type is `daily`, this specifies one or more day numbers to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
  * @property int|null $schedule_id If trigger is `custom_schedule`, the reusable Schedule used instead of the sync's schedule fields.
  * @property int[]|null $schedule_days_of_week If trigger is `custom_schedule`, Custom schedule description for when the sync should be run. 0-based days of the week. 0 is Sunday, 1 is Monday, etc.
+ * @property int|null $schedule_interval_minutes Run every N minutes (1–59, subject to the Site plan minimum). Use by itself with `custom_schedule`.
  * @property string[]|null $schedule_times_of_day Times of day to run in HH:MM format. For `custom_schedule`, run at these times on specified days of week. For `daily`, run at these times on the scheduled interval date.
  * @property string|null $schedule_time_zone Time zone for the schedule. If not set, times are interpreted as UTC.
  * @property string|null $holiday_region Skip the sync if there is a formal, observed holiday for this region.
@@ -676,6 +677,26 @@ class Sync
         return $this->attributes['schedule_days_of_week'] = $value;
     }
     /**
+     * Run every N minutes (1–59, subject to the Site plan minimum). Use by itself with `custom_schedule`.
+     *
+     * @return int|null
+     */
+    public function getScheduleIntervalMinutes()
+    {
+        return isset($this->attributes['schedule_interval_minutes']) ? $this->attributes['schedule_interval_minutes'] : null;
+    }
+
+    /**
+     * Run every N minutes (1–59, subject to the Site plan minimum). Use by itself with `custom_schedule`.
+     *
+     * @param int|null $value
+     * @return int|null The assigned value.
+     */
+    public function setScheduleIntervalMinutes($value)
+    {
+        return $this->attributes['schedule_interval_minutes'] = $value;
+    }
+    /**
      * Times of day to run in HH:MM format. For `custom_schedule`, run at these times on specified days of week. For `daily`, run at these times on the scheduled interval date.
      *
      * @return string[]|null
@@ -846,6 +867,7 @@ class Sync
      *     - `recurring_days` (int[], optional): If trigger type is `daily`, this specifies one or more day numbers to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
      *     - `schedule_id` (int, optional): If trigger is `custom_schedule`, the reusable Schedule used instead of the sync's schedule fields.
      *     - `schedule_days_of_week` (int[], optional): If trigger is `custom_schedule`, Custom schedule description for when the sync should be run. 0-based days of the week. 0 is Sunday, 1 is Monday, etc.
+     *     - `schedule_interval_minutes` (int, optional): Run every N minutes (1–59, subject to the Site plan minimum). Use by itself with `custom_schedule`.
      *     - `schedule_time_zone` (string, optional): Time zone for the schedule. If not set, times are interpreted as UTC.
      *     - `schedule_times_of_day` (string[], optional): Times of day to run in HH:MM format. For `custom_schedule`, run at these times on specified days of week. For `daily`, run at these times on the scheduled interval date.
      *     - `src_path` (string, optional): Absolute source path for the sync
@@ -933,6 +955,10 @@ class Sync
 
         if (isset($params['schedule_days_of_week']) && !is_array($params['schedule_days_of_week'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_days_of_week must be of type array; received ' . gettype(@$params['schedule_days_of_week']));
+        }
+
+        if (isset($params['schedule_interval_minutes']) && !is_int($params['schedule_interval_minutes'])) {
+            throw new \Files\Exception\InvalidParameterException('$schedule_interval_minutes must be of type int; received ' . gettype(@$params['schedule_interval_minutes']));
         }
 
         if (isset($params['schedule_time_zone']) && !is_string($params['schedule_time_zone'])) {
@@ -1168,6 +1194,7 @@ class Sync
      *     - `recurring_days` (int[], optional): If trigger type is `daily`, this specifies one or more day numbers to run in one of the supported intervals: `week`, `month`, `quarter`, `year`.
      *     - `schedule_id` (int, optional): If trigger is `custom_schedule`, the reusable Schedule used instead of the sync's schedule fields.
      *     - `schedule_days_of_week` (int[], optional): If trigger is `custom_schedule`, Custom schedule description for when the sync should be run. 0-based days of the week. 0 is Sunday, 1 is Monday, etc.
+     *     - `schedule_interval_minutes` (int, optional): Run every N minutes (1–59, subject to the Site plan minimum). Use by itself with `custom_schedule`.
      *     - `schedule_time_zone` (string, optional): Time zone for the schedule. If not set, times are interpreted as UTC.
      *     - `schedule_times_of_day` (string[], optional): Times of day to run in HH:MM format. For `custom_schedule`, run at these times on specified days of week. For `daily`, run at these times on the scheduled interval date.
      *     - `src_path` (string, optional): Absolute source path for the sync
@@ -1241,6 +1268,10 @@ class Sync
 
         if (isset($params['schedule_days_of_week']) && !is_array($params['schedule_days_of_week'])) {
             throw new \Files\Exception\InvalidParameterException('$schedule_days_of_week must be of type array; received ' . gettype(@$params['schedule_days_of_week']));
+        }
+
+        if (isset($params['schedule_interval_minutes']) && !is_int($params['schedule_interval_minutes'])) {
+            throw new \Files\Exception\InvalidParameterException('$schedule_interval_minutes must be of type int; received ' . gettype(@$params['schedule_interval_minutes']));
         }
 
         if (isset($params['schedule_time_zone']) && !is_string($params['schedule_time_zone'])) {

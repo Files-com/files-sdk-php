@@ -29,6 +29,7 @@
     3,
     5
   ],
+  "schedule_interval_minutes": 15,
   "schedule_times_of_day": [
     "06:30"
   ],
@@ -58,6 +59,7 @@
 * `recurring_days` (array(int64)): If trigger is `daily`, this selects one or more day numbers inside a `week`, `month`, `quarter`, or `year` interval.
 * `schedule_id` (int64): If trigger is `custom_schedule`, the reusable Schedule used instead of the AI Task's schedule fields.
 * `schedule_days_of_week` (array(int64)): If trigger is `custom_schedule`, the 0-based weekdays used by the schedule.
+* `schedule_interval_minutes` (int64): Run every N minutes (1–59, subject to the Site plan minimum). Use by itself with `custom_schedule`.
 * `schedule_times_of_day` (array(string)): Times of day in HH:MM format for the AI Task schedule.
 * `schedule_time_zone` (string): Time zone used by the AI Task schedule.
 * `holiday_region` (string): Optional holiday region used by the AI Task schedule.
@@ -117,6 +119,7 @@ one `\Files\Page` at a time, requesting each later page only when it is asked fo
   'recurring_days' => [1,15],
   'schedule_id' => 1,
   'schedule_days_of_week' => [1,3,5],
+  'schedule_interval_minutes' => 15,
   'schedule_time_zone' => "Eastern Time (US & Canada)",
   'schedule_times_of_day' => ["06:30"],
   'source' => "*.pdf",
@@ -141,6 +144,7 @@ one `\Files\Page` at a time, requesting each later page only when it is asked fo
 * `recurring_days` (array(int64)): If trigger is `daily`, this selects one or more day numbers inside a `week`, `month`, `quarter`, or `year` interval.
 * `schedule_id` (int64): If trigger is `custom_schedule`, the reusable Schedule used instead of the AI Task's schedule fields.
 * `schedule_days_of_week` (array(int64)): If trigger is `custom_schedule`, the 0-based weekdays used by the schedule.
+* `schedule_interval_minutes` (int64): Run every N minutes (1–59, subject to the Site plan minimum). Use by itself with `custom_schedule`.
 * `schedule_time_zone` (string): Time zone used by the AI Task schedule.
 * `schedule_times_of_day` (array(string)): Times of day in HH:MM format for the AI Task schedule.
 * `source` (string): Source glob used with `path` for action-triggered AI Tasks.
@@ -183,6 +187,7 @@ $ai_task->update([
   'recurring_days' => [1,15],
   'schedule_id' => 1,
   'schedule_days_of_week' => [1,3,5],
+  'schedule_interval_minutes' => 15,
   'schedule_time_zone' => "Eastern Time (US & Canada)",
   'schedule_times_of_day' => ["06:30"],
   'source' => "*.pdf",
@@ -210,6 +215,7 @@ $ai_task->update([
 * `recurring_days` (array(int64)): If trigger is `daily`, this selects one or more day numbers inside a `week`, `month`, `quarter`, or `year` interval.
 * `schedule_id` (int64): If trigger is `custom_schedule`, the reusable Schedule used instead of the AI Task's schedule fields.
 * `schedule_days_of_week` (array(int64)): If trigger is `custom_schedule`, the 0-based weekdays used by the schedule.
+* `schedule_interval_minutes` (int64): Run every N minutes (1–59, subject to the Site plan minimum). Use by itself with `custom_schedule`.
 * `schedule_time_zone` (string): Time zone used by the AI Task schedule.
 * `schedule_times_of_day` (array(string)): Times of day in HH:MM format for the AI Task schedule.
 * `source` (string): Source glob used with `path` for action-triggered AI Tasks.
@@ -246,6 +252,7 @@ $ai_task->update([
     3,
     5
   ],
+  "schedule_interval_minutes": 15,
   "schedule_times_of_day": [
     "06:30"
   ],

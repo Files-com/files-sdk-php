@@ -53,8 +53,7 @@ require_once __DIR__ . '/../Files.php';
  * @property string|null $ldap_base_dn Base DN for looking up users in LDAP server
  * @property string|null $ldap_domain Domain name that will be appended to LDAP usernames
  * @property bool|null $display_on_login_page Should this strategy be displayed on the login page?
- * @property string|null $public_sso_domain Username domain that can publicly discover this SSO provider on this site. Set after saving the provider. Set to null to turn off discovery.
- * @property string|null $public_sso_domain_dns_value This provider's DNS TXT value to publish at _files-sso.<domain> before enabling public SSO discovery for that domain.
+ * @property string|null $public_sso_domain Username domain that can publicly discover this SSO provider on this site. Set to null to turn off discovery.
  * @property string|null $ldap_host LDAP host
  * @property string|null $ldap_host_2 LDAP backup host
  * @property string|null $ldap_host_3 LDAP backup host
@@ -527,22 +526,13 @@ class SsoStrategy
         return isset($this->attributes['display_on_login_page']) ? $this->attributes['display_on_login_page'] : null;
     }
     /**
-     * Username domain that can publicly discover this SSO provider on this site. Set after saving the provider. Set to null to turn off discovery.
+     * Username domain that can publicly discover this SSO provider on this site. Set to null to turn off discovery.
      *
      * @return string|null
      */
     public function getPublicSsoDomain()
     {
         return isset($this->attributes['public_sso_domain']) ? $this->attributes['public_sso_domain'] : null;
-    }
-    /**
-     * This provider's DNS TXT value to publish at _files-sso.<domain> before enabling public SSO discovery for that domain.
-     *
-     * @return string|null
-     */
-    public function getPublicSsoDomainDnsValue()
-    {
-        return isset($this->attributes['public_sso_domain_dns_value']) ? $this->attributes['public_sso_domain_dns_value'] : null;
     }
     /**
      * LDAP host

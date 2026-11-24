@@ -65,7 +65,7 @@ one `\Files\Page` at a time, requesting each later page only when it is asked fo
 \Files\Model\DatabaseDestination::create([
   'name' => "Orders",
   'provider' => "snowflake",
-  'config' => "example",
+  'config' => {"account_identifier":"value","database_name":"value","schema_name":"value","table_name":"value"},
   'secret_id' => 1,
   'workspace_id' => 1,
 ]);
@@ -90,7 +90,7 @@ $database_destination = \Files\Model\DatabaseDestination::find($id);
 $database_destination->update([
   'name' => "Orders",
   'secret_id' => 1,
-  'config' => "example",
+  'config' => {"account_identifier":"value","database_name":"value","schema_name":"value","table_name":"value"},
 ]);
 ```
 

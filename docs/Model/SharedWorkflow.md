@@ -124,6 +124,7 @@ $shared_workflow->run_workflow([
   "successful_operations": 1,
   "failed_operations": 1,
   "definition": "example",
+  "application_actions": "example",
   "node_states": "example",
   "execution_nodes": [
     {

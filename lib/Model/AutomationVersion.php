@@ -19,6 +19,7 @@ require_once __DIR__ . '/../Files.php';
  * @property string|null $username Username recorded when the revision was saved, when available.
  * @property int|null $api_key_id ID of the API key used to save the revision, when available.
  * @property object|null $definition Saved Automation v2 graph definition. Included when retrieving a single revision.
+ * @property object|null $application_actions Normalized application action metadata keyed by pinned action fingerprint.
  * @package Files
  */
 class AutomationVersion
@@ -173,6 +174,15 @@ class AutomationVersion
     public function getDefinition()
     {
         return isset($this->attributes['definition']) ? $this->attributes['definition'] : null;
+    }
+    /**
+     * Normalized application action metadata keyed by pinned action fingerprint.
+     *
+     * @return object|null
+     */
+    public function getApplicationActions()
+    {
+        return isset($this->attributes['application_actions']) ? $this->attributes['application_actions'] : null;
     }
 
     /**

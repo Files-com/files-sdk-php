@@ -15,7 +15,7 @@ require_once __DIR__ . '/../Files.php';
  * @property bool|null $available_to_all_workspaces Allow all workspaces to use this default-workspace Custom Domain.
  * @property string[]|null $outbound_ip_addresses Eligible public IP addresses for Remote Server outbound connections. Empty when this Custom Domain is not eligible for outbound selection.
  * @property string|null $domain Customer-owned domain name.
- * @property string|null $destination Where this custom domain routes. Can be `site_alias`, `public_hosting`, `s3_endpoint`, or `unassigned` (not routing traffic). Set to `unassigned` automatically when a bound `public_hosting` folder behavior is deleted, and can be set manually via the API for any reason.
+ * @property string|null $destination Where this custom domain routes. Can be `site_alias`, `public_hosting`, `s3_endpoint`, `file_content`, or `unassigned` (not routing traffic). Each Site can have one File Content domain in its default workspace. It applies to the whole Site and uses the Site's existing dedicated HTTPS IPs. Set to `unassigned` automatically when a bound `public_hosting` folder behavior is deleted, and can be set manually via the API for any reason.
  * @property string|null $dns_status Current DNS verification status.
  * @property int|null $ssl_certificate_id Current SSL certificate ID.
  * @property bool|null $brick_managed Is this domain's SSL certificate automatically managed and renewed by Files.com?
@@ -198,7 +198,7 @@ class CustomDomain
         return $this->attributes['domain'] = $value;
     }
     /**
-     * Where this custom domain routes. Can be `site_alias`, `public_hosting`, `s3_endpoint`, or `unassigned` (not routing traffic). Set to `unassigned` automatically when a bound `public_hosting` folder behavior is deleted, and can be set manually via the API for any reason.
+     * Where this custom domain routes. Can be `site_alias`, `public_hosting`, `s3_endpoint`, `file_content`, or `unassigned` (not routing traffic). Each Site can have one File Content domain in its default workspace. It applies to the whole Site and uses the Site's existing dedicated HTTPS IPs. Set to `unassigned` automatically when a bound `public_hosting` folder behavior is deleted, and can be set manually via the API for any reason.
      *
      * @return string|null
      */
@@ -208,7 +208,7 @@ class CustomDomain
     }
 
     /**
-     * Where this custom domain routes. Can be `site_alias`, `public_hosting`, `s3_endpoint`, or `unassigned` (not routing traffic). Set to `unassigned` automatically when a bound `public_hosting` folder behavior is deleted, and can be set manually via the API for any reason.
+     * Where this custom domain routes. Can be `site_alias`, `public_hosting`, `s3_endpoint`, `file_content`, or `unassigned` (not routing traffic). Each Site can have one File Content domain in its default workspace. It applies to the whole Site and uses the Site's existing dedicated HTTPS IPs. Set to `unassigned` automatically when a bound `public_hosting` folder behavior is deleted, and can be set manually via the API for any reason.
      *
      * @param string|null $value
      * @return string|null The assigned value.
@@ -349,7 +349,7 @@ class CustomDomain
      *     - `id` (int, optional when set on this model): Custom Domain ID.
      *     - `available_to_all_workspaces` (bool, optional): Allow all workspaces to use this default-workspace Custom Domain.
      *     - `workspace_id` (int, optional): Workspace ID (0 for the default workspace).
-     *     - `destination` (string, optional): Where this custom domain routes. Can be `site_alias`, `public_hosting`, `s3_endpoint`, or `unassigned` (not routing traffic). Set to `unassigned` automatically when a bound `public_hosting` folder behavior is deleted, and can be set manually via the API for any reason. Allowed values: site_alias, public_hosting, s3_endpoint, unassigned.
+     *     - `destination` (string, optional): Where this custom domain routes. Can be `site_alias`, `public_hosting`, `s3_endpoint`, `file_content`, or `unassigned` (not routing traffic). Each Site can have one File Content domain in its default workspace. It applies to the whole Site and uses the Site's existing dedicated HTTPS IPs. Set to `unassigned` automatically when a bound `public_hosting` folder behavior is deleted, and can be set manually via the API for any reason. Allowed values: site_alias, public_hosting, s3_endpoint, unassigned, file_content.
      *     - `folder_behavior_id` (int, optional): Public Hosting behavior ID when this domain routes to a specific Public Hosting behavior.  Preserved as historical context when `destination` becomes `unassigned`.
      *     - `ssl_certificate_id` (int, optional): Current SSL certificate ID.
      *     - `domain` (string, optional): Customer-owned domain name.
@@ -586,7 +586,7 @@ class CustomDomain
      * @param array $params Request parameters.
      *     - `available_to_all_workspaces` (bool, optional): Allow all workspaces to use this default-workspace Custom Domain.
      *     - `workspace_id` (int, optional): Workspace ID (0 for the default workspace).
-     *     - `destination` (string, optional): Where this custom domain routes. Can be `site_alias`, `public_hosting`, `s3_endpoint`, or `unassigned` (not routing traffic). Set to `unassigned` automatically when a bound `public_hosting` folder behavior is deleted, and can be set manually via the API for any reason. Allowed values: site_alias, public_hosting, s3_endpoint, unassigned.
+     *     - `destination` (string, optional): Where this custom domain routes. Can be `site_alias`, `public_hosting`, `s3_endpoint`, `file_content`, or `unassigned` (not routing traffic). Each Site can have one File Content domain in its default workspace. It applies to the whole Site and uses the Site's existing dedicated HTTPS IPs. Set to `unassigned` automatically when a bound `public_hosting` folder behavior is deleted, and can be set manually via the API for any reason. Allowed values: site_alias, public_hosting, s3_endpoint, unassigned, file_content.
      *     - `folder_behavior_id` (int, optional): Public Hosting behavior ID when this domain routes to a specific Public Hosting behavior.  Preserved as historical context when `destination` becomes `unassigned`.
      *     - `ssl_certificate_id` (int, optional): Current SSL certificate ID.
      *     - `domain` (string, required): Customer-owned domain name.

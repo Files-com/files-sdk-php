@@ -19,6 +19,7 @@ require_once __DIR__ . '/../Files.php';
  * @property bool|null $deleted Indicates if the automation has been deleted.
  * @property string|null $description Description for the this Automation.
  * @property object|null $definition Automation v2 graph definition.
+ * @property object|null $application_actions Normalized application action metadata keyed by pinned action fingerprint.
  * @property string|null $destination_replace_from If set, this string in the destination path will be replaced with the value in `destination_replace_to`.
  * @property string|null $destination_replace_to If set, this string will replace the value `destination_replace_from` in the destination filename. You can use special patterns here.
  * @property string[]|null $destinations Destination Paths
@@ -314,6 +315,26 @@ class Automation
     public function setDefinition($value)
     {
         return $this->attributes['definition'] = $value;
+    }
+    /**
+     * Normalized application action metadata keyed by pinned action fingerprint.
+     *
+     * @return object|null
+     */
+    public function getApplicationActions()
+    {
+        return isset($this->attributes['application_actions']) ? $this->attributes['application_actions'] : null;
+    }
+
+    /**
+     * Normalized application action metadata keyed by pinned action fingerprint.
+     *
+     * @param object|null $value
+     * @return object|null The assigned value.
+     */
+    public function setApplicationActions($value)
+    {
+        return $this->attributes['application_actions'] = $value;
     }
     /**
      * If set, this string in the destination path will be replaced with the value in `destination_replace_to`.
@@ -1626,6 +1647,129 @@ class Automation
     public static function get($id, $params = [], $options = [])
     {
         return self::find($id, $params, $options);
+    }
+
+    /**
+     * List actions available for an Automation application
+     *
+     * GET /automations/application_actions
+     *
+     * @param array $params Request parameters.
+     *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+     *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+     *     - `application_key` (string, required): Application key returned by the Automation applications list.
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\AutomationApplicationAction[]
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
+    public static function listApplicationActions($params = [], $options = [])
+    {
+        if (empty($params['application_key'])) {
+            throw new \Files\Exception\MissingParameterException('Parameter missing: application_key');
+        }
+
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        if (isset($params['application_key']) && !is_string($params['application_key'])) {
+            throw new \Files\Exception\InvalidParameterException('$application_key must be of type string; received ' . gettype(@$params['application_key']));
+        }
+
+        $response = Api::sendRequest('/automations/application_actions', 'GET', $params, $options);
+
+        $return_array = [];
+
+        foreach (Api::listEntries(isset($response->data) ? $response->data : null, $response->status) as $obj) {
+            $return_array[] = new AutomationApplicationAction(Api::modelAttributes($obj, $response->status), $options);
+        }
+
+        return $return_array;
+    }
+
+    /**
+     * Fetches one page of listApplicationActions()'s results, with the same parameters and options,
+     * whatever Files::$autoPaginate is. Iterate the page, step with nextPage(), or read every result lazily with
+     * autoPagingIterator(). A 'cursor' parameter starts from a page saved with getNextCursor().
+     *
+     * @return \Files\Page
+     */
+    public static function listApplicationActionsPage($params = [], $options = [])
+    {
+        if (empty($params['application_key'])) {
+            throw new \Files\Exception\MissingParameterException('Parameter missing: application_key');
+        }
+
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        if (isset($params['application_key']) && !is_string($params['application_key'])) {
+            throw new \Files\Exception\InvalidParameterException('$application_key must be of type string; received ' . gettype(@$params['application_key']));
+        }
+
+        return \Files\Page::fetch('/automations/application_actions', $params, $options, AutomationApplicationAction::class);
+    }
+
+    /**
+     * List applications available in the Automation builder
+     *
+     * GET /automations/applications
+     *
+     * @param array $params Request parameters.
+     *     - `cursor` (string, optional): Used for pagination.  When a list request has more records available, cursors are provided in the response headers `X-Files-Cursor-Next` and `X-Files-Cursor-Prev`.  Send one of those cursor value here to resume an existing list from the next available record.  Note: many of our SDKs have iterator methods that will automatically handle cursor-based pagination.
+     *     - `per_page` (int, optional): Number of records to show per page.  (Max: 10000, 1,000 or less is recommended).
+     * @param array $options Request options, including api_key, session_id, workspace_id and Guzzle options.
+     * @return \Files\Model\AutomationApplication[]
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
+    public static function listApplications($params = [], $options = [])
+    {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        $response = Api::sendRequest('/automations/applications', 'GET', $params, $options);
+
+        $return_array = [];
+
+        foreach (Api::listEntries(isset($response->data) ? $response->data : null, $response->status) as $obj) {
+            $return_array[] = new AutomationApplication(Api::modelAttributes($obj, $response->status), $options);
+        }
+
+        return $return_array;
+    }
+
+    /**
+     * Fetches one page of listApplications()'s results, with the same parameters and options,
+     * whatever Files::$autoPaginate is. Iterate the page, step with nextPage(), or read every result lazily with
+     * autoPagingIterator(). A 'cursor' parameter starts from a page saved with getNextCursor().
+     *
+     * @return \Files\Page
+     */
+    public static function listApplicationsPage($params = [], $options = [])
+    {
+        if (isset($params['cursor']) && !is_string($params['cursor'])) {
+            throw new \Files\Exception\InvalidParameterException('$cursor must be of type string; received ' . gettype(@$params['cursor']));
+        }
+
+        if (isset($params['per_page']) && !is_int($params['per_page'])) {
+            throw new \Files\Exception\InvalidParameterException('$per_page must be of type int; received ' . gettype(@$params['per_page']));
+        }
+
+        return \Files\Page::fetch('/automations/applications', $params, $options, AutomationApplication::class);
     }
 
     /**

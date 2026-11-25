@@ -31,6 +31,7 @@ require_once __DIR__ . '/../Files.php';
  * @property int|null $successful_operations Count of successful operations.
  * @property int|null $failed_operations Count of failed operations.
  * @property object|null $definition Automation definition snapshot pinned by this run. For performance reasons, this is not provided when listing Automation runs.
+ * @property object|null $application_actions Normalized application action metadata keyed by pinned action fingerprint.
  * @property object|null $node_states Status and execution stage for each node in this run. For performance reasons, this is not provided when listing Automation runs.
  * @property object[]|null $execution_nodes Execution status, timing, and bounded output summaries for each node. For performance reasons, this is not provided when listing Automation runs.
  * @property string|null $journal_url Link to the run journal artifact.
@@ -297,6 +298,15 @@ class AutomationRun
     public function getDefinition()
     {
         return isset($this->attributes['definition']) ? $this->attributes['definition'] : null;
+    }
+    /**
+     * Normalized application action metadata keyed by pinned action fingerprint.
+     *
+     * @return object|null
+     */
+    public function getApplicationActions()
+    {
+        return isset($this->attributes['application_actions']) ? $this->attributes['application_actions'] : null;
     }
     /**
      * Status and execution stage for each node in this run. For performance reasons, this is not provided when listing Automation runs.

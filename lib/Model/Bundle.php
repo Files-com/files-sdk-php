@@ -36,7 +36,7 @@ require_once __DIR__ . '/../Files.php';
  * @property string|null $created_at Bundle created at date/time
  * @property bool|null $deleted Indicates if the bundle has been deleted.
  * @property string|null $deleted_at Bundle deleted at date/time
- * @property bool|null $dont_separate_submissions_by_folder Do not create subfolders for files uploaded to this share. Note: there are subtle security pitfalls with allowing anonymous uploads from multiple users to live in the same folder. We strongly discourage use of this option unless absolutely required.
+ * @property bool|null $dont_separate_submissions_by_folder Do not create subfolders for files uploaded to this share. Upload-only Share Links with non-recursive folder access require this to be true. If omitted on create, the API sets it to true for those links. Note: there are subtle security pitfalls with allowing anonymous uploads from multiple users to live in the same folder. We strongly discourage use of this option unless absolutely required.
  * @property string|null $effective_expires_at Read-only expiration date/time, using the explicit expiration or the site-wide setting when applicable. Null when the Share Link does not expire.
  * @property int|null $max_uses Visitor limit configured for this Share Link. Null uses the Site-wide cap, if set. The configured limit cannot exceed the Site-wide cap.
  * @property int|null $effective_max_uses Read-only visitor limit actually enforced for this Share Link. Uses the lower of the link limit and the Site-wide cap when both are set. Null means unlimited.
@@ -650,7 +650,7 @@ class Bundle
         return $this->attributes['deleted_at'] = $value;
     }
     /**
-     * Do not create subfolders for files uploaded to this share. Note: there are subtle security pitfalls with allowing anonymous uploads from multiple users to live in the same folder. We strongly discourage use of this option unless absolutely required.
+     * Do not create subfolders for files uploaded to this share. Upload-only Share Links with non-recursive folder access require this to be true. If omitted on create, the API sets it to true for those links. Note: there are subtle security pitfalls with allowing anonymous uploads from multiple users to live in the same folder. We strongly discourage use of this option unless absolutely required.
      *
      * @return bool|null
      */
@@ -660,7 +660,7 @@ class Bundle
     }
 
     /**
-     * Do not create subfolders for files uploaded to this share. Note: there are subtle security pitfalls with allowing anonymous uploads from multiple users to live in the same folder. We strongly discourage use of this option unless absolutely required.
+     * Do not create subfolders for files uploaded to this share. Upload-only Share Links with non-recursive folder access require this to be true. If omitted on create, the API sets it to true for those links. Note: there are subtle security pitfalls with allowing anonymous uploads from multiple users to live in the same folder. We strongly discourage use of this option unless absolutely required.
      *
      * @param bool|null $value
      * @return bool|null The assigned value.
@@ -1316,7 +1316,7 @@ class Bundle
      *     - `code` (string, optional): Bundle code.  This code forms the end part of the Public URL.
      *     - `create_snapshot` (bool, optional): If true, create a snapshot of this bundle's contents.
      *     - `description` (string, optional): Public description
-     *     - `dont_separate_submissions_by_folder` (bool, optional): Do not create subfolders for files uploaded to this share. Note: there are subtle security pitfalls with allowing anonymous uploads from multiple users to live in the same folder. We strongly discourage use of this option unless absolutely required.
+     *     - `dont_separate_submissions_by_folder` (bool, optional): Do not create subfolders for files uploaded to this share. Upload-only Share Links with non-recursive folder access require this to be true. If omitted on create, the API sets it to true for those links. Note: there are subtle security pitfalls with allowing anonymous uploads from multiple users to live in the same folder. We strongly discourage use of this option unless absolutely required.
      *     - `expires_at` (string, optional): Explicit Bundle expiration date/time. If not set, the site-wide expiration setting may apply.
      *     - `finalize_snapshot` (bool, optional): If true, finalize the snapshot of this bundle's contents. Note that `create_snapshot` must also be true.
      *     - `inbox_id` (int, optional): ID of the associated inbox, if available.
@@ -1702,7 +1702,7 @@ class Bundle
      *     - `bypasses_site_expiration_rules` (bool, optional): If true, this Share Link bypasses site-wide expiration rules. Only site admins may set this.
      *     - `form_field_set_id` (int, optional): Id of Form Field Set to use with this bundle
      *     - `create_snapshot` (bool, optional): If true, create a snapshot of this bundle's contents.
-     *     - `dont_separate_submissions_by_folder` (bool, optional): Do not create subfolders for files uploaded to this share. Note: there are subtle security pitfalls with allowing anonymous uploads from multiple users to live in the same folder. We strongly discourage use of this option unless absolutely required.
+     *     - `dont_separate_submissions_by_folder` (bool, optional): Do not create subfolders for files uploaded to this share. Upload-only Share Links with non-recursive folder access require this to be true. If omitted on create, the API sets it to true for those links. Note: there are subtle security pitfalls with allowing anonymous uploads from multiple users to live in the same folder. We strongly discourage use of this option unless absolutely required.
      *     - `expires_at` (string, optional): Explicit Bundle expiration date/time. If not set, the site-wide expiration setting may apply.
      *     - `finalize_snapshot` (bool, optional): If true, finalize the snapshot of this bundle's contents. Note that `create_snapshot` must also be true.
      *     - `max_uses` (int, optional): Visitor limit configured for this Share Link. Null uses the Site-wide cap, if set. The configured limit cannot exceed the Site-wide cap.

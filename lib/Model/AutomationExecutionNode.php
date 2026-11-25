@@ -22,8 +22,10 @@ require_once __DIR__ . '/../Files.php';
  * @property int|null $duration_ms Node runtime in milliseconds.
  * @property object[]|null $inputs Ordered inbound edge references.
  * @property object|null $outputs Output counts, item kinds, and typed-error summaries by outlet.
- * @property object|null $input_items Materialized input items currently available, grouped by inlet.
- * @property object|null $output_items Materialized output items grouped by outlet.
+ * @property object|null $input_items Available input items grouped by inlet. Resolve large values with item_refs and item_values.
+ * @property object|null $output_items Output items grouped by outlet. Resolve large values with item_refs and item_values.
+ * @property object[]|null $item_refs References with a path from the response root and a digest. Replace the null at each path with the value for that digest. Path segments are literal object keys or zero-based array indexes.
+ * @property object[]|null $item_values Ordered entries with a digest, a value, and optional item_refs relative to that value. References inside entries point to earlier entries in this array.
  * @package Files
  */
 class AutomationExecutionNode
@@ -207,7 +209,7 @@ class AutomationExecutionNode
         return isset($this->attributes['outputs']) ? $this->attributes['outputs'] : null;
     }
     /**
-     * Materialized input items currently available, grouped by inlet.
+     * Available input items grouped by inlet. Resolve large values with item_refs and item_values.
      *
      * @return object|null
      */
@@ -216,12 +218,30 @@ class AutomationExecutionNode
         return isset($this->attributes['input_items']) ? $this->attributes['input_items'] : null;
     }
     /**
-     * Materialized output items grouped by outlet.
+     * Output items grouped by outlet. Resolve large values with item_refs and item_values.
      *
      * @return object|null
      */
     public function getOutputItems()
     {
         return isset($this->attributes['output_items']) ? $this->attributes['output_items'] : null;
+    }
+    /**
+     * References with a path from the response root and a digest. Replace the null at each path with the value for that digest. Path segments are literal object keys or zero-based array indexes.
+     *
+     * @return object[]|null
+     */
+    public function getItemRefs()
+    {
+        return isset($this->attributes['item_refs']) ? $this->attributes['item_refs'] : null;
+    }
+    /**
+     * Ordered entries with a digest, a value, and optional item_refs relative to that value. References inside entries point to earlier entries in this array.
+     *
+     * @return object[]|null
+     */
+    public function getItemValues()
+    {
+        return isset($this->attributes['item_values']) ? $this->attributes['item_values'] : null;
     }
 }

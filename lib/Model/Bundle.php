@@ -1488,6 +1488,64 @@ class Bundle
     }
 
     /**
+     * Update Bundle Path
+     *
+     * PATCH /bundles/{id}/paths/{path}
+     *
+     * @param array $params Request parameters.
+     *     - `id` (int, optional when set on this model): Bundle ID.
+     *     - `path` (string, required): Path to operate on.
+     *     - `recursive` (bool, required): Allow access to subfolders content?
+     * @return \Files\Model\BundlePath
+     * @throws \Files\Exception\FilesException When validation, configuration or an API request fails.
+     */
+    public function updateBundle($params = [])
+    {
+        if (!is_array($params)) {
+            throw new \Files\Exception\InvalidParameterException('$params must be of type array; received ' . gettype($params));
+        }
+
+        if (empty($params['id'])) {
+            if (@$this->id) {
+                $params['id'] = $this->id;
+            } else {
+                throw new \Files\Exception\MissingParameterException('Parameter missing: id');
+            }
+        }
+
+        if (empty($params['path'])) {
+            if (@$this->path) {
+                $params['path'] = $this->path;
+            } else {
+                throw new \Files\Exception\MissingParameterException('Parameter missing: path');
+            }
+        }
+
+        if (!isset($params['recursive'])) {
+            if (@$this->recursive !== null) {
+                $params['recursive'] = $this->recursive;
+            } else {
+                throw new \Files\Exception\MissingParameterException('Parameter missing: recursive');
+            }
+        }
+
+        if (isset($params['id']) && !is_int($params['id'])) {
+            throw new \Files\Exception\InvalidParameterException('$id must be of type int; received ' . gettype(@$params['id']));
+        }
+
+        if (isset($params['path']) && !is_string($params['path'])) {
+            throw new \Files\Exception\InvalidParameterException('$path must be of type string; received ' . gettype(@$params['path']));
+        }
+
+        if (isset($params['recursive']) && !is_scalar($params['recursive'])) {
+            throw new \Files\Exception\InvalidParameterException('$recursive must be of type boolean; received ' . gettype(@$params['recursive']));
+        }
+
+        $response = Api::sendRequest('/bundles/' . rawurlencode(strval(@$params['id'])) . '/paths/' . rawurlencode(strval(@$params['path'])) . '', 'PATCH', $params, $this->options);
+        return new BundlePath(Api::modelAttributes(isset($response->data) ? $response->data : null, $response->status), $this->options);
+    }
+
+    /**
      * Delete Share Link
      *
      * DELETE /bundles/{id}

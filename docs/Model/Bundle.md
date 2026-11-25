@@ -493,6 +493,33 @@ $bundle->update([
 
 ---
 
+## Update Bundle Path
+
+```
+$bundle = \Files\Model\Bundle::find($id);
+
+$bundle->update_bundle([
+  'recursive' => true,
+]);
+```
+
+### Parameters
+
+* `id` (int64): Required - Bundle ID.
+* `path` (string): Required - Path to operate on.
+* `recursive` (boolean): Required - Allow access to subfolders content?
+
+### Example Response
+
+```json
+{
+  "recursive": true,
+  "path": "example"
+}
+```
+
+---
+
 ## Delete Share Link
 
 ```
